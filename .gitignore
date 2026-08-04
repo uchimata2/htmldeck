@@ -1,0 +1,9 @@
+# Local scratch — never published
+control/
+dist/
+__pycache__/
+*.pyc
+
+# Live handoff state is machine-local; the config is not
+.handoff/HANDOFF.md
+.handoff/processed_*
