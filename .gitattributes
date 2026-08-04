@@ -1,0 +1,4 @@
+# Determinism: this project compares generated files byte for byte, so line endings
+# must not depend on who checked out the repository. See CLAUDE.md.
+* text=auto eol=lf
+*.png binary
