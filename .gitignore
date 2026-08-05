@@ -7,3 +7,7 @@ __pycache__/
 # Live handoff state is machine-local; the config is not
 .handoff/HANDOFF.md
 .handoff/processed_*
+
+# Corpus knowledgebase — full-fidelity extraction of the owner's private notes.
+# Local-only by construction: it contains client and personal data and must never publish.
+.kb/

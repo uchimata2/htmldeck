@@ -7,22 +7,34 @@ Read this before doing anything in this folder.
 A publishable Claude Code plugin: **single-file HTML presentations that don't look generated**,
 plus the prompt structure that briefs them and the critique pass that fixes them.
 
-Grounded in a corpus of ~10 real decks produced across a training programme. `docs/BRIEF.md`
-records what that evidence shows and what to build; `reference/` holds the source prompt.
-**Status: not started.** Read the brief first.
+Grounded in a corpus of real decks, prompts and written style guides from a training programme.
+`docs/BRIEF.md` records what that evidence shows and what to build; `reference/` holds the source
+prompt. **Status: research phase (WP1).** Read the brief first — its "Decisions taken" section
+overrides anything older in it.
+
+**The objectives are still being shaped.** Research is expected to be able to overturn scope, not
+just fill it in. Findings that contradict the brief are surfaced as candidate changes of
+direction, not quietly worked around.
 
 ## The rules that must survive
 
 1. **Self-contained or it doesn't ship.** One `.html` that renders correctly with the network
    disabled. Every deck in the source corpus failed this — 2–7 external references each, mostly
    web fonts. Fixing it while keeping the typography is the plugin's main technical problem.
-2. **Diagrams are inline SVG.** Never raster images, never an external chart library. They scale,
-   they theme, they diff.
-3. **Decks must not look like each other.** The corpus decks read as designed *because* they
-   don't share a template. A plugin shipping one house style produces one house look — which is
-   the problem it exists to solve.
-4. **Look at the rendered deck.** A deck that validates is not a deck that reads well.
-5. **Critique is a first-class mode**, not a footnote. It is what turns a first draft into
+2. **Portability is the constraint, not restraint.** No installation, no special privileges — the
+   recipient double-clicks the file. It must render **glitch-free in recent Chrome/Edge**; other
+   browsers degrade gracefully and mobile is secondary. Within that envelope, richness is wanted:
+   interaction, animation and 3D. There is no JavaScript budget. The corpus habit of 1–3 script
+   tags describes past work, not this.
+3. **Use whatever renders best.** SVG, `<canvas>` and WebGL are all permitted, for diagrams
+   included. Still never raster images, and never an *external* library — rule 1 settles that.
+   When SVG is as good, prefer it: it scales, themes and diffs.
+4. **One theme, every layer parametric.** Ship one fully-resolved look, not several and not a
+   per-topic palette. Every value that could differ between themes is a token. Variety comes later,
+   from a tool that generates new templates — design for it now, do not build it yet.
+5. **Printing is optional.** A mode the user can force on, never a constraint on the design.
+6. **Look at the rendered deck.** A deck that validates is not a deck that reads well.
+7. **Critique is a first-class mode**, not a footnote. It is what turns a first draft into
    something worth presenting, and it is the part users cannot do for their own work.
 
 ## Voice

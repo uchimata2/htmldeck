@@ -5,12 +5,12 @@ type: deliverable
 status: proposed
 phase: specify
 parent: null
-blocked_by: []
+blocked_by: [T-014]
 related: [T-002]
-work_package: none
+work_package: WP3
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-06
 deliverables: []
 ---
 
@@ -29,9 +29,27 @@ The most useful artifact in the corpus is a critique, not a deck. It caught a st
 - [ ] Names specific defects with the slide they are on — no general advice
 - [ ] Run against a deck with known defects and found them
 - [ ] Voice stays direct; no compliment sandwich
+- [ ] **When sources are supplied, reconciles the deck against them** — and reconciles the sources
+      against each other, because a deck inherits their disagreements
+- [ ] Run against a deck built from sources that contradict each other, and found the contradiction
+- [ ] States plainly when it reviewed the deck alone, so a clean report is not read as "the content
+      is right"
+
+**The second class of finding**
+
+The corpus critique's findings are all inside one deck. `docs/BRIEF.md` § *The critique pass* records
+a second class, from a five-document set audited before its deck was built: figures correct where
+written and wrong where quoted, a summary contradicting the table above it, a count drifted from the
+model it described. Each document had passed its own review. **All of them were found by counting,
+not reading** — so this mode needs a counting pass, not only a reading pass.
+
+The cheap technique that worked: one table of every figure in the material, its origin, and every
+place it is reused.
 
 **Open questions**
 - Should critique be able to apply its own fixes, or only report?
+- Does the counting pass belong here or in the build check (T-005)? They overlap. Likely: T-005
+  gates automatically, critique explains and prioritises.
 
 ## 2. Plan
 
@@ -61,3 +79,4 @@ The most useful artifact in the corpus is a critique, not a deck. It caught a st
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
+| 2026-08-05 | (no change) | Added the cross-document class of finding and the counting pass, after a source-document audit found nine defects that five per-document reviews had all passed. Evidence in `docs/BRIEF.md`. |

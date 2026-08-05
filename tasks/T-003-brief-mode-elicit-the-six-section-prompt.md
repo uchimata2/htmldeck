@@ -5,12 +5,12 @@ type: deliverable
 status: proposed
 phase: specify
 parent: null
-blocked_by: []
+blocked_by: [T-015]
 related: [T-002]
-work_package: none
+work_package: WP3
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-06
 deliverables: []
 ---
 

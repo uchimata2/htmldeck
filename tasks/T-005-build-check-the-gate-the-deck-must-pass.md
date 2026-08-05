@@ -6,11 +6,11 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: [T-002]
-related: [T-001]
-work_package: none
+related: [T-001, T-007, T-016]
+work_package: WP3
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-06
 deliverables: []
 ---
 
@@ -25,14 +25,44 @@ An automated check run on every generated deck.
 Cheap to build, and it converts several house rules from hopes into failures.
 
 **Acceptance criteria**
+
+*Presentation — always run*
 - [ ] Fails on any external reference
 - [ ] Fails on banned terminology
 - [ ] Fails on a `<section>` with no heading
 - [ ] Checks contrast against WCAG AA
+- [ ] Fails when the deck does not render glitch-free **from `file://`** in the target browser —
+      the restricted-origin failures (ES modules, `fetch`, XHR, some WebGL texture paths) are the
+      likeliest way a rich deck ships broken. See T-017
+- [ ] Fails on a console error or unhandled rejection on load or during navigation
+- [ ] Fails on a theme value hard-coded outside the token layer — see T-007
+- [ ] *Opt-in only:* when the user has asked for a printable deck, fails if disclosure content is
+      dropped or slides clip. Not run otherwise — printing is a mode, not a gate
 - [ ] Proven **failing** on each class before being trusted
+
+*Content — run when source documents are supplied*
+- [ ] Fails when a figure on a slide appears in no source
+- [ ] Fails when a figure on a slide disagrees with the source it came from
+- [ ] Fails when the same figure appears twice in the deck with different values
+- [ ] Proven **failing** on each of those three before being trusted
+
+*Honesty*
+- [ ] The output states which half ran. "Presentation-only" is a legitimate result; reported as a
+      clean pass, it is a false one
+- [ ] Ships with a self-test on a case whose answer is known, and the self-test is part of the
+      deliverable, not a one-off
+
+**Why the content half exists**
+
+A deck can pass every presentation check and still put a wrong number in front of a board. The
+evidence is in `docs/BRIEF.md` § *The critique pass*: a five-document set where every document
+passed its own review, and the figure that reached the board's decision cell was wrong in eight
+places. Nothing on this task's presentation list would have caught it.
 
 **Open questions**
 - Is the check a separate command, or always part of build?
+- Does the content half need the sources parsed, or is "the user pastes them in" enough? Ties to
+  open question 6 in `docs/BRIEF.md`.
 
 ## 2. Plan
 
@@ -62,3 +92,6 @@ Cheap to build, and it converts several house rules from hopes into failures.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
+| 2026-08-05 | (no change) | Acceptance criteria split into presentation and content halves, plus an honesty criterion, after a source-document audit showed the presentation list cannot catch a wrong figure. Evidence in `docs/BRIEF.md`. |
+| 2026-08-06 | (no change) | Added disclosure-layer and token-layer criteria after the owner identified progressive disclosure as their signature technique and chose a parametric single theme. |
+| 2026-08-06 | (no change) | Corrected: print demoted from hard gate to opt-in mode, and the keyboard/hover criteria dropped, after the owner ruled that printing overrides nothing and that rich interaction is wanted. Replaced by `file://` render and console-error gates. |

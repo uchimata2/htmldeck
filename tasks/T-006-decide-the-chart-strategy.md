@@ -5,12 +5,12 @@ type: decision
 status: proposed
 phase: specify
 parent: null
-blocked_by: []
-related: [T-002]
-work_package: none
+blocked_by: [T-013]
+related: [T-002, T-016, T-017]
+work_package: WP2
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-06
 deliverables: []
 ---
 
@@ -24,13 +24,24 @@ A decision on how data becomes a diagram.
 **Why this one**
 Hand-authored inline SVG scales badly to real data; a charting library is an external dependency and breaks self-containment. The corpus used both, and the library-based decks are the ones that will not render offline.
 
+**Reopened 2026-08-06.** That framing assumed a JavaScript budget. There is none — a charting
+library is no longer disqualified by being a library, only by being *external*. A vendored,
+inlined library that initialises from `file://` is now a live option, and so is an animated or
+interactive chart. This widens the decision rather than settling it; the size and licence cost
+comes from T-013, the `file://` envelope from T-017.
+
 **Acceptance criteria**
-- [ ] Approach chosen, with the reason
+- [ ] Approach chosen, with the reason — hand-authored SVG, generated SVG, or a vendored library
 - [ ] The three or four chart types a business deck actually needs identified from the corpus
+- [ ] If a library: licence permits redistribution, it runs from `file://`, and its inlined size
+      is measured on a real deck
+- [ ] Interaction and animation position stated — charts that reveal on interaction fit the
+      disclosure layer (T-016), and that is a reason to prefer one approach over another
 - [ ] A chart produced by the chosen approach rendered and looked at
 
 **Open questions**
 - Does a minimal built-in SVG chart generator cover enough cases?
+- Does chart interaction belong to the chart or to the disclosure layer? — resolve with T-016
 
 ## 2. Plan
 
@@ -60,3 +71,4 @@ Hand-authored inline SVG scales badly to real data; a charting library is an ext
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
+| 2026-08-06 | (no change) | Reopened and widened: a vendored charting library is back on the table now that the minimal-JavaScript constraint is gone. |

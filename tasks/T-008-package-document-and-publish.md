@@ -7,10 +7,10 @@ phase: specify
 parent: null
 blocked_by: [T-002, T-004]
 related: [T-005]
-work_package: none
+work_package: final
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-06
 deliverables: []
 ---
 
