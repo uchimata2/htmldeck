@@ -7,23 +7,29 @@ The corpus reduced to rules that can be kept, dropped or amended. Deliverable of
 **These are candidates, not decisions.** Choosing what survives is [T-014](../../tasks/T-014-synthesise-research-into-the-design-system-reference.md),
 after the external research lands. Nothing here is settled.
 
-> ### ⚠ Provenance is unresolved, and it is load-bearing
+> ### ✔ Provenance resolved — see [R4](R4-prior-art.md)
 >
-> An unknown share of the rules below labelled `stated` are **quoted from a general-purpose deck
-> skill** that the corpus decks were built with, not authored by the owner. The specs cite it as an
-> authority — *"the skill names those as generic tells"*, *"the skill explicitly forbids continuous
-> glow"*, *"a deliberate departure from the skill's default"* — and one requirements document says
-> plainly **"use the Visual Explainer skill"**.
+> The concern this box used to raise was real: an unknown share of the rules below were **quoted
+> from a general-purpose deck skill** the corpus decks were built with, not authored by the owner.
+> [T-012](../../tasks/T-012-research-existing-html-deck-skills-and-libraries.md) read that skill
+> from source and assigned every rule a verdict. **[R4 §9](R4-prior-art.md#9-per-rule-provenance-table)
+> is the single home for those verdicts** — they are deliberately not duplicated here, because the
+> Verdict column below belongs to T-014.
 >
-> This project exists to encode **the owner's** taste. Building in rules that belong to an existing
-> skill re-derives something that already ships, which is the failure the owner explicitly asked to
-> avoid. Every rule therefore needs a provenance verdict before T-014 can act on it:
-> **owner-authored · inherited from the skill · owner's deliberate departure from the skill.**
+> **The result: 86 owner-authored · 42 inherited · 22 departures · 4 owned by the owner's own
+> `humanize-writing` skill.** Two corrections matter when reading the tables below:
 >
-> **The departures are the highest-value rows in this file.** L1 (fixed scaled stage), J1–J2
-> (self-containment), D3 (embedded faces), F11 (the four-motion vocabulary) and G11 (the spine
-> ribbon) are all positions argued *against* a default — which is exactly where taste is visible.
-> Scoped to [T-012](../../tasks/T-012-research-existing-html-deck-skills-and-libraries.md).
+> - **G11 (the spine ribbon) is not a departure — it is owner-authored.** The skill has position
+>   indicators, nothing that carries the argument. **F11 (the four-motion vocabulary) is only half
+>   a departure**: the skill's "Choreography" section already names four motions by element role
+>   with stagger, so the shape is inherited and only the content is the owner's.
+> - **Seventeen departures were never flagged**, including the two sharpest: the skill *prescribes*
+>   the card-grid and step-card-pipeline layout that E9/E10 class as a severity-H failure, and it
+>   instructs the opposite of A2 — add slides rather than drop content, 18–25 from a 7-section
+>   source.
+>
+> Three inherited clusters are worth knowing before assigning any keep/drop verdict: **navigation
+> (G1–G7 is the skill's slide engine entire)**, **typography (D1–D6)**, and **colour discipline (C)**.
 
 **Frequency** — `dominant` most decks or stated and unopposed · `variant` some decks · `one-off`
 a single instance · `stated` written down but under-delivered.
@@ -269,10 +275,10 @@ itself** — they were not silences, they were documents I had not yet read.
 
 | # | Gap | Status | Who fills it |
 | :--- | :--- | :--- | :--- |
-| G-2 | Slide archetype vocabulary | **Closed** — two specs name and reuse archetype sets (rule L3) | — |
-| G-4 | Type scale | **Closed** — display `clamp(34px,4.2vw,56px)`, body 18–24px/1.55, mono 11–13px (D4–D6) | — |
-| G-8 | Banned-terminology list | **Closed** — five AI-tell categories with examples, plus the caveat that a word list is insufficient (B22–B23) | — |
-| G-10 | Motion token vocabulary | **Closed** — four named motions with exact durations and easings (F11) | — |
+| G-2 | Slide archetype vocabulary | **Closed, but inherited** — L3's set maps almost one-to-one onto the skill's ten slide types. **Timeline, Case file and Verdict are the owner's three additions** ([R4 §3](R4-prior-art.md)) | — |
+| G-4 | Type scale | **Closed, but inherited** — D4–D6 are the skill's scales and techniques; the owner's display values are smaller | — |
+| G-8 | Banned-terminology list | **Closed by another of the owner's skills** — B22–B23 are `humanize-writing` steps 2–3. Defer to it; do not re-derive ([R4 §7](R4-prior-art.md)) | — |
+| G-10 | Motion token vocabulary | **Closed, shape inherited** — the four-slot vocabulary is the skill's "Choreography"; the names, durations and easings are the owner's (F11) | — |
 | G-12 | Content-length rule | **Closed** — sentence <20 words, headline ≤6 words, ≤3 fragments per slide (B13–B14) | — |
 | G-3 | **Narrative framework.** Partly closed: a spine question, a through-line, an emotional arc and named rhetorical beats exist — but no general framework (pyramid, SCR, assertion-evidence) is stated | Partial | T-010 |
 | G-1 | **No accessibility floor.** ARIA in 8/12 and "keyboard-reachable" is stated, but no contrast ratio, focus-visible rule, tab order or screen-reader position appears anywhere | Open | T-010 |

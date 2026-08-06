@@ -2,8 +2,8 @@
 id: T-012
 title: Research existing HTML-deck skills, plugins and libraries to build on
 type: research
-status: specified
-phase: specify
+status: in_progress
+phase: implement
 parent: null
 blocked_by: []
 related: [T-009, T-014, T-015]
@@ -75,30 +75,55 @@ are part of the design, and every enhancement path needs a stated fallback.
 
 ## 2. Plan
 
+Ordered so the gating deliverable lands first: T-014 is blocked on rule provenance, not on the
+library survey. Steps 1–2 answer it; a session that runs out of room after step 2 has still
+unblocked the project.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Inventory installed overlapping skills and read what each owns | overlap table |
-| 2 | Survey published HTML-deck skills and plugins | candidate list |
-| 3 | Survey deck frameworks against self-containment | framework verdicts |
-| 4 | Survey plugin packaging conventions | packaging notes |
-| 5 | Write up with verdicts and the build-ourselves list | `docs/research/R4-prior-art.md` |
+| 1 | Read the source skills the corpus was built with, **from the skills themselves** — `visual-explainer` first, then `humanize-writing` / `humanize-prose` and the `bpmn` skill. Their files are on disk but outside every documented skill location, and the sandboxed shell cannot see them (R4 §1); invoking the skill reveals its base directory, then read `references/` and `templates/` — that is where the substance is | what each skill owns, in its own words |
+| 2 | **Provenance pass over every R1 rule** — owner-authored · inherited · departure, judged against step 1's text; each departure's argument recorded | verdict column filled in `R1-rules-candidate.md` |
+| 3 | Assess the remaining overlapping skills (`artifact-design`, `artifact-diagramming`, `dataviz`, `marp-slides`, `pptx-design`, `pptx-build`, `document-figures`) | depend / borrow / avoid, each with vendor-vs-defer split |
+| 4 | Survey published HTML-deck skills and plugins in the wider ecosystem | candidate list |
+| 5 | Survey deck frameworks and the motion/3D libraries on licence, inlined size and `file://` behaviour | framework and library verdicts |
+| 6 | Survey plugin packaging conventions from the locally installed `plugin-dev` plugin (a real, readable example) | packaging notes for T-015 and T-008 |
+| 7 | Answer the detection question — how a skill establishes another is present without failing noisily | detection contract with fallbacks |
+| 8 | Write up | `docs/research/R4-prior-art.md` |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- Provenance verdicts live in `R4-prior-art.md` §9, **not** in `R1-rules-candidate.md` — 2026-08-06.
+  R1's Verdict column belongs to T-014 (keep/drop/amend); mixing a second verdict axis into the
+  same tables would put two owners in one column. R1's warning box now points at R4 instead.
+- A fourth verdict, `O/S`, was added to the three the specify section named — 2026-08-06.
+  B7/B19/B22/B23 are owner-authored but already ship in the owner's *own* `humanize-writing`
+  skill. They are neither "inherited from a third party" nor "build it ourselves": the correct
+  action is to defer, which is a different instruction to T-014 than either original category
+  gives.
+- Steps 4–6 deferred rather than rushed — 2026-08-06. Provenance was sequenced first because it
+  gates T-014; the framework and library survey gates only T-001/T-006/T-016/T-015/T-008.
 
 **Outputs produced**
-- <path>
+- `docs/research/R4-prior-art.md` — §§1–4, 7, 9 complete; §§5–6 explicitly marked not done
+- `docs/research/R1-rules-candidate.md` — warning box replaced with the resolved result; gaps
+  register rows G-2, G-4, G-8, G-10 corrected to record that they were closed by inherited
+  material
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Each candidate assessed on what it owns, licence, self-containment, verdict | **Not met** | Only the two skills the corpus names were assessed. Frameworks and libraries not surveyed |
+| Explicit depend / borrow-ideas / avoid for every installed skill listed | **Partial** | Decided for the deck skill (borrow ideas, vendor nothing) and `humanize-writing` (defer, per R4 §7). The other eight not assessed |
+| Publishing-format survey feeding T-015 and T-008 | **Not met** | Local first-party source located (`plugin-dev`) but not read — R4 §8 |
+| A stated list of what htmldeck must build itself | **Partial** | R4 §2 identifies the four owner-authored clusters, and §4 what the skill knows that the corpus does not. Not yet a build list |
+| **Every R1 rule carries a provenance verdict** | **Met** | All 154, R4 §9 |
+| The owner's departures listed, each argument recorded | **Met, and it corrected R1** | 22 found against R1's 5. G11 reclassified as owner-authored; F11 downgraded to half a departure; 17 previously unflagged — R4 §3 |
 
 **Child fix tasks raised**
-- none
+- none yet — the unmet criteria stay in this task rather than becoming a new one, since they are
+  the same survey, not a follow-on.
 
 ## Log
 
@@ -107,3 +132,6 @@ are part of the design, and every enhancement path needs a stated fallback.
 | 2026-08-06 | → proposed | Created from the owner's direction not to reinvent existing work. |
 | 2026-08-06 | (no change) | Scope widened to rule provenance after R1 showed an unknown share of its rules are quoted from the visual-explainer skill rather than authored by the owner. This now gates T-014. |
 | 2026-08-06 | -> specified | Specify section complete; next step is planning. Selected as the next task ahead of T-010 because the provenance verdict gates T-014. |
+| 2026-08-06 | -> planned | Plan reordered to put rule provenance first, since that is what gates T-014. |
+| 2026-08-06 | -> in-progress | Steps 1–3 and 7 done; `R4-prior-art.md` written. All 154 R1 rules carry a provenance verdict, so **T-014 is unblocked**. Steps 4–6 (ecosystem, frameworks, motion/3D libraries, packaging) remain — the task is not done. |
+| 2026-08-06 | (no change) | Correction to the previous entry's premise: the overlapping skills **do** have files on disk, in the desktop app's data tree. The sandboxed PowerShell tool reports that path as non-existent and returns nothing from a recursive search; Bash and the file tools read it fine. Recorded in R4 §1 — it is rule M11 again, and it cost two wrong conclusions in one session. |

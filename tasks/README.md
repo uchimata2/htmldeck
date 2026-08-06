@@ -26,7 +26,7 @@ Working method: [`../CLAUDE.md`](../CLAUDE.md). Specification: [`../docs/BRIEF.m
 | [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004 | - |
 | [T-010](T-010-research-external-deck-design-and-ux-principles.md) | Research external deck-design and presentation UX principles | WP1 | `proposed` | specify | - | T-014 |
 | [T-011](T-011-research-exemplary-decks-and-why-they-work.md) | Research exemplary decks and what makes them work | WP1 | `proposed` | specify | - | T-014 |
-| [T-012](T-012-research-existing-html-deck-skills-and-libraries.md) | Research existing HTML-deck skills, plugins and libraries to build on | WP1 | `specified` | specify | - | T-014 |
+| [T-012](T-012-research-existing-html-deck-skills-and-libraries.md) | Research existing HTML-deck skills, plugins and libraries to build on | WP1 | `in_progress` | implement | - | T-014 |
 | [T-013](T-013-research-offline-safe-assets-and-licences.md) | Research offline-safe assets — icons, illustration, fonts, diagram tooling | WP1 | `proposed` | specify | - | T-001, T-006, T-014 |
 | [T-014](T-014-synthesise-research-into-the-design-system-reference.md) | Synthesise the research into the htmldeck design-system reference | WP1 | `proposed` | specify | T-010, T-011, T-012, T-013, T-017 | T-002, T-004, T-007, T-015, T-016 |
 | [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | WP2 | `proposed` | specify | T-014 | T-002, T-003 |
