@@ -181,7 +181,7 @@ below, and generalised as **L-17** and **L-18**.
 - `tools/portability/build_probes.py` — builds the probes; self-tests the chunker and the PNG
   generator before it will build anything (L-04).
 - `tools/portability/run_probes.py` — clean-profile and literal-double-click runners.
-- `.assets-cache/portability/results/chrome-offline/probe-results.json` — 90 rows, Chrome
+- `.assets-cache/portability/results/chrome-offline/probe-results.json` — 91 rows, Chrome
   151.0.7922.71, clean profile, no extensions, DNS black-holed. Gitignored by design; the
   repository keeps the script and the numbers, never the artefacts.
 

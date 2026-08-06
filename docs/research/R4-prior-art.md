@@ -229,6 +229,14 @@ prohibited use — so htmldeck may generate GSAP code. It should not ship GSAP's
 three.js is MIT and initialises from `file://`, but at 331.0 KB it is 1.7× a whole deck: opt-in
 only.
 
+> **Both figures in that sentence were wrong, and one of them was never tested — corrected
+> 2026-08-06 by [R6](R6-portability-contract.md).** The 331.0 KB was `three.module.min.js` alone,
+> a re-export shim; with `three.core.min.js` the real inlined cost is **703.2 KB**, which is
+> **3.7×** a whole deck. The `file://` claim happened to be true but was written without testing,
+> and it is true only conditionally: the entry module's relative import cannot be resolved from a
+> `blob:` URL, so the specifier must be rewritten at build time. Verdict unchanged — opt-in only,
+> and now for a stronger reason.
+
 ## 7. Detecting another skill — answered
 
 T-012's open question was how a skill establishes that another is installed without failing
