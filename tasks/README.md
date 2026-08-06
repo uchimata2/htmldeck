@@ -31,7 +31,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | WP1 | `proposed` | specify | - | - |
 | [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) | Build the reflow view and enforce the resolution contract | WP2 | `proposed` | specify | - | - |
 | [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | WP2 | `proposed` | specify | - | - |
-| [T-029](T-029-stop-the-deliverable-exemption-silently-dropping-pointers.md) | Stop the deliverable exemption silently dropping pointers from the check | none | `proposed` | specify | - | - |
 
 ## Closed
 
@@ -52,6 +51,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md) | Reconcile the thirteen ruleset findings the reference deck produced | `done` | 2026-08-06 |
 | [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md) | Settle who scores a deck, and whether the score reaches the user | `done` | 2026-08-06 |
 | [T-027](T-027-specify-the-slide-deliverable-and-the-outline-contract.md) | Specify the slide deliverable and the outline contract, and the rules the owner's deck review implies | `done` | 2026-08-06 |
+| [T-029](T-029-stop-the-deliverable-exemption-silently-dropping-pointers.md) | Stop the deliverable exemption silently dropping pointers from the check | `done` | 2026-08-07 |
 
 ## Next ID
 

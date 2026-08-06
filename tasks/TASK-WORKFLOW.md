@@ -74,7 +74,7 @@ Every field below appears in every task file. Order is conventional, not enforce
 | `work_package` | `WP1` … `WPn` · `final` · `none` | Groups the index. |
 | `owner` | A role, e.g. `maintainer` | Who decides, not who types. |
 | `created`, `updated` | `YYYY-MM-DD` | `updated` is the date shown in the closed table. |
-| `deliverables` | `[path, path]`, a block list, or `[]` | Repo-relative paths. `task.py deliverables` reports which of them exist yet. |
+| `deliverables` | `[path, path]`, a block list, or `[]` | Repo-relative paths. `task.py deliverables` reports which of them exist yet. **This field is the only place an unproduced output is written as a path** — front-matter is not pointer-scanned, prose is. In §2 and §3, name a not-yet-existing output rather than pointing at it (`` `R7-printable-mode.md`, under `docs/research/` ``), or `check` reports it as a dead pointer, correctly. |
 
 **Never write `children:` or `blocks:`.** Both are derived from the edges below, and `check`
 rejects a task file that still carries `children:`.
@@ -152,8 +152,15 @@ python tools/tasks/task.py deliverables     # every declared output, and whether
 - `blocked` implies a non-empty `blocked_by`.
 - No dependency cycles.
 - Every markdown link, and every repo-relative `.md` path written in prose or printed by a tool,
-  resolves in a fresh clone. Paths `.gitignore` excludes are skipped — they are machine-local by
-  design — as are paths some task has declared as a deliverable but not produced yet.
+  resolves in a fresh clone. **Two things are skipped, and `check` prints how many:** documents
+  `.gitignore` excludes, which are machine-local by design and absent from the clone; and
+  **front-matter, which is a structured record rather than prose** — so `deliverables:` can name
+  an output that does not exist yet without that counting as a broken pointer.
+- **There is no exemption for declared deliverables.** Until T-029 there was: any path a task
+  named in `deliverables:` was skipped *everywhere in the repository*, on the reasoning that a
+  deliverable is a promise about the future. It was hiding **110 of 357 pointers**, because most
+  declared outputs are long-existing documents that everything else cites. Declaring one existing
+  file added six more to that total and `check` still reported `0 broken` (**L-05**).
 - With `--closing`, `deliverables/_working/` is empty.
 
 **What it does not.** `check` validates structure and references. It cannot tell you a

@@ -203,6 +203,16 @@ def is_ignored(rel, patterns):
     return False
 
 
+def strip_front_matter(text):
+    """The pointer scan reads prose, and front-matter is not prose - it is the structured
+    record the loader parses and `check` validates by other means. `deliverables:` is the case
+    that forces the distinction: it names outputs a task has not produced yet, so scanning it
+    would make declaring one impossible, and `task.py deliverables` exists to report on exactly
+    those. Replaced with blank lines rather than removed, so nothing downstream shifts."""
+    m = re.match(r"---\r?\n.*?\r?\n---\r?\n", text, re.S)
+    return "\n" * text[:m.end()].count("\n") + text[m.end():] if m else text
+
+
 def resolves(target, base):
     """A pointer may be written from the repository root - the form a tool prints - or
     relative to the file it appears in. Either is fine; neither existing is not."""
@@ -473,22 +483,27 @@ def cmd_check(args):
     # Prose and printed pointers. The question this answers is narrow - would a reader who just
     # cloned this repository find the file? So .gitignore decides on both sides: an excluded
     # path is not a broken pointer, and an excluded *document* is not scanned at all, because it
-    # is not in the clone either. A path some task declares as a deliverable is exempt too; that
-    # is a promise about the future, and `task.py deliverables` is what reports on it.
+    # is not in the clone either.
+    #
+    # There used to be a third exemption: any path some task declared as a deliverable was
+    # skipped, on the grounds that it was a promise about the future. It was deleted (T-029),
+    # because it exempted the path *everywhere in the repository, forever*, including files that
+    # already existed - declaring `docs/LESSONS.md` silently dropped six live pointers out of
+    # validation and `check` still printed "0 broken" (L-05). What replaces it is narrower by
+    # construction: front-matter is not prose, so it is not scanned. `deliverables:` is a
+    # declaration that `task.py deliverables` reports on, not a pointer sending a reader
+    # anywhere, and skipping the field cannot widen to cover a mention somewhere else.
     ignore = gitignore_patterns()
-    declared = set()
-    for t in tasks.values():
-        for path in t.outputs:
-            declared.add(os.path.normpath(path).replace("\\", "/"))
 
-    pointers, seen_pointers = 0, set()
+    pointers, seen_pointers, skipped = 0, set(), 0
     for src in sorted(project_files((".md", ".py"))):
         if is_ignored(os.path.relpath(src, "."), ignore):
+            skipped += 1
             continue
         base = os.path.dirname(src)
-        for m in POINTER.finditer(read(src)):
+        for m in POINTER.finditer(strip_front_matter(read(src))):
             target = m.group(1)
-            if target in OPTIONAL_DOCS or target in declared or is_ignored(target, ignore):
+            if target in OPTIONAL_DOCS or is_ignored(target, ignore):
                 continue
             if not points_into_repo(target, base):
                 continue
@@ -516,6 +531,11 @@ def cmd_check(args):
     # while two documents the tool itself points at were missing (L-05).
     print("OK - %d tasks, vocabulary valid, task references resolve, "
           "%d document pointer(s) checked, 0 broken" % (len(tasks), pointers))
+    # And say what was *not* checked. A count that silently shrinks is the failure T-029 was
+    # raised for: declaring one existing file as a deliverable dropped six pointers out of this
+    # number, and the line above still read "0 broken".
+    print("     %d document(s) not scanned (.gitignore); front-matter is not scanned."
+          % skipped)
     print("     structure and references only - it cannot tell you a spec or a "
           "deliverable is any good.")
     return 0

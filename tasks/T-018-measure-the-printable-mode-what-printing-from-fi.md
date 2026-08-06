@@ -92,7 +92,7 @@ send anything to a physical printer.
 | 3 | Build a 12-slide deck with a print stylesheet and print it to a file | printed artefact |
 | 4 | Look at the printed output and record what survived and what did not | findings |
 | 5 | Measure the stylesheet's size cost | figure |
-| 6 | Write the note and rule on rule 5 | `docs/research/R7-printable-mode.md` |
+| 6 | Write the note and rule on rule 5 | `R7-printable-mode.md`, under `docs/research/` |
 
 ## 3. Implement
 
@@ -100,7 +100,10 @@ send anything to a physical printer.
 - <decision — rationale — date>
 
 **Outputs produced**
-- `docs/research/R7-printable-mode.md`
+- `R7-printable-mode.md`, under `docs/research/` — **written as a name, not a path, because it
+  does not exist yet.** `check` reports a pointer-shaped string to a missing file as a dead
+  pointer, and since T-029 there is no exemption for declared deliverables. The front-matter
+  `deliverables:` field carries the real path, and `task.py deliverables` is what reports on it.
 
 ## 4. Review
 

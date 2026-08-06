@@ -418,6 +418,33 @@ alternatives stay comparable rather than rhetorical, and **put the options to th
 coverage stated, not the recommendation with its support attached.** A recommendation is a hypothesis
 recorded at a time of lower information; treat it as an input to the decision, never as its default.
 
+### L-30 — An exemption keyed on a value silently exempts everything that value matches
+
+**L-05** says a check must state what it did not examine. This is the mechanism that makes that
+hard to obey: an exemption written as *"skip anything matching X"* has no fixed size. It looks like
+a small carve-out at the point it is written, and its real cost is however much of the corpus
+happens to match X — a quantity nobody measures, because the check's output reports what it looked
+at, not what it declined to.
+
+The case: `task.py check` skipped any path a task had declared as a deliverable, on the reasoning
+that an unproduced output is a promise about the future rather than a broken pointer. Sound as far
+as it goes. But it keyed on the **path**, so one declaration exempted that path *in every document
+in the repository, permanently* — and most declared outputs are the long-lived documents everything
+else cites. **It was hiding 110 of 357 pointers, roughly a third, while printing `0 broken`.**
+
+**The measurement trap is the second half, and it is the part that generalises.** The defect was
+found by declaring one existing file and watching the count fall by **six** — so it was reported,
+and initially scoped, as a six-pointer problem. Six was the *marginal* cost of one new declaration.
+The *standing* cost was 110, and nothing in the discovery hinted at the difference. **What you
+measure when you trip a rule is what tripping it cost, not what the rule costs.**
+
+**How to apply.** Prefer an exemption keyed on the **site** — this field, this file, this call —
+over one keyed on a **value**, because a site-keyed rule has a size you can see and cannot widen
+when unrelated content starts matching. Where a value-keyed exemption is genuinely needed, **count
+what it currently excludes and print that count**, so the number is visible when it grows. And when
+a coverage defect surfaces, measure the rule with the exemption removed entirely before scoping the
+fix — the discovery gives you a delta, and the delta is not the total.
+
 ---
 
 ## Tooling
