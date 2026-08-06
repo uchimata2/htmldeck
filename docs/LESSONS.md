@@ -240,6 +240,82 @@ time — a later session cannot recover it, because by then the plan reads as se
 research note whose only citations are other research notes as unchecked: it has not yet been held
 against anything with the standing to contradict it.
 
+### L-21 — A tie-break between two sources cannot resolve a conflict with a third
+
+A rule for choosing between evidence and habit is a rule about *two* inputs. Standing decisions are
+a third, they outrank both, and a tie-break written without them silently has no verdict for the
+cases they govern — which are usually the ones that matter, because a decision gets made precisely
+where something was contested.
+
+The case: T-014's tie-break was set carefully — principle wins on anything measurable, habit wins
+where evidence is weak. Applied to 154 rules it fired **once**. Four other rules changed, and every
+one of them changed because a standing owner decision overrode an observed habit with no external
+principle involved at all: the per-deck palette and the per-deck font rotation both lost to *one
+theme*, and two portability rules lost to a measurement that had retired their premise. Had the
+lookup only known its two named classes, all four would have been resolved on the merits, one at a
+time — the exact failure the tie-break was written to prevent.
+
+**How to apply.** When a conflict rule is written, enumerate every class of input that can win, not
+only the two in tension. State their precedence explicitly and resolve in that order — standing
+decisions first, then the graded evidence, then the named contradictions, then the default. Then
+**count how often each class fires**: a class that never fires is either wrong or unnecessary, and a
+class that fires four times while the headline rule fires once was the real rule all along.
+
+### L-22 — Ask what a constraint is for; the mechanism is not the requirement
+
+A constraint arrives stated as a mechanism — *a fixed scaled stage*, *no external references*, *one
+accent*. The mechanism is one solution to a requirement nobody wrote down. Implement the mechanism
+and you satisfy the letter; ask for the requirement and you usually get a **number**, because
+requirements come from things that went wrong and things that went wrong were observed.
+
+The case: the fixed 1600×900 stage sat in the corpus with the rationale *"what was rehearsed is what
+appears"* — which reads as presenter convenience, and is weak enough that T-014 escalated it as
+losing to two WCAG criteria. The owner's actual reason was two observed failures: decks built for
+small screens **break on a 4K display**, and decks presented from a high-resolution monitor **arrive
+illegible** because a video call re-encodes the shared screen at 1080p or 720p. The second has an
+arithmetic answer — under a uniform scale the presenter's viewport cancels out, so stream legibility
+depends only on the design size and the call's resolution. **That turned a contested preference into
+a hard rule with a computed floor** (body ≥ 24 design units, nothing under 18), tightened a corpus
+range that had been carried unexamined, and demoted a corpus element — mono labels — that the
+arithmetic showed had never been legible to a remote audience. **It also flipped an option from
+"cheaper but worse" to "ruled out", because it re-introduces the defect.**
+
+None of that was derivable from the mechanism. It was one question away the whole time.
+
+**How to apply.** When a rule is inherited as a mechanism and the rationale is thin, do not weigh it
+as taste — **ask what it prevents, and ask for the incident.** Then check whether the mechanism is
+the only thing that prevents it: if it is, the rule is hard and the alternatives are ruled out, not
+merely dispreferred. Watch especially for constraints whose stated reason is a *convenience* — a
+convenience rationale on a rule someone insists on is usually a symptom of the real reason not
+having been written down.
+
+### L-23 — A standard needs IDs and a score, or it cannot drive anything
+
+A ruleset written as prose is readable and inert. To *operate* — to be checked, reported on, fixed
+against, and converged toward — it needs two things that feel like bureaucracy while you are writing
+it and turn out to be the whole mechanism:
+
+- **A stable ID per rule.** Without one, a finding cannot cite what it violates, a fix cannot be
+  verified as landing, and two reviews of the same deck cannot be compared. Prose rules produce prose
+  findings, and prose findings cannot be counted.
+- **A score, distinct from a gate.** Pass/fail cannot show progress, so it cannot terminate a loop
+  except at "no failures left". Prose cannot show convergence at all. **Something has to answer *is
+  this better than the last iteration?* numerically, or the loop stops when the agent feels
+  finished.**
+
+The case: this project produced 131 carefully-reasoned design rules with sources, evidence grades
+and resolved conflicts — and no way to answer *"is this deck good enough yet?"* The rules had no IDs,
+so nothing could point at one. There was a pass/fail check and a prose critique, and neither could
+drive an iteration. **The owner's phrase for it was exact: a design system without an effective
+pipeline is decoration.**
+
+**How to apply.** When writing any standard meant to be applied repeatedly, add three columns before
+the prose: **ID** (permanent, never reused), **severity class** (gate versus scored — a gate failure
+must never be averaged away), and **how it is checked** (automatic · needs rendering · judgement).
+That last column is the routing table for the whole pipeline and it costs nothing to write while the
+rule is fresh. Then ask the question that exposes whether the standard is operable at all: **what
+number goes up when this gets better?** If there is no answer, nothing built on it can converge.
+
 ---
 
 ## Tooling

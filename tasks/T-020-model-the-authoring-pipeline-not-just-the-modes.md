@@ -6,7 +6,7 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: []
-related: [T-002, T-003, T-004, T-014, T-015]
+related: [T-002, T-003, T-004, T-014, T-015, T-023]
 work_package: WP1
 owner: maintainer
 created: 2026-08-06
@@ -58,6 +58,24 @@ That section predates the corpus research and was never reconciled with it. The 
   any HTML exists — becomes part of critique mode or a mode of its own. T-004 currently reviews a
   built deck only.
 - In: whether **batched build** (a few slides, then feedback) is the default rather than one pass.
+- In: **where the convergence loop sits, and it is now the centre of this task.** Added by the owner
+  2026-08-06: *a design system without an effective and efficient pipeline is just decoration.*
+  [`docs/EVALUATION.md`](../docs/EVALUATION.md) defines the loop — evaluate → report → fix →
+  re-evaluate, with four distinct stop conditions. **This task decides where it runs**, and the
+  placement questions are real:
+  - Does the loop run **per batch** (converge 3 slides, then build the next 3) or **once at the end**
+    over the whole deck? Per batch converges cheaply on craft but cannot see D1 Spine or D4
+    Consistency, which are whole-deck dimensions by construction. **The likely answer is both, at
+    different depths** — per-slide dimensions per batch, whole-deck dimensions once — but that is a
+    hypothesis and it changes the cost profile substantially.
+  - Does the loop run **before or after** the owner's approval gate? Running it first means the owner
+    reviews converged work; running it after means the loop does not burn iterations on slides the
+    owner was going to cut. **These are opposite optimisations and the corpus does not settle it.**
+  - Does the **specification review** (the second critique format, run before any HTML exists) get
+    its own rubric, or is it out of the loop's scope? The rubric's dimensions are mostly about
+    rendered artifacts; S1 Claim, S2 Evidence, D1 Spine and D3 Close would all work against a
+    slide-by-slide spec. **If they do, defects get caught before any HTML is written**, which is the
+    cheapest place to catch them and is exactly what the owner's pipeline was already doing.
 - In: the **approval gates** — outline sign-off, preview sign-off, and the review→fix loop — and how
   many iterations are assumed.
 - In: the **governing idea in one line**, and which artifact carries it.
@@ -103,12 +121,22 @@ an implementation one.**
 - Should this be a hard `blocked_by` on T-002 and T-015 rather than `related`? It is left as
   `related` so it does not silently deadlock the backlog, but building build mode before this is
   settled risks building it against the wrong input contract. — owner
-- **This task and [T-014](T-014-synthesise-research-into-the-design-system-reference.md) overlap,
-  and doing them independently will produce two documents that disagree.** R1 §10's Foundation Spec
-  has nine sections; T-014's design-system reference has thirteen coverage areas; they describe much
-  the same territory. The distinction that probably resolves it — **the design system is standing
-  and shared, the foundation spec is per-deck and generated from it** — is a hypothesis, not a
-  decision. Settle it before either document is written, not after. — owner / whoever takes both
+- ~~**This task and [T-014](T-014-synthesise-research-into-the-design-system-reference.md)
+  overlap.**~~ **Settled by the owner 2026-08-06, before either document was written — the design
+  system is standing and shared; the foundation spec is per-deck and references it.** T-014 goes
+  first; this task consumes its output.
+
+  Tested against the material, the split is sharper than the hypothesis stated. Under CLAUDE.md
+  rule 4 (**one** theme), four of the nine sections — visual system · motion · interaction model ·
+  technical stack — have no per-deck variable left; three more — linguistic style · recurring
+  elements · layout structures — are standing catalogues a deck **selects from**; the quality bar is
+  the standing check plus per-deck additions. Only the **narrative spine** and the governing idea
+  are genuinely per-deck.
+
+  **Consequence for this task's scope:** the first in-scope question below is no longer "is the
+  foundation spec an artifact with nine authored sections" but "**is the per-deck selection sheet
+  surfaced, and what does it carry beyond the narrative spine and the governing idea**". The
+  anti-drift rule is fixed either way: **it cites `docs/DESIGN-SYSTEM.md`, it never restates it.**
 
 ## 2. Plan
 
@@ -141,3 +169,5 @@ an implementation one.**
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-06 | → proposed | Raised when the owner described their authoring process and it matched nothing in the repository — despite R1 having captured it and R4 having graded it owner-authored with zero prior art. The gap is between research and the build plan, not in the research. |
+| 2026-08-06 | (no change) | **Sequencing settled by the owner: T-014 first, this task consumes it.** The design system is standing and shared; the foundation spec is per-deck and references it. Testing the hypothesis against R1 §10 sharpened it — under one theme, only the narrative spine and the governing idea are genuinely per-deck, so the foundation spec is a **selection sheet**, not a parallel nine-section document. Scope question 1 re-framed accordingly. Still `proposed`; nothing else in the spec was worked. |
+| 2026-08-06 | (no change) | **The owner made the convergence loop this task's centre**, on the grounds that a design system without an effective and efficient pipeline is decoration. [`docs/EVALUATION.md`](../docs/EVALUATION.md) ([T-023](T-023-the-deck-evaluation-rubric-and-convergence-loop.md)) now defines the loop; **this task places it**, and three placement questions were added to scope — per-batch versus end-of-deck, before or after the approval gate, and whether the spec review gets the rubric before any HTML exists. That last one matters most: S1, S2, D1 and D3 all work against a slide-by-slide spec, which would catch those defects at the cheapest possible point — which is what the owner's own pipeline was already doing. |

@@ -176,8 +176,23 @@ Three modes, in build order:
    keyboard navigation, print/PDF stylesheet.
 3. **Critique** — section-by-section review against the standard, blunt, with a BLUF verdict.
 
+> **Three documents now carry what the modes build against**, written 2026-08-06:
+>
+> | | |
+> | :--- | :--- |
+> | [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) | **The operative ruleset.** 131 rules, each with a stable `DS-nnn` ID, a **hard/default/guidance** label, and a **Check** value — `auto` (59) · `render` (32) · `judge` (36). The `Check` column is what routes a rule to the build check, the render pass, or the evaluator. Loaded on demand; the skill body must not paraphrase it. |
+> | [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) | **Why each rule is what it is** — drops, the sixteen conflicts, provenance, derivations. **No runtime loads it.** |
+> | [`EVALUATION.md`](EVALUATION.md) | **How a deck is scored and when it is good enough.** Ten dimensions with anchors, a threshold, and a convergence loop with four distinct stop conditions. |
+>
+> **The evaluator is what makes the ruleset operate rather than decorate.** Before it, nothing in
+> this repository stated what *good enough* meant, so the loop terminated when the agent felt
+> finished. **`hard` rules are gates and are never scored** — averaging a hard failure into a total
+> is how a deck ships with a wrong number on the title slide and a respectable percentage.
+
 Plus a **check** the build must pass: no external references, no banned terminology, every
-`<section>` has a heading, contrast meets WCAG AA, and it renders glitch-free from `file://` in
+`<section>` has a heading — **now semantic: the heading must be a *claim*, not a topic label
+([`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) §9.4), which grows build mode as well as the check** —
+contrast meets WCAG AA, and it renders glitch-free from `file://` in
 the target browser. *(Printing was on this list; it is now an opt-in mode, not a gate — see
 "Decisions taken".)* **"Glitch-free" is now defined as nine testable conditions** in
 [R6 §8](research/R6-portability-contract.md) — T-005 implements them; two of the nine exist
@@ -247,6 +262,15 @@ Set by the owner when the project was re-scoped around researching their existin
 > check can ask: *what does this animation encode?* If the answer is "it looks good", it is the
 > case the evidence is about. The Richness decision stands until T-014 rules; it no longer stands
 > unexamined.
+>
+> **T-014 ruled, 2026-08-06: adopted.** *Motion must encode something* is now
+> [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) §5.2's governing rule, and §9.2 records the reasoning.
+> **No re-scope is requested** — R2's reading was right that the conflict is between this row's
+> *wording* and a practice that never took the permission. The corpus's four-motion vocabulary is
+> kept as the mechanism, and it is what makes the rule hold rather than merely be stated.
+>
+> **One wording change is proposed, and it is the owner's to accept:** the Richness row's *"There is
+> no JavaScript budget"* → *"There is no JavaScript budget, and every animation encodes something."*
 >
 > **And the owner already holds this position.** [R1 §11](research/R1-corpus-conventions.md) records
 > that the corpus's most developed spec defines exactly four motions and nothing else — because *a
@@ -326,6 +350,31 @@ replaces enforced variety, with the template generator satisfying it later.
 3. ~~**One template or many?**~~ **Answered above:** one theme, parametric, generator later.
 4. **Speaker notes and PDF export.** Both wanted eventually; neither in the corpus. Scope now,
    build later.
+7. ~~**The fixed stage versus the accessibility floor.**~~ **Answered 2026-08-06 by the owner: keep
+   the stage, add a reflow view.** Built as
+   [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md); the rules are
+   [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) §2.4 and §2.5.
+
+   **The owner's reason for the stage is the part worth recording, because it changed the design
+   system rather than only closing the question.** The stage was on the record as a rehearsal
+   guarantee — *what was rehearsed is what appears* — which reads as presenter convenience. It is
+   not. It answers two observed failures: **a deck built for small screens breaks when opened on a
+   4K display**, and **a deck presented from a high-resolution monitor arrives illegible** after
+   Zoom, Meet or Discord re-encode the shared screen at 1080p or 720p.
+
+   The second has an arithmetic answer. Under a uniformly scaled stage, **the presenter's viewport
+   cancels out of the legibility equation** — what the audience receives depends only on the design
+   size and the call's resolution, never on the machine it is presented from. **No responsive layout
+   has that property**, which is why "drop the stage for flex slides" moved from *cheaper but worse*
+   to *ruled out*: it re-introduces the defect.
+
+   **It also produced a type floor the research could not have derived.** 720p is the binding case,
+   body text lands at **24 design units**, the corpus's 18–24 range loses its lower half, and the
+   corpus's 11–13 unit mono labels are demoted to decoration because they are illegible in a
+   downscaled stream.
+
+   **The conformance claim is now stated precisely** — AA *via a conforming alternate version
+   reachable by a persistent control*, never a bare "this deck is AA".
 5. ~~**Content vs. design split.**~~ **Answered above:** the plugin writes the words. It is the
    harder path and the acceptance criteria for build mode must reflect that.
 6. ~~**Do brief, build and critique get the source documents?**~~ **Answered 2026-08-06 by the
@@ -350,4 +399,9 @@ replaces enforced variety, with the template generator satisfying it later.
 - A deck renders correctly with the network disabled.
 - The build check demonstrated failing on each class of problem it claims to catch.
 - The critique mode run against a deck with known defects, and found them.
+- **The evaluation rubric run against a deck with one seeded defect per dimension, and scored each
+  0 or 1.** Added 2026-08-06 with [`EVALUATION.md`](EVALUATION.md) §7 — an unvalidated rubric passes
+  everything, and this project has already paid for that once. It is the criterion holding
+  [T-023](../tasks/T-023-the-deck-evaluation-rubric-and-convergence-loop.md) open.
+- **A real 12-slide deck taken through the convergence loop to a PASS**, and looked at offline.
 - No personal, client, or machine data anywhere in the repository.

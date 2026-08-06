@@ -2,8 +2,8 @@
 id: T-014
 title: Synthesise the research into the htmldeck design-system reference
 type: analysis
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: [T-009, T-010, T-011, T-012, T-013, T-017]
 related: []
@@ -59,10 +59,52 @@ necessary and not sufficient; R1 §14 has the critique format and severity schem
 has **zero prior art** — it is entirely the owner's; R2 §9 has the accessibility floor as numbers;
 R3 §3 and §6 have the 14 archetypes and 12 anti-patterns.
 
+**Structure — settled during specify, 2026-08-06**
+
+The thirteen coverage areas in *Scope* were listed before R2 and R3 existed. Checked against
+[`R1-rules-candidate.md`](../docs/research/R1-rules-candidate.md), whose 154 rules are **already
+grouped into fourteen letter groups**, the thirteen turn out to be a list of topics rather than a
+structure, and they have a hole: **motion (group F) has no coverage area at all** — which matters,
+because *"motion must encode something"* is one of the four candidate changes of direction this task
+must rule on. **Theming/tokens (I)** and **portability (J)** are likewise unhomed.
+
+**So the reference is structured on the letter groups, and the thirteen map onto them.** The rules
+live there already and the Verdict column this task owns is indexed by rule ID; structuring the
+document any other way would mean maintaining a second index of the same 154 rules.
+
+| Part | Sections | Rule groups | Which of the thirteen it absorbs |
+| :--- | :--- | :--- | :--- |
+| **Envelope** | Portability and the render envelope · Theming and tokens | J, I | — *(the two the thirteen missed, plus motion below)* |
+| **Look** | Colour · Typography · Layout and grid · Recurring elements | C, D, H | colour · layout and grid · design language |
+| **Argument** | Deck structure and pacing · The archetype library · Writing style and the banned list · Headings and subtitles | A, L, B | deck structure and pacing · content practice · writing style + banned terminology · headings and subtitles |
+| **Visuals** | Diagrams · Icons · Illustration | E | diagrams · icons · illustration |
+| **Behaviour** | Interaction and navigation · Motion · Progressive disclosure | F, G | UX and reading behaviour · UI controls and navigation |
+| **Floor** | The accessibility floor, as numbers | (R2 §9) | — *(cross-cutting; separate so a check can read it)* |
+| **Boundaries** | What this points at rather than owns | (R2 §3) | external tools and skills |
+
+**The boundary this reference does not cross.** It owns **what a good deck is**. It does not own
+**how the plugin works** — the authoring pipeline is T-020 (group A′), the check's mechanics are
+T-005 (group K), and critique's output format is T-004 (group M). Those three consume the standard
+stated here; they do not restate it. The one thing taken from group M is the **severity scheme**,
+because a shared vocabulary for "how bad is this" is part of the standard, not part of the report.
+
 **Acceptance criteria**
-- [ ] All thirteen coverage areas present, none left as a placeholder
+- [ ] ~~All thirteen coverage areas present~~ — **amended during specify, before the work, per
+      TASK-WORKFLOW §2.** Replaced by: every one of the thirteen has a home in the mapping table
+      above, **and** the three the thirteen missed (motion, theming, portability) are covered. The
+      original wording would have closed clean on a document with no motion rules in it.
+- [ ] No section left as a placeholder
 - [ ] Every rule carries a source reference and a hard/default/guidance label
-- [ ] Every conflict found in research is resolved explicitly, with the reason
+- [ ] **All sixteen named conflicts resolved, by ID, with the reason** — X-1…X-11 in
+      `R1-rules-candidate.md` § *Contradictions to resolve at T-014*, and R2 §12.1…§12.5. Made
+      countable during specify: "every conflict found in research" cannot be verified, and this
+      project's own *count, don't read* lesson says why that matters.
+- [ ] **The Verdict column in `R1-rules-candidate.md` filled for all 154 rules** — keep · drop ·
+      amend · defer. Recorded as a criterion because it is a deliverable of this task that the
+      front-matter's `deliverables:` list does not name.
+- [ ] **The four candidate changes of direction each adopted or overruled explicitly** — R2 §12.1
+      (motion must encode something), progressive disclosure as load-bearing, R3 §8's A-13-as-modifier,
+      and R2 P-01's semantic heading check
 - [ ] Ends with a **re-scoping proposal** for the owner where research contradicts `docs/BRIEF.md` —
       this is an expected outcome, not a planning failure
 - [ ] The hard rules are stated in a form a check can actually test
@@ -86,49 +128,123 @@ A conflict where the external side is E3 or E4 is not a conflict — habit stand
 - The two that would have blocked this task were settled by the owner on 2026-08-06: the tie-break
   above, and BRIEF open question 6 (the plugin **does** receive source documents and reconciles
   against them — see `docs/BRIEF.md`).
-- **This task overlaps [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) more than
-  the board shows, and doing the two independently will produce two documents that disagree.** If
-  T-020 adopts the pipeline, the **nine sections** of R1 §10's Foundation Spec (narrative spine ·
-  linguistic style · visual system · recurring elements · motion · interaction model · layout
-  structures · technical stack · quality-bar checklist) and the **thirteen coverage areas** in the
-  scope above are describing much the same territory from two directions — one as a per-deck
-  artifact the plugin generates, one as a standing reference the skill points at. Settle which is
-  which *before* writing either. — owner / whoever takes both
-- **Do the thirteen coverage areas still have a home for what R3 produced?** They were defined
-  before R2 and R3 existed. The **14 archetypes** fit awkwardly — "deck structure and pacing" and
-  "layout and grid" both half-cover them, and R3 §8 argues the catalogue is structural more than
-  visual, so it may belong nearer briefing than layout. The **12 anti-patterns** may belong to
-  T-004 rather than here. Decide deliberately rather than filing them wherever they fit. — this task
+- ~~**This task overlaps [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) more than
+  the board shows.**~~ **Settled by the owner 2026-08-06, before either document was written — the
+  design system is standing and shared; the foundation spec is per-deck and references it.**
+
+  The hypothesis held, and testing it against the material made it stronger than "two altitudes".
+  Because the project ships **one** theme (CLAUDE.md rule 4), four of R1 §10's nine sections —
+  **visual system · motion · interaction model · technical stack** — have no per-deck variable left
+  at all. They *are* the design system, and a foundation spec that restates them has already forked
+  from it. Three more — **linguistic style · recurring elements · layout structures** — are standing
+  catalogues a deck **selects from**, not authors. The **quality-bar checklist** is the standing
+  check plus per-deck additions. Only the **narrative spine**, and the governing idea line above it,
+  is genuinely per-deck.
+
+  So the foundation spec is not a parallel document; it is a **per-deck selection sheet**. The
+  anti-drift rule, which is the brief's own *don't restate what another source owns* applied here:
+  **the foundation spec cites the design system, it never restates it.** This task writes the
+  standing rules; T-020 decides whether the selection sheet is a surfaced artifact and what it
+  carries. T-014 proceeds first and T-020 consumes it.
+- ~~**Do the thirteen coverage areas still have a home for what R3 produced?**~~ **Answered
+  2026-08-06 during specify — and the answer is that the thirteen are the wrong spine.** See
+  *Structure* below. In short: the archetypes go under **structure**, not layout (R3 §8 finding 3);
+  **A-13 becomes a modifier** applied across the catalogue rather than a fourteenth entry (R3 §8
+  finding 1, and R2 reached it independently); and the **12 anti-patterns stay here as rules** —
+  T-004 consumes them rather than owning them, because a check and the standard it tests must not
+  be two documents.
 
 ## 2. Plan
 
+The four-step table this replaced was written before R2, R3 and R6 existed and before the tie-break
+was settled; it said "surface and resolve conflicts" when the conflicts are now named and countable.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Merge R1–R5 into one rule set | draft rule list |
-| 2 | Surface and resolve conflicts | resolution table |
-| 3 | Label hard / default / guidance | labelled rules |
-| 4 | Restructure for on-demand loading | `docs/DESIGN-SYSTEM.md` |
+| 1 | Fill the Verdict column on all 154 rules — **by lookup**, not on the merits: R4 §9 gives provenance, R2 gives the evidence grade, and the tie-break turns the pair into a verdict | completed Verdict column in `R1-rules-candidate.md` |
+| 2 | Resolve the sixteen named conflicts by ID — X-1…X-11 and R2 §12.1…§12.5 | resolution table, keyed by ID |
+| 3 | Rule the four candidate changes of direction, each adopted or overruled with the reason | decisions, recorded in §3 below and in the reference |
+| 4 | Write the seven parts of the reference against the *Structure* mapping, every rule labelled **hard / default / guidance** with its source | `docs/DESIGN-SYSTEM.md` |
+| 5 | Pull the **hard** rules into one list stated as testable conditions, for T-005 to consume without re-reading the whole reference | the check-facing section of the reference |
+| 6 | Write the re-scoping proposal where research contradicts `docs/BRIEF.md` | closing section of the reference |
+| 7 | Verify by counting, not reading — coverage against the mapping table, 16 conflicts, 154 verdicts, 4 rulings | the §4 verdict table |
+
+**Approach decisions**
+
+- **Order matters: verdicts before prose.** Writing the reference first and back-filling verdicts
+  would let the document decide the rules, which is the inverse of this task. Step 1 is the
+  bottleneck and it is deliberately first.
+- **Step 1 is mechanical by design.** The owner's tie-break exists precisely so 154 rules do not
+  each become a judgement. Where lookup genuinely underdetermines a verdict, the rule gets `defer`
+  and a named owner — not an invented ruling.
+- **Step 7 counts.** This project's own *count, don't read* lesson, applied to its own output.
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+
+- **The lookup needed a fourth class the tie-break never named — 2026-08-06.** The owner's rule
+  covers principle-versus-habit. It has no verdict for *standing decision versus habit*, which is
+  what actually governed C7, D1, J1 and J2. Precedence used, and recorded in the reference: standing
+  decision → E1/E2 principle → named contradiction → keep. **The tie-break fired once (L1); the
+  unnamed class fired four times.** Generalised as **L-21**.
+- **Provenance was context, never a verdict — 2026-08-06.** No rule was dropped for being inherited.
+  All seven of G1–G7 are the source skill's slide engine and all seven are kept. R4's grading buys
+  the right to *cite* something as the owner's signature, not a reason to discard what is not.
+- **The boundary drawn at specify held, and it is what kept the deferrals honest — 2026-08-06.** All
+  26 defers are boundary (T-020 process, T-005 mechanics, T-004 report format), not indecision.
+  Two verification rules were kept **against** the boundary — K1 and K5 — because they are claims
+  about what a check may assert, not about how it runs.
+- **Deck length was demoted from a house rule to a per-deck decision — 2026-08-06.** X-5 is three
+  contradictory rulings on three decks, all the owner's. Averaging them would have invented a rule
+  no deck follows. Default 8–12, past 12 needs a recorded reason.
+- **L1 was escalated rather than ruled — 2026-08-06.** The tie-break's answer is clear (1.4.4 and
+  1.4.10 are AA and a scaled stage defeats both) but the remedy is a new mode, and adding one is not
+  this task's authority. Recorded as a re-scoping proposal with three options, one of them ruled out.
+- **Assumption, stated because it shapes §6:** the twelve anti-patterns are kept here rather than
+  moved to T-004, on the reasoning that a check and the standard it tests must not be two documents.
+  If T-004 disagrees when it is planned, this is the decision to revisit.
 
 **Outputs produced**
-- <path>
+- [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — 12 sections
+- [`docs/research/R1-rules-candidate.md`](../docs/research/R1-rules-candidate.md) — Verdict column
+  filled, 154 rules
+- [`docs/LESSONS.md`](../docs/LESSONS.md) — **L-21** added
 
 ## 4. Review
 
+Verified by counting, per step 7 of the plan and this project's own *count, don't read* lesson.
+
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Every one of the thirteen coverage areas has a home, **and** motion, theming and portability are covered | **met** | Mapping table in §1 above; motion §5.2, theming §1.2, portability §1.1 |
+| No section left as a placeholder | **met** | Zero `TODO`/`TBD`/placeholder matches across the file |
+| Every rule carries a source reference and a hard/default/guidance label | **met** | 140 labelled rule rows; every table row carries both columns |
+| All sixteen named conflicts resolved, by ID, with the reason | **met** | §10 — X-1…X-11 and R2 §12.1…§12.5, counted at exactly 16 rows |
+| The Verdict column filled for all 154 rules | **met** | 110 keep · 17 amend · 1 drop · 26 defer = 154; zero empty verdict cells |
+| The four candidate changes of direction each adopted or overruled explicitly | **met** | §9.2 motion-encodes · §9.3 disclosure load-bearing · §9.4 semantic heading · §9.5 A-13 as modifier. All four **adopted** |
+| Ends with a re-scoping proposal where research contradicts `docs/BRIEF.md` | **met** | §9, six entries. §9.1 needs an owner decision; §9.2 asks a wording change only |
+| The hard rules are stated in a form a check can actually test | **met, with a stated limit** | §11 — 26 numbered conditions. **Two (15 and 23) are not machine-checkable and say so**, rather than being dropped to make the list look clean |
+| Structured for on-demand loading — the skill body must not restate it | **met** | §0 is the one-screen summary; the twelve sections are addressable individually |
+| Free of personal, client and machine data | **met** | Sweep clean — the only two matches were the `Home`/`End` keyboard keys |
+
+**Not verified, and it is the important one.** Nothing here has been tested by building a deck. The
+reproducibility rulings are reasoned from R6's capability matrix, which answers *"is this
+available?"* and not *"does this read well at 12 slides?"* **CLAUDE.md rule 6 governs the second
+question**, and §12 of the reference says so in the document rather than only here. The handoff's
+standing recommendation is unchanged and now has a ruleset to test: **the next artifact is a real
+12-slide deck with diagrams, built from this reference and opened offline.**
 
 **Child fix tasks raised**
-- none
+- none — but §9.1 requires an owner decision before T-002 or T-007 can build the stage, and §9.4
+  grows build mode's scope. Both are recorded on the affected tasks by pointer.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-06 | → proposed | Created as the join point between research and build. |
+| 2026-08-06 | (no change, still done) | **§9.1 settled by the owner the same day: keep the fixed stage, add a reflow view — raised as [T-021](T-021-the-reflow-view-and-the-resolution-contract.md).** The owner's reason reshaped §2 rather than merely closing the question, so the reference gained **§2.4 (the stage, resolution and screen share)** and **§2.5 (the reflow view)**, and §11 gained seven conditions. The stage is not a rehearsal convenience: it answers a deck breaking on a 4K display and a deck arriving illegible after a video call downscales the shared frame. Under a uniform scale **the presenter's viewport cancels out of the legibility equation**, which no responsive layout achieves — so "drop the stage for flex slides" moved from an option to ruled out. It also produced a type floor the research had no way to derive: body **≥ 24 design units**, nothing under 18, D5's 18–24 tightened to 24–28, and the corpus's 11–13 unit mono labels demoted to decoration. Generalised as **L-22**. The §4 verdicts below stand; the criterion they were checked against did not change. |
+| 2026-08-06 | → in_progress → review → done | **`docs/DESIGN-SYSTEM.md` written; all 154 verdicts filled.** 110 keep · 17 amend · 1 drop · 26 defer. The one drop is C7 (one palette per deck) and it fell to CLAUDE.md rule 4, not to evidence — which exposed a class the owner's tie-break does not name: **a standing decision overriding an observed habit**. It fired four times; the tie-break itself fired once, on L1. Generalised as **L-21**. L1 (the fixed 1600×900 stage) is the one thing this task could not settle: 1.4.4 and 1.4.10 are AA and a scaled stage defeats both, but the remedy is a new mode, so it is escalated as a re-scoping proposal with three options and one ruled out. All four candidate changes of direction adopted. Every acceptance criterion verified by counting. **No deck has been built from this ruleset — that is the next artifact, and §12 of the reference says so.** |
+| 2026-08-06 | → specified → planned | **Both open questions closed and the spec worked through.** Sequencing settled by the owner: the design system is standing, the foundation spec is per-deck and references it — T-014 first, T-020 consumes it. The thirteen coverage areas were then checked against `R1-rules-candidate.md`'s fourteen letter groups and found to be a topic list with a hole: **motion, theming and portability had no home**, and motion is where one of the four candidate changes of direction lands. Reference restructured onto the letter groups with a mapping table; the coverage acceptance criterion amended **before** the work, with the reason. Two criteria added and made countable — sixteen conflicts by ID, 154 verdicts — and the plan rewritten so verdicts precede prose. |
 | 2026-08-06 | (no change) | **Unblocked** — all six blockers closed with T-010 and T-011. Spec updated for what landed since it was written: R6 exists (references said R1–R5), the four candidate changes of direction are named in scope, and `R1-rules-candidate.md`'s empty Verdict column is recorded as this task's to fill. Owner settled both blocking decisions the same day — the conflict tie-break (split by rule type) and BRIEF open question 6 (sources are supplied and reconciled). Non-Latin ruled out of scope. **Still `proposed`: the spec has not been worked through, only made current.** |
