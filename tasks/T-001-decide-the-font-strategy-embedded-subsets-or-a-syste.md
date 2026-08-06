@@ -76,6 +76,20 @@ it, not to re-research it.
   carrying the copyright line and licence reference beside each `@font-face`. This is a build-check
   item, so it becomes an input to T-005.
 
+**Which parts of this are settled, and which are not** — added 2026-08-06 after the owner asked
+whether research should accumulate before anything is ruled on. It should, and this task closed
+ahead of T-010, T-011 and T-017. Separating the layers rather than presenting them as one
+decision:
+
+| Layer | Status | What could still move it |
+| :--- | :--- | :--- |
+| The measurements — per-face bytes, OFL 1.1, 192 KB deck | **Settled.** Facts, reproducible | Nothing. Re-run `measure.py` |
+| **Embedded subsets, not a system stack** | **Settled.** The structural ruling | Nothing in WP1's remainder bears on it. T-017 cannot break `data:` fonts — the probe deck already loads three from `file://` |
+| **The specific faces** — Instrument Serif · Space Grotesk · JetBrains Mono | **Provisional** | **T-010** (typographic scale and measure for projected reading; WCAG AA contrast) and **T-011** (what the exemplar decks actually do). Either could change the set |
+
+**T-014 must re-test the third row against T-010 and T-011 rather than inherit it.** The first two
+rows it may take as given.
+
 **Outputs produced**
 - No document of its own — this task is a decision, and its evidence is
   [`docs/research/R5-assets-and-licences.md`](../docs/research/R5-assets-and-licences.md) §1.

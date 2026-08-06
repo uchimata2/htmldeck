@@ -99,6 +99,17 @@ comes from T-013, the `file://` envelope from T-017.
   the DOM made it unambiguous. Fixed, and both scales now carry a self-test. This is **L-06**'s
   visual case in action, one commit after that lesson was written.
 
+**Which parts of this are settled, and which are not** — added 2026-08-06, same reason as T-001:
+this closed ahead of T-010 and T-011, and the layers have different strengths.
+
+| Layer | Status | What could still move it |
+| :--- | :--- | :--- |
+| **No charting library** | **Settled.** The defect argument does not depend on anything unresearched, and the sizes are measured | Nothing. T-017 can only reinforce it — static SVG is the most conservative option available |
+| **The three guards** | **Settled in kind, provisional in value** | The guards answer named corpus defects. The *thresholds* (62% height, 3 px floor) are reasoned, not derived — **T-010**'s work on projected reading could set them properly |
+| **The four types** | **Provisional** | **T-011** catalogues at least 12 archetypes including "the single-number slide, the before/after, the timeline". Its list may need chart forms not among these four. **T-010**'s data-visualisation practice may also revise them |
+
+**T-014 must re-test rows two and three.** Row one it may take as given.
+
 **Outputs produced**
 - `tools/assets/chart_probe.py` — the four types, the three guards, and a 12-check self-test.
   Renders to gitignored `.assets-cache/chart-probe.html`; the repository keeps the generator.

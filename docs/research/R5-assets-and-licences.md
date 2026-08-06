@@ -181,8 +181,24 @@ motion; for staggered entrances below roughly ten elements, CSS `animation-delay
 and costs nothing. R4 recorded that the source deck skill says exactly this. **So motion should be
 a build-time decision, not a constant**: no motion library unless the deck asks for one.
 
-**three.js: opt-in, never default.** 331 KB, MIT, initialises fine from `file://`. It is 1.7× the
-whole probe deck. It belongs behind an explicit request.
+**three.js: opt-in, never default.** 331 KB, MIT. It is 1.7× the whole probe deck, so it belongs
+behind an explicit request on size alone.
+
+> **Correction, same day: this section originally said three.js "initialises fine from `file://`".
+> That was not tested, and it should not have been written.** The probe deck exercised fonts,
+> icons, anime.js and inline SVG from `file://` — never three.js, WebGL or module scripts. Worse,
+> the file measured above is `three.module.min.js`, an **ES module**, and module loading is one of
+> the specific things a restricted origin is expected to break.
+>
+> An attempt to settle it in the preview pane failed for a reason worth recording: the pane
+> reports `location.origin` as `"file://"` and allows `fetch()` of a local file, both of which are
+> inconsistent with a genuinely restricted origin. **It is not a faithful `file://` environment**,
+> so nothing it reports about this can be trusted — the third time in this session that pane has
+> given a confident wrong answer (**L-06**).
+>
+> **This is T-017's question, and T-017's method is the only one that answers it: double-click on
+> a clean profile and record what happens.** The 331 KB figure and the MIT licence stand; the
+> runtime claim is withdrawn until tested.
 
 ## 4. The delivery-mode question — the recommendation you asked for
 
@@ -336,6 +352,19 @@ of problem that only appears at real size, which is the whole reason L-02 asks f
 **Not measured:** deck-specific font subsetting below Google's latin subset (needs a font-tooling
 dependency, and at 97 KB for three faces the incentive is absent); `three.js` inside a real deck;
 and Mermaid's build-time render path, which needs Node and belongs with the enhancement work.
+
+**What this note is *not* evidence about, stated plainly.** The offline verification in this
+section covers exactly what the probe deck contains: `data:` fonts, inline SVG, inline icons, and
+one classic (non-module) script. It says **nothing** about ES modules, WebGL, workers, `fetch`,
+`localStorage`, canvas tainting or Web Audio from a restricted origin. Those are
+[T-017](../../tasks/T-017-define-the-portability-contract.md)'s matrix, they must be tested by
+double-click rather than in any preview tool (see §3's correction), and **T-017 could still narrow
+what this note treats as available.**
+
+This is an ordering inversion worth naming: T-013's own scope says the `file://` envelope "comes
+from T-017", and T-017's says it "feeds T-013" — but T-013 ran first. Where the two meet, T-013
+measured **size and licence**, which are facts that do not depend on T-017, and **assumed**
+runtime availability, which does. The assumption is now marked everywhere it was made.
 
 ## 8. What this hands to other tasks
 
