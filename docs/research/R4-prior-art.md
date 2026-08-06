@@ -5,10 +5,14 @@ Companion to [R1](R1-corpus-conventions.md) and its
 [rules register](R1-rules-candidate.md).
 
 **Status: partial.** Sections 1–4 and 7 are complete and evidenced. Sections 5–6 — the wider
-ecosystem survey, the deck frameworks, and the motion/3D libraries — are **not done**; see
-§8. The provenance pass that gates
-[T-014](../../tasks/T-014-synthesise-research-into-the-design-system-reference.md) is complete,
-so T-014 is unblocked regardless of §8.
+ecosystem survey, the deck frameworks, and the motion/3D libraries — are **not done**; see §8.
+
+**On what this does and does not unblock.** The provenance question that R1's warning box raised —
+that no contradiction in the rules register could be resolved until each rule's authorship was
+known — is answered. That gate is lifted.
+[T-014](../../tasks/T-014-synthesise-research-into-the-design-system-reference.md) itself is
+**still blocked**, by T-010, T-011, T-013, T-017 and by this task's own remainder. Lifting the
+provenance gate makes T-014 *possible* to do correctly; it does not make it ready to start.
 
 ---
 
