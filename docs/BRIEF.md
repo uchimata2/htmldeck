@@ -66,18 +66,19 @@ only to show what changed.
 **Self-containment is still the first requirement**, and the corpus proves it is reachable without
 giving up the typography.
 
-> **Candidate change of direction raised 2026-08-06 — the owner's, and unresolved.** When T-013
-> asked whether a per-deck size ceiling was acceptable, the owner's answer made delivery a
-> configuration parameter with **CDN references as the default** and embedding on request. That
-> reverses the sentence above and CLAUDE.md rule 1, and it reverses the position
-> [R4](research/R4-prior-art.md) identified as the owner's sharpest departure from the source deck
-> skill (J1 — *the skill means one file, the owner means no network*).
+> **Raised and resolved, 2026-08-06 — the sentence above stands.** When T-013 asked whether a
+> per-deck size ceiling was acceptable, the owner's answer made delivery a configuration parameter
+> with **CDN references as the default** and embedding on request. That would have reversed this
+> sentence, CLAUDE.md rule 1, and the position [R4](research/R4-prior-art.md) identified as the
+> owner's sharpest departure from the source deck skill (J1 — *the skill means one file, the owner
+> means no network*).
 >
-> [R5 §4](research/R5-assets-and-licences.md) argues against it and **recommends embed-by-default
-> with a `linked` development mode**, on the measurement: the premise was that embedding is
-> expensive, and it is 192 KB. **The owner has not ruled on that recommendation.** It should be
-> settled before T-014 synthesises the design system — whether a deck must work offline changes
-> what the design system may assume.
+> [R5 §4](research/R5-assets-and-licences.md) argued against it on the measurement — the premise
+> was that embedding is expensive, and a full deck is 192 KB — and **the owner accepted that
+> recommendation the same day**. Delivery is now a decision, not an open question: see *Delivery
+> mode* in "Decisions taken". The episode is kept on the record because it is the only place the
+> project has reversed a stated owner direction on evidence, and because CLAUDE.md asks for
+> exactly that to be visible rather than quiet.
 
 ---
 
@@ -209,6 +210,7 @@ Set by the owner when the project was re-scoped around researching their existin
 | **Printing** | **Not a requirement.** An optional mode the user can force on to make a deck printable. It must never shape the interaction design. |
 | **Target browser** | **Recent Chrome/Edge.** One engine, tested. Firefox and Safari degrade gracefully but are not the bar. |
 | **Render technique** | **Full exemption from the SVG-only rule** — SVG, `<canvas>` and WebGL are all permitted, for data-carrying diagrams included. Raster images and external libraries stay banned. |
+| **Delivery mode** | **Embed by default.** Two modes, not three: `portable` (everything inlined, zero external references, ~190 KB typical) is the default and the only shipping mode; `linked` (CDN) exists **for the authoring loop only** and a deck built with it is a defect the critique pass flags. No local-files mode. Settled 2026-08-06 on [R5 §4](research/R5-assets-and-licences.md) — see below. |
 
 **Three consequences worth stating plainly.**
 

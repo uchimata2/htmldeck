@@ -20,7 +20,13 @@ direction, not quietly worked around.
 
 1. **Self-contained or it doesn't ship.** One `.html` that renders correctly with the network
    disabled. Every deck in the source corpus failed this — 2–7 external references each, mostly
-   web fonts. Fixing it while keeping the typography is the plugin's main technical problem.
+   web fonts.
+   *Measured and settled 2026-08-06:* this is no longer the main technical problem. A full
+   12-slide deck with three embedded faces, icons, a motion library and SVG diagrams is **192 KB
+   with zero external references** (`docs/research/R5-assets-and-licences.md`). Embedding is
+   cheap, so `portable` is the default and the only shipping mode. A `linked` (CDN) mode exists
+   **for the authoring loop only**; a deck delivered that way is a defect, and the critique pass
+   says so.
 2. **Portability is the constraint, not restraint.** No installation, no special privileges — the
    recipient double-clicks the file. It must render **glitch-free in recent Chrome/Edge**; other
    browsers degrade gracefully and mobile is secondary. Within that envelope, richness is wanted:

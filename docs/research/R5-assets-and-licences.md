@@ -198,6 +198,11 @@ of direction rather than worked around, so it is raised here rather than impleme
 
 **Recommendation: embed by default; make CDN the opt-in; drop the local-files mode entirely.**
 
+> **Accepted by the owner, 2026-08-06.** This is now the project's decision, recorded under
+> *Delivery mode* in [BRIEF.md](../BRIEF.md) "Decisions taken". CLAUDE.md rule 1 stands unchanged
+> and `linked` is a development mode only. The rest of this section is the argument that was made,
+> kept as the rationale behind the decision.
+
 The case, in the order the evidence supports it:
 
 1. **Cost is not a reason.** The premise for defaulting to CDN is that embedding is expensive.
@@ -342,7 +347,6 @@ and Mermaid's build-time render path, which needs Node and belongs with the enha
 | **T-016** motion | anime.js 4, MIT, 82 KB, opt-in rather than constant; CSS staggering below ~10 elements. GSAP rejected on redistribution, not capability. §3. |
 | **T-015 / T-008** packaging | §6. |
 
-**Open for the owner:** §4's recommendation reverses the stated CDN-by-default direction. It is a
-recommendation, not a decision — but the default should be settled before T-014 synthesises the
-design system, because "does this deck have to work offline" changes what the design system can
-assume.
+**Settled 2026-08-06:** §4's recommendation reversed the stated CDN-by-default direction and the
+owner accepted it. T-014 can assume every shipped deck is self-contained. Recorded under *Delivery
+mode* in [BRIEF.md](../BRIEF.md) "Decisions taken".

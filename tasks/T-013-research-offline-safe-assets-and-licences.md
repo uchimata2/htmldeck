@@ -56,10 +56,11 @@ network references. Getting the licence-clean shortlist settled early unblocks t
   author sets. The owner's stated default is CDN references, with embedding or local-file
   references available on request.
 
-  **This contradicts CLAUDE.md rule 1 and R4's J1 finding**, so it is carried as a candidate
+  **This contradicted CLAUDE.md rule 1 and R4's J1 finding**, so it was carried as a candidate
   change of direction rather than adopted silently — see §4 of `R5-assets-and-licences.md`. The
-  owner asked for a measured recommendation on which way the default should fall, so producing
-  that recommendation is now an output of this task.
+  owner asked for a measured recommendation on which way the default should fall; that
+  recommendation became an output of this task, and **the owner accepted it the same day**.
+  Delivery is now settled the other way: embed by default, `linked` for authoring only.
 
 ## 2. Plan
 
