@@ -5,8 +5,8 @@ type: audit
 status: proposed
 phase: specify
 parent: null
-children: []
 blocked_by: []
+related: []
 work_package: none
 owner: <name>
 created: YYYY-MM-DD
@@ -25,7 +25,7 @@ deliverables: []
 - [ ] Factual accuracy — claims traceable to `docs/` or an external source
 - [ ] Internal consistency — no contradictions across deliverables
 - [ ] Completeness — every required element of the deliverable present
-- [ ] Standard compliance — task files follow `TASK-WORKFLOW.md`
+- [ ] Standard compliance — task files follow `tasks/TASK-WORKFLOW.md`
 - [ ] Audience fit — understandable without a data-science background
 - [ ] Link and file hygiene — no broken links, no stray working files
 

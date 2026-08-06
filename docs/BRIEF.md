@@ -157,6 +157,10 @@ clean pass, it is a false one.
 
 ## Carried lessons
 
+What the corpus research carried into this project. The durable, citable form of these — plus the
+ones this project has since paid for itself — lives in [`LESSONS.md`](LESSONS.md), which is where
+new ones go.
+
 | | Lesson |
 | :--- | :--- |
 | **Look at the output** | Every automated check can pass on something visually broken. A deck that validates is not a deck that reads well — render it and look before claiming done. |
