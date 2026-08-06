@@ -47,8 +47,11 @@ against, ahead of the build mode being finished.
 - [ ] Works in a project on an unrelated topic — no assumption about deck subject
 
 **Open questions**
-- Does this replace T-003 (brief mode's six-section elicitation), or does the six-section brief
-  become an internal structure the skill fills in silently from the two answers? — owner
+- ~~Does this replace T-003 (brief mode's six-section elicitation), or does the six-section brief
+  become an internal structure the skill fills in silently from the two answers?~~ **Answered
+  2026-08-07 by [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md): both.** It
+  replaces T-003, now `cancelled`, **and** the six sections become the internal structure the skill
+  fills from the two answers plus any sources. See the log row below for what the interface gains.
 
 ## 2. Plan
 

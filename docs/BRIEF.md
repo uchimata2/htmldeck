@@ -85,7 +85,12 @@ giving up the typography.
 ## The prompt structure that works
 
 The corpus contains a prompt that produced one of the better decks. Its shape generalises, and
-the plugin should elicit exactly these:
+the plugin should ~~elicit~~ **assemble** exactly these:
+
+> **Amended 2026-08-07 by [T-020](../tasks/T-020-model-the-authoring-pipeline-not-just-the-modes.md).
+> The six sections survive; the elicitation does not.** With brief mode absorbed, these are the
+> **internal shape of the requirements stage** — filled from the two questions plus any supplied
+> sources, then feeding the foundation spec. Nothing here is asked of the user section by section.
 
 ```
 ## Role         — who the author is being, in strong terms
@@ -416,8 +421,11 @@ replaces enforced variety, with the template generator satisfying it later.
    owner: ask for them, and reconcile when they are given.** The check has two halves, and the
    content half is the one that catches what an audience actually gets hurt by. Consequences, all
    of which are now requirements rather than options:
-   - **Brief mode asks for the sources.** They join the `## Resources` section of the six-part
-     prompt, which already has a slot for them.
+   - **The sources are asked for.** They join the `## Resources` section of the six-part structure,
+     which already has a slot for them. *(Was "brief mode asks for the sources" — that mode was
+     absorbed 2026-08-07 by T-020. **The requirement is unchanged**; it now belongs to the
+     two-question interface, [T-015](../tasks/T-015-plugin-scaffold-and-the-two-question-interface.md),
+     whose second question is exactly "anything to align to".)*
    - **Absence is a legitimate state, not a failure.** When they are not supplied the check runs
      presentation-only and **says so in its output** — the "say which half you ran" rule, which
      exists precisely for this case.
