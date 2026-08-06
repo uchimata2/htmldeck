@@ -260,6 +260,19 @@ sees it, plus one. **Measured against a real deck, 2 rounds sufficed** — see �
 scoring it triggers; applying twelve fixes inside that round costs one render, not twelve. Counting
 fixes would price the cheap half of the loop and cap the deck on it.
 
+**Nor does it count batch loops** — added 2026-08-07 by
+[T-020](../tasks/T-020-model-the-authoring-pipeline-not-just-the-modes.md) §3.4, which places this
+loop in the authoring pipeline. Build is batched, and each batch runs the **auto gate, the render
+gate and S3/S5/S6** on its own slides. That is not a measurement round: §8.1 puts S1, S2, S4 and
+D1–D4 in a single fresh-context read of the **whole** deck, so a batch cannot produce the judgement
+this cap is pricing. **A batch loop is a cheap per-batch sweep; the cap counts whole-deck rounds
+only.**
+
+The arithmetic is the reason, and it is the same error §6.2 already corrected once: at a cap of 3, a
+four-batch deck counting batch loops would **exhaust the cap before the deck existed.** What
+batching buys is not scoring but timing — DS-136 requires interaction patterns to be built once and
+reused, so a component defect caught in batch one is fixed once instead of in twelve places.
+
 ---
 
 ## 7. Validating the rubric itself

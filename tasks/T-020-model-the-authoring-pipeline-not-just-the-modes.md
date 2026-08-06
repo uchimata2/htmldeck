@@ -2,15 +2,15 @@
 id: T-020
 title: Model the authoring pipeline, not just the three modes
 type: decision
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
-related: [T-002, T-003, T-004, T-014, T-015, T-023]
+related: [T-002, T-003, T-004, T-014, T-015, T-023, T-030]
 work_package: WP1
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: []
 ---
 
@@ -126,9 +126,11 @@ an implementation one.**
       brief, or a specification?
 
 **Open questions**
-- Should this be a hard `blocked_by` on T-002 and T-015 rather than `related`? It is left as
-  `related` so it does not silently deadlock the backlog, but building build mode before this is
-  settled risks building it against the wrong input contract. — owner
+- ~~Should this be a hard `blocked_by` on T-002 and T-015 rather than `related`?~~ **Answered
+  2026-08-07 by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md): yes, and on
+  T-004 as well.** The deadlock this question feared cannot occur — this task is blocked by nothing,
+  so it can always be worked first. The edges now exist, which also means **this task is the head of
+  the backlog**: nothing downstream should be specified against an input contract it may change.
 - ~~**This task and [T-014](T-014-synthesise-research-into-the-design-system-reference.md)
   overlap.**~~ **Settled by the owner 2026-08-06, before either document was written — the design
   system is standing and shared; the foundation spec is per-deck and references it.** T-014 goes
@@ -157,17 +159,191 @@ an implementation one.**
 
 ## 3. Implement
 
+### 3.1 The pipeline, stated once
+
+Assembled from R1 §2, §10 and §14 rather than left scattered across three notes. Reading right to
+left, **two of the four reviews happen before any HTML exists**, and that is the whole shape of it.
+
+```
+governing idea (one line)
+    └─→ requirements ─→ foundation spec ─→ slide-by-slide spec ─→ REVIEW OF THE SPEC
+                                                                        │
+                        ┌───────────────────────────────────────────────┘
+                        ▼
+                  build, in batches ─→ review of the build ─→ OWNER REVIEW ─→ fix
+```
+
+Per-slide, the spec fixes **structure · text · visuals · animations · interactive elements · title ·
+bottom line** (R1 §2). That last field is worth naming: the slide-by-slide spec is the first place
+the deliverable contract (DS-201 to DS-209) can be satisfied at all, which is the contract
+[T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) exists because no deck
+here met.
+
+**A correction to this task's own §1, from R4 §9.** §1 says R4 grades *"that whole structure"* as
+owner-authored with zero prior art. R4 is narrower and the difference matters. **A4** (specify
+slide-by-slide before building) and **A6 / A′4** (review the spec before any HTML) are graded
+**`I` — inherited**; the source skill says *"map source to slides"* and *"verify before writing
+HTML"*. What has zero prior art is the **specification as a written document** — the governing idea,
+the foundation spec, the trace table, the timing budget, plus **A5** (build the spec page by page)
+and **A7** (build slides in batches), all `O`.
+
+So the sequence is table stakes and **the artifact is the departure.** That reframes the central
+question of this task: not *should there be a specify-then-review step* — there should, and the
+source skill agrees — but *should the specification be a document somebody can read.*
+
+### 3.2 The stage decisions
+
+| Stage | Decision | Reason |
+| :--- | :--- | :--- |
+| **Governing idea** | **Adopt.** One line, written before anything else, carried as the first line of the foundation spec. Not a gate of its own. | `O`, zero prior art, and it costs one sentence. R1 §10's rationale is the argument: *"A deck with six colours is decorated. A deck with one accent used with total discipline is designed."* |
+| **Foundation spec** | **Adopt, as a selection sheet — not nine authored sections.** Per-deck content is the governing idea, the narrative spine, the archetypes and elements this deck selects, and any per-deck additions to the quality bar. **It cites [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md); it never restates it.** | T-014's ruling, already recorded in §1: under CLAUDE.md rule 4 four of the nine sections have no per-deck variable left, and three more are standing catalogues a deck selects from. Only the spine and the governing idea are genuinely per-deck. |
+| **Slide-by-slide spec** | **Adopt.** The seven fields from R1 §2, one row per slide. It is the artifact the spec review reads and the input build mode consumes. | It is the only place the pipeline's two cheapest reviews have anything to act on, and the only place a bottom line exists before it is a layout problem. |
+| **Spec review** | **Adopt, inside critique mode as a second format — not a mode of its own. And it gets the rubric.** | R1 §14 proves two critique formats and both are critiques; the input type differs, not the job. Splitting them doubles the mode surface for a difference in argument type. See 3.3 for which dimensions it can carry. |
+| **Batched build** | **Adopt as the default.** Build a few slides, run the cheap half of the loop, then continue. | `O` (A7), and the mechanism is DS-136: interaction patterns are built once and reused, so **a component defect found in batch one is fixed once instead of in twelve places.** That, not scoring, is what batching buys. |
+| **Approval gates** | **Two, and each is independently skippable — see 3.5.** *(a)* **Outline sign-off** after the spec review, carrying its *"Open — needs a decision"* items; *(b)* **detailed-spec sign-off** before the build. The fix cycle is not a gate. | R1 §10's pipeline has exactly one human review; R1 §14 shows the spec review escalating open decisions, which is the second. R1 §15 is explicit that the owner wants to be asked: *"Please ask, argue, do not accept and guess blindly."* |
+| **Iteration loop** | **Runs before the owner review, not after.** | See 3.4 — this task's §1 recorded it as unsettled, and it is not. |
+
+### 3.3 What the spec review can actually score
+
+The question §1 raised — *does the spec review get its own rubric, or is it out of the loop's
+scope* — has a sharper answer than either option. **The rubric mostly already works against a
+specification**, and the dimensions it reaches are the expensive ones.
+
+| Works against a slide-by-slide spec | Needs a rendered artifact |
+| :--- | :--- |
+| **S1 Claim** — a headline is a claim or a label on paper | **S3 Encoding** — the chart exists or it does not |
+| **S2 Evidence** — a figure has a source or it has none | **S4 Density** — a tier split is a rendered judgement |
+| **D1 Spine** — the argument holds or breaks at step two | **S5 Craft** — measured, not specified |
+| **D2 Pacing** — slide count and archetype rhythm are spec-level facts | **S6 Motion** — the same |
+| **D3 Close** — the closing line is written before it is styled | **D4, visual half** — consistency of look |
+| **D4, source-reconciliation half** — figures against sources and against each other | |
+
+**This is the result that changes the cost of the whole pipeline.** Three of the five dimensions no
+mechanical check can reach — S1, S2, D1 — are checkable **before any HTML exists**, along with D2,
+D3 and half of D4. R1 §14's own findings are the evidence that this is not theoretical: an invented
+number in a title supported by no source (S2), a narrative conceit that silently breaks at step two
+(D1), and *"missing content rather than error"* — half a stated goal absent, four items counted but
+never named (S2, D3). Its closing observation is the one to carry: **"The four Major findings were
+all substance, not polish."**
+
+**Consequence for [T-004](T-004-critique-mode-blunt-section-by-section-review.md):** it takes two
+input types and reports differently for each — spec review as `ID · Severity · Slide · Finding ·
+Fix` with Major/Minor/Note, then *"Open — needs a decision"*, then counts; design audit as headline
+verdict, coverage table, findings with the principle violated, then an explicit keep-vs-rebuild
+split. R1 §14 gives both formats; neither is invented here.
+
+### 3.4 Where the loop runs — both placement questions
+
+**Per batch or once at the end: both, at different depths — and they are not the same loop.**
+[T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md) killed the clean split
+§1 hypothesised, because S1, S2 and S4 are scored in one fresh-context read of the whole deck. What
+survives for a batch is the auto gate, the render gate, and **S3, S5, S6** — which is not a scoring
+round at all. So:
+
+- **Per batch:** auto gate + render gate + S3/S5/S6 on the batch. Cheap, and it catches a component
+  defect before the component is reused.
+- **Once, on the whole deck:** the measurement round [`EVALUATION.md`](../docs/EVALUATION.md) §6
+  defines, including the fresh-context judgement pass.
+
+**The ruling this forces, and `EVALUATION.md` does not currently make it: batch loops must not count
+against the iteration cap.** The cap is 3 and it counts whole-deck measurement rounds (§6.4). If a
+batch loop counted, a four-batch deck would exhaust the cap **before the deck existed** — the same
+arithmetic error §6.2 already corrected once, when a literal reading of *"fix one at a time"* would
+have capped a deck that needed 23 fixes.
+
+**Before or after the owner's approval gate: before — and the corpus does settle this, contrary to
+§1.** R1 §10's sequence is *build → review of the build → owner review → fix*: the machine review is
+second, the human third. `EVALUATION.md` §6.4 already relies on that reading, setting the cap at 3
+because R1 gives *"two machine iterations before a human sees it, plus one."*
+
+The objection §1 raised — that running the loop first burns iterations on slides the owner was going
+to cut — is real and is answered somewhere else. **The outline gate is what protects the loop from
+wasted work**, because a slide is cut at the spec stage, before any HTML exists. That is what the two
+pre-HTML reviews are *for*. Buying the same protection by deferring the loop would pay for it with
+an owner review of unconverged work, which is the more expensive of the two.
+
+### 3.5 The artifact and the gate are separate decisions — the owner's ruling
+
+**Settled by the owner 2026-08-07, and it splits a pair this task had treated as one.**
+
+- **The specification files are always written.** Not optional, not conditional on the gates, not
+  an internal representation. The foundation spec and the slide-by-slide spec exist on disk for
+  every run.
+- **The gates are optional, and independently so.** Three shapes the user can ask for: **both**
+  gates, **one** of the two, or **neither** — deliver the result.
+
+**Why the split is the right one, stated because it resolves the §1 conflict rather than
+compromising on it.** The two-question promise is about **what the user must supply and attend
+to**. A file written to disk costs the user nothing until they choose to open it; a gate costs
+attention. So the promise constrains gates and has nothing to say about artifacts — which is why
+the specs can be unconditional and the interruptions cannot.
+
+Two things follow, and both are load-bearing:
+
+1. **The spec review always has something to read.** Its value does not depend on the user
+   attending a gate, so a fully skipped run still catches S1, S2, D1, D2, D3 before any HTML
+   exists (3.3). **Skipping the gates costs the user's *cut* decision, not the review.**
+2. **A skipped run is still inspectable afterwards.** The specs are the trace of what was decided
+   and why, available when the deck turns out wrong, which is the moment nobody has the context any
+   more.
+
+**Default: both gates on. — assumption, 2026-08-07.** Taken from the owner's phrasing — *"whether
+the user asks you to skip the gates"* puts skipping on the user's side of the request, so the
+unasked-for state is the gated one. It is also what [`BRIEF.md`](../docs/BRIEF.md)'s *Purpose* row
+implies: the plugin encodes **this owner's** conventions, and this owner's process has both reviews.
+**One line to change if that reading is wrong.**
+
+### 3.6 Build mode's input contract
+
+**Build mode consumes a reviewed slide-by-slide specification, not a brief.** Two answers plus any
+sources produce the requirements; the requirements produce the foundation spec; the foundation spec
+and the sources produce the slide-by-slide spec; the spec is reviewed and signed off; build mode
+consumes that. This is the acceptance criterion §1 asks for, and it is why
+[T-002](T-002-build-mode-the-self-contained-deck-generator.md) is `blocked_by` this task.
+
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The specification sequence is inherited; the specification *document* is the departure —
+  2026-08-07.** R4 §9 grades A4 and A6 as `I`, not `O`. Recorded because §1 overstated it, and
+  because it moves the question this task has to answer.
+- **The spec review is a format of critique mode, not a fourth mode — 2026-08-07.** Both formats are
+  critiques over different input types; two modes would duplicate the reporting machinery for one
+  difference in input.
+- **Batch loops are not measurement rounds — 2026-08-07.** Required by the cap arithmetic, and
+  `EVALUATION.md` §6.4 has to say so; today it does not.
+- **Assumed: the two pre-HTML reviews are worth their cost.** Untested here. The evidence is R1
+  §14's finding that the Major defects were substance rather than polish, which is the class a spec
+  can carry — but this project has not yet run a spec review of its own.
 
 **Outputs produced**
-- <path>
+- This section — the pipeline stated once, seven stage decisions, and the two placement rulings.
+- Pending the owner's answer below: amendments to [`BRIEF.md`](../docs/BRIEF.md) *What to build* and
+  the *Interface* row, and to [`EVALUATION.md`](../docs/EVALUATION.md) §6.4 for the cap ruling.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| A decision per stage — governing idea · foundation spec · slide-by-slide spec · spec review · batched build · preview gate · iteration loop — each with a reason | met | §3.2, seven rows. **All seven adopted, none rejected or deferred** — with two reshaped rather than taken as proposed: the foundation spec is a selection sheet, not nine authored sections (T-014's ruling), and the spec review is a *format* of critique mode, not a mode. |
+| The two-question conflict resolved explicitly, and `BRIEF.md` amended | met | §3.5. Questions constrain what the user supplies in advance; gates are artifacts they react to. The owner split it further: **files unconditional, gates optional and independently skippable.** `BRIEF.md`'s *Interface* row carries it. |
+| The mode list in `BRIEF.md` § *What to build* updated, or confirmed unchanged | met | Updated. Brief mode absorbed, build mode's input restated as a reviewed specification, critique mode given two formats, and the pipeline diagram added under it. |
+| Every affected task told what changed, by pointer | met | Log rows on T-002 (input contract, batching, the specified bottom line), T-004 (two input types, six dimensions, both report formats), T-015 (the two questions survive; it does replace T-003), T-003 (cancelled, with what survives). |
+| If the pipeline is adopted, build mode's input contract is stated | met | §3.6 — a **reviewed slide-by-slide specification**, not a brief. |
+
+**Two findings beyond the criteria**
+
+- **The spec review reaches three of the five dimensions no mechanical check can reach**, plus D2,
+  D3 and half of D4 — before any HTML exists (§3.3). T-024 measured that five of ten dimensions are
+  invisible to every static and measured check, and that result has until now read as *"the pipeline
+  cannot end at the gate"*. It also means the opposite and cheaper thing: **most of what the gate
+  cannot see does not need a rendered deck to be seen.** Untested here — no spec review has been run
+  in this project — and recorded as an assumption in §3, not as a result.
+- **`EVALUATION.md` §6.4 needed a ruling it did not have**, and batching is what exposed it: at a cap
+  of 3, a four-batch deck counting batch loops would exhaust the cap before the deck existed. Same
+  arithmetic error §6.2 had already corrected once for fixes. Amended.
+
+**One assumption the owner should overturn if it is wrong:** gates default to **on** (§3.5). Read
+from the owner's phrasing, in which skipping is what the user asks for. One line in `BRIEF.md` and
+one in §3.5 if it should be the other way.
 
 **Child fix tasks raised**
 - none
@@ -176,6 +352,7 @@ an implementation one.**
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | → done | **The pipeline is adopted whole — all seven stages, none rejected.** Two were reshaped rather than taken as proposed: the foundation spec is a **selection sheet** under one theme, and the spec review is a **format of critique mode**, not a fourth mode. The owner settled the conflict this task existed for by splitting a pair it had treated as one — **specification files unconditional, gates optional and independently skippable** — which leaves the two-question promise intact, because the promise constrains what the user supplies in advance and a file costs nothing until it is opened. Two corrections to this task's own §1: R4 grades A4 and A6 as **inherited**, so the specify-then-review sequence is table stakes and the *document* is the departure; and the corpus **does** settle loop placement — R1 §10 runs the machine review before the owner review, which `EVALUATION.md` §6.4 was already relying on. The finding worth carrying is §3.3: **six of the ten dimensions are checkable against a specification, three of them among the five no check can reach.** Amended `BRIEF.md` (*What to build*, *Interface*) and `EVALUATION.md` §6.4; propagated to T-002, T-004, T-015; cancelled T-003. |
 | 2026-08-06 | (no change) | **A constraint on the pipeline, now measured rather than argued.** [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md) validated the rubric against a seeded-defect deck and found the split: **five of the ten dimensions are catchable mechanically and five are not.** S1 Claim, S2 Evidence, S4 Density, D1 Spine and D4 Consistency are invisible to any static or measured check, so **the pipeline cannot end at the gate** — a gate-only run ships a deck whose headline is a topic label and whose figures contradict each other. F-13 also reframes the loop's cap: it governs measurement rounds, not fixes. |
 | 2026-08-06 | → proposed | Raised when the owner described their authoring process and it matched nothing in the repository — despite R1 having captured it and R4 having graded it owner-authored with zero prior art. The gap is between research and the build plan, not in the research. |
 | 2026-08-06 | (no change) | **Sequencing settled by the owner: T-014 first, this task consumes it.** The design system is standing and shared; the foundation spec is per-deck and references it. Testing the hypothesis against R1 §10 sharpened it — under one theme, only the narrative spine and the governing idea are genuinely per-deck, so the foundation spec is a **selection sheet**, not a parallel nine-section document. Scope question 1 re-framed accordingly. Still `proposed`; nothing else in the spec was worked. |

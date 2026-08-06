@@ -169,12 +169,44 @@ every place it is reused.
 > promise to ask exactly two questions need reconciling, and the distinction to argue from is that
 > **a question is something the user must answer in advance; a gate is an artifact they react to.**
 
-Three modes, in build order:
+> **Resolved 2026-08-07 by [T-020](../tasks/T-020-model-the-authoring-pipeline-not-just-the-modes.md).
+> The pipeline is adopted, and the three-mode list below is superseded by the one under it.** The
+> correction R4 §9 forces on the challenge above is worth keeping: **A4 and A6 are graded `I`, not
+> `O`** — specifying slide-by-slide before building, and reviewing before any HTML exists, are both
+> inherited. What has zero prior art is **the specification as a written document**. The sequence is
+> table stakes; the artifact is the departure.
 
-1. **Brief** — elicit the six-section prompt above from whatever the user has.
-2. **Build** — generate the single-file deck: self-contained, section-per-slide, inline SVG,
-   keyboard navigation, print/PDF stylesheet.
-3. **Critique** — section-by-section review against the standard, blunt, with a BLUF verdict.
+~~Three modes, in build order:~~
+
+1. ~~**Brief** — elicit the six-section prompt above from whatever the user has.~~ **Absorbed
+   2026-08-07.** The six sections survive as the internal shape of the requirements the skill
+   assembles from the two answers plus any sources; there is no separate elicitation mode.
+   `T-003` is cancelled.
+2. **Build** — generate the single-file deck. **Its input is a reviewed slide-by-slide
+   specification, not a brief.**
+3. **Critique** — blunt review with a BLUF verdict, in **two formats**: a **specification review**
+   before any HTML exists, and a **design audit** of the built deck. R1 §14 proves both.
+
+**The pipeline, which is what the modes sit inside**
+
+```
+governing idea (one line)
+    └─→ requirements ─→ foundation spec ─→ slide-by-slide spec ─→ spec review
+                                                                       │
+                       ┌───────────────────────────────────────────────┘
+                       ▼
+                 build, in batches ─→ build review ─→ owner review ─→ fix
+```
+
+**Two of the four reviews happen before any HTML exists, and that is the point.** Six of the ten
+rubric dimensions are checkable against a specification — S1 Claim, S2 Evidence, D1 Spine, D2
+Pacing, D3 Close, and the source-reconciliation half of D4. **Three of those are among the five no
+mechanical check can reach**, so the most expensive defects are catchable at the cheapest possible
+moment. T-020 §3.3 has the mapping and R1 §14's own findings as the evidence.
+
+**The specification files are always written; the gates are optional** — settled by the owner
+2026-08-07. Both gates, one, or neither, at the user's request; the files exist either way. See the
+*Interface* row in "Decisions taken" for why that is not a breach of the two-question promise.
 
 > **Three documents now carry what the modes build against**, written 2026-08-06:
 >
@@ -233,7 +265,7 @@ Set by the owner when the project was re-scoped around researching their existin
 | | Decision |
 | :--- | :--- |
 | **Purpose** | Not a generic tool. It encodes *this owner's* conventions so tightly that any topic needs almost no input. |
-| **Interface** | The skill asks exactly two questions: content length (max and/or min), and whether there is anything to align to. Nothing else. Extension deferred. |
+| **Interface** | The skill asks exactly two questions: content length (max and/or min), and whether there is anything to align to. Nothing else. Extension deferred. **Refined 2026-08-07 — the promise constrains questions, and questions are not gates.** A *question* is something the user must answer **in advance**; a *gate* is a generated artifact they **react to**. The two questions stand. The pipeline adds two gates — outline sign-off and detailed-spec sign-off — and **each is independently skippable**, so a user who wants one shot says so once. **The specification files are written unconditionally**, because a file costs the user nothing until they open it and it is the only trace of what was decided when the deck later turns out wrong. Gates default to **on**. [T-020](../tasks/T-020-model-the-authoring-pipeline-not-just-the-modes.md) §3.5. |
 | **Authorship** | The plugin **writes the words** from source material — it decides the narrative and the slide copy, not just the design around supplied text. Answers open question 5. |
 | **Use case** | Primarily **presented live**, but the supporting detail is hidden behind interactive elements — turning cards, toggles, tabs, floating information layers, tooltips — so the same file is consumable by a recipient reading it alone. |
 | **Dependencies** | **Self-contained core, optional enhancement.** Works standalone for a user who installed nothing else; uses other skills when present, with a stated fallback for each. |
