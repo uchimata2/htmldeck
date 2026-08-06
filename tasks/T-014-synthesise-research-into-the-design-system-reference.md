@@ -83,9 +83,22 @@ So the tie-break is not a judgement call per conflict: **look up the grade, then
 A conflict where the external side is E3 or E4 is not a conflict — habit stands.
 
 **Open questions**
-- None outstanding. The two that would have blocked this task were settled by the owner on
-  2026-08-06: this one, and BRIEF open question 6 (the plugin **does** receive source documents and
-  reconciles against them — see `docs/BRIEF.md`).
+- The two that would have blocked this task were settled by the owner on 2026-08-06: the tie-break
+  above, and BRIEF open question 6 (the plugin **does** receive source documents and reconciles
+  against them — see `docs/BRIEF.md`).
+- **This task overlaps [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) more than
+  the board shows, and doing the two independently will produce two documents that disagree.** If
+  T-020 adopts the pipeline, the **nine sections** of R1 §10's Foundation Spec (narrative spine ·
+  linguistic style · visual system · recurring elements · motion · interaction model · layout
+  structures · technical stack · quality-bar checklist) and the **thirteen coverage areas** in the
+  scope above are describing much the same territory from two directions — one as a per-deck
+  artifact the plugin generates, one as a standing reference the skill points at. Settle which is
+  which *before* writing either. — owner / whoever takes both
+- **Do the thirteen coverage areas still have a home for what R3 produced?** They were defined
+  before R2 and R3 existed. The **14 archetypes** fit awkwardly — "deck structure and pacing" and
+  "layout and grid" both half-cover them, and R3 §8 argues the catalogue is structural more than
+  visual, so it may belong nearer briefing than layout. The **12 anti-patterns** may belong to
+  T-004 rather than here. Decide deliberately rather than filing them wherever they fit. — this task
 
 ## 2. Plan
 

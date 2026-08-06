@@ -103,6 +103,12 @@ an implementation one.**
 - Should this be a hard `blocked_by` on T-002 and T-015 rather than `related`? It is left as
   `related` so it does not silently deadlock the backlog, but building build mode before this is
   settled risks building it against the wrong input contract. — owner
+- **This task and [T-014](T-014-synthesise-research-into-the-design-system-reference.md) overlap,
+  and doing them independently will produce two documents that disagree.** R1 §10's Foundation Spec
+  has nine sections; T-014's design-system reference has thirteen coverage areas; they describe much
+  the same territory. The distinction that probably resolves it — **the design system is standing
+  and shared, the foundation spec is per-deck and generated from it** — is a hypothesis, not a
+  decision. Settle it before either document is written, not after. — owner / whoever takes both
 
 ## 2. Plan
 
