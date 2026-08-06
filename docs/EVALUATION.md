@@ -45,9 +45,13 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 | :--- | :--- | :--- | :--- |
 | 1 | **Auto gate** | 65 `auto` rules — static analysis of the file | Near zero. Runs first, always. |
 | 2 | **Render gate** | 39 `render` rules — measurement and a look at the rendered deck, **with motion pinned off** (DS-221) | One render, several measurements |
-| 3 | **Per-slide score** | S1–S6 (§3), per slide | The expensive stage. Scales with slide count. |
-| 4 | **Whole-deck score** | D1–D4 (§4), once | One pass over the finished artifact |
+| 3 | **Per-slide score, by the author** | S3, S5, S6 (§3), per slide | Scales with slide count, but the author already holds the context |
+| 4 | **The judgement pass, in fresh context** | S1, S2, S4 across every slide, and D1–D4 (§4) | One pass over the finished artifact |
 | 5 | **Fix and re-enter** | §5 | Bounded by the iteration cap |
+
+**The split between stages 3 and 4 is a ruling, not a convenience** — §8.1. The five dimensions no
+mechanical check can reach all sit in stage 4, read without the build history, because a self-scoring
+author is the one most likely to pass its own work.
 
 **Stage 4 is not optional and the report says whether it ran.** Defects that span slides are
 invisible to per-slide review — this project has the evidence twice: a figure correct in one document
@@ -165,6 +169,10 @@ Four dimensions, **0–4 each, maximum 16.**
 2. **Every slide ≥ 18/24, and no slide dimension below 2.**
 3. **Deck ≥ 12/16, and no deck dimension below 2.**
 
+**A slide's total spans two scorers** — S3/S5/S6 from the author, S1/S2/S4 from the judgement pass
+(§8.1). Conditions 2 and 3 are evaluated once both have run; a threshold declared on the author's
+half alone is not a threshold.
+
 **The per-dimension floor is the important half.** Without it a slide reaches 18 on craft and motion
 while scoring 1 on Claim — a beautiful slide that says nothing, which is the exact failure the
 design system exists to prevent. **A dimension at 0 or 1 is a finding regardless of the total.**
@@ -174,10 +182,11 @@ design system exists to prevent. **A dimension at 0 or 1 is a finding regardless
 ## 6. The loop
 
 ```
-  auto gate ─→ render gate ─→ per-slide score ─→ whole-deck score
-       ↑                                                │
-       │                                                ▼
-       └───── fix (batched, §6.2) ←──── threshold met? ──→ PASS
+  auto gate ─→ render gate ─→ author score ─→ judgement pass
+                              (S3 S5 S6)      (S1 S2 S4 · D1–D4,
+       ↑                                       fresh context)  │
+       │                                                       ▼
+       └───── fix (batched, §6.2) ←──── threshold met? ─────→ PASS
 
   One trip round the loop is one MEASUREMENT ROUND. The cap counts rounds,
   not fixes — a round carries as many fixes as the round found.
@@ -191,6 +200,10 @@ design system exists to prevent. **A dimension at 0 or 1 is a finding regardless
 | **CAP** | Iteration 3 completes below threshold | Remaining findings as **"Open — needs a decision"**. The loop does not get a fourth attempt. |
 | **STALL** | Total score gained < 2 points in an iteration | *These are not defects the loop can fix.* Almost always design decisions wearing a finding's clothes. Escalate, do not retry. |
 | **OSCILLATION** | A fix reverts an earlier fix | **Stop immediately and name the two rules in tension.** |
+
+**No outcome prints the score** — §8.2. The trigger column above is how the loop decides; what
+reaches the user is the outcome, the findings, and any dimension at 0 or 1 named as a finding.
+STALL's "< 2 points" is an internal comparison, not something the report states.
 
 **OSCILLATION is a finding about the ruleset, not about the deck.** Two rules that cannot both be
 satisfied on one slide is exactly the kind of conflict `DESIGN-RATIONALE.md` §2 exists to record.
@@ -225,17 +238,19 @@ something previously fine is the failure mode a fix loop is most prone to and le
 Re-run per iteration:
 
 - **all `auto` gates, whole deck** — cheap, and a fix routinely reintroduces an external reference;
-- **all dimensions of touched slides**;
-- **all dimensions of slides sharing a component with a touched slide.** DS-136 requires interaction
+- **S3, S5 and S6 on touched slides**;
+- **S3, S5 and S6 on slides sharing a component with a touched slide.** DS-136 requires interaction
   patterns to be built once and reused, so **a fix to a component silently touches every slide using
   it.** This is the non-obvious one and it is where regressions actually hide;
-- **all four deck dimensions** — a slide fix routinely breaks D1 or D4.
+- **the whole judgement pass — S1, S2, S4 on every slide and all of D1–D4.** It re-runs entire, not
+  on touched slides only: a slide fix routinely breaks D1 or D4, and it is one pass either way
+  (§8.1), so there is nothing to save by narrowing it.
 
 ### 6.4 Cost
 
-Per measurement round: one auto pass, one render pass, per-slide scoring **for touched and
-component-sharing slides only**, and one whole-deck pass. With a cap of 3, worst case is 3 full render
-passes and roughly 1 + 2×(touched fraction) slide-scoring passes.
+Per measurement round: one auto pass, one render pass, the author's per-slide scoring **for touched
+and component-sharing slides only**, and **one fresh-context judgement pass** (§8.1). The two scoring
+stages are **2 passes per round** — 4 for a deck that converges like T-024's, 6 at the cap.
 
 **The cap is the cost control, and it counts measurement rounds.** It is set at 3 because R1's
 pipeline runs build → review → owner review → fix, which is two machine iterations before a human
@@ -262,25 +277,78 @@ mean anything.
 
 ---
 
-## 8. Open — needs a decision
+## 8. Decisions taken
 
-Recorded here rather than settled, per DS-191 and the project's own habit of not letting an
-implementer quietly answer an owner's question.
+Three questions this document held open. **All three are now settled** — the two below by the owner
+on 2026-08-06 ([T-026](../tasks/T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md)),
+the third against measurement. They are rulings, not recommendations; a mode that departs from one
+is defective, not merely unusual.
 
-- **Who scores?** A self-scoring author is cheap and is the one most likely to pass its own work —
-  "watch for missing content, not just errors" names this as the failure a self-review most easily
-  misses. **Recommendation: per-slide scoring by the author against the anchors, whole-deck scoring
-  in fresh context.** The deck pass is one pass over a finished artifact, so the cost is small and it
-  is precisely where self-review is weakest.
-- **Does the score reach the user?** A visible number invites gaming and implies precision the rubric
-  does not have; hiding it makes the loop opaque. **Recommendation: report findings and outcome
-  (PASS/CAP/STALL/OSCILLATION), not the number.**
-- ~~**Is the cap 2 or 3?**~~ **Closed 2026-08-06, against a real 12-slide deck rather than in the
-  abstract.** [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.1 reached
-  PASS in **two measurement rounds** — round 1 found 23 defects across contrast, spill, clipping, the
-  type floor and the reflow view; round 2 found one, a cross-slide figure disagreement. **The cap
-  stays at 3**, now explicitly counting rounds (§6.4): the measured need was 2, and a cap set at the
-  measured need leaves a first-draft deck no margin at all. What the evidence settles is that 3 is not
-  *low* — the question §6.2 answered — rather than that 3 is exactly right. **One deck, one topic, one
-  author.** A deck that needs a fourth round is a deck the loop should hand back, and that claim has
-  been tested once.
+### 8.1 Who scores — the author, plus one fresh-context judgement pass
+
+**Ruling.** The author scores **S3, S5 and S6** per slide against the anchors. **One fresh-context
+pass** scores the five dimensions no mechanical check can reach — **S1, S2 and S4 across every
+slide, and D1 to D4** — reading the finished artifact without the build history.
+
+**Cost accepted: 2 passes per measurement round** — 4 for a deck like T-024's, which reached PASS in
+two rounds; 6 at the cap of 3. The alternatives were 0 passes (author scores everything) and roughly
+25 passes for T-024's deck at a fresh-context pass per slide.
+
+**How the five judgement-only dimensions are covered.** They are the whole point of the ruling.
+[T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.2 found that five of
+ten dimensions — **S1 Claim, S2 Evidence, S4 Density, D1 Spine, D4 Consistency** — are invisible to
+every static and measured check, so whoever scores *them* is the quality mechanism. All five are
+assigned to the fresh-context pass and none is left with the author. The evidence for putting them
+there is in the same task: **D4 scored 4 only after counting, and on reading alone it was a 2** —
+the author had read past the contradiction repeatedly.
+
+**Why one pass and not twelve.** S1, S2 and S4 are per-slide dimensions, but they are scored in a
+single read of the whole deck rather than twelve isolated ones. That is not a cost compromise: S4's
+"a first-time reader needs this" and S2's "one side argued and the other not" are both judgements
+about the deck a reader actually meets, and a per-slide pass in isolated context cannot make them.
+D1 and D4 require the whole deck by definition.
+
+**The threshold in §5 is unchanged and combines both passes.** A slide's 24 points come from the
+author's S3/S5/S6 and the judgement pass's S1/S2/S4; the per-dimension floor applies across both.
+
+**The known limit.** Fresh context removes the build history, not the author. Where the same model
+scores its own work without that history, this ruling buys independence of *memory*, not of
+judgement — a real reduction in the failure T-024 exhibited, and not the same thing as review by
+another party.
+
+### 8.2 Does the score reach the user — no
+
+**Ruling.** The report states the **outcome** (PASS · CAP · STALL · OSCILLATION) and **every
+finding**. **The numbers are never shown** — not per-slide totals, not the whole-deck total, not
+per-dimension scores.
+
+**What the user sees instead.** The outcome, which is the decision the score exists to make; every
+finding with its severity and the rule ID or dimension it came from; and, on a PASS, what was fixed
+plus every remaining `Note`. A dimension at 0 or 1 reaches the user **as a finding naming the
+dimension** (§5 makes it one regardless of the total) — so the actionable half survives without the
+arithmetic.
+
+**Cost accepted: none in passes.** The scoring runs either way; this governs only what is printed.
+The cost is opacity — a user cannot see how close to threshold a deck sits, and cannot watch it
+converge round by round.
+
+**Why.** §0 of this document says the score is a stopping rule, not a quality claim. T-024's deck
+passed at 18–22 per slide and 16/16, and those numbers imply a precision the rubric does not have;
+its **findings**, by contrast, were all actionable. A visible number also invites fixes aimed at the
+number rather than at the deck.
+
+### 8.3 Is the cap 2 or 3 — 3
+
+**Ruling: the cap stays at 3, counting measurement rounds.** Closed 2026-08-06 by
+[T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md), **against a
+real 12-slide deck rather than in the abstract** — this one was settled by measurement, not by the
+owner.
+
+[T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.1 reached PASS in
+**two measurement rounds** — round 1 found 23 defects across contrast, spill, clipping, the type
+floor and the reflow view; round 2 found one, a cross-slide figure disagreement. The measured need
+was 2, and a cap set at the measured need leaves a first-draft deck no margin at all.
+
+**What the evidence settles is that 3 is not *low*** — the question §6.2 answered — rather than that
+3 is exactly right. **One deck, one topic, one author.** A deck that needs a fourth round is a deck
+the loop should hand back, and that claim has been tested once.

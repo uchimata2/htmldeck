@@ -244,10 +244,16 @@ Recorded because L-01 means reporting what was seen, not what passed. All fixed 
 **Whole-deck: D1 4 · D2 4 · D3 4 · D4 4 = 16/16.** D4 reached 4 only after the count in §3.4 —
 it was a 2 on the evidence, and reading had passed it repeatedly.
 
-All three threshold conditions hold. **Stated limitation:** EVALUATION §8 recommends whole-deck
-scoring in fresh context precisely because a self-scoring author is the one most likely to pass its
-own work. These scores are the author's. They should be read as *"the loop found no further defect
-it can see"*, which is what §0 of that document says a score means.
+All three threshold conditions hold. **Stated limitation:** these scores are the author's, in the
+author's own build context. They should be read as *"the loop found no further defect it can see"*,
+which is what §0 of EVALUATION says a score means.
+
+> **This limitation is what closed the question.** At the time, EVALUATION §8 only *recommended*
+> fresh-context whole-deck scoring. On this evidence — the D4 result above especially —
+> [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md) ruled that **all five
+> judgement-only dimensions** (S1, S2, S4, D1, D4) are scored in fresh context, not just the
+> whole-deck two. EVALUATION §8.1. **The scores in this section predate that ruling** and were not
+> produced under it.
 
 ### 4.2 Did the rubric detect the seeded defects?
 

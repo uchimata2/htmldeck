@@ -68,6 +68,14 @@ That section predates the corpus research and was never reconciled with it. The 
     Consistency, which are whole-deck dimensions by construction. **The likely answer is both, at
     different depths** — per-slide dimensions per batch, whole-deck dimensions once — but that is a
     hypothesis and it changes the cost profile substantially.
+
+    > **Narrowed by [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md),
+    > 2026-08-06.** The hypothesis's clean split no longer holds: EVALUATION §8.1 rules that **S1,
+    > S2 and S4 — per-slide dimensions — are scored in one fresh-context read of the whole deck**,
+    > alongside D1–D4. So a per-batch loop can carry only S3, S5 and S6; three of the five
+    > dimensions no mechanical check can reach are whole-deck-timed regardless of batching. The
+    > open question is now *what a batch loop is worth when it covers only the three mechanically
+    > checkable dimensions*, not whether to split by per-slide vs whole-deck.
   - Does the loop run **before or after** the owner's approval gate? Running it first means the owner
     reviews converged work; running it after means the loop does not burn iterations on slides the
     owner was going to cut. **These are opposite optimisations and the corpus does not settle it.**
