@@ -75,11 +75,20 @@ sitting:
 - **A skill's own body is half of it.** `SKILL.md` is a routing table; the substance sits in
   `references/` and `templates/`, several times longer, and that is where nearly everything
   worth finding was found.
+- **A preview pane is not a browser.** It renders `file://` pages as static snapshots, and the
+  snapshot renderer draws SVG `text-anchor` wrongly. It produced a convincing picture of a broken
+  diagram that was not broken — the DOM geometry was correct to the pixel when measured. A visual
+  defect very nearly went into a research note on the strength of a screenshot.
 
 **How to apply.** When a source says "nothing here", confirm with a second tool before recording
 it as a finding. Absence claimed by a restricted reader is not evidence of absence. Two
 acceptance criteria on T-009 were reported unmet on this exact mistake and were both wrong — the
 material existed in documents that had not been read.
+
+The visual case has its own move: **measure, do not only look.** For anything rendered, get the
+computed geometry out of the DOM before recording what the picture seems to show. This does not
+weaken **L-01** — you still have to look — it says a screenshot alone is one source, and the
+lesson above applies to it like any other.
 
 ---
 
