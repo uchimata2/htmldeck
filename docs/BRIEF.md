@@ -40,6 +40,13 @@ only to show what changed.
 - **Typography carries the identity.** Bricolage Grotesque, IBM Plex Mono, Fraunces, Inter — a
   deliberate pairing per deck, driven by CSS custom properties. **The decks do not share a
   template**, and that is why they don't look generated.
+  > **Contradicted 2026-08-06 by [R4](research/R4-prior-art.md).** Those faces are three rows of
+  > the deck skill's own font-pairing table, and its instruction to rotate pairings and never
+  > repeat one is where "a deliberate pairing per deck" comes from. Five of the seven typography
+  > rules (D1–D6) are inherited. The decks not sharing a template is real; reading the *typography*
+  > as the owner's signature is not. **Candidate change of direction for T-014:** if the type
+  > choices are the skill's, the identity has to be carried by something else — and R4 §2 says
+  > where the owner's taste actually concentrates.
 - **Minimal JavaScript.** 1–3 script tags: keyboard navigation, progress, occasionally a chart.
   **This is an observation, not a target** — see "Decisions taken". Richness is now wanted.
 
