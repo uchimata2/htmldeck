@@ -80,3 +80,4 @@ place it is reused.
 | :--- | :--- | :--- |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
 | 2026-08-05 | (no change) | Added the cross-document class of finding and the counting pass, after a source-document audit found nine defects that five per-document reviews had all passed. Evidence in `docs/BRIEF.md`. |
+| 2026-08-06 | (no change) | Owner answered BRIEF open question 6 — sources are supplied, so the cross-document reconciliation added above is now a **standing** part of this mode rather than a conditional one. Two further inputs landed: R3 §6's 12 anti-patterns are directly usable as named defect classes, and R2 §11 gives this mode a testable disclosure check — close every panel and read the deck; if a slide stops making its argument, the tier split is wrong. R4 §2 found the critique format has **zero prior art**, so R1 §14's severity scheme is the only source for it. |

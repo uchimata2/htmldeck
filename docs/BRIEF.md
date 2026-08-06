@@ -212,6 +212,8 @@ Set by the owner when the project was re-scoped around researching their existin
 | **Printing** | **Not a requirement.** An optional mode the user can force on to make a deck printable. It must never shape the interaction design. |
 | **Target browser** | **Recent Chrome/Edge.** One engine, tested. Firefox and Safari degrade gracefully but are not the bar. |
 | **Render technique** | **Full exemption from the SVG-only rule** — SVG, `<canvas>` and WebGL are all permitted, for data-carrying diagrams included. Raster images and external libraries stay banned. |
+| **Script scope** | **Latin only. Non-Latin is out of scope** — settled 2026-08-06, and it is a real exclusion rather than an oversight. R5's "embedding is cheap" result rests on latin-subset faces at 27–76 KB each; a CJK face runs to megabytes even subsetted, which would reopen the delivery-mode decision below. Nothing in R1–R6 covers CJK or RTL typography, and nothing needs to. **A deck in a non-Latin script is not a supported case** — do not half-support it. |
+| **Conflict tie-break** | **Split by rule type** — settled 2026-08-06, answering T-014's open question. **Principle wins on anything measurable**: accessibility, contrast, encoding accuracy, legibility. **Habit wins on aesthetic and structural choices** where the evidence is weak or absent — which is most of what makes a deck look like this owner's rather than generated. The [R2](research/R2-external-principles.md) evidence grades are what make this operable: E1/E2 material is measurable and wins; E3/E4 material does not outrank a corpus habit. |
 | **Delivery mode** | **Embed by default.** Two modes, not three: `portable` (everything inlined, zero external references, ~190 KB typical) is the default and the only shipping mode; `linked` (CDN) exists **for the authoring loop only** and a deck built with it is a defect the critique pass flags. No local-files mode. Settled 2026-08-06 on [R5 §4](research/R5-assets-and-licences.md) — see below. |
 
 > **The Richness decision is contested by the strongest evidence in the field, and
@@ -310,11 +312,20 @@ replaces enforced variety, with the template generator satisfying it later.
    build later.
 5. ~~**Content vs. design split.**~~ **Answered above:** the plugin writes the words. It is the
    harder path and the acceptance criteria for build mode must reflect that.
-6. **Do brief, build and critique get the source documents?** Reconciling a deck against the
-   material it was built from is the highest-value check available, and it needs those documents
-   in context — which costs context budget on every run. Ask for them and reconcile, or degrade to
-   presentation-only when they are absent? This decides whether the check in *What to build* has
-   one half or two.
+6. ~~**Do brief, build and critique get the source documents?**~~ **Answered 2026-08-06 by the
+   owner: ask for them, and reconcile when they are given.** The check has two halves, and the
+   content half is the one that catches what an audience actually gets hurt by. Consequences, all
+   of which are now requirements rather than options:
+   - **Brief mode asks for the sources.** They join the `## Resources` section of the six-part
+     prompt, which already has a slot for them.
+   - **Absence is a legitimate state, not a failure.** When they are not supplied the check runs
+     presentation-only and **says so in its output** — the "say which half you ran" rule, which
+     exists precisely for this case.
+   - **The reconciliation technique is already known and cheap:** one table listing every figure in
+     the material, its origin, and every place it is reused. The corpus audit found nine defects
+     that way which five document-level reviews had passed.
+   - The context cost is accepted. It buys the only check that can stop a wrong number reaching a
+     board.
 
 ---
 

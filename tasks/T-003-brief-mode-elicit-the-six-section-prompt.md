@@ -60,3 +60,4 @@ The structure is taken from a real prompt in the corpus that produced one of the
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
+| 2026-08-06 | (no change) | Owner answered BRIEF open question 6: the plugin **does** receive source documents. Brief mode therefore has to ask for them — they populate the `## Resources` section, which already has the slot. Absence is a legitimate state and must not be treated as a failure. Decision recorded once, in `docs/BRIEF.md`; not restated here. |
