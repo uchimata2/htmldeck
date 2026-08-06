@@ -207,17 +207,52 @@ Set by the owner when the project was re-scoped around researching their existin
 | **Use case** | Primarily **presented live**, but the supporting detail is hidden behind interactive elements — turning cards, toggles, tabs, floating information layers, tooltips — so the same file is consumable by a recipient reading it alone. |
 | **Dependencies** | **Self-contained core, optional enhancement.** Works standalone for a user who installed nothing else; uses other skills when present, with a stated fallback for each. |
 | **Visual identity** | **One** theme, fully resolved on every layer — not several, not generated per topic. But **every layer parametric from the start**, because the planned next step is an in-plugin tool that generates new templates. Answers open question 3. |
-| **Richness** | Interaction, smooth visuals, 2D animation and 3D effects are **wanted**. The corpus's "1–3 script tags" is a description of past work, not a target. There is no JavaScript budget. |
+| **Richness** | Interaction, smooth visuals, 2D animation and 3D effects are **wanted**. The corpus's "1–3 script tags" is a description of past work, not a target. There is no JavaScript budget. **Contested 2026-08-06 — see the note below the table.** |
 | **Portability** | The binding constraint. No installation, no special privileges — the recipient double-clicks a file. **One browser must render it with no glitch**; that beats working everywhere adequately. Mobile is secondary. |
 | **Printing** | **Not a requirement.** An optional mode the user can force on to make a deck printable. It must never shape the interaction design. |
 | **Target browser** | **Recent Chrome/Edge.** One engine, tested. Firefox and Safari degrade gracefully but are not the bar. |
 | **Render technique** | **Full exemption from the SVG-only rule** — SVG, `<canvas>` and WebGL are all permitted, for data-carrying diagrams included. Raster images and external libraries stay banned. |
 | **Delivery mode** | **Embed by default.** Two modes, not three: `portable` (everything inlined, zero external references, ~190 KB typical) is the default and the only shipping mode; `linked` (CDN) exists **for the authoring loop only** and a deck built with it is a defect the critique pass flags. No local-files mode. Settled 2026-08-06 on [R5 §4](research/R5-assets-and-licences.md) — see below. |
 
+> **The Richness decision is contested by the strongest evidence in the field, and
+> [R2 §12.1](research/R2-external-principles.md) does not pretend to have settled it.** Mayer's
+> coherence principle — inessential material measurably *reduces* comprehension, 23 of 23 tests,
+> median effect size 0.86 — is the best-supported result R2 found, and it cuts against decorative
+> motion. This project's own rules say evidence overturns taste, so the conflict is recorded rather
+> than smoothed into "use motion tastefully".
+>
+> **The position R2 proposes, for T-014 to adopt or overrule deliberately: motion must be
+> subordinate to signalling.** Animation that marks structure — staging an argument, showing where
+> you are, animating a diagram's own mechanism — *is* signalling, which the same body of work
+> supports. Ambient motion that only decorates is what the evidence rules against. So the rule is
+> not "less motion" but **"motion that encodes something"**, and it comes with a question a build
+> check can ask: *what does this animation encode?* If the answer is "it looks good", it is the
+> case the evidence is about. The Richness decision stands until T-014 rules; it no longer stands
+> unexamined.
+
 **Three consequences worth stating plainly.**
 
 *Progressive disclosure was absent from this brief entirely.* It is the owner's signature technique
 and the mechanism that lets one file serve both a live audience and a lone reader. Scoped as T-016.
+
+> **Upgraded 2026-08-06 by [R2](research/R2-external-principles.md): it is load-bearing, not a
+> signature flourish.** The *Use case* decision — presented live, detail behind interaction —
+> collides directly with the best-replicated result in multimedia learning. Mayer's **redundancy**
+> principle finds that on-screen text competing with a speaker reduces comprehension, and the
+> **coherence** principle finds the same of anything inessential on the slide (23 of 23 tests,
+> median effect size 0.86). By that literature, a deck that is also a document carries extraneous
+> material by construction.
+>
+> **The interaction layer is what dissolves the conflict**, by separating the two audiences in time
+> rather than compromising between them: hidden detail is not in the live channel during the talk,
+> and is available once the speaker is gone. That makes T-016 the reason the deck can be two
+> things, not a feature of it — a priority change, and R2 §12.4 is the argument.
+>
+> R2 §11 also answers the question T-010 left open about disclosure a presenter must operate live,
+> and the answer is not the intuitive one. The availability of control measurably helped viewers
+> **whether or not they used it**, while the documented harm of click-driven builds is specific and
+> avoidable. The rule: **available and visible during the talk, never load-bearing in it** — a slide
+> must make its point with every panel closed. Testable, and now a critique-pass check.
 
 *Portability replaces restraint as the constraint,* and the two are not the same thing. The real
 hazard is that **`file://` is a restricted origin**: ES modules, `fetch`, XHR and some worker and
