@@ -153,6 +153,22 @@ every place it is reused.
 
 ## What to build
 
+> **Challenged 2026-08-06 — this section predates the corpus research and was never reconciled with
+> it.** [R1 §10](research/R1-corpus-conventions.md) records the owner's actual pipeline as
+> *requirements → foundation spec → slide-by-slide spec → **review of the spec** → build → review of
+> the build → owner review → fix*, with the deck built **page by page, in batches**, and two of the
+> reviews happening **before any HTML exists**. [R4 §9](research/R4-prior-art.md) grades that whole
+> structure as owner-authored with **zero prior art** — the source deck skill has no
+> specification-document concept at all.
+>
+> **The three modes below model none of it.** There is no foundation spec, no slide-by-slide spec,
+> no spec review, no batching, no approval gate and no iteration loop; critique mode reviews a built
+> deck only, though R1 §14 proves two formats. Raised as
+> [T-020](../tasks/T-020-model-the-authoring-pipeline-not-just-the-modes.md), which also has to
+> resolve this against the *Interface* decision above — a process with three approval gates and a
+> promise to ask exactly two questions need reconciling, and the distinction to argue from is that
+> **a question is something the user must answer in advance; a gate is an artifact they react to.**
+
 Three modes, in build order:
 
 1. **Brief** — elicit the six-section prompt above from whatever the user has.
