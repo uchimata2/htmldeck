@@ -31,6 +31,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | WP1 | `proposed` | specify | - | - |
 | [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) | Build the reflow view and enforce the resolution contract | WP2 | `proposed` | specify | - | - |
 | [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | WP2 | `proposed` | specify | - | - |
+| [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) | Audit the dependency edges across the open backlog and propose a build order | none | `proposed` | specify | - | - |
 
 ## Closed
 
@@ -55,6 +56,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 
 ## Next ID
 
-`T-030`
+`T-031`
 
 <!-- end generated -->
