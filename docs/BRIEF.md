@@ -163,7 +163,9 @@ Three modes, in build order:
 Plus a **check** the build must pass: no external references, no banned terminology, every
 `<section>` has a heading, contrast meets WCAG AA, and it renders glitch-free from `file://` in
 the target browser. *(Printing was on this list; it is now an opt-in mode, not a gate — see
-"Decisions taken".)*
+"Decisions taken".)* **"Glitch-free" is now defined as nine testable conditions** in
+[R6 §8](research/R6-portability-contract.md) — T-005 implements them; two of the nine exist
+because this project has watched a font check and a WebGL check both pass on a broken render.
 
 Those are all presentation checks. **When the user supplies source documents, the check also
 reconciles content:** every figure on a slide appears in a source with the same value, and every
@@ -222,6 +224,21 @@ hazard is that **`file://` is a restricted origin**: ES modules, `fetch`, XHR an
 WebGL texture paths fail on a double-clicked file even though they work when served over HTTP.
 "Rich JavaScript" and "no installation" collide exactly there, and it is the most likely way a
 deck ships broken. Scoped as T-017.
+
+> **Measured 2026-08-06 by [R6](research/R6-portability-contract.md), and the paragraph above draws
+> the line in the wrong place.** It is not "inline works, external fails" — a sibling file loads
+> perfectly well as a stylesheet, font, image, script or audio source. The boundary is between
+> **fetch-like access and element-like access**: script may not read a local file's bytes, the
+> renderer may consume them. Across 95 rows on Chrome 151 and Edge 151 that single sentence covers
+> every refusal.
+>
+> Most of what this paragraph feared is available. `file://` is a **secure context**, so
+> `crypto.subtle`, view transitions, container queries, popover, WebGL1/2 and a WebGPU adapter are
+> all present; fullscreen, clipboard, audio resume, download and every storage API work. ES modules
+> are usable via `import()` of a `blob:` or `data:` URL — but a library shipping as more than one
+> file needs its internal specifiers rewritten at build time, because a relative specifier cannot
+> resolve from a `blob:` base and an import map does not rescue it. **No refused capability costs
+> the deck anything**; each has a working substitute. The design layer is unconstrained.
 
 *The rules in `../CLAUDE.md` have been updated to match.* The old rule 2 (inline SVG only) and rule
 3 (decks must not look like each other) both predated these decisions and were rewritten on the

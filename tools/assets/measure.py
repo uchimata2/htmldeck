@@ -73,7 +73,12 @@ LIBS = [
     ("anime.js 4",   "npm/animejs@4/lib/anime.iife.min.js",        "MIT",       "motion"),
     ("motion 12",    "npm/motion@12/dist/motion.min.js",           "MIT",       "motion"),
     ("gsap 3",       "npm/gsap@3/dist/gsap.min.js",                "no-charge", "motion, not OSI"),
-    ("three.js",     "npm/three@0.180.0/build/three.module.min.js", "MIT",      "3D"),
+    # three.js ships as two files: an entry module that re-exports, and the core it imports by
+    # the relative specifier `./three.core.min.js`. Inlining the entry alone gets you a third of
+    # the bytes and a module that cannot resolve its own import - so both are measured, and the
+    # cost of the library is the sum.
+    ("three.js",     "npm/three@0.180.0/build/three.module.min.js", "MIT",      "3D - entry module"),
+    ("three.core",   "npm/three@0.180.0/build/three.core.min.js",  "MIT",      "3D - the rest of it"),
     ("reveal.js 5",  "npm/reveal.js@5/dist/reveal.js",             "MIT",       "deck framework"),
     ("impress.js 1", "npm/impress.js@1/js/impress.js",             "MIT",       "deck framework"),
     ("mermaid 11",   "npm/mermaid@11/dist/mermaid.min.js",         "MIT",       "diagrams"),

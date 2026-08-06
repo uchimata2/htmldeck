@@ -53,6 +53,13 @@ was trusted because it printed numbers.
 **How to apply.** Every check ships with a self-test on a case whose answer was worked out by
 hand. Run it before believing the check, and again whenever the check changes.
 
+**The checker's *inputs* need the same suspicion.** Three rows of T-017's `file://` probe reported
+the environment as refusing something when the fixture was simply invalid — a 2 ms audio clip no
+element will ever report metadata for, a 36-byte fragment of an mp4 header that is not a decodable
+video, and a font check that would have passed while the page rendered in Arial. A false FAIL is
+quieter than a false PASS and just as wrong: it deletes a capability from the record that was never
+actually tested.
+
 ### L-05 — Say which half you checked
 
 A check that *looks* complete is worse than no check, because a partial pass gets read as a
@@ -114,16 +121,82 @@ An unreliable tool that errors is a nuisance. One that answers *confidently and 
 reporting a capability as available when the real environment denies it — puts the defect in the
 shipped artefact instead of the console. The cost is paid by the recipient, not the author.
 
-The case: a preview pane loaded with a `file://` page reported `location.origin` as `"file://"`
-and allowed `fetch()` of a local file. Both are what an *unrestricted* origin does; the real thing
-is opaque and denies them. Every check run there passes, and the deck breaks on the recipient's
+The case: a preview pane loaded with a `file://` page allowed `fetch()` of a local file. A real
+restricted origin denies it. Every check run there passes, and the deck breaks on the recipient's
 machine. It is **L-06** with the stakes inverted — the convenient source did not say "nothing
 here", it said "everything works".
+
+> **One of the two original proofs was withdrawn, 2026-08-06, by T-017's measurement.** This
+> lesson also cited the pane reporting `location.origin` as `"file://"` rather than an opaque
+> `"null"`. **Real Chrome 151 reports `"file://"` too**, on a genuinely double-clicked file — it is
+> what Chrome does, and it is evidence of nothing. The origin *is* opaque there (Chrome's own
+> worker error names it `'null'`), but `location.origin` does not say so. The `fetch()` half is
+> the real discriminator and the lesson stands on it.
+>
+> Which makes this lesson an instance of itself, and that is why the correction is kept rather
+> than tidied away: **the diagnostic used to convict the untrustworthy tool had not been checked
+> against the trustworthy one either.** When you catch a tool lying, verify the test you caught it
+> with — on the real environment, before it becomes the thing everyone cites.
 
 **How to apply.** For any constraint that only bites in the delivery environment, test *in* that
 environment — for a deck, a real double-click on a clean profile. When a tool cannot be trusted
 for a given question, record the prohibition in the task that will ask it, not only in the note
 where it was discovered; the next session reads the task.
+
+### L-16 — A probe cannot report through the channel it is testing
+
+The natural way to get results out of an experiment is the most capable channel available. When
+the experiment is *about what the environment permits*, that channel is one of the things under
+test — and its failure erases the result instead of recording it.
+
+The case: the `file://` probe reported by downloading a JSON file. Downloading is itself a row in
+that matrix. Worse, a *second* download from one page makes Chrome raise a permission dialog, and
+the dialog takes focus away from the page — so the download channel disabled the very rows that
+were about to be measured. The fallback, a result payload rotated through the window title in
+chunks, needed no permission from anyone and carried every row.
+
+**How to apply.** Give any probe a reporting path that spends nothing the probe is measuring, and
+prefer the dumbest channel available: something already visible from outside the subject — a title,
+an exit code, a file the harness wrote itself — over anything the subject must be *permitted* to
+do. Build the fallback first; it is the one that reports the interesting failures.
+
+### L-17 — A permission you spend once cannot be shared across measurements
+
+Some capabilities are gated on a resource that is *consumed on use* rather than merely checked: a
+browser's transient user activation, a one-time token, a rate-limited call, a single confirmation.
+Test several such capabilities from one grant and only the first is measured honestly. The rest
+report the exhaustion of the grant — and they report it in the vocabulary of refusal, so the
+result reads exactly like the environment saying no.
+
+The case: four gesture-gated rows (fullscreen, clipboard, audio resume, download) were chained
+off a single click. Three came back `NotAllowedError` and were about to be written into the
+portability contract as `file://` restrictions. Given one click each, **all four pass** — nothing
+had been refused. A second instance of the same fault sat underneath it: the first click on a
+newly opened window is spent focusing that window, so even the one-click-each version failed its
+*first* row until an unmeasured arming click was put in front.
+
+**How to apply.** One grant, one measurement. Give each gated call its own fresh grant, and if
+acquiring the grant has its own side effect (focus, a dialog, a redirect), spend one on arming and
+measure nothing with it. Then ask what a failure would look like if the harness were at fault: for
+consumable permissions the answer is *identical to a genuine refusal*, which is why this cannot be
+caught by reading the result.
+
+### L-18 — A shared readback channel carries the previous run's answer
+
+When results come back over a channel that is not private to the run — a window title, a
+well-known file, a fixed port, a shared clipboard, a log — a leftover producer from an earlier run
+is indistinguishable from the current one, and it answers first.
+
+The case: the probe reports through the window title, which is global to the desktop. A run
+launched by double-click harvested a complete, well-formed, *correct-looking* payload from a probe
+window still open from the previous run — gesture rows the freshly opened page had not yet run and
+could not have produced. Nothing was malformed; the reassembly succeeded; the answer was simply
+from the wrong run.
+
+**How to apply.** Before starting a run, record which producers already exist, and ignore them —
+by handle, pid or inode, not by name or title, since those are exactly what a stale producer
+shares with a fresh one. Where possible make the channel per-run instead. Treat a plausible
+result arriving *sooner than the work could have finished* as the signature of this fault.
 
 ---
 

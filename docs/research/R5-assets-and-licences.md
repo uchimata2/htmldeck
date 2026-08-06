@@ -151,8 +151,16 @@ opened from disk.
 | impress.js 1 | 157.3 | 36.2 | MIT | avoid |
 | Chart.js 4 | 203.6 | 68.9 | MIT | avoid — SVG is enough (§5) |
 | d3 7 | 273.2 | 90.3 | ISC | avoid whole; borrow scale maths |
-| three.js | 331.0 | 76.9 | MIT | opt-in only |
+| three.js | **703.2** | 175.0 | MIT | opt-in only — two files, see below |
 | **mermaid 11** | **3482.5** | 948.8 | MIT | **never ship the runtime** |
+
+> **Corrected 2026-08-06 by T-017 step 6.** This row read **331.0 KB**, which was the size of
+> `three.module.min.js` alone. That file is a re-export shim: the library is in
+> `three.core.min.js` (372.2 KB), which it pulls in by a relative import. Inlining the measured
+> file gets you under half the bytes and a module that cannot resolve its own dependency. The
+> real inlined cost is **703.2 KB**, and `tools/assets/measure.py` now measures both halves so
+> the number cannot drift back. The verdict is unchanged and better supported — this is 3.7× the
+> whole probe deck, not 1.7×.
 
 **GSAP needs a paragraph, because "free" is not "open source".** Since April 2025 (Webflow's
 acquisition of GreenSock) GSAP is free for commercial use including the former members-only
@@ -181,7 +189,7 @@ motion; for staggered entrances below roughly ten elements, CSS `animation-delay
 and costs nothing. R4 recorded that the source deck skill says exactly this. **So motion should be
 a build-time decision, not a constant**: no motion library unless the deck asks for one.
 
-**three.js: opt-in, never default.** 331 KB, MIT. It is 1.7× the whole probe deck, so it belongs
+**three.js: opt-in, never default.** 703 KB, MIT. It is 3.7× the whole probe deck, so it belongs
 behind an explicit request on size alone.
 
 > **Correction, same day: this section originally said three.js "initialises fine from `file://`".
@@ -190,15 +198,30 @@ behind an explicit request on size alone.
 > the file measured above is `three.module.min.js`, an **ES module**, and module loading is one of
 > the specific things a restricted origin is expected to break.
 >
-> An attempt to settle it in the preview pane failed for a reason worth recording: the pane
-> reports `location.origin` as `"file://"` and allows `fetch()` of a local file, both of which are
-> inconsistent with a genuinely restricted origin. **It is not a faithful `file://` environment**,
-> so nothing it reports about this can be trusted — the third time in this session that pane has
-> given a confident wrong answer (**L-06**).
+> An attempt to settle it in the preview pane failed for a reason worth recording: the pane allows
+> `fetch()` of a local file, which a genuinely restricted origin does not. **It is not a faithful
+> `file://` environment**, so nothing it reports about this can be trusted — the third time in this
+> session that pane has given a confident wrong answer (**L-06**).
+>
+> **Amended 2026-08-06 by [T-017](../../tasks/T-017-define-the-portability-contract.md).** This
+> paragraph originally gave a second proof: that the pane reported `location.origin` as `"file://"`
+> rather than an opaque `"null"`. Measured on a real double-clicked file, **Chrome 151 reports
+> `"file://"` as well**, so that observation distinguishes nothing and has been removed. The
+> `fetch()` proof is sound and the conclusion is unchanged. See **L-15**.
 >
 > **This is T-017's question, and T-017's method is the only one that answers it: double-click on
-> a clean profile and record what happens.** The 331 KB figure and the MIT licence stand; the
-> runtime claim is withdrawn until tested.
+> a clean profile and record what happens.** The MIT licence stands; the runtime claim is
+> withdrawn until tested.
+>
+> **Settled 2026-08-06 by T-017 step 6 — tested, and the withdrawn claim was half right.**
+> Double-clicked on a clean Chrome 151 profile with DNS black-holed, three.js r180 **does**
+> initialise and render: 422 exports, a WebGL2 context, and a shaded box confirmed by reading the
+> framebuffer and by looking at it. But not by being inlined as it ships. The entry module's
+> relative import of `./three.core.min.js` cannot be resolved from a `blob:` URL — and an import
+> map does not rescue it, because resolution fails before the map is consulted. The specifier has
+> to be rewritten to the core's blob URL at build time. So: usable, at 703 KB, conditional on a
+> build step. Detail and the full row set are in
+> [T-017](../../tasks/T-017-define-the-portability-contract.md) §3 and in R6.
 
 ## 4. The delivery-mode question — the recommendation you asked for
 
