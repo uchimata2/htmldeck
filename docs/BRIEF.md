@@ -180,8 +180,8 @@ Three modes, in build order:
 >
 > | | |
 > | :--- | :--- |
-> | [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) | **The operative ruleset.** 131 rules, each with a stable `DS-nnn` ID, a **hard/default/guidance** label, and a **Check** value — `auto` (59) · `render` (32) · `judge` (36). The `Check` column is what routes a rule to the build check, the render pass, or the evaluator. Loaded on demand; the skill body must not paraphrase it. |
-> | [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) | **Why each rule is what it is** — drops, the sixteen conflicts, provenance, derivations. **No runtime loads it.** |
+> | [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) | **The operative ruleset.** 154 rules as of 2026-08-06, each with a stable `DS-nnn` ID, a **hard/default/guidance** label, and a **Check** value — `auto` (65) · `render` (39) · `judge` (43). The `Check` column is what routes a rule to the build check, the render pass, or the evaluator. Loaded on demand; the skill body must not paraphrase it. **Counts are derived and go stale when a rule is added — re-derive, never adjust by hand** (`EVALUATION.md` §1). |
+> | [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) | **Why each rule is what it is** — drops, provenance, derivations, and **twenty-nine conflicts**: sixteen found by reading the sources against each other, thirteen more found by building a deck strictly to the finished ruleset. **No runtime loads it.** |
 > | [`EVALUATION.md`](EVALUATION.md) | **How a deck is scored and when it is good enough.** Ten dimensions with anchors, a threshold, and a convergence loop with four distinct stop conditions. |
 >
 > **The evaluator is what makes the ruleset operate rather than decorate.** Before it, nothing in

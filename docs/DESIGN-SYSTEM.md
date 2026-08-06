@@ -29,7 +29,8 @@ brave to depart when a different idea communicates better.* Licenses departure f
 5. **Two tiers of detail, never three.** Tier one carries the argument with everything closed.
 6. **WCAG 2.2 AA is the floor**, plus two AAA criteria adopted deliberately (§7).
 7. **Portable or it does not ship.** One file, zero external references, opened from `file://`.
-8. **One fixed 1920×1080 stage, uniformly scaled; no text under 18 design units.**
+8. **One fixed 1920×1080 stage, uniformly scaled.** Body type stays at 24–28 design units; nothing
+   anywhere goes below 16.
 
 ---
 
@@ -55,7 +56,7 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | DS-010 | **Every value that could differ between themes is a CSS custom property** — including ones no current theme varies. | hard | auto |
 | DS-011 | Ship **one** fully-resolved theme. Never a palette generated per topic. | hard | auto |
 | DS-012 | Dark mode is one block of custom-property overrides, never a redesign. | hard | auto |
-| DS-013 | Core tokens: `--ink` · `--bg` · `--line` · `--shadow` · `--accent` · semantic role colours · `--measure` · the disclosure mark. | default | auto |
+| DS-013 | Core tokens: `--ink` · `--bg` · `--line` · `--shadow` · `--accent` · semantic role colours · **a data-series role and a UI-line role, both separate from `--line`** · `--measure` · the disclosure mark. Chart marks and interactive borders carry a 3:1 obligation (§7, 1.4.11) that a hairline does not, so a deck reusing `--line` for either fails a criterion no token in the list names. | default | auto |
 
 ---
 
@@ -83,7 +84,7 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | DS-030 | Three named roles, one face each, every one a token: **display · text · mono**. | hard | auto |
 | DS-031 | **Never Inter, Roboto, Arial or `system-ui`.** A system-font body is a severity-H failure. | hard | auto |
 | DS-032 | Faces embed as base64 `@font-face`, latin subset, licence permitting redistribution. **The licence travels with the font.** | hard | auto |
-| DS-033 | Type is sized in **design units on the 1920×1080 stage**. No `px`, `vw`, `vh` or `clamp()` inside the stage — they fight the transform. | hard | auto |
+| DS-033 | Type is sized in **design units on the 1920×1080 stage**. A design unit is not a unit CSS has, so the stage declares one — **once**, as a token — and every size derives from it. **No bare `px` anywhere else inside the stage, and no `vw`, `vh` or `clamp()` at all**: those are what fight the transform. | hard | auto |
 | DS-034 | **Body 24–28 design units** at line-height 1.55. Display ~67. Subhead ~34. | hard | auto |
 | DS-035 | **Nothing below 16 design units, anywhere.** *Amended from 18 by the owner, 2026-08-06 — see [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §2.* | hard | auto |
 | DS-036 | Mono labels 16–18 units, uppercase, tracked ~1.4px — **and never load-bearing.** The 16–17 band is reserved for marginalia; body type stays at DS-034's range. | hard | judge |
@@ -117,7 +118,7 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | DS-060 | The presentation view is a **fixed 1920×1080 design space, uniformly scaled** with `transform: scale()`. | hard | auto |
 | DS-061 | **Exactly one layout.** No media queries, no breakpoints, no `max-width` containers inside the stage. | hard | auto |
 | DS-062 | Aspect ratio is 16:9 and fixed. A non-16:9 viewport letterboxes; it never reflows. | hard | render |
-| DS-063 | Rendered at 3840×2000 and at 1280×634, the stage is **identical up to a uniform scale factor.** | hard | render |
+| DS-063 | Rendered at 3840×2000 and at 1280×634, the stage is **identical up to a uniform scale factor, within a stated tolerance**: non-text geometry ≤ **0.25 design units**, text-run widths ≤ **2 design units**. Exact equality is unachievable — glyph advances round to device pixels, so any deck containing text fails an equality check. *The tolerance is measured rather than guessed: 384 values, worst case 0.09 and 1.17 — [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §2.* | hard | render |
 | DS-064 | Body text measures ≥ 16 px in a 720p capture of the presented deck. | hard | render |
 | DS-065 | No decorative element positioned in absolute pixels rather than design units. | hard | auto |
 | DS-200 | **Centre the scaled stage by a technique that survives the transform.** `transform: scale()` does not change layout size, so flex or grid centring positions the **unscaled** 1920×1080 box: the track sizes to 1920, start-aligns it, and the scaled stage lands off-centre and clips at the far edge. Anchor at 50%/50% and translate, or size the wrapper to the scaled dimensions. **Measure the stage's rect against the viewport at several widths — the bug is invisible at full size.** | hard | render |
@@ -189,7 +190,7 @@ modifier available to all the others (§5.3).
 | DS-099 | Respectful, positive, professional; voiced as an enthusiastic business person. | hard | judge |
 | DS-100 | Active voice. One dash per paragraph at most. **No rhetorical questions.** | hard | auto |
 | DS-101 | **Bold the fact, not the emphasis.** Three bold things means none stands out. | hard | render |
-| DS-102 | **No fabricated metrics.** Every figure sourced; `[est.]` markers preserved. | hard | judge |
+| DS-102 | **No fabricated metrics.** Every figure sourced; `[est.]` markers preserved. **An illustrative deck sources its figures from its own model**: say on the deck that the subject is illustrative, state the assumptions the numbers derive from, and attribute nothing to a real study. This is the provision that stops the alternative — quoting half-remembered real research, where a misremembered figure is a fabricated metric wearing a citation. | hard | judge |
 | DS-103 | Grade honestly: solved / substantially / partial / deferred. | default | judge |
 | DS-104 | Mark assumptions subtly at the side, never as noise. | default | render |
 | DS-105 | Provenance mark upper-right. A working link where sources are reachable from where the deck is presented; plain text where they are not. **Never a dead link.** | default | auto |
@@ -243,7 +244,7 @@ What it must contain is a property of a good deck, so it is here.**
 | DS-114 | **One icon per concept, used consistently.** A repeated icon is a repeated idea. | hard | judge |
 | DS-115 | Particles, connectors and custom diagrams may be drawn freely in SVG or canvas. | guidance | — |
 | DS-116 | **Branch where the process branches.** Four boxes joined by arrow glyphs is not a flow diagram. | hard | judge |
-| DS-117 | Connectors have arrowheads that **meet their target**, and are **labelled**. | hard | render |
+| DS-117 | Connectors are **labelled**, always. Arrowheads are for **directional** connectors only, and they **meet their target**. An undirected edge gets no arrowhead: an arrow asserts a direction, and asserting one the data does not have is a wrong diagram rather than a tidy one. | hard | render |
 | DS-118 | **Every SVG and chart is theme-aware.** No hard-coded fill or stroke. | hard | auto |
 | DS-119 | `<canvas>` gets fixed pixel dimensions via HTML attributes; CSS scales it. | hard | auto |
 | DS-120 | An accumulation effect must actually accumulate, not fall through. | hard | render |
@@ -252,6 +253,7 @@ What it must contain is a property of a good deck, so it is here.**
 | DS-123 | **"Boxes everywhere" is the rejected pattern.** Card grids, stat strips, pill rows and bulleted lists **used instead of a diagram** are a severity-H failure. | hard | judge |
 | DS-214 | **Colour an SVG through CSS, never through a presentation attribute.** A class rule outranks `fill=` and `stroke=` silently, so an element styled by both renders the CSS colour and the attribute is dead markup — how a 2.17:1 run shipped past a palette audit that reported zero failures. This is DS-118's mechanism: theme-aware means *styled*, not *attributed*. | hard | auto |
 | DS-215 | **Check the colour that renders, not the colour intended.** A palette audit compares token pairs an author nominates; it cannot see a pair nobody thought to nominate. Compare each text run's **computed** fill against the **computed** fill of whatever is painted behind it. DS-191, in the one place it has already cost this project a defect. | hard | render |
+| DS-219 | **Never set text on a data mark.** To clear 1.4.11's 3:1 against the ground a neutral mark must be dark; to carry 1.4.3's 4.5:1 text it must be light. **No neutral does both.** The label goes outside the mark, or on a plate that earns 4.5:1 in its own right. A consequence of the accessibility floor, not a stylistic preference — and the reason a value-inside-the-bar chart cannot be made conformant by choosing a better grey. | hard | render |
 
 ---
 
@@ -269,7 +271,7 @@ What it must contain is a property of a good deck, so it is here.**
 | DS-135 | The page title and the nav-bar name for that page **must match**. | hard | auto |
 | DS-136 | Interaction patterns built **once as components and reused**, so the UX is learnable. | hard | judge |
 | DS-137 | Two simultaneous interactions need a **defined precedence rule.** | hard | judge |
-| DS-138 | Popovers drop **below** the element, never above. | hard | render |
+| DS-138 | Popovers drop **below** the element, never above — **so the control sits high enough that its panel fits below it on the stage.** Panel placement constrains control placement, and the ruleset previously fixed only the first: a control near the foot of a 1080-unit stage cannot host a panel more than a row or two deep, and no styling of the panel repairs it. Choose the control's row from the panel's height. | hard | render |
 | DS-139 | Assumption marker on the right edge, silent until wanted. | default | render |
 | DS-216 | **One encoding of position, not three.** A spine ribbon, a dot per slide and a progress bar all answer *where am I*. Showing all three is noise competing with the slide. Pick one primary; a second is permitted only when it encodes a **different** fact — stage versus slide — and never a third. | default | render |
 | DS-217 | **Chrome has a budget: roughly 12 labelled or interactive items, and ~90 design units of height.** Past that the navigation reads as an interface rather than as a deck, and per-slide dots stop scaling somewhere around ten slides. Prefer a compact indicator plus click-to-jump over one target per slide. | default | render |
@@ -282,16 +284,17 @@ is "it looks good", it is decoration and it goes.
 | ID | Rule | Label | Check |
 | :--- | :--- | :--- | :--- |
 | DS-140 | **A named vocabulary of exactly four motions, and nothing else:** Rise (entry, 340 ms, `cubic-bezier(.22,1,.36,1)`, 60 ms stagger) · Current (flow, dasharray 7 6, 4.5 s linear infinite) · Open/Turn/Scale (reveals, 380/420/300 ms) · Pulse-once (1.2 s, never looping). | hard | auto |
-| DS-141 | **Animations max 500 ms**, ease-in-out. Inter-slide transition 400–500 ms. | hard | auto |
+| DS-141 | **Entry and transition animations max 500 ms**, ease-in-out. Inter-slide transition 400–500 ms. **DS-141 governs entry and transition only; DS-140's named vocabulary is the specific override** — Pulse-once at 1.2 s and Current at 4.5 s are conformant by name, not exceptions to be argued. A duration over 500 ms that is *not* one of DS-140's four is a defect. | hard | auto |
 | DS-142 | **No continuous ambient glow, pulse or drift on static content.** | hard | auto |
 | DS-143 | `prefers-reduced-motion` honoured, **and the semantics survive it** — the dashed arrows stay dashed. | hard | render |
 | DS-144 | **No 3D transitions between slides**, no flashy zooms, no punchy cuts. The 3D reveal of a card is permitted. | hard | auto |
 | DS-145 | Hidden elements reveal by opening, turning or scaling. Flows use dashed arrows, slowly animated. | default | render |
-| DS-146 | Charts draw in **once**; never re-animate on back-navigation. | hard | render |
+| DS-146 | Charts draw in **once**; never re-animate on back-navigation. **The draw-in is DS-140's Rise applied to the chart's marks, staggered — not a fifth motion.** A stroke-dash draw would add one to a vocabulary DS-140 fixes at four, which is the trade this rule is not permitted to make. | hard | render |
 | DS-147 | Count-up on headline statistics; **one** emphasis pulse on the key number per slide. | default | render |
 | DS-148 | When a diagram changes mode, animate nodes to their new size and position. | default | render |
 | DS-149 | Entrance animations with `fill-mode: forwards` keep their stacking context. | hard | render |
 | DS-150 | **Every animation answers *what does this encode?*** Depth, shadow, transparency and shaders are subject to the same test. | hard | judge |
+| DS-218 | **Motion that loops, or runs over 5 s, ships with a persistent, keyboard-operable control that stops it** — and the deck still reads with motion off. DS-140's `Current` is infinite, so **every deck with a flow diagram needs this control**, and §7's 2.2.2 stated the obligation without any rule here requiring the deck to build one. Distinct from DS-143: `prefers-reduced-motion` is what the reader's system asks for; this is what the reader can reach. | hard | auto |
 
 ### 5.3 Progressive disclosure
 
@@ -308,7 +311,7 @@ every archetype.
 | DS-165 | The disclosure mark is a **tokenised element of the theme**, not a per-slide invention. | hard | auto |
 | DS-166 | **Disclosure state never required to advance.** Arrows advance; a separate key toggles; the two do not interact. | hard | auto |
 | DS-167 | Every affordance **available and visible during the talk, never load-bearing in it.** | hard | judge |
-| DS-168 | Targets ≥ 24 × 24 CSS px, or the spacing exception. | hard | auto |
+| DS-168 | Targets ≥ 24 × 24 CSS px, or the spacing exception — which **inside the stage means ≥ 48 × 48 design units**. The stage scale bottoms out at 0.5 before DS-071 hands over to the reflow view, so a design unit is worth half a CSS pixel at the smallest size the stage is ever shown. **Sizing a control at 24 design units matches the number and fails the criterion.** | hard | auto |
 | DS-169 | One meaningful interaction per slide, where it adds signal. Never decoration. | default | judge |
 | DS-170 | Push longer text behind interaction rather than onto the slide. When detail is unavoidable: hide it, or split to a new page. | default | judge |
 
@@ -399,12 +402,14 @@ resolve to nothing, and a check that silently checks nothing is worse than a sho
 | [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md) | Building §2.5 |
 | [T-001](../tasks/T-001-decide-the-font-strategy-embedded-subsets-or-a-syste.md) · [T-006](../tasks/T-006-decide-the-chart-strategy.md) · [T-007](../tasks/T-007-define-the-parametric-theme-layer.md) | The three standing decisions |
 
-**Two rules about checking that stay here**, being claims about what a check may assert:
+**Four rules about checking that stay here**, being claims about what a check may assert:
 
 | ID | Rule | Label |
 | :--- | :--- | :--- |
 | DS-190 | **Structural checks say nothing about layout — always render and look.** | hard |
 | DS-191 | **DOM measurement confirms geometry you suspect; it cannot find a defect you never thought to measure.** | hard |
+| DS-220 | **A box clamped by its grid track never reports an overflow.** Content taller than a `1fr` track spills silently: the box measures exactly the track, so comparing the box against the stage finds nothing wrong. **Compare `scrollHeight` against `clientHeight`** — the box is the wrong thing to measure. | hard |
+| DS-221 | **Pin motion off before capturing.** DS-140's infinite `Current` means a headless render never reaches a quiescent state, so the screenshot fires mid-transition and yields a convincing blank slide. A render gate that does not disable animation is measuring an arbitrary frame and reporting it as the deck. | hard |
 
 ---
 
@@ -412,9 +417,11 @@ resolve to nothing, and a check that silently checks nothing is worse than a sho
 
 **Tested once, by building a deck** — [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md)
 built [`examples/reference-deck.html`](../examples/reference-deck.html) strictly to this document and
-produced **thirteen findings**, four of them conflicts between two `hard` rules. Those are being
-reconciled by [T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md);
-until it lands, **rules in this file may still contradict each other**, and F-01 to F-13 name where.
+produced **thirteen findings**, four of them conflicts between two `hard` rules. All thirteen are
+reconciled by [T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md),
+which amended nine rules and added four; **each conflicting pair now names which rule yields, in the
+rule text.** What that reconciliation is worth is bounded by what produced it: **one deck**. Every
+amendment is a correction from a single build, and a second deck would be expected to find more.
 
 **What that build did not test.** It was one deck, one topic, one author, and it was scored by the
 agent that wrote it. §3.4 and §3.5 arrived *after* it, from the owner's review, so **no deck in this

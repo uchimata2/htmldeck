@@ -48,9 +48,8 @@ of an answer.
 **Sixteen were found by reading the sources against each other. Thirteen more (F-01 to F-13) were
 found by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) building a deck
 strictly to the finished ruleset**, and four of those are conflicts between two rules both labelled
-`hard` — a compliant deck could not exist. They are recorded on T-024 §3.3 and reconciled by
-[T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md); **F-01 is
-settled**, above, by the owner's amendment to DS-035.
+`hard` — a compliant deck could not exist. They are recorded on T-024 §3.3 and reconciled in §2.1
+below by [T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md).
 
 The generalisation is **L-24**: reading a ruleset tells you whether it is coherent, and building to
 it tells you whether it is possible. These sixteen came from reading. Thirteen more were waiting.
@@ -73,6 +72,42 @@ it tells you whether it is possible. These sixteen came from reading. Thirteen m
 | **R2 §12.3** | WCAG 2 **vs** APCA | Conform to AA, design with APCA, never report APCA as conformance. |
 | **R2 §12.4** | Redundancy **vs** the standalone file | Dissolved structurally by the disclosure layer, not by compromise. The two audiences are separated in time. → §5 |
 | **R2 §12.5** | Sans-serif at distance **vs** R5's serif display face | Not a conflict once roles are separated. P-12 governs *projected* text; a display face at headline size is well above the angular size where serifs fail. Recorded so it is not re-derived. |
+
+### 2.1 The thirteen the build found — F-01 to F-13, and how each was closed
+
+**The shape of the set is the result, not any single row.** Four conflicts between two `hard` rules,
+three rules that could not be built as written, two silences with a computable answer, one check that
+was impossible as specified, two measurement traps, and one loop rule that could not coexist with its
+own cost control. **Roughly one finding per ten rules, and none of them cosmetic** — which is the
+argument that a design system has to be built against before it can be trusted.
+
+**Where a conflict is resolved, the resolution names which rule yields, and that ruling is now in the
+rule text itself.** A conflict resolved only here is a conflict a builder will hit again, because
+nothing loads this file at runtime.
+
+| # | Rules | Class | Resolution, and why |
+| :-- | :--- | :--- | :--- |
+| **F-01** | DS-035 × DS-036 | conflict | **DS-035 yields — the number, not the principle.** The floor moved from 18 to 16 on the owner's amendment (§3 below), which makes DS-036's mono range reachable. A floor that forbids the range another rule prescribes is the floor that is wrong: DS-036's band was derived from a role (marginalia, never load-bearing), DS-035's 18 was derived from arithmetic about a different role. Settled by [T-027](../tasks/T-027-specify-the-slide-deliverable-and-the-outline-contract.md) before T-025 opened. |
+| **F-02** | DS-033 | unbuildable | **Rule clarified: the ban is on *bare* `px`.** "No `px` inside the stage" cannot hold literally — every CSS length resolves to an absolute unit, so a design unit has to be declared as one somewhere. The rule's real content is that `vw`, `vh` and `clamp()` fight the transform and bare `px` bypasses the scale; declaring `--du` once and deriving every size from it does neither. **The rule was right about the failure and wrong about the mechanism**, which is the failure mode of a rule written from a symptom. |
+| **F-03** | DS-140 × §7 2.2.2 | silence | **New rule, DS-218** — owner's decision, 2026-08-06. `Current` is infinite, so DS-140 mandates the exact motion 2.2.2 requires a control for, and nothing required the deck to build one. The alternative — leaving it to §7, where the criterion already sits — was rejected because **the reference deck only got a control because the build happened to notice**, and a floor that reaches the builder as a criterion rather than an instruction produces non-conformant decks by default. A rule ID also gives the build check something to test by number, which §7's criterion rows do not offer. |
+| **F-04** | DS-140 × DS-141 | conflict | **DS-141 yields, by scope.** Its 500 ms cap now governs entry and transition only, with DS-140's named vocabulary as the specific override. DS-141 was written about the class of animation that makes a deck feel slow; Pulse-once and Current are neither. **The general rule yields to the specific one, and the text now says so** rather than leaving each builder to infer it — which is what T-024 had to do. |
+| **F-05** | DS-146 × DS-140 | conflict | **DS-140 wins; DS-146 says how.** The draw-in is Rise applied to the chart's marks, staggered. The tempting fix — a stroke-dash draw — is a fifth motion, and DS-140's whole value is that the vocabulary is closed at four: *a named vocabulary is what stops animation becoming decoration* (§4). **A rule that requires an effect must be satisfiable from the vocabulary another rule closes**, so the requirement is expressed in the vocabulary's own terms. |
+| **F-06** | DS-168 × DS-071 | silence | **DS-168 amended with the design-unit floor: ≥ 48.** The number was always computable and never stated. `scale = min(vw/1920, vh/1080)`, and DS-071 hands over to the reflow view below 960 CSS px, so the stage bottoms out at scale 0.5 and a design unit is worth half a CSS pixel at the smallest size the stage is ever shown. 24 CSS px therefore needs 48 design units. **The unstated consequence is the trap: a builder reading "24" inside a stage measured in design units will write 24, match the number and fail the criterion.** The reference deck used 52. *Caveat: the 0.5 floor assumes width binds. A short, wide viewport can scale lower, and DS-071 is `default` — a deck that moves the reflow threshold moves this floor with it.* |
+| **F-07** | DS-117 | unbuildable | **Rule split: labels are universal, arrowheads are conditional.** The rule assumed every diagram is a directed flow, which is true of A-08 and false of a network graph. An arrowhead is not decoration — it asserts a direction — so applying the rule literally to an undirected edge makes the diagram *say something untrue* in order to satisfy a rule about tidiness. **The label half was right for every diagram; only the arrowhead half was over-generalised.** |
+| **F-08** | DS-063 | check impossible | **Tolerance stated, and measured rather than guessed:** non-text geometry ≤ 0.25 du, text-run widths ≤ 2 du. Across 384 values at 3840×2000 and 1280×634, positions agreed to **0.09 du** and the worst text-run width disagreed by **1.17 du**, through glyph-advance rounding to device pixels. A check demanding exact equality fails every deck containing text — **the rule was unfalsifiable, which is worse than lax.** The two tolerances differ because the mechanisms differ: box geometry rounds once, a text run accumulates rounding per glyph, so the text figure carries headroom for runs longer than this deck's. |
+| **F-09** | DS-013 | silence | **Token list extended with a data-series role and a UI-line role.** With neither present the natural move is to reuse `--line` for chart marks, and a hairline token is tuned for a hairline's job — the reference deck's landed at **1.79:1** against the ground, failing 1.4.11's 3:1 for meaningful graphics. **The token list is where a role either exists or gets improvised**, and an improvised role inherits the contrast obligation of whatever it was borrowed from. |
+| **F-10** | §7 1.4.3 × 1.4.11 | conflict | **New rule, DS-219: text never goes on a data mark.** To clear 3:1 against the ground a neutral mark must be dark; to carry 4.5:1 text it must be light; no neutral is both. This is **not resolvable by picking a better grey** — it is arithmetic on the accessibility floor, and it rules out the value-inside-the-bar chart for neutral series generally. Recorded as a rule because it is a general consequence, and a builder meeting it slide-side will otherwise try to tune their way out of it. |
+| **F-11** | DS-138 | unbuildable | **DS-138 extended to constrain the control, not only the panel.** "Panels drop below" is geometrically unsatisfiable when the control sits near the foot of a 1080-unit stage and the panel is more than a row or two — the panel has nowhere to go. **A rule that fixes one end of a relationship silently constrains the other**, and stating only the visible end leaves the builder to discover the invisible one by failing. |
+| **F-12** | DS-190/DS-191 | measurement | **Two new rules, DS-220 and DS-221**, siblings of DS-190/191 because both are claims about what a check may assert. (a) Content taller than a `1fr` track is clamped by the track, so the box measures exactly right and the spill is invisible — `scrollHeight` vs `clientHeight` is the only view of it. (b) An infinite `Current` means a headless render never quiesces, so the screenshot fires mid-transition and **produces a convincing blank slide** — a false negative that looks like a result. Both were hit, not predicted. **DS-191 demonstrated on DS-191's own tooling.** |
+| **F-13** | EVALUATION §6.2 × §6.4 | conflict | **The cap governs measurement rounds, not fixes.** One fix per iteration under a cap of 3 permits three fixes; the reference deck needed **23** before clearing its own gate, so the loop would have reported CAP with twenty defects outstanding — off by an order of magnitude. Run as two measurement rounds with fixes batched inside each, it reached PASS. The one-at-a-time discipline is **kept and scoped** to fixes that interact, which is the case it was written for: attribution only matters where a fix can move a score it was not aimed at. This also closes EVALUATION §8's *"is the cap 2 or 3?"* with evidence rather than reasoning — **2 rounds sufficed for a first-draft 12-slide deck.** |
+
+**One row is not a finding but belongs with them: DS-102 and the illustrative deck.** "Every figure
+sourced" cannot be met by a deck about a place that does not exist, and the plugin's own example deck
+is exactly that case. T-024 resolved it in the build — the model is the source, said so on the deck —
+and the rule now carries the provision. **The point is which alternative it forecloses:** a builder
+who cannot satisfy DS-102 honestly will reach for real research quoted from memory, and a
+misremembered elasticity is a fabricated metric wearing a citation. The rule is stricter with the
+provision than without it.
 
 ---
 

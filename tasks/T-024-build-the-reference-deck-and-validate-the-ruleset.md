@@ -165,6 +165,10 @@ recommendation's cost in the deck's own voice before anyone asks for it.
 
 **These are the point of the task, not evidence it went badly.** Routed per plan step 6 on close.
 
+> **All thirteen are closed** by [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md)
+> — nine rules amended, four added, none rejected. The table below is the record of what the build
+> found; the resolutions are in [`DESIGN-RATIONALE.md`](../docs/DESIGN-RATIONALE.md) §2.1.
+
 | # | Rule(s) | Finding | Found |
 | :-- | :--- | :--- | :--- |
 | F-01 | DS-035 × DS-036 | **Conflict, both `hard`.** DS-035 sets an absolute floor of 18 design units; DS-036 sizes mono labels at "16–18". The 16–17 band is unreachable, so DS-036's range is wrong or DS-035's "anywhere" is not absolute. Neither yields to the other by its own terms. Built to DS-035. | Reading the ruleset, before any HTML |

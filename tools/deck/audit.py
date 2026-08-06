@@ -105,8 +105,10 @@ PROBE = r"""
     }
 
     // DS-140/142 - DS-140 sanctions exactly one looping motion, `Current`, for flows. Anything
-    // else looping is continuous motion on static content, which DS-142 bans outright. 2.2.2
-    // additionally needs a control for whatever does loop.
+    // else looping is continuous motion on static content, which DS-142 bans outright. DS-218
+    // additionally requires a control for whatever does loop (WCAG 2.2.2 is the criterion behind
+    // it; DS-218 is the rule that makes building the control an obligation rather than an
+    // inference).
     out.infinite = []; out.ambient = [];
     for (var j=0;j<all.length;j++){
       var c = getComputedStyle(all[j]);
@@ -316,7 +318,7 @@ def main(deck):
          data.get("panelBelowControl") is not False),
         ("DS-142", "looping motion on static content: %d" % len(data.get("ambient", [])),
          not data.get("ambient")),
-        ("2.2.2", "control for motion over 5s: %s (%d looping)"
+        ("DS-218", "control for motion over 5s: %s (%d looping)"
          % (data["motionControl"], len(data["infinite"])),
          len(data["infinite"]) == 0 or data["motionControl"]),
         ("DS-143", "reduced motion keeps the dashes: %s"

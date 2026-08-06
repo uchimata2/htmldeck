@@ -26,9 +26,14 @@ failure into a score is how a deck ships with a wrong number on the title slide 
 
 | | Gate | Score |
 | :--- | :--- | :--- |
-| Which rules | 102 `hard` | 35 `default`, 6 `guidance`, and the dimensions in §3–§4 |
+| Which rules | 108 `hard` | 40 `default`, 6 `guidance`, and the dimensions in §3–§4 |
 | Result | pass / fail, per rule ID | 0–4 per dimension |
 | On failure | The deck is defective. Fix before scoring is meaningful. | A finding with a severity, entering the loop |
+
+> **Every count in this document is derived from `DESIGN-SYSTEM.md` and goes stale when a rule is
+> added.** These are as of 2026-08-06: 154 rules, counting DS-000. **Re-derive them, never adjust
+> them by hand** — the previous set was wrong by six, having been written before the rules T-027 and
+> T-025 added, and a hand-adjusted count is indistinguishable from a correct one.
 
 ---
 
@@ -38,8 +43,8 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 
 | # | Stage | Covers | Cost |
 | :--- | :--- | :--- | :--- |
-| 1 | **Auto gate** | 59 `auto` rules — static analysis of the file | Near zero. Runs first, always. |
-| 2 | **Render gate** | 32 `render` rules — measurement and a look at the rendered deck | One render, several measurements |
+| 1 | **Auto gate** | 65 `auto` rules — static analysis of the file | Near zero. Runs first, always. |
+| 2 | **Render gate** | 39 `render` rules — measurement and a look at the rendered deck, **with motion pinned off** (DS-221) | One render, several measurements |
 | 3 | **Per-slide score** | S1–S6 (§3), per slide | The expensive stage. Scales with slide count. |
 | 4 | **Whole-deck score** | D1–D4 (§4), once | One pass over the finished artifact |
 | 5 | **Fix and re-enter** | §5 | Bounded by the iteration cap |
@@ -172,7 +177,10 @@ design system exists to prevent. **A dimension at 0 or 1 is a finding regardless
   auto gate ─→ render gate ─→ per-slide score ─→ whole-deck score
        ↑                                                │
        │                                                ▼
-       └──────── fix (one at a time) ←──── threshold met? ──→ PASS
+       └───── fix (batched, §6.2) ←──── threshold met? ──→ PASS
+
+  One trip round the loop is one MEASUREMENT ROUND. The cap counts rounds,
+  not fixes — a round carries as many fixes as the round found.
 ```
 
 ### 6.1 Four ways it stops, and they are different outcomes
@@ -194,8 +202,20 @@ Every fix records **rule ID · slide · was · now · iteration**. It is what ma
 detectable — without it, a loop can alternate between two states forever and each individual
 iteration looks like progress.
 
-**Fixes are applied one at a time, in order of severity.** A batch of fixes whose combined effect is
-a lower score cannot be attributed to any one of them.
+**Fixes are worked in order of severity, and batched within a round.** The cap in §6.4 counts
+measurement rounds, not fixes — a round carries as many fixes as that round's measurement found.
+
+**One at a time applies to fixes that interact**, which is the case the rule was written for: two
+fixes that can move the same score, touch the same component (DS-136), or contend for the same space
+on a slide. A batch of *those* whose combined effect is a lower score cannot be attributed to any one
+of them. **Fixes that cannot interact are batched**, and the fix ledger keeps them attributable
+anyway.
+
+> **Why this is scoped rather than absolute.** Read literally alongside a cap of 3, the rule permits
+> three fixes per deck. The reference deck needed **23** before it cleared its own gate, so the loop
+> would have reported CAP with twenty defects outstanding — the cap firing on a deck that was
+> converging perfectly well. Evidence:
+> [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.1.
 
 ### 6.3 The regression sweep — the part most likely to be skipped
 
@@ -213,12 +233,17 @@ Re-run per iteration:
 
 ### 6.4 Cost
 
-Per iteration: one auto pass, one render pass, per-slide scoring **for touched and component-sharing
-slides only**, and one whole-deck pass. With a cap of 3, worst case is 3 full render passes and
-roughly 1 + 2×(touched fraction) slide-scoring passes.
+Per measurement round: one auto pass, one render pass, per-slide scoring **for touched and
+component-sharing slides only**, and one whole-deck pass. With a cap of 3, worst case is 3 full render
+passes and roughly 1 + 2×(touched fraction) slide-scoring passes.
 
-**The cap is the cost control.** It is set at 3 because R1's pipeline runs build → review → owner
-review → fix, which is two machine iterations before a human sees it, plus one.
+**The cap is the cost control, and it counts measurement rounds.** It is set at 3 because R1's
+pipeline runs build → review → owner review → fix, which is two machine iterations before a human
+sees it, plus one. **Measured against a real deck, 2 rounds sufficed** — see §8.
+
+**The cap does not bound the number of fixes, and must not.** A round's cost is one render plus the
+scoring it triggers; applying twelve fixes inside that round costs one render, not twelve. Counting
+fixes would price the cheap half of the loop and cap the deck on it.
 
 ---
 
@@ -250,4 +275,12 @@ implementer quietly answer an owner's question.
 - **Does the score reach the user?** A visible number invites gaming and implies precision the rubric
   does not have; hiding it makes the loop opaque. **Recommendation: report findings and outcome
   (PASS/CAP/STALL/OSCILLATION), not the number.**
-- **Is the cap 2 or 3?** Settle against a real 12-slide deck, not in the abstract.
+- ~~**Is the cap 2 or 3?**~~ **Closed 2026-08-06, against a real 12-slide deck rather than in the
+  abstract.** [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.1 reached
+  PASS in **two measurement rounds** — round 1 found 23 defects across contrast, spill, clipping, the
+  type floor and the reflow view; round 2 found one, a cross-slide figure disagreement. **The cap
+  stays at 3**, now explicitly counting rounds (§6.4): the measured need was 2, and a cap set at the
+  measured need leaves a first-draft deck no margin at all. What the evidence settles is that 3 is not
+  *low* — the question §6.2 answered — rather than that 3 is exactly right. **One deck, one topic, one
+  author.** A deck that needs a fourth round is a deck the loop should hand back, and that claim has
+  been tested once.

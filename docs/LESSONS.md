@@ -275,7 +275,8 @@ small screens **break on a 4K display**, and decks presented from a high-resolut
 illegible** because a video call re-encodes the shared screen at 1080p or 720p. The second has an
 arithmetic answer — under a uniform scale the presenter's viewport cancels out, so stream legibility
 depends only on the design size and the call's resolution. **That turned a contested preference into
-a hard rule with a computed floor** (body ≥ 24 design units, nothing under 18), tightened a corpus
+a hard rule with a computed floor** (body ≥ 24 design units, nothing under 16 anywhere — the floor
+the owner later set), tightened a corpus
 range that had been carried unexamined, and demoted a corpus element — mono labels — that the
 arithmetic showed had never been legible to a remote audience. **It also flipped an option from
 "cheaper but worse" to "ruled out", because it re-introduces the defect.**
@@ -354,6 +355,39 @@ same element before choosing a value — especially where one is expressed in ab
 other in the design's own units. Where two floors genuinely cannot both hold, **the resolution is
 usually structural rather than numeric**: move the text out, move the control up. Record which rule
 yielded and why, because the next builder will hit the same pair.
+
+### L-28 — Most conflicts between two hard rules are a missing scope, not a real impossibility
+
+A build reports *"these two rules cannot both be satisfied"* and the instinct is to arbitrate — weigh
+the two, pick a winner, soften the loser. **Usually there is nothing to arbitrate.** The rules were
+written at different altitudes about different cases, and the conflict is that neither says which
+case it governs.
+
+The case: four conflicts between two rules both labelled `hard`, from one build. Only **one** was a
+genuine impossibility (two contrast floors on one element — **L-25**). Of the other three, one was a
+number set too high in a rule whose principle was never in doubt, and **two were a general rule and
+its own specific case, both marked `hard` with no precedence between them**: a 500 ms animation cap
+against a named vocabulary containing a 1.2 s pulse and a 4.5 s loop, and a rule requiring charts to
+"draw in" against a rule closing the motion vocabulary at four. In both, **the intended design was
+consistent and the text was not.** The reference deck implemented both correctly by guessing the
+scope — which is the tell: a builder who has to infer the precedence will sometimes infer it wrong,
+and nothing will catch that, because both readings cite a `hard` rule.
+
+Two failure shapes produce this, and both are worth recognising by sight:
+
+- **The general rule with an unnamed exception.** Write the scope into the general rule and name the
+  specific one as the override. Both stay `hard`; neither is softened.
+- **The rule that bans a mechanism instead of a failure.** "No `px` inside the stage" is
+  unsatisfiable as written — every CSS length resolves to an absolute unit, so a design unit must be
+  declared as one somewhere. The rule was right about what goes wrong and wrong about what causes it,
+  which is what happens when a rule is written from a symptom. **A rule nobody can satisfy is not
+  strict; it is ignored.**
+
+**How to apply.** Before arbitrating a conflict, ask *is one of these the other's specific case?* and
+*can this rule be satisfied at all, by anyone?* If either is yes, the fix is text — a scope clause, a
+named override — and no rule loses. Reserve yielding for conflicts that survive both questions. And
+**put the ruling in the rule itself, not only in the rationale**: nothing loads the rationale at
+build time, so a precedence recorded only there will be re-derived by guess on the next build.
 
 ---
 
