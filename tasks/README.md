@@ -18,7 +18,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 
 | ID | Title | WP | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :---: | :--- | :--- | :--- | :--- |
-| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | WP3 | `proposed` | specify | T-014, T-015 | T-005, T-008 |
+| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | WP3 | `proposed` | specify | T-014, T-015 | T-005, T-008, T-019 |
 | [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) | Brief mode — elicit the six-section prompt | WP3 | `proposed` | specify | T-015 | - |
 | [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | WP3 | `proposed` | specify | T-014 | T-008 |
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | WP3 | `proposed` | specify | T-002 | - |
@@ -29,6 +29,8 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-014](T-014-synthesise-research-into-the-design-system-reference.md) | Synthesise the research into the htmldeck design-system reference | WP1 | `proposed` | specify | T-010, T-011 | T-002, T-004, T-007, T-015, T-016 |
 | [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | WP2 | `proposed` | specify | T-014 | T-002, T-003 |
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | T-014 | - |
+| [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | WP1 | `proposed` | specify | - | - |
+| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
 
 ## Closed
 
@@ -43,6 +45,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 
 ## Next ID
 
-`T-018`
+`T-020`
 
 <!-- end generated -->

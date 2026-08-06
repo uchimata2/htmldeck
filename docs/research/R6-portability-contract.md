@@ -349,7 +349,11 @@ WebGLRenderingContext                only if the deck renders 3D
 ```
 
 **Recommended for T-005 and WP3:** the build emits only the checks the deck actually uses, and the
-deck degrades to a legible static state rather than a blank page when one fails.
+deck degrades to a legible static state rather than a blank page when one fails. **Raised as
+[T-019](../../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md)**, blocked on build
+mode, since the preflight is emitted by it. Note the distinction that task turns on: T-005 gates
+the deck at **build** time on the author's machine, the preflight runs at **open** time on the
+recipient's. Neither replaces the other.
 
 ---
 
@@ -395,8 +399,9 @@ deck's own rules make this mostly moot: a `portable` deck has no siblings.
 can be authored and detected. What was **not** tested is whether `window.print()` behaves from
 `file://` and whether a print stylesheet reproduces the deck faithfully at page size. Printing is
 "a mode the user can force on, never a constraint on the design" — nothing in this matrix threatens
-it, and nothing here confirms it either. It needs its own small task when the print mode is
-specified.
+it, and nothing here confirms it either. **Raised as
+[T-018](../../tasks/T-018-measure-the-printable-mode-what-printing-from-fi.md)**, which also has to
+say plainly what a printed deck cannot preserve: anything behind interaction, motion or 3D.
 
 ---
 
