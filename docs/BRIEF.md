@@ -47,6 +47,12 @@ only to show what changed.
   > as the owner's signature is not. **Candidate change of direction for T-014:** if the type
   > choices are the skill's, the identity has to be carried by something else — and R4 §2 says
   > where the owner's taste actually concentrates.
+  >
+  > **[R5 §1](research/R5-assets-and-licences.md) adds a cost argument to the same conclusion.**
+  > Of the four faces named above, **Inter is the most expensive and the least distinctive** —
+  > 62.8 KB inlined, more than twice Instrument Serif, and the face every generated deck already
+  > uses. If the pairing is inherited anyway, there is no reason to inherit the costly generic
+  > half of it. R5 recommends Instrument Serif · Space Grotesk · JetBrains Mono at 97.3 KB.
 - **Minimal JavaScript.** 1–3 script tags: keyboard navigation, progress, occasionally a chart.
   **This is an observation, not a target** — see "Decisions taken". Richness is now wanted.
 
@@ -59,6 +65,19 @@ only to show what changed.
 
 **Self-containment is still the first requirement**, and the corpus proves it is reachable without
 giving up the typography.
+
+> **Candidate change of direction raised 2026-08-06 — the owner's, and unresolved.** When T-013
+> asked whether a per-deck size ceiling was acceptable, the owner's answer made delivery a
+> configuration parameter with **CDN references as the default** and embedding on request. That
+> reverses the sentence above and CLAUDE.md rule 1, and it reverses the position
+> [R4](research/R4-prior-art.md) identified as the owner's sharpest departure from the source deck
+> skill (J1 — *the skill means one file, the owner means no network*).
+>
+> [R5 §4](research/R5-assets-and-licences.md) argues against it and **recommends embed-by-default
+> with a `linked` development mode**, on the measurement: the premise was that embedding is
+> expensive, and it is 192 KB. **The owner has not ruled on that recommendation.** It should be
+> settled before T-014 synthesises the design system — whether a deck must work offline changes
+> what the design system may assume.
 
 ---
 
@@ -211,12 +230,20 @@ replaces enforced variety, with the template generator satisfying it later.
 
 ## Open questions
 
-1. **Fonts.** Embedded subsets (large files, licensing questions) or a curated system stack
-   (smaller, safer, less distinctive)? This is the identity/self-containment trade-off and it
-   decides how the decks look. **Answer first.**
-2. **Charts.** Hand-authored inline SVG scales badly to real data; a charting library is an
-   external dependency. A minimal built-in SVG chart generator for the three or four chart types
-   a business deck actually uses is the likely answer.
+1. ~~**Fonts.** Embedded subsets (large files, licensing questions) or a curated system stack?~~
+   **Answered 2026-08-06 by [R5](research/R5-assets-and-licences.md): embedded subsets, and the
+   trade-off the question assumed does not exist.** Both premises were wrong. The files are not
+   large — a latin-subset woff2 is 27–76 KB inlined, and a three-face identity is 97 KB. The
+   licensing is not questionable — every candidate is OFL 1.1, which permits redistribution
+   provided the licence travels with the font. A complete 12-slide deck with three faces, icons,
+   a motion library and four SVG diagrams measured **191.8 KB, zero external references**, opened
+   offline. There is no identity/self-containment trade-off to make.
+2. ~~**Charts.** Hand-authored inline SVG scales badly to real data; a charting library is an
+   external dependency.~~ **Answered 2026-08-06 by [R5 §5](research/R5-assets-and-licences.md):
+   no chart library.** Chart.js is 203.6 KB and d3 is 273.2 KB, against a hand-written SVG chart
+   that fits inside the 9.1 KB covering the probe deck's entire markup, CSS, script and four
+   diagrams. Borrow d3's scale arithmetic as a few lines; do not vendor d3. The "minimal built-in
+   SVG chart generator" the question guessed at is the right answer — T-006 builds it.
 3. ~~**One template or many?**~~ **Answered above:** one theme, parametric, generator later.
 4. **Speaker notes and PDF export.** Both wanted eventually; neither in the corpus. Scope now,
    build later.

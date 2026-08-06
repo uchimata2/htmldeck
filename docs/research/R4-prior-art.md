@@ -4,8 +4,10 @@ Deliverable of [T-012](../../tasks/T-012-research-existing-html-deck-skills-and-
 Companion to [R1](R1-corpus-conventions.md) and its
 [rules register](R1-rules-candidate.md).
 
-**Status: partial.** Sections 1–4 and 7 are complete and evidenced. Sections 5–6 — the wider
-ecosystem survey, the deck frameworks, and the motion/3D libraries — are **not done**; see §8.
+**Status: complete.** Sections 1–4 and 7 landed with the provenance pass. Sections 5, 6 and 8 —
+the ecosystem survey, deck frameworks, motion and 3D libraries, and plugin packaging — were
+completed 2026-08-06 as one survey with T-013; their measurements live in
+[R5](R5-assets-and-licences.md).
 
 **On what this does and does not unblock.** The provenance question that R1's warning box raised —
 that no contradiction in the rules register could be resolved until each rule's authorship was
@@ -197,16 +199,35 @@ that R1 has no rule for, because the corpus never hit the failure or never recor
 These belong in htmldeck's build check, and none of them came from the corpus. Sourcing them is
 legitimate — they are defect knowledge, not taste.
 
-## 5. Deck frameworks — NOT DONE
+## 5. Deck frameworks — done, in R5
 
-See §8.
+Surveyed and measured in [R5 §3](R5-assets-and-licences.md). The verdict is **build, do not
+vendor**, and the measurement is what settles it: a working deck shell — stage scaling, keyboard
+and click navigation, slide transitions — came to 9.1 KB *including* the CSS, the markup and four
+SVG diagrams. reveal.js alone is 109.5 KB and brings a plugin architecture and DOM contract that
+would be fought rather than used. impress.js is 157.3 KB. Marp and Spectacle are out by
+construction: a Markdown build step and a React component library respectively, both excluded by
+this task's own scope.
 
-## 6. Motion and 3D libraries — NOT DONE
+## 6. Motion and 3D libraries — done, in R5
 
-See §8. One data point landed incidentally: the skill uses **anime.js 3.2.2** from jsDelivr for
-orchestrated entrances, staggered reveals, path drawing and count-up numbers, and explicitly
-treats CSS `animation-delay` staggering as sufficient below ~10 elements. That is a licence and
-inlined-size question for T-012's remaining work, not an answer.
+Measured in [R5 §3](R5-assets-and-licences.md). **anime.js 4, MIT, 82.0 KB minified — vendored,
+but opt-in rather than constant.**
+
+The incidental data point recorded here earlier held up: the skill uses anime.js 3.2.2 and treats
+CSS `animation-delay` staggering as sufficient below ~10 elements. R5 adopts that as the rule, so
+a deck with no orchestrated motion pays nothing.
+
+**GSAP was rejected, and not on capability.** It is smaller than anime.js (71.2 KB) and free for
+commercial use since April 2025. But the repository carries **no LICENSE file at all**, the terms
+live on a web page as a "no charge" licence rather than an SPDX identifier, and there is no
+explicit redistribution grant. Vendoring a third party's minified build into a published
+repository needs one. Its Prohibited Uses clause does *not* bite — it targets no-code visual
+animation builders competing with Webflow, and the FAQ states that AI-generated code is not a
+prohibited use — so htmldeck may generate GSAP code. It should not ship GSAP's file.
+
+three.js is MIT and initialises from `file://`, but at 331.0 KB it is 1.7× a whole deck: opt-in
+only.
 
 ## 7. Detecting another skill — answered
 
@@ -242,21 +263,23 @@ it. htmldeck ships its own word-list check as the primary path, states in the ou
 list is necessary and not sufficient (which is B23, and which R1 records as contradiction X-10),
 and treats a fuller voice pass as the enhancement.
 
-## 8. What is still outstanding
+## 8. What was outstanding — now closed
 
-Plan steps 4, 5 and 6 are not done: the published HTML-deck skills and plugins in the wider
-ecosystem, the deck frameworks (reveal.js, Slidev, Marp, Spectacle, impress.js) against
-self-containment, the motion and 3D libraries (GSAP, Motion, anime.js, three.js) on licence,
-inlined size and `file://` behaviour, and the plugin packaging survey that feeds T-015 and T-008.
+Plan steps 4, 5 and 6 were deferred when the provenance pass consumed its session. They were
+completed 2026-08-06 alongside T-013, as one survey, because they ask the same licence-and-size
+question of different assets — splitting them would have meant reading the same licence pages
+twice. The results live in [R5](R5-assets-and-licences.md) rather than being duplicated here:
 
-They are outstanding because the provenance pass consumed the session, and provenance was
-sequenced first deliberately: it is what gates T-014, and the remaining steps do not.
+| Step | Where it landed |
+| :--- | :--- |
+| 4 — wider-ecosystem skills and plugins | **257 plugins in the official marketplace, zero deck plugins.** Searching name and description for slide/deck/present/reveal/keynote/powerpoint/pptx/marp returns one hit, and it is a false positive (an investor-data plugin whose description mentions AGM presentations). The overlapping *skills* were assessed in §4 and R5 §3 |
+| 5 — deck frameworks, motion and 3D libraries | §5 and §6 above, measured in R5 §3 |
+| 6 — plugin packaging conventions | [R5 §6](R5-assets-and-licences.md), from the first-party `plugin-dev` plugin |
 
-**None of them blocks T-014.** They block T-001 (fonts), T-006 (charts), T-016 (motion) and
-T-015/T-008 (packaging). The packaging survey has a cheap local source that was located but not
-read: the `plugin-dev` plugin installed in this environment ships skills for plugin structure,
-skill development, command development and plugin settings — a first-party worked example rather
-than documentation about one.
+**The remaining build-list criterion is answered by combining §2, §4 and R5 §3.** htmldeck builds
+its own deck shell (9.1 KB beats 109.5 KB and owns the DOM contract), its own diagram and chart
+SVG, its own terminology check, and the critique mode — which §2 shows has zero prior art
+anywhere. It vendors only anime.js, and only when a deck asks for motion.
 
 ## 9. Per-rule provenance table
 

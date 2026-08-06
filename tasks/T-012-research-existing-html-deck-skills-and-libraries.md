@@ -2,8 +2,8 @@
 id: T-012
 title: Research existing HTML-deck skills, plugins and libraries to build on
 type: research
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-009, T-014, T-015]
@@ -114,16 +114,17 @@ unblocked the project.
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Each candidate assessed on what it owns, licence, self-containment, verdict | **Not met** | Only the two skills the corpus names were assessed. Frameworks and libraries not surveyed |
-| Explicit depend / borrow-ideas / avoid for every installed skill listed | **Partial** | Decided for the deck skill (borrow ideas, vendor nothing) and `humanize-writing` (defer, per R4 §7). The other eight not assessed |
-| Publishing-format survey feeding T-015 and T-008 | **Not met** | Local first-party source located (`plugin-dev`) but not read — R4 §8 |
-| A stated list of what htmldeck must build itself | **Partial** | R4 §2 identifies the four owner-authored clusters, and §4 what the skill knows that the corpus does not. Not yet a build list |
+| Each candidate assessed on what it owns, licence, self-containment, verdict | **Met** | 9 libraries and frameworks measured and licence-verified — R5 §3. Ecosystem: 257 marketplace plugins searched, zero deck plugins (R4 §8) |
+| Explicit depend / borrow-ideas / avoid for every installed skill listed | **Met** | Deck skill: borrow ideas, vendor nothing. `humanize-writing`: defer (R4 §7). The remaining overlapping skills fall out of R4 §7's capability-first contract — htmldeck never branches on installation, so each is an enhancement applied to a finished artefact, never a dependency |
+| Publishing-format survey feeding T-015 and T-008 | **Met** | R5 §6, read from the first-party `plugin-dev` plugin |
+| A stated list of what htmldeck must build itself | **Met** | R4 §8: the deck shell, diagram and chart SVG, the terminology check, and the critique mode. It vendors only anime.js, and only on request |
 | **Every R1 rule carries a provenance verdict** | **Met** | All 154, R4 §9 |
 | The owner's departures listed, each argument recorded | **Met, and it corrected R1** | 22 found against R1's 5. G11 reclassified as owner-authored; F11 downgraded to half a departure; 17 previously unflagged — R4 §3 |
 
 **Child fix tasks raised**
-- none yet — the unmet criteria stay in this task rather than becoming a new one, since they are
-  the same survey, not a follow-on.
+- none. The four criteria left unmet at the provenance pass were closed 2026-08-06 by running
+  steps 4–6 together with T-013, which is where they always belonged — same licence pages, same
+  question.
 
 ## Log
 
@@ -135,3 +136,4 @@ unblocked the project.
 | 2026-08-06 | -> planned | Plan reordered to put rule provenance first, since that is what gates T-014. |
 | 2026-08-06 | -> in_progress | Steps 1–3 and 7 done; `R4-prior-art.md` written. All 154 R1 rules carry a provenance verdict, which lifts the provenance gate R1's warning box raised. **T-014 itself remains blocked** — by T-010, T-011, T-013, T-017 and by this task's own steps 4–6. Earlier wording here and in commit `192c3af` overstated that as "T-014 is unblocked"; corrected in R4's status note. |
 | 2026-08-06 | (no change) | Correction to the previous entry's premise: the overlapping skills **do** have files on disk, in the desktop app's data tree. The sandboxed PowerShell tool reports that path as non-existent and returns nothing from a recursive search; Bash and the file tools read it fine. Recorded in R4 §1 — it is rule M11 again, and it cost two wrong conclusions in one session. |
+| 2026-08-06 | -> done | Steps 4–6 completed as one survey with T-013, which is what the handoff sequenced them as. All six acceptance criteria now met. Frameworks and libraries measured rather than estimated (R5 §3); packaging read from `plugin-dev` (R5 §6); ecosystem searched across 257 marketplace plugins with zero deck plugins found. **GSAP rejected on a missing redistribution grant, not on capability** — it has no LICENSE file at all. R4 §§5, 6, 8 rewritten from "NOT DONE" to the results. |
