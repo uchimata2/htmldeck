@@ -24,8 +24,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | WP3 | `proposed` | specify | T-002 | - |
 | [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | WP2 | `proposed` | specify | T-014 | - |
 | [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004 | - |
-| [T-011](T-011-research-exemplary-decks-and-why-they-work.md) | Research exemplary decks and what makes them work | WP1 | `proposed` | specify | - | T-014 |
-| [T-014](T-014-synthesise-research-into-the-design-system-reference.md) | Synthesise the research into the htmldeck design-system reference | WP1 | `proposed` | specify | T-011 | T-002, T-004, T-007, T-015, T-016 |
+| [T-014](T-014-synthesise-research-into-the-design-system-reference.md) | Synthesise the research into the htmldeck design-system reference | WP1 | `proposed` | specify | - | T-002, T-004, T-007, T-015, T-016 |
 | [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | WP2 | `proposed` | specify | T-014 | T-002, T-003 |
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | T-014 | - |
 | [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | WP1 | `proposed` | specify | - | - |
@@ -39,6 +38,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-006](T-006-decide-the-chart-strategy.md) | Decide the chart strategy | `done` | 2026-08-06 |
 | [T-009](T-009-analyse-the-corpus-extract-my-deck-conventions.md) | Analyse the corpus — extract the deck conventions already in use | `done` | 2026-08-06 |
 | [T-010](T-010-research-external-deck-design-and-ux-principles.md) | Research external deck-design and presentation UX principles | `done` | 2026-08-06 |
+| [T-011](T-011-research-exemplary-decks-and-why-they-work.md) | Research exemplary decks and what makes them work | `done` | 2026-08-06 |
 | [T-012](T-012-research-existing-html-deck-skills-and-libraries.md) | Research existing HTML-deck skills, plugins and libraries to build on | `done` | 2026-08-06 |
 | [T-013](T-013-research-offline-safe-assets-and-licences.md) | Research offline-safe assets — icons, illustration, fonts, diagram tooling | `done` | 2026-08-06 |
 | [T-017](T-017-define-the-portability-contract.md) | Define the portability contract — what "opens anywhere and works" actually permits | `done` | 2026-08-06 |

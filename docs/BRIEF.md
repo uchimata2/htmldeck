@@ -229,6 +229,13 @@ Set by the owner when the project was re-scoped around researching their existin
 > check can ask: *what does this animation encode?* If the answer is "it looks good", it is the
 > case the evidence is about. The Richness decision stands until T-014 rules; it no longer stands
 > unexamined.
+>
+> **And the owner already holds this position.** [R1 §11](research/R1-corpus-conventions.md) records
+> that the corpus's most developed spec defines exactly four motions and nothing else — because *a
+> named vocabulary is what stops animation becoming decoration* — and that two specs independently
+> forbid 3D spins and flashy zooms. So the conflict is narrower than it looks: it is between the
+> *wording* of Richness above, which reads as permission, and a practice that never took that
+> permission. T-014's likely job is to notice that, not to arbitrate.
 
 **Three consequences worth stating plainly.**
 

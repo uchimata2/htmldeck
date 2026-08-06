@@ -462,6 +462,20 @@ is "it looks good", it is the case P-05 is about.
 **This is a position, not a resolution**, and it is flagged for T-014. It is also the place where a
 finding contradicts the brief hardest, which CLAUDE.md asks to be visible rather than quiet.
 
+**It is, however, a position the owner already holds.** [R1 §11](R1-corpus-conventions.md) records
+that the corpus's most developed spec defines **exactly four motions and nothing else**, for a
+stated reason — a named vocabulary is what stops animation becoming decoration — and that two specs
+independently forbid 3D spins and flashy zooms. It also shows the right degradation: under reduced
+motion the four collapse to instant states, **but the dashed flow arrows stay dashed, so the meaning
+survives when the animation does not.**
+
+That is the same rule arrived at from the other end, and it changes the standing of §12.1
+considerably. The conflict is between the *brief's* Richness wording — "no JavaScript budget",
+which reads as permission — and the evidence. The owner's own practice is already on the evidence's
+side. So T-014's likely job is not to choose between them but to notice that the brief overstated a
+freedom the corpus never took, and that "degrade the motion, keep the semantics" is the mechanism
+for doing it.
+
 ### 12.2 Line length: speed versus preference
 
 Typographic convention says 45–75 characters. Measured reading studies complicate it — longer lines
