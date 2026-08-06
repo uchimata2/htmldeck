@@ -92,4 +92,5 @@ a validated rubric, and a scoring pass whose limitations were recorded rather th
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-06 | (no change) | **EVALUATION §8's third question — *"is the cap 2 or 3?"* — was closed by [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md)**, against T-024's evidence rather than by decision: 2 measurement rounds measured, cap stays 3. It was never this task's, and this task's two remain open and unchanged. Recorded so §8's three entries are not read as three open questions. |
 | 2026-08-06 | → proposed | Split out of [T-023](T-023-the-deck-evaluation-rubric-and-convergence-loop.md) at its closure. Both questions are the owner's and neither was decidable before a real deck existed; T-024 now supplies the evidence, including the honest limitation that its own scores were the author's. |

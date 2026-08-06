@@ -245,6 +245,7 @@ Set by the owner when the project was re-scoped around researching their existin
 | **Render technique** | **Full exemption from the SVG-only rule** — SVG, `<canvas>` and WebGL are all permitted, for data-carrying diagrams included. Raster images and external libraries stay banned. |
 | **Script scope** | **Latin only. Non-Latin is out of scope** — settled 2026-08-06, and it is a real exclusion rather than an oversight. R5's "embedding is cheap" result rests on latin-subset faces at 27–76 KB each; a CJK face runs to megabytes even subsetted, which would reopen the delivery-mode decision below. Nothing in R1–R6 covers CJK or RTL typography, and nothing needs to. **A deck in a non-Latin script is not a supported case** — do not half-support it. |
 | **Conflict tie-break** | **Split by rule type** — settled 2026-08-06, answering T-014's open question. **Principle wins on anything measurable**: accessibility, contrast, encoding accuracy, legibility. **Habit wins on aesthetic and structural choices** where the evidence is weak or absent — which is most of what makes a deck look like this owner's rather than generated. The [R2](research/R2-external-principles.md) evidence grades are what make this operable: E1/E2 material is measurable and wins; E3/E4 material does not outrank a corpus habit. |
+| **Release gate** | **[T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) lands before the first published version** — settled 2026-08-06. The deliverable contract (§3.4, DS-201 to DS-209) is the rule the owner cared about most and the one no deck here satisfies, so **the plugin does not ship with a reference deck that fails it.** The example deck is the plugin's argument for itself; one that leaves its audience waiting for the presenter argues the opposite. This is a gate on publishing, not on any other work. |
 | **Delivery mode** | **Embed by default.** Two modes, not three: `portable` (everything inlined, zero external references, ~190 KB typical) is the default and the only shipping mode; `linked` (CDN) exists **for the authoring loop only** and a deck built with it is a defect the critique pass flags. No local-files mode. Settled 2026-08-06 on [R5 §4](research/R5-assets-and-licences.md) — see below. |
 
 > **The Richness decision is contested by the strongest evidence in the field, and
@@ -396,8 +397,9 @@ replaces enforced variety, with the template generator satisfying it later.
 
 ## Definition of done
 
-*Three of six met by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md),
-2026-08-06.*
+*Three of seven met by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md),
+2026-08-06. The seventh was added by the owner the same day and is a **gate on publishing** — see
+"Decisions taken", Release gate.*
 
 - ~~A deck renders correctly with the network disabled.~~ **Met.**
   [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 178 KB, zero
@@ -418,9 +420,13 @@ replaces enforced variety, with the template generator satisfying it later.
 - ~~**A real 12-slide deck taken through the convergence loop to a PASS**, and looked at offline.~~
   **Met**, in two measurement rounds and 24 fixes.
 - No personal, client, or machine data anywhere in the repository. *Holds — re-checked at each commit.*
+- **A deck in this repository satisfies the deliverable contract** — every slide states its point on
+  the slide, per §3.4, DS-201 to DS-209. *Open —
+  [T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md). **No deck here
+  satisfies it yet**: the rules that matter most are the least exercised, because they were written
+  after the only deck was built.*
 
-**One criterion is missing from this list and should be added when it can be met honestly.** The
-design system now requires every slide to state its deliverable (§3.4, DS-201 to DS-209), and **no
-deck in this repository satisfies that yet** — the rules that matter most are the least exercised.
-[T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) is the work; until
-it lands, a deck can pass every check here and still leave its audience waiting for the presenter.
+**The last criterion is the publishing gate**, added by the owner 2026-08-06. Until it is met, a deck
+can pass every other check on this list and still leave its audience waiting for the presenter to say
+what the slide was for — which is the failure the design system exists to prevent, shipped as the
+plugin's own example.

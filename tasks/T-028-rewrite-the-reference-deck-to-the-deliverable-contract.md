@@ -16,6 +16,10 @@ deliverables: []
 
 # T-028 — Retrofit the reference deck to the deliverable contract and thin its chrome
 
+> **This task gates the first published version of the plugin** — owner, 2026-08-06.
+> [`BRIEF.md`](../docs/BRIEF.md) *Decisions taken* → **Release gate**, and its definition of done
+> carries the criterion. Nothing else is blocked by it; publishing is.
+
 ## 1. Specify
 
 **Outcome**
@@ -102,4 +106,6 @@ the subtitles above it are extremely noisy with that many dots."*
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-06 | (no change) | **Made a release gate by the owner: this lands before the first published version.** Recorded in `BRIEF.md` *Decisions taken* and added to its definition of done as a seventh criterion. The reasoning is that the example deck is the plugin's argument for itself, so shipping one that fails the deliverable contract argues against the ruleset it is meant to demonstrate. No `blocked_by` edge exists for it — nothing else in the backlog is gated, only publishing. |
+| 2026-08-06 | (no change) | Confirmed still open by [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md): the three simultaneous position encodings (DS-216/DS-217) are visible in every capture taken during its re-check, and no rule change there touched them. |
 | 2026-08-06 | → proposed | Raised by [T-027](T-027-specify-the-slide-deliverable-and-the-outline-contract.md). The owner's review produced two hard-rule defects, fixed there, and one change that is a rewrite rather than a fix: **no slide in the deck states its deliverable**, because the rule requiring it did not exist when the deck was built. Chrome density comes with it — three encodings of position, which the owner called *"extremely noisy"*. |
