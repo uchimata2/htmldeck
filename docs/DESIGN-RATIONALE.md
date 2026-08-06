@@ -43,7 +43,17 @@ of an answer.
 
 ---
 
-## 2. The sixteen conflicts
+## 2. The conflicts
+
+**Sixteen were found by reading the sources against each other. Thirteen more (F-01 to F-13) were
+found by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) building a deck
+strictly to the finished ruleset**, and four of those are conflicts between two rules both labelled
+`hard` — a compliant deck could not exist. They are recorded on T-024 §3.3 and reconciled by
+[T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md); **F-01 is
+settled**, above, by the owner's amendment to DS-035.
+
+The generalisation is **L-24**: reading a ruleset tells you whether it is coherent, and building to
+it tells you whether it is possible. These sixteen came from reading. Thirteen more were waiting.
 
 | # | The tension | Resolution |
 | :--- | :--- | :--- |
@@ -113,6 +123,68 @@ why DS-061 forbids media queries inside the stage.
 unit mono labels to decoration** (DS-036), because they were never legible to a remote audience.
 
 Neither number was derivable before the reason was stated. Generalised as **L-22**.
+
+> **DS-035 amended from 18 to 16 design units by the owner, 2026-08-06**, after reviewing the
+> reference deck: *"If it's min 18 now, I would accept a 16 too."*
+>
+> This also **settles F-01**, which was a conflict between two `hard` rules: DS-035's floor of 18
+> made the 16–17 half of DS-036's mono range unreachable, so a compliant deck could not use the
+> range the ruleset told it to use. The floor stays a floor; the number moved, and DS-036 became
+> satisfiable.
+>
+> **What the table above still says, and the amendment does not overturn.** 16 design units is
+> **11 px in a 720p screen share** — the row marked ✗. So the amendment widens what is *permitted*,
+> not what is *readable at distance*: DS-036 already confines that band to marginalia that is never
+> load-bearing, and DS-034 keeps body type at 24–28. **A deck that puts anything the audience must
+> read at 16 units has obeyed DS-035 and failed the audience**, which is the distinction between a
+> floor and a target.
+
+### Where the deliverable rules came from — DS-201 to DS-213
+
+**T-014 synthesised the corpus into 131 rules and dropped the one the owner cared about most.** The
+design system could describe how a slide should look, argue, move and disclose, and had **nothing
+about what a slide owes its audience**. The owner named it after reading the reference deck:
+
+> *Each slide needs to deliver something. The key deliverable should not be hidden in a list or
+> prose… So they don't need to wait for the presenter to finally say the essence.*
+
+**This was recorded taste, not new taste.** The corpus carries it in three independent places, and
+the synthesis passed over all three:
+
+| Source | What it says |
+| :--- | :--- |
+| The build process for two separate decks | Each slide is specified by structure, text, visuals, animations, interactive elements, title **and bottom line**. The bottom line is a named, required per-slide element. |
+| Owner feedback on a deck | *"Bottom line repeats content. Keep only the key message here, no reasoning."* — so the bottom line is the **deliverable**, not a summary. DS-202. |
+| Owner feedback on another deck | *"Show the details here, do not hide them under the click."* — disclosure is for depth; the point does not live behind it. DS-205, DS-206. |
+
+**Why the miss happened, and it is worth naming.** The synthesis read the corpus for *conventions* —
+things stated as rules — and the bottom line appears in the corpus as a **field in a template** and
+as **feedback on a specific slide**. Neither reads like a rule. **A convention that only ever appears
+as a column heading is the easiest kind to lose**, and losing this one cost the ruleset its most
+important rule until a human looked at a deck built from it.
+
+### Idiom is not jargon — DS-208 beside DS-097
+
+DS-097 already said *the reader is bright and new to the field; anything the author would look up is
+a defect.* That is about **jargon**, and it has a remedy: the reader looks the term up.
+
+**Idiom has no such remedy, because it does not announce itself.** A non-native reader who meets a
+figurative phrasal verb or a sporting metaphor does not know a lookup is needed — the words are all
+ordinary, and the sentence reads as literal and wrong. The corpus writing standard states the
+constraint the owner restated: *plain, simple English… the reader may not be a native speaker and no
+sentence should need a second pass.* Hence a separate rule with a separate check.
+
+### Three encodings of one fact — DS-216, DS-217
+
+The reference deck showed a spine ribbon, twelve dots and a progress bar: **23 labelled or
+interactive items in 96 design units**, all answering *where am I*. Every one of them was individually
+sanctioned — DS-131 asks for dots, DS-133 for a progress indicator, DS-134 for the spine ribbon —
+and **nothing forbade showing all three at once.** The owner's verdict was *"extremely noisy."*
+
+This is a composition failure rather than a rule failure, and it generalises: **a ruleset assembled
+from individually-good requirements can specify a bad whole.** Rules that each permit an element say
+nothing about how many such elements a frame can carry, which is why DS-217 states a budget rather
+than another permission.
 
 ### Viewer scale — why 960 CSS px is the reflow threshold
 

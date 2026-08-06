@@ -18,8 +18,10 @@ brave to depart when a different idea communicates better.* Licenses departure f
 
 ---
 
-## 0. The eight that decide everything else
+## 0. The nine that decide everything else
 
+0. **Every slide delivers one thing, and says it on the slide.** The audience must not have to wait
+   for the presenter to reach the point. Everything below serves this (§3.4).
 1. **One theme, every value a token.** Not a palette per deck.
 2. **Neutral ground, one accent, and the accent means something.**
 3. **The headline is a claim, not a topic.**
@@ -83,8 +85,8 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | DS-032 | Faces embed as base64 `@font-face`, latin subset, licence permitting redistribution. **The licence travels with the font.** | hard | auto |
 | DS-033 | Type is sized in **design units on the 1920×1080 stage**. No `px`, `vw`, `vh` or `clamp()` inside the stage — they fight the transform. | hard | auto |
 | DS-034 | **Body 24–28 design units** at line-height 1.55. Display ~67. Subhead ~34. | hard | auto |
-| DS-035 | **Nothing below 18 design units, anywhere.** | hard | auto |
-| DS-036 | Mono labels 16–18 units, uppercase, tracked ~1.4px — **and never load-bearing.** | hard | judge |
+| DS-035 | **Nothing below 16 design units, anywhere.** *Amended from 18 by the owner, 2026-08-06 — see [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §2.* | hard | auto |
+| DS-036 | Mono labels 16–18 units, uppercase, tracked ~1.4px — **and never load-bearing.** The 16–17 band is reserved for marginalia; body type stays at DS-034's range. | hard | judge |
 | DS-037 | `text-wrap: balance` and slight negative tracking on display headings. | default | auto |
 | DS-038 | The mono layer carries the domain vocabulary — key terms in mono, accent underline at first use. | default | judge |
 | DS-039 | Line length is a token (`--measure`), defaulting inside 45–75 characters. | default | render |
@@ -118,6 +120,7 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | DS-063 | Rendered at 3840×2000 and at 1280×634, the stage is **identical up to a uniform scale factor.** | hard | render |
 | DS-064 | Body text measures ≥ 16 px in a 720p capture of the presented deck. | hard | render |
 | DS-065 | No decorative element positioned in absolute pixels rather than design units. | hard | auto |
+| DS-200 | **Centre the scaled stage by a technique that survives the transform.** `transform: scale()` does not change layout size, so flex or grid centring positions the **unscaled** 1920×1080 box: the track sizes to 1920, start-aligns it, and the scaled stage lands off-centre and clips at the far edge. Anchor at 50%/50% and translate, or size the wrapper to the scaled dimensions. **Measure the stage's rect against the viewport at several widths — the bug is invisible at full size.** | hard | render |
 
 ### 2.5 The reflow view
 
@@ -196,6 +199,37 @@ modifier available to all the others (§5.3).
 > **DS-106 is owned by the `humanize-writing` skill.** Point at it; the list above is the inline
 > fallback for machines where it is absent, because a pointer that resolves to nothing checks nothing.
 
+### 3.4 The deliverable — what every slide owes its audience
+
+**This is the section the rest of the argument rules serve.** A slide can satisfy every rule above —
+claim headline, three fragments, a real diagram, no banned words — and still leave the audience
+waiting for the presenter to say what the point was. That is a failure, and until now nothing here
+named it.
+
+| ID | Rule | Label | Check |
+| :--- | :--- | :--- | :--- |
+| DS-201 | **Every slide delivers exactly one thing.** Name it before the slide is written. If it needs two sentences, the slide is two slides — or none. | hard | judge |
+| DS-202 | **The deliverable appears on the slide as a bottom line**: one sentence, factual, no reasoning. Not the headline restated, not a summary of what is above it. | hard | auto |
+| DS-203 | **The bottom line is the most prominent text after the headline** — recognisable in about two seconds, with no presenter talking. Accent colour, weight, position, and at most one Pulse-once. | hard | render |
+| DS-204 | **Never bury the deliverable in a list, a paragraph or a table cell.** If it is one bullet among five, the audience has to find it, and they will find it after the presenter says it. | hard | judge |
+| DS-205 | **The deliverable is never behind a disclosure.** DS-161 says a closed slide still makes its point; this says which part of the slide *is* the point. | hard | auto |
+| DS-206 | **Supporting detail stays visible and subordinate — do not hide it under the click.** Disclosure earns its place for depth, never for tidying a slide that is merely full. Judge it per slide. | default | judge |
+| DS-207 | **The deliverable is stated factually and directly.** No analogy, no metaphor, no rhetorical framing. Wit is allowed in the headline and in the presenter's mouth; the bottom line carries none of it. | hard | judge |
+| DS-208 | **No native-speaker idiom, unless it is asked for.** Idioms, phrasal verbs used figuratively, sporting and cultural metaphors. **The reader may not be a native speaker, and no sentence should need a second pass.** Distinct from DS-097, which governs jargon: a reader can look a term up, and cannot look up an idiom they have misread as literal. | hard | judge |
+| DS-209 | **One emphasis per slide, and it belongs to the deliverable.** DS-101 at slide scale: three emphasised things means none is emphasised, and the one that loses is the point. | hard | render |
+
+### 3.5 The outline, before any slide exists
+
+**Where the outline sits in the authoring pipeline is [T-020](../tasks/T-020-model-the-authoring-pipeline-not-just-the-modes.md)'s.
+What it must contain is a property of a good deck, so it is here.**
+
+| ID | Rule | Label | Check |
+| :--- | :--- | :--- | :--- |
+| DS-210 | **An outline exists before any slide does**, and covers every topic the deck is expected to carry. | hard | auto |
+| DS-211 | Per slide the outline names, at minimum: **archetype · title · bottom line**. The bottom line in the outline is the same sentence that ships on the slide. | hard | auto |
+| DS-212 | The outline is expanded into a **slide-by-slide specification** — structure, text, visuals, motion, interaction, title, bottom line — **page by page, never in one pass.** | default | judge |
+| DS-213 | **The specification is reviewed slide by slide before any HTML is written**, for missing points, unnecessary detail, inconsistency and inefficiency, and the findings are fixed one at a time. | default | judge |
+
 ---
 
 ## 4. Visuals
@@ -216,6 +250,8 @@ modifier available to all the others (§5.3).
 | DS-121 | Charts obey the **encoding ranking** — position > length > area > hue. Variety never buys a worse encoding. | hard | judge |
 | DS-122 | No chart library. Hand-written SVG, borrowing scale arithmetic as a few lines. | hard | auto |
 | DS-123 | **"Boxes everywhere" is the rejected pattern.** Card grids, stat strips, pill rows and bulleted lists **used instead of a diagram** are a severity-H failure. | hard | judge |
+| DS-214 | **Colour an SVG through CSS, never through a presentation attribute.** A class rule outranks `fill=` and `stroke=` silently, so an element styled by both renders the CSS colour and the attribute is dead markup — how a 2.17:1 run shipped past a palette audit that reported zero failures. This is DS-118's mechanism: theme-aware means *styled*, not *attributed*. | hard | auto |
+| DS-215 | **Check the colour that renders, not the colour intended.** A palette audit compares token pairs an author nominates; it cannot see a pair nobody thought to nominate. Compare each text run's **computed** fill against the **computed** fill of whatever is painted behind it. DS-191, in the one place it has already cost this project a defect. | hard | render |
 
 ---
 
@@ -235,6 +271,8 @@ modifier available to all the others (§5.3).
 | DS-137 | Two simultaneous interactions need a **defined precedence rule.** | hard | judge |
 | DS-138 | Popovers drop **below** the element, never above. | hard | render |
 | DS-139 | Assumption marker on the right edge, silent until wanted. | default | render |
+| DS-216 | **One encoding of position, not three.** A spine ribbon, a dot per slide and a progress bar all answer *where am I*. Showing all three is noise competing with the slide. Pick one primary; a second is permitted only when it encodes a **different** fact — stage versus slide — and never a third. | default | render |
+| DS-217 | **Chrome has a budget: roughly 12 labelled or interactive items, and ~90 design units of height.** Past that the navigation reads as an interface rather than as a deck, and per-slide dots stop scaling somewhere around ten slides. Prefer a compact indicator plus click-to-jump over one target per slide. | default | render |
 
 ### 5.2 Motion
 
@@ -372,8 +410,17 @@ resolve to nothing, and a check that silently checks nothing is worse than a sho
 
 ## 9. What is not covered
 
-**Nothing here has been tested by building a deck.** The reproducibility rulings are reasoned from
-R6's capability matrix, which answers *"is this available?"* — not *"does this read well at 12
-slides?"* CLAUDE.md rule 6 governs the second question.
+**Tested once, by building a deck** — [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md)
+built [`examples/reference-deck.html`](../examples/reference-deck.html) strictly to this document and
+produced **thirteen findings**, four of them conflicts between two `hard` rules. Those are being
+reconciled by [T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md);
+until it lands, **rules in this file may still contradict each other**, and F-01 to F-13 name where.
+
+**What that build did not test.** It was one deck, one topic, one author, and it was scored by the
+agent that wrote it. §3.4 and §3.5 arrived *after* it, from the owner's review, so **no deck in this
+repository yet satisfies the deliverable contract** — the rules that matter most are the least
+exercised. The reproducibility rulings still come from R6's capability matrix, which answers *"is
+this available?"* rather than *"does this read well?"* CLAUDE.md rule 6 governs the second question,
+and it is answered by looking, not by this document.
 
 Sources, verdicts, provenance and every "why": [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md).

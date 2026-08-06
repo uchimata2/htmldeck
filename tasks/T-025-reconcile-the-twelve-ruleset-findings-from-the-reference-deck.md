@@ -63,8 +63,12 @@ task applies them.
 - [ ] `python tools/tasks/task.py check` passes
 
 **Open questions**
-- **Does DS-036's mono range move, or does DS-035's floor stop being absolute?** F-01 forces the
-  choice and the deck assumed the floor. — owner
+- ~~**Does DS-036's mono range move, or does DS-035's floor stop being absolute?**~~ **Settled by the
+  owner, 2026-08-06**, reviewing the reference deck: *"If it's min 18 now, I would accept a 16 too."*
+  **The floor moved to 16**, which makes DS-036's range reachable and closes F-01. Applied by
+  [T-027](T-027-specify-the-slide-deliverable-and-the-outline-contract.md); the reasoning and the
+  caveat — 16 units is 11 px in a 720p screen share, so this widens what is permitted, not what is
+  readable — are in `DESIGN-RATIONALE.md` §3. **F-01 needs no further work here.**
 - **Should the Motion control (F-03) become a rule of its own?** Every deck with a `Current` flow
   needs it to stay conformant, and no rule currently requires it. — owner
 

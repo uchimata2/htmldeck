@@ -137,8 +137,8 @@ def main():
                "The $1.5M the frequency package does not spend is what buys the reversal.",
                "The $2.2M the frequency package does not spend is what buys the reversal.")
     html = sub(html, "D4", "and again on the gate's own branch",
-               '<text class="val" x="1290" y="130" fill="var(--ink-soft)">$1.5M returns to the reserve</text>',
-               '<text class="val" x="1290" y="130" fill="var(--ink-soft)">$2.2M returns to the reserve</text>')
+               '<text class="val t-soft" x="1290" y="130">$1.5M returns to the reserve</text>',
+               '<text class="val t-soft" x="1290" y="130">$2.2M returns to the reserve</text>')
 
     # styles the seeded markup needs, plus the ambient animation S6 depends on
     html = sub(html, "--", "seeded styles",

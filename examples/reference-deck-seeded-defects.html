@@ -156,15 +156,17 @@ svg{display:block}
   border-radius:calc(4*var(--du))}   /* 2.4.7 + 2.4.13 adopted */
 
 /* ---------------------------------------------------------------- the stage (DS-060..065) */
-.viewport{position:fixed;inset:0;display:grid;place-items:center;background:var(--field);overflow:hidden}
+/* DS-200. `transform: scale()` leaves the layout box at 1920x1080, so grid or flex centring
+   positions the UNSCALED box: the track sizes to 1920, start-aligns it, and the scaled stage
+   lands off-centre and clips at the far edge. Anchor at 50%/50% and translate instead. */
+.viewport{position:fixed;inset:0;background:var(--field);overflow:hidden}
 .stage{
-  position:relative;
+  position:absolute;left:50%;top:50%;
   width:calc(1920*var(--du));height:calc(1080*var(--du));
-  flex:none;
   background:var(--paper);
   border:var(--hair) solid var(--line-firm);
   box-shadow:0 calc(18*var(--du)) calc(60*var(--du)) var(--shadow);
-  transform:scale(var(--k,1));
+  transform:translate(-50%,-50%) scale(var(--k,1));
   transform-origin:center center;
   overflow:hidden;
   font-size:var(--fs-body);line-height:var(--lh-body);
@@ -328,6 +330,14 @@ svg{display:block}
 .fig .lab{font-family:var(--font-mono);letter-spacing:var(--track-mono);fill:var(--ink-faint);
   text-transform:uppercase;font-size:18px}
 .fig .val{font-family:var(--font-mono);fill:var(--ink);font-size:22px}
+/* DS-214: colour SVG text through classes. A presentation attribute loses to any class
+   rule, so `fill=` on a classed element is dead markup that renders the wrong colour. */
+.fig text.t-accent{fill:var(--accent)}
+.fig text.t-soft{fill:var(--ink-soft)}
+.fig text.t-faint{fill:var(--ink-faint)}
+.fig text.t-paper{fill:var(--paper)}
+.fig text.t-ink{fill:var(--ink)}
+.fig text.t-caution{fill:var(--caution)}
 .fig .name{font-size:24px;fill:var(--ink)}
 .fig .axis{stroke:var(--data-quiet);stroke-width:1.5;fill:none}
 .fig .grid{stroke:var(--line);stroke-width:1.5;fill:none}
@@ -580,7 +590,7 @@ svg{display:block}
 
       <line class="grid" x1="0" y1="248" x2="1728" y2="248"/>
       <text class="lab" x="0" y="480">Bike-share leads · 12,200 weekday trips between them</text>
-      <text class="lab" x="1728" y="480" text-anchor="end" fill="var(--accent)">Frequency leads · 36,000 weekday trips between them</text>
+      <text class="lab t-accent" x="1728" y="480" text-anchor="end">Frequency leads · 36,000 weekday trips between them</text>
     </svg>
   </div>
   <div class="disc" data-disc>
@@ -650,7 +660,7 @@ svg{display:block}
 
       <line class="grid" x1="0" y1="248" x2="1728" y2="248"/>
       <text class="lab" x="0" y="480">Bike-share leads · 12,200 weekday trips between them</text>
-      <text class="lab" x="1728" y="480" text-anchor="end" fill="var(--accent)">Frequency leads · 36,000 weekday trips between them</text>
+      <text class="lab t-accent" x="1728" y="480" text-anchor="end">Frequency leads · 36,000 weekday trips between them</text>
     </svg>
   </div>
   <div class="disc" data-disc>
@@ -720,7 +730,7 @@ svg{display:block}
 
       <line class="grid" x1="0" y1="248" x2="1728" y2="248"/>
       <text class="lab" x="0" y="480">Bike-share leads · 12,200 weekday trips between them</text>
-      <text class="lab" x="1728" y="480" text-anchor="end" fill="var(--accent)">Frequency leads · 36,000 weekday trips between them</text>
+      <text class="lab t-accent" x="1728" y="480" text-anchor="end">Frequency leads · 36,000 weekday trips between them</text>
     </svg>
   </div>
   <div class="disc" data-disc>
@@ -792,7 +802,7 @@ svg{display:block}
         <text class="name" x="826" y="132">Ride · 13 min</text>
         <text class="name" x="1454" y="132">Transfer · 4 min</text>
         <path class="accent-s" d="M294 158 L294 178 L1644 178 L1644 158" stroke-width="2"/>
-        <text class="lab" x="969" y="208" text-anchor="middle" fill="var(--accent)">15 minutes not moving · 44% of the trip</text>
+        <text class="lab t-accent" x="969" y="208" text-anchor="middle">15 minutes not moving · 44% of the trip</text>
       </g>
 
       <line class="grid" x1="0" y1="330" x2="1728" y2="330"/>
@@ -810,7 +820,7 @@ svg{display:block}
         <path class="accent-s" d="M700 60 L1326 60" stroke-width="3" marker-end="url(#ar4)"/>
         <defs><marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
           orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent)"/></marker></defs>
-        <text class="lab" x="1013" y="46" text-anchor="middle" fill="var(--accent)">Waits 11 minutes on average</text>
+        <text class="lab t-accent" x="1013" y="46" text-anchor="middle">Waits 11 minutes on average</text>
       </g>
     </svg>
   </div>
@@ -842,28 +852,28 @@ svg{display:block}
       <line class="axis" x1="60" y1="250" x2="1668" y2="250"/>
       <rect x="60" y="196" width="900" height="108" rx="10" fill="var(--accent-wash)"/>
       <text class="lab" x="80" y="176">Grant window · open</text>
-      <text class="lab" x="1000" y="176" fill="var(--ink-faint)">Closed until 2030</text>
+      <text class="lab t-faint" x="1000" y="176">Closed until 2030</text>
 
       <g><circle class="accent" cx="60" cy="250" r="11"/>
         <text class="name" x="60" y="330">Today</text>
-        <text class="val" x="60" y="366" fill="var(--ink-soft)">6 Aug 2026</text></g>
+        <text class="val t-soft" x="60" y="366">6 Aug 2026</text></g>
       <g><circle class="accent" cx="820" cy="250" r="11"/>
         <text class="name" x="820" y="330" text-anchor="middle">Budget vote</text>
-        <text class="val" x="820" y="366" text-anchor="middle" fill="var(--ink-soft)">12 Mar 2027</text></g>
+        <text class="val t-soft" x="820" y="366" text-anchor="middle">12 Mar 2027</text></g>
       <g><rect class="accent" x="948" y="226" width="24" height="48" rx="5"/>
         <text class="name" x="960" y="330" text-anchor="middle">Grant closes</text>
-        <text class="val" x="960" y="366" text-anchor="middle" fill="var(--ink-soft)">31 Mar 2027</text></g>
+        <text class="val t-soft" x="960" y="366" text-anchor="middle">31 Mar 2027</text></g>
       <g><circle class="quiet" cx="1620" cy="250" r="11"/>
-        <text class="name" x="1620" y="330" text-anchor="end" fill="var(--ink-soft)">Next round</text>
-        <text class="val" x="1620" y="366" text-anchor="end" fill="var(--ink-faint)">2030</text></g>
+        <text class="name t-soft" x="1620" y="330" text-anchor="end">Next round</text>
+        <text class="val t-faint" x="1620" y="366" text-anchor="end">2030</text></g>
 
       <path class="accent-s" d="M820 208 L820 158" stroke-width="2" marker-end="url(#ar)"/>
       <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
         orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent)"/></marker></defs>
-      <text class="lab" x="838" y="150" fill="var(--accent)">The one meeting that can decide it</text>
+      <text class="lab t-accent" x="838" y="150">The one meeting that can decide it</text>
 
       <g transform="translate(60,410)">
-        <text class="val" x="0" y="0" fill="var(--ink-soft)">$5.6M capital, available once. Nineteen days between the vote and the deadline.</text>
+        <text class="val t-soft" x="0" y="0">$5.6M capital, available once. Nineteen days between the vote and the deadline.</text>
       </g>
     </svg>
   </div>
@@ -918,9 +928,9 @@ svg{display:block}
       </g>
 
       <g class="rise" style="--i:7">
-        <text class="val" x="1640" y="80" text-anchor="end" fill="var(--accent)">6,100 · Frequency</text>
-        <text class="val" x="1640" y="304" text-anchor="end" fill="var(--ink-soft)">3,000 · Bike-share</text>
-        <text class="lab" x="904" y="238" text-anchor="middle" fill="var(--ink-soft)">Docks full</text>
+        <text class="val t-accent" x="1640" y="80" text-anchor="end">6,100 · Frequency</text>
+        <text class="val t-soft" x="1640" y="304" text-anchor="end">3,000 · Bike-share</text>
+        <text class="lab t-soft" x="904" y="238" text-anchor="middle">Docks full</text>
         <path class="quiet-s" d="M904 250 L904 262" stroke-width="2"/>
       </g>
 
@@ -993,19 +1003,19 @@ svg{display:block}
 
       <g transform="translate(1000,200)">
         <path class="accent" d="M0,-46 L46,0 L0,46 L-46,0 Z"/>
-        <text class="lab" x="0" y="86" text-anchor="middle" fill="var(--accent)">Month 18 · gate</text>
+        <text class="lab t-accent" x="0" y="86" text-anchor="middle">Month 18 · gate</text>
         <text class="name" x="0" y="-118" text-anchor="middle">Trunk ridership up 18%</text>
       </g>
 
       <path class="accent-s" d="M1050 176 L1180 100 L1268 100" stroke-width="3" marker-end="url(#ar9)"/>
-      <text class="lab" x="1136" y="112" fill="var(--accent)">Yes</text>
+      <text class="lab t-accent" x="1136" y="112">Yes</text>
       <text class="name" x="1290" y="94">Complete the package</text>
-      <text class="val" x="1290" y="130" fill="var(--ink-soft)">$2.2M returns to the reserve</text>
+      <text class="val t-soft" x="1290" y="130">$2.2M returns to the reserve</text>
 
       <path class="quiet-s" d="M1050 224 L1180 320 L1268 320" stroke-width="3" marker-end="url(#ar9q)"/>
       <text class="lab" x="1136" y="336">No</text>
       <text class="name" x="1290" y="314">Buy 16 Old Quarter stations</text>
-      <text class="val" x="1290" y="350" fill="var(--ink-soft)">$1.5M, where bikes win</text>
+      <text class="val t-soft" x="1290" y="350">$1.5M, where bikes win</text>
 
       <text class="lab" x="40" y="440">Nothing before month 18 is irreversible. The buses hold their value; a schedule change costs a schedule change.</text>
     </svg>
@@ -1093,36 +1103,36 @@ svg{display:block}
       <g transform="translate(0,80)">
         <text class="name" x="0" y="0">Nine buses cannot reach a 12-minute headway</text>
         <text class="lab" x="0" y="32">Measured month 4 · by the scheduling office</text>
-        <text class="lab" x="0" y="60" fill="var(--accent)">Then the package is re-scoped before a bus is ordered</text>
+        <text class="lab t-accent" x="0" y="60">Then the package is re-scoped before a bus is ordered</text>
         <line class="axis" x1="900" y1="14" x2="1660" y2="14"/>
         <rect class="accent" x="900" y="0" width="495" height="28" rx="6"/>
-        <text class="val" x="912" y="22" fill="var(--paper)">12 min</text>
+        <text class="val t-paper" x="912" y="22">12 min</text>
         <line x1="1395" y1="-8" x2="1395" y2="44" stroke="var(--caution)" stroke-width="3"/>
-        <text class="lab" x="1395" y="-20" text-anchor="middle" fill="var(--caution)">Limit · 12 min</text>
+        <text class="lab t-caution" x="1395" y="-20" text-anchor="middle">Limit · 12 min</text>
       </g>
       <line class="grid" x1="0" y1="200" x2="1728" y2="200"/>
 
       <g transform="translate(0,250)">
         <text class="name" x="0" y="0">Old Quarter demand passes 900 trips a day</text>
         <text class="lab" x="0" y="32">Measured month 12 · by the annual household survey</text>
-        <text class="lab" x="0" y="60" fill="var(--accent)">Then the reserve buys stations early</text>
+        <text class="lab t-accent" x="0" y="60">Then the reserve buys stations early</text>
         <line class="axis" x1="900" y1="14" x2="1660" y2="14"/>
         <rect class="accent" x="900" y="0" width="356" height="28" rx="6"/>
-        <text class="val" x="912" y="22" fill="var(--paper)">540</text>
+        <text class="val t-paper" x="912" y="22">540</text>
         <line x1="1494" y1="-8" x2="1494" y2="44" stroke="var(--caution)" stroke-width="3"/>
-        <text class="lab" x="1494" y="-20" text-anchor="middle" fill="var(--caution)">Trigger · 900</text>
+        <text class="lab t-caution" x="1494" y="-20" text-anchor="middle">Trigger · 900</text>
       </g>
       <line class="grid" x1="0" y1="370" x2="1728" y2="370"/>
 
       <g transform="translate(0,418)">
         <text class="name" x="0" y="0">Operating cost passes $7.5M a year</text>
         <text class="lab" x="0" y="32">Measured month 12 · by the city auditor</text>
-        <text class="lab" x="0" y="60" fill="var(--accent)">Then service holds at seven routes</text>
+        <text class="lab t-accent" x="0" y="60">Then service holds at seven routes</text>
         <line class="axis" x1="900" y1="14" x2="1660" y2="14"/>
         <rect class="accent" x="900" y="0" width="499" height="28" rx="6"/>
-        <text class="val" x="912" y="22" fill="var(--paper)">$6.8M</text>
+        <text class="val t-paper" x="912" y="22">$6.8M</text>
         <line x1="1450" y1="-8" x2="1450" y2="44" stroke="var(--caution)" stroke-width="3"/>
-        <text class="lab" x="1450" y="-20" text-anchor="middle" fill="var(--caution)">Ceiling · $7.5M</text>
+        <text class="lab t-caution" x="1450" y="-20" text-anchor="middle">Ceiling · $7.5M</text>
       </g>
     </svg>
   </div>

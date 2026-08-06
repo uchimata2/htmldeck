@@ -88,7 +88,7 @@ PROBE = r"""
     var k = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 1;
     out.slideCount = slides.length;
 
-    // DS-035 - nothing below 18 design units, anywhere
+    // DS-035 - nothing below 16 design units, anywhere (amended from 18, 2026-08-06)
     out.underFloor = [];
     var all = stage.querySelectorAll('*');
     for (var i=0;i<all.length;i++){
@@ -99,7 +99,7 @@ PROBE = r"""
         var m = el.getScreenCTM(); if (!m) continue;
         du = fs * (Math.sqrt(Math.abs(m.a*m.d - m.b*m.c)) / k);
       }
-      if (du < 17.5) out.underFloor.push([+du.toFixed(1),
+      if (du < 15.5) out.underFloor.push([+du.toFixed(1),
         el.textContent.replace(/\s+/g,' ').trim().slice(0,32),
         (el.closest('.slide')||{dataset:{}}).dataset.name || '']);
     }
@@ -190,6 +190,69 @@ PROBE = r"""
     var cur = document.querySelector('.current');
     if (cur) out.currentDasharray = getComputedStyle(cur).strokeDasharray;
 
+    // DS-214/215 - the colour that RENDERS, not the colour the palette intended. A palette audit
+    // compares pairs an author nominates; it cannot see a pair nobody thought to nominate.
+    function lum(c){
+      var m = (c||'').match(/\d+(\.\d+)?/g); if (!m || m.length < 3) return null;
+      var f = [m[0],m[1],m[2]].map(function(v){ v = v/255;
+        return v <= 0.04045 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); });
+      return 0.2126*f[0] + 0.7152*f[1] + 0.0722*f[2];
+    }
+    function contrastOf(a,b){
+      var x = lum(a), y = lum(b); if (x === null || y === null) return null;
+      return (Math.max(x,y)+0.05) / (Math.min(x,y)+0.05);
+    }
+    function paintedBehind(el){
+      if (el.ownerSVGElement){
+        var r = el.getBoundingClientRect();
+        var cx = r.left + r.width/2, cy = r.top + r.height/2, found = null;
+        var shapes = el.ownerSVGElement.querySelectorAll('rect,circle,path,polygon,ellipse');
+        for (var i=0;i<shapes.length;i++){
+          var sr = shapes[i].getBoundingClientRect();
+          if (sr.width < 2 || sr.height < 2) continue;
+          if (cx >= sr.left && cx <= sr.right && cy >= sr.top && cy <= sr.bottom){
+            var f = getComputedStyle(shapes[i]).fill;
+            if (f && f !== 'none' && f !== 'rgba(0, 0, 0, 0)') found = f;
+          }
+        }
+        if (found) return found;
+      }
+      var n = el.nodeType === 1 ? el : el.parentElement;
+      while (n && n !== document.documentElement){
+        var bg = getComputedStyle(n).backgroundColor;
+        if (bg && bg !== 'rgba(0, 0, 0, 0)') return bg;
+        n = n.parentElement;
+      }
+      return getComputedStyle(document.body).backgroundColor;
+    }
+    out.renderedLowContrast = [];
+    out.deadFillAttributes = [];
+    for (var sl=0; sl<slides.length; sl++){
+      var texts = slides[sl].querySelectorAll('text, p, h2, h3, h4, span, li');
+      for (var t2=0; t2<texts.length; t2++){
+        var el2 = texts[t2];
+        if (el2.children.length || !(el2.textContent||'').trim()) continue;
+        var cs2 = getComputedStyle(el2);
+        var fg = el2.ownerSVGElement ? cs2.fill : cs2.color;
+        var r2 = contrastOf(fg, paintedBehind(el2));
+        if (r2 !== null && r2 < 4.5)
+          out.renderedLowContrast.push([slides[sl].dataset.name,
+            el2.textContent.trim().slice(0,24), fg, paintedBehind(el2), +r2.toFixed(2)]);
+        // a fill= that the computed style disagrees with is dead markup (DS-214)
+        var attr = el2.getAttribute && el2.getAttribute('fill');
+        if (attr && el2.ownerSVGElement){
+          var probe = document.createElement('span');
+          if (attr.indexOf('var(') === 0){
+            probe.style.color = attr; document.body.appendChild(probe);
+            var want = getComputedStyle(probe).color; document.body.removeChild(probe);
+            if (want && want !== cs2.fill)
+              out.deadFillAttributes.push([slides[sl].dataset.name,
+                el2.textContent.trim().slice(0,24), attr, cs2.fill]);
+          }
+        }
+      }
+    }
+
     out.vw = window.innerWidth;
     document.title = 'RESULT' + JSON.stringify(out) + 'ENDRESULT';
   }
@@ -235,7 +298,7 @@ def main(deck):
     print("\n=== stage 3  render gate (measured, viewport %d)" % data["vw"])
     rows = [
         ("DS-080/081/082", "sections: %d" % data["slideCount"], 6 <= data["slideCount"]),
-        ("DS-035", "text below 18 design units: %d" % len(data["underFloor"]),
+        ("DS-035", "text below 16 design units: %d" % len(data["underFloor"]),
          not data["underFloor"]),
         ("DS-091", "headlines over six words: %d" % len(data["longHeadlines"]),
          not data["longHeadlines"]),
@@ -270,6 +333,10 @@ def main(deck):
          data.get("at320ScrollWidth", 999) <= 321 and data.get("at320Overflowing") == 0),
         ("DS-076", "position preserved returning from the reflow view: %r"
          % data.get("backOnSlide"), bool(data.get("backOnSlide"))),
+        ("DS-214", "dead fill= attributes overridden by CSS: %d"
+         % len(data.get("deadFillAttributes", [])), not data.get("deadFillAttributes")),
+        ("DS-215", "text runs rendering under 4.5:1: %d"
+         % len(data.get("renderedLowContrast", [])), not data.get("renderedLowContrast")),
     ]
     for rule, what, good in rows:
         if not good:
@@ -278,6 +345,10 @@ def main(deck):
 
     for du, text, slide in data["underFloor"][:6]:
         print("      %5.1f du  %-32s  [%s]" % (du, text, slide))
+    for slide, text, fg, bg, r in data.get("renderedLowContrast", [])[:8]:
+        print("      %-30s %-24s %s on %s = %.2f:1" % (slide[:30], text, fg, bg, r))
+    for slide, text, attr, actual in data.get("deadFillAttributes", [])[:8]:
+        print("      %-30s %-24s wrote %s, renders %s" % (slide[:30], text, attr, actual))
     for name, slide in data["infinite"][:6]:
         tag = "ambient" if [name, slide] in data.get("ambient", []) else "flow (DS-140)"
         print("      looping %-14s %-14s [%s]" % (name, tag, slide))

@@ -32,6 +32,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) | Build the reflow view and enforce the resolution contract | WP2 | `proposed` | specify | - | - |
 | [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md) | Reconcile the thirteen ruleset findings the reference deck produced | WP2 | `proposed` | specify | - | - |
 | [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md) | Settle who scores a deck, and whether the score reaches the user | WP2 | `proposed` | specify | - | - |
+| [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | WP2 | `proposed` | specify | - | - |
 
 ## Closed
 
@@ -49,9 +50,10 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-022](T-022-split-the-design-system-from-its-rationale.md) | Split the operative ruleset from its rationale, and give every rule an ID | `done` | 2026-08-06 |
 | [T-023](T-023-the-deck-evaluation-rubric-and-convergence-loop.md) | Define the deck evaluation rubric and the convergence loop that uses it | `done` | 2026-08-06 |
 | [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md) | Build the reference deck by hand and find out whether the ruleset works | `done` | 2026-08-06 |
+| [T-027](T-027-specify-the-slide-deliverable-and-the-outline-contract.md) | Specify the slide deliverable and the outline contract, and the rules the owner's deck review implies | `done` | 2026-08-06 |
 
 ## Next ID
 
-`T-027`
+`T-029`
 
 <!-- end generated -->
