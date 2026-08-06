@@ -212,6 +212,26 @@ def resolves(target, base):
     return False
 
 
+def points_into_repo(target, base):
+    """Whether a path-shaped string is a promise about *this* repository at all.
+
+    Research notes quote other projects' layouts - `references/libraries.md` inside the deck
+    skill, `humanize-writing/SKILL.md` - and those are citations, not pointers a reader is
+    meant to follow here. The test that separates them: the directory the path names has to
+    exist, from the root or beside the citing file. A missing file under `docs/` is still
+    caught, because that directory is real; `references/libraries.md` is not, because no
+    `references/` is. (Writing that example out as a path would trip this very check - which is
+    the check working.)
+
+    The hole this leaves is a typo in the directory itself - `doc/BRIEF.md` reads as somebody
+    else's tree and is skipped. `PROJECT_DOCS` covers the documents that matter most by name,
+    which is why that list exists separately."""
+    head = target.replace("\\", "/").split("/")[0]
+    if head in ("", ".", ".."):
+        return True
+    return any(os.path.isdir(os.path.normpath(c)) for c in (head, os.path.join(base, head)))
+
+
 def load_decisions():
     """Parse the D-NNN rows out of tasks/DECISIONS.md. That table is the source; which
     tasks a decision blocks is derived from the tasks' `decisions:` fields."""
@@ -450,10 +470,11 @@ def cmd_check(args):
             problems.append("MISSING DOC  %s is pointed at but does not exist - %s"
                             % (doc, PROJECT_DOCS[doc]))
 
-    # Prose and printed pointers. Two exemptions, and they are the whole subtlety here: a path
-    # .gitignore excludes is absent from a fresh clone on purpose, and a path some task declares
-    # as a deliverable is a promise about the future - `task.py deliverables` is what reports on
-    # those. Everything else must be there for the reader who just cloned this.
+    # Prose and printed pointers. The question this answers is narrow - would a reader who just
+    # cloned this repository find the file? So .gitignore decides on both sides: an excluded
+    # path is not a broken pointer, and an excluded *document* is not scanned at all, because it
+    # is not in the clone either. A path some task declares as a deliverable is exempt too; that
+    # is a promise about the future, and `task.py deliverables` is what reports on it.
     ignore = gitignore_patterns()
     declared = set()
     for t in tasks.values():
@@ -462,10 +483,14 @@ def cmd_check(args):
 
     pointers, seen_pointers = 0, set()
     for src in sorted(project_files((".md", ".py"))):
+        if is_ignored(os.path.relpath(src, "."), ignore):
+            continue
         base = os.path.dirname(src)
         for m in POINTER.finditer(read(src)):
             target = m.group(1)
             if target in OPTIONAL_DOCS or target in declared or is_ignored(target, ignore):
+                continue
+            if not points_into_repo(target, base):
                 continue
             pointers += 1
             if (src, target) in seen_pointers:
