@@ -31,6 +31,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | WP1 | `proposed` | specify | - | - |
 | [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) | Build the reflow view and enforce the resolution contract | WP2 | `proposed` | specify | - | - |
 | [T-023](T-023-the-deck-evaluation-rubric-and-convergence-loop.md) | Define the deck evaluation rubric and the convergence loop that uses it | WP1 | `review` | review | - | - |
+| [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md) | Build the reference deck by hand and find out whether the ruleset works | WP2 | `proposed` | specify | - | - |
 
 ## Closed
 
@@ -49,6 +50,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 
 ## Next ID
 
-`T-024`
+`T-025`
 
 <!-- end generated -->

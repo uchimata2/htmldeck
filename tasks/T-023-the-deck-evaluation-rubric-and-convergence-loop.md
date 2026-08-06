@@ -6,7 +6,7 @@ status: review
 phase: review
 parent: null
 blocked_by: []
-related: [T-002, T-004, T-005, T-014, T-020]
+related: [T-002, T-004, T-005, T-014, T-020, T-024]
 work_package: WP1
 owner: maintainer
 created: 2026-08-06
@@ -142,7 +142,7 @@ means**, which means today the loop terminates when the agent feels finished.
 that matters most: **an unvalidated rubric passes everything.** This project has already paid for
 that — a quality scan under-reported by 15× and was believed because it did not look like a tool.
 The rubric stays unclosed until it has been run against a deck with seeded defects and found them.
-That deck is the same artifact CLAUDE.md rule 6 has been asking for since T-014.
+That deck is the same artifact CLAUDE.md rule 6 has been asking for since T-014, and it now has a task: [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md).
 
 **Child fix tasks raised**
 - none — closing this needs the real deck, not another task
