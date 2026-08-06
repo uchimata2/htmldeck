@@ -396,12 +396,31 @@ replaces enforced variety, with the template generator satisfying it later.
 
 ## Definition of done
 
-- A deck renders correctly with the network disabled.
-- The build check demonstrated failing on each class of problem it claims to catch.
-- The critique mode run against a deck with known defects, and found them.
-- **The evaluation rubric run against a deck with one seeded defect per dimension, and scored each
-  0 or 1.** Added 2026-08-06 with [`EVALUATION.md`](EVALUATION.md) §7 — an unvalidated rubric passes
-  everything, and this project has already paid for that once. It is the criterion holding
-  [T-023](../tasks/T-023-the-deck-evaluation-rubric-and-convergence-loop.md) open.
-- **A real 12-slide deck taken through the convergence loop to a PASS**, and looked at offline.
-- No personal, client, or machine data anywhere in the repository.
+*Three of six met by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md),
+2026-08-06.*
+
+- ~~A deck renders correctly with the network disabled.~~ **Met.**
+  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 178 KB, zero
+  external references, rendered in real Chrome with DNS black-holed and all three embedded faces
+  reporting `loaded`.
+- The build check demonstrated failing on each class of problem it claims to catch. *Open —
+  [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md). A measurement layer now exists
+  at `tools/deck/` and reports 0 mechanical failures on the reference deck against 3 on the seeded
+  one, but it has not been shown to fail on **each class**.*
+- The critique mode run against a deck with known defects, and found them. *Open —
+  [T-004](../tasks/T-004-critique-mode-blunt-section-by-section-review.md). The seeded-defect deck it
+  needs now exists.*
+- ~~**The evaluation rubric run against a deck with one seeded defect per dimension, and scored each
+  0 or 1.**~~ **Met.** Ten defects seeded, all scored 0 or 1, no anchor corrected —
+  [`examples/reference-deck-seeded-defects.html`](../examples/reference-deck-seeded-defects.html).
+  **Five of the ten dimensions proved uncatchable by any mechanical check**, which is the result that
+  matters more than the pass.
+- ~~**A real 12-slide deck taken through the convergence loop to a PASS**, and looked at offline.~~
+  **Met**, in two measurement rounds and 24 fixes.
+- No personal, client, or machine data anywhere in the repository. *Holds — re-checked at each commit.*
+
+**One criterion is missing from this list and should be added when it can be met honestly.** The
+design system now requires every slide to state its deliverable (§3.4, DS-201 to DS-209), and **no
+deck in this repository satisfies that yet** — the rules that matter most are the least exercised.
+[T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) is the work; until
+it lands, a deck can pass every check here and still leave its audience waiting for the presenter.
