@@ -90,6 +90,41 @@ computed geometry out of the DOM before recording what the picture seems to show
 weaken **L-01** — you still have to look — it says a screenshot alone is one source, and the
 lesson above applies to it like any other.
 
+### L-14 — Say which layer of a conclusion is load-bearing
+
+A decision is rarely one claim. It is usually a measurement, a structural ruling that follows from
+it, and a specific choice that follows from neither — and those have completely different
+strengths. Recorded as a single verdict, the weakest layer inherits the confidence of the
+strongest, and a later reader cannot tell which part they are allowed to revisit.
+
+The concrete case: closing the font decision recorded *"embedded subsets, and the faces are these
+three"* as one decision. The first half rested on measurement and nothing left in the research
+could move it. The second was a preference that two unfinished research tasks could reasonably
+overturn — and it was written with the same certainty.
+
+**How to apply.** When a task closes ahead of research that touches it, split the verdict into
+settled / provisional and name **what specifically could move each row**. "Provisional" without a
+named mover is just hedging; it has to say *which* task, so the synthesis step knows what to
+re-test rather than inherit. This also protects the strong rows, which otherwise get re-litigated
+alongside the weak ones.
+
+### L-15 — A tool that fails optimistically is worse than one that fails
+
+An unreliable tool that errors is a nuisance. One that answers *confidently and permissively* —
+reporting a capability as available when the real environment denies it — puts the defect in the
+shipped artefact instead of the console. The cost is paid by the recipient, not the author.
+
+The case: a preview pane loaded with a `file://` page reported `location.origin` as `"file://"`
+and allowed `fetch()` of a local file. Both are what an *unrestricted* origin does; the real thing
+is opaque and denies them. Every check run there passes, and the deck breaks on the recipient's
+machine. It is **L-06** with the stakes inverted — the convenient source did not say "nothing
+here", it said "everything works".
+
+**How to apply.** For any constraint that only bites in the delivery environment, test *in* that
+environment — for a deck, a real double-click on a clean profile. When a tool cannot be trusted
+for a given question, record the prohibition in the task that will ask it, not only in the note
+where it was discovered; the next session reads the task.
+
 ---
 
 ## Tooling
@@ -139,6 +174,8 @@ out, every comparison is noise and every regeneration is a diff.
 
 **How to apply.** `.gitattributes` pins `eol=lf`; anything that writes a file passes
 `newline="\n"` so the output is identical on every platform.
+
+---
 
 ---
 

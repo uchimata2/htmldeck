@@ -65,9 +65,26 @@ Safari degrade gracefully but do not set the bar, and mobile is secondary. Probe
 far enough to know what breaks, not to support them.
 
 **Open questions**
-- Is a single-file deck still the requirement if it costs a large inlined 3D library, or is a
-  folder-plus-file acceptable for the heaviest decks? — owner
+- ~~Is a single-file deck still the requirement if it costs a large inlined 3D library, or is a
+  folder-plus-file acceptable for the heaviest decks?~~ **Answered 2026-08-06 by the delivery-mode
+  ruling** (BRIEF.md *Decisions taken*): **no folder-plus-file mode.** Two modes only — `portable`
+  (everything inlined, the only shipping mode) and `linked` (CDN, authoring loop only). A deck plus
+  an asset folder is the format that breaks when emailed, and it fails the double-click rule. So
+  if a 3D library is too heavy to inline, the answer is not to ship it, not to unbundle the deck.
 - What is the version floor? "Recent" needs a number before a check can test it.
+
+**A tooling constraint that will otherwise cost this task a session** — recorded 2026-08-06.
+**The in-app preview pane cannot answer this task's question and will appear to.** Loaded with a
+`file://` URL it reports `location.origin` as `"file://"` and allows `fetch()` of a local file —
+neither consistent with a genuinely restricted origin, where the origin is opaque. It also renders
+`file://` pages as static snapshots that mis-draw SVG `text-anchor`. It produced three confident
+wrong answers in the session that closed T-013, one of which reached a research note before being
+caught (R5 §3's withdrawn three.js claim).
+
+The Method above already says "double-click on a clean profile". Read it as a prohibition on every
+in-tool shortcut, not just on reading documentation — **the shortcut here is not merely
+unreliable, it fails in the optimistic direction**, reporting capabilities as available that a
+real restricted origin denies. That is the failure mode that ships a broken deck.
 
 ## 2. Plan
 
