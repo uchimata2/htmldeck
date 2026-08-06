@@ -115,4 +115,5 @@ send anything to a physical printer.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-06 | (no change) | [`examples/reference-deck.html`](../examples/reference-deck.html) now carries a minimal `@media print` block that prints the reflow view rather than the stage. **It has never been printed or measured** — it is a starting point for this task, not a result. |
 | 2026-08-06 | → proposed | Created. R6 §9 recorded printing as untested and said so plainly rather than guessing; raised as its own task so the gap cannot be lost. Deliberately **not** blocked on the print mode being specified — the measurement is useful input to that specification, not a consequence of it. |

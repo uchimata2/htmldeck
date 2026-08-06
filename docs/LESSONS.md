@@ -316,9 +316,67 @@ That last column is the routing table for the whole pipeline and it costs nothin
 rule is fresh. Then ask the question that exposes whether the standard is operable at all: **what
 number goes up when this gets better?** If there is no answer, nothing built on it can converge.
 
+### L-24 — A standard is unvalidated until something is built strictly against it
+
+Reading a ruleset tells you whether it is coherent. **Building to it tells you whether it is
+possible**, and those are different questions with different answers.
+
+The case: 131 rules, reviewed repeatedly, cited by ID, with conflicts already resolved and recorded.
+The first real deck built strictly against them produced **thirteen findings** — four of them
+conflicts between two rules both labelled `hard`, so a compliant deck could not exist; three rules
+unimplementable as written; one rule whose check was impossible as specified. One finding surfaced
+before a line of code, from reading the rules *in order to build*. **Every one of the other twelve
+came from the build or from measuring what the build produced.** Review of the ruleset as a document
+had found none of them, because a reader resolves an ambiguity silently and a builder cannot.
+
+**How to apply.** Treat "build one real artifact strictly to it" as part of writing a standard, not
+as the first use of a finished one — and budget for it, because the findings arrive at roughly one
+per ten rules. Two disciplines make it work: **build to the rule even where the rule is painful**
+(softening it destroys the evidence), and **record the finding rather than fixing the rule
+mid-build** — a test that edits the thing it is testing is not a test. Hand the findings to a
+separate task.
+
+### L-25 — Two conformance floors on one element can be jointly unsatisfiable
+
+Accessibility minima are usually met one at a time, so it is easy to assume they compose. They do
+not always. A neutral data mark must be **dark enough** to clear 3:1 against the page (non-text
+contrast) and **light enough** to carry 4.5:1 text (text contrast). In a neutral hue there is no
+value that does both — the requirement is not "pick a better colour", it is *"text does not belong
+inside that mark"*.
+
+The same shape appeared twice more in one build: a target-size minimum in CSS pixels silently sets a
+minimum in *design units* once a scaled stage is involved (and the binding number comes from an
+unrelated rule — the width at which the layout stops being shown at all); and a panel required to
+open downward cannot do so if its control sits near the foot of a fixed-height stage.
+
+**How to apply.** When a rule constrains an element, check it against the *other* rules touching the
+same element before choosing a value — especially where one is expressed in absolute units and the
+other in the design's own units. Where two floors genuinely cannot both hold, **the resolution is
+usually structural rather than numeric**: move the text out, move the control up. Record which rule
+yielded and why, because the next builder will hit the same pair.
+
 ---
 
 ## Tooling
+
+### L-26 — Measure the content, not the box; and pin motion before capturing
+
+Two measurement traps, both hit while validating one deck, both of which return a confident clean
+result:
+
+- **A box cannot overflow a track that clamps it.** Content taller than a `1fr` grid row does not
+  make any element exceed the stage — the track fixes the box and the content spills out of it
+  silently. An overflow check written against element bounds reports zero while two slides are
+  visibly broken. Compare `scrollHeight` with `clientHeight` instead.
+- **An infinite animation stops a headless render from ever settling.** With a looping animation in
+  the document, the virtual-time budget never reaches a quiescent state, screenshots fire mid
+  transition, and the result is a convincingly blank slide that looks exactly like a real defect.
+  Three "defects" chased this way were the harness, not the deck.
+
+**How to apply.** Any automated render gate pins motion off and disables transitions before
+capturing, and measures content extents rather than element bounds. Both are one line each and both
+were discovered by disbelieving a result that did not match what the previous render showed —
+which is **L-06** again, now with a mechanism.
 
 ### L-07 — Standard library only
 

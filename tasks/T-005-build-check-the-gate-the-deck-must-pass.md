@@ -91,6 +91,7 @@ places. Nothing on this task's presentation list would have caught it.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-06 | (no change) | **A working measurement layer now exists**, built by [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md) and committed as `tools/deck/audit.py`, `tools/deck/render.py` and `tools/deck/contrast.py`. It runs 30 checks against `DS-nnn` IDs in real Chrome, offline, and it found six defects in the reference deck that looking at it had not — including type below DS-035's own floor and a headline over DS-091's word cap. **This task now hardens and completes that layer rather than starting one**; the gap is L-04 self-tests on the render path, the `judge` boundary, and a report format T-004 can consume. Two findings constrain it: an infinite animation makes a headless capture non-deterministic unless motion is pinned off, and content spilling a grid track is invisible to element-bounds checks (**L-26**). |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
 | 2026-08-05 | (no change) | Acceptance criteria split into presentation and content halves, plus an honesty criterion, after a source-document audit showed the presentation list cannot catch a wrong figure. Evidence in `docs/BRIEF.md`. |
 | 2026-08-06 | (no change) | Added disclosure-layer and token-layer criteria after the owner identified progressive disclosure as their signature technique and chose a parametric single theme. |
