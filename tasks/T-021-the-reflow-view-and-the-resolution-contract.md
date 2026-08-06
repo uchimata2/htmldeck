@@ -6,11 +6,11 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: []
-related: [T-002, T-005, T-007, T-014, T-016]
+related: [T-002, T-005, T-007, T-014, T-016, T-018]
 work_package: WP2
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: []
 ---
 
@@ -119,5 +119,6 @@ resolution. That is why the stage is `hard` and why no responsive presentation l
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | `related` gains [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md), the measurement that answers this task's shared-rendering open question. [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) also **flags this specification as partly satisfied**: the row below records a reflow view already carrying all tier-two content, `scrollWidth` 320 at 320 CSS px and position preserved both ways, so three of the acceptance criteria are demonstrated on one deck. What remains is the fullscreen suppression, the auto-engage threshold, condition 17, the 720p body-text measurement, the conformance wording — and the **enforcement**, which is the half the title names and the half that does not exist. Flagged, not rewritten; the rewrite is the owner's call. |
 | 2026-08-06 | (no change) | **A working reflow view now exists** in [`examples/reference-deck.html`](../examples/reference-deck.html), built by [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md) because without it the deck fails its own hard rules and the convergence loop is meaningless. Measured: 12 sections carrying all tier-two content, `scrollWidth` **320** at 320 CSS px with zero elements overflowing, position preserved in both directions, panels open and their controls removed. **This task now specifies against a real implementation rather than in the abstract** — and two defects it already surfaced are worth carrying: the stage's absolutely-positioned, fixed-width disclosure panel cannot reflow until both are undone, and an inline `font-size` on a headline outranks the reading view's own type scale. |
 | 2026-08-06 | → proposed | Raised out of [T-014](T-014-synthesise-research-into-the-design-system-reference.md) §9.1, which the owner settled the same day: keep the fixed stage, add a reflow view. Created because a mode is built, not asserted. **The owner's reason for the stage reshaped the design system rather than only answering the question** — the screen-share arithmetic in §2.4 produced a type floor (body ≥ 24 design units) that no research note had, tightened D5's 18–24 range to 24–28, and demoted the corpus's mono labels to decoration because they are illegible at 720p. |

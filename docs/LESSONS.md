@@ -445,6 +445,50 @@ what it currently excludes and print that count**, so the number is visible when
 a coverage defect surfaces, measure the rule with the exemption removed entirely before scoping the
 fix — the discovery gives you a delta, and the delta is not the total.
 
+### L-31 — A dependency edge is a claim with a date on it, and nothing re-checks it
+
+An edge records what was true when someone wrote it. The work it describes then moves, and the edge
+does not. **The index cannot tell a correct edge from an unrevisited one** — both render as the same
+row — so a stale gate is invisible in exactly the view built to make dependencies visible.
+
+The case: `T-005` (the build check) was `blocked_by` build mode, written when neither existed. A
+later task then built the reference deck by hand, and with it a measurement layer running 30 checks
+against two decks now committed to the repository — one of them the seeded-defect fixture T-005's
+own criteria demand. **T-005 was a third built while the board reported it gated**, and nothing in
+the backlog said so, because nothing re-reads an edge once it is written.
+
+Note what did *not* fix it: the blocking task never landed. The gate went false because unrelated
+work supplied what the gate was protecting against. **An edge can be invalidated by something that
+touches neither of its endpoints**, which is why "re-check the edges when the blocker closes" is not
+enough.
+
+**How to apply.** Treat a `blocked_by` as a dated assertion, not a fact. When any task closes,
+re-read the edges of everything it plausibly touched, not only its own. Periodically audit the whole
+graph — the cost is one pass and the finding is usually that most edges are right, which is itself
+worth knowing, because *unblocked* and *unrevisited* are otherwise the same picture. And when a
+ruling is made in prose — a release gate, a precedence — **write the edge the same day**; a
+dependency stated only in a document is one the tooling cannot enforce and the board will contradict.
+
+### L-32 — Building one instance by hand does the first pass of every task downstream of it
+
+To make a hand-built reference artifact comply with a ruleset, you must build a first version of
+whatever the ruleset requires — the tokens, the components, the checks. Those are usually other
+tasks' deliverables. **The work lands, and the specifications that asked for it never notice**, so
+they go on describing authorship when what is actually left is extraction and proof.
+
+The case: one reference deck produced a first instance of **four** downstream tasks — 57 custom
+properties (the token layer), a disclosure component and a motion vocabulary (the interaction
+layer), a reflow view carrying all tier-two content, and a 30-check measurement layer. Two of the
+four recorded it in their logs. The other two still read as greenfield, which misprices them badly:
+extracting a contract from something that works is a different and much cheaper job than authoring
+one.
+
+**How to apply.** When a task builds something end to end, list what it had to build *incidentally*
+and write a log row on each downstream task that now owns a first instance. Say what exists and,
+more importantly, **what is still missing** — an instance is not a contract, and a thing that works
+once is not a thing that is specified. The bar for the downstream task does not drop; only its
+starting point moves.
+
 ---
 
 ## Tooling

@@ -5,12 +5,12 @@ type: deliverable
 status: proposed
 phase: specify
 parent: null
-blocked_by: [T-001, T-014, T-015]
-related: []
+blocked_by: [T-001, T-007, T-014, T-015, T-016, T-020]
+related: [T-021, T-028]
 work_package: WP3
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: []
 ---
 
@@ -69,6 +69,7 @@ richness is wanted within the portability envelope T-017 defines.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **Three blockers added by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md).** [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) because it decides this mode's **input contract** — a brief or a specification — and a generator specified against the wrong one is respecified rather than adjusted; T-020's own open question proposed exactly this edge and left it `related` only to avoid a deadlock that does not exist, since T-020 has no blockers of its own. [T-007](T-007-define-the-parametric-theme-layer.md) and [T-016](T-016-the-interaction-and-motion-layer.md) because two acceptance criteria above already require every theme value to come from the token layer and every component to be composed rather than emitted bespoke: with neither contract in existence, the only thing this mode can do is hard-code, which [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) §1.2 calls `hard`. `related` gains T-021, the other half of the two renderings, and T-028, the reference output this mode is judged against. |
 | 2026-08-06 | (no change) | **The generator now has a reference output to be judged against**: [`examples/reference-deck.html`](../examples/reference-deck.html), 12 slides, 178 KB, zero external references, built by hand to the ruleset by [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md). That closes the objection in T-024's scope — a generator with no reference output is a generator nobody can review. **What it should automate is now visible rather than assumed**, and so is what it must not: five of the ten evaluation dimensions cannot be checked mechanically, so the build mode cannot self-certify. |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
 | 2026-08-06 | (no change) | Updated for the owner's decisions: writes copy from source material, minimal-JavaScript habit dropped, print demoted to opt-in, `file://` Chrome/Edge render added as a gate. |

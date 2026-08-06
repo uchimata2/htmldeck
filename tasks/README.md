@@ -18,20 +18,19 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 
 | ID | Title | WP | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :---: | :--- | :--- | :--- | :--- |
-| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | WP3 | `proposed` | specify | T-015 | T-005, T-008, T-019 |
+| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | WP3 | `proposed` | specify | T-007, T-015, T-016, T-020 | T-008, T-019 |
 | [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) | Brief mode — elicit the six-section prompt | WP3 | `proposed` | specify | T-015 | - |
-| [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | WP3 | `proposed` | specify | - | T-008 |
-| [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | WP3 | `proposed` | specify | T-002 | - |
-| [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | WP2 | `proposed` | specify | - | - |
-| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004 | - |
-| [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | WP2 | `proposed` | specify | - | T-002, T-003 |
-| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | - |
+| [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | WP3 | `proposed` | specify | T-020 | T-008 |
+| [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | WP3 | `proposed` | specify | - | T-008 |
+| [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | WP2 | `proposed` | specify | - | T-002 |
+| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004, T-005, T-028 | - |
+| [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | WP2 | `proposed` | specify | T-020 | T-002, T-003 |
+| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | T-002 |
 | [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | WP1 | `proposed` | specify | - | - |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
-| [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | WP1 | `proposed` | specify | - | - |
+| [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | WP1 | `proposed` | specify | - | T-002, T-004, T-015 |
 | [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) | Build the reflow view and enforce the resolution contract | WP2 | `proposed` | specify | - | - |
-| [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | WP2 | `proposed` | specify | - | - |
-| [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) | Audit the dependency edges across the open backlog and propose a build order | none | `proposed` | specify | - | - |
+| [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | WP2 | `proposed` | specify | - | T-008 |
 
 ## Closed
 
@@ -53,6 +52,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md) | Settle who scores a deck, and whether the score reaches the user | `done` | 2026-08-06 |
 | [T-027](T-027-specify-the-slide-deliverable-and-the-outline-contract.md) | Specify the slide deliverable and the outline contract, and the rules the owner's deck review implies | `done` | 2026-08-06 |
 | [T-029](T-029-stop-the-deliverable-exemption-silently-dropping-pointers.md) | Stop the deliverable exemption silently dropping pointers from the check | `done` | 2026-08-07 |
+| [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) | Audit the dependency edges across the open backlog and propose a build order | `done` | 2026-08-07 |
 
 ## Next ID
 

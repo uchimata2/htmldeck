@@ -6,11 +6,11 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: [T-001, T-014]
-related: [T-002]
+related: [T-002, T-016, T-021]
 work_package: WP2
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: []
 ---
 
@@ -76,6 +76,7 @@ Not a decision any more — the parametric theme layer that the decision require
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | `related` gains T-016 and T-021 — the motion tokens that swap with this layer, and the second of the two renderings it must carry. [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) also recorded a measurement that changes what *starting* this task means: **[`examples/reference-deck.html`](../examples/reference-deck.html) already carries 57 custom properties**, spanning colour, type scale, spacing, radii, stroke, shadow, motion durations and easings, `--measure`, `--du` and a tokenised disclosure mark. The token *layer* exists, as one hand-built instance. The **contract** does not, and neither does the swap demonstration the criteria above ask for. This task extracts and proves; it does not author from nothing. |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
 | 2026-08-06 | (no change) | Owner decided: one theme now, every layer parametric, template generator deferred. Task reframed from a decision to the token layer that decision requires. |
 | 2026-08-06 | (no change) | **T-014 closed.** [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) §1.2 fixes the token layer this task builds: parametricity is **hard**, not tidy practice, because a value hard-coded now is a value the generator cannot vary. Token vocabulary extended beyond the corpus's `--ink`/`--bg`/`--line`/`--shadow` with `--measure` and a tokenised disclosure mark. **C7 (one palette per deck) was dropped and D1's per-deck font rotation with it** — this task's variety comes from the generator, never from per-deck improvisation. **§9.1 gates it**: the stage question is an owner decision. |

@@ -6,11 +6,11 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: [T-015]
-related: [T-002]
+related: [T-002, T-020]
 work_package: WP3
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: []
 ---
 
@@ -59,5 +59,6 @@ The structure is taken from a real prompt in the corpus that produced one of the
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | `related` gains [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md), added by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md). **This mode's continued existence is an open question** — [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) §1 asks whether the scaffold replaces it or whether the six-section brief becomes an internal structure filled in silently from the two answers, and T-020's pipeline decision is what settles it. No `blocked_by`: the gate reaches here transitively through T-015, and a second edge would only duplicate it. |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
 | 2026-08-06 | (no change) | Owner answered BRIEF open question 6: the plugin **does** receive source documents. Brief mode therefore has to ask for them — they populate the `## Resources` section, which already has the slot. Absence is a legitimate state and must not be treated as a failure. Decision recorded once, in `docs/BRIEF.md`; not restated here. |

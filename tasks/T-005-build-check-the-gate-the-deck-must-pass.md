@@ -5,12 +5,12 @@ type: deliverable
 status: proposed
 phase: specify
 parent: null
-blocked_by: [T-002]
-related: [T-001, T-007, T-016]
+blocked_by: []
+related: [T-001, T-002, T-007, T-016, T-018, T-021]
 work_package: WP3
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: []
 ---
 
@@ -91,6 +91,7 @@ places. Nothing on this task's presentation list would have caught it.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **Unblocked by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) — the `blocked_by` on T-002 was false.** This check runs on an HTML file, and two exist: [`examples/reference-deck.html`](../examples/reference-deck.html) and [`examples/reference-deck-seeded-defects.html`](../examples/reference-deck-seeded-defects.html), the second of which is precisely the *proven **failing** on each class* fixture the criteria above demand. `tools/deck/` already runs 30 checks against both. **Nothing here waits on build mode**, and the edge was gating a task already a third built — the exact case the audit was raised to find. T-002 becomes `related`, alongside T-018 (whether the print path earns a row) and T-021 (which hands conditions 13–19 over). |
 | 2026-08-06 | (no change) | **A working measurement layer now exists**, built by [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md) and committed as `tools/deck/audit.py`, `tools/deck/render.py` and `tools/deck/contrast.py`. It runs 30 checks against `DS-nnn` IDs in real Chrome, offline, and it found six defects in the reference deck that looking at it had not — including type below DS-035's own floor and a headline over DS-091's word cap. **This task now hardens and completes that layer rather than starting one**; the gap is L-04 self-tests on the render path, the `judge` boundary, and a report format T-004 can consume. Two findings constrain it: an infinite animation makes a headless capture non-deterministic unless motion is pinned off, and content spilling a grid track is invisible to element-bounds checks (**L-26**). |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
 | 2026-08-05 | (no change) | Acceptance criteria split into presentation and content halves, plus an honesty criterion, after a source-document audit showed the presentation list cannot catch a wrong figure. Evidence in `docs/BRIEF.md`. |

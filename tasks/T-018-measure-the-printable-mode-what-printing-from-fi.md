@@ -6,11 +6,11 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: []
-related: [T-002, T-005, T-017]
+related: [T-002, T-005, T-017, T-021]
 work_package: WP1
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: [docs/research/R7-printable-mode.md]
 ---
 
@@ -118,5 +118,6 @@ send anything to a physical printer.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | `related` gains [T-021](T-021-the-reflow-view-and-the-resolution-contract.md), added by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md). T-021 carries the open question *do the reflow view and the print stylesheet share one document rendering?* — and it is answerable only with the measurement this task takes. The reference deck's `@media print` block already prints the reflow view, so the two modes are coupled in the only implementation that exists, without either task having ruled that they should be. |
 | 2026-08-06 | (no change) | [`examples/reference-deck.html`](../examples/reference-deck.html) now carries a minimal `@media print` block that prints the reflow view rather than the stage. **It has never been printed or measured** — it is a starting point for this task, not a result. |
 | 2026-08-06 | → proposed | Created. R6 §9 recorded printing as untested and said so plainly rather than guessing; raised as its own task so the gap cannot be lost. Deliberately **not** blocked on the print mode being specified — the measurement is useful input to that specification, not a consequence of it. |

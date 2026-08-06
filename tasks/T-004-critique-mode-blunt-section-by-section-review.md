@@ -5,12 +5,12 @@ type: deliverable
 status: proposed
 phase: specify
 parent: null
-blocked_by: [T-014]
+blocked_by: [T-014, T-020]
 related: [T-002]
 work_package: WP3
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: []
 ---
 
@@ -78,6 +78,7 @@ place it is reused.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **Blocked on [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md), added by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md).** T-020 decides whether the **specification review** — the second critique format R1 §14 proves, run before any HTML exists — belongs to this mode or becomes one of its own. That is a doubling of scope, not a detail: §1 above reviews a built deck only, and every acceptance criterion is written against a rendered artifact. A mode specified for one format and then handed two is respecified. |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
 | 2026-08-05 | (no change) | Added the cross-document class of finding and the counting pass, after a source-document audit found nine defects that five per-document reviews had all passed. Evidence in `docs/BRIEF.md`. |
 | 2026-08-06 | (no change) | Owner answered BRIEF open question 6 — sources are supplied, so the cross-document reconciliation added above is now a **standing** part of this mode rather than a conditional one. Two further inputs landed: R3 §6's 12 anti-patterns are directly usable as named defect classes, and R2 §11 gives this mode a testable disclosure check — close every panel and read the deck; if a slide stops making its argument, the tier split is wrong. R4 §2 found the critique format has **zero prior art**, so R1 §14's severity scheme is the only source for it. |

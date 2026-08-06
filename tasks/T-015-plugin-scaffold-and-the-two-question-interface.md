@@ -5,12 +5,12 @@ type: deliverable
 status: proposed
 phase: specify
 parent: null
-blocked_by: [T-014]
+blocked_by: [T-014, T-020]
 related: [T-002, T-003, T-012]
 work_package: WP2
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: []
 ---
 
@@ -80,4 +80,5 @@ against, ahead of the build mode being finished.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **Blocked on [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md), added by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md).** T-020's stated job includes resolving the two-question conflict and amending `BRIEF.md` to match; the central acceptance criterion here is *asks exactly the two questions, and nothing else, on a normal run*. If the promise is reworded to "two questions, then shows its work at three points", that criterion is **wrong rather than incomplete**, and so is the interface built to it. T-020's own open question proposed this edge and declined to add it; the audit found no deadlock to justify the caution — T-020 has no blockers. |
 | 2026-08-06 | → proposed | Created to carry the owner's two-question, near-zero-config requirement. |
