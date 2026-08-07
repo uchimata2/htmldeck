@@ -462,9 +462,13 @@ replaces enforced variety, with the template generator satisfying it later.
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
 - The build check demonstrated failing on each class of problem it claims to catch. *Open —
-  [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md). A measurement layer now exists
-  at `tools/deck/` and reports 0 mechanical failures on the reference deck against 3 on the seeded
-  one, but it has not been shown to fail on **each class**.*
+  [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md), and **closer than it was**.
+  The measurement layer at `tools/deck/` reports 0 mechanical failures on the reference deck against
+  3 on the seeded one, and as of 2026-08-07 the **resolution-contract subset is demonstrated failing
+  on each of its seven classes** — `tools/deck/contract_variants.py` breaks one rule per deck and
+  requires the gate to notice. That exercise caught **three of the new checks passing decks that
+  violated them**, which is the argument for this criterion in one line. The other 33 checks have
+  still not been shown to fail individually.*
 - The critique mode run against a deck with known defects, and found them. *Open —
   [T-004](../tasks/T-004-critique-mode-blunt-section-by-section-review.md). The seeded-defect deck it
   needs now exists.*
