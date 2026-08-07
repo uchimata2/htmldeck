@@ -632,6 +632,46 @@ to-do. And **a gate must not depend on anything a design rule is allowed to dele
 artifact through the parts that exist because it has to work, not through the parts that exist
 because they currently look that way.
 
+### L-37 — An answer that contradicts a rule is a rule amendment, not a permission
+
+An owner answers an open question. The answer is authoritative, it settles the task, and it is
+written down where the task expects it — struck question, date, rationale. **What nothing checks is
+whether the answer just licensed something a `hard` rule forbids.** The task then reads as decided,
+the rule keeps saying the opposite, and the next thing built from the ruleset is either
+non-conformant or quietly ignores the rule.
+
+The case: seventeen open questions answered in one pass, 2026-08-07. Two of them landed on rules,
+and **only one of the two was visible as a rule question when it was asked.**
+
+- **DS-131, and it was already a task.** *Per-stage jump targets, not one per slide* contradicts
+  DS-131's *"clickable dots"*.
+  [T-033](../tasks/T-033-reconcile-ds-131-with-the-chrome-budget.md) existed precisely because
+  [T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) had obeyed
+  DS-216 and DS-217 and made the reference deck depart from DS-131. The conflict was on the board.
+- **DS-140, and it was on nobody's board.** *3D is wanted for functional visualisation — a diagram
+  wobbling slightly so peaks read as peaks* is **continuous motion**, against a rule that closes the
+  motion vocabulary at exactly four named motions, `hard` and `auto`-checked. Neither the question
+  nor the answer mentioned DS-140. It surfaced only because the answer was being written next to
+  the same task's scope line requiring a motion rest state.
+
+This is **not L-28.** There, two rules written at different altitudes conflict, and the fix is a
+scope clause that costs neither of them anything. Here **one side is not a rule** — it is a decision
+that outranks the ruleset, so the ruleset is what moves. The risk runs the opposite way too: L-28
+warns against arbitrating a conflict that isn't real; this warns against **not** arbitrating at all
+— taking the answer as a one-off licence and leaving the rule for whoever builds against it to
+discover, which is **L-33**'s mechanism one step earlier. The third instance is already in the
+repository: T-025 made the motion control **DS-218** rather than a note, because *"a floor that
+reaches the builder as a criterion rather than an instruction produces non-conformant decks by
+default"*.
+
+**How to apply.** Before writing *answered*, read the answer against the rules it touches — the
+ruleset is addressable by `DS-nnn` and the `Check` column says which rules a machine enforces, so an
+answer contradicting an `auto` rule will **fail a gate**, not merely disagree with a document. Name
+the rule in the answer and say **which side moves**: if the answer wins, that is a rule amendment
+with an owner and a task, raised before the task closes; if the rule wins, the answer needs putting
+again with the rule in front of it. What must not happen is the third option, which is the default
+one — recording the answer, not naming the rule, and leaving the precedence to be inferred.
+
 ---
 
 ## Tooling
