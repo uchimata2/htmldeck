@@ -221,6 +221,31 @@ from individually-good requirements can specify a bad whole.** Rules that each p
 nothing about how many such elements a frame can carry, which is why DS-217 states a budget rather
 than another permission.
 
+### Which side moved — DS-131 against DS-216 and DS-217
+
+Adding the budget left a rule conflict behind it. DS-131 required *"clickable dots"*; DS-216 counts a
+dot per slide among the three encodings of position it forbids stacking, and DS-217 says to prefer a
+compact indicator plus click-to-jump over one target per slide. Obeying the two new rules in
+[T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) meant deleting the
+twelve dots, which left the ruleset's own worked example departing from DS-131. All three are
+`default`, so the departure was legitimate; a flagship example that silently contradicts a rule is
+not.
+
+**DS-131 is the side that moved, and the reason generalises: it was the only one of the three that
+named a widget rather than a requirement.** What the reader needs is a way to reach a part of the
+deck without stepping through it. Dots are one way to spend that; the stage names are another and
+cheaper — seven labelled targets already on screen, against twelve unlabelled ones that were not.
+Rewording DS-131 to *a bounded set of named targets* keeps the requirement and drops only the
+mandated implementation, and nothing in DS-216 or DS-217 had to weaken. **A rule that specifies the
+element instead of the need is the one that will collide with the next composition rule**, because
+composition rules are written about elements.
+
+The rewording also states a limit the owner's ruling did not cover. *Per-stage* is the right target
+set while stages are even and short enough that landing on one lands near what the reader wanted. A
+jump into a nine-slide stage is barely a jump, and there the answer is an on-demand slide index —
+a component rather than a chrome element, so it costs nothing against DS-217's budget until it is
+asked for. Naming that limit in the rule is cheaper than leaving the next deck to discover it.
+
 ### What the first tolerance measurement did not measure
 
 DS-063 states two tolerances. When [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md)

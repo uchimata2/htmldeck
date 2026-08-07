@@ -643,11 +643,13 @@ non-conformant or quietly ignores the rule.
 The case: seventeen open questions answered in one pass, 2026-08-07. Two of them landed on rules,
 and **only one of the two was visible as a rule question when it was asked.**
 
-- **DS-131, and it was already a task.** *Per-stage jump targets, not one per slide* contradicts
-  DS-131's *"clickable dots"*.
+- **DS-131, and it was already a task.** *Per-stage jump targets, not one per slide* contradicted
+  DS-131 as it then read — *"clickable dots"*.
   [T-033](../tasks/T-033-reconcile-ds-131-with-the-chrome-budget.md) existed precisely because
   [T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) had obeyed
   DS-216 and DS-217 and made the reference deck depart from DS-131. The conflict was on the board.
+  **Closed 2026-08-08**: DS-131 moved, as the side that named a widget where the others named a
+  requirement, and now reads *a bounded set of named targets*.
 - **DS-140, and it was on nobody's board.** *3D is wanted for functional visualisation — a diagram
   wobbling slightly so peaks read as peaks* is **continuous motion**, against a rule that closes the
   motion vocabulary at exactly four named motions, `hard` and `auto`-checked. Neither the question
