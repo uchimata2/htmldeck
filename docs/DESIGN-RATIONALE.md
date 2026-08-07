@@ -92,7 +92,7 @@ nothing loads this file at runtime.
 | **F-03** | DS-140 × §7 2.2.2 | silence | **New rule, DS-218** — owner's decision, 2026-08-06. `Current` is infinite, so DS-140 mandates the exact motion 2.2.2 requires a control for, and nothing required the deck to build one. The alternative — leaving it to §7, where the criterion already sits — was rejected because **the reference deck only got a control because the build happened to notice**, and a floor that reaches the builder as a criterion rather than an instruction produces non-conformant decks by default. A rule ID also gives the build check something to test by number, which §7's criterion rows do not offer. |
 | **F-04** | DS-140 × DS-141 | conflict | **DS-141 yields, by scope.** Its 500 ms cap now governs entry and transition only, with DS-140's named vocabulary as the specific override. DS-141 was written about the class of animation that makes a deck feel slow; Pulse-once and Current are neither. **The general rule yields to the specific one, and the text now says so** rather than leaving each builder to infer it — which is what T-024 had to do. |
 | **F-05** | DS-146 × DS-140 | conflict | **DS-140 wins; DS-146 says how.** The draw-in is Rise applied to the chart's marks, staggered. The tempting fix — a stroke-dash draw — is a fifth motion, and DS-140's whole value is that the vocabulary is closed at four: *a named vocabulary is what stops animation becoming decoration* (§4). **A rule that requires an effect must be satisfiable from the vocabulary another rule closes**, so the requirement is expressed in the vocabulary's own terms. |
-| **F-06** | DS-168 × DS-071 | silence | **DS-168 amended with the design-unit floor: ≥ 48.** The number was always computable and never stated. `scale = min(vw/1920, vh/1080)`, and DS-071 hands over to the reflow view below 960 CSS px, so the stage bottoms out at scale 0.5 and a design unit is worth half a CSS pixel at the smallest size the stage is ever shown. 24 CSS px therefore needs 48 design units. **The unstated consequence is the trap: a builder reading "24" inside a stage measured in design units will write 24, match the number and fail the criterion.** The reference deck used 52. *Caveat: the 0.5 floor assumes width binds. A short, wide viewport can scale lower, and DS-071 is `default` — a deck that moves the reflow threshold moves this floor with it.* |
+| **F-06** | DS-168 × DS-071 | silence | **DS-168 amended with the design-unit floor: ≥ 48.** The number was always computable and never stated. `scale = min(vw/1920, vh/1080)`, and DS-071 hands over to the reflow view below 960 CSS px, so the stage bottoms out at scale 0.5 and a design unit is worth half a CSS pixel at the smallest size the stage is ever shown. 24 CSS px therefore needs 48 design units. **The unstated consequence is the trap: a builder reading "24" inside a stage measured in design units will write 24, match the number and fail the criterion.** The reference deck used 52. *Caveat, closed 2026-08-07: the 0.5 floor assumed width binds, and a short, wide viewport scales lower. **DS-071 now keys off the scale factor itself**, so 0.5 is the floor by construction rather than by assumption. DS-071 is still `default` — a deck that moves the reflow threshold still moves this floor with it.* |
 | **F-07** | DS-117 | unbuildable | **Rule split: labels are universal, arrowheads are conditional.** The rule assumed every diagram is a directed flow, which is true of A-08 and false of a network graph. An arrowhead is not decoration — it asserts a direction — so applying the rule literally to an undirected edge makes the diagram *say something untrue* in order to satisfy a rule about tidiness. **The label half was right for every diagram; only the arrowhead half was over-generalised.** |
 | **F-08** | DS-063 | check impossible | **Tolerance stated, and measured rather than guessed:** non-text geometry ≤ 0.25 du, text-run widths ≤ 2 du. Across 384 values at 3840×2000 and 1280×634, positions agreed to **0.09 du** and the worst text-run width disagreed by **1.17 du**, through glyph-advance rounding to device pixels. A check demanding exact equality fails every deck containing text — **the rule was unfalsifiable, which is worse than lax.** The two tolerances differ because the mechanisms differ: box geometry rounds once, a text run accumulates rounding per glyph, so the text figure carries headroom for runs longer than this deck's. |
 | **F-09** | DS-013 | silence | **Token list extended with a data-series role and a UI-line role.** With neither present the natural move is to reuse `--line` for chart marks, and a hairline token is tuned for a hairline's job — the reference deck's landed at **1.79:1** against the ground, failing 1.4.11's 3:1 for meaningful graphics. **The token list is where a role either exists or gets improvised**, and an improvised role inherits the contrast obligation of whatever it was borrowed from. |
@@ -221,7 +221,7 @@ from individually-good requirements can specify a bad whole.** Rules that each p
 nothing about how many such elements a frame can carry, which is why DS-217 states a budget rather
 than another permission.
 
-### Viewer scale — why 960 CSS px is the reflow threshold
+### Viewer scale — why scale 0.5 is the reflow threshold, and 960 CSS px is only its usual face
 
 `scale = min(vw/1920, vh/1080)`:
 
@@ -231,9 +231,18 @@ than another permission.
 | FullHD laptop, 100% | 1920 × 950 | 0.88 | 21 px |
 | FullHD laptop, 125% | 1536 × 760 | 0.70 | 17 px |
 | FullHD laptop, 150% | 1280 × 634 | 0.59 | 14 px |
-| Below 960 CSS px | — | < 0.5 | reflow engages |
+| Short and wide — a half-height window | 1280 × 400 | 0.37 | **8.9 px** |
+| 16:9 or taller, below 960 CSS px wide | — | < 0.5 | reflow engages |
 
 **Every laptop case stays on the stage and stays readable**, which is the requirement.
+
+**The threshold is the scale, not the width** — amended 2026-08-07 by the owner via
+[T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md). 12 CSS px of body text is
+what the rule is protecting, and 24 design units reach it at scale 0.5; 960 px of width reaches
+scale 0.5 **only when height does not bind**. The short-and-wide row is the case a width test misses
+and it is not exotic — it is a browser window dragged short. The caveat under **F-06** had already
+named it in one line; keying DS-071 off the scale factor is what removes it, and with it DS-168's
+≥ 48-design-unit floor stops being an assumption about which dimension binds.
 
 **Why 1920×1080 design units rather than the corpus's 1600×900:** purely a change of units — both
 16:9, both scale, nothing renders differently. It buys **one design unit = one pixel in a 1080p

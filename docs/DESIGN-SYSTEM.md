@@ -128,9 +128,9 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | ID | Rule | Label | Check |
 | :--- | :--- | :--- | :--- |
 | DS-070 | Reachable by a **persistent, visible, keyboard-operable control.** This carries the conformance claim. | hard | render |
-| DS-071 | Auto-engages below 960 CSS px of viewport width. | default | render |
+| DS-071 | **Auto-engages when the stage's scale factor `min(vw/1920, vh/1080)` drops below 0.5** — the point where 24-design-unit body text renders under 12 CSS px. On a 16:9-or-taller viewport that is 960 CSS px of width, which is the number to quote; **width alone is a lossy proxy and short viewports are where it fails** — 1280 × 400 scales to 0.37 and puts body text at 8.9 px while a width test keeps the deck on the stage. *Amended 2026-08-07 by the owner via [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md); the caveat under F-06 in [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) had already named the case.* | default | render |
 | DS-072 | **Never engages in fullscreen**, or while a presentation control is active. | hard | render |
-| DS-073 | Carries **all** content, tier-two disclosure included. | hard | auto |
+| DS-073 | Carries **all** content, tier-two disclosure included — and **carries it inlined**: every panel rendered open in normal flow, the disclosure control not rendered at all. A document rendering does not hide content behind an affordance, and a control printed or shown with nothing to reveal advertises something the reader cannot reach. The two-tier reading rhythm is the stage's, and §5.3's rules are written for the stage. *Settled 2026-08-07 by the owner via [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md), ratifying what the reference deck already did; [R7 §5](research/R7-printable-mode.md) decided the same question the same way for print.* | hard | auto |
 | DS-074 | A document rendering, not a responsive stage: one column, normal flow, type in `rem`, honouring user font size. | hard | auto |
 | DS-075 | No two-dimensional scrolling at 320 CSS px equivalent. | hard | render |
 | DS-076 | Switching views preserves position in both directions. | default | render |
