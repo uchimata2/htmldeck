@@ -53,8 +53,11 @@ PAGINATED = """/* T-018 variant: PAGINATED STAGE - one slide per printed page. *
   .doc{display:none!important}
 
   /* THE RULE THIS RENDERING LIVES OR DIES BY, and the one whose absence printed blank pages twice.
-     The deck switches itself to the reading view below 960px and sets `viewport.hidden` when it
-     does - and PRINTING IS WHAT MAKES IT SWITCH, because printing changes the layout viewport.
+     The deck switches itself to the reading view when the viewport gets small - since 2026-08-07
+     whenever the stage scales below 0.5, previously below 960px of width, and the change makes
+     this rule MORE load-bearing rather than less, because a height-aware trigger fires on more
+     page geometries - and sets `viewport.hidden` when it does. PRINTING IS WHAT MAKES IT SWITCH,
+     because printing changes the layout viewport.
      `.viewport[hidden]{display:none}` then hides the stage, and overriding `position` does not
      touch `display`. So the stage was never in the output at all: the first run hid the reading
      view too and printed nothing; the second left the reading view visible and printed THAT,

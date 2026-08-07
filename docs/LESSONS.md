@@ -579,6 +579,34 @@ nothing. And when a measurement disagrees with what someone is plainly looking a
 measurement first — check what it counts and what conditions it runs under, before concluding the
 artifact is fine.
 
+### L-36 — A stated tolerance is a claim about the instrument, not only about the artifact
+
+A threshold looks verified once a number sits next to it. But a threshold is only as real as the
+values that were compared to produce it, and **a category the probe never sampled produces no
+values and no complaint** — the rule reads as measured, the citation resolves, and nothing anywhere
+says the number covers nothing.
+
+The case: DS-063 states two tolerances, non-text geometry ≤ 0.25 design units and text runs ≤ 2.
+Both were recorded as *measured rather than guessed*, sourced to 384 values across two resolutions,
+and carried through a full split of the design system into rules and rationale. When
+[T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md) turned the rule into a gate,
+**the probe behind those 384 values turned out to contain nine keys and all nine are text runs.**
+The stricter tolerance had never had a single value in it, and the *"positions agreed to 0.09 du"*
+line under it was the worst placement disagreement among text elements, filed under non-text.
+
+Adding four non-text boxes to the probe measured it for the first time: **116 values, worst
+disagreement 0.000 du.** The rule was right and the evidence for it was not there. A second finding
+came with it — the split belongs to element kind, not to axis, because glyph rounding moves a text
+run's position and height as well as its width — and holding text placement to the non-text figure
+would have failed a provably-identical layout on 27 values.
+
+**How to apply.** When a rule cites a measurement, check what the instrument sampled before
+trusting the number, and prefer a check that reports *how many values it compared* over one that
+reports a verdict — a count of zero is then visible instead of silent. **A gate must fail on
+"nothing measured", never pass on it.** This is **L-05** — *say which half you checked* — and
+DS-191 arriving from underneath: a measurement confirms the geometry you suspect, and says
+nothing at all about geometry you never put in the probe.
+
 ---
 
 ## Tooling

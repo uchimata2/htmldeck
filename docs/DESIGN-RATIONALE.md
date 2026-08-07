@@ -94,7 +94,7 @@ nothing loads this file at runtime.
 | **F-05** | DS-146 × DS-140 | conflict | **DS-140 wins; DS-146 says how.** The draw-in is Rise applied to the chart's marks, staggered. The tempting fix — a stroke-dash draw — is a fifth motion, and DS-140's whole value is that the vocabulary is closed at four: *a named vocabulary is what stops animation becoming decoration* (§4). **A rule that requires an effect must be satisfiable from the vocabulary another rule closes**, so the requirement is expressed in the vocabulary's own terms. |
 | **F-06** | DS-168 × DS-071 | silence | **DS-168 amended with the design-unit floor: ≥ 48.** The number was always computable and never stated. `scale = min(vw/1920, vh/1080)`, and DS-071 hands over to the reflow view below 960 CSS px, so the stage bottoms out at scale 0.5 and a design unit is worth half a CSS pixel at the smallest size the stage is ever shown. 24 CSS px therefore needs 48 design units. **The unstated consequence is the trap: a builder reading "24" inside a stage measured in design units will write 24, match the number and fail the criterion.** The reference deck used 52. *Caveat, closed 2026-08-07: the 0.5 floor assumed width binds, and a short, wide viewport scales lower. **DS-071 now keys off the scale factor itself**, so 0.5 is the floor by construction rather than by assumption. DS-071 is still `default` — a deck that moves the reflow threshold still moves this floor with it.* |
 | **F-07** | DS-117 | unbuildable | **Rule split: labels are universal, arrowheads are conditional.** The rule assumed every diagram is a directed flow, which is true of A-08 and false of a network graph. An arrowhead is not decoration — it asserts a direction — so applying the rule literally to an undirected edge makes the diagram *say something untrue* in order to satisfy a rule about tidiness. **The label half was right for every diagram; only the arrowhead half was over-generalised.** |
-| **F-08** | DS-063 | check impossible | **Tolerance stated, and measured rather than guessed:** non-text geometry ≤ 0.25 du, text-run widths ≤ 2 du. Across 384 values at 3840×2000 and 1280×634, positions agreed to **0.09 du** and the worst text-run width disagreed by **1.17 du**, through glyph-advance rounding to device pixels. A check demanding exact equality fails every deck containing text — **the rule was unfalsifiable, which is worse than lax.** The two tolerances differ because the mechanisms differ: box geometry rounds once, a text run accumulates rounding per glyph, so the text figure carries headroom for runs longer than this deck's. |
+| **F-08** | DS-063 | check impossible | **Tolerance stated, and measured rather than guessed:** a non-text box's rect ≤ 0.25 du, a text run's rect ≤ 2 du. A check demanding exact equality fails every deck containing text — **the rule was unfalsifiable, which is worse than lax.** The two tolerances differ because the mechanisms differ: box geometry rounds once, a text run accumulates rounding per glyph, so the text figure carries headroom for runs longer than this deck's. **Corrected 2026-08-07 by [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md), and the correction is the interesting part** — see *What the first tolerance measurement did not measure*, below. |
 | **F-09** | DS-013 | silence | **Token list extended with a data-series role and a UI-line role.** With neither present the natural move is to reuse `--line` for chart marks, and a hairline token is tuned for a hairline's job — the reference deck's landed at **1.79:1** against the ground, failing 1.4.11's 3:1 for meaningful graphics. **The token list is where a role either exists or gets improvised**, and an improvised role inherits the contrast obligation of whatever it was borrowed from. |
 | **F-10** | §7 1.4.3 × 1.4.11 | conflict | **New rule, DS-219: text never goes on a data mark.** To clear 3:1 against the ground a neutral mark must be dark; to carry 4.5:1 text it must be light; no neutral is both. This is **not resolvable by picking a better grey** — it is arithmetic on the accessibility floor, and it rules out the value-inside-the-bar chart for neutral series generally. Recorded as a rule because it is a general consequence, and a builder meeting it slide-side will otherwise try to tune their way out of it. |
 | **F-11** | DS-138 | unbuildable | **DS-138 extended to constrain the control, not only the panel.** "Panels drop below" is geometrically unsatisfiable when the control sits near the foot of a 1080-unit stage and the panel is more than a row or two — the panel has nowhere to go. **A rule that fixes one end of a relationship silently constrains the other**, and stating only the visible end leaves the builder to discover the invisible one by failing. |
@@ -220,6 +220,35 @@ This is a composition failure rather than a rule failure, and it generalises: **
 from individually-good requirements can specify a bad whole.** Rules that each permit an element say
 nothing about how many such elements a frame can carry, which is why DS-217 states a budget rather
 than another permission.
+
+### What the first tolerance measurement did not measure
+
+DS-063 states two tolerances. When [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md)
+turned it into a gate on 2026-08-07, **the stricter of the two turned out to have a number and no
+coverage**: the probe behind the original 384 values carried nine keys — headline, standfirst, body,
+eyebrow, disclosure label, mono label and three SVG label roles — and **every one of them is a text
+run**. Not one non-text box had ever been compared. F-08's *"positions agreed to 0.09 du"* was the
+worst placement disagreement **among text elements**, recorded under a heading that says non-text.
+
+Two corrections came out of measuring it properly, over the full 12-slide deck:
+
+| | Values | Worst disagreement |
+| :--- | ---: | ---: |
+| Non-text boxes — figure, disclosure container, control, grid row *(newly measured)* | 116 | **0.000 du** |
+| Text runs, whole rect | 336 | 1.170 du — `svgName / w` |
+
+1. **Layout boxes agree exactly.** Zero, across a scale ratio of 3.15. The 0.25 du allowance is
+   generous rather than tight, and for the first time something is actually inside it.
+2. **The split is by element kind, not by axis.** The rule said *text-run widths*, which reads as
+   though only the width is glyph-derived. It is not: a text run's `y` disagreed by up to 0.62 du
+   and its height by 0.42. A gate that held a text run's placement to the non-text tolerance failed
+   the reference deck on 27 of 336 values while its layout was provably identical — a false
+   positive on a `hard` rule, which is the expensive kind.
+
+**The generalisable part is neither number.** A tolerance was stated, sourced, and cited for a
+category the instrument could not see, and it survived review and a full ruleset split. That is
+**DS-191** arriving from underneath: a measurement confirms geometry you suspect, and it says
+nothing whatever about the geometry you never put in the probe. Recorded as **L-36**.
 
 ### Viewer scale — why scale 0.5 is the reflow threshold, and 960 CSS px is only its usual face
 

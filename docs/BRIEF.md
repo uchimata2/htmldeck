@@ -403,9 +403,11 @@ replaces enforced variety, with the template generator satisfying it later.
 4. **Speaker notes and PDF export.** Both wanted eventually; neither in the corpus. Scope now,
    build later.
 7. ~~**The fixed stage versus the accessibility floor.**~~ **Answered 2026-08-06 by the owner: keep
-   the stage, add a reflow view.** Built as
-   [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md); the rules are
-   [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) §2.4 and §2.5.
+   the stage, add a reflow view.** Built and **enforced** by
+   [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md), closed 2026-08-07; the
+   rules are [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) §2.4 and §2.5, and twelve of the fourteen are
+   now gated by `tools/deck/contract.py`. Building the gate amended three of them — the tolerance
+   in DS-063 had never been measured for the category it names, and DS-065 could not be false.
 
    **The owner's reason for the stage is the part worth recording, because it changed the design
    system rather than only closing the question.** The stage was on the record as a rehearsal

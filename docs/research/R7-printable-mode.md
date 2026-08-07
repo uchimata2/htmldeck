@@ -80,8 +80,12 @@ R6's wording could mislead a reader into building the wrong thing.
 
 This is the load-bearing discovery, and it took three printed runs to see.
 
-The reference deck switches to its reading view below 960 px and sets `viewport.hidden` when it
-does. **Printing is what makes it switch**, because printing changes the layout viewport.
+The reference deck switches to its reading view when the viewport gets small — below 960 px of
+width at the time this was measured, and since 2026-08-07 whenever the stage scales below 0.5
+([T-021](../../tasks/T-021-the-reflow-view-and-the-resolution-contract.md) amended DS-071; **the
+finding below is unaffected, and the amendment widens it** — a height-aware trigger fires on more
+print geometries, not fewer) — and it sets `viewport.hidden` when it does. **Printing is what makes
+it switch**, because printing changes the layout viewport.
 `.viewport[hidden]{display:none}` then hides the stage — and overriding `position` in a print
 stylesheet does not touch `display`. The consequences ran in sequence:
 

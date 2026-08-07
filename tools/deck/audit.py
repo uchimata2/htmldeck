@@ -24,6 +24,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import render                                                       # noqa: E402
 import contrast                                                     # noqa: E402
+import contract                                                     # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -269,9 +270,10 @@ def ok(flag):
     return "pass" if flag else "FAIL"
 
 
-def main(deck):
+def main(deck, skip_contract=False):
     render.self_test()
     contrast.self_test()
+    contract.self_test()
     html = open(deck, "r", encoding="utf-8").read()
     print("browser: %s" % render.CHROME)
     print("deck:    %s" % os.path.relpath(deck, ROOT))
@@ -354,6 +356,16 @@ def main(deck):
     for name, slide in data["infinite"][:6]:
         tag = "ambient" if [name, slide] in data.get("ambient", []) else "flow (DS-140)"
         print("      looping %-14s %-14s [%s]" % (name, tag, slide))
+
+    # Stage 4 is a second and a third pass of the browser, so it is opt-out: the resolution
+    # contract is a claim about what happens BETWEEN viewports and one render cannot decide it.
+    if not skip_contract:
+        print("\n=== stage 4  resolution contract (DESIGN-SYSTEM §2.4, §2.5)")
+        for rule, what, good in contract.audit(deck, quiet=True):
+            if not good:
+                failures.append(rule)
+            print("  %-15s %-4s  %s" % (rule, ok(good), what))
+        print(contract.UNCHECKED)
 
     print("\n%d mechanical failure(s): %s" % (len(failures), ", ".join(failures) or "none"))
     print("""

@@ -2,8 +2,8 @@
 id: T-021
 title: Build the reflow view and enforce the resolution contract
 type: deliverable
-status: specified
-phase: plan
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-002, T-005, T-007, T-014, T-016, T-018]
@@ -11,7 +11,9 @@ work_package: WP2
 owner: maintainer
 created: 2026-08-06
 updated: 2026-08-07
-deliverables: []
+deliverables:
+  - tools/deck/contract.py
+  - tools/deck/contract_variants.py
 ---
 
 # T-021 — Build the reflow view and enforce the resolution contract
@@ -177,38 +179,121 @@ rule amendments they produced are in the ruleset rather than only here.
 
 ## 2. Plan
 
-*Not yet worked — the phase is `specify`. Steps 1–4 predate the 2026-08-07 rewrite of §1 and are
-carried with their stale rule references corrected; step 2 in particular no longer describes the
-work, since the rendering and the switch exist.*
+**What a baseline run showed, and it changes the plan.** `python tools/deck/audit.py
+examples/reference-deck.html` reports **0 mechanical failures over 32 checks** — and **not one of
+them is a §2.4 rule** beyond the static DS-061. Meanwhile
+[`tools/deck/render.py`](../tools/deck/render.py) already renders at 3840×2000, 1280×634 and 720p
+and already computes DS-063's geometry diff and DS-064's smallest body run. **So DS-063 and DS-064
+are measured but not gated**: the numbers print, nothing fails, and a regression is a line of output
+nobody is obliged to read. That is a third instance of **L-32**, and it makes step 3 mostly wiring
+rather than authorship.
+
+**Order, and why this order.** The DS-071 amendment goes first, because it is the one step whose
+check is *expected to fail before it* — the deck's auto-engage is width-based and the rule is now
+scale-based. Writing the check first and watching it fail on a real divergence is worth more than
+any seeded defect, and it is the acceptance criterion *each new check has been seen to fail* earned
+honestly rather than staged.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Settle the two remaining open questions above against a real deck, not in the abstract | decisions recorded in §3 |
-| 2 | ~~Build the document rendering and the switch~~ — **exists**. Reconcile the instance against §2.5 instead, and fix whichever side is wrong | the instance and the ruleset agreeing |
-| 3 | Implement DS-060–DS-065, DS-200 and DS-070–DS-076 as checks, **DS-063 first** — it is the cheapest and catches the whole "broken on my monitor" class | checks in `tools/deck/audit.py`, handed to T-005 |
-| 4 | Verify on a real 12-slide deck at both resolutions, offline, and in a 720p capture | measurements in §4 |
+| 1 | **Write the DS-071 check first and watch it fail.** Three viewports: `k < 0.5` must engage, `k > 0.5` must not, and **1280 × 400** — short and wide, `k = 0.37` — must engage, which is the case a width test cannot see | a failing check, recorded in §3 |
+| 2 | **Reconcile the instance to the rule.** Auto-engage keys off `min(vw/1920, vh/1080) < 0.5`; the check goes green on the same three viewports | `examples/reference-deck.html` |
+| 3 | **Gate what is already measured.** Lift DS-063's tolerance test and DS-064's 720p floor out of `render.py`'s report into a shared function, and give `audit.py` a stage that fails on them | `tools/deck/render.py`, `tools/deck/audit.py` |
+| 4 | **Close the rest of §2.4 and §2.5.** DS-060 (fixed design space, uniform scale), DS-062 (letterbox, never reflow), DS-065 (no absolute-pixel decoration), DS-200 (the scaled stage is centred — measured against the viewport at several widths, as the rule itself instructs), DS-072 (no engage in fullscreen), DS-074 (one column, `rem`, normal flow). **Any rule that cannot honestly be automated is named in §3 with the reason** rather than quietly dropped | checks, and a stated list of what is not checkable |
+| 5 | **Verify on the real 12-slide deck**: `measure` at all three resolutions, the seeded-defect fixture for the failure direction, and the deck **opened offline and looked at** on a large display and at 1080p (**L-01**, CLAUDE.md rule 6) | measurements in §4 |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+
+- **The two open questions, settled by the owner 2026-08-07**, each producing a rule amendment
+  rather than a decision row: **DS-073** — the reflow view inlines tier two, panels open in normal
+  flow, control not rendered; **DS-071** — auto-engage keys off `min(vw/1920, vh/1080) < 0.5`, with
+  960 CSS px kept as the quotable equivalent for a 16:9-or-taller viewport. §1's open-questions
+  block carries the reasoning.
+- **The DS-071 check was written before the fix, and failed.** 1280 × 400, k = 0.370, the deck
+  stayed on the stage because its auto-engage was a `max-width: 959px` media query. That failure is
+  the honest version of the *seen to fail* criterion — a real divergence, not a staged one. The
+  media query is also why it listened on the wrong event: a media query never fires on a height
+  change, so the handler now listens for `resize` and `orientationchange`.
+- **DS-063's tolerance is split by element kind, not by axis** — and this was a correction, not a
+  design choice. Implementing the rule as written failed the reference deck on 27 of 336 values
+  while its layout was provably identical: glyph rounding moves a text run's position and height,
+  not only its width. Amended in the ruleset with the measurement behind it.
+- **DS-063's non-text tolerance had never been measured.** The probe carried nine keys and all nine
+  are text runs, so the 0.25 du figure had a citation and zero coverage. Four non-text boxes added
+  to the probe; 116 values, **worst disagreement 0.000 du**. Generalised as **L-36** and it is the
+  finding of this task, not the checks.
+- **DS-065 was reworded rather than checked.** Inside the stage a design unit *is* one CSS pixel
+  before the transform, so *"absolute pixels rather than design units"* could not be false. The
+  rule now names units that do not ride the transform, which DS-033 decides statically.
+- **DS-072 is verified against doubles and says so.** A faked `fullscreenElement` and a faked
+  viewport height, never a real fullscreen — headless has no gesture to request one with. The first
+  version of this check passed a deck with the guard deleted, because it asserted "nothing changed"
+  while the deck was already in the right state; it now forces a state where the guard has to act.
+- **Assumption, stated:** everything mechanical was measured in headless Chrome 151 from `file://`
+  with DNS black-holed. Per **L-35** that is a different code path from a double-clicked file, so
+  the rendered captures were **looked at** rather than trusted from the numbers, and the checks
+  report values rather than verdicts so a wrong one is visible.
 
 **Outputs produced**
-- <path>
+- [`tools/deck/contract.py`](../tools/deck/contract.py) — the §2.4 / §2.5 gate: a four-viewport
+  sweep, the two-resolution comparison, and the list of what it does *not* check with the reason.
+- [`tools/deck/contract_variants.py`](../tools/deck/contract_variants.py) — seven decks that each
+  break one rule, and the requirement that the gate notice.
+- [`tools/deck/audit.py`](../tools/deck/audit.py) — stage 4 added; 43 checks, from 33.
+- [`tools/deck/render.py`](../tools/deck/render.py) — four non-text probes added; thresholds moved
+  out to `contract.py` so the report and the gate cannot disagree.
+- [`examples/reference-deck.html`](../examples/reference-deck.html) — auto-engage reconciled to
+  DS-071, and [`examples/reference-deck-seeded-defects.html`](../examples/reference-deck-seeded-defects.html)
+  regenerated from it.
+- [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — DS-063, DS-065, DS-071, DS-073 amended.
+- [`docs/DESIGN-RATIONALE.md`](../docs/DESIGN-RATIONALE.md) — F-06's caveat closed, F-08 corrected,
+  and a new section on what the first tolerance measurement did not measure.
+- [`docs/LESSONS.md`](../docs/LESSONS.md) — **L-36**.
+- [`examples/README.md`](../examples/README.md) — the corrected measurements and the conformance
+  claim written out in full.
 
 ## 4. Review
 
+*Reproduce with `python tools/deck/audit.py examples/reference-deck.html` (43 checks, stage 4 is
+this task's) and `python tools/deck/contract_variants.py` (the failure direction).*
+
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Reflow renders tier-one **and tier-two**, counted not read | **met** | `audit.py` DS-073: 10/10 panels open in the reading view, and no section carrying less text than its slide, compared character by character across all 12 |
+| No two-dimensional scrolling at 320 CSS px | **met** | DS-075: `scrollWidth` **320**, zero elements over 321 px |
+| Switch keyboard-operable, visible without hover, position preserved both ways | **met** | DS-076 returns on *Frequency compounds, bikes plateau* — the slide it left from. `r` toggles; the control is a persistent button, not a hover affordance |
+| The switch **cannot** fire in fullscreen, demonstrated | **met, against a double** | DS-072, and the honest half is the qualifier. Faked `fullscreenElement` + faked short viewport, then a `resize`: the deck holds. The `no-fullscreen-guard` variant fails it. **Never tested against a real fullscreen** — headless has no gesture to request one, and the check prints that caveat every run rather than implying otherwise (**L-35**) |
+| Auto-engage below 960 CSS px and **not** at 1280 | **met, and the rule moved under it** | The criterion as written passes: 800 × 700 engages, 1280 × 720 and 1600 × 900 do not. It is also now the weaker claim — **1280 × 400 must engage too** (k = 0.370) and did not until DS-071 was amended and the deck reconciled |
+| **DS-063 demonstrated** — identical up to a uniform scale factor | **met, after correcting the rule** | Full 12-slide run at 3840 × 2000 vs 1280 × 634, k ratio 3.1546: **116 non-text values, worst 0.000 du**; 336 text values, worst 1.17 du. The tolerance split had to be corrected from per-axis to per-element-kind first, and the non-text half had never been measured at all (**L-36**) |
+| **A real 12-slide deck opened offline on a large display and on a 1080p display, looked at in both** | **met, with the instrument stated** | Captured at 3840 × 2000, 1920 × 1080, 1280 × 720 and 1280 × 400, offline with DNS black-holed, and **looked at** — the 4K stage letterboxes and centres, the 720p ledger slide is legible row by row, and the short-wide viewport now hands over to a readable document. Real Chrome, but headless: not a physical monitor, and **L-35** says that distinction stays written down |
+| Body text ≥ 16 px in a 720p capture | **met** | DS-064: smallest body run **17.3 px** (26 du) on *Eleven minutes decides this*, over 11 slides carrying a body probe. The `body-type-under-the-floor` variant lands at 13.3 px and fails |
+| Conformance wording states the alternate-version route | **met** | Was an HTML comment and a half-sentence. [`examples/README.md`](../examples/README.md) now states it in full — *AA via a conforming alternate version reachable by a persistent control* — and says why the presentation view does not carry it alone |
+| Every `hard` rule in §2.4 / §2.5 is a check **or** named with the reason | **met** | Gated: DS-060, DS-062, DS-063, DS-064, DS-070, DS-071, DS-072, DS-073, DS-074, DS-075, DS-076, DS-200. Named unenforceable and printed on every run: DS-061 (static, in `audit.py`), DS-065 (**not checkable — the rule was reworded**), DS-072's real-fullscreen half |
+| Each new check **seen to fail** | **met** | Seven variants, seven caught. **Three of them were not caught on the first run** — DS-072 asserted stability in a state that could not change, DS-074 sampled one reading-view role while the variant broke three others, and DS-063 sampled a slide with no figure and measured nothing. All three would have shipped as checks that check nothing |
+| Checks report the rule ID and the measured value, not a boolean | **met** | Every row prints its number — `worst 0.00 du of 0.25 allowed over 24 values`, `k=0.370 gave doc=False`. A count of zero values is visible rather than silent, which is the specific defect **L-36** is about |
+| Runs offline from `file://` in real Chrome, reproducible by one documented command | **met** | `--host-resolver-rules=MAP * ~NOTFOUND`, a throwaway profile, `file:///…`. One command each, documented in [`examples/README.md`](../examples/README.md); both self-test before measuring |
+
+**What this task did not settle, stated rather than implied**
+
+- **One deck.** Every number is the reference deck. DS-063's tolerances are now covered rather than
+  asserted, but a second deck would be expected to move the text figure and might move the non-text
+  one off zero.
+- **Chrome 151 and Edge 151 on Windows, headless, from `file://`.** No Firefox, no Safari, no
+  mobile, no physical display.
+- **DS-071's threshold is `default`.** A deck that moves it moves DS-168's ≥ 48-design-unit target
+  floor with it, and nothing checks that pairing.
 
 **Child fix tasks raised**
-- none
+- none. Two rule amendments and one rewording went into the ruleset directly, because a `hard` rule
+  that a gate proves wrong is not a separate task — it is this task's output.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | → done | **Twelve of the fourteen §2.4 / §2.5 rules are now gated; the two that are not are printed on every run with the reason.** Worked plan steps 1–5 in one pass. The order paid for itself immediately: writing DS-071's check *before* reconciling the deck caught the divergence on 1280 × 400 — k = 0.370 with the deck still on the stage — which is *seen to fail* earned on a real defect rather than a staged one. **The task's real output is not the checks, it is what building them found.** DS-063's non-text tolerance, stated as *measured rather than guessed* and cited to 384 values, turned out to have **zero values in it**: every key in the probe behind those numbers is a text run. Measuring it for the first time gave 116 values at **0.000 du** — the rule was right and its evidence was not there (**L-36**). Two further corrections came with it: the tolerance splits by element kind, not by axis, because glyph rounding moves a text run's position and height as well as its width — implementing the rule as written failed a provably-identical layout on 27 values — and **DS-065 could not be false at all**, since inside the stage a design unit *is* one CSS pixel, so it was reworded to name units that do not ride the transform. The variant suite then caught **three of its own checks measuring nothing**: DS-072 asserted stability in a state that could not change, DS-074 sampled one reading-view role while the variant broke three others, DS-063 sampled a slide with no figure. All three would have shipped green. Deck opened offline and looked at at 3840 × 2000, 1920 × 1080, 1280 × 720 and 1280 × 400 — headless real Chrome, which **L-35** says is not the same as a double-clicked file, and §4 says so too. |
 | 2026-08-07 | → specified | **Both remaining open questions answered by the owner, and each produced a rule amendment rather than only a decision row.** *Tier two is inlined* — **DS-073** now states it (panels open in normal flow, control not rendered), ratifying what the reference deck already shipped and matching R7 §5's ruling for print; T-016's disclosure component therefore has one context, not two. *Auto-engage keys off the scale factor, not width* — **DS-071** now reads `min(vw/1920, vh/1080) < 0.5`, with 960 CSS px kept as the quotable equivalent for a 16:9-or-taller viewport. The second amendment **closes a caveat that was already written down and unactioned**: F-06 in `DESIGN-RATIONALE.md` noted that the 0.5 floor assumed width binds, which is what made DS-168's ≥ 48-design-unit floor an assumption; it is now true by construction. `DESIGN-RATIONALE.md`'s viewer-scale table gains the short-and-wide row — 1280 × 400, scale 0.37, body at **8.9 px** — because the case a rule misses belongs next to the rule. **The reference deck now diverges from the ruleset on DS-071** and that is deliberate: plan step 2 reconciles the instance to the rule, not the other way round. |
 | 2026-08-07 | (no change) | **§1 rewritten, which is the specify phase's work** — [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) §4 flagged this specification as stale and left the rewrite to the owner. Three staleness classes, all fixed: **(a)** it cited *"§11 conditions 13–19"* and *"condition 17"*, a numbering [T-022](T-022-split-the-design-system-from-its-rationale.md) removed when it split the design system — the rules are DS-060–DS-065, DS-200 and DS-070–DS-076, and *condition 17* is **DS-063**; **(b)** its shared-rendering open question was answered `no` by [R7](../docs/research/R7-printable-mode.md) §4 and is struck; **(c)** it read as greenfield while a conforming reflow view and four of the seven §2.5 checks already existed. **The outcome statement changed as a result** — the deliverable is the enforcement, not the view, and the scope now says so. Two questions remain open and **both are the owner's**: whether the ruleset adopts the inlined tier two the instance already ships, and whether DS-071 should key off the computed scale factor rather than 960 CSS px — the arithmetic for the second is in §1 and it says width is a lossy proxy. Four acceptance criteria added for the enforcement half, none of which is started; the original nine are carried unedited, because a criterion reworded after the fact is a description of what happened. |
 | 2026-08-07 | (no change) | `related` gains [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md), the measurement that answers this task's shared-rendering open question. [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) also **flags this specification as partly satisfied**: the row below records a reflow view already carrying all tier-two content, `scrollWidth` 320 at 320 CSS px and position preserved both ways, so three of the acceptance criteria are demonstrated on one deck. What remains is the fullscreen suppression, the auto-engage threshold, condition 17, the 720p body-text measurement, the conformance wording — and the **enforcement**, which is the half the title names and the half that does not exist. Flagged, not rewritten; the rewrite is the owner's call. |

@@ -41,9 +41,15 @@ advancing: arrows move, `d` toggles, and neither affects the other.
 ### The reading view
 
 The **Read** control switches to a conforming alternate version — one column, normal flow, type in
-`rem`, every detail panel already open. It auto-engages below 960 CSS px and never in fullscreen.
-Position is preserved in both directions. This is what carries the accessibility conformance claim;
-the presentation view alone does not.
+`rem`, every detail panel already open. It auto-engages when the stage scales below 0.5 — 960 CSS
+px of width on a 16:9-or-taller window, and sooner on a short one — and never in fullscreen.
+Position is preserved in both directions.
+
+**The conformance claim, stated in full:** *WCAG 2.2 Level AA, via a conforming alternate version
+reachable by a persistent control.* Not "this deck is AA" — the presentation view is a scaled
+fixed stage and does not meet 1.4.4 Resize Text or 1.4.10 Reflow on its own. The reading view is
+what conforms, the **Read** control is the persistent route to it, and the claim is only true while
+both hold. [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) §7 owns the wording.
 
 ### Provenance
 
@@ -66,13 +72,21 @@ In real Chrome, from `file://`, with every DNS lookup black-holed:
 | External references | **0** |
 | Embedded faces | 3, all reporting `loaded` offline |
 | Body text at 720p | **17.3 px** (26 design units × 0.667) — clears the 16 px floor |
-| Two-resolution diff | 384 geometry values at 3840×2000 vs 1280×634; **worst disagreement 1.17 design units**, on an SVG text-run width |
+| Two-resolution diff, non-text boxes | **116 values at 3840×2000 vs 1280×634; worst disagreement 0.000 design units** |
+| Two-resolution diff, text runs | 336 values, worst **1.17 design units** on an SVG text-run width |
 | Reflow at 320 CSS px | `scrollWidth` **320**, zero elements overflowing, zero internal scrollers |
+| Reflow auto-engage | correct at all four sweep viewports, including 1280 × 400 (scale 0.37) |
 | Smallest interactive target | 30.5 CSS px at 1280×634 |
 
-The 1.17-unit disagreement is glyph-advance rounding, not layout: element *positions* agree to 0.09
-design units. A check written to demand exact equality across resolutions would fail every deck
-that contains text.
+The layout is identical across a 3.15× scale ratio — every box lands on the same design-unit
+coordinate. The 1.17-unit disagreement is text, and it is glyph-advance rounding rather than
+layout: a run's width, position *and* height all shift as glyphs round to device pixels. A check
+demanding exact equality would fail every deck that contains text.
+
+*The first two rows were measured for the first time on 2026-08-07.* Until then the probe carried
+nine keys and **all nine were text runs**, so the earlier line here — *384 values, positions agree
+to 0.09* — described text placement under a heading that said geometry, and DS-063's non-text
+tolerance had never had a value in it (**L-36**).
 
 ---
 
@@ -138,11 +152,24 @@ python tools/deck/render.py measure examples/reference-deck.html
 ```
 
 ```bash
+python tools/deck/contract.py examples/reference-deck.html
+```
+
+```bash
+python tools/deck/contract_variants.py
+```
+
+```bash
 python tools/examples/seed_defects.py
 ```
 
-`audit.py` runs the auto gate, the contrast audit and the render gate — 30 checks against
-`DS-nnn` rules. `render.py measure` produces the 720p and two-resolution numbers. `render.py shots`
+`audit.py` runs the auto gate, the contrast audit, the render gate and the resolution contract —
+43 checks against `DS-nnn` rules. `contract.py` is that last stage on its own: it sweeps four
+viewports and two resolutions, because §2.4 and §2.5 are claims about what happens *between*
+viewports and no single render can decide them. **`contract_variants.py` breaks each of those
+rules on purpose and requires the gate to notice** — a check that has only ever passed is not
+evidence that it checks anything, and three of these were caught measuring nothing the first time
+it ran. `render.py measure` produces the 720p and two-resolution numbers. `render.py shots`
 writes one PNG per slide so the deck can be *looked at*, which is the check none of the others
 replace. Both drive **real Chrome with a clean throwaway profile and every DNS lookup black-holed**,
 because a preview pane is not a faithful `file://` environment and has given this project a

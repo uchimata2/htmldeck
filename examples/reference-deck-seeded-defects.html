@@ -105,7 +105,7 @@
   /* the disclosure mark is a theme element, not a per-slide invention (DS-165) */
   --disc-mark-size:calc(26*var(--du));
   --disc-mark-bar:calc(12*var(--du));
-  --disc-hit:calc(52*var(--du));   /* >=24 CSS px at the 960px reflow threshold — see README */
+  --disc-hit:calc(52*var(--du));   /* >=24 CSS px at the 0.5 scale floor — see README */
 
   /* the four motions, and nothing else (DS-140) */
   --rise-dur:340ms;
@@ -1500,15 +1500,22 @@ svg{display:block}
   toDoc.addEventListener('click', function(){ setView(true); });
   toStage.addEventListener('click', function(){ setView(!inDoc ? true : false); });
 
-  /* auto-engage below 960 CSS px, never in fullscreen (DS-071/072) */
-  var narrow = window.matchMedia('(max-width: 959px)');
+  /* Auto-engage when the stage scales below 0.5 - the point where 24-unit body text renders
+     under 12 CSS px - and never in fullscreen (DS-071/072).
+
+     Keyed off the scale factor, not viewport width. 960 CSS px is the same threshold only when
+     height does not bind: 1280 x 400 scales to 0.37 and puts body text at 8.9 px, and a
+     `max-width: 959px` query keeps that on the stage. So the trigger is the number the rule is
+     actually about, and it listens for resize - a media query never fires on a height change. */
   function autoView(){
     if (document.fullscreenElement) return;
-    if (narrow.matches && !inDoc) setView(true);
-    if (!narrow.matches && inDoc) setView(false);
+    var k = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    if (!isFinite(k) || k <= 0) return;
+    if (k < 0.5 && !inDoc) setView(true);
+    if (k >= 0.5 && inDoc) setView(false);
   }
-  if (narrow.addEventListener) narrow.addEventListener('change', autoView);
-  else narrow.addListener(autoView);
+  window.addEventListener('resize', autoView);
+  window.addEventListener('orientationchange', autoView);
 
   /* ---------------------------------------------------------- count-up (DS-147) */
   function countUp(el){

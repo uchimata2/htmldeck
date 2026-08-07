@@ -105,7 +105,15 @@ PROBE = r"""
         monoLab:   cur.querySelector('.mono, .lab, .col-c'),
         svgLab:    cur.querySelector('svg .lab'),
         svgVal:    cur.querySelector('svg .val'),
-        svgName:   cur.querySelector('svg .name')
+        svgName:   cur.querySelector('svg .name'),
+        /* NON-TEXT boxes. Everything above is a text run, and until 2026-08-07 that was the
+           whole probe - so DS-063's *non-text* tolerance had a stated number and no coverage
+           at all. A rect that is laid out rather than glyph-derived is the only thing that can
+           test it (DS-191: a measurement cannot find a defect nobody thought to measure). */
+        figBox:    cur.querySelector('svg.fig'),
+        discBox:   cur.querySelector('.disc'),
+        btnBox:    cur.querySelector('.disc-btn'),
+        rowBox:    cur.querySelector('.ledger-row, .col-a, .card, .stat-right')
       };
       for (var key in probes){
         var el = probes[key];
@@ -206,7 +214,9 @@ def calibrate(probe, w, h):
 
 # ---------------------------------------------------------------------------- commands
 
-def cmd_measure(deck, which):
+def measure(deck, which, quiet=False):
+    """Collect the per-slide geometry at every resolution. `quiet` suppresses the per-row log so
+    a gate can call this without burying its own verdicts."""
     probe = make_probe(deck)
     results = {}
     for (w, h, label) in RESOLUTIONS:
@@ -218,45 +228,51 @@ def cmd_measure(deck, which):
                 print("  !! no result for %s slide %d" % (label, s))
                 continue
             results[label].append(data)
-            print("  %-10s slide %2d  vp=%dx%d k=%.4f stage=%sx%s body=%.1fpx hit=%s %s"
-                  % (label, s, data["vw"], data["vh"], data["k"],
-                     data["stage"][0], data["stage"][1],
-                     data["type"].get("body", {}).get("css", -1),
-                     data.get("discHitCssPx"), data["fonts"]))
+            if not quiet:
+                print("  %-10s slide %2d  vp=%dx%d k=%.4f stage=%sx%s body=%.1fpx hit=%s %s"
+                      % (label, s, data["vw"], data["vh"], data["k"],
+                         data["stage"][0], data["stage"][1],
+                         data["type"].get("body", {}).get("css", -1),
+                         data.get("discHitCssPx"), data["fonts"]))
             for o in data["overflow"]:
                 print("     OVERFLOW: %s" % o)
     with open(os.path.join(OUT, "measurements.json"), "w", encoding="utf-8") as fh:
         json.dump(results, fh, indent=1)
+    return results
+
+
+def cmd_measure(deck, which):
+    results = measure(deck, which)
     report(results)
     return results
 
 
 def report(results):
-    """DS-063: identical up to a uniform scale factor. DS-064: body >= 16px in a 720p capture."""
-    a, b = results.get("3840x2000", []), results.get("1280x634", [])
-    if a and b:
-        worst, where, n = 0.0, "", 0
-        for ra, rb in zip(a, b):
-            for key in sorted(set(ra["geom"]) & set(rb["geom"])):
-                for i, axis in enumerate("x y w h".split()):
-                    d = abs(ra["geom"][key][i] - rb["geom"][key][i])
-                    n += 1
-                    if d > worst:
-                        worst, where = d, "%s / %s / %s" % (ra["slide"], key, axis)
-        print("\nDS-063  %d geometry values across 3840x2000 and 1280x634" % n)
-        print("        worst disagreement %.2f design units  (%s)" % (worst, where))
-        print("        k ratio %.4f" % (a[0]["k"] / b[0]["k"]))
-        if worst > 1.5:
-            print("        NOTE: above the ~1.2 du that glyph-advance rounding explains")
+    """DS-063: identical up to a uniform scale factor. DS-064: body >= 16px in a 720p capture.
 
-    seven = results.get("720p", [])
-    bodies = [(r["slide"], r["type"]["body"]["css"], r["type"]["body"]["du"])
-              for r in seven if "body" in r["type"]]
-    if bodies:
-        worst = min(bodies, key=lambda t: t[1])
-        print("\nDS-064  smallest body run in a 720p capture: %.1f px (%.0f du) on %r"
-              % (worst[1], worst[2], worst[0]))
-        print("        floor is 16 px - %s" % ("clears it" if worst[1] >= 16 else "FAILS"))
+    **The thresholds are not here.** They live in `contract.py`, which is what gates on them, and
+    this prints the same verdict rather than a second opinion (L-08). Imported at call time
+    because `contract` imports this module.
+    """
+    import contract                                                  # noqa: E402
+
+    g = contract.geometry(results)
+    if g:
+        print("\nDS-063  %d geometry values across 3840x2000 and 1280x634" % g["counted"])
+        print("        worst non-text disagreement %.2f du  (%s)  tolerance %.2f - %s"
+              % (g["geom"][0], g["geom"][1], contract.GEOM_TOLERANCE_DU,
+                 "within" if g["geom_ok"] else "OVER"))
+        print("        worst text-run disagreement %.2f du  (%s)  tolerance %.2f - %s"
+              % (g["text"][0], g["text"][1], contract.TEXT_TOLERANCE_DU,
+                 "within" if g["text_ok"] else "OVER"))
+        print("        k ratio %.4f" % g["k_ratio"])
+
+    b = contract.body_floor(results)
+    if b:
+        print("\nDS-064  smallest body run in a 720p capture: %.1f px (%.0f du) on %r  (%d sampled)"
+              % (b["css"], b["du"], b["slide"], b["n"]))
+        print("        floor is %.0f px - %s"
+              % (contract.BODY_FLOOR_CSS_PX, "clears it" if b["ok"] else "FAILS"))
 
     spills = [(lbl, r["slide"], o) for lbl, rows in results.items()
               for r in rows for o in r["overflow"]]
