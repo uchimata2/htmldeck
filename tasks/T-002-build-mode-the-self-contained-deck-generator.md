@@ -34,13 +34,32 @@ richness is wanted within the portability envelope T-017 defines.
 - [ ] Renders glitch-free **from `file://` in recent Chrome/Edge**, with no console errors
 - [ ] Every theme value comes from the token layer (T-007); none hard-coded here
 - [ ] Composes the interaction and motion components (T-016) rather than emitting bespoke markup
+- [ ] **Departs from the specification when compliance requires it** rather than building a
+      non-conformant slide or looping on one — the deviation is this mode's call, not a question
+      returned to the user
+- [ ] Every deviation is written back into the specification file it contradicts, so the artifacts
+      record what was built
+- [ ] Deviations reach the user at delivery as **brief bullet points**
 - [ ] Tested on a real 12-slide deck with diagrams, not a three-slide toy
 - [ ] Rendered deck opened and looked at
 - [ ] *Opt-in:* a printable variant can be forced. Not a gate
 
 **Open questions**
 - ~~Does the plugin write the words?~~ **Answered 2026-08-06: yes**, from source material.
-- How much of the narrative decision is the generator's versus the brief's? — resolve with T-015
+- ~~How much of the narrative decision is the generator's versus the brief's?~~ **Answered
+  2026-08-07 by the owner: the specification decides the narrative, and the generator may depart
+  from it where compliance requires — every departure recorded, and reported briefly.**
+  [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) already put the spine, the
+  outline and the bottom lines upstream and that stands: this mode invents no narrative. What the
+  ruling did not cover is the case the owner named — **a specification can turn out unbuildable.**
+  A slide that will not fit the stage, or that a `hard` rule fails on, cannot be built as written,
+  and a generator with no authority to change it either ships a non-conformant slide or loops on
+  it. So the generator holds **implementation authority above the detailed spec**: it resolves the
+  layout or the rule conflict itself rather than returning a decision to a user who cannot picture
+  the outcome. Two obligations come with the authority — **every deviation is written back into the
+  artifacts it contradicts**, the slide-by-slide spec and, where the outline moved, the foundation
+  spec, so those files record what was *built* rather than what was intended; and **the user is
+  told at delivery, in brief bullet points**, not a rationale per item.
 
 ## 2. Plan
 
@@ -69,6 +88,7 @@ richness is wanted within the portability envelope T-017 defines.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **The last open question is answered, and the answer gives this mode an authority it did not have: it may depart from the specification to keep the deck compliant.** Three acceptance criteria added for it. The owner's reason is the failure mode a strict-obedience generator has no exit from — a slide that will not fit the stage or that a `hard` rule fails on cannot be built as specified, so obedience means shipping a non-conformant slide or looping. **The loop already has language for the two cases this does *not* cover:** [`EVALUATION.md`](../docs/EVALUATION.md) §6.1's **STALL** (a design decision wearing a finding's clothes — escalate) and **OSCILLATION** (two rules in tension — stop and name them, and record it in [`DESIGN-RATIONALE.md`](../docs/DESIGN-RATIONALE.md) §2). Deviation authority is for what the generator *can* resolve; those two outcomes remain the exits for what it cannot, and this ruling does not weaken them. **Where the deviations are written is already fixed** by [`artifacts.md`](../skills/htmldeck/references/artifacts.md): `<slug>.slides.md` and, when the outline moved, `<slug>.foundation.md` — both of which exist to be *"what a reader opens when the deck turns out wrong"*, which they are not if they record only the intent. The user-facing half is bullet points at delivery, and it is the first thing this mode must report that is not the deck. |
 | 2026-08-07 | (no change) | **[T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) settled this mode's input contract, and it is not a brief.** Build mode consumes a **reviewed slide-by-slide specification** — seven fields per slide, structure · text · visuals · animations · interactive elements · title · bottom line — produced upstream from the two answers, the sources and the foundation spec. Two consequences beyond the input type: **the build is batched by default**, a few slides at a time, each batch running the auto gate, the render gate and S3/S5/S6 before the next is written, because DS-136 reuse means a component defect found in batch one is fixed once rather than twelve times; and **the bottom line arrives specified rather than invented at layout time**, which is the contract [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) exists because no deck met. T-020 §3.2, §3.4, §3.6. |
 | 2026-08-07 | (no change) | **Three blockers added by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md).** [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) because it decides this mode's **input contract** — a brief or a specification — and a generator specified against the wrong one is respecified rather than adjusted; T-020's own open question proposed exactly this edge and left it `related` only to avoid a deadlock that does not exist, since T-020 has no blockers of its own. [T-007](T-007-define-the-parametric-theme-layer.md) and [T-016](T-016-the-interaction-and-motion-layer.md) because two acceptance criteria above already require every theme value to come from the token layer and every component to be composed rather than emitted bespoke: with neither contract in existence, the only thing this mode can do is hard-code, which [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) §1.2 calls `hard`. `related` gains T-021, the other half of the two renderings, and T-028, the reference output this mode is judged against. |
 | 2026-08-06 | (no change) | **The generator now has a reference output to be judged against**: [`examples/reference-deck.html`](../examples/reference-deck.html), 12 slides, 178 KB, zero external references, built by hand to the ruleset by [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md). That closes the objection in T-024's scope — a generator with no reference output is a generator nobody can review. **What it should automate is now visible rather than assumed**, and so is what it must not: five of the ten evaluation dimensions cannot be checked mechanically, so the build mode cannot self-certify. |

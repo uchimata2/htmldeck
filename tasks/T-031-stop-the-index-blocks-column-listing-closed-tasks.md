@@ -70,12 +70,14 @@ order.
 - [ ] `python tools/tasks/task.py check --closing` still passes, and the pointer count does not fall
 
 **Open questions**
-- **Drop closed downstream tasks, or show them struck through / marked?** `context` already prints
-  each downstream task's status, so it can afford to keep them; the board's column cannot, because
-  it has no room for a status. Consistency of *rule* matters more than identical output —
-  **maintainer decides.** Proposed: the board drops them, `context` keeps them with their status,
-  and the rule stated in `TASK-WORKFLOW.md` §6 is *"generated views count only open tasks as
-  gated"*.
+- ~~**Drop closed downstream tasks, or show them struck through / marked?**~~ **Answered
+  2026-08-07 by the owner: the proposal, as written.** The board drops them, `context` keeps them
+  with their status, and [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6 gains the rule — *"generated
+  views count only open tasks as gated"*. The two views differ because they are read for different
+  reasons: the board is read to **choose** work and has no column for a status, `context` is read
+  to **do** one task and the closed downstream tasks are the trail explaining why it exists. What
+  had to be consistent was the rule, and now it is stated in one place rather than implied by two
+  comprehensions.
 
 ## 2. Plan
 
@@ -104,4 +106,5 @@ order.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **Answered by the owner: the proposal stands as written** — board drops, `context` keeps with status, and the rule goes into [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6. §1 now has no open question, and the task is a three-part edit with a stated rule behind it rather than a one-line filter. **The `TASK-WORKFLOW.md` half is the part that stops this recurring**: the defect was two comprehensions disagreeing with nothing written down for either, which is how it survived being read repeatedly. |
 | 2026-08-07 | → proposed | Raised from a finding carried in the session handoff rather than in any durable home — the reason it is a task now. Found while reading the board to start [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md): its *Blocks* column names `T-003`, which is `cancelled`. The cause is one unfiltered comprehension in `cmd_index`, and the same asymmetry may exist in `cmd_context`. Cosmetic in effect, structural in kind — the board is what a session reads to choose work, and the *Blocks* column is criterion (a) of T-030's tie-break rule. |

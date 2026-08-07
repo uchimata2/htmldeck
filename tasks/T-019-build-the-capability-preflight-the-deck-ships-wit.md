@@ -10,7 +10,7 @@ related: [T-005, T-017]
 work_package: WP3
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-06
+updated: 2026-08-07
 deliverables: []
 ---
 
@@ -71,10 +71,20 @@ one.
 - [ ] The failure state **looked at** (**L-01**), offline, in a real browser
 
 **Open questions**
-- Should a failed preflight be silent for the *author* and loud for the *recipient*, or the same
-  for both? — owner decides; it turns on whether the author is expected to re-run the build check.
-- Does `isSecureContext` belong in the emitted preflight at all, given that every route by which a
-  deck is opened satisfies it? It may be a build-check row rather than a runtime one.
+- ~~Should a failed preflight be silent for the *author* and loud for the *recipient*, or the same
+  for both?~~ **Answered 2026-08-07 by the owner: the same for both, always visible.** A deck
+  opened by double-click cannot know who opened it, so "silent for the author" would have to be
+  compiled in — and the shipped file would then differ from the file that was tested, which is the
+  one thing a portability contract cannot afford. The author's separate signal already exists and
+  runs at a different moment on a different machine:
+  [T-005](T-005-build-check-the-gate-the-deck-must-pass.md)'s build check.
+- ~~Does `isSecureContext` belong in the emitted preflight at all, given that every route by which a
+  deck is opened satisfies it? It may be a build-check row rather than a runtime one.~~ **Answered
+  2026-08-07 by the owner: no — make it a build-check row.** `file://` is already a secure context
+  in Chrome, so a runtime test can only ever pass: bytes in every deck, plus the false reassurance
+  that something was verified. **This is the general rule this task should apply to the whole check
+  set, not a one-off** — a preflight row earns its place only if there is a real opening route on
+  which it fails, and the scope line above already forbids emitting checks the deck does not use.
 
 ## 2. Plan
 
@@ -108,4 +118,5 @@ one.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **Both open questions answered by the owner; §1 has none left.** *One behaviour, always visible* — the file cannot know who opened it, and an author-silent build would ship a different artifact from the one that was tested. *`isSecureContext` becomes a build-check row* — it is true for `file://`, so at runtime it can only pass. **The second answer generalises into the design step this task starts with**: step 1 selects checks per deck feature, and the selection rule is now stated — a row earns its place only where a real opening route makes it fail. That is testable against [R6](../docs/research/R6-portability-contract.md) §2's load-bearing list, and it will remove more than one candidate. |
 | 2026-08-06 | → proposed | Created. R6 §7 defines the deck's version floor as a capability preflight rather than a number; that position is only real if something emits the preflight. Blocked on T-002 because the preflight is emitted **by** build mode and cannot be built before it — the design work in steps 1–2 could start earlier if the owner wants it pulled forward. |

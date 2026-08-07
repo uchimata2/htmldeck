@@ -6,7 +6,7 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: []
-related: [T-001, T-002, T-007, T-016, T-018, T-021]
+related: [T-001, T-002, T-004, T-007, T-016, T-018, T-021]
 work_package: WP3
 owner: maintainer
 created: 2026-08-04
@@ -37,7 +37,14 @@ Cheap to build, and it converts several house rules from hopes into failures.
 - [ ] Fails on a console error or unhandled rejection on load or during navigation
 - [ ] Fails on a theme value hard-coded outside the token layer — see T-007
 - [ ] *Opt-in only:* when the user has asked for a printable deck, fails if disclosure content is
-      dropped or slides clip. Not run otherwise — printing is a mode, not a gate
+      dropped or slides clip. Not run otherwise — printing is a mode, not a gate. **Owner,
+      2026-08-07: the print path does earn its row, opt-in only** — inherited from
+      [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md), which deferred the call
+      here. The row asserts [R7](../docs/research/R7-printable-mode.md) §4's three rules — the print
+      stylesheet asserts the view it wants **including `display`**, a slide stays a containing block
+      for its own overlays, entrance animations are disabled for print — **and the page count**,
+      because the measured failure is silent: thirteen blank pages, which nothing on the
+      presentation list above can see
 - [ ] Proven **failing** on each class before being trusted
 
 *Content — run when source documents are supplied*
@@ -60,9 +67,24 @@ passed its own review, and the figure that reached the board's decision cell was
 places. Nothing on this task's presentation list would have caught it.
 
 **Open questions**
-- Is the check a separate command, or always part of build?
-- Does the content half need the sources parsed, or is "the user pastes them in" enough? Ties to
-  open question 6 in `docs/BRIEF.md`.
+- ~~Is the check a separate command, or always part of build?~~ **Answered 2026-08-07 by the owner:
+  both — one library, two entry points.** Called per batch and whole-deck by the pipeline
+  ([`pipeline.md`](../skills/htmldeck/references/pipeline.md) stage 6 already requires the per-batch
+  run), **and** exposed as a standalone command that takes any HTML file. The standalone half is not
+  a convenience: the *proven failing* criteria below run against
+  [`examples/reference-deck-seeded-defects.html`](../examples/reference-deck-seeded-defects.html),
+  a deck this plugin did not build, and [T-004](T-004-critique-mode-blunt-section-by-section-review.md)
+  reviews decks it did not build either. `tools/deck/audit.py` is already both shapes.
+- ~~Does the content half need the sources parsed, or is "the user pastes them in" enough?~~
+  **Answered 2026-08-07 by the owner: read the files at the paths supplied in question 2.** That is
+  where [`pipeline.md`](../skills/htmldeck/references/pipeline.md) stage 2 already builds the figure
+  ledger — every figure, its origin, every place it is reused. Reconciliation needs an **origin per
+  figure**, and a pasted blob has no path, so *"appears in no source"* degrades to string matching —
+  which is the class of defect the content half exists to catch. Pasting stays legitimate as a
+  fallback for a source that is not a file; it is not the contract.
+- **Inherited and answered:** the print row, from
+  [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) — see the opt-in criterion
+  above.
 
 ## 2. Plan
 
@@ -91,6 +113,7 @@ places. Nothing on this task's presentation list would have caught it.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **Three questions answered by the owner, and one of them was inherited.** *Both entry points* — one library, called per batch and whole-deck by the pipeline and exposed as a standalone command, because two of this task's own criteria and all of [T-004](T-004-critique-mode-blunt-section-by-section-review.md) run against decks this plugin did not build. *Sources are read from their paths*, at pipeline stage 2 where the figure ledger is built; pasting is the fallback, not the contract. *The print row is earned, opt-in only* — [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) closed having deliberately deferred that call here, and it is now taken: [R7](../docs/research/R7-printable-mode.md) §4's three rules plus the page count. **Scope moved in both directions today.** It grew by the print row and by the figure ledger, which [T-004](T-004-critique-mode-blunt-section-by-section-review.md)'s counting-pass answer routes here — this task counts, that one prioritises, so the ledger has to be an output this check *emits*, not an internal. It did not grow by the fix loop: fixes stay with the build step. **`related` gains [T-004](T-004-critique-mode-blunt-section-by-section-review.md)**, written on both files: that mode consumes this check's report and its ledger, an edge [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) used to order the two and neither file recorded. |
 | 2026-08-07 | (no change) | **[T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) closed and handed this task a second variants suite and a refactor it should build on.** `audit.py` now splits `render_data(deck)` (the browser half) from `render_verdicts(data)` (pure, no browser), so a suite can seed a break, take one measurement, and ask **the same code that gates the real deck** rather than a copy of it — that split is the shape this task's gate wants, and it is already done. [`tools/deck/deliverable_variants.py`](../tools/deck/deliverable_variants.py) covers DS-202/203/205/216/217, 7 of 7 caught; with `contract_variants.py` that is **14 rules demonstrated failing on purpose**, against 36 checks still never shown to fail individually. Two findings bear directly on this task's criteria: **five rules labelled `auto` and `render` had no implementation at all** (L-36's second instance), so *"the gate checks what it says it checks"* needs to be a criterion here and not an assumption; and **the gate was driving the deck through chrome a design rule required deleting**, which made stage 3 report `NO RESULT` and made `render.py measure` emit a tolerance verdict computed from 16 values. A gate must fail on *nothing measured*, never pass on it. |
 | 2026-08-07 | (no change) | **[T-021](T-021-the-reflow-view-and-the-resolution-contract.md) closed and handed this task the resolution-contract checks built rather than specified**, so what remains here is absorption, not authorship — the pattern [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) §4 flagged as **L-32** for four tasks at once. What arrived: [`tools/deck/contract.py`](../tools/deck/contract.py) gating twelve of the fourteen §2.4 / §2.5 rules, stage 4 of `audit.py` (33 checks → 43), and [`tools/deck/contract_variants.py`](../tools/deck/contract_variants.py). **The variants file is the part worth reading before writing this task's criteria**: it broke each rule on purpose and caught **three of the new checks measuring nothing**, which is a stronger form of this task's own *"fails on a seeded-defect deck"* criterion than a fixture alone gives. Also relevant to the criterion about theme values: DS-065 was found **unenforceable as written** and reworded, so a check for it is not owed. |
 | 2026-08-07 | (no change) | **Unblocked by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) — the `blocked_by` on T-002 was false.** This check runs on an HTML file, and two exist: [`examples/reference-deck.html`](../examples/reference-deck.html) and [`examples/reference-deck-seeded-defects.html`](../examples/reference-deck-seeded-defects.html), the second of which is precisely the *proven **failing** on each class* fixture the criteria above demand. `tools/deck/` already runs 30 checks against both. **Nothing here waits on build mode**, and the edge was gating a task already a third built — the exact case the audit was raised to find. T-002 becomes `related`, alongside T-018 (whether the print path earns a row) and T-021 (which hands conditions 13–19 over). |

@@ -46,8 +46,17 @@ Not a decision any more — the parametric theme layer that the decision require
 - [ ] No theme-specific value reachable anywhere outside the token layer
 
 **Open questions**
-- What is the minimum token set that makes a future theme genuinely distinct rather than a
-  recolour? Recolouring is not the goal — the corpus decks differ structurally too.
+- ~~What is the minimum token set that makes a future theme genuinely distinct rather than a
+  recolour? Recolouring is not the goal — the corpus decks differ structurally too.~~ **Answered
+  2026-08-07 by the owner: the token set must span four axes, not one.** Colour is necessary and
+  nowhere near sufficient. The minimum is **layout geometry and density · type scale ratio and face
+  pairing · shape language (radius, stroke) · motion (duration, easing, distance)**, with colour
+  alongside them — and the swap demonstration below has to change at least one **non-colour** axis
+  to count. The reason is the criterion itself: *visibly different, still coherent* is not what a
+  recolour produces, and the corpus decks read as designed because they differ **structurally**. A
+  token set that freezes geometry and motion guarantees the failure this task exists to prevent,
+  and it does so invisibly — every individual value is parametric and the family still looks like
+  one template.
 
 ## 2. Plan
 
@@ -76,6 +85,7 @@ Not a decision any more — the parametric theme layer that the decision require
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **The open question is answered and it sets the size of this task: four axes, not one.** Layout geometry and density, type scale ratio and face pairing, shape language, motion — plus colour, and the swap demonstration must move at least one non-colour axis. **This is more than the 57 custom properties in [`examples/reference-deck.html`](../examples/reference-deck.html) already carry**, because tokenising a value and making it *variable* are different claims: the deck's geometry is tokenised against one stage and has never been asked to hold at a different density. Two consequences to carry into the plan. **The second token file is now a deliverable, not an illustration** — it is the only thing that can demonstrate the criterion, and it has to be built and rendered. **The motion axis is shared with [T-016](T-016-the-interaction-and-motion-layer.md)**, whose durations, easings and distances are the same values: it consumes this contract, so the axis is specified here and exercised there rather than owned twice. |
 | 2026-08-07 | (no change) | `related` gains T-016 and T-021 — the motion tokens that swap with this layer, and the second of the two renderings it must carry. [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) also recorded a measurement that changes what *starting* this task means: **[`examples/reference-deck.html`](../examples/reference-deck.html) already carries 57 custom properties**, spanning colour, type scale, spacing, radii, stroke, shadow, motion durations and easings, `--measure`, `--du` and a tokenised disclosure mark. The token *layer* exists, as one hand-built instance. The **contract** does not, and neither does the swap demonstration the criteria above ask for. This task extracts and proves; it does not author from nothing. |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |
 | 2026-08-06 | (no change) | Owner decided: one theme now, every layer parametric, template generator deferred. Task reframed from a decision to the token layer that decision requires. |

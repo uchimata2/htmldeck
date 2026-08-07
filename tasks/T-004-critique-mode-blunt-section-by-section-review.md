@@ -6,7 +6,7 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: [T-014, T-020]
-related: [T-002]
+related: [T-002, T-005]
 work_package: WP3
 owner: maintainer
 created: 2026-08-04
@@ -47,9 +47,18 @@ The cheap technique that worked: one table of every figure in the material, its 
 place it is reused.
 
 **Open questions**
-- Should critique be able to apply its own fixes, or only report?
-- Does the counting pass belong here or in the build check (T-005)? They overlap. Likely: T-005
-  gates automatically, critique explains and prioritises.
+- ~~Should critique be able to apply its own fixes, or only report?~~ **Answered 2026-08-07 by the
+  owner: report only, when the user invokes it as a mode.** Inside the convergence loop the fixes
+  are the build step's, as [`EVALUATION.md`](../docs/EVALUATION.md) §6.2 already has them, with the
+  fix ledger keeping them attributable. The reason to hold the line at the user-invoked mode is
+  evidence, not purity: a reviewer that edits its own subject cannot be re-run to prove the fix
+  landed, and two reports of the same deck stop being comparable.
+- ~~Does the counting pass belong here or in the build check (T-005)? They overlap. Likely: T-005
+  gates automatically, critique explains and prioritises.~~ **Answered 2026-08-07 by the owner:
+  the hypothesis was right — [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) counts, this
+  mode explains and prioritises.** Counting is deterministic and has to *gate*, which is what T-005
+  is; its three figure criteria already own it. What a count cannot produce is which wrong number
+  matters, and that is this mode's half.
 
 ## 2. Plan
 
@@ -78,6 +87,7 @@ place it is reused.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **Both open questions answered by the owner; §1 now has none.** *Report, do not fix* — the user-invoked mode reports and nothing else, while the loop's fixes stay with the build step under [`EVALUATION.md`](../docs/EVALUATION.md) §6.2. *Counting belongs to [T-005](T-005-build-check-the-gate-the-deck-must-pass.md)* — this mode consumes the count and says which wrong figure matters. **The second answer removes work from here and adds a dependency**: the counting pass in §1 above is no longer this mode's to build, so what it needs from T-005 is the figure ledger in a form it can cite — which is one more reason this mode follows the check rather than preceding it. **The `related` edge this implies is now written on both files** — it existed in [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md)'s reasoning for the build order and in neither task's front-matter, and `related` is asymmetric, so it has to be stated twice or the task that needs the context cannot see it. |
 | 2026-08-07 | (no change) | **[T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) ruled: this mode takes two input types, and it is not split into two modes.** The **specification review** runs before any HTML exists and the **design audit** after the build; both are critiques over different inputs, and two modes would duplicate the reporting machinery for that one difference. **The scope growth is real and it is the cheap half.** T-020 §3.3 maps six of the ten dimensions onto a slide-by-slide spec — S1, S2, D1, D2, D3 and D4's source-reconciliation half — **three of them among the five no mechanical check can reach.** The two report formats are R1 §14's, not inventions: spec review as `ID · Severity · Slide · Finding · Fix` with Major/Minor/Note, then *"Open — needs a decision"*, then counts; design audit as headline verdict, coverage table, findings with the principle violated, then an explicit keep-vs-rebuild split. |
 | 2026-08-07 | (no change) | **Blocked on [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md), added by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md).** T-020 decides whether the **specification review** — the second critique format R1 §14 proves, run before any HTML exists — belongs to this mode or becomes one of its own. That is a doubling of scope, not a detail: §1 above reviews a built deck only, and every acceptance criterion is written against a rendered artifact. A mode specified for one format and then handed two is respecified. |
 | 2026-08-04 | → proposed | Seeded from `docs/BRIEF.md` when the project folder was prepared. |

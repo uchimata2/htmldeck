@@ -73,10 +73,18 @@ so that route no longer exists. This is the finding, carrying its own file.
       failures, and `python tools/deck/deliverable_variants.py` still catches 7 of 7
 
 **Open questions**
-- **Does click-to-jump require one target per slide, or is per-stage enough?** T-028 answered it
-  for a 12-slide deck by making the seven stage names the jump targets, and DS-217 endorses that
-  shape. Whether that generalises — a 30-slide deck, or one whose stages are uneven — is the
-  owner's, and it is the question DS-131 is really about.
+- ~~**Does click-to-jump require one target per slide, or is per-stage enough?**~~ **Answered
+  2026-08-07 by the owner: per-stage.** So it is **DS-131 that moves**, not DS-216/DS-217: the rule
+  is reworded to require click-to-jump to a **bounded set of named targets**, and *"clickable dots"*
+  stops being a named requirement — it becomes one permitted implementation of a bounded set, which
+  DS-217's *"somewhere around ten slides"* already bounds. [`examples/reference-deck.html`](../examples/reference-deck.html)
+  therefore **conforms** once the rewording lands, rather than needing a recorded departure, which
+  is the cheaper of the two branches in the second acceptance criterion below.
+  **What the answer does not settle, and the rewording must not paper over:** a deck whose stages
+  are uneven, or long enough that a stage is not a useful jump target, still has no answer. Name
+  that limit in the rule rather than leaving the next deck to discover it — an on-demand slide
+  index is the obvious shape, it is a component
+  [T-016](T-016-the-interaction-and-motion-layer.md) would own, and it is out of scope here.
 
 ## 2. Plan
 
@@ -109,4 +117,5 @@ so that route no longer exists. This is the finding, carrying its own file.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **Answered by the owner: per-stage, so DS-131 is the side that moves.** Click-to-jump requires a **bounded set of named targets**; dots become one permitted implementation rather than a requirement, and DS-216/DS-217 stand unchanged. Two consequences for the plan. **Step 2 is no longer a decision, it is drafting** — the ruling exists and what remains is wording that three rules can be read together. **The second acceptance criterion resolves to its cheap branch**: [`examples/reference-deck.html`](../examples/reference-deck.html) conforms once the rewording lands, so no departure has to be recorded and the deck is not touched — which was already out of scope. The limit the answer does *not* cover — an uneven or long deck where a stage is not a useful target — belongs in the rule's own text, not in a later surprise. |
 | 2026-08-07 | → proposed | Raised while closing [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md), which surfaced the conflict by obeying DS-216 and DS-217 for the first time. Not folded into T-028: its scope explicitly put rule changes out, and the reference deck now passes every gated rule — this is a defect in the ruleset's internal consistency, not in the deck. Raised as its own file rather than appended to T-025 because that task is `done`. |
