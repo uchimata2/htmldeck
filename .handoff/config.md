@@ -19,10 +19,11 @@ Read by the `handoff` skill. Plain Markdown, read by the agent — no parser.
 
 ## Notes for whoever resumes
 
-**WP1's research is complete but for one measurement, and the plugin now exists** — `.claude-plugin/`
-and `skills/htmldeck/`, standing up the seven-stage pipeline. Read `CLAUDE.md` first — its rules were
-rewritten 2026-08-06 and supersede anything older. Then `docs/BRIEF.md`, whose **"Decisions taken"**
-section overrides the older material above it in the same file.
+**WP1 — the research phase — is complete as of 2026-08-07**, and the plugin exists:
+`.claude-plugin/` and `skills/htmldeck/`, standing up the seven-stage pipeline. The work from here
+is building, against research already written up in `docs/research/R1`–`R7`. Read `CLAUDE.md`
+first — its rules were rewritten 2026-08-06 and supersede anything older. Then `docs/BRIEF.md`,
+whose **"Decisions taken"** section overrides the older material above it in the same file.
 
 `skills/htmldeck/SKILL.md` is the always-loaded body and is kept under a byte budget on purpose;
 substance goes in `references/` or in `docs/`, never in it. `tools/plugin/check_scaffold.py`
