@@ -49,7 +49,15 @@ PAGINATED = """/* T-018 variant: PAGINATED STAGE - one slide per printed page. *
   @page{ size:1920px 1080px; margin:0 }
 
   html,body{background:#fff;overflow:visible;height:auto}
-  .doc,.viewswitch,.hud,.progress,.controls{display:none!important}
+
+  /* The reading view is NOT hidden here, and that is deliberate - it is the defect that made the
+     first run print thirteen blank pages. `.doc{display:none!important}` blanks the entire
+     printed output in Chrome and Edge, reproducibly, even though `.doc` is a later sibling of the
+     stage and is already `display:none` from its own base rule. Measured, not theorised: the same
+     rule set without this one declaration prints all twelve slides with their fonts embedded.
+     Leaving `.doc` alone costs nothing, because its base rule already hides it whenever the deck
+     is in presentation view - which is when this rendering makes sense at all. */
+  .viewswitch,.chrome,.progress,.controls{display:none!important}
 
   /* On screen the stage is a fixed box centred by transform and scaled by --k. A transformed
      element does not paginate - the whole stack prints on one page, clipped. Both go. */
@@ -70,7 +78,9 @@ PAGINATED = """/* T-018 variant: PAGINATED STAGE - one slide per printed page. *
     transition:none!important;
     break-after:page;break-inside:avoid;
   }
-  .slide:last-child{break-after:auto}
+  /* :last-child does not match - the stage ends with the nav and the progress bar, not with a
+     slide - so the twelfth slide kept its page break and produced a thirteenth, empty page. */
+  section.slide:last-of-type{break-after:auto}
 
   /* Entrance animations hold their pre-animation state until played, so an unplayed slide
      prints blank or half-risen. */
@@ -84,10 +94,14 @@ PAGINATED = """/* T-018 variant: PAGINATED STAGE - one slide per printed page. *
 
 REFLOW = """/* T-018 variant: REFLOW DOCUMENT - the reading view, printed as continuous prose. */
 @media print{
-  @page{ size:A4 portrait; margin:14mm }
+  /* Margin only, and deliberately NO `size` descriptor. Pinning `size:A4 portrait` here did work,
+     but it also greyed out the print dialog's orientation control - the reader could not choose
+     landscape even though this rendering reads perfectly well in it. A print stylesheet that
+     dictates paper takes a decision away from the person holding the printer. */
+  @page{ margin:14mm }
 
   html,body{background:#fff;overflow:visible;height:auto}
-  .viewport,.viewswitch,.hud,.progress,.controls{display:none!important}
+  .viewport,.viewswitch,.chrome,.progress,.controls{display:none!important}
 
   /* buildDoc() has already run and has already opened every disclosure panel (DS-073), so tier
      two is in this rendering whether or not the reader ever switched views. */
@@ -105,6 +119,15 @@ REFLOW = """/* T-018 variant: REFLOW DOCUMENT - the reading view, printed as con
   *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
 }
 """
+
+
+def decls(css):
+    """The declarations only, with comments removed.
+
+    Both of the checks below name the defect they guard against, so the phrase they look for also
+    appears in the comment explaining why it is absent. Reading the commented source would fail on
+    its own documentation - which it did, the first time this ran."""
+    return re.sub(r"/\*.*?\*/", "", css, flags=re.S).replace(" ", "")
 
 
 def self_test(source):
@@ -135,8 +158,19 @@ def self_test(source):
         failures.append("paginated variant does not break after each slide")
     if "break-after:page" in REFLOW:
         failures.append("reflow variant paginates - it is meant to be continuous")
-    if "display:none!important" not in PAGINATED.split(".doc,")[1][:60]:
-        failures.append("paginated variant does not hide the reading view")
+    # The regression that cost this task a run: hiding `.doc` with `!important` blanks the whole
+    # printed output in Chrome and Edge. Measured on the real thing, then reproduced headlessly.
+    # It reads like a harmless tidy-up, which is exactly why it needs a check rather than a memory.
+    if ".doc{display:none!important}" in decls(PAGINATED):
+        failures.append("paginated variant hides .doc with !important - that blanks every printed "
+                        "page; leave the reading view alone, its base rule already hides it")
+    if ":last-child{break-after:auto}" in decls(REFLOW) + decls(PAGINATED):
+        failures.append("break-after is being suppressed with :last-child, which does not match - "
+                        "the stage ends with the nav, so the last slide keeps its break and emits "
+                        "an empty final page. Use section.slide:last-of-type")
+    if re.search(r"@page\{[^}]*size:", decls(REFLOW)):
+        failures.append("reflow variant pins @page size, which greys out the dialog's orientation "
+                        "control and takes the choice away from the reader")
 
     if failures:
         print("SELF-TEST FAILED")

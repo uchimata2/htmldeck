@@ -190,6 +190,53 @@ gesture rows are collected by hand. `tools/portability/run_probes.py` already ca
   and the reflow one **1 110 B**. Against the deck as committed — which already carries a 232 B
   print block — the deltas are **+1.5 KB** and **+0.8 KB** on a 178.2 KB deck. Neither is a reason
   to refuse printing.
+**Measured, step 2 — Chrome 151 and Edge 151, offline, clean profile, `file://`. Identical on all
+nine rows.**
+
+| Row | Result |
+| :--- | :--- |
+| `window.print()` present | PASS |
+| **gesture-gated?** | **No.** The no-activation attempt opened a real dialog and blocked until Escape — 116 s on Chrome, 29 s on Edge — and threw nothing. With an activation it behaves identically. **The pair is the finding**: printing needs no user gesture from a restricted origin. |
+| `beforeprint` / `afterprint` | **Both fire, from `file://`, in both browsers, in both attempts.** R6 never measured this. It is what lets a deck open its disclosure content before printing and close it after. |
+| `matchMedia('print').matches` **inside** `beforeprint` | **`false`.** The media query does not report printing at the moment a deck would act on it. A deck must use the **events**, not the query — R6 recorded the query as "available" and that is true but not useful. |
+| `print-color-adjust: exact` | PASS, both the standard and `-webkit-` spellings |
+| `break-inside: avoid`, `break-after: page` | PASS |
+| `@page` | Parses as `CSSPageRule`; the `size` descriptor is exposed on `.style` |
+| `@page` margin boxes | Survive parsing (which is not the same as rendering, and was not tested) |
+
+**Steps 3–5 — the first run failed, and the failure was mine.** The paginated variant printed
+**thirteen blank pages**. The PDF says how blank: correct geometry (1440×810 pt = exactly the
+1920×1080 px `@page`), one white rectangle on page 1, **no font resources at all**. Three defects,
+each measured rather than guessed:
+
+1. **`.doc{display:none!important}` blanks the entire printed output**, in Chrome and Edge, and
+   headlessly, reproducibly. The identical rule set without that one declaration prints all twelve
+   slides with fonts embedded. The declaration looks like a harmless tidy-up: `.doc` is a later
+   sibling of the stage and its own base rule already sets `display:none`. **The mechanism is not
+   explained** — the deck is verifiably in presentation view at `beforeprint` (measured by painting
+   colour-coded markers from the handler and reading the fill operators back out of the PDF, since
+   subset-encoded text is not readable), so the obvious explanation is ruled out. Recorded as
+   behaviour, not as a theory, and locked into `print_variants.py`'s self-test.
+2. **`.slide:last-child` never matched**, so the twelfth slide kept its page break and emitted an
+   empty thirteenth page. The stage ends with the nav and the progress bar, not with a slide.
+   `section.slide:last-of-type` is the fix.
+3. **Pinning `@page { size:A4 portrait }` greys out the print dialog's orientation control.** The
+   reader cannot choose landscape even where the rendering reads better in it. A print stylesheet
+   that dictates paper takes a decision away from the person holding the printer. The reflow
+   variant now sets `margin` only.
+
+Corrected, both renderings produce real output. **Awaiting re-verification by a real print**, which
+is the only evidence this task may cite for a rendering claim.
+
+**A note on instruments, because it matters to how much of the above can be believed.** Headless
+Chrome was used **only to diagnose** the blank pages, never to measure the printable mode: it is a
+different code path from the one a recipient uses, which is why §1 puts it out of scope. Every
+claim above about *behaviour* comes from the probe run in a real browser; every claim about *the
+rendering* is pending the real print. `render.py`'s header warns that DS-140's infinite animation
+can make a headless capture blank (**L-26**), which would have made the whole diagnosis worthless,
+so the decisive comparison was repeated with motion pinned off: **byte-for-byte identical**. The
+artifact was not in play.
+
 - `R7-printable-mode.md`, under `docs/research/` — **written as a name, not a path, because it
   does not exist yet.** `check` reports a pointer-shaped string to a missing file as a dead
   pointer, and since T-029 there is no exemption for declared deliverables. The front-matter
