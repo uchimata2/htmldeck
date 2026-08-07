@@ -136,8 +136,17 @@ REFLOW = """/* T-018 variant: REFLOW DOCUMENT - the reading view, printed as con
   .doc .lab,.doc .mono,.doc .ledger-head{break-after:avoid}
   .doc .standfirst,.doc .disc-panel{break-before:avoid}
 
-  .doc .figwrap,.doc .fig,.doc table,.doc .disc-panel,
-  .doc .stat,.doc .ledger,.doc .cost-aside{break-inside:avoid}
+  /* Protect only what is genuinely atomic, and protect it at ROW level where it has rows.
+     A figure split down the middle is useless, so a figure is atomic. A disclosure panel is not:
+     it is a list of key/value rows, and a break between two rows costs the reader nothing. But
+     `break-inside:avoid` on the whole panel means any panel that will not fit in what is left of
+     the page is pushed entire to the next one - and on a SHORT page a panel is a large fraction of
+     the height, so that is most of them. Measured on A4 landscape, the paper this deck is actually
+     printed on: whole-panel protection left five pages between a quarter and a half empty.
+     The same reasoning applies to the ledger, which is rows all the way down. */
+  .doc .figwrap,.doc .fig{break-inside:avoid}
+  .doc .disc-panel .row,.doc .ledger-row,.doc .ledger-head,.doc .ledger-foot,
+  .doc .stat,.doc .cost-item,.doc .cost-aside,.doc tr{break-inside:avoid}
   .doc p,.doc li{orphans:3;widows:3}
 
   .rise{opacity:1!important;transform:none!important;animation:none!important}
