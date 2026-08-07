@@ -2,8 +2,8 @@
 id: T-018
 title: Measure the printable mode — what printing a deck from `file://` actually costs
 type: research
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-002, T-005, T-017, T-021]
@@ -273,15 +273,33 @@ artifact was not in play.
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `window.print()` behaviour from a double-clicked file on Chrome and Edge, with versions, and an explicit statement of whether it needs a user activation | met | [R7](../docs/research/R7-printable-mode.md) §2. Chrome 151 and Edge 151, identical on all nine rows. **It needs no activation** — called without one it opened a real dialog and blocked until dismissed, 116 s and 29 s, `threw=no`. Measured twice, with and without, because either alone is unattributable (**L-17**). |
+| Background/colour fidelity recorded, including whether `print-color-adjust: exact` is honoured | met | R7 §2 — both the standard and `-webkit-` spellings, both browsers. R7 §5.4 records the consequence nobody asked for: it makes the dialog's "Background graphics" checkbox inert. |
+| One-slide-per-page pagination demonstrated on a **real 12-slide deck**, not a toy (**L-02**) | met | R7 §4. Twelve pages, one slide per page, 1920 × 1080 px, fonts embedded. `examples/reference-deck.html` is twelve slides, so no deck was written for the task. |
+| Both renderings demonstrated on the **same** deck | met | R7 §4, both from `tools/deck/print_variants.py` off the committed deck. |
+| Both printed results **looked at**, not merely generated (**L-01**) | met | Page by page, as images, across five export rounds. Looking is what found the second failure: the export "worked" and was printing the **reading view**, which no page count or byte size would have shown. |
+| A ruling on which rendering the printable mode uses, and with it an answer to T-021's open question | met | R7 §4 — **the paginated stage**; the reading view is not a print target. T-021's *do the reflow view and the print stylesheet share one document rendering?* is answered **no**, measured rather than asserted. |
+| Size cost of the print stylesheet measured, not estimated — per rendering | met | R7 §6. 3 063 B and 2 422 B; +2.7 KB and +2.1 KB on a 178.2 KB deck. Under 2% either way. |
+| An explicit list of what the printable mode does **not** preserve, written for the user | met | R7 §5, five entries. The largest is **38.6% of the deck's text** behind disclosure — counted, not estimated. Two were not anticipated in §1: the reader's paper choice, and the absolute `file://` path Chrome prints on every page. |
+| A ruling: does rule 5 survive as written, or does printing need something from the design after all — surfaced as a candidate change of direction if so | met | R7 §7 — **it survives, and it did work here**: rule 5 is what said to stop reshaping the reading view. One clarification added, that "optional" obliges the mode to state its limits. The candidate change of direction — a cooperative mode using `beforeprint` to carry tier two — is **raised, not taken**, as [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md). |
+| *(open question)* Does the print path deserve a row in the build check (T-005)? | deferred, deliberately | §1 assigned this to the owner "once the cost is known". The cost is now known and it is small, but the check runs on `portable` mode and printing is optional — so this is T-005's call with R7 in hand, not a verdict to take here. Recorded rather than dropped. |
+
+**What this task got wrong, since the record is worth more than the score.** Three of the five
+printed rounds failed on defects in the stylesheet or the harness rather than on browser behaviour,
+and the instrument rules are what caught each: headless disagreeing with the real browser
+(**L-35**, new), a quality metric counting the browser's own header and footer as content, and
+verification on the wrong paper size. The measurement that mattered — §2's nine rows — was right
+from the first run, in both browsers.
 
 **Child fix tasks raised**
-- none
+- [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) — the reference deck still
+  prints the reading view, which R7 rejected, and the tier-two decision needs an owner.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | → done | [R7](../docs/research/R7-printable-mode.md) written; every criterion has a verdict in §4 and the one open question is deferred to T-005 deliberately rather than dropped. **The ruling: the printable mode is the paginated stage, and the reading view is not a print target** — which answers T-021's shared-rendering question with a measured *no*. Rule 5 survives as written, with one clarification: "optional" obliges the mode to state its limits, so R7 §5 lists them, the largest being 38.6% of the deck's text behind disclosure. The owner ruled that print states the loss and hides the affordance rather than carrying tier two; the cooperative alternative `beforeprint` makes possible is raised as [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md), which also has to correct the reference deck — it still prints the rendering R7 rejected. **L-35** is new and is the task's most reusable output: an instrument scoped out for being a different code path will eventually prove it. Five printed rounds, three of which failed on this task's own stylesheet or harness rather than on the browser. |
 | 2026-08-07 | → planned | Eight steps, two of them operator-run. The plan found something §1 had not: **`beforeprint`/`afterprint` were never measured by R6**, and they decide how much of §1's honest-guarantee criterion is even true. If they fire from `file://`, a deck can open every disclosure element before printing and close it after, which moves progressive-disclosure content out of the "cannot survive print" list — the pessimistic assumption §1 was written on. Two rows, and they may be the most load-bearing measurement in the task. Also settled: `window.print()` is a **gesture** row with a minutes-long timeout, because it raises a modal dialog and does not return until dismissed — as an automatic row it would report `timeout` on a working feature, which is L-17's shape exactly. |
 | 2026-08-07 | → specified | §1 accepted, with one scope change the owner ruled on. It had scoped in *"one slide per printed page"* — a pre-commitment the only existing implementation contradicts: the reference deck's `@media print` block hides the stage and prints the **reflow document**. §1 assumed pagination, the code assumed document flow, and neither task had ruled. **Ruling: measure both renderings on the same deck and let the printed evidence decide**, rather than settling by assertion which of the two the printable mode uses. It costs one extra stylesheet in a run that happens anyway, and it converts [T-021](T-021-the-reflow-view-and-the-resolution-contract.md)'s open question — *do the reflow view and the print stylesheet share one document rendering?* — from a question T-021 inherits into an acceptance criterion here. Two criteria widened, one added, the size measurement made per-rendering so the choice is priced. Also settled without needing a decision: the print pass takes its gesture by real human click through the existing `ask_for_gesture()`, per R6 §3, and prints through the browser's own dialog rather than a headless renderer — both now written into *Method* so the plan cannot drift into them. §2's steps table still reads as written before this ruling and is the next phase's work. |
 | 2026-08-07 | (no change) | `related` gains [T-021](T-021-the-reflow-view-and-the-resolution-contract.md), added by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md). T-021 carries the open question *do the reflow view and the print stylesheet share one document rendering?* — and it is answerable only with the measurement this task takes. The reference deck's `@media print` block already prints the reflow view, so the two modes are coupled in the only implementation that exists, without either task having ruled that they should be. |

@@ -91,6 +91,15 @@ PAGINATED = """/* T-018 variant: PAGINATED STAGE - one slide per printed page. *
      prints blank or half-risen. */
   .rise{opacity:1!important;transform:none!important;animation:none!important}
 
+  /* Tier two does not survive this rendering: the panels are absolutely positioned overlays on a
+     fixed 1920x1080 box, and opening them onto it covers the content they explain. So the whole
+     affordance goes, button included. Printing a "+ What the grant will and will not fund" control
+     onto paper is worse than losing the detail silently - it advertises something the reader can
+     see but cannot reach, on a medium where nothing can be clicked.
+     This is 38.6% of the deck's text (10 panels, 3543 of 9177 characters), and R7 says so plainly
+     rather than letting a reader discover it. */
+  .slide .disc{display:none!important}
+
   /* Backgrounds and rules are most of this design; without this they print as white. */
   *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
 }

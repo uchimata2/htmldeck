@@ -403,6 +403,13 @@ it, and nothing here confirms it either. **Raised as
 [T-018](../../tasks/T-018-measure-the-printable-mode-what-printing-from-fi.md)**, which also has to
 say plainly what a printed deck cannot preserve: anything behind interaction, motion or 3D.
 
+> **Closed by [R7](R7-printable-mode.md), 2026-08-07.** `window.print()` works and needs **no user
+> activation**; `beforeprint`/`afterprint` both fire. One correction to the paragraph above: this
+> note calls `matchMedia('print')` *available*, which is true and misleading — inside the
+> `beforeprint` handler it still reads **`false`**, so a deck must use the **events**, not the
+> query. R7 also found that printing changes the layout viewport, which makes a width-responsive
+> deck switch its own view mid-print — a portability behaviour this matrix had no row for.
+
 ---
 
 ## 10. What this note is *not* evidence about

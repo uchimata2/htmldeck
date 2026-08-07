@@ -552,6 +552,33 @@ cover, a file type nobody parses — rather than a carve-out keyed on their cont
 fails on its own test data, do not reach for the exemption first: the collision is usually telling
 you that one of the two is treating a structured record as prose.
 
+### L-35 — An instrument scoped out for being a different code path will eventually prove it
+
+A substitute instrument is adopted because it agrees with the real one on the cases tried so far.
+Every run where it agrees feels like evidence that it is equivalent. It is not: it is evidence
+about the cases tried, and the disagreement arrives on the case that matters, because that is the
+case where the code paths differ.
+
+The case: headless `--print-to-pdf` was scoped out of [R7](research/R7-printable-mode.md) as a
+*measurement* instrument and used only to diagnose. It then disagreed with the real browser on the
+central question — the deck flips itself into its reading view when printing narrows the layout
+viewport, and headless did not flip. The headless check passed while the real print was producing
+blank pages, and a marker experiment run headlessly **ruled out the true explanation** and sent the
+diagnosis down a false path for several rounds.
+
+The same shape twice more in one task, both in how quality was *measured* rather than produced: a
+dead-space metric counted the browser's header and footer as page content, and reported 2.4% on
+pages that were visibly half empty; and it was run on Letter portrait while the deck is printed on
+A4 landscape, when page height is the exact variable that decides whether an unbreakable block is
+ruinous. Both flattered the result, which is the dangerous direction (**L-15**).
+
+**How to apply.** Write down what the substitute cannot see *before* using it, and treat every
+result from it as a hypothesis the real instrument has to confirm. When the substitute and the real
+thing disagree, the real one wins and the substitute's earlier agreements are retroactively worth
+nothing. And when a measurement disagrees with what someone is plainly looking at, suspect the
+measurement first — check what it counts and what conditions it runs under, before concluding the
+artifact is fine.
+
 ---
 
 ## Tooling
