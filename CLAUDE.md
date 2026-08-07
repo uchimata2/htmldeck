@@ -9,8 +9,9 @@ plus the prompt structure that briefs them and the critique pass that fixes them
 
 Grounded in a corpus of real decks, prompts and written style guides from a training programme.
 `docs/BRIEF.md` records what that evidence shows and what to build; `reference/` holds the source
-prompt. **Status: research phase (WP1).** Read the brief first — its "Decisions taken" section
-overrides anything older in it.
+prompt. **Status: WP1 research is complete but for one measurement; the plugin scaffold now exists
+and runs its own pipeline** (`.claude-plugin/`, `skills/htmldeck/`). Read the brief first — its
+"Decisions taken" section overrides anything older in it.
 
 **The objectives are still being shaped.** Research is expected to be able to overturn scope, not
 just fill it in. Findings that contradict the brief are surfaced as candidate changes of
