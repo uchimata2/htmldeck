@@ -454,11 +454,12 @@ replaces enforced variety, with the template generator satisfying it later.
 ## Definition of done
 
 *Three of seven met by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md),
-2026-08-06. The seventh was added by the owner the same day and is a **gate on publishing** — see
-"Decisions taken", Release gate.*
+2026-08-06. The seventh was added by the owner the same day as a **gate on publishing** — see
+"Decisions taken", Release gate — and was met 2026-08-07. **Five of seven now met; the two that
+remain are both about the build and critique modes, not about the deck.***
 
 - ~~A deck renders correctly with the network disabled.~~ **Met.**
-  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 178 KB, zero
+  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 183 KB, zero
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
 - The build check demonstrated failing on each class of problem it claims to catch. *Open —
@@ -466,9 +467,10 @@ replaces enforced variety, with the template generator satisfying it later.
   The measurement layer at `tools/deck/` reports 0 mechanical failures on the reference deck against
   3 on the seeded one, and as of 2026-08-07 the **resolution-contract subset is demonstrated failing
   on each of its seven classes** — `tools/deck/contract_variants.py` breaks one rule per deck and
-  requires the gate to notice. That exercise caught **three of the new checks passing decks that
-  violated them**, which is the argument for this criterion in one line. The other 33 checks have
-  still not been shown to fail individually.*
+  requires the gate to notice. `tools/deck/deliverable_variants.py` does the same for the five
+  deliverable and chrome rules as of 2026-08-07. Between them, that exercise has caught **five
+  checks passing decks that violated them**, which is the argument for this criterion in one line.
+  The other 36 checks have still not been shown to fail individually.*
 - The critique mode run against a deck with known defects, and found them. *Open —
   [T-004](../tasks/T-004-critique-mode-blunt-section-by-section-review.md). The seeded-defect deck it
   needs now exists.*
@@ -480,13 +482,15 @@ replaces enforced variety, with the template generator satisfying it later.
 - ~~**A real 12-slide deck taken through the convergence loop to a PASS**, and looked at offline.~~
   **Met**, in two measurement rounds and 24 fixes.
 - No personal, client, or machine data anywhere in the repository. *Holds — re-checked at each commit.*
-- **A deck in this repository satisfies the deliverable contract** — every slide states its point on
-  the slide, per §3.4, DS-201 to DS-209. *Open —
-  [T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md). **No deck here
-  satisfies it yet**: the rules that matter most are the least exercised, because they were written
-  after the only deck was built.*
+- ~~**A deck in this repository satisfies the deliverable contract** — every slide states its point
+  on the slide, per §3.4, DS-201 to DS-209.~~ **Met** by
+  [T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md), 2026-08-07. All
+  twelve slides carry a bottom line, and DS-202, DS-203 and DS-205 are gated rather than asserted —
+  as are DS-216 and DS-217, which the same task found unenforced. **The publishing gate is clear.**
 
-**The last criterion is the publishing gate**, added by the owner 2026-08-06. Until it is met, a deck
-can pass every other check on this list and still leave its audience waiting for the presenter to say
-what the slide was for — which is the failure the design system exists to prevent, shipped as the
-plugin's own example.
+**The last criterion was the publishing gate**, added by the owner 2026-08-06 and met 2026-08-07.
+It existed because a deck can pass every other check on this list and still leave its audience
+waiting for the presenter to say what the slide was for — the failure the design system exists to
+prevent, shipped as the plugin's own example. That is precisely what the reference deck was doing
+while the gate reported zero failures, which is the argument for the criterion and for T-028's other
+finding: **five rules were labelled machine-checkable and nothing checked them** (L-36).

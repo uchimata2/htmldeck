@@ -70,9 +70,14 @@ def main():
     html = sub(html, "S2", "slide 7 calls a modelled curve an observation",
                '<text class="lab" x="150" y="500">New daily trips · five years · modelled, not observed</text>',
                '<text class="lab" x="150" y="500">New daily trips · five years · observed across comparable cities</text>')
-    html = sub(html, "S2", "slide 7 standfirst asserts the projection as measured fact",
-               "Bike-share fills its docks by year three. Frequency keeps adding riders after it.",
-               "Bike-share stalls at 3,000 trips. Frequency reaches 6,100, as the data shows.")
+    # Retargeted by T-028 from the standfirst, which no longer asserts anything to corrupt: it
+    # became setup when the deliverable moved to the bottom line. The bottom line is now where the
+    # slide makes its claim, so it is where an unsourced claim has to be seeded.
+    html = sub(html, "S2", "slide 7 bottom line asserts the projection as measured fact",
+               '<b>Bike-share stops growing when its docks fill in\n    2029, and frequency is '
+               'still adding trips in 2031.</b>',
+               '<b>Bike-share stalls at 3,000 trips and frequency reaches 6,100, as the data '
+               'shows.</b>')
     html = re.sub(r'\s*<div class="disc disc--edge" data-disc>.*?</div>\s*</div>\s*(?=<p class="provenance")',
                   "\n  ", html, count=1, flags=re.S)
     applied.append(("S2", "slide 7 assumption marker removed, so no figure is qualified"))
@@ -94,10 +99,18 @@ def main():
 
     # S4 Density - the sentence that decides the slide moves into tier two, so the argument
     # only completes once something is opened.
+    # Retargeted by T-028: this used to hollow out `.ledger-note`, which is gone - it became slide
+    # 5's bottom line. The defect is unchanged: the deciding sentence moves into tier two and the
+    # slot keeps a sentence that decides nothing.
+    #
+    # Note what the gate does with it. DS-202 and DS-205 both pass here: a bottom line is present
+    # and it is not inside a panel. Only a reader can see that "Two options, six rows." is not a
+    # deliverable. That is S4 being one of the five dimensions the gate cannot decide, working as
+    # documented - not a hole in the checks T-028 added.
     html = sub(html, "S4", "slide 5's deciding line moved behind the disclosure",
-               '''<p class="ledger-note"><b class="caution">Operating cost is the row that decides it.</b>
-        The grant cannot pay for either column's staff.</p>''',
-               '<p class="ledger-note">Two options, six rows.</p>')
+               '''  <p class="bottom-line rise" style="--i:4"><b>Operating cost decides it: the grant pays for no
+    staff in either column.</b></p>\n''',
+               '  <p class="bottom-line rise" style="--i:4"><b>Two options, six rows.</b></p>\n')
     html = sub(html, "S4", "and reappears only inside the panel",
                '<div class="row"><span class="k">Capital</span><span>Both exclude land.',
                '<div class="row"><span class="k">Decides it</span><span>Operating cost. The grant '
@@ -114,28 +127,33 @@ def main():
                '<g transform="translate(1176,290)">', '<g transform="translate(1193,307)">')
 
     # S6 Motion - a continuous ambient pulse on static content, encoding nothing.
-    html = sub(html, "S6", "slide 10 aside given a looping ambient pulse",
-               '<aside class="cost-aside rise" style="--i:6">',
-               '<aside class="cost-aside rise seeded-throb" style="--i:6">')
+    # Retargeted by T-028, which removed the `.cost-aside` this used to throb. The bottom line is
+    # the better host anyway: motion on the one element the slide exists to deliver.
+    html = sub(html, "S6", "slide 10's bottom line given a looping ambient pulse",
+               '<p class="bottom-line rise" style="--i:6"><b>Three corridors wait until month 18,',
+               '<p class="bottom-line rise seeded-throb" style="--i:6"><b>Three corridors wait until month 18,')
 
     # ---------------------------------------------------------------- whole-deck dimensions
     # D3 Close - the ask becomes a recap and a thank-you.
+    # Retargeted by T-028: the ask moved out of `.close-sub` and into the shared bottom-line slot.
     html = sub(html, "D3", "slide 12 ends on a summary and a thank-you, not an ask",
-               '''<h2 class="headline close-h rise" style="--i:1">Approve the frequency package</h2>
-      <p class="close-sub rise" style="--i:2">
-        <svg class="icon sm" aria-hidden="true"><use href="#i-ask"/></svg>
-        On 12 March: $4.1M of the grant, $6.8M a year from the general fund, $1.5M held for the gate.</p>''',
-               '''<h2 class="headline close-h rise" style="--i:1">Thank you</h2>
-      <p class="close-sub rise" style="--i:2">
-        <svg class="icon sm" aria-hidden="true"><use href="#i-ask"/></svg>
-        In summary: wait times are long, both options have merit, and frequency looks promising.</p>''')
+               '<h2 class="headline close-h rise" style="--i:1">Approve the frequency package</h2>',
+               '<h2 class="headline close-h rise" style="--i:1">Thank you</h2>')
+    html = sub(html, "D3", "and the ask becomes a recap",
+               '''<b>On 12 March: $4.1M of the grant,
+    $6.8M a year from the general fund, $1.5M held for the gate.</b>''',
+               '<b>In summary: wait times are long, both options have merit, and frequency looks '
+               'promising.</b>')
     html = sub(html, "D3", "and its slide name follows",
                'data-name="Approve the frequency package"', 'data-name="Thank you"')
 
     # D4 Consistency - the reserve disagrees with the ledger that established it.
+    # Retargeted by T-028 from slide 9's standfirst to its bottom line, which is where the figure
+    # lives now. A contradiction in the deliverable is a worse defect than one in the setup, so
+    # this seed got stronger rather than weaker.
     html = sub(html, "D4", "slide 9 reserve contradicts slide 5's $1.5M",
-               "The $1.5M the frequency package does not spend is what buys the reversal.",
-               "The $2.2M the frequency package does not spend is what buys the reversal.")
+               "and the\n    $1.5M reserve buys 16 Old Quarter stations if the gate fails.",
+               "and the\n    $2.2M reserve buys 16 Old Quarter stations if the gate fails.")
     html = sub(html, "D4", "and again on the gate's own branch",
                '<text class="val t-soft" x="1290" y="130">$1.5M returns to the reserve</text>',
                '<text class="val t-soft" x="1290" y="130">$2.2M returns to the reserve</text>')

@@ -81,6 +81,10 @@
   --fs-display:calc(67*var(--du));
   --fs-title:calc(96*var(--du));
   --fs-subhead:calc(34*var(--du));
+  /* DS-203 wants the bottom line second only to the headline. It sits between subhead and
+     display on purpose: large enough to win the slide after the headline, small enough that
+     a two-clause sentence still sets on one or two lines at 1920. */
+  --fs-bottom:calc(40*var(--du));
   --fs-lead:calc(30*var(--du));
   --fs-body:calc(26*var(--du));
   --fs-mono:calc(18*var(--du));
@@ -176,8 +180,8 @@ svg{display:block}
 /* ---------------------------------------------------------------- slides */
 .slide{
   position:absolute;inset:0;
-  display:grid;grid-template-rows:auto auto 1fr;
-  padding:var(--pad-y) var(--pad-x) calc(170*var(--du));
+  display:grid;grid-template-rows:auto auto 1fr auto;
+  padding:var(--pad-y) var(--pad-x) calc(150*var(--du));
   opacity:0;visibility:hidden;
   transition:opacity var(--slide-dur) ease-in-out,visibility 0s linear var(--slide-dur);
 }
@@ -195,10 +199,35 @@ svg{display:block}
   letter-spacing:var(--track-display);text-wrap:balance;
   margin-top:var(--sp-2);color:var(--ink);
 }
+/* Demoted from --fs-lead by T-028. It used to be the second-most-prominent text on the slide,
+   which is the slot DS-203 reserves for the bottom line. It now does the one job it is good at:
+   setting up the slide. On slide 4 it was carrying the deliverable outright; that sentence moved
+   down to the bottom line and this one was rewritten as setup. */
 .standfirst{
-  font-size:var(--fs-lead);color:var(--ink-soft);max-width:var(--measure);
+  font-size:var(--fs-body);color:var(--ink-soft);max-width:var(--measure);
   margin-top:var(--sp-2);
 }
+
+/* ---------------------------------------------------------------- the bottom line (DS-202/203) */
+/* One component, twelve uses. The rule is what makes it findable in two seconds without reading
+   it (DS-203), and it carries the accent so the sentence itself can stay full-strength ink:
+   accent-coloured body text would be the weaker pair against paper, and DS-215 says judge the
+   colour that renders. Anchored to the foot of the slide by its own grid row, so it lands in the
+   same place on all twelve regardless of what the body above it does. */
+.bottom-line{
+  grid-row:4;align-self:end;
+  display:grid;gap:var(--sp-2);
+  margin-top:var(--sp-3);max-width:calc(1500*var(--du));
+}
+.bottom-line::before{
+  content:"";width:calc(120*var(--du));height:var(--rule);background:var(--accent);
+}
+.bottom-line b{
+  font-family:var(--font-display);font-size:var(--fs-bottom);line-height:1.2;
+  font-weight:400;color:var(--ink);text-wrap:pretty;
+}
+.bottom-line--center{justify-items:center;text-align:center;justify-self:center}
+
 /* Rows are placed explicitly, not by source order: a slide with no disclosure would otherwise
    auto-place its body into the `auto` track and leave the `1fr` one empty. */
 .slide > header{grid-row:1}
@@ -260,40 +289,46 @@ svg{display:block}
 .disc--edge .disc-panel{left:auto;right:0;text-align:left}
 
 /* ---------------------------------------------------------------- chrome */
-/* two rows: the argument gets a full-width line of its own, so the stage names can never
-   collide with the controls the way they do when both share one row. */
+/* One row since T-028. It was two because twelve dots made the controls too wide to sit beside
+   the stage names without colliding; with the dots gone the row is ~1450 of the 1728 available
+   design units, and the second row was costing 48du of a ~90du budget (DS-217) to solve a
+   problem that no longer existed. The stage is always 1920 units wide, so this fits or does not
+   fit deterministically - there is no viewport at which it reflows into a collision. */
 .chrome{
   position:absolute;left:var(--pad-x);right:var(--pad-x);bottom:calc(40*var(--du));
-  display:grid;grid-template-rows:auto auto;gap:var(--sp-2);z-index:8;
+  display:flex;align-items:center;gap:var(--sp-4);z-index:8;
 }
-.ribbon{display:flex;align-items:center;gap:var(--sp-2);min-width:0}
-.ribbon li{
-  display:flex;align-items:center;gap:var(--sp-1);
+.ribbon{display:flex;align-items:center;gap:var(--sp-1);min-width:0;margin-right:auto}
+/* T-028: the stage names became the click target when the twelve dots went. DS-217 asks for a
+   compact indicator plus click-to-jump rather than one target per slide, and seven stages that
+   were already drawn are a cheaper target than twelve dots that were not labelled. */
+.ribbon li{display:flex;align-items:center;min-width:0}
+.ribbon li + li{margin-left:var(--sp-1)}
+.ribbon button{
+  display:flex;align-items:center;gap:var(--sp-1);min-height:var(--disc-hit);
+  padding:0 calc(4*var(--du));border-radius:var(--radius);
   font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
   text-transform:uppercase;color:var(--ink-faint);white-space:nowrap;
 }
-.ribbon li::before{content:"";width:calc(10*var(--du));height:calc(10*var(--du));
-  border-radius:50%;background:var(--ui-line);
+.ribbon button::before{content:"";width:calc(10*var(--du));height:calc(10*var(--du));
+  border-radius:50%;background:var(--ui-line);flex:none;
   transition:background var(--scale-dur) ease-in-out,transform var(--scale-dur) ease-in-out}
-.ribbon li[data-lit]{color:var(--ink)}
-.ribbon li[data-lit]::before{background:var(--accent);transform:scale(1.5)}
-.ribbon li + li{margin-left:var(--sp-2)}
+.ribbon button:hover{color:var(--ink)}
+.ribbon li[data-lit] button{color:var(--ink)}
+.ribbon li[data-lit] button::before{background:var(--accent);transform:scale(1.5)}
 .ribbon .link{width:calc(22*var(--du));height:var(--hair);background:var(--line);flex:none}
 
-.controls{display:flex;align-items:center;gap:var(--sp-2)}
-.dots{display:flex;align-items:center;gap:calc(6*var(--du));margin-right:auto}
-.dots button{
-  width:var(--disc-hit);height:var(--disc-hit);
-  display:grid;place-items:center;border-radius:50%;
+.controls{display:flex;align-items:center;gap:var(--sp-2);flex:none}
+/* the second encoding DS-216 permits, and it encodes a different fact: the ribbon says which
+   stage, this says how far through the deck. Numerals, not twelve targets. */
+.count{
+  margin-left:var(--sp-3);font-family:var(--font-mono);font-size:var(--fs-mono);
+  letter-spacing:var(--track-mono);color:var(--ink-faint);white-space:nowrap;
 }
-.dots button::after{content:"";width:calc(11*var(--du));height:calc(11*var(--du));
-  border-radius:50%;background:var(--ui-line);
-  transition:background var(--scale-dur) ease-in-out,transform var(--scale-dur) ease-in-out}
-.dots button[aria-current="true"]::after{background:var(--accent);transform:scale(1.35)}
-.dots button:hover::after{background:var(--ink-soft)}
+.count b{font-weight:400;color:var(--ink)}
 
 .btn{
-  min-height:var(--disc-hit);min-width:var(--disc-hit);
+  min-height:var(--disc-hit);min-width:var(--disc-hit);flex:none;white-space:nowrap;
   padding:0 var(--sp-2);display:inline-flex;align-items:center;gap:var(--sp-1);
   border:var(--hair) solid var(--ui-line);border-radius:var(--radius);
   color:var(--ink-soft);font-family:var(--font-mono);font-size:var(--fs-mono);
@@ -306,10 +341,10 @@ svg{display:block}
 .btn .chev.l{transform:rotate(135deg)}
 .btn .chev.r{transform:rotate(-45deg)}
 
-/* progress encodes real position (DS-133) */
-.progress{position:absolute;left:0;right:0;bottom:0;height:calc(5*var(--du));background:var(--line)}
-.progress i{display:block;height:100%;background:var(--accent);width:0;
-  transition:width var(--slide-dur) ease-in-out}
+/* DS-133 wants a progress indicator that encodes real position; the `05 / 12` counter above is
+   it. The accent bar that used to run along the foot of the stage was a THIRD encoding of the
+   same fact the ribbon and the counter already carry, which is what DS-216 forbids - removed by
+   T-028 rather than kept as decoration. */
 
 /* ---------------------------------------------------------------- shared pieces */
 .icon{width:calc(40*var(--du));height:calc(40*var(--du));color:var(--accent);flex:none}
@@ -369,7 +404,7 @@ svg{display:block}
   .current{animation:none}
   .rise,.pulse,.opening{animation:none;opacity:1;transform:none}
   .slide{transition:none}
-  .progress i,.ribbon li::before,.dots button::after{transition:none}
+  .ribbon button::before{transition:none}
 }
 
 /* ---------------------------------------------------------------- reflow view (DS-070..076) */
@@ -473,12 +508,13 @@ svg{display:block}
   </header>
   <div class="body">
     <div class="title-foot rise" style="--i:3">
-      <div class="title-rule"></div>
       <p class="title-note">Riverbend is an illustrative city. It does not exist. Every figure in this deck
         is an output of the assumptions shown on the slide that uses it, and none is drawn from a real
         agency, study or place.</p>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>Spend the $5.6M grant on bus frequency, and hold
+    $1.5M for bike-share until month 18.</b></p>
   <p class="provenance">Illustrative model<br>Assumptions on every slide</p>
 </section>
 
@@ -499,7 +535,7 @@ svg{display:block}
       <div class="col-c">Capital</div>
       <div class="col-b"><b class="pos">$4.1M</b> — leaves $1.5M</div></div>
     <div class="ledger-row"><div class="col-a"><b class="pos">$1.9M</b> a year</div>
-      <div class="col-c">Operating</div>
+      <div class="col-c caution">Operating</div>
       <div class="col-b"><b class="neg">$6.8M</b> a year</div></div>
     <div class="ledger-row"><div class="col-a"><b class="neg">38,000</b> within 300m of a station</div>
       <div class="col-c">People reached</div>
@@ -519,7 +555,6 @@ svg{display:block}
         <span><i style="background:var(--neg)"></i>Weaker</span>
         <span><i style="background:var(--caution)"></i>Decides it</span>
       </div>
-      <p class="ledger-note">Two options, six rows.</p>
     </div>
   </div>
   <div class="disc" data-disc>
@@ -535,6 +570,7 @@ svg{display:block}
       <div class="row"><span class="k">Weather</span><span>Days with any measurable precipitation or a maximum below 4°C, over ten years <span class="est">[est.]</span>.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>Two options, six rows.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -543,7 +579,7 @@ svg{display:block}
   <header>
     <p class="eyebrow rise" style="--i:0"><span class="tick"></span>06 · The concession</p>
     <h2 class="headline rise" style="--i:1">Bikes win three corridors</h2>
-    <p class="standfirst rise" style="--i:2">They are the three carrying a quarter of weekday trips.</p>
+    <p class="standfirst rise" style="--i:2">Six corridors, each modelled under both proposals on one shared scale.</p>
   </header>
   <div class="body figwrap rise" style="--i:3">
     <svg class="fig" viewBox="0 0 1728 520" role="img"
@@ -589,8 +625,10 @@ svg{display:block}
       </g>
 
       <line class="grid" x1="0" y1="248" x2="1728" y2="248"/>
-      <text class="lab" x="0" y="480">Bike-share leads · 12,200 weekday trips between them</text>
-      <text class="lab t-accent" x="1728" y="480" text-anchor="end">Frequency leads · 36,000 weekday trips between them</text>
+      <!-- The two "leads - N weekday trips" captions that sat here said exactly what the bottom
+           line now says. Keeping both would have made the bottom line a summary of the slide
+           rather than its deliverable, which is the one thing DS-202 says it must not be. -->
+      <text class="lab" x="0" y="480">Corridors are ordered by which proposal leads</text>
     </svg>
   </div>
   <div class="disc" data-disc>
@@ -605,6 +643,8 @@ svg{display:block}
       <div class="row"><span class="k">Overlap</span><span>Old Quarter and Market Cross share 900 metres. Trips there are counted once, to Market Cross.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>The three corridors bike-share wins carry 12,200
+    weekday trips; the three frequency wins carry 36,000.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -613,7 +653,7 @@ svg{display:block}
   <header>
     <p class="eyebrow rise" style="--i:0"><span class="tick"></span>06 · The concession</p>
     <h2 class="headline rise" style="--i:1">Corridors, continued</h2>
-    <p class="standfirst rise" style="--i:2">They are the three carrying a quarter of weekday trips.</p>
+    <p class="standfirst rise" style="--i:2">Six corridors, each modelled under both proposals on one shared scale.</p>
   </header>
   <div class="body figwrap rise" style="--i:3">
     <svg class="fig" viewBox="0 0 1728 520" role="img"
@@ -659,8 +699,10 @@ svg{display:block}
       </g>
 
       <line class="grid" x1="0" y1="248" x2="1728" y2="248"/>
-      <text class="lab" x="0" y="480">Bike-share leads · 12,200 weekday trips between them</text>
-      <text class="lab t-accent" x="1728" y="480" text-anchor="end">Frequency leads · 36,000 weekday trips between them</text>
+      <!-- The two "leads - N weekday trips" captions that sat here said exactly what the bottom
+           line now says. Keeping both would have made the bottom line a summary of the slide
+           rather than its deliverable, which is the one thing DS-202 says it must not be. -->
+      <text class="lab" x="0" y="480">Corridors are ordered by which proposal leads</text>
     </svg>
   </div>
   <div class="disc" data-disc>
@@ -675,6 +717,8 @@ svg{display:block}
       <div class="row"><span class="k">Overlap</span><span>Old Quarter and Market Cross share 900 metres. Trips there are counted once, to Market Cross.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>The three corridors bike-share wins carry 12,200
+    weekday trips; the three frequency wins carry 36,000.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -683,7 +727,7 @@ svg{display:block}
   <header>
     <p class="eyebrow rise" style="--i:0"><span class="tick"></span>06 · The concession</p>
     <h2 class="headline rise" style="--i:1">Corridors, concluded</h2>
-    <p class="standfirst rise" style="--i:2">They are the three carrying a quarter of weekday trips.</p>
+    <p class="standfirst rise" style="--i:2">Six corridors, each modelled under both proposals on one shared scale.</p>
   </header>
   <div class="body figwrap rise" style="--i:3">
     <svg class="fig" viewBox="0 0 1728 520" role="img"
@@ -729,8 +773,10 @@ svg{display:block}
       </g>
 
       <line class="grid" x1="0" y1="248" x2="1728" y2="248"/>
-      <text class="lab" x="0" y="480">Bike-share leads · 12,200 weekday trips between them</text>
-      <text class="lab t-accent" x="1728" y="480" text-anchor="end">Frequency leads · 36,000 weekday trips between them</text>
+      <!-- The two "leads - N weekday trips" captions that sat here said exactly what the bottom
+           line now says. Keeping both would have made the bottom line a summary of the slide
+           rather than its deliverable, which is the one thing DS-202 says it must not be. -->
+      <text class="lab" x="0" y="480">Corridors are ordered by which proposal leads</text>
     </svg>
   </div>
   <div class="disc" data-disc>
@@ -745,6 +791,8 @@ svg{display:block}
       <div class="row"><span class="k">Overlap</span><span>Old Quarter and Market Cross share 900 metres. Trips there are counted once, to Market Cross.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>The three corridors bike-share wins carry 12,200
+    weekday trips; the three frequency wins carry 36,000.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -762,8 +810,6 @@ svg{display:block}
     <div class="stat-right rise" style="--i:3">
       <svg class="icon" aria-hidden="true"><use href="#i-wait"/></svg>
       <p class="stat-read">A Riverbend rider waits longer than they ride on nine of fourteen routes.</p>
-      <p class="stat-sub">Every proposal in this deck is a way of spending money on that number, or of
-        routing around it.</p>
     </div>
   </div>
   <div class="disc" data-disc>
@@ -778,6 +824,8 @@ svg{display:block}
       <div class="row"><span class="k">Excluded</span><span>Off-peak service, school specials, and the two routes on a fixed clock-face timetable.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>A Riverbend rider waits 11 minutes on average, and
+    both proposals are ways of spending money on that number.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -786,7 +834,7 @@ svg{display:block}
   <header>
     <p class="eyebrow rise" style="--i:0"><span class="tick"></span>04 · The mechanism</p>
     <h2 class="headline rise" style="--i:1">Waiting is the trip</h2>
-    <p class="standfirst rise" style="--i:2">Standing still takes 15 of the 34 minutes a door-to-door trip costs.</p>
+    <p class="standfirst rise" style="--i:2">One door-to-door trip, broken into the four things a rider actually does.</p>
   </header>
   <div class="body figwrap rise" style="--i:3">
     <svg class="fig" viewBox="0 0 1728 560" role="img"
@@ -836,6 +884,8 @@ svg{display:block}
       <div class="row"><span class="k">Where it flatters</span><span>Bunching makes real waits worse than half a headway. This model ignores that.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>Eleven of the 34 minutes are the wait, and the wait
+    is half the headway.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -857,12 +907,16 @@ svg{display:block}
       <g><circle class="accent" cx="60" cy="250" r="11"/>
         <text class="name" x="60" y="330">Today</text>
         <text class="val t-soft" x="60" y="366">6 Aug 2026</text></g>
+      <!-- The vote and the deadline are 19 days apart, so middle-anchored labels on both
+           overlapped: "Budget vote" ran into "Grant closes", and the two dates read as one
+           string. They anchor away from each other instead — the only pair on this timeline
+           close enough to need it. -->
       <g><circle class="accent" cx="820" cy="250" r="11"/>
-        <text class="name" x="820" y="330" text-anchor="middle">Budget vote</text>
-        <text class="val t-soft" x="820" y="366" text-anchor="middle">12 Mar 2027</text></g>
+        <text class="name" x="905" y="330" text-anchor="end">Budget vote</text>
+        <text class="val t-soft" x="905" y="366" text-anchor="end">12 Mar 2027</text></g>
       <g><rect class="accent" x="948" y="226" width="24" height="48" rx="5"/>
-        <text class="name" x="960" y="330" text-anchor="middle">Grant closes</text>
-        <text class="val t-soft" x="960" y="366" text-anchor="middle">31 Mar 2027</text></g>
+        <text class="name" x="1015" y="330">Grant closes</text>
+        <text class="val t-soft" x="1015" y="366">31 Mar 2027</text></g>
       <g><circle class="quiet" cx="1620" cy="250" r="11"/>
         <text class="name t-soft" x="1620" y="330" text-anchor="end">Next round</text>
         <text class="val t-faint" x="1620" y="366" text-anchor="end">2030</text></g>
@@ -888,6 +942,8 @@ svg{display:block}
       <div class="row"><span class="k">If we miss it</span><span>The programme runs on a three-year cycle. The next award lands in 2030 <span class="est">[est.]</span>.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>The grant closes on 31 March 2027, and the 12 March
+    budget vote is the only meeting that can commit it.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -896,7 +952,7 @@ svg{display:block}
   <header>
     <p class="eyebrow rise" style="--i:0"><span class="tick"></span>07 · The evidence</p>
     <h2 class="headline rise" style="--i:1">Frequency compounds, bikes plateau</h2>
-    <p class="standfirst rise" style="--i:2">Bike-share stalls at 3,000 trips. Frequency reaches 6,100, as the data shows.</p>
+    <p class="standfirst rise" style="--i:2">Five years of modelled new daily trips, both proposals on one scale.</p>
   </header>
   <div class="body figwrap">
     <svg class="fig" viewBox="0 0 1728 520" role="img"
@@ -940,6 +996,19 @@ svg{display:block}
       <text class="lab" x="150" y="500">New daily trips · five years · observed across comparable cities</text>
     </svg>
   </div>
+  <div class="disc disc--edge" data-disc>
+    <button class="disc-btn" aria-expanded="false" aria-controls="p7">
+      <span class="disc-mark" aria-hidden="true"></span>
+      <span class="disc-label">Assumptions behind this curve</span>
+    </button>
+    <div class="disc-panel" id="p7" hidden>
+      <div class="row"><span class="k">Elasticity</span><span>Each 10% cut in wait adds 4% ridership. Assumed for this model, not measured here.</span></div>
+      <div class="row"><span class="k">Plateau</span><span>Bike-share flattens when 85% of docks fill at peak. Riverbend hits that in 2029 <span class="est">[est.]</span>.</span></div>
+      <div class="row"><span class="k">Held constant</span><span>Fares, fuel price, population and the road network. None of them will hold.</span></div>
+      <div class="row"><span class="k">If elasticity is half</span><span>Frequency reaches 4,000 by 2031 and still passes bike-share in 2028.</span></div>
+    </div>
+  </div>
+  <p class="bottom-line rise" style="--i:4"><b>Bike-share stalls at 3,000 trips and frequency reaches 6,100, as the data shows.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -973,6 +1042,8 @@ svg{display:block}
       <div class="row"><span class="k">Bike-share</span><span>Cannot produce this edge. A dock at Centre still leaves the rider waiting for Route 7.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>A timed connection at Centre removes one change for
+    North Line and Market Cross riders.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -981,7 +1052,7 @@ svg{display:block}
   <header>
     <p class="eyebrow rise" style="--i:0"><span class="tick"></span>09 · The evidence</p>
     <h2 class="headline rise" style="--i:1">Month eighteen stays reversible</h2>
-    <p class="standfirst rise" style="--i:2">The $2.2M the frequency package does not spend is what buys the reversal.</p>
+    <p class="standfirst rise" style="--i:2">Three steps, then a gate the transport committee reads in public.</p>
   </header>
   <div class="body figwrap rise" style="--i:3">
     <svg class="fig" viewBox="0 0 1728 500" role="img"
@@ -1017,7 +1088,7 @@ svg{display:block}
       <text class="name" x="1290" y="314">Buy 16 Old Quarter stations</text>
       <text class="val t-soft" x="1290" y="350">$1.5M, where bikes win</text>
 
-      <text class="lab" x="40" y="440">Nothing before month 18 is irreversible. The buses hold their value; a schedule change costs a schedule change.</text>
+      <text class="lab" x="40" y="440">The buses hold their value, and a schedule change costs a schedule change.</text>
     </svg>
   </div>
   <div class="disc" data-disc>
@@ -1032,6 +1103,8 @@ svg{display:block}
       <div class="row"><span class="k">If it fails</span><span>Service holds at month-9 levels. The reserve moves to stations inside one budget cycle.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>Nothing before month 18 is irreversible, and the
+    $2.2M reserve buys 16 Old Quarter stations if the gate fails.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -1040,33 +1113,26 @@ svg{display:block}
   <header>
     <p class="eyebrow rise" style="--i:0"><span class="tick"></span>10 · The cost</p>
     <h2 class="headline rise" style="--i:1">Frequency has no ribbon</h2>
-    <p class="standfirst rise" style="--i:2">Nobody photographs a shorter wait, and three corridors wait eighteen months.</p>
+    <p class="standfirst rise" style="--i:2">Three costs this recommendation carries, stated before the ask rather than after it.</p>
   </header>
   <div class="body cost">
     <div class="cost-list">
       <div class="cost-item rise" style="--i:3">
         <svg class="icon" aria-hidden="true"><use href="#i-cost"/></svg>
         <div><h3 class="cost-h">The general fund carries $6.8M a year</h3>
-          <p class="cost-p">The grant pays for buses once. Drivers are paid every year, from money that
-            currently does something else.</p></div>
+          <p class="cost-p">The grant buys buses once. Drivers are paid every year after.</p></div>
       </div>
       <div class="cost-item rise" style="--i:4">
         <svg class="icon" aria-hidden="true"><use href="#i-bike"/></svg>
         <div><h3 class="cost-h">The Old Quarter waits until month 18</h3>
-          <p class="cost-p">Bike-share wins there on the evidence, and this recommendation asks that
-            corridor to wait for a gate it does not control.</p></div>
+          <p class="cost-p">Bike-share wins there, and that corridor waits for a gate it does not set.</p></div>
       </div>
       <div class="cost-item rise" style="--i:5">
         <svg class="icon" aria-hidden="true"><use href="#i-window"/></svg>
         <div><h3 class="cost-h">The grant closes either way</h3>
-          <p class="cost-p">Holding $1.5M in reserve means the city takes less from the state than it
-            could have taken.</p></div>
+          <p class="cost-p">The city takes $1.5M less from the state than it could have taken.</p></div>
       </div>
     </div>
-    <aside class="cost-aside rise seeded-throb" style="--i:6">
-      <p class="mono">The honest version</p>
-      <p class="cost-quote">Frequency is the cheaper mistake to unwind and the harder one to celebrate.</p>
-    </aside>
   </div>
   <div class="disc" data-disc>
     <button class="disc-btn" aria-expanded="false" aria-controls="p10">
@@ -1080,6 +1146,8 @@ svg{display:block}
       <div class="row"><span class="k">What they get</span><span>Nothing until month 18, then either 16 stations or a place in the 2030 round.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise seeded-throb" style="--i:6"><b>Three corridors wait until month 18, and the general
+    fund carries $6.8M every year after.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -1148,6 +1216,8 @@ svg{display:block}
       <div class="row"><span class="k">Standing</span><span>All three thresholds are set before approval, so none can be moved to fit the result.</span></div>
     </div>
   </div>
+  <p class="bottom-line rise" style="--i:4"><b>Three thresholds are fixed before approval, and each
+    is measured on a stated date by someone outside this team.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -1159,11 +1229,11 @@ svg{display:block}
   <div class="body close-body">
     <div>
       <h2 class="headline close-h rise" style="--i:1">Thank you</h2>
-      <p class="close-sub rise" style="--i:2">
-        <svg class="icon sm" aria-hidden="true"><use href="#i-ask"/></svg>
-        In summary: wait times are long, both options have merit, and frequency looks promising.</p>
     </div>
   </div>
+  <!-- the closing slide uses the same slot as the other eleven, centred rather than left-set:
+       the ask is the deliverable, so it belongs where every other deliverable has been. -->
+  <p class="bottom-line bottom-line--center rise" style="--i:2"><b>In summary: wait times are long, both options have merit, and frequency looks promising.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -1171,14 +1241,13 @@ svg{display:block}
 <nav class="chrome" aria-label="Deck navigation">
   <ul class="ribbon" id="ribbon"></ul>
   <div class="controls">
-    <div class="dots" id="dots" role="group" aria-label="Go to slide"></div>
+    <p class="count" id="count" aria-hidden="true"></p>
     <button class="btn" id="prev" aria-label="Previous slide"><span class="chev l"></span></button>
     <button class="btn" id="next" aria-label="Next slide"><span class="chev r"></span></button>
     <button class="btn" id="toDoc">Read</button>
     <button class="btn" id="motion" aria-pressed="false">Motion on</button>
   </div>
 </nav>
-<div class="progress" role="presentation"><i id="bar"></i></div>
 
 </main>
 </div>
@@ -1204,7 +1273,6 @@ svg{display:block}
 /* a class, not an inline size: an inline declaration would outrank the reading view's own
    type scale and stop the title reflowing at 320 CSS px */
 .title-h{font-size:var(--fs-title)}
-.title-rule{width:calc(220*var(--du));height:var(--rule);background:var(--accent)}
 .title-note{max-width:calc(1100*var(--du));color:var(--ink-soft);font-size:calc(24*var(--du))}
 
 .figwrap{position:relative}
@@ -1217,11 +1285,10 @@ svg{display:block}
 .stat-right{display:grid;gap:var(--sp-3);align-content:center;
   border-left:var(--rule) solid var(--accent);padding-left:var(--sp-4)}
 .stat-read{font-family:var(--font-display);font-size:var(--fs-subhead);line-height:1.3;max-width:var(--measure)}
-.stat-sub{color:var(--ink-soft);max-width:var(--measure)}
 
 .ledger{display:grid;align-content:start;gap:0}
 .ledger-head,.ledger-row{display:grid;grid-template-columns:1fr calc(300*var(--du)) 1fr;
-  align-items:center;gap:var(--sp-3);padding:calc(8*var(--du)) 0}
+  align-items:center;gap:var(--sp-3);padding:calc(4*var(--du)) 0}
 .ledger-row{border-top:var(--hair) solid var(--line)}
 .ledger-head{font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
   text-transform:uppercase;color:var(--ink-soft);padding-bottom:var(--sp-2)}
@@ -1236,24 +1303,22 @@ svg{display:block}
 .ledger .neg{color:var(--neg)}
 .ledger .caution{color:var(--caution)}
 .ledger-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);
-  margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:var(--hair) solid var(--line-firm)}
-.ledger-note{color:var(--ink-soft);font-size:calc(23*var(--du));text-align:right}
+  margin-top:var(--sp-2);padding-top:var(--sp-2);border-top:var(--hair) solid var(--line-firm)}
 
-.cost{display:grid;grid-template-columns:1fr calc(520*var(--du));gap:var(--sp-5);align-content:start}
-.cost-list{display:grid;gap:var(--sp-3);align-content:start}
+/* T-028 removed the pull-quote aside that used to fill the second column: it was the slide's
+   loudest element and it was a metaphor, so under DS-209 it was the emphasis and under DS-207 it
+   was the wrong kind of sentence to be one. One column now. */
+.cost{display:grid;gap:var(--sp-5);align-content:start}
+/* tightened by T-028 to pay for the bottom line: the three items used to have a pull-quote beside
+   them and now have the full width, so each paragraph sets shorter and the old gaps were slack. */
+.cost-list{display:grid;gap:var(--sp-2);align-content:start}
 .cost-item{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-3);align-items:start;
-  padding-bottom:var(--sp-3);border-bottom:var(--hair) solid var(--line)}
+  padding-bottom:var(--sp-2);border-bottom:var(--hair) solid var(--line)}
 .cost-h{font-family:var(--font-display);font-size:var(--fs-subhead);line-height:1.25}
 .cost-p{color:var(--ink-soft);margin-top:var(--sp-1);max-width:var(--measure)}
-.cost-aside{align-self:start;padding:var(--sp-4);border-radius:var(--radius);
-  background:var(--accent-wash);border:var(--hair) solid var(--line)}
-.cost-quote{font-family:var(--font-display);font-size:var(--fs-subhead);line-height:1.3;
-  color:var(--ink);margin-top:var(--sp-2)}
 
 .close-body{display:grid;place-content:center;justify-items:center;text-align:center}
 .close-h{font-size:calc(84*var(--du));max-width:calc(1500*var(--du))}
-.close-sub{display:flex;align-items:center;justify-content:center;gap:var(--sp-2);
-  color:var(--ink-soft);font-size:var(--fs-lead);margin-top:var(--sp-4)}
 
 .doc .stat,.doc .cost,.doc .ledger-head,.doc .ledger-row,.doc .ledger-foot{
   display:block}
@@ -1265,16 +1330,18 @@ svg{display:block}
 .doc .legend{flex-wrap:wrap;gap:.5rem 1rem}
 .doc .cost-item{display:block;margin-bottom:1rem}
 .doc .cost-h{font-size:1.2rem}
-.doc .cost-aside{margin-top:1.5rem}
-.doc .cost-quote{font-size:1.2rem}
 .doc .close-body{display:block;text-align:left;height:auto}
 .doc .close-h{font-size:1.9rem;max-width:none}
-.doc .close-sub{justify-content:flex-start;font-size:1.05rem}
 .doc .icon{width:1.4rem;height:1.4rem}
 .doc .title-h{font-size:2.2rem}
 .doc .title-foot{display:block;height:auto;padding-bottom:0}
-.doc .title-rule{width:6rem;height:.18rem;margin-bottom:1rem}
 .doc .title-note{font-size:1rem;max-width:none}
+/* the bottom line reflows with everything else, and keeps its rank: still the largest text in
+   the section after the headline (DS-203 holds in the reading view too) */
+.doc .bottom-line{margin-top:1.25rem;max-width:none;gap:.6rem}
+.doc .bottom-line::before{width:4rem;height:.18rem}
+.doc .bottom-line b{font-size:1.35rem}
+.doc .bottom-line--center{justify-items:start;text-align:left;justify-self:start}
 .doc .stat-unit{font-size:.8rem}
 .doc .est{font-size:.7rem}
 </style>
@@ -1286,9 +1353,8 @@ svg{display:block}
   var stage = document.getElementById('stage');
   var viewport = document.getElementById('viewport');
   var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
-  var dotsBox = document.getElementById('dots');
+  var countBox = document.getElementById('count');
   var ribbonBox = document.getElementById('ribbon');
-  var bar = document.getElementById('bar');
   var doc = document.getElementById('doc');
   var docBody = document.getElementById('docBody');
   var toDoc = document.getElementById('toDoc');
@@ -1309,21 +1375,26 @@ svg{display:block}
   }
 
   /* ---------------------------------------------------------- chrome, built from the slides */
+  /* where each stage starts, read from the slides rather than declared twice (L-08) */
+  function firstSlideOfStage(st){
+    for (var n = 0; n < slides.length; n++){
+      if (parseInt(slides[n].dataset.stage, 10) === st) return n;
+    }
+    return 0;
+  }
+
   STAGES.forEach(function(name, i){
     if (i) { var l = document.createElement('li'); l.className = 'link'; l.setAttribute('aria-hidden','true');
              ribbonBox.appendChild(l); }
     var li = document.createElement('li');
-    li.textContent = name;
     li.dataset.stageIndex = i;
-    ribbonBox.appendChild(li);
-  });
-
-  slides.forEach(function(s, i){
     var b = document.createElement('button');
+    b.textContent = name;
     /* the nav name and the page title come from one source (DS-135) */
-    b.setAttribute('aria-label', (i+1) + '. ' + s.dataset.name);
-    b.addEventListener('click', function(){ go(i); });
-    dotsBox.appendChild(b);
+    b.setAttribute('aria-label', 'Go to ' + name + ': ' + slides[firstSlideOfStage(i)].dataset.name);
+    b.addEventListener('click', function(){ go(firstSlideOfStage(i)); countIfSeen(); });
+    li.appendChild(b);
+    ribbonBox.appendChild(li);
   });
 
   /* ---------------------------------------------------------- disclosure (one open at a time) */
@@ -1368,15 +1439,20 @@ svg{display:block}
     /* charts and entrances draw in once, never on the way back (DS-146) */
     if (!played[i]) { played[i] = true; slides[i].setAttribute('data-played',''); }
 
-    Array.prototype.forEach.call(dotsBox.children, function(b, n){
-      if (n === i) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current');
-    });
+    countBox.innerHTML = '';
+    var strong = document.createElement('b');
+    strong.textContent = (i + 1) < 10 ? '0' + (i + 1) : String(i + 1);
+    countBox.appendChild(strong);
+    countBox.appendChild(document.createTextNode(' / ' + slides.length));
+
     var st = parseInt(slides[i].dataset.stage, 10);
     Array.prototype.forEach.call(ribbonBox.children, function(li){
       if (li.dataset.stageIndex === undefined) return;
-      if (parseInt(li.dataset.stageIndex,10) === st) li.setAttribute('data-lit',''); else li.removeAttribute('data-lit');
+      var lit = parseInt(li.dataset.stageIndex,10) === st;
+      if (lit) li.setAttribute('data-lit',''); else li.removeAttribute('data-lit');
+      var b = li.querySelector('button');
+      if (b) { if (lit) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current'); }
     });
-    bar.style.width = ((i + 1) / slides.length * 100) + '%';
     var name = slides[i].dataset.name;
     document.title = (name === DECK) ? DECK : name + ' — ' + DECK;
     if (opts && opts.focus) slides[i].focus();
@@ -1532,6 +1608,15 @@ svg{display:block}
     requestAnimationFrame(step);
   }
 
+  /* A function declaration, not a var: the ribbon's click handlers are wired during boot, before
+     the line that would have assigned it. Runs once, the first time its slide is the current one. */
+  var counter = stage.querySelector('[data-count]'), counted = false;
+  function countIfSeen(){
+    if (!counter || counted || !slides[idx].contains(counter)) return;
+    counted = true;
+    countUp(counter);
+  }
+
   /* ---------------------------------------------------------- boot */
   window.addEventListener('resize', fit);
   window.addEventListener('orientationchange', fit);
@@ -1540,15 +1625,9 @@ svg{display:block}
   buildDoc();
   go(0);
   autoView();
-  var counter = stage.querySelector('[data-count]');
-  if (counter){
-    var seen = false;
-    var obs = function(){ if (!seen && slides[idx].contains(counter)) { seen = true; countUp(counter); } };
-    document.addEventListener('keyup', obs);
-    dotsBox.addEventListener('click', obs);
-    document.getElementById('next').addEventListener('click', obs);
-    document.getElementById('prev').addEventListener('click', obs);
-  }
+  document.addEventListener('keyup', countIfSeen);
+  document.getElementById('next').addEventListener('click', countIfSeen);
+  document.getElementById('prev').addEventListener('click', countIfSeen);
 })();
 </script>
 </body>

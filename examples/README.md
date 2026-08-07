@@ -20,8 +20,13 @@ or place — see *Provenance*, below.
 *Buy frequency before bikes* — a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-**178 KB in one file.** Three embedded typefaces (97 KB of it), nine Lucide icons, seven
+**183 KB in one file.** Three embedded typefaces (97 KB of it), nine Lucide icons, seven
 hand-written SVG figures, and the deck shell. No libraries, no build step, no network.
+
+Every slide carries a **bottom line**: one factual sentence, at the foot of the slide, second in
+prominence only to the headline. It is what the slide delivers, and it is there so the deck reads
+without a presenter. [T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md)
+added it to all twelve; before that the deck had one on none of them, and passed the gate anyway.
 
 ### Using it
 
@@ -35,8 +40,14 @@ hand-written SVG figures, and the deck shell. No libraries, no build step, no ne
 | `f` | Fullscreen |
 | `Esc` | Close an open detail panel |
 
-Clickable dots, prev/next, swipe and the mouse wheel all work too. Disclosure never interacts with
-advancing: arrows move, `d` toggles, and neither affects the other.
+The seven stage names in the ribbon are buttons — click one to jump to where that stage begins —
+and prev/next, swipe and the mouse wheel all work too. Disclosure never interacts with advancing:
+arrows move, `d` toggles, and neither affects the other.
+
+There used to be a dot per slide as well. T-028 removed them under DS-216 and DS-217: a spine
+ribbon, twelve dots and a progress bar are three answers to *where am I*, competing with the slide
+for attention. What remains is two, and they answer different questions — the ribbon says which
+stage, the `05 / 12` counter says how far through.
 
 ### The reading view
 
@@ -72,14 +83,16 @@ In real Chrome, from `file://`, with every DNS lookup black-holed:
 | External references | **0** |
 | Embedded faces | 3, all reporting `loaded` offline |
 | Body text at 720p | **17.3 px** (26 design units × 0.667) — clears the 16 px floor |
-| Two-resolution diff, non-text boxes | **116 values at 3840×2000 vs 1280×634; worst disagreement 0.000 design units** |
-| Two-resolution diff, text runs | 336 values, worst **1.17 design units** on an SVG text-run width |
+| Two-resolution diff, non-text boxes | **40 values at 3840×2000 vs 1280×634; worst disagreement 0.00 design units** |
+| Two-resolution diff, text runs | 84 values, worst **1.07 design units** on an SVG mono-label height |
 | Reflow at 320 CSS px | `scrollWidth` **320**, zero elements overflowing, zero internal scrollers |
 | Reflow auto-engage | correct at all four sweep viewports, including 1280 × 400 (scale 0.37) |
 | Smallest interactive target | 30.5 CSS px at 1280×634 |
+| Chrome | **11 labelled or interactive items, 52 design units tall** — was 23 and 96 before T-028 |
+| Encodings of position | **2**, and they answer different questions (DS-216 permits a second only then) |
 
 The layout is identical across a 3.15× scale ratio — every box lands on the same design-unit
-coordinate. The 1.17-unit disagreement is text, and it is glyph-advance rounding rather than
+coordinate. The 1.07-unit disagreement is text, and it is glyph-advance rounding rather than
 layout: a run's width, position *and* height all shift as glyphs round to device pixels. A check
 demanding exact equality would fail every deck that contains text.
 
@@ -160,16 +173,23 @@ python tools/deck/contract_variants.py
 ```
 
 ```bash
+python tools/deck/deliverable_variants.py
+```
+
+```bash
 python tools/examples/seed_defects.py
 ```
 
 `audit.py` runs the auto gate, the contrast audit, the render gate and the resolution contract —
-43 checks against `DS-nnn` rules. `contract.py` is that last stage on its own: it sweeps four
+50 checks against `DS-nnn` rules. `contract.py` is that last stage on its own: it sweeps four
 viewports and two resolutions, because §2.4 and §2.5 are claims about what happens *between*
-viewports and no single render can decide them. **`contract_variants.py` breaks each of those
-rules on purpose and requires the gate to notice** — a check that has only ever passed is not
-evidence that it checks anything, and three of these were caught measuring nothing the first time
-it ran. `render.py measure` produces the 720p and two-resolution numbers. `render.py shots`
+viewports and no single render can decide them. **`contract_variants.py` and
+`deliverable_variants.py` break each of those rules on purpose and require the gate to notice** —
+a check that has only ever passed is not evidence that it checks anything, and three of the
+resolution checks were caught measuring nothing the first time they ran. The second suite covers
+the deliverable and chrome rules (DS-202, DS-203, DS-205, DS-216, DS-217), which were written with
+`auto` and `render` labels and then went a whole task unenforced. `render.py measure` produces the
+720p and two-resolution numbers. `render.py shots`
 writes one PNG per slide so the deck can be *looked at*, which is the check none of the others
 replace. Both drive **real Chrome with a clean throwaway profile and every DNS lookup black-holed**,
 because a preview pane is not a faithful `file://` environment and has given this project a

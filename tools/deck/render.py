@@ -62,9 +62,15 @@ CHROME = find_browser()
 # The resolutions DS-063 and DS-064 name, plus the one used for looking at slides.
 RESOLUTIONS = [(3840, 2000, "3840x2000"), (1280, 634, "1280x634"), (1280, 720, "720p")]
 
-# Injected into a COPY of the deck. It drives the deck through its own public controls - the dot
-# buttons' click handlers - never by writing internal state, which would measure something the
-# audience never sees.
+# Injected into a COPY of the deck. It drives the deck through its own public controls - never by
+# writing internal state, which would measure something the audience never sees.
+#
+# It advances with the NEXT button rather than by jumping to a per-slide target. T-028 removed the
+# twelve dots this used to click (DS-216: three encodings of position where one was wanted), and
+# every slide after the first went unmeasured with no error - the gate reported "NO RESULT", not a
+# failure. A measurement tool must not depend on a piece of chrome a design rule can delete. Next
+# and previous are controls, not position encodings, so they survive a chrome redesign; if they
+# ever do not, the assertion below fails loudly instead of silently measuring slide 1 twelve times.
 PROBE = r"""
 <script>
 (function(){
@@ -78,7 +84,7 @@ PROBE = r"""
   }
   function run(){
     var stage = document.getElementById('stage');
-    var dots  = document.getElementById('dots');
+    var next  = document.getElementById('next');
     if (quiet){
       document.documentElement.setAttribute('data-motion','off');
       var s = document.createElement('style');
@@ -86,7 +92,10 @@ PROBE = r"""
                       '.rise,.pulse,.opening{opacity:1!important;transform:none!important}';
       document.head.appendChild(s);
     }
-    if (want > 0 && dots.children[want]) dots.children[want].click();
+    if (want > 0){
+      if (!next) { document.title = 'PROBE-ERROR no next control'; return; }
+      for (var n = 0; n < want; n++) next.click();
+    }
     setTimeout(function(){
       var k = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 0;
       var srect = stage.getBoundingClientRect();
@@ -99,7 +108,10 @@ PROBE = r"""
       var probes = {
         headline:  cur.querySelector('.headline'),
         standfirst:cur.querySelector('.standfirst'),
-        body:      cur.querySelector('.standfirst, .cost-p, .title-note, .stat-sub, .ledger-note'),
+        /* the deliverable, on every slide since T-028. Probed by name because DS-203 is a claim
+           about RANK - it has to be comparable against the headline and the body, not just present. */
+        bottomLine:cur.querySelector('.bottom-line b'),
+        body:      cur.querySelector('.standfirst, .cost-p, .title-note'),
         eyebrow:   cur.querySelector('.eyebrow'),
         discLabel: cur.querySelector('.disc-label'),
         monoLab:   cur.querySelector('.mono, .lab, .col-c'),

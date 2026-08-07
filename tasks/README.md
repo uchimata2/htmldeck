@@ -22,10 +22,9 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | WP3 | `proposed` | specify | - | T-008 |
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | WP3 | `proposed` | specify | - | T-008 |
 | [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | WP2 | `proposed` | specify | - | T-002 |
-| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004, T-005, T-028 | - |
+| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004, T-005 | - |
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | T-002 |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
-| [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | WP2 | `proposed` | specify | - | T-008 |
 | [T-031](T-031-stop-the-index-blocks-column-listing-closed-tasks.md) | Stop the index `Blocks` column listing closed downstream tasks | none | `proposed` | specify | - | - |
 | [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) | Adopt the paginated print mode in the reference deck, and decide whether print carries tier two | WP2 | `proposed` | specify | - | - |
 
@@ -53,6 +52,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md) | Reconcile the thirteen ruleset findings the reference deck produced | `done` | 2026-08-06 |
 | [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md) | Settle who scores a deck, and whether the score reaches the user | `done` | 2026-08-06 |
 | [T-027](T-027-specify-the-slide-deliverable-and-the-outline-contract.md) | Specify the slide deliverable and the outline contract, and the rules the owner's deck review implies | `done` | 2026-08-06 |
+| [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | `done` | 2026-08-07 |
 | [T-029](T-029-stop-the-deliverable-exemption-silently-dropping-pointers.md) | Stop the deliverable exemption silently dropping pointers from the check | `done` | 2026-08-07 |
 | [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) | Audit the dependency edges across the open backlog and propose a build order | `done` | 2026-08-07 |
 

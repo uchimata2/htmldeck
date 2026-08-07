@@ -81,6 +81,24 @@ PROBE = r"""
         return r.width > 0 && r.height > 0;
       });
   }
+  /* Jump to a slide without depending on any one piece of chrome.
+     This used to be `getElementById('dots').children[i].click()`. T-028 deleted the twelve dots
+     under DS-216, and stage 3 then reported NO RESULT - a null dereference that read as an
+     infrastructure failure rather than as "the gate is calling something that no longer exists".
+     Next and previous are controls rather than position encodings, so a chrome redesign does not
+     take them; and walking from the current slide means the helper never assumes where it is. */
+  function goTo(i){
+    var slides = document.querySelectorAll('.stage .slide');
+    var prev = document.getElementById('prev'), next = document.getElementById('next');
+    if (!prev || !next) throw new Error('no prev/next control to drive the deck with');
+    var guard = 0;
+    while (guard++ < slides.length + 2){
+      var cur = document.querySelector('.slide[data-current]');
+      var at = Array.prototype.indexOf.call(slides, cur);
+      if (at === i || at < 0) return;
+      (at < i ? next : prev).click();
+    }
+  }
   function run(){
     var out = {};
     var stage = document.getElementById('stage');
@@ -132,6 +150,70 @@ PROBE = r"""
     // DS-111 / DS-123 - figures present, and card rows standing in for a diagram
     out.figures = stage.querySelectorAll('svg.fig').length;
 
+    // ---- DS-202/203/205 - the deliverable. T-027 wrote these rules and labelled them auto and
+    // render; nothing enforced them until T-028, which is how a deck with a bottom line on none
+    // of its twelve slides passed a 43-check gate. L-36: a rule with no coverage is a claim about
+    // the instrument, not about the deck.
+    out.noBottomLine = [];      // DS-202 - present at all
+    out.multiSentence = [];     // DS-202 - one sentence, not a paragraph
+    out.bottomLineHidden = [];  // DS-205 - never behind a disclosure
+    out.outranked = [];         // DS-203 - second only to the headline
+    for (var s=0;s<slides.length;s++){
+      var sl = slides[s], nm = sl.dataset.name;
+      var bl = sl.querySelector('.bottom-line');
+      if (!bl || !bl.textContent.trim()){ out.noBottomLine.push(nm); continue; }
+      var txt = bl.textContent.trim().replace(/\s+/g,' ');
+      // terminal punctuation followed by space-or-end, so $4.1M and 1.5M are not sentence ends
+      var ends = txt.match(/[.!?](\s|$)/g) || [];
+      if (ends.length !== 1) out.multiSentence.push([nm, ends.length, txt.slice(0,60)]);
+      if (bl.closest('.disc-panel')) out.bottomLineHidden.push(nm);
+
+      // DS-203 is a claim about RANK, so it needs every competing prose run, measured as rendered.
+      // Prose only: a stat figure ('11') and a chart label ('Bus') are marks, not sentences, and
+      // a word-count floor is what separates them without naming every class by hand.
+      var blSize = parseFloat(getComputedStyle(bl.querySelector('b') || bl).fontSize);
+      var runs = sl.querySelectorAll('p,h3,h4,li,td,text,div');
+      for (var r=0;r<runs.length;r++){
+        var el = runs[r];
+        if (el.closest('.disc-panel') || el.closest('.bottom-line') || el.closest('.headline')) continue;
+        if (el.querySelector('p,h3,h4,li,td,text,div')) continue;   // leaf runs only, no wrappers
+        var words = (el.textContent || '').trim().split(/\s+/).filter(Boolean);
+        if (words.length < 4) continue;
+        var fs = parseFloat(getComputedStyle(el).fontSize);
+        if (el.namespaceURI === 'http://www.w3.org/2000/svg'){
+          var m = el.getScreenCTM(), sc = m ? Math.sqrt(Math.abs(m.a*m.d - m.b*m.c)) : k;
+          fs = fs * (sc / k);
+        }
+        if (fs >= blSize)
+          out.outranked.push([nm, +fs.toFixed(1), +blSize.toFixed(1), words.slice(0,6).join(' ')]);
+      }
+    }
+
+    // ---- DS-216/217 - one encoding of position, and a chrome budget
+    var chrome = document.querySelector('.chrome');
+    out.chromeItems = chrome ? tabbables(chrome).length : 0;
+    // buttons, plus labelled items that are not merely wrappers around one - counting `li` and
+    // `button` separately scored every ribbon stage twice and reported 24 for an 11-item chrome.
+    out.chromeLabelled = 0;
+    if (chrome){
+      var items = chrome.querySelectorAll('button,[aria-label]');
+      for (var q=0;q<items.length;q++){
+        if (items[q].querySelector('button')) continue;   // a wrapper, not an item
+        out.chromeLabelled++;
+      }
+    }
+    var chromeRect = chrome ? chrome.getBoundingClientRect() : null;
+    var progRect = document.querySelector('.progress');
+    progRect = progRect ? progRect.getBoundingClientRect() : null;
+    out.chromeHeightDu = chromeRect ? +((chromeRect.height +
+      (progRect ? progRect.height : 0)) / k).toFixed(1) : 0;
+    // the encodings of position that exist, by the marker each one draws
+    out.positionEncodings = [];
+    if (document.querySelector('.ribbon li'))    out.positionEncodings.push('stage ribbon');
+    if (document.querySelector('.dots button'))  out.positionEncodings.push('per-slide dots');
+    if (document.querySelector('.progress'))     out.positionEncodings.push('progress bar');
+    if (document.querySelector('.count'))        out.positionEncodings.push('slide counter');
+
     // DS-132 - off-screen slides leave the tab order. DS-130 - the current one stays in it.
     var t = tabbables(document);
     out.tabbables = t.length;
@@ -149,7 +231,7 @@ PROBE = r"""
     var btns = document.querySelectorAll('.stage .disc-btn');
     if (btns.length){
       btns[0].click();
-      document.getElementById('dots').children[4].click();
+      goTo(4);
       var b2 = document.querySelector('.slide[data-current] .disc-btn');
       if (b2) b2.click();
       out.panelsOpenAfterTwo = document.querySelectorAll('.stage .disc-panel:not([hidden])').length;
@@ -161,7 +243,7 @@ PROBE = r"""
 
     // DS-070..076 - the reflow view
     if (doc){
-      document.getElementById('dots').children[6].click();
+      goTo(6);
       document.getElementById('toDoc').click();
       out.docOn = doc.hasAttribute('data-on');
       out.docSections = doc.querySelectorAll('#docBody > section').length;
@@ -270,42 +352,36 @@ def ok(flag):
     return "pass" if flag else "FAIL"
 
 
-def main(deck, skip_contract=False):
-    render.self_test()
-    contrast.self_test()
-    contract.self_test()
-    html = open(deck, "r", encoding="utf-8").read()
-    print("browser: %s" % render.CHROME)
-    print("deck:    %s" % os.path.relpath(deck, ROOT))
-
-    print("\n=== stage 1  auto gate (static)")
-    failures = []
-    for rule, what, fn in STATIC:
-        good = fn(html)
-        if not good:
-            failures.append(rule)
-        print("  %-8s %-50s %s" % (rule, what, ok(good)))
-
-    print("\n=== stage 2  contrast (WCAG 2.2 AA, DESIGN-SYSTEM §7)")
-    cfails = contrast.audit(html, verbose=False)
-    print("  %d failure(s)" % len(cfails))
-    for theme, label, fg, bg, r, need in cfails:
-        print("    %-6s %-32s %.2f:1 (needs %.1f)" % (theme, label, r, need))
-        failures.append("contrast/%s" % label)
-
+def render_data(deck):
+    """Run the stage-3 probe once. Returns (measurements, error) - the browser half."""
     probe = render.make_probe(deck, name="audit.html", extra=PROBE)
-    data, err = render.read_result(render.file_url(probe), 1622, 1054)
-    if not data:
-        print("\n=== stage 3  render gate: NO RESULT\n%s" % err[:400])
-        return 1
+    return render.read_result(render.file_url(probe), 1622, 1054)
 
-    print("\n=== stage 3  render gate (measured, viewport %d)" % data["vw"])
-    rows = [
+
+def render_verdicts(data):
+    """(rule, what, ok) for every rule stage 3 decides. Pure: no browser, so a variant suite can
+    seed a break, take one measurement, and ask the same code that gates the real deck."""
+    return [
         ("DS-080/081/082", "sections: %d" % data["slideCount"], 6 <= data["slideCount"]),
         ("DS-035", "text below 16 design units: %d" % len(data["underFloor"]),
          not data["underFloor"]),
         ("DS-091", "headlines over six words: %d" % len(data["longHeadlines"]),
          not data["longHeadlines"]),
+        ("DS-202", "slides with no bottom line: %d" % len(data.get("noBottomLine", [])),
+         not data.get("noBottomLine")),
+        ("DS-202", "bottom lines that are not one sentence: %d"
+         % len(data.get("multiSentence", [])), not data.get("multiSentence")),
+        ("DS-205", "bottom lines behind a disclosure: %d" % len(data.get("bottomLineHidden", [])),
+         not data.get("bottomLineHidden")),
+        ("DS-203", "prose outranking the bottom line: %d" % len(data.get("outranked", [])),
+         not data.get("outranked")),
+        ("DS-216", "encodings of position: %d (%s)"
+         % (len(data.get("positionEncodings", [])), ", ".join(data.get("positionEncodings", []))),
+         len(data.get("positionEncodings", [])) <= 2),
+        ("DS-217", "labelled or interactive chrome items: %d" % data.get("chromeLabelled", 0),
+         data.get("chromeLabelled", 0) <= 12),
+        ("DS-217", "chrome height: %s du" % data.get("chromeHeightDu"),
+         data.get("chromeHeightDu", 999) <= 90),
         ("DS-111", "inline SVG figures: %d" % data["figures"], data["figures"] > 0),
         ("DS-132", "tabbables from off-screen slides: %d" % data["tabbablesOffscreen"],
          data["tabbablesOffscreen"] == 0),
@@ -342,6 +418,38 @@ def main(deck, skip_contract=False):
         ("DS-215", "text runs rendering under 4.5:1: %d"
          % len(data.get("renderedLowContrast", [])), not data.get("renderedLowContrast")),
     ]
+
+
+def main(deck, skip_contract=False):
+    render.self_test()
+    contrast.self_test()
+    contract.self_test()
+    html = open(deck, "r", encoding="utf-8").read()
+    print("browser: %s" % render.CHROME)
+    print("deck:    %s" % os.path.relpath(deck, ROOT))
+
+    print("\n=== stage 1  auto gate (static)")
+    failures = []
+    for rule, what, fn in STATIC:
+        good = fn(html)
+        if not good:
+            failures.append(rule)
+        print("  %-8s %-50s %s" % (rule, what, ok(good)))
+
+    print("\n=== stage 2  contrast (WCAG 2.2 AA, DESIGN-SYSTEM §7)")
+    cfails = contrast.audit(html, verbose=False)
+    print("  %d failure(s)" % len(cfails))
+    for theme, label, fg, bg, r, need in cfails:
+        print("    %-6s %-32s %.2f:1 (needs %.1f)" % (theme, label, r, need))
+        failures.append("contrast/%s" % label)
+
+    data, err = render_data(deck)
+    if not data:
+        print("\n=== stage 3  render gate: NO RESULT\n%s" % err[:400])
+        return 1
+
+    print("\n=== stage 3  render gate (measured, viewport %d)" % data["vw"])
+    rows = render_verdicts(data)
     for rule, what, good in rows:
         if not good:
             failures.append(rule)

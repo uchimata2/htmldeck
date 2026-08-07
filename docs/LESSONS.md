@@ -600,12 +600,37 @@ came with it — the split belongs to element kind, not to axis, because glyph r
 run's position and height as well as its width — and holding text placement to the non-text figure
 would have failed a provably-identical layout on 27 values.
 
+**It happened again, in a different part of the system, and that is what makes it a property rather
+than an accident.** [T-027](../tasks/T-027-specify-the-slide-deliverable-and-the-outline-contract.md)
+wrote five rules and labelled them `auto` and `render` — *a machine decides this* — and no machine
+did. [T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) found the
+reference deck carrying a bottom line on **none** of its twelve slides and **three** simultaneous
+encodings of position, while a 43-check gate reported zero failures. The label was a plan, and
+nothing distinguished a rule that was gated from a rule that merely intended to be. Two further
+turns of the same screw arrived in the same task:
+
+- **The gate was driving the deck through a piece of chrome a rule required deleting.** Both
+  `audit.py` and `render.py` clicked `#dots.children[i]`. Removing the dots made stage 3 print *NO
+  RESULT* and made `render.py measure` emit a DS-063 verdict computed from **16 values, all from
+  slide 1** — a tolerance line that read as a pass. Navigation now uses next/previous, which are
+  controls rather than position encodings.
+- **Two of the new checks were wrong when written**, and the variant suite is the only reason that
+  is known: the chrome item count scored every ribbon stage twice and reported 24 items for an
+  11-item chrome.
+
 **How to apply.** When a rule cites a measurement, check what the instrument sampled before
 trusting the number, and prefer a check that reports *how many values it compared* over one that
 reports a verdict — a count of zero is then visible instead of silent. **A gate must fail on
-"nothing measured", never pass on it.** This is **L-05** — *say which half you checked* — and
+"nothing measured", never pass on it** — including when the reason nothing was measured is that
+the gate could not drive the artifact. This is **L-05** — *say which half you checked* — and
 DS-191 arriving from underneath: a measurement confirms the geometry you suspect, and says
 nothing at all about geometry you never put in the probe.
+
+Two rules follow from the second instance. **A check label is a claim that something checks it**,
+so a rule marked `auto` or `render` with no implementation is a defect in the ruleset, not a
+to-do. And **a gate must not depend on anything a design rule is allowed to delete** — drive an
+artifact through the parts that exist because it has to work, not through the parts that exist
+because they currently look that way.
 
 ---
 
