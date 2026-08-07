@@ -292,8 +292,12 @@ def cmd_context(args):
     if t.blocks:
         out.append("")
         out.append("BLOCKS  (waiting on this one)")
+        # `context` keeps closed downstream tasks where the board drops them - it is read to
+        # *do* one task, and the closed ones are the trail explaining why it exists. They are
+        # marked, because the heading above claims they are waiting and they are not.
         for b in t.blocks:
-            out.append("  " + line(tasks[b], tasks))
+            flag = "" if tasks[b].is_open else "  <-- closed, not waiting"
+            out.append("  " + line(tasks[b], tasks) + flag)
 
     if t.parent and t.parent in tasks:
         out.append("")
@@ -366,9 +370,13 @@ def cmd_index(args):
     for t in ordered:
         link = "[%s](%s)" % (t.id, t.name)
         if t.is_open:
+            # Both sides of the same edge, filtered the same way: the board counts only open
+            # tasks as gated (TASK-WORKFLOW.md §6). A closed blocker no longer gates, and a
+            # closed downstream task is no longer waiting - listing it overstates how much
+            # this row unblocks, which is criterion (a) of T-030's tie-break rule.
             blockers = ", ".join(b for b in t.blocked_by
                                  if b in tasks and tasks[b].is_open) or "-"
-            downstream = ", ".join(t.blocks) or "-"
+            downstream = ", ".join(b for b in t.blocks if tasks[b].is_open) or "-"
             active.append("| %s | %s | %s | `%s` | %s | %s | %s |"
                           % (link, t.title, t.wp, t.status, t.phase,
                              blockers, downstream))
@@ -547,6 +555,8 @@ def cmd_decisions(args):
     register = load_decisions()
     for t in tasks.values():
         for d in t.decisions:
+            # Open only - the same rule the board applies to `blocks` and `blocked_by`
+            # (TASK-WORKFLOW.md §6). A closed task is not held up by anything.
             if d in register and t.is_open:
                 register[d]["blocks"].append(t.id)
 

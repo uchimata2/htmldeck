@@ -2,15 +2,15 @@
 id: T-031
 title: Stop the index `Blocks` column listing closed downstream tasks
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-029, T-030]
 work_package: none
 owner: maintainer
 created: 2026-08-07
-updated: 2026-08-07
+updated: 2026-08-08
 deliverables: []
 ---
 
@@ -83,21 +83,46 @@ order.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
+| 1 | Survey every place a derived edge list is printed and record which of them already filter, so the fix is to the inconsistency rather than to one line. | The three sites named in §3 |
+| 2 | `cmd_index`: filter the *Blocks* column to open tasks, matching the *Blocked by* side, and state the rule in a comment at the point both comprehensions are read. | [`tools/tasks/task.py`](../tools/tasks/task.py) |
+| 3 | `cmd_context`: keep closed downstream tasks and mark them, mirroring how `BLOCKED BY` flags the ones still open — the section header claims they are waiting, and for a closed one that is false. | same |
+| 4 | Write the rule into [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6, so the next reader of either comprehension has something to check them against. | [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) |
+| 5 | Verify against a constructed open→closed edge, because the instance that raised this closed in the meantime (see §3) and the live board no longer shows it. | Recorded in §4 |
+| 6 | Regenerate [`README.md`](README.md), run `check --closing`, and state what moved in the board. | [`README.md`](README.md) |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The instance that raised this closed before the fix landed, so the board diff is empty** —
+  2026-08-08. T-015 is `done`, and a closed task's row moves to the *Closed* table, which has no
+  *Blocks* column. Scanning every edge in the backlog, **no open task currently has a closed
+  downstream task**, so `index` regenerated `README.md` byte-identical. The defect is latent, not
+  gone: the comprehension was still unfiltered, and the next `blocked_by` edge to close would have
+  reproduced it. Verified against a constructed edge instead — see §4.
+- **Three sites print a derived edge list; one was wrong** — 2026-08-08. `cmd_index`'s *Blocked by*
+  column already filtered to open, and `cmd_decisions` already filtered its "blocks" list with
+  `t.is_open`. Only `cmd_index`'s *Blocks* column did not. Both correct sites gained a comment
+  citing the rule, so the next reader has something to check them against rather than re-deriving
+  the argument — the fix is to the inconsistency, per §1's scope.
+- **`context` marks closed downstream tasks rather than only showing their status** — 2026-08-08.
+  `line()` already printed `done`, but the section heading says *"waiting on this one"*, which is
+  false for a closed task. `<-- closed, not waiting` mirrors the `<-- still open` flag the
+  `BLOCKED BY` section uses, and open downstream tasks stay unflagged so the marker is signal.
 
 **Outputs produced**
-- `tools/tasks/task.py`
+- `tools/tasks/task.py` — `cmd_index` (filter + rule comment), `cmd_context` (mark closed
+  downstream), `cmd_decisions` (rule comment; behaviour unchanged).
+- [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6 — *"Generated views count only open tasks as gated"*,
+  with the board/`context` split as a table.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `index` drops closed tasks from the *Blocks* column, and T-015's row no longer names T-003 | partial | The filter is in and verified; **the named instance is unverifiable and was already gone** — T-015 closed on 2026-08-07, so it has no *Blocks* column to check. Verified instead against a constructed pair (open `T-900` ← closed `T-901`, `blocked_by: [T-900]`): the board printed `Blocks: -` where the old comprehension would have printed `T-901`. Both scratch files removed afterwards. |
+| `context` shows the same set of downstream tasks as the board, closed ones marked or omitted consistently | pass | Same rule, stated once in `TASK-WORKFLOW.md` §6 and cited from all three call sites. `context T-900` printed `T-901 done ... <-- closed, not waiting`; `context T-002` printed its two open downstream tasks unflagged. |
+| A task whose downstream tasks are *all* closed reads as blocking nothing, not as blocking a list | pass | `T-900`'s board row read `Blocks: -`. The existing `or "-"` handles it once the comprehension filters. |
+| `check --closing` still passes, and the pointer count does not fall | pass | `OK - 33 tasks, 493 document pointers, 0 broken`, no cycles — the same 493 as before the change. `index` reported 10 active / 23 closed and left `README.md` byte-identical (see §3). |
 
 **Child fix tasks raised**
 - none
@@ -106,5 +131,6 @@ order.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | → done | Worked through `plan`, `implement` and `review` in one pass. **The board did not move**: T-015 — the row that raised this — closed on 2026-08-07, and no other open task currently has a closed downstream task, so `index` regenerated `README.md` byte-identical and the fix is preventive rather than corrective. Verified against a constructed open→closed edge instead, then removed it. Of the three sites §1 named, only one was wrong; the two already-correct ones gained a comment citing the rule, because the reason this survived repeated reading was that nothing was written down for either comprehension. **The `TASK-WORKFLOW.md` §6 half is the durable part** — the code now cites a rule instead of implying one. |
 | 2026-08-07 | (no change) | **Answered by the owner: the proposal stands as written** — board drops, `context` keeps with status, and the rule goes into [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6. §1 now has no open question, and the task is a three-part edit with a stated rule behind it rather than a one-line filter. **The `TASK-WORKFLOW.md` half is the part that stops this recurring**: the defect was two comprehensions disagreeing with nothing written down for either, which is how it survived being read repeatedly. |
 | 2026-08-07 | → proposed | Raised from a finding carried in the session handoff rather than in any durable home — the reason it is a task now. Found while reading the board to start [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md): its *Blocks* column names `T-003`, which is `cancelled`. The cause is one unfiltered comprehension in `cmd_index`, and the same asymmetry may exist in `cmd_context`. Cosmetic in effect, structural in kind — the board is what a session reads to choose work, and the *Blocks* column is criterion (a) of T-030's tie-break rule. |

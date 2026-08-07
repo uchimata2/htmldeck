@@ -144,6 +144,19 @@ python tools/tasks/task.py deliverables     # every declared output, and whether
 `index` rewrites only the block between its generated markers; hand-written sections of
 `README.md` survive it.
 
+**Generated views count only open tasks as gated.** Both directions of an edge are filtered the
+same way: a closed task neither gates anything nor waits on anything, so it is absent from a
+*Blocked by* column, a *Blocks* column, and a decision's "blocks" list. The two views then differ
+on purpose, and only in what they do with the closed ones:
+
+| View | Read to | Closed tasks on an edge |
+| :--- | :--- | :--- |
+| `index` (the board) | **choose** what to work on | Dropped. The board has no column for a status, and a closed downstream task overstates how much a row unblocks. |
+| `context` | **do** one task | Kept, with their status and marked as not waiting. They are the trail explaining why the task exists. |
+
+Stated here because it was previously implied by two comprehensions that disagreed with each
+other, which is how it survived being read repeatedly (**T-031**, **L-08**).
+
 **What `check` enforces**
 
 - `status` and `phase` are in the vocabularies in §3.
