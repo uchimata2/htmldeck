@@ -173,6 +173,14 @@ governing idea (one line)
                   build, in batches ─→ review of the build ─→ OWNER REVIEW ─→ fix
 ```
 
+> **This diagram is the corpus record, and it is missing a stage — corrected 2026-08-07 while
+> [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) tried to wire it.** There is no
+> **outline** node here, although [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) §3.5 makes one
+> `hard`: DS-210 says an outline exists before any slide does, and DS-212 says the slide-by-slide
+> spec is *expanded from it*. The decided pipeline — outline included, both gates placed — is under
+> the gates row in 3.2. Kept as it was, with this note, because the diagram's job is to record what
+> R1 §§2/10/14 show; the additions are decisions, and decisions belong in 3.2.
+
 Per-slide, the spec fixes **structure · text · visuals · animations · interactive elements · title ·
 bottom line** (R1 §2). That last field is worth naming: the slide-by-slide spec is the first place
 the deliverable contract (DS-201 to DS-209) can be satisfied at all, which is the contract
@@ -200,8 +208,34 @@ source skill agrees — but *should the specification be a document somebody can
 | **Slide-by-slide spec** | **Adopt.** The seven fields from R1 §2, one row per slide. It is the artifact the spec review reads and the input build mode consumes. | It is the only place the pipeline's two cheapest reviews have anything to act on, and the only place a bottom line exists before it is a layout problem. |
 | **Spec review** | **Adopt, inside critique mode as a second format — not a mode of its own. And it gets the rubric.** | R1 §14 proves two critique formats and both are critiques; the input type differs, not the job. Splitting them doubles the mode surface for a difference in argument type. See 3.3 for which dimensions it can carry. |
 | **Batched build** | **Adopt as the default.** Build a few slides, run the cheap half of the loop, then continue. | `O` (A7), and the mechanism is DS-136: interaction patterns are built once and reused, so **a component defect found in batch one is fixed once instead of in twelve places.** That, not scoring, is what batching buys. |
-| **Approval gates** | **Two, and each is independently skippable — see 3.5.** *(a)* **Outline sign-off** after the spec review, carrying its *"Open — needs a decision"* items; *(b)* **detailed-spec sign-off** before the build. The fix cycle is not a gate. | R1 §10's pipeline has exactly one human review; R1 §14 shows the spec review escalating open decisions, which is the second. R1 §15 is explicit that the owner wants to be asked: *"Please ask, argue, do not accept and guess blindly."* |
+| **Approval gates** | **Two, and each is independently skippable — see 3.5.** *(a)* **Outline sign-off** on the outline, before it is expanded; *(b)* **detailed-spec sign-off** after the spec review, carrying its *"Open — needs a decision"* items. The fix cycle is not a gate. **Placement corrected 2026-08-07 — see under this table.** | R1 §10's pipeline has exactly one human review; R1 §14 shows the spec review escalating open decisions, which is the second. R1 §15 is explicit that the owner wants to be asked: *"Please ask, argue, do not accept and guess blindly."* |
 | **Iteration loop** | **Runs before the owner review, not after.** | See 3.4 — this task's §1 recorded it as unsettled, and it is not. |
+
+**The decided pipeline, with the outline restored and both gates placed.** Settled by the owner
+2026-08-07, on a contradiction [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md)
+raised: the gates row above originally put outline sign-off *"after the spec review"*, which
+`DESIGN-SYSTEM.md` §3.5 contradicts and which **3.4 of this section argues against on its own
+terms** — the cut decision is what protects the loop from wasted work, so it has to arrive *before*
+the expansion it is meant to save, not after it.
+
+```
+governing idea (one line)
+    └─→ requirements ─→ foundation spec ─→ outline ─→ OUTLINE SIGN-OFF
+                                                            │
+                    ┌───────────────────────────────────────┘
+                    ▼
+        slide-by-slide spec ─→ REVIEW OF THE SPEC ─→ DETAILED-SPEC SIGN-OFF
+                                                            │
+                    ┌───────────────────────────────────────┘
+                    ▼
+              build, in batches ─→ review of the build ─→ OWNER REVIEW ─→ fix
+```
+
+**The rule, stated so it survives the diagram: each gate immediately follows the artifact it gates,
+and immediately precedes the expensive expansion of it.** The accepted cost is that the first gate
+signs off an **unreviewed** outline — DS-213 reviews the *specification*, so at outline time there
+is nothing yet to review, and an outline is three fields per slide (DS-211), which is cheap to read
+and cheap to cut from.
 
 ### 3.3 What the spec review can actually score
 
@@ -352,6 +386,7 @@ one in §3.5 if it should be the other way.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | (no change) | **One decision in §3.2 was wrong and is corrected — the outline gate's placement.** It read *"outline sign-off **after the spec review**"*, which contradicts [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) §3.5 — DS-210 puts the outline before any slide, DS-212 expands the slide-by-slide spec *from* it — and contradicts **§3.4 of this task**, which argues the cut decision is what protects the loop from wasted work and therefore has to precede the expansion it saves. Found by [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md), which had to wire the gates and could not wire a contradiction; ruled by the owner the same day. **The rule now stated so it survives the diagram: each gate immediately follows the artifact it gates.** §3.1's diagram was left as the corpus record and annotated — the outline it omits is a `hard` rule but not an R1 observation — and the decided pipeline lives under §3.2's table. `BRIEF.md` § *What to build* carried the same omission and is corrected too. **This is the second thing this task recorded that its own later sections disagreed with**, after §1's provenance claim; both were caught by a downstream task reading it closely rather than by the review here. Generalised as **L-33** in [`LESSONS.md`](../docs/LESSONS.md) — a decision recorded in prose is unchecked until something has to wire it. |
 | 2026-08-07 | → done | **The pipeline is adopted whole — all seven stages, none rejected.** Two were reshaped rather than taken as proposed: the foundation spec is a **selection sheet** under one theme, and the spec review is a **format of critique mode**, not a fourth mode. The owner settled the conflict this task existed for by splitting a pair it had treated as one — **specification files unconditional, gates optional and independently skippable** — which leaves the two-question promise intact, because the promise constrains what the user supplies in advance and a file costs nothing until it is opened. Two corrections to this task's own §1: R4 grades A4 and A6 as **inherited**, so the specify-then-review sequence is table stakes and the *document* is the departure; and the corpus **does** settle loop placement — R1 §10 runs the machine review before the owner review, which `EVALUATION.md` §6.4 was already relying on. The finding worth carrying is §3.3: **six of the ten dimensions are checkable against a specification, three of them among the five no check can reach.** Amended `BRIEF.md` (*What to build*, *Interface*) and `EVALUATION.md` §6.4; propagated to T-002, T-004, T-015; cancelled T-003. |
 | 2026-08-06 | (no change) | **A constraint on the pipeline, now measured rather than argued.** [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md) validated the rubric against a seeded-defect deck and found the split: **five of the ten dimensions are catchable mechanically and five are not.** S1 Claim, S2 Evidence, S4 Density, D1 Spine and D4 Consistency are invisible to any static or measured check, so **the pipeline cannot end at the gate** — a gate-only run ships a deck whose headline is a topic label and whose figures contradict each other. F-13 also reframes the loop's cap: it governs measurement rounds, not fixes. |
 | 2026-08-06 | → proposed | Raised when the owner described their authoring process and it matched nothing in the repository — despite R1 having captured it and R4 having graded it owner-authored with zero prior art. The gap is between research and the build plan, not in the research. |

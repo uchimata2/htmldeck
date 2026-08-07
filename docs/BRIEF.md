@@ -196,12 +196,24 @@ every place it is reused.
 
 ```
 governing idea (one line)
-    └─→ requirements ─→ foundation spec ─→ slide-by-slide spec ─→ spec review
-                                                                       │
-                       ┌───────────────────────────────────────────────┘
-                       ▼
-                 build, in batches ─→ build review ─→ owner review ─→ fix
+    └─→ requirements ─→ foundation spec ─→ outline ─→ OUTLINE SIGN-OFF
+                                                            │
+                    ┌───────────────────────────────────────┘
+                    ▼
+        slide-by-slide spec ─→ spec review ─→ DETAILED-SPEC SIGN-OFF
+                                                            │
+                    ┌───────────────────────────────────────┘
+                    ▼
+              build, in batches ─→ build review ─→ owner review ─→ fix
 ```
+
+> **Corrected 2026-08-07.** This diagram had no **outline** in it, although
+> [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) DS-210 makes one `hard` and DS-212 says the slide-by-slide
+> spec is expanded from it — and it placed neither gate. Raised by
+> [T-015](../tasks/T-015-plugin-scaffold-and-the-two-question-interface.md), which had to wire the
+> gates and could not wire a contradiction. **The rule the owner settled: each gate immediately
+> follows the artifact it gates**, so the outline is signed off before it is expanded, and the spec
+> review's open decisions land at the gate directly after it. T-020 §3.2.
 
 **Two of the four reviews happen before any HTML exists, and that is the point.** Six of the ten
 rubric dimensions are checkable against a specification — S1 Claim, S2 Evidence, D1 Spine, D2

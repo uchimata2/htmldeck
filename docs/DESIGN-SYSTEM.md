@@ -224,6 +224,12 @@ named it.
 **Where the outline sits in the authoring pipeline is [T-020](../tasks/T-020-model-the-authoring-pipeline-not-just-the-modes.md)'s.
 What it must contain is a property of a good deck, so it is here.**
 
+> **Settled 2026-08-07, and this section is what settled it.** T-020 §3.2 had placed outline
+> sign-off *after* the specification review, which the DS-210 → DS-212 order below contradicts.
+> The owner ruled for this order: the outline is signed off **before** it is expanded into the
+> slide-by-slide specification. T-020 §3.2 carries the corrected pipeline; nothing in this table
+> changed.
+
 | ID | Rule | Label | Check |
 | :--- | :--- | :--- | :--- |
 | DS-210 | **An outline exists before any slide does**, and covers every topic the deck is expected to carry. | hard | auto |
