@@ -24,7 +24,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | WP2 | `proposed` | specify | - | T-002 |
 | [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004, T-005, T-028 | - |
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | T-002 |
-| [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | WP1 | `proposed` | specify | - | - |
+| [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | WP1 | `specified` | plan | - | - |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
 | [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) | Build the reflow view and enforce the resolution contract | WP2 | `proposed` | specify | - | - |
 | [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | WP2 | `proposed` | specify | - | T-008 |
