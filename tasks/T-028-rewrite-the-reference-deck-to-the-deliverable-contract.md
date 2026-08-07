@@ -6,7 +6,7 @@ status: done
 phase: review
 parent: T-027
 blocked_by: []
-related: [T-002, T-005, T-021, T-024, T-025]
+related: [T-002, T-005, T-021, T-024, T-025, T-033]
 work_package: WP2
 owner: maintainer
 created: 2026-08-06
@@ -228,7 +228,13 @@ pair away from each other.
   judgement rules and adding a machine check for them would be the L-36 failure in a new place.
 
 **Child fix tasks raised**
-- none
+- none. One **finding** was raised as a sibling rather than a child:
+  [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md) — obeying DS-216 and DS-217 meant
+  deleting the twelve dots that **DS-131 lists as required navigation**, so the reference deck now
+  departs from a rule in the ruleset it exists to demonstrate. All three are `default`, so the
+  departure is legitimate; the ruleset contradicting itself is not. Not fixed here because scope
+  put rule changes out, and not appended to T-025 — T-028's stated route for such findings —
+  because T-025 is `done`.
 
 ## Log
 
