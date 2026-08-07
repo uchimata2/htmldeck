@@ -438,6 +438,15 @@ and initially scoped, as a six-pointer problem. Six was the *marginal* cost of o
 The *standing* cost was 110, and nothing in the discovery hinted at the difference. **What you
 measure when you trip a rule is what tripping it cost, not what the rule costs.**
 
+**A second case, and it is the same shape read from the other end.** A check on the plugin package
+flagged a working-directory-relative path only when the sentence around it contained the word
+*load* — an inclusion keyed on a value rather than an exemption, but with the identical property:
+its size is whatever happens to match. `Build to <a doc>` is a load instruction and does not say
+*load*, so it passed. Replacing the keyed rule with a blanket one — **every** bare repo-relative
+path in a skill file — found **13 live mis-resolutions**, four of them inside the load table that is
+the skill's entire routing job. **Inclusions key on values as readily as exemptions do**, and the
+tell is the same: the rule names a token instead of a position.
+
 **How to apply.** Prefer an exemption keyed on the **site** — this field, this file, this call —
 over one keyed on a **value**, because a site-keyed rule has a size you can see and cannot widen
 when unrelated content starts matching. Where a value-keyed exemption is genuinely needed, **count
@@ -517,6 +526,31 @@ read the decision for self-consistency **before** absorbing it into a scope: tha
 validation pass, so spend it there rather than assuming a `done` task is coherent. And when the
 contradiction is found, fix **every** document that carried it, including the one a reader reaches
 first — correcting the decision alone leaves the wrong version in the specification.
+
+### L-34 — A test fixture is indistinguishable from the real thing, which is the point and the problem
+
+A fixture earns its keep by looking exactly like live input. Any *other* scanner over the same
+repository therefore reads it as live input, because there is nothing in the text to read
+differently. Two checks that are individually right then contradict each other, and the one that
+loses is usually the one that runs second.
+
+The case: a scaffold check needed fixtures naming plausible files — a manifest, a skill body, a
+document one of them points at — to demonstrate it catches a dead pointer. Written as string
+literals, those names were then picked up by the project's *reference* check as pointers into the
+repository, and four of them reported dead. Both checks were correct. The fixture names were not
+references; nothing said so.
+
+**The fix is not an exemption, which would be L-30 again.** Assembling the paths from components
+makes them what they already were — structured data rather than prose — and the reference check
+already draws exactly that distinction for front-matter, having reached it independently and from
+the other side. **When two checks in one repository disagree about a string, one of them is reading
+structure as prose**, and naming which is cheaper than carving either one back.
+
+**How to apply.** Before writing realistic fixture data, ask what else scans this repository. Give
+fixtures a form the other checks already exclude — assembled values, a directory the ignore rules
+cover, a file type nobody parses — rather than a carve-out keyed on their content. And when a check
+fails on its own test data, do not reach for the exemption first: the collision is usually telling
+you that one of the two is treating a structured record as prose.
 
 ---
 

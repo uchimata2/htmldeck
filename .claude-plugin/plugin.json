@@ -1,0 +1,16 @@
+{
+  "name": "htmldeck",
+  "version": "0.1.0",
+  "description": "Single-file HTML presentations that don't look generated. One .html that renders offline with zero external references — real diagrams, progressive disclosure, considered typography. Asks two questions and nothing else.",
+  "author": "the htmldeck maintainers",
+  "license": "MIT",
+  "keywords": [
+    "presentation",
+    "slides",
+    "deck",
+    "html",
+    "offline",
+    "svg",
+    "critique"
+  ]
+}
