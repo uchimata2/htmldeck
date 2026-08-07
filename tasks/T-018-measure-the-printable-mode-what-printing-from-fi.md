@@ -2,8 +2,8 @@
 id: T-018
 title: Measure the printable mode — what printing a deck from `file://` actually costs
 type: research
-status: specified
-phase: plan
+status: in_progress
+phase: implement
 parent: null
 blocked_by: []
 related: [T-002, T-005, T-017, T-021]
@@ -107,21 +107,89 @@ gesture rows are collected by hand. `tools/portability/run_probes.py` already ca
 
 ## 2. Plan
 
+**Approach decisions**
+
+- **Extend `probe.html`, do not build a second probe** — the three-channel readback, the stale-window
+  guard and the version capture all exist and all took a bug each to get right. The print rows are
+  four automatic rows and one gesture row in the existing structure.
+- **`window.print()` is a gesture row, not an automatic one, and its timeout is minutes not
+  seconds.** It raises a modal dialog and does not return until that dialog is dismissed, so an
+  automatic row would report `timeout` on a feature that works — the same false negative shape as
+  the fullscreen row that nearly libelled the contract (**L-17**). The operator is present anyway,
+  by the gesture rule.
+- **`beforeprint` / `afterprint` are measured, and they are the rows that matter most.** If they
+  fire from `file://`, the deck can **open every progressive-disclosure element before the print
+  begins and close it afterwards** — which moves disclosure content from the "cannot survive print"
+  list to the "survives, if the deck cooperates" list. §1's honest-guarantee criterion is written
+  assuming the pessimistic answer; these two rows are what decide whether that assumption holds.
+  Nothing in R6 measured them.
+- **Two rendering variants, built from `examples/reference-deck.html`, kept out of the repository.**
+  Same deck, same content, two print stylesheets — artefacts go to `.assets-cache/` like every other
+  probe output, and the repository keeps the script and the numbers (R6's rule). Whether either
+  stylesheet lands in the reference deck for good is [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md)'s
+  and [T-021](T-021-the-reflow-view-and-the-resolution-contract.md)'s business, not this task's.
+- **Steps 2 and 4 are operator-run and scripted in advance.** Both need a real human click, and
+  step 4 also needs the print dialog's destination and the save path chosen by hand. Written as a
+  numbered script before the run rather than improvised during it, because a mis-run gesture row is
+  indistinguishable from a refusal (**L-17** again).
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Extend the portability probe with the print rows | probe rows |
-| 2 | Run them, Chrome and Edge, offline, clean profile, plus a literal double-click | result set |
-| 3 | Build a 12-slide deck with a print stylesheet and print it to a file | printed artefact |
-| 4 | Look at the printed output and record what survived and what did not | findings |
-| 5 | Measure the stylesheet's size cost | figure |
-| 6 | Write the note and rule on rule 5 | `R7-printable-mode.md`, under `docs/research/` |
+| 1 | Add the print rows to `build_probes.py` — `matchMedia('print')` already exists; add `beforeprint`/`afterprint` firing, `print-color-adjust` support, `@page` support, and `window.print()` as a fifth gesture row | probe rows, self-test still passing |
+| 2 | Run them: clean profile and literal double-click, Chrome and Edge, offline, with the operator's clicks | result set, with both browser versions |
+| 3 | Build the two rendering variants from the reference deck — paginated stage, and reflow document | two variants in `.assets-cache/` |
+| 4 | Print each variant to a file through the browser's own dialog, both browsers | four PDFs |
+| 5 | Look at all four, page by page, and record what survived and what did not | findings, per rendering |
+| 6 | Measure each stylesheet's size cost the way R5 measures | two figures |
+| 7 | Rule: which rendering the printable mode uses, whether it shares one with the reflow view, and whether rule 5 survives as written | the ruling |
+| 8 | Write the note | `R7-printable-mode.md`, under `docs/research/` |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+
+- **A separate `probe-print.html`, not more rows in `probe.html`** — 2026-08-07. This reverses §2's
+  first approach decision, and the reason is the second one: the print dialog is **modal**. A print
+  row inside `probe.html` blocks the shared title channel and the shared result payload, so a run
+  that stalled on a dialog would cost the 91-row matrix that was carrying it. `probe-3d.html`
+  already establishes the pattern of a focused second page with its own light plumbing, so this is
+  the file's habit rather than a departure from it. The 91 rows are also left untouched, which
+  keeps R6's numbers comparable.
+- **The no-activation attempt runs *before* the download, not after** — 2026-08-07. Its result then
+  travels in the JSON rather than only in a title the gesture payload later overwrites. The
+  accepted cost is that a browser which does **not** gate `print()` blocks there until the operator
+  presses Escape; the page banner and the runner script both say so, and the block is itself the
+  measurement. The runner's download wait is 150 s on this page for the same reason — 25 s would
+  report a working run as a download failure.
+- **`window.print()` is measured twice, and the pair is the row** — 2026-08-07. Once with no
+  activation and once with a live one. Neither answers "is it gesture-gated from `file://`" alone,
+  and reporting either alone is L-17's shape: a harness failure wearing a measurement's clothes.
+- **Tier-two panels stay hidden in the paginated variant** — 2026-08-07. They are absolutely
+  positioned overlays; unhiding them onto a fixed 1920×1080 box overlaps the content they explain.
+  The loss is recorded as a finding rather than papered over. **The reflow variant does not have
+  this problem** — `buildDoc()` already clones every slide and opens every panel (DS-073), so tier
+  two travels into that rendering by construction, whether or not the reader ever switched views.
+- **The variants are artefacts and stay out of the repository** — 2026-08-07. `.assets-cache/print/`,
+  gitignored, per R6's rule that the repository keeps the script and the numbers. Neither
+  stylesheet is proposed for the reference deck here; that is T-021's and T-028's call.
+- **Steps 2 and 4 cannot be run by the agent** — 2026-08-07. Not a scheduling preference: **L-15**
+  and R6 §1 prohibit answering these questions from an in-tool preview pane, because it reports
+  capabilities as available that a real restricted origin denies, and the gesture must be a real
+  human one per R6 §3. Both are operator-run, scripted in advance.
 
 **Outputs produced**
+- [`tools/portability/build_probes.py`](../tools/portability/build_probes.py) — builds
+  `probe-print.html`: 7 automatic rows, 1 no-activation attempt, 1 gesture attempt. Its self-test
+  gained checks for the placeholders, the six named rows, and **the absence of synthetic input**,
+  so the technique R6 §3 withdrew cannot creep back in unnoticed.
+- [`tools/portability/run_probes.py`](../tools/portability/run_probes.py) — the print probe's own
+  operator script, and a 150 s download wait on that page.
+- [`tools/deck/print_variants.py`](../tools/deck/print_variants.py) — emits both renderings from
+  the committed deck, self-testing the replacement anchor first.
+- **Size cost, measured (step 6, done ahead of the run):** the paginated stylesheet is **1 811 B**
+  and the reflow one **1 110 B**. Against the deck as committed — which already carries a 232 B
+  print block — the deltas are **+1.5 KB** and **+0.8 KB** on a 178.2 KB deck. Neither is a reason
+  to refuse printing.
 - `R7-printable-mode.md`, under `docs/research/` — **written as a name, not a path, because it
   does not exist yet.** `check` reports a pointer-shaped string to a missing file as a dead
   pointer, and since T-029 there is no exemption for declared deliverables. The front-matter
@@ -140,6 +208,7 @@ gesture rows are collected by hand. `tools/portability/run_probes.py` already ca
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-07 | → planned | Eight steps, two of them operator-run. The plan found something §1 had not: **`beforeprint`/`afterprint` were never measured by R6**, and they decide how much of §1's honest-guarantee criterion is even true. If they fire from `file://`, a deck can open every disclosure element before printing and close it after, which moves progressive-disclosure content out of the "cannot survive print" list — the pessimistic assumption §1 was written on. Two rows, and they may be the most load-bearing measurement in the task. Also settled: `window.print()` is a **gesture** row with a minutes-long timeout, because it raises a modal dialog and does not return until dismissed — as an automatic row it would report `timeout` on a working feature, which is L-17's shape exactly. |
 | 2026-08-07 | → specified | §1 accepted, with one scope change the owner ruled on. It had scoped in *"one slide per printed page"* — a pre-commitment the only existing implementation contradicts: the reference deck's `@media print` block hides the stage and prints the **reflow document**. §1 assumed pagination, the code assumed document flow, and neither task had ruled. **Ruling: measure both renderings on the same deck and let the printed evidence decide**, rather than settling by assertion which of the two the printable mode uses. It costs one extra stylesheet in a run that happens anyway, and it converts [T-021](T-021-the-reflow-view-and-the-resolution-contract.md)'s open question — *do the reflow view and the print stylesheet share one document rendering?* — from a question T-021 inherits into an acceptance criterion here. Two criteria widened, one added, the size measurement made per-rendering so the choice is priced. Also settled without needing a decision: the print pass takes its gesture by real human click through the existing `ask_for_gesture()`, per R6 §3, and prints through the browser's own dialog rather than a headless renderer — both now written into *Method* so the plan cannot drift into them. §2's steps table still reads as written before this ruling and is the next phase's work. |
 | 2026-08-07 | (no change) | `related` gains [T-021](T-021-the-reflow-view-and-the-resolution-contract.md), added by [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md). T-021 carries the open question *do the reflow view and the print stylesheet share one document rendering?* — and it is answerable only with the measurement this task takes. The reference deck's `@media print` block already prints the reflow view, so the two modes are coupled in the only implementation that exists, without either task having ruled that they should be. |
 | 2026-08-06 | (no change) | [`examples/reference-deck.html`](../examples/reference-deck.html) now carries a minimal `@media print` block that prints the reflow view rather than the stage. **It has never been printed or measured** — it is a starting point for this task, not a result. |

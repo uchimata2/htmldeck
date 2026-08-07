@@ -237,6 +237,26 @@ def ask_for_gesture():
     print("       The page names the row it is waiting for. Waiting up to 120s.")
 
 
+def ask_for_print_gesture():
+    """The print probe's operator script, which differs from the four-row one above.
+
+    Two attempts are measured, not four rows: `window.print()` with no user activation and again
+    with a live one. The pair is what says whether printing is gesture-gated from `file://` - one
+    alone cannot. Both may raise a MODAL dialog that blocks the page until it is dismissed, which
+    is why this is scripted here rather than improvised at the keyboard: a mis-run gesture row is
+    indistinguishable from a refusal (L-17)."""
+    print("\n   >>> PRINT PROBE - read this before touching the window.")
+    print("       1. A print dialog may open on its own, before you click anything. That is the")
+    print("          no-activation row, and the dialog appearing IS the result. Press ESCAPE.")
+    print("          If no dialog appears, that is equally a result - the row records it.")
+    print("       2. The page then asks for one click. Click anywhere in it.")
+    print("       3. A print dialog opens again, this time with a real activation behind it.")
+    print("          Press ESCAPE again - nothing needs to be printed from here.")
+    print("       Do not print to a printer or to a file from this probe. The rendering")
+    print("       comparison is a separate step, on the deck variants, not on this page.")
+    print("       Waiting up to 120s.")
+
+
 # --------------------------------------------------------------------- runners
 
 def run_clean(page, browser, offline, shot=False):
@@ -280,11 +300,19 @@ def run_clean(page, browser, offline, shot=False):
         print("   %d probe window(s) already open - their titles will be ignored" % len(stale))
     proc = subprocess.Popen(args)
     try:
-        auto = wait_for_file(downloads, "-results.json", 25)
+        # The print probe emits AFTER its no-activation attempt, which may sit on a modal dialog
+        # for as long as the operator takes to notice it. 25s would report a working run as a
+        # download failure and send it down the title-channel fallback for nothing.
+        if page == "probe-print.html":
+            ask_for_print_gesture()
+            wait = 150
+        else:
+            wait = 25
+        auto = wait_for_file(downloads, "-results.json", wait)
         if auto:
             print("   automatic rows -> %s" % os.path.basename(auto))
         else:
-            print("   no results file after 25s; falling back to the title channel")
+            print("   no results file after %ds; falling back to the title channel" % wait)
             payload = harvest_title_channel(ignore=stale)
             if payload:
                 print("   title channel: %s" % payload[:160])
@@ -297,8 +325,9 @@ def run_clean(page, browser, offline, shot=False):
             else:
                 print("   screenshot     -> failed")
 
-        if page == "probe.html":
-            ask_for_gesture()
+        if page in ("probe.html", "probe-print.html"):
+            if page == "probe.html":          # the print probe's script was printed before the wait
+                ask_for_gesture()
             gesture = harvest_title_channel(seconds=120.0, want_prefix="G:", ignore=stale)
             if gesture and gesture.startswith("G:"):
                 rows = [r for r in gesture[2:].split(";") if r]

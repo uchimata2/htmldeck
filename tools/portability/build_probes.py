@@ -107,12 +107,34 @@ def self_test():
     if seen != [b"IHDR", b"IDAT", b"IEND"]:
         failures.append("png_bytes: chunk order %r" % (seen,))
 
+    # The print probe is a template, so what can be checked here is that it says what it must and
+    # not what it must not. Both halves have cost something before: a placeholder left unreplaced
+    # ships a page that reports nothing, and synthetic input is the one technique R6 §3 withdrew.
+    for token in ("__TAG__", "__TITLE_CHUNK__"):
+        if token not in PRINT_PROBE_HTML:
+            failures.append("print probe lost its %s placeholder - build() would substitute "
+                            "nothing and the page would report under the wrong name" % token)
+    for row in ("print.api-present", "print.no-activation", "print.with-activation",
+                "print.page-rule", "print.color-adjust", "print.break-control"):
+        if row not in PRINT_PROBE_HTML:
+            failures.append("print probe is missing the %s row" % row)
+    # The pair is the measurement: either one alone cannot say whether print() is gesture-gated.
+    if not ("print.no-activation" in PRINT_PROBE_HTML
+            and "print.with-activation" in PRINT_PROBE_HTML):
+        failures.append("print probe needs both attempts - one alone answers nothing")
+    for banned in ("dispatchEvent(new MouseEvent", "keybd_event", "SendKeys", "mouse_event",
+                   "SetForegroundWindow"):
+        if banned in PRINT_PROBE_HTML:
+            failures.append("print probe contains synthetic input (%s) - withdrawn by R6 §3, "
+                            "do not reintroduce" % banned)
+
     if failures:
         print("SELF-TEST FAILED")
         for f in failures:
             print("  - " + f)
         return False
-    print("self-test ok  (chunk_text, png_bytes: signature, IHDR, CRCs, IEND)")
+    print("self-test ok  (chunk_text, png_bytes: signature, IHDR, CRCs, IEND;"
+          " print probe: placeholders, 6 rows, no synthetic input)")
     return True
 
 
@@ -1011,6 +1033,233 @@ var SPECIFIER = './three.core.min.js';
 """
 
 
+# --------------------------------------------------------------------------- print probe
+
+PRINT_PROBE_HTML = r"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>htmldeck print probe</title>
+<style>
+body{margin:0;padding:18px 20px;background:#0f1113;color:#e8e6e1;
+     font:13px/1.55 ui-monospace,Consolas,monospace}
+h1{font-size:15px;margin:0 0 4px}
+.note{color:#9aa0a6;max-width:70ch;margin:0 0 14px}
+.warn{background:#3a2a12;border-left:3px solid #e0b25f;padding:9px 12px;margin:0 0 14px;
+      max-width:70ch;color:#f0e3c8}
+table{border-collapse:collapse;margin:0 0 14px;width:100%;max-width:110ch}
+td{padding:2px 10px 2px 0;vertical-align:top;border-bottom:1px solid #1e2226}
+.id{color:#9aa0a6;white-space:nowrap}
+.code{white-space:nowrap;font-weight:700}
+.PASS .code{color:#7fc98b}
+.FAIL .code{color:#e2807a}
+.INFO .code{color:#e0b25f}
+.d{color:#cfd3d6}
+#ask{background:#14304a;border-left:3px solid #6fb0e8;padding:9px 12px;max-width:70ch}
+</style>
+</head>
+<body>
+<h1>htmldeck print probe &mdash; T-018</h1>
+<p class="note">R6 measured <code>matchMedia('print')</code> and stopped: a print stylesheet can be
+authored and detected, but nothing said whether printing itself works from a restricted origin.
+These rows are that half. Separate from <code>probe.html</code> on purpose &mdash; the print dialog
+is <em>modal</em>, and a row that blocks the shared title channel would cost the 91-row payload.</p>
+
+<div class="warn" id="warn">If a print dialog opens <strong>before this page asks you to click</strong>,
+that is the <code>print.no-activation</code> row and the dialog itself is the finding.
+<strong>Press Escape</strong> &mdash; do not print from it. The run continues on its own.</div>
+
+<div id="out"></div>
+<p id="ask">starting&hellip;</p>
+
+<script>
+// Pure measurement. Nothing here synthesises a click, a keystroke or a dialog dismissal: the
+// activation is a real human one, as R6 §3 settled after withdrawing an OS-level synthetic version.
+var RESULTS = [];
+var META = { tag: '__TAG__', ua: navigator.userAgent,
+             browser: (navigator.userAgent.match(/Edg\/[\d.]+/) ||
+                       navigator.userAgent.match(/Chrome\/[\d.]+/) || ['unknown'])[0],
+             href: location.href, when: new Date().toISOString() };
+
+function rec(id, code, detail) {
+  RESULTS.push({ id: id, code: code, detail: String(detail === undefined ? '' : detail) });
+  render();
+}
+
+function attempt(id, fn) {
+  try { rec(id, 'PASS', fn()); }
+  catch (e) { rec(id, 'FAIL', (e && e.name ? e.name + ': ' : '') +
+                              (e && e.message ? e.message : String(e))); }
+}
+
+function render() {
+  var html = '<table>';
+  RESULTS.forEach(function (r) {
+    html += '<tr class="' + r.code + '"><td class="id">' + r.id + '</td><td class="code">' +
+            r.code + '</td><td class="d">' +
+            r.detail.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</td></tr>';
+  });
+  document.getElementById('out').innerHTML = html + '</table>';
+}
+
+function say(s) { document.getElementById('ask').textContent = s; }
+
+// ------------------------------------------------------------------ static support rows
+function automaticRows() {
+  attempt('print.api-present', function () {
+    if (typeof window.print !== 'function') throw new Error('api-absent');
+    return 'window.print is a function';
+  });
+
+  // Presence of the handler properties, which is not the same question as whether the events
+  // fire from a restricted origin. That one costs a real print, and is measured below.
+  rec('print.handlers-present', 'INFO',
+      'onbeforeprint=' + ('onbeforeprint' in window) +
+      ' onafterprint=' + ('onafterprint' in window));
+
+  rec('print.matchMedia-idle', 'INFO',
+      "matchMedia('print').matches=" + matchMedia('print').matches + ' (expected false when idle)');
+
+  attempt('print.color-adjust', function () {
+    var std = CSS.supports('print-color-adjust: exact');
+    var pre = CSS.supports('-webkit-print-color-adjust: exact');
+    if (!std && !pre) throw new Error('neither spelling supported');
+    return 'standard=' + std + ' webkit=' + pre;
+  });
+
+  attempt('print.break-control', function () {
+    var inside = CSS.supports('break-inside: avoid');
+    var after = CSS.supports('break-after: page');
+    if (!inside || !after) throw new Error('inside=' + inside + ' after=' + after);
+    return 'break-inside:avoid and break-after:page both supported';
+  });
+
+  // @page cannot be probed with CSS.supports - that answers about declarations, and @page is an
+  // at-rule. Parsing one and reading it back is the honest test: a browser that does not
+  // understand the rule drops it, so an empty cssRules IS the negative result.
+  attempt('print.page-rule', function () {
+    var s = document.createElement('style');
+    s.textContent = '@page { size: A4 landscape; margin: 0 }';
+    document.head.appendChild(s);
+    try {
+      var rules = s.sheet.cssRules;
+      if (!rules.length) throw new Error('rule-dropped-by-parser');
+      var r = rules[0];
+      var name = (r.constructor && r.constructor.name) || 'unknown';
+      var size = (r.style && r.style.size) ? r.style.size : '(descriptor not exposed on .style)';
+      return 'parsed as ' + name + '; size=' + size;
+    } finally { s.remove(); }
+  });
+
+  attempt('print.page-margin-boxes', function () {
+    var s = document.createElement('style');
+    s.textContent = '@page { @bottom-center { content: "x" } }';
+    document.head.appendChild(s);
+    try {
+      return s.sheet.cssRules.length ? 'margin-box rule survived parsing'
+                                     : 'margin boxes dropped - no page furniture from CSS';
+    } finally { s.remove(); }
+  });
+}
+
+// ------------------------------------------------------------------ the two print attempts
+// One measurement run twice - once with no user activation and once with a live one. Neither run
+// answers "is window.print() gesture-gated from file://" alone; the pair does.
+function measurePrint(id) {
+  var fired = { before: 0, after: 0, matchedInBefore: null };
+  function onBefore() { fired.before++; fired.matchedInBefore = matchMedia('print').matches; }
+  function onAfter() { fired.after++; }
+  addEventListener('beforeprint', onBefore);
+  addEventListener('afterprint', onAfter);
+
+  var t0 = Date.now(), thrown = 'no';
+  try { window.print(); }
+  catch (e) { thrown = (e && e.name ? e.name : 'Error') + (e && e.message ? ': ' + e.message : ''); }
+  var blocked = Date.now() - t0;
+
+  return new Promise(function (res) {
+    // afterprint is not guaranteed to have fired by the time print() returns, so the counters get
+    // an event-loop turn before they are read. Reading them synchronously would report afterprint
+    // as never firing on a run whose dialog was plainly dismissed.
+    setTimeout(function () {
+      removeEventListener('beforeprint', onBefore);
+      removeEventListener('afterprint', onAfter);
+      rec(id, fired.before ? 'PASS' : 'FAIL',
+          'beforeprint=' + fired.before + ' afterprint=' + fired.after +
+          ' matchesInsideBeforeprint=' + fired.matchedInBefore +
+          ' blockedMs=' + blocked + ' threw=' + thrown);
+      res();
+    }, 500);
+  });
+}
+
+// ------------------------------------------------------------------ channels
+function emit() {
+  var json = JSON.stringify({ meta: META, results: RESULTS }, null, 1);
+  var dl = 'ok';
+  try {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+    a.download = META.tag + '-results.json';
+    document.body.appendChild(a); a.click(); a.remove();
+  } catch (e) { dl = 'failed:' + e.name; }
+  startTitleChannel('DL:' + dl + ';' +
+    RESULTS.map(function (r) { return r.id + '=' + r.code; }).join(';'));
+}
+
+var titleTimer = null;
+function startTitleChannel(text) {
+  if (titleTimer) clearInterval(titleTimer);
+  var chunks = [], i;
+  for (i = 0; i < text.length; i += __TITLE_CHUNK__) chunks.push(text.substr(i, __TITLE_CHUNK__));
+  if (!chunks.length) chunks = [''];
+  var k = 0;
+  titleTimer = setInterval(function () {
+    document.title = 'HD ' + (k % chunks.length) + '/' + chunks.length + ' ' +
+                     chunks[k % chunks.length] + '¬';
+    k++;
+  }, 350);
+}
+
+// ------------------------------------------------------------------ sequence
+// Order matters and is the opposite of probe.html's. The no-activation attempt runs BEFORE the
+// download, so its result travels in the JSON rather than only in a title the gesture payload
+// later overwrites. The cost is that a browser which does not gate print() blocks here until the
+// operator presses Escape - which the banner says, and which is itself the measurement.
+var gestureArmed = false, gestureDone = false;
+
+addEventListener('load', function () {
+  setTimeout(function () {
+    automaticRows();
+    say('running print.no-activation - if a dialog opens, press Escape');
+    measurePrint('print.no-activation').then(function () {
+      emit();
+      say('Now click once anywhere on this page. The print dialog will open with a real user '
+        + 'activation behind it. Press Escape to dismiss it - the row is measured either way.');
+      gestureArmed = true;
+    });
+  }, 400);
+});
+
+function onGesture() {
+  if (!gestureArmed || gestureDone) return;
+  gestureDone = true;
+  // The gated call is reached inside this handler's own task, so the activation is genuinely live.
+  measurePrint('print.with-activation').then(function () {
+    say('done - both print rows measured');
+    // Title only, never a second download: a page that downloads twice makes Chrome raise a
+    // permission dialog, and that dialog takes focus away from the page.
+    startTitleChannel('G:' + RESULTS.filter(function (r) { return r.id.indexOf('print.') === 0; })
+      .map(function (r) { return r.id + '=' + r.code + '(' +
+                                 r.detail.replace(/[;()]/g, ' ').slice(0, 110) + ')'; })
+      .join(';'));
+  });
+}
+document.addEventListener('click', onGesture);
+document.addEventListener('keydown', onGesture);
+</script>
+</body></html>
+"""
+
+
 def build():
     if not os.path.isdir(CACHE):
         print("No .assets-cache/. Run:  python tools/assets/measure.py all")
@@ -1083,6 +1332,12 @@ def build():
         "three_core": three_core.decode("utf-8", "replace"),
     }).replace("__TAG__", "probe3d"))
 
+    # Separate page, not more rows in probe.html: the print dialog is modal, and a row that blocks
+    # the shared title channel would cost the 91-row payload it was carrying.
+    write("probe-print.html", PRINT_PROBE_HTML
+          .replace("__TITLE_CHUNK__", str(TITLE_CHUNK))
+          .replace("__TAG__", "probeprint"))
+
     print("\nPROBES BUILT - %s" % os.path.relpath(OUT, ROOT))
     print("-" * 66)
     for name, size in written:
@@ -1091,8 +1346,11 @@ def build():
     rows = (PROBE_JS.count("\ntest(") + PROBE_JS.count("\ninfo(")
             + PROBE_JS.count("\n  ['css."))
     print("  %d automatic rows + %d gesture rows in probe.html" % (rows, 4))
+    print("  %d automatic rows + 1 no-activation row + 1 gesture row in probe-print.html"
+          % (PRINT_PROBE_HTML.count("attempt('print.") + PRINT_PROBE_HTML.count("rec('print.")))
     print("\n  Do NOT open these in any preview pane (L-15). Run:")
     print("      python tools/portability/run_probes.py")
+    print("      python tools/portability/run_probes.py --page probe-print.html")
     return 0
 
 
