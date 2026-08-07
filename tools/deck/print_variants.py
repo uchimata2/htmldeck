@@ -121,8 +121,21 @@ REFLOW = """/* T-018 variant: REFLOW DOCUMENT - the reading view, printed as con
      a figure, a table, a disclosure panel - are kept whole, and headings are tied to what follows
      so a break cannot orphan one at the foot of a page. */
   .doc section{padding:1.2rem 0}
-  .doc .eyebrow,.doc .headline{break-after:avoid}
-  .doc .standfirst,.doc .disc-lead{break-before:avoid}
+
+  /* A label belongs to what comes AFTER it, so every one of these takes `break-after:avoid`.
+     `.disc-lead` had `break-before:avoid` instead, which ties it to the paragraph above and lets
+     the panel it introduces move to the next page without it - a heading stranded at the top of a
+     page over half a page of nothing, which is what "still messed up" was. */
+  /* `.standfirst` is deliberately NOT in this list, and that was tested rather than assumed.
+     Chaining break-after through it - eyebrow, headline, standfirst - forces a section's whole
+     opening onto the next page whenever the block after it is tall, and it opens larger holes than
+     it closes: measured, 12 pages became 13 and pages more than a quarter empty went from 1 to 6.
+     Stopping the chain at the headline keeps the heading with its first line and lets the rest
+     flow. */
+  .doc .eyebrow,.doc .headline,.doc .disc-lead,
+  .doc .lab,.doc .mono,.doc .ledger-head{break-after:avoid}
+  .doc .standfirst,.doc .disc-panel{break-before:avoid}
+
   .doc .figwrap,.doc .fig,.doc table,.doc .disc-panel,
   .doc .stat,.doc .ledger,.doc .cost-aside{break-inside:avoid}
   .doc p,.doc li{orphans:3;widows:3}
@@ -190,6 +203,16 @@ def self_test(source):
     if ".docsection{break-inside:avoid" in decls(REFLOW):
         failures.append("reflow variant keeps whole sections unbreakable - a section is most of a "
                         "page, so any that will not fit is pushed whole and leaves the rest blank")
+    # A label belongs to what follows it. Getting this backwards strands the label at the top of a
+    # page with the thing it introduces on the next one, which reads as a broken page break.
+    keep_with_next = set()
+    for selectors, body in re.findall(r"([^{}]+)\{([^{}]*)\}", decls(REFLOW)):
+        if "break-after:avoid" in body:
+            keep_with_next.update(s.strip() for s in selectors.split(","))
+    for label in (".doc.disc-lead", ".doc.eyebrow", ".doc.headline"):
+        if label not in keep_with_next:
+            failures.append("reflow variant does not give %s break-after:avoid - whatever it "
+                            "introduces can move to the next page without it" % label)
     if ":last-child{break-after:auto}" in decls(REFLOW) + decls(PAGINATED):
         failures.append("break-after is being suppressed with :last-child, which does not match - "
                         "the stage ends with the nav, so the last slide keeps its break and emits "
