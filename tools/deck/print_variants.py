@@ -49,20 +49,21 @@ PAGINATED = """/* T-018 variant: PAGINATED STAGE - one slide per printed page. *
   @page{ size:1920px 1080px; margin:0 }
 
   html,body{background:#fff;overflow:visible;height:auto}
-
-  /* The reading view is NOT hidden here, and that is deliberate - it is the defect that made the
-     first run print thirteen blank pages. `.doc{display:none!important}` blanks the entire
-     printed output in Chrome and Edge, reproducibly, even though `.doc` is a later sibling of the
-     stage and is already `display:none` from its own base rule. Measured, not theorised: the same
-     rule set without this one declaration prints all twelve slides with their fonts embedded.
-     Leaving `.doc` alone costs nothing, because its base rule already hides it whenever the deck
-     is in presentation view - which is when this rendering makes sense at all. */
   .viewswitch,.chrome,.progress,.controls{display:none!important}
+  .doc{display:none!important}
 
-  /* On screen the stage is a fixed box centred by transform and scaled by --k. A transformed
-     element does not paginate - the whole stack prints on one page, clipped. Both go. */
-  .viewport{position:static!important;inset:auto!important;overflow:visible!important;
-            background:#fff!important}
+  /* THE RULE THIS RENDERING LIVES OR DIES BY, and the one whose absence printed blank pages twice.
+     The deck switches itself to the reading view below 960px and sets `viewport.hidden` when it
+     does - and PRINTING IS WHAT MAKES IT SWITCH, because printing changes the layout viewport.
+     `.viewport[hidden]{display:none}` then hides the stage, and overriding `position` does not
+     touch `display`. So the stage was never in the output at all: the first run hid the reading
+     view too and printed nothing; the second left the reading view visible and printed THAT,
+     which looked like a fix and was not.
+     Forcing `display` on both the element and its [hidden] state is what makes this rendering
+     print the stage regardless of which view the deck has decided it is in. */
+  .viewport,.viewport[hidden]{display:block!important;
+            position:static!important;inset:auto!important;overflow:visible!important;
+            height:auto!important;background:#fff!important}
   .stage{
     position:static!important;transform:none!important;
     width:1920px!important;height:auto!important;
@@ -71,8 +72,12 @@ PAGINATED = """/* T-018 variant: PAGINATED STAGE - one slide per printed page. *
 
   /* Slides are absolutely stacked with only [data-current] visible. Un-stack them, make every
      one visible, and give each its own page. */
+  /* `relative`, not `static`. A slide is the containing block for its own absolutely positioned
+     descendants - the disclosure panels and the provenance line - and making it static hands them
+     to the page instead, which scatters them across breaks. Relative keeps it in normal flow AND
+     keeps it a containing block. */
   .slide{
-    position:static!important;
+    position:relative!important;
     width:1920px!important;height:1080px!important;
     opacity:1!important;visibility:visible!important;
     transition:none!important;
@@ -108,12 +113,19 @@ REFLOW = """/* T-018 variant: REFLOW DOCUMENT - the reading view, printed as con
   .doc{display:block!important;height:auto!important;overflow:visible!important}
   .doc-inner{max-width:none;padding:0}
 
-  /* A section is a slide's worth of content. Keeping one whole is the point of this rendering;
-     where one cannot fit, its heading must not be the last thing on a page. */
-  .doc section{break-inside:avoid;padding:1.2rem 0}
-  .doc .headline,.doc .eyebrow{break-after:avoid}
-  .doc .standfirst{break-before:avoid}
-  .doc .figwrap,.doc .fig,.doc table{break-inside:avoid}
+  /* `break-inside:avoid` on the SECTION is what produced half-empty pages: a section is a slide's
+     worth of content, often most of a page tall, so any section that will not fit is pushed whole
+     to the next one and leaves the remainder blank. Measured on a 22-page export where nine pages
+     carried a third of the text of their neighbours.
+     Sections are therefore allowed to break. Only the things that are unreadable when split -
+     a figure, a table, a disclosure panel - are kept whole, and headings are tied to what follows
+     so a break cannot orphan one at the foot of a page. */
+  .doc section{padding:1.2rem 0}
+  .doc .eyebrow,.doc .headline{break-after:avoid}
+  .doc .standfirst,.doc .disc-lead{break-before:avoid}
+  .doc .figwrap,.doc .fig,.doc table,.doc .disc-panel,
+  .doc .stat,.doc .ledger,.doc .cost-aside{break-inside:avoid}
+  .doc p,.doc li{orphans:3;widows:3}
 
   .rise{opacity:1!important;transform:none!important;animation:none!important}
   *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
@@ -161,9 +173,23 @@ def self_test(source):
     # The regression that cost this task a run: hiding `.doc` with `!important` blanks the whole
     # printed output in Chrome and Edge. Measured on the real thing, then reproduced headlessly.
     # It reads like a harmless tidy-up, which is exactly why it needs a check rather than a memory.
-    if ".doc{display:none!important}" in decls(PAGINATED):
-        failures.append("paginated variant hides .doc with !important - that blanks every printed "
-                        "page; leave the reading view alone, its base rule already hides it")
+    # The regression that cost this task two runs. The deck hides the stage itself when it decides
+    # it is in the reading view, and printing is what makes it decide that. Overriding `position`
+    # does not touch `display`, so the stage silently never reached the page.
+    if "[hidden]{display:block!important" not in decls(PAGINATED):
+        failures.append("paginated variant does not force .viewport[hidden] back to display:block "
+                        "- the deck hides the stage when print narrows the viewport, and this "
+                        "rendering then prints nothing, or prints the reading view instead")
+    if ".doc{display:none!important}" not in decls(PAGINATED):
+        failures.append("paginated variant does not hide the reading view - with the stage forced "
+                        "visible both would print, one after the other")
+    # A slide is the containing block for its own absolutely positioned descendants.
+    if "position:relative!important" not in decls(PAGINATED):
+        failures.append("paginated variant un-positions the slide, which hands its disclosure "
+                        "panels and provenance line to the page and scatters them across breaks")
+    if ".docsection{break-inside:avoid" in decls(REFLOW):
+        failures.append("reflow variant keeps whole sections unbreakable - a section is most of a "
+                        "page, so any that will not fit is pushed whole and leaves the rest blank")
     if ":last-child{break-after:auto}" in decls(REFLOW) + decls(PAGINATED):
         failures.append("break-after is being suppressed with :last-child, which does not match - "
                         "the stage ends with the nav, so the last slide keeps its break and emits "

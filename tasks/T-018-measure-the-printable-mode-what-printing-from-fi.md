@@ -209,21 +209,48 @@ nine rows.**
 1920×1080 px `@page`), one white rectangle on page 1, **no font resources at all**. Three defects,
 each measured rather than guessed:
 
-1. **`.doc{display:none!important}` blanks the entire printed output**, in Chrome and Edge, and
-   headlessly, reproducibly. The identical rule set without that one declaration prints all twelve
-   slides with fonts embedded. The declaration looks like a harmless tidy-up: `.doc` is a later
-   sibling of the stage and its own base rule already sets `display:none`. **The mechanism is not
-   explained** — the deck is verifiably in presentation view at `beforeprint` (measured by painting
-   colour-coded markers from the handler and reading the fill operators back out of the PDF, since
-   subset-encoded text is not readable), so the obvious explanation is ruled out. Recorded as
-   behaviour, not as a theory, and locked into `print_variants.py`'s self-test.
+1. **The deck changes its own view while printing, and the print stylesheet has to survive that.**
+   This is the finding of the task, and it took three printed runs to see. The deck switches to the
+   reading view below 960 px and sets `viewport.hidden` when it does (`reference-deck.html` line
+   ~1408) — and **printing is what makes it switch**, because printing changes the layout viewport.
+   `.viewport[hidden]{display:none}` then hides the stage, and overriding `position` never touches
+   `display`. So:
+   - run 1 hid the reading view with `!important` *and* the stage was hidden by `[hidden]` →
+     **thirteen blank pages**;
+   - run 2 dropped the `.doc` rule → **the reading view printed**, which looked like a fix and was
+     not: the paginated stylesheet had still never rendered a single slide;
+   - run 3 forces `display` on both `.viewport` and `.viewport[hidden]` → the stage prints, from
+     either view state.
+
+   An earlier note here called the mechanism unexplained. It is not: the colour-marker measurement
+   that ruled out a view change was taken **headlessly**, and headless does not flip the view. That
+   is the same instrument error §1 scoped headless out for, caught by the same rule.
 2. **`.slide:last-child` never matched**, so the twelfth slide kept its page break and emitted an
    empty thirteenth page. The stage ends with the nav and the progress bar, not with a slide.
    `section.slide:last-of-type` is the fix.
-3. **Pinning `@page { size:A4 portrait }` greys out the print dialog's orientation control.** The
-   reader cannot choose landscape even where the rendering reads better in it. A print stylesheet
-   that dictates paper takes a decision away from the person holding the printer. The reflow
-   variant now sets `margin` only.
+3. **Pinning `@page { size }` removes the reader's paper controls** — confirmed twice, on both
+   variants: orientation on the reflow one, the whole layout section on the paginated one. A print
+   stylesheet that dictates paper takes a decision away from the person holding the printer. The
+   reflow variant now sets `margin` only. The paginated one **keeps** its pinned 1920×1080 page,
+   because there the page shape *is* the design — but that is now a stated cost, not an accident.
+4. **`break-inside: avoid` on whole sections wasted 45% of the pages.** A section is a slide's
+   worth of content, often most of a page tall, so any that would not fit was pushed whole and left
+   the remainder blank: **22 pages, nine of them carrying a third of their neighbours' text.**
+   Allowing sections to break and protecting only figures, tables and panels: **12 pages, same
+   content.** This is what "the page breaks are terrible" was.
+5. **`.slide{position:static}` scatters the disclosure panels.** A slide is the containing block
+   for its own absolutely positioned descendants; making it static hands them to the page.
+   `position:relative` keeps it in flow *and* keeps it a containing block.
+6. **`print-color-adjust:exact` makes the dialog's "Background graphics" tick inert.** That is why
+   toggling it changed nothing. Defensible here — this design's backgrounds are content, not
+   decoration, and the property exists to say so — but it is one more reader decision the deck
+   quietly takes.
+7. **Chrome's default header/footer prints the deck's absolute `file://` path** across the foot of
+   every page. Not reachable from CSS, and it is a real disclosure: a recipient printing a deck
+   leaks their own directory layout into the paper copy. The printable mode can warn; it cannot fix.
+8. **Disclosure controls print as collapsed buttons advertising content that is not there.**
+   Worse than losing tier two silently. But `beforeprint` fires (measured above), so the fix is
+   available and cheap: open every panel on `beforeprint`, close them on `afterprint`.
 
 Corrected, both renderings produce real output. **Awaiting re-verification by a real print**, which
 is the only evidence this task may cite for a rendering claim.
