@@ -104,7 +104,7 @@ which is why [T-023](T-023-the-deck-evaluation-rubric-and-convergence-loop.md) i
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
 | Every rule has a unique `DS-nnn`, a label and a `Check` value | **met** | 131 rules; zero duplicate IDs; labels 102 hard / 35 default / 6 guidance; checks 59 auto / 32 render / 36 judge |
-| Rule content unchanged | **met** | Every rule maps back to the T-014 file. 131 vs the previous ~120 prose rows: the increase is **splitting**, not adding — DS-035 (the 18-unit floor) and DS-036 (mono never load-bearing) were one row, and six stage/reflow conditions were prose in §11 |
+| Rule content unchanged | **met** | Every rule maps back to the T-014 file. 131 vs the previous ~120 prose rows: the increase is **splitting**, not adding — DS-035 (the 18-unit floor) and DS-036 (mono never load-bearing) were one row, and six stage/reflow conditions were prose in §11 *(**§11 never existed** — corrected 2026-08-09 by [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md). The six conditions are real and are DS-060 to DS-065; only their stated home was not)* |
 | No historical narrative in the ruleset | **met** | Every "dropped because", provenance note and derivation moved. What remains is one pointer line under §2.4 |
 | `DESIGN-RATIONALE.md` holds it, reachable by `DS-nnn` | **met** | Six sections, keyed by rule ID |
 | Materially shorter | **met** | **700 → 379 lines, a 46% reduction**, and the removed half is the half that goes stale |

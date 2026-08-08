@@ -27,6 +27,17 @@ row going absent. `Reach` also stays deliberately separate from `Check`: **auto*
 coherent pair — a rule a program could test in principle, on input no program can produce — and
 collapsing the two columns would lose it.
 
+**Two of that list's conditions are gone and are not coming back.** It named two rules as beyond any
+check, numbered **22 and 30**, and which rules those were cannot be recovered — the numbering was
+not this document's order, and the account is in
+[`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §5.5. Nothing is owed to them: every rule now states its
+own `Reach`, which is what those two conditions were trying to say about themselves.
+
+**`Reach` says whether a check can get at a rule. It never says which part of the gate does.**
+*"Decided statically from the source rather than at render"* is a fact about how the gate is built
+today and it changes whenever the gate is refactored; it belongs in the gate's own output, not here.
+A rule checked in an unexpected stage is still `yes`.
+
 **Override clause (DS-000, guidance).** *Keep this guide only as long as it serves the message; be
 brave to depart when a different idea communicates better.* Licenses departure from **default** and
 **guidance** with a stated reason. Never from **hard**.

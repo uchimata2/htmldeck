@@ -180,7 +180,7 @@ places. Nothing on this task's presentation list would have caught it.
   two in `examples/`. **The triage line is where this task's scope will drift**, so it is stated as
   a rule and not an intention: a rule leaves the silent list by being checked or by being excused in
   writing, and by no third route.
-- ~~Where does "not machine-checkable" live, now that §11 is gone?~~ **Answered 2026-08-08 by the
+- ~~Where does "not machine-checkable" live, given that §11 never existed?~~ **Answered 2026-08-08 by the
   owner: per rule, in the ruleset** — a rule no check can reach says so in its own row, on
   [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md)'s precedent. **Raised as
   [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md) rather than done here**, a
