@@ -273,7 +273,7 @@ What it must contain is a property of a good deck, so it is here.**
 | DS-131 | **The navigation set: keyboard ←/→/space/Home/End; prev/next arrows; touch/swipe; wheel; and click-to-jump to a bounded set of named targets.** *Named* is the load-bearing word — a target the reader can identify before clicking, which the deck's stages already are. **Not one *unnamed* target per slide** — amended 2026-08-08 by the owner for [T-035](../tasks/T-035-the-ruler-navigator.md), and the moved word is the whole amendment: the objection was never the *count*, it was twelve unlabelled dots (T-028). One target per slide is admitted when every target names itself. **The naming is per target, never per group**, and that clause is the precondition rather than a detail: a ruler whose small ticks announce their *section* would give twelve targets seven labels, leaving a reader unable to name a tick before clicking it — the same defect in a new shape, and the amendment would have gutted this rule while appearing to preserve it. Dots remain one permitted implementation of a bounded set, never a requirement, and DS-217 bounds the count. **Where stages are uneven, or long enough that landing on one is not a useful jump**, the stage list has stopped being the right target set and the deck owes an on-demand slide index instead — offering neither is a departure from this rule and needs a reason. | default | render |
 | DS-132 | **Off-screen slides removed from the tab order.** | hard | auto |
 | DS-133 | Progress indicator, **provided it encodes real position.** | default | render |
-| DS-134 | **The spine ribbon**: the deck's argument shown with the current stage lit. | default | render |
+| DS-134 | **The spine**: the deck's argument shown as a persistent element, with the current position lit. **Reworded 2026-08-08 for [T-035](../tasks/T-035-the-ruler-navigator.md)**, which replaced the stage-name ribbon this rule used to name with a ruler — and the rewording is the same correction DS-131 needed for the same reason: *a rule that specifies the element instead of the need is the one that collides with the next composition rule*, because composition rules are written about elements. What is required is that the argument's structure is visible and the reader's place in it is marked; the ribbon was one way to spend that and the ruler is another, cheaper in width because its footprint does not depend on how the stages are named. | default | render |
 | DS-135 | The page title and the nav-bar name for that page **must match**. | hard | auto |
 | DS-136 | Interaction patterns built **once as components and reused**, so the UX is learnable. | hard | judge |
 | DS-137 | Two simultaneous interactions need a **defined precedence rule.** | hard | judge |
@@ -338,7 +338,7 @@ amending rather than merely extending: the printed artifact is now **`n` + 1 pag
 Amended 2026-08-08 by the owner for
 [T-034](../tasks/T-034-a-contents-page-for-the-printed-deck.md) (**L-37** — the answer that
 required it was recognised as a rule change and taken as one, with a named side). The reason it
-exists is that this stylesheet hides the chrome, so the spine ribbon that carries the structure on
+exists is that this stylesheet hides the chrome, so the spine (DS-134) that carries the structure on
 screen reaches a paper reader nowhere; and it is the **only** surface that reaches the person
 holding the pages, which is where R7 §5's loss is finally stated to them rather than to whoever was
 about to print.
