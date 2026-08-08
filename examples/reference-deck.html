@@ -353,13 +353,20 @@ svg{display:block}
   width:calc(4*var(--du));height:calc(10*var(--du))}
 .ruler[data-dense] .ruler-ticks li:not([data-section])[data-lit] button::before{
   background:var(--accent);height:calc(20*var(--du));width:calc(6*var(--du))}
+/* The degraded marks above are bar-shaped. A circle needs equal sides or `border-radius:50%` turns
+   it into an oval, so the dot style restates them square - at 4 du, which is the measured floor:
+   2.02 CSS px at the 0.5 hand-over, below which the quiet colour stops registering at all. */
+.ruler[data-ticks="dot"][data-dense] .ruler-ticks li:not([data-section]) button::before{
+  width:calc(4*var(--du));height:calc(4*var(--du))}
+.ruler[data-ticks="dot"][data-dense] .ruler-ticks li:not([data-section])[data-lit] button::before{
+  width:calc(7*var(--du));height:calc(7*var(--du));background:var(--accent)}
 
 /* ---- TICK STYLE IS A THEME PARAMETER, not a fork of the component (CLAUDE.md rule 4).
-   `bar` and `dot` share one manifest, one set of targets, one keyboard model and one degradation;
-   only the mark and the current-position treatment differ, so a later template generator can pick
-   between them without re-deriving anything. Both are named targets, so DS-131 as amended admits
-   either - the prohibition moved onto *unnamed*, never onto the shape, and the twelve dots T-028
-   removed were unlabelled ones. */
+   `dot` is the shipped default and `bar` is the alternative; they share one manifest, one set of
+   targets, one keyboard model and one degradation, so only the mark and the current-position
+   treatment differ and a later template generator can pick between them without re-deriving
+   anything. Both are named targets, so DS-131 as amended admits either - the prohibition moved
+   onto *unnamed*, never onto the shape, and the twelve dots T-028 removed were unlabelled ones. */
 .ruler[data-ticks="dot"] .ruler-ticks button::before{
   width:calc(8*var(--du));height:calc(8*var(--du));border-radius:50%}
 .ruler[data-ticks="dot"] .ruler-ticks li[data-section] button::before{
@@ -1385,7 +1392,7 @@ svg{display:block}
        no per-item label at rest - rather than trusting the attribute.
        The label is aria-hidden because every tick carries its own accessible name. The visible
        swap is a sighted-user affordance and must not be announced on every focus move. -->
-  <div class="ruler" id="ruler" data-ticks="bar">
+  <div class="ruler" id="ruler" data-ticks="dot">
     <ul class="ruler-ticks" id="rulerTicks" data-scale></ul>
     <i class="ruler-ring" id="rulerRing" aria-hidden="true"></i>
     <p class="ruler-label" id="rulerLabel" aria-hidden="true"></p>
