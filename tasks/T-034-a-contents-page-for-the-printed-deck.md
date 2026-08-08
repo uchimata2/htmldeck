@@ -47,6 +47,26 @@ that carried the structure. A contents page is the paper equivalent of the ribbo
    [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) ruled out print-only
    chrome on the slides.
 
+**One content source, two renderings — and the manifest is the shared part, not the page**
+*Owner's question, 2026-08-08: does the on-screen overlay index show the same thing as this?*
+**The fields are the same and must be derived once; the renderings are not the same and should not
+be forced to be.** Both need each slide's **number, title, bottom line, stage and mark** — and
+`buildDoc()` already sets the precedent by cloning slides for the reading view rather than
+re-authoring them. Two independent derivations of one fact is how they drift (**L-08**), so
+whichever of this task and [T-035](T-035-the-ruler-navigator.md) lands first builds a **slide
+manifest** and the other consumes it.
+
+What legitimately differs, and why forcing them to match would be the wrong economy:
+
+| | Printed contents page | On-screen overlay index |
+| :--- | :--- | :--- |
+| Constraint | **Must fit one page.** Length forces the layout. | Scrolls. Length costs nothing. |
+| Read to | **Orient** before reading, once. | **Jump**, repeatedly. |
+| Needs | The line stating that detail is screen-only. | Current-position highlight; nothing about print. |
+| Mark | A slide clone is a texture at 0.22 scale — icon or nothing. | A live clone **can** work: no paper resolution limit, and it can enlarge on hover. |
+
+So: **do not generate the content twice, and do not render it once.**
+
 **The rule this amends, raised rather than taken** (**L-37**)
 [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) §5.4 opens *"the printable mode is the paginated
 stage — one slide per page"*. A contents page is **a printed page that is not a slide**, so the
@@ -89,6 +109,8 @@ mark and the honest one. This is a recommendation, not a ruling — see the open
       blank page at either end
 - [ ] Every box carries the slide's number, its title and its bottom line, **read from the slide**
       rather than authored — changing a slide's bottom line changes the contents page
+- [ ] The fields are read through a **slide manifest** that the on-screen overlay index can consume
+      unchanged, so the two renderings cannot derive the same fact twice (**L-08**)
 - [ ] The page states in one line that detail behind disclosure is screen-only
 - [ ] The whole thing fits one page at twelve slides, and **the number of slides at which it stops
       fitting is measured and written down**
@@ -137,4 +159,5 @@ mark and the honest one. This is a recommendation, not a ruling — see the open
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | (no change) | **Answered the owner's question — the on-screen overlay index and this page share their content but not their rendering, and the shared part is a slide manifest rather than a page.** Both need each slide's number, title, bottom line, stage and mark, and deriving that twice is how the two drift (**L-08**); `buildDoc()` already sets the precedent of cloning slides instead of re-authoring them. What differs is real and should not be flattened: this page **must fit one page** and is read once to orient, the overlay scrolls and is read repeatedly to jump; this page owes the screen-only line, the overlay owes a current-position highlight; and **the mark can legitimately differ** — a slide clone is a texture at 0.22 scale on paper, but on screen it has no resolution limit and can enlarge on hover. So whichever of this and [T-035](T-035-the-ruler-navigator.md) lands first builds the manifest and the other consumes it. |
 | 2026-08-08 | → proposed | Raised by the owner on reading the printed deck from [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md). Recorded with two arguments the request did not make — **the description is free**, because DS-211's bottom line already exists on every slide and reading it means the page cannot drift from the deck; and **it is the only surface that reaches a paper reader**, so the disclosure loss finally has somewhere to be stated to the person actually holding the pages. One amendment is owed and is raised rather than taken (**L-37**): §5.4 says the printable mode *is* the paginated stage, and a contents page is a printed page that is not a slide. The thumbnail option is argued against rather than dropped: at twelve boxes a slide clone renders at ~0.22 scale, which puts body text at five design units — a texture that looks like content. |
