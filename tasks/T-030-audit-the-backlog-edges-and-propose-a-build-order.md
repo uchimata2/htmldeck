@@ -137,7 +137,7 @@ them — and those two states are indistinguishable from the index.
 | 1 | **T-020** | Gates three tasks and is blocked by none. A decision, not a build — the cheapest thing in the backlog that unblocks the most. |
 | 2 | **T-015** | Unblocks two, and its own §1 argues for standing the scaffold up early to have a working v1 to test against. |
 | 3 | **T-018** | Cheap, unblocked, and the last open WP1 item — it closes the research phase. Its measurement is what T-021 needs at **step 1**. |
-| 4 | **T-021** | Half built already; finishing it produces §11 conditions 13–19 as checks, which T-005 then absorbs in one pass instead of being reopened. |
+| 4 | **T-021** | Half built already; finishing it produces §11 conditions 13–19 as checks, which T-005 then absorbs in one pass instead of being reopened. *(Corrected 2026-08-09 by [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md): **`DESIGN-SYSTEM.md` §11 never existed**, so this position was argued from a section nobody had opened. The ordering still held — T-021 did produce the resolution-contract checks, as **DS-060 to DS-076** — but the reason cited a document that was not there.)* |
 | 5 | **T-028** | The release gate — definition-of-done criterion 7, and the only one the owner made a condition of shipping. Unblocked since it was raised. |
 | 6 | **T-005** | Definition-of-done criterion 2, unblocked as of this audit, a third built, both fixtures already in the repository. Takes T-021's conditions with it. |
 | 7 | **T-007** | Gates T-002. Extraction from a working instance rather than authorship, so cheaper than its §1 reads. |

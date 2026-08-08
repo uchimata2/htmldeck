@@ -387,6 +387,42 @@ split is wrong.**
 
 ---
 
+## 5.5 The `Reach` column — why a rule carries this on its own row
+
+**A rule's `Check` value says how it would be tested; it never said whether it can be.** Those are
+different facts and the ruleset recorded only the first, so a rule labelled `auto` that no program
+can decide was indistinguishable from one nobody had built yet. `Reach` records the second, per rule.
+
+**It is a column and not a section because the section was tried and it failed silently.** The
+original design was a check-facing list — the hard rules restated as numbered testable conditions,
+naming the two no check could reach. It was recorded as delivered and **was never written**;
+`DESIGN-SYSTEM.md` has ended at §9 in every commit of its life. Four tasks reasoned about the list's
+contents for two months, one of them ordering part of the build on it, and the file was never
+opened. The mechanism is **L-39**: a review verdict that cites an address rather than content
+survives the content not existing, and `task.py check` validates links and paths, so a `§11` in
+prose is invisible to it.
+
+The general form is the part worth keeping: **a parallel structure can go absent without anything
+breaking**, because everything else works off the originals. A fact carried on the rule's own row
+cannot — the row would have to go missing too.
+
+**Conditions 22 and 30 are written off, not lost.** The numbered list named two conditions as not
+machine-checkable, and which rules they were is **unrecoverable**. The numbering was not the hard
+rules in document order: the one condition anyone ever translated by hand, *condition 17* → DS-063,
+puts DS-063 **31st** in that order. Nothing in the repository preserves the sequence, so the two are
+recorded here as gone rather than left as a search for the next reader to re-run and abandon. Their
+content is not lost with them — every rule now carries its own `Reach` value, which is what those
+two conditions were trying to say about themselves.
+
+**`Reach` stays separate from `Check` rather than becoming a fourth value of it.** `auto` with
+`never` is a coherent pair — a rule a program could test in principle, on an input no program can
+produce — and one column cannot hold both halves without losing it. The same argument decides the
+null: every `judge` rule reads `—`, meaning *outside the gate's jurisdiction*, which is not the same
+claim as `never` and must not be read as one. `judge` rules are decided by the evaluator, and
+`Reach` says nothing about whether it can do so.
+
+---
+
 ## 6. Drops and amendments worth knowing
 
 **DS-011 — one palette per deck was dropped.** The corpus rule (C7) is `dominant`; it describes what

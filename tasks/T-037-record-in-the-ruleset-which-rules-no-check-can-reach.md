@@ -238,9 +238,82 @@ by reading the column back rather than by looking at it.
   re-labelling a rule and correcting the gate are both outside §1's scope, and this task would be
   changing the very column it is populating on the strength of its own reading.
 
+- **§8's four rules get both columns as `—`, rather than staying three-wide — 2026-08-09.** Step 4
+  found the omission was closer to deliberate than the plan assumed: the section already says these
+  are *"claims about what a check may assert"*, so they bind whoever builds a check and there is
+  nothing in them for a gate to test. Giving them explicit nulls says that, where a missing column
+  only let it be inferred — and it removes a parser special case, since every rule row is now the
+  same width.
+- **Most unreached rules are unbuilt, not unreachable, and the column now shows the difference —
+  2026-08-09.** Of 109 `auto`/`render` rules exactly **four** are not `yes`. That is the answer to
+  the worry that this column would become an excuse list: it cannot, because the honest value for a
+  rule nobody has got round to is `yes`, and `yes` is what makes silence a failure.
+
+**Evidence — steps 3 and 4, the full migration**
+
+All **158** rule rows carry a value; the cross-tab closes against the `Check` column with nothing
+unaccounted for:
+
+```
+  —, —                   6        auto, never            1
+  auto, off-gate         2        auto, yes             62
+  judge, —              43        render, off-gate       1
+  render, yes           43        total rows: 158
+```
+
+`auto` 62+1+2 = **65**; `render` 43+1 = **44**; `judge` **43**; null `Check` **6**. Those match the
+column's own counts, so no row was edited into a different category on the way through.
+
+**The number for [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) to assert against: 105** —
+rules with `Reach: yes` and `Check` in {`auto`, `render`}. Derived from the ruleset, not maintained
+anywhere.
+
+**The four that are not `yes`:**
+
+| Rule | Value | Why |
+| :--- | :--- | :--- |
+| DS-042 | `never` | which boxes *read as a set* is a reading of the content; the DOM records containment, not what a viewer groups |
+| DS-072 | `off-gate` | headless has no user gesture to enter fullscreen with |
+| DS-210 | `off-gate` | the outline is a pipeline artefact; the delivered HTML does not record whether one existed |
+| DS-211 | `off-gate` | needs the outline document alongside the deck; the gate is handed the HTML only |
+
+**Evidence — the reader was made to fail before it was trusted (L-04)**
+
+Three defects seeded into a copy of the ruleset, one per contract clause. All three caught:
+
+```
+rule rows: 157 migrated, 1 not yet          <- dropped Reach cell on DS-008
+rows with a Reach value outside the vocabulary: 1
+  DS-003 -> 'maybe'                         <- value not in the vocabulary
+rows marked never/off-gate with no reason: 1  <- reason stripped from DS-072
+```
+
+**Evidence — step 10, the gates, after the ruleset changed**
+
+```
+audit.py                 0 mechanical failure(s): none
+deliverable_variants.py  7 of 7 variants caught.
+contract_variants.py     7 of 7 variants caught.
+contents_bound.py        self-test ok
+chrome_row.py            self-test ok
+task.py check            OK - 38 tasks, 564 document pointer(s) checked, 0 broken
+```
+
+**Step 5 closed smaller than specified, and the criterion says why.** Only DS-072's reason was a
+reachability reason and it is in the ruleset. DS-061 and DS-065 are `yes` — their notes say the rule
+*is* checked, statically rather than at render — and DS-033 only ever appeared inside DS-065's note.
+The criterion's wording, *"`audit.py` no longer holds the **only** copy"*, is satisfied for the one
+that was in scope; the other three were never this task's to move. `review` should judge that as
+written rather than as intended.
+
 **Outputs produced**
-- `docs/DESIGN-SYSTEM.md` — the `Reach` vocabulary and parse contract; the column populated in
-  §2.5 and §5.1 (19 rows)
+- `docs/DESIGN-SYSTEM.md` — the `Reach` vocabulary and parse contract; the column on all 158 rule
+  rows, §8 included
+- `docs/DESIGN-RATIONALE.md` — §5.5, why per rule and not a list, and the conditions 22 / 30
+  write-off
+- `tasks/T-004-...md`, `tasks/T-005-...md`, `tasks/T-030-...md` — the four surviving `§11` claims
+  annotated in place rather than erased, so the historical belief stays visible and the pointer no
+  longer misleads
 
 ## 4. Review
 
@@ -255,6 +328,7 @@ by reading the column back rather than by looking at it.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | (no change) | **Steps 3–10 done; all ten steps are complete and the outputs exist.** Every one of the **158** rule rows carries a `Reach` value, and the cross-tab against `Check` closes exactly — `auto` 65, `render` 44, `judge` 43, null 6 — so nothing was edited into a different category in passing. **The number this produces for [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) is 105**, derived from the ruleset rather than maintained anywhere. **The finding that matters is how few rules are unreachable: four out of 109.** DS-042 `never`, and DS-072, DS-210, DS-211 `off-gate`. The worry that this column would become a place to park inconvenient rules is answered by its own arithmetic — the honest value for a rule nobody has built a check for is `yes`, and `yes` is exactly what makes silence about it a failure. Step 4 ruled §8's four rules `—` in both columns rather than leaving them three-wide: the section already calls them *"claims about what a check may assert"*, so they bind the check's author, and saying so explicitly also removes a parser special case. **Step 5 closed smaller than §1 specified**, for the reason recorded on 2026-08-09 above — one of its four reasons was a reachability reason, the other three say the rule *is* checked, and `review` should judge the criterion as written. **The reader was made to fail before being trusted (L-04)**: three defects seeded into a copy — a value outside the vocabulary, a dropped cell, and an `off-gate` stripped of its reason — and all three were caught. Gates after the ruleset changed: `audit.py` **0 mechanical failures**, both variant suites **7/7**, `contents_bound` and `chrome_row` self-tests ok, `task.py check` **38 tasks, 564 pointers, 0 broken**. |
 | 2026-08-09 | → in_progress | **Steps 1 and 2 done, and step 2 earned its place.** The `Reach` vocabulary is written where `Check` is already defined, and the column is populated in **§2.5 and §5.1 — 19 rows** — then read back by a parser that has never heard of an individual rule. **The first read failed**, exactly as the step was designed to let it: the contract said *"the reason follows an em dash"*, `—` is itself a value, and the two `judge` rows parsed as **empty**. The contract is now *"the value is the first word, the rest is free text"*, which makes `—`, `never` and `off-gate` one shape and the dash cosmetic. Cost: 19 rows, against 154 had the format been trusted. **Two departures from the plan, both recorded in §3.** The spike covers two sections rather than one, because the plan named §5.1 believing it held DS-072 and DS-072 is in §2.5 — both were done rather than swapping, so `off-gate` and the `judge` null are each exercised. And **`Reach` gained a fourth value, `—`**, for rules outside the gate's jurisdiction; marking `judge` rules `never` would have claimed the evaluator cannot decide them either. **One §1 assumption is now false and step 5 shrinks because of it:** `audit.py`'s *"Not gated here, and why"* tail is **not** four reasons a rule cannot be reached — only DS-072 is that. DS-061 and DS-065 say the rule *is* checked, statically from source rather than at render, and DS-033 only appears inside DS-065's note. So one reason migrates, three rules are `yes`, and the tail is a gate-side defect for [T-005](T-005-build-check-the-gate-the-deck-must-pass.md). **[T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) raised**: two `judge` rules are gated mechanically and DS-161's verdict measures a precondition of its rule rather than its rule. Found by the row-by-row reading this column forces, without looking for it. |
 | 2026-08-08 | → planned | **The mechanism is a new column, ruled by the owner**, so *unreachable in principle* stays distinct from *unreachable by this gate* — a fourth `Check` value would have collapsed the two, and they oblige different things: one is permanent, the other is a gap someone may close. **Ten steps, and two structural facts measured before planning against them.** The ruleset is **17 tables**: 16 carry `\| ID \| Rule \| Label \| Check \|` over **154 rule rows**, and **§8 Boundaries carries 4 rows with no `Check` column at all** — outside the gate's jurisdiction today by omission rather than by decision, so step 4 rules on it explicitly. Rows already run to a median of 123 characters and a maximum of 2241 and the tables do not wrap, so **width was ruled out as a constraint by measurement** and the format chosen on meaning. Three decisions worth finding later: the reason sits **in the same cell as the value**, because a separate "unreachable rules and why" table is a second parallel list of the same rules in a different order — what §11 was, and what **L-39** now records the cost of; the vocabulary is **`yes` / `never` / `off-gate`**, named for what each obliges rather than for how it feels; and **`audit.py` is not touched** — step 5 copies its four reasons into the ruleset and leaves the tool printing its own, because editing the gate from a ruleset task is out of §1's scope and [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) owns making it derive. The criterion was already worded *"no longer holds the **only** copy"*, which is what makes that split legitimate rather than a fudge. Step 2 populates one section and reads it back before the other 15 are touched, so an unparseable format is discovered at 12 rows rather than 154. |
 | 2026-08-08 | → specified | **§1 corrected on evidence, and the correction makes this task's case stronger rather than smaller.** It was written saying [T-022](T-022-split-the-design-system-from-its-rationale.md) replaced §11's numbered conditions with `DS-nnn` IDs and the section went with the renumbering. **Checked against git before accepting the spec: that is wrong. §11 was never committed** — `docs/DESIGN-SYSTEM.md` has ended at §9 in all 13 commits of its life, created that way by the commit that closed [T-014](T-014-synthesise-research-into-the-design-system-reference.md) recording §11 as **met**. So this is not a stale-reference problem to tidy; it is a deliverable recorded as delivered on the evidence of a section number, which four task files then consumed for two months. **One acceptance criterion is settled by that check rather than left for `implement`:** the numbering is unrecoverable, proven — had the conditions been the hard rules in document order, condition 17 would be the 17th, and DS-063, the only one [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) ever translated, is the **31st**. Conditions 22 and 30 are therefore written off in the ruleset with the reason, not hunted for. A criterion was also added for the surviving `§11` references in T-004, T-005 and [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md). T-014's §4 verdict is corrected to `not met` and its log carries the account; **it is not reopened**, because its real deliverable exists and only the carve-out is missing — which is this task. The mechanism question stays open for `plan`, as written. |

@@ -78,10 +78,30 @@ a third rule that is also not what is being measured.
       two columns cannot disagree
 
 **Open questions**
-- **Does *"closed by default"* deserve its own rule ID, or is it already DS-073's inverse? — owner.**
-  It is a real, checkable property that the ruleset states only as part of a judgement. Creating a
-  rule to match a check is backwards in general; leaving a useful check attached to the wrong ID is
-  worse. Decide in `specify`, since it changes what the outcome is.
+- **Does *"closed by default"* deserve its own rule ID, or is it already DS-073's inverse? — owner.
+  *Recommended: give it its own ID*, and the owner indicated support for this reading on
+  2026-08-09; it is recorded as the recommendation rather than as the answer, because the rule's
+  actual wording is this task's work and not a thing to settle in a sentence.**
+
+  The objection to inventing a rule so a check has somewhere to live is real, but it does not apply
+  here, and the distinction is worth stating because it will come up again. **It is backwards when
+  the check is the reason the rule exists.** Here the rule is load-bearing and simply was never
+  written down: *on the stage, every disclosure panel is closed at load* is a **precondition that
+  two other rules already depend on**. DS-161 asks whether the slide still makes its point with
+  everything closed — a question with no content unless closed-at-load is guaranteed. DS-073
+  requires the reflow view to render every panel **open** and inlined, which is only a meaningful
+  contrast against a stage that starts closed. So two rules lean on a fact the ruleset never
+  states, and the check that happens to exist is evidence the fact matters, not the motive.
+
+  DS-073's inverse is the tempting shortcut and it is not sufficient: DS-073 governs the **reflow
+  view**, and a rule about a different rendering cannot carry an obligation on the stage by
+  negation. Reading it that way would leave the stage's behaviour derivable only by someone who
+  notices the inversion — which is the class of unstated dependency this whole task is about.
+
+  What this implies for the rest of the task: DS-161 keeps its judgement and stays `judge`, the new
+  rule takes the mechanical fact as `hard` / `auto` / `Reach: yes`, and `audit.py`'s existing probe
+  moves to it unchanged — a re-pointing rather than new work, which is what keeps this inside §1's
+  *"out: building any new check"*.
 
 ## 2. Plan
 
