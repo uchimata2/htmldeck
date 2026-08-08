@@ -2,8 +2,8 @@
 id: T-035
 title: Replace the stage ribbon with a ruler navigator, and rescope the chrome budget it breaks
 type: deliverable
-status: in_progress
-phase: implement
+status: review
+phase: review
 parent: null
 blocked_by: []
 related: [T-033, T-028, T-016, T-027, T-034]
@@ -69,9 +69,11 @@ it is a rule amendment with a named side, not a licence.
    ≥ 24 × 24 CSS px, which **inside the stage means ≥ 48 × 48 design units**, because the stage
    bottoms out at 0.5 scale. The chrome row has **1728 usable design units**, so at most 36 targets
    fit, fewer once the right-hand controls take their share — call it **around 30, to be measured
-   rather than asserted.** ***Measured 2026-08-08: it is 24.*** The controls cost 546 units, a third
-   of the row, which is what the eyeballed reduction from 36 underestimated — see *The two bounds*
-   below, which is the home of that number. *This was originally written as the point where the ruler degrades to
+   rather than asserted.** ***Measured 2026-08-08, in two stages: 24, then 17.*** The controls cost
+   546 units — a third of the row, and what the eyeballed reduction from 36 underestimated — which
+   gives **24 if the ticks have all the remaining space**. They do not: the label shares the row,
+   and at the shipped 52-unit pitch the answer as built is **17**. See *The two bounds* below and
+   §3, which are the home of those numbers. *This was originally written as the point where the ruler degrades to
    section ticks only. The owner's degradation is better and replaces it — see below, and the
    consequence is that DS-168 stops governing the slide count at all.* The figure is still worth
    deriving: it is the first honest answer to *how long is too long*, where DS-217 has been guessing.
@@ -373,24 +375,84 @@ owner's, taken 2026-08-08, and each names which side moved (**L-37**).
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+
+- **The pitch is `--disc-hit` (52 du), not DS-168's bare 48.** The token already sits above the
+  floor on purpose, and reusing it makes a tick the same size as every other hit target in the
+  deck. **The first build declared 48 and drew 52**, so the capacity arithmetic was overstated by
+  four units per tick — `chrome_row.py` now measures the rendered cell and fails if the declared
+  constant and the drawn one disagree. — 2026-08-08
+- **The capacity is 17, and the three earlier numbers were each wrong for a different reason.**
+  36 was the whole row ignoring the controls; ~30 was that reduced by eye; 24 was the measured free
+  space **assuming ticks had it all**. As built the label shares the row, and at a 52-unit pitch
+  that leaves **17**. Each correction came from measuring one more thing that had been assumed. —
+  2026-08-08
+- **The label is part of the ruler, not a third encoding — and this is a judgement against a rule
+  I had just written, so it is stated rather than buried.** DS-216 caps position encodings at two,
+  and the ruler plus the counter is two. The label names whichever tick is under the cursor and, at
+  rest, where you are. **The test applied: an independent encoding survives the others being
+  removed, and this one does not** — take the ticks away and the label has nothing to say. It is a
+  component's caption, not a third indicator. That reading is now written into DS-216 so the next
+  component is not free to reinvent it. — 2026-08-08
+- **Ticks are bars, not dots.** DS-131's history is twelve unlabelled *dots*, and drawing dots again
+  would read as the removed thing returning even though these are named targets. A ruler has tick
+  lines; the shape says which component this is. — 2026-08-08
+- **DS-137's precedence rule, and it is stated in two places on purpose.** While focus is inside the
+  ruler the arrows move between ticks and do **not** advance the deck; Home/End go to the ends;
+  Enter or Space jumps. Everywhere else they advance, unchanged. The ruler's handler stops
+  propagation *and* the document handler checks for ruler focus — the rule is that the ruler owns
+  the arrows while focused, and a rule that depends on which listener was registered first is not a
+  rule. Same shape as DS-166. — 2026-08-08
+- **`audit.py` implements amendment 1 by verifying the claim, never trusting it.** `data-scale`
+  earns the one-item count only if the element is a uniform mark at uniform pitch with no per-item
+  label at rest. It defends itself in practice: the `chrome-over-budget` variant stuffs the row,
+  the ticks compress unevenly, the pitch stops being uniform, and **the exemption withdraws itself**
+  — the gate reports *"claims data-scale but is not regular — counted as n"*. — 2026-08-08
+- **`chrome_row.py`'s model of the row was wrong and had been right by accident.** It inferred the
+  gap from the distance between the two blocks, which equalled the CSS gap only while the ribbon
+  filled its space. The ruler's flexible label takes the slack instead, so the inferred gap became
+  596 du and free space collapsed to the ticks' own width — and it fed that into the deck's own
+  layout function, which then reported a false *dense*. It now reads the row's `gap` directly. —
+  2026-08-08
+- **The seeded-defect suite caught its own staleness, and the variant was re-anchored rather than
+  deleted.** `three-position-encodings` patched `.ribbon`, which no longer exists; its self-test
+  said so and refused to run. The defect it seeds is unchanged and now proves the **new** cap: a
+  progress bar beside the ruler and the counter is a third encoding, and it is caught. — 2026-08-08
 
 **Outputs produced**
-- <path>
+- [`examples/reference-deck.html`](../examples/reference-deck.html) — the ruler, its label, the
+  degradation, and the keyboard precedence
+- [`tools/deck/chrome_row.py`](../tools/deck/chrome_row.py) — the two bounds, re-measurable
+- [`tools/deck/audit.py`](../tools/deck/audit.py) — amendment 1, enforced by verification
+- [`tools/deck/deliverable_variants.py`](../tools/deck/deliverable_variants.py) — re-anchored
+- [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) · [`docs/DESIGN-RATIONALE.md`](../docs/DESIGN-RATIONALE.md)
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Row width does not grow with the number of stages or the length of their names | **met** | The indicator went from **1180 du to 624 du** on the same deck, and its width is now `n` × 52 regardless of what the stages are called |
+| Every tick a named jump target, revealed by replacing the title in the bar — hover **and** focus, instant, restoring on blur, not a tooltip | **met** | Verified in real Chrome: focusing tick 4 put *"Waiting is the trip"* in the label and blur restored *"Claim"*. No transition on the label. DS-138 forbade a tooltip here — the chrome sits 40 du off the foot |
+| Every tick carries its own accessible name, no live region | **met** | `aria-label` per tick — section: *"Go to Claim: Buy frequency before bikes"*; small: *"Go to slide 4: Waiting is the trip"*. The label element is `aria-hidden`, so the swap is never announced |
+| Small ticks name **themselves**, not their section | **met** | Checked on stage 2, which holds two slides — its ticks name slide 3 and slide 4 separately. This is the precondition amendment 3 rests on |
+| Slide and stage readable from one element, no third encoding | **met** | `audit.py` DS-216: *encodings of position: 2 (ruler, slide counter)* |
+| The bound measured on the real row and written into DS-217 as where small ticks stop being targets | **met** | **17**, by [`chrome_row.py`](../tools/deck/chrome_row.py). Written into DS-217 with the derivation |
+| Past the bound: section ticks stay large and selectable, small ticks become marks, still reads as a ruler | **met** | Verified by driving the real path — widening the controls until `fitRuler()` chose dense — not by forcing the attribute, which `fitRuler` correctly undid. Section ticks stay 52 du targets, small ticks collapse to 8 du marks and leave the tab order |
+| Minimum mark size measured at the 0.5 floor on a 1× display, not chosen | **partly** | Measured: **4 du = 2.02 CSS px**, and the binding constraint is the inactive marks, not the current one. **The 1–2 pixel judgement was taken through a screenshot and is owed a look on real hardware** (**L-15**) before it hardens into a rule |
+| Tick hit areas ≥ 48 × 48 du, checked not eyeballed | **met** | 52 du — `--disc-hit`. `audit.py` DS-168: *targets under 24 CSS px: 0* |
+| Arrow-key precedence decided and written down (DS-137) | **met** | Ruler owns the arrows while focused. Verified both ways: an arrow inside the ruler moved focus 3 → 4 and **left the slide unchanged**; the same key outside advanced the deck |
+| `aria-current` still marks the current position | **met** | Moves with the lit tick, and roving `tabindex` follows it, so tabbing in lands where you are |
+| The four amendments in `DESIGN-SYSTEM.md`, reasoning in `DESIGN-RATIONALE.md` | **met** | DS-131, DS-216, DS-217 ×2, each naming which side moved; *Which side moved, second time* records why three narrowed and one widened with a cap |
+| `audit.py` zero failures, both suites 7 of 7 | **met** | Plus `check_scaffold`, `print_variants`, `contents_bound` and `chrome_row` self-tests |
+| The deck is **looked at** at 1920 and at the 0.5 scale floor | **partly** | Rendered and looked at both, plus the degraded mode. **The owner has not seen it yet**, and on a change to the deck's primary navigation that is the verdict that counts |
 
 **Child fix tasks raised**
-- none
+- none yet — the two `partly` rows are owner looks, not defects.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | → review | **The ruler is built, gated and looked at; two verdicts are the owner's.** Steps 3–7 landed together. The indicator went from **1180 du to 624 du** on the same deck and its width no longer depends on what the stages are called. Three numbers were corrected on the way. **The pitch is `--disc-hit` (52 du), and the first build declared 48 while drawing 52** — `chrome_row.py` now measures the rendered cell and fails on drift. **Capacity is 17, not 24**: 24 assumed the ticks had the whole free row, and the label shares it. **`chrome_row.py`'s own model of the row was wrong and had been right by accident** — it inferred the gap from the distance between two blocks, which equalled the CSS gap only while the ribbon filled its space; with the ruler's flexible label taking the slack it read 596 du of gap, collapsed free space to the ticks' own width, and fed that into the deck's layout function to produce a false *dense*. One judgement is flagged rather than buried: **the ruler's label is part of the ruler, not DS-216's forbidden third encoding**, on the test that an independent encoding survives the others being removed — this one does not, so it is a caption. That reading is now in DS-216. **Amendment 1 is enforced by verification rather than trust**, and it defends itself: stuff the row and the ticks compress unevenly, the pitch stops being uniform, and the exemption withdraws itself. **The seeded-defect suite caught its own staleness** — `three-position-encodings` anchored on `.ribbon`, refused to run, and was re-anchored rather than deleted; it now proves the new cap by catching a progress bar as a third encoding. Eight gates green. **What is owed: the owner has not looked at the ruler**, and on a change to the deck's primary navigation that is the verdict that counts; and the 4 du mark floor is a one-to-two pixel call taken through a screenshot, owed a look on real hardware (**L-15**) before it hardens into a rule. |
 | 2026-08-08 | → in_progress | **Step 2 measured, and both estimates it was checking turned out wrong.** [`chrome_row.py`](../tools/deck/chrome_row.py) prices the row in real offline Chrome at two scales. **The target bound is 24, not ~30**: §1 derived 36 from 1728 ÷ 48 and reduced it by eye, but **the five controls had never been measured and they cost 546 units — 32% of the row**, leaving 1180, which is 24 targets at DS-168's floor. That is the number for DS-217's amendment 2. **The row is also 1726 units, not 1728** — the two are the stage's own border. **The premise is confirmed but its cited evidence is not**: the *"~1450 of 1728, 84% used"* quoted from the deck's own comment does not reproduce — the ribbon is 1180 of 1726, or 68.4% — because the comment predates the control labels growing. The premise stands on stronger evidence instead: the ribbon's content wants **1249.5 units in a 1180 box** and the six connectors, each compressed to 22.0, absorb the difference, so **the row is at capacity now rather than one stage short of it** and renders cleanly only because the connectors are already yielding. The stale comment was corrected in the deck rather than left to be quoted again. **The mark floor is 4 du (2.02 CSS px)**, measured at k = 0.5056 — and the run confirmed DS-071 empirically, the stage being hidden at 0.4685 and shown at 0.5056. **The binding constraint is the inactive marks, not the current one**: at one to two pixels the quiet colour vanishes well before the accent does, which the numbers alone would not have shown. That verdict is a one-to-two device pixel judgement taken through a screenshot and is flagged for the owner to confirm on real hardware (**L-15**). |
 | 2026-08-08 | → planned | **All open questions answered, and the answers turned three amendments into four.** The owner took amendments 1–3 **with two tightenings, both narrowing**: *regular repeating scale* is defined as uniform mark, uniform pitch and no per-item label at rest, because undefined it is a loophole any evenly-spaced row of controls could claim, leaving DS-217 enforceable against nothing; and DS-131's narrowing carries a **per-target naming clause** rather than a per-group one. That second tightening matters more than it reads: **amendment 3 and the own-slide answer are one decision**, since ticks announcing their *section* would give twelve targets seven labels — still unnamable before clicking, still exactly what DS-131 forbids — so the amendment would have gutted the rule while appearing to preserve it. The precondition is written into the rule rather than left as a fact about this deck. **The counter is kept, and that is the fourth amendment**: the ruler already carries both facts, so `05 / 12` is the same fact at a different *precision*, which swaps DS-216's test from **fact** to **register** — and register is far easier to claim, a progress bar being the obvious next claimant, which this task's own scope excludes on DS-216's authority. Taken with a **cap that does the work the old test used to**: a second encoding is permitted for a different fact or register, and the total is never more than two elements however well a third is argued. §2 was rewritten around the fact that [T-034](T-034-a-contents-page-for-the-printed-deck.md) has since **shipped `manifest()`**, so the ruler consumes it rather than reading the slides again, and around **L-38** — this task's brief is entirely about long decks, so a short one is the case that will go unrendered unless the plan names it. |
 | 2026-08-08 | (no change) | **§1 gained what the raising session had measured but never written down, and one of the findings is a conflict this task now has to settle.** The row's real geometry — 1728 usable design units, `bottom: 40du`, and the five elements in the `.controls` block the ruler must share the row with. The current-position idiom the owner's degradation describes **already ships**: `data-lit` plus `transform: scale(1.5)` on a 10-unit dot, which also anchors the mark-size measurement (10 units is 5 CSS px at the 0.5 scale floor, so a 4-unit mark is 2 px and a 2-unit mark is 1). The lit dot **transitions**, and the title swap must not inherit that. **The conflict: arrow keys are already taken globally.** The `keydown` listener is on `document` and guards only against `input,textarea`, so the arrows advance the deck even while a chrome button holds focus — tolerable with seven ribbon buttons, a genuine collision with thirty ticks, and **DS-137 requires the precedence rule to be stated** rather than left to listener order. DS-166 already fixes the shape of the answer for disclosure and should be followed here. Also recorded for [T-016](T-016-the-interaction-and-motion-layer.md): **`Escape` is already bound in the reading view**, so an ESC-opened slide index has a conflict in one of the two views. |

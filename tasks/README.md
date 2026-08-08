@@ -25,7 +25,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004, T-005 | - |
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | T-002 |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
-| [T-035](T-035-the-ruler-navigator.md) | Replace the stage ribbon with a ruler navigator, and rescope the chrome budget it breaks | WP2 | `in_progress` | implement | - | - |
+| [T-035](T-035-the-ruler-navigator.md) | Replace the stage ribbon with a ruler navigator, and rescope the chrome budget it breaks | WP2 | `review` | review | - | - |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | WP2 | `proposed` | specify | - | - |
 
 ## Closed

@@ -79,10 +79,14 @@ VARIANTS = [
     ("three-position-encodings", "DS-216", [
         # The deck's own committed state until T-028: ribbon, counter AND a progress bar. Restored
         # verbatim rather than invented, so the variant is a regression test for a real defect.
+        # Re-anchored 2026-08-08 when T-035 replaced the ribbon with the ruler. The defect is
+        # unchanged and so is the rule it breaks - a progress bar beside the ruler and the counter
+        # is a THIRD encoding, and DS-216's amended cap forbids a third however well it is argued.
+        # This is the variant that proves the cap is enforced rather than merely written down.
         ("</nav>\n",
          '</nav>\n<div class="progress" role="presentation"><i id="bar"></i></div>\n'),
-        (".ribbon{display:flex;align-items:center;gap:var(--sp-1);min-width:0;margin-right:auto}",
-         ".ribbon{display:flex;align-items:center;gap:var(--sp-1);min-width:0;margin-right:auto}\n"
+        (".ruler{display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}",
+         ".ruler{display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}\n"
          ".progress{position:absolute;left:0;right:0;bottom:0;height:calc(5*var(--du));"
          "background:var(--line)}\n"
          ".progress i{display:block;height:100%;background:var(--accent);width:0}")]),

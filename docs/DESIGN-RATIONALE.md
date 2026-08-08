@@ -246,6 +246,45 @@ jump into a nine-slide stage is barely a jump, and there the answer is an on-dem
 a component rather than a chrome element, so it costs nothing against DS-217's budget until it is
 asked for. Naming that limit in the rule is cheaper than leaving the next deck to discover it.
 
+### Which side moved, second time — the ruler, and why four rules bent rather than one
+
+[T-035](../tasks/T-035-the-ruler-navigator.md) replaced the stage-name ribbon with a ruler, and the
+ribbon's problem was structural rather than aesthetic: **its footprint depended on how the stages
+were named.** Measured, seven names cost 856 design units in a 1180-unit box, with the six flexible
+connectors already compressed to absorb 69.5 units the row did not have. It rendered cleanly and had
+nothing left to give — one more stage, or one longer name, and it wrapped into the second row DS-217
+exists to prevent. Tick marks have a fixed width, so the element stops depending on the words.
+
+Four rules had to move, and **the shape of each amendment is the point: three narrowed the rule's
+*mechanism* while keeping its *intent*, and the fourth widened a test and paid for it with a cap.**
+
+- **DS-217 counts a scale as one item.** The budget counts items because items make a frame noisy,
+  and a tick array is one perceived object. The metric was wrong for the shape, not the intent —
+  so the counting changed and the number did not. Raising 12 to 24 would have destroyed the budget
+  for everything else to admit one component.
+- **DS-217's slide bound became a measurement.** *"Somewhere around ten"* was a guess the shipping
+  twelve-slide deck already contradicted, which is the worst state for a rule: contradicted by the
+  artifact it governs, and by an amount nobody had checked.
+- **DS-131 narrowed by one word — *unnamed*.** T-033 had already established that *named* was
+  load-bearing; the amendment simply attached the prohibition to the right half of the phrase.
+- **DS-216 widened, from *different fact* to *different fact or register*.** This is the one that
+  did not narrow, and it is the one that needed a brake.
+
+**The brake is worth stating on its own, because it is a reusable move.** A widened test invites
+claimants the old test excluded: *register* is easy to assert, and a progress bar reads as
+"approximate position" as readily as a ruler does. So the widening ships with a **hard cap of two
+elements, however well a third is argued** — the cap does the work the old test used to, and it is
+countable where the test was arguable. **When a rule's test is loosened, replace the rigour
+somewhere it can still be counted**, or the loosening is unbounded in practice however narrow it
+looked on paper. The seeded-defect suite carries the proof: a progress bar beside the ruler and the
+counter is caught as a third encoding, which is the cap being enforced rather than merely written.
+
+The same discipline applies to the scale exemption. **`data-scale` is verified, not trusted** —
+uniform mark, uniform pitch, no per-item label at rest — because an unverified exemption is a
+loophole any evenly-spaced row of controls could claim. In practice it defends itself: when a
+variant stuffs the row with extra buttons, the ticks compress unevenly, the pitch stops being
+uniform, and the exemption withdraws itself before the budget is breached.
+
 ### What the first tolerance measurement did not measure
 
 DS-063 states two tolerances. When [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md)

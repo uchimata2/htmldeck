@@ -194,13 +194,45 @@ PROBE = r"""
     out.chromeItems = chrome ? tabbables(chrome).length : 0;
     // buttons, plus labelled items that are not merely wrappers around one - counting `li` and
     // `button` separately scored every ribbon stage twice and reported 24 for an 11-item chrome.
+    // DS-217 as amended by T-035: a REGULAR REPEATING SCALE counts as one item rather than n,
+    // because the budget counts items to bound how noisy the frame reads and a scale is perceived
+    // as one object. The claim is verified, never trusted - otherwise `data-scale` is a loophole
+    // any evenly spaced row of controls could use to escape the budget entirely.
+    // The owner's definition, 2026-08-08: uniform mark, uniform pitch, no per-item label at rest.
+    // Two pitch/width clusters are allowed, because major and minor graduations are what makes a
+    // ruler a ruler - but a labelled item disqualifies it outright.
+    function regularScale(el){
+      var kids = Array.prototype.slice.call(el.children);
+      if (kids.length < 3) return false;
+      var gaps = [], widths = [], prev = null;
+      for (var s=0;s<kids.length;s++){
+        var r = kids[s].getBoundingClientRect();
+        if ((kids[s].textContent || '').trim()) return false;   // a label at rest
+        widths.push(Math.round(r.width * 2) / 2);
+        var c = r.left + r.width / 2;
+        if (prev !== null) gaps.push(Math.round((c - prev) * 2) / 2);
+        prev = c;
+      }
+      function clusters(a){
+        var u = []; for (var t=0;t<a.length;t++) if (u.indexOf(a[t]) < 0) u.push(a[t]); return u;
+      }
+      return clusters(gaps).length <= 2 && clusters(widths).length <= 2;
+    }
     out.chromeLabelled = 0;
+    out.scaleVerdict = null;
     if (chrome){
+      var scaleEl = chrome.querySelector('[data-scale]');
+      var scaleOk = scaleEl ? regularScale(scaleEl) : false;
+      if (scaleEl) out.scaleVerdict = scaleOk
+        ? 'regular scale, counted as 1'
+        : 'claims data-scale but is not regular - counted as n';
       var items = chrome.querySelectorAll('button,[aria-label]');
       for (var q=0;q<items.length;q++){
         if (items[q].querySelector('button')) continue;   // a wrapper, not an item
+        if (scaleEl && scaleOk && scaleEl.contains(items[q])) continue;   // counted once, below
         out.chromeLabelled++;
       }
+      if (scaleEl && scaleOk) out.chromeLabelled++;
     }
     var chromeRect = chrome ? chrome.getBoundingClientRect() : null;
     var progRect = document.querySelector('.progress');
@@ -209,6 +241,7 @@ PROBE = r"""
       (progRect ? progRect.height : 0)) / k).toFixed(1) : 0;
     // the encodings of position that exist, by the marker each one draws
     out.positionEncodings = [];
+    if (document.querySelector('.ruler-ticks li')) out.positionEncodings.push('ruler');
     if (document.querySelector('.ribbon li'))    out.positionEncodings.push('stage ribbon');
     if (document.querySelector('.dots button'))  out.positionEncodings.push('per-slide dots');
     if (document.querySelector('.progress'))     out.positionEncodings.push('progress bar');
@@ -378,7 +411,9 @@ def render_verdicts(data):
         ("DS-216", "encodings of position: %d (%s)"
          % (len(data.get("positionEncodings", [])), ", ".join(data.get("positionEncodings", []))),
          len(data.get("positionEncodings", [])) <= 2),
-        ("DS-217", "labelled or interactive chrome items: %d" % data.get("chromeLabelled", 0),
+        ("DS-217", "labelled or interactive chrome items: %d%s"
+         % (data.get("chromeLabelled", 0),
+            ("  [%s]" % data["scaleVerdict"]) if data.get("scaleVerdict") else ""),
          data.get("chromeLabelled", 0) <= 12),
         ("DS-217", "chrome height: %s du" % data.get("chromeHeightDu"),
          data.get("chromeHeightDu", 999) <= 90),

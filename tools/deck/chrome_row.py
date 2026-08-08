@@ -37,6 +37,9 @@ DECK = os.path.join(ROOT, "examples", "reference-deck.html")
 # DS-168: >= 24 x 24 CSS px, which inside the stage is >= 48 x 48 design units, because a design
 # unit is worth half a CSS pixel at the 0.5 scale floor.
 TARGET_FLOOR_DU = 48
+# What the ruler declares as its pitch, in `TICK_PITCH_DU`. It is `--disc-hit` (52), not the bare
+# floor, so a tick is the same size as every other hit target in the deck.
+DECLARED_PITCH_DU = 52
 # The row, from --pad-x on both sides of a 1920 stage. Asserted rather than assumed.
 ROW_DU = 1920 - 2 * 96
 # Candidate mark sizes for the degraded mode, in design units.
@@ -54,7 +57,10 @@ PROBE = r"""
                l:+(r.left/k).toFixed(2), r:+(r.right/k).toFixed(2) };
     }
     var chrome   = document.querySelector('.chrome');
-    var ribbon   = document.getElementById('ribbon');
+    /* The indicator: the ruler since T-035, the ribbon before it. Both are measured the same way -
+       what the left-hand block costs and what the row has left - so the numbers stay comparable
+       across the replacement rather than restarting at it. */
+    var ribbon   = document.getElementById('rulerTicks') || document.getElementById('ribbon');
     var controls = document.querySelector('.controls');
     var out = { k:+k.toFixed(6), vw:window.innerWidth, vh:window.innerHeight };
     if (!chrome || !ribbon || !controls){
@@ -71,9 +77,14 @@ PROBE = r"""
         out.controlItems.push({ id:c.id || c.className || c.tagName.toLowerCase(),
                                 w:d.w, h:d.h });
       });
-      /* the gap between the two blocks, which is real space the ruler cannot use */
-      out.gapDu = +(out.controls.l - out.ribbon.r).toFixed(2);
-      /* what a ruler actually gets: the row minus the controls minus the gap */
+      /* The gap is read from the ROW's own `gap`, not inferred from the distance between the two
+         boxes. Those agreed while the ribbon filled its space, and stopped agreeing the moment the
+         ruler's flexible label took the slack instead - at which point the inferred figure was
+         596 du of "gap" and the free space collapsed to the ticks' own width. Correct by accident
+         is not correct. */
+      var gapCss = parseFloat(getComputedStyle(chrome).gap) / k;
+      out.gapDu = +(isFinite(gapCss) ? gapCss : 0).toFixed(2);
+      /* what the indicator actually gets: the row minus the controls minus that gap */
       out.freeDu = +(out.chrome.w - out.controls.w - out.gapDu).toFixed(2);
       /* the current ribbon's real footprint, against the number quoted from the source comment */
       out.ribbonPct = +((out.ribbon.w / out.chrome.w) * 100).toFixed(1);
@@ -112,9 +123,24 @@ PROBE = r"""
       out.itemHeightDu = items.length
         ? +(items[0].getBoundingClientRect().height/k).toFixed(2) : 0;
 
-      /* the lit dot, which is the idiom the degraded mode reuses */
+      /* the lit mark, which is the idiom the degraded mode reuses */
       var lit = document.querySelector('[data-lit]');
       if (lit) out.litDot = du(lit);
+
+      /* The capacity the deck itself computes, asked of the deck rather than recomputed here -
+         a second copy of the rule is what stops the tool measuring what ships (L-08). */
+      if (window.htmldeckRulerLayout){
+        var lay = window.htmldeckRulerLayout(document.querySelectorAll('.slide').length, out.freeDu);
+        out.rulerCapacity = lay.capacity;
+        out.rulerDense = !!lay.dense;
+        out.rulerTicks = ribbon.children.length;
+        /* the rendered pitch, so the deck's declared TICK_PITCH_DU cannot drift from the cell it
+           actually draws - the capacity arithmetic is built on the two agreeing */
+        var t0 = ribbon.firstElementChild;
+        out.rulerPitchDu = t0 ? +(t0.getBoundingClientRect().width/k).toFixed(2) : 0;
+        var lbl = document.querySelector('.ruler-label');
+        out.rulerLabelDu = lbl ? +(lbl.getBoundingClientRect().width/k).toFixed(2) : 0;
+      }
     }
     document.title = 'RESULT' + JSON.stringify(out) + 'ENDRESULT';
     document.documentElement.setAttribute('data-probe-done','');
@@ -172,7 +198,15 @@ def self_test(wide, floor):
                         "the mark sizes are being reported for the wrong scale" % floor["k"])
     # Blocks must not already overlap, or "free space" is a negative fiction.
     if wide["gapDu"] < 0:
-        failures.append("the ribbon and the controls already overlap by %.1f du" % -wide["gapDu"])
+        failures.append("the indicator and the controls already overlap by %.1f du"
+                        % -wide["gapDu"])
+    # The pitch the deck DECLARES and the cell it DRAWS have to be the same number, because the
+    # capacity below is arithmetic on the declared one. They were 48 and 52 on the first build.
+    pitch = wide.get("rulerPitchDu")
+    if pitch and abs(pitch - DECLARED_PITCH_DU) > 0.6:
+        failures.append("the ruler draws a %.1f du cell but the capacity arithmetic assumes %d - "
+                        "TICK_PITCH_DU in the deck and the rendered tick have drifted apart"
+                        % (pitch, DECLARED_PITCH_DU))
     return failures
 
 
@@ -209,21 +243,22 @@ def main():
     print("  row (.chrome)            %8.1f du   measured; T-035 quotes %d, and the %.0f du "
           "difference is the stage's own border"
           % (wide["chrome"]["w"], ROW_DU, ROW_DU - wide["chrome"]["w"]))
-    print("  ribbon box (available)   %8.1f du   %.1f%% of the row"
-          % (wide["ribbon"]["w"], wide["ribbonPct"]))
-    print("  ribbon content (used)    %8.1f du   %.1f%% of the row, across %d item(s)"
-          % (wide.get("ribbonContentDu", 0),
-             100.0 * wide.get("ribbonContentDu", 0) / wide["chrome"]["w"],
-             wide.get("ribbonItems", 0)))
-    print("      %d stage name(s)   %7.1f du total" % (len(wide.get("namedItems", [])),
-                                                       wide.get("namedTotal", 0)))
-    print("      %d connector(s)    %7.1f du total, each %.1f-%.1f du"
-          % (len(wide.get("linkItems", [])), wide.get("linkTotal", 0),
-             wide.get("linkMin", 0), wide.get("linkMax", 0)))
-    if wide.get("ribbonOverflowDu", 0) > 1:
-        print("      content wants %.1f du more than the box gives it - absorbed by the"
-              % wide["ribbonOverflowDu"])
-        print("      connectors, which is why the row still renders cleanly")
+    print("  indicator                %8.1f du   %.1f%% of the row, across %d item(s)"
+          % (wide["ribbon"]["w"], wide["ribbonPct"], wide.get("ribbonItems", 0)))
+    if wide.get("linkItems"):
+        # the ribbon shape: named labels separated by flexible connectors
+        print("      %d stage name(s)   %7.1f du total" % (len(wide.get("namedItems", [])),
+                                                           wide.get("namedTotal", 0)))
+        print("      %d connector(s)    %7.1f du total, each %.1f-%.1f du"
+              % (len(wide.get("linkItems", [])), wide.get("linkTotal", 0),
+                 wide.get("linkMin", 0), wide.get("linkMax", 0)))
+        if wide.get("ribbonOverflowDu", 0) > 1:
+            print("      content wants %.1f du more than the box gives it - absorbed by the"
+                  % wide["ribbonOverflowDu"])
+            print("      connectors, which is why the row still renders cleanly")
+    if wide.get("rulerLabelDu"):
+        print("  ruler label              %8.1f du   flexible; it takes the slack the ticks leave"
+              % wide["rulerLabelDu"])
     if wide.get("itemHeightDu") and wide.get("ribbonHeightDu", 0) > wide["itemHeightDu"] * 1.4:
         print("      WRAPPED - %.1f du tall against a %.1f du item"
               % (wide["ribbonHeightDu"], wide["itemHeightDu"]))
@@ -241,8 +276,14 @@ def main():
     print("  on paper, whole row      %8d targets   (%d / %d, ignoring the controls)"
           % (paper, ROW_DU, TARGET_FLOOR_DU))
     print("  T-035 estimated          %8s targets   derived from that, then eyeballed down" % "~30")
-    print("  MEASURED, free space     %8d targets   (%.1f / %d)"
+    print("  MEASURED, free space     %8d targets   (%.1f / %d, ticks alone)"
           % (fits, wide["freeDu"], TARGET_FLOOR_DU))
+    if wide.get("rulerCapacity") is not None:
+        print("  AS BUILT, label included %8d targets   the label shares the row, and the deck's"
+              % wide["rulerCapacity"])
+        print("                                        own htmldeckRulerLayout() says so")
+        print("      %d tick(s) drawn, dense mode %s"
+              % (wide.get("rulerTicks", 0), "ON" if wide.get("rulerDense") else "off"))
     print("\n  The ruler shares the row, so the whole-row figure was never the bound. What the")
     print("  controls cost had not been measured, and it is %.1f du - %.0f%% of the row."
           % (wide["chrome"]["w"] - wide["freeDu"],

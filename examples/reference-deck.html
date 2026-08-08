@@ -311,25 +311,59 @@ svg{display:block}
   position:absolute;left:var(--pad-x);right:var(--pad-x);bottom:calc(40*var(--du));
   display:flex;align-items:center;gap:var(--sp-4);z-index:8;
 }
-.ribbon{display:flex;align-items:center;gap:var(--sp-1);min-width:0;margin-right:auto}
-/* T-028: the stage names became the click target when the twelve dots went. DS-217 asks for a
-   compact indicator plus click-to-jump rather than one target per slide, and seven stages that
-   were already drawn are a cheaper target than twelve dots that were not labelled. */
-.ribbon li{display:flex;align-items:center;min-width:0}
-.ribbon li + li{margin-left:var(--sp-1)}
-.ribbon button{
-  display:flex;align-items:center;gap:var(--sp-1);min-height:var(--disc-hit);
-  padding:0 calc(4*var(--du));border-radius:var(--radius);
-  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
-  text-transform:uppercase;color:var(--ink-faint);white-space:nowrap;
+/* THE RULER (T-035), which replaced the stage-name ribbon. The ribbon's footprint depended on how
+   the stages were NAMED - measured at capacity with seven of them, its six connectors already
+   compressed to absorb 69.5 du it did not have - so one more stage, or one longer name, wrapped it
+   into the second row DS-217 exists to prevent. Tick marks have a fixed width, so the element's
+   size stops depending on the words. */
+.ruler{display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}
+.ruler-ticks{display:flex;align-items:center;flex:none}
+/* The cell IS the hit area and the mark is what you see, so the target size is the pitch rather
+   than a minimum applied afterwards. `--disc-hit` is 52 du - the same target token the disclosure
+   buttons use, and deliberately above DS-168's 48-unit floor inside the stage. */
+.ruler-ticks li{
+  display:flex;align-items:center;justify-content:center;flex:none;
+  width:var(--disc-hit);height:var(--disc-hit);
 }
-.ribbon button::before{content:"";width:calc(10*var(--du));height:calc(10*var(--du));
-  border-radius:50%;background:var(--ui-line);flex:none;
-  transition:background var(--scale-dur) ease-in-out,transform var(--scale-dur) ease-in-out}
-.ribbon button:hover{color:var(--ink)}
-.ribbon li[data-lit] button{color:var(--ink)}
-.ribbon li[data-lit] button::before{background:var(--accent);transform:scale(1.5)}
-.ribbon .link{width:calc(22*var(--du));height:var(--hair);background:var(--line);flex:none}
+.ruler-ticks button{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;height:100%;border-radius:var(--radius);
+}
+/* A bar, not a dot. DS-131's history is twelve unlabelled DOTS, and drawing dots again would read
+   as the thing that was removed even though these are named targets. A ruler has tick lines. */
+.ruler-ticks button::before{
+  content:"";display:block;width:var(--rule);height:calc(14*var(--du));
+  border-radius:calc(2*var(--du));background:var(--ui-line);
+  transition:background var(--scale-dur) ease-in-out,height var(--scale-dur) ease-in-out;
+}
+/* the stage starts - the seven that stay targets past the bound */
+.ruler-ticks li[data-section] button::before{height:calc(26*var(--du));background:var(--line-firm)}
+.ruler-ticks button:hover::before{background:var(--ink-soft)}
+.ruler-ticks li[data-lit] button::before{background:var(--accent);height:calc(32*var(--du))}
+.ruler-ticks button:focus-visible{outline:var(--rule) solid var(--accent);outline-offset:calc(-3*var(--du))}
+
+/* DEGRADED MODE - past the measured capacity the small ticks stop being TARGETS and stay MARKS.
+   That drops the affordance and keeps the information, and it takes DS-168 out of the slide count:
+   the 48-unit floor then governs only the seven section ticks. 4 du is the measured floor - at the
+   0.5 stage hand-over it renders at 2.02 CSS px, and the quiet colour vanishes below that long
+   before the accent does. */
+.ruler[data-dense] .ruler-ticks li:not([data-section]){width:calc(8*var(--du));height:calc(26*var(--du))}
+.ruler[data-dense] .ruler-ticks li:not([data-section]) button{pointer-events:none}
+.ruler[data-dense] .ruler-ticks li:not([data-section]) button::before{
+  width:calc(4*var(--du));height:calc(10*var(--du))}
+.ruler[data-dense] .ruler-ticks li:not([data-section])[data-lit] button::before{
+  background:var(--accent);height:calc(20*var(--du));width:calc(6*var(--du))}
+
+/* The label names the tick under the cursor or the focus, and at rest names where you are. It is
+   part of the ruler rather than a third encoding of position (DS-216): remove the ticks and it has
+   nothing to say, which is the test - an independent encoding survives the others being removed.
+   No transition: arrowing through thirty ticks would otherwise flicker it thirty times. */
+.ruler-label{
+  flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  text-transform:uppercase;color:var(--ink-faint);
+}
+.ruler-label[data-preview]{color:var(--ink)}
 
 .controls{display:flex;align-items:center;gap:var(--sp-2);flex:none}
 /* the second encoding DS-216 permits, and it encodes a different fact: the ribbon says which
@@ -1306,7 +1340,15 @@ svg{display:block}
 
 <!-- ============================================================ chrome -->
 <nav class="chrome" aria-label="Deck navigation">
-  <ul class="ribbon" id="ribbon"></ul>
+  <!-- The ruler (T-035). `data-scale` is not decoration: DS-217 counts a regular repeating scale
+       as ONE item rather than n, and the gate verifies the claim - uniform mark, uniform pitch,
+       no per-item label at rest - rather than trusting the attribute.
+       The label is aria-hidden because every tick carries its own accessible name. The visible
+       swap is a sighted-user affordance and must not be announced on every focus move. -->
+  <div class="ruler" id="ruler">
+    <ul class="ruler-ticks" id="rulerTicks" data-scale></ul>
+    <p class="ruler-label" id="rulerLabel" aria-hidden="true"></p>
+  </div>
   <div class="controls">
     <p class="count" id="count" aria-hidden="true"></p>
     <button class="btn" id="prev" aria-label="Previous slide"><span class="chev l"></span></button>
@@ -1421,7 +1463,9 @@ svg{display:block}
   var viewport = document.getElementById('viewport');
   var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
   var countBox = document.getElementById('count');
-  var ribbonBox = document.getElementById('ribbon');
+  var rulerEl = document.getElementById('ruler');
+  var rulerTicks = document.getElementById('rulerTicks');
+  var rulerLabel = document.getElementById('rulerLabel');
   var doc = document.getElementById('doc');
   var docBody = document.getElementById('docBody');
   var toDoc = document.getElementById('toDoc');
@@ -1478,18 +1522,123 @@ svg{display:block}
     });
   }
 
-  STAGES.forEach(function(name, i){
-    if (i) { var l = document.createElement('li'); l.className = 'link'; l.setAttribute('aria-hidden','true');
-             ribbonBox.appendChild(l); }
-    var li = document.createElement('li');
-    li.dataset.stageIndex = i;
-    var b = document.createElement('button');
-    b.textContent = name;
-    /* the nav name and the page title come from one source (DS-135) */
-    b.setAttribute('aria-label', 'Go to ' + name + ': ' + slides[firstSlideOfStage(i)].dataset.name);
-    b.addEventListener('click', function(){ go(firstSlideOfStage(i)); countIfSeen(); });
-    li.appendChild(b);
-    ribbonBox.appendChild(li);
+  /* ------------------------------------------------------------------------ the ruler (T-035) */
+  /* Built from manifest(), the same derivation the printed contents page renders (T-034). The two
+     are renderings of one source rather than two readings of the deck (L-08).
+
+     48 du is the pitch, not a minimum bolted on afterwards: DS-168's target floor inside the stage
+     is 48 x 48, because the stage bottoms out at 0.5 scale. The label needs room on the same row,
+     so capacity is what is left after it - measured below rather than assumed. */
+  /* The pitch is `--disc-hit` = 52 du, the deck's existing target-size token, not DS-168's bare 48
+     floor - the token already sits above the floor on purpose and reusing it keeps a tick the same
+     size as every other hit target in the deck. Written here as a number because the arithmetic
+     needs one; tools/deck/chrome_row.py measures the rendered tick and fails if the two disagree. */
+  var TICK_PITCH_DU = 52;
+  var LABEL_MIN_DU = 260;
+
+  function rulerLayout(n, availDu){
+    var capacity = Math.floor((availDu - LABEL_MIN_DU) / TICK_PITCH_DU);
+    return { capacity: capacity, dense: n > capacity };
+  }
+  /* exported for tools/deck/chrome_row.py, so the bound it reports is the rule the deck SHIPS
+     rather than a copy kept in step by hand (L-08) */
+  window.htmldeckRulerLayout = rulerLayout;
+
+  /* What the ruler actually has: the row, less the controls, less the gap between them. Measured
+     rather than derived, because the controls cost 32% of the row and that was the number T-035's
+     paper estimate of "~30 targets" got wrong. */
+  function rulerAvailableDu(){
+    var kk = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 1;
+    var chromeEl = document.querySelector('.chrome');
+    var ctrlEl = document.querySelector('.controls');
+    if (!chromeEl || !ctrlEl || !kk) return 0;
+    var cw = chromeEl.getBoundingClientRect().width / kk;
+    var ow = ctrlEl.getBoundingClientRect().width / kk;
+    var gap = parseFloat(getComputedStyle(chromeEl).gap) / kk || 0;
+    return cw - ow - gap;
+  }
+
+  var MAN = manifest();
+
+  function buildRuler(){
+    MAN.forEach(function(m, i){
+      var isSection = firstSlideOfStage(m.stage) === i;
+      var li = document.createElement('li');
+      li.dataset.slide = i;
+      if (isSection) li.dataset.section = '';
+
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.tabIndex = -1;                 /* roving: only the current tick is in the tab order */
+      /* The accessible name is independent of the visible swap, because the swap is for the eye
+         (DS-163). A section tick names its stage AND its slide; a small tick names its own slide,
+         never its section - twelve targets carrying seven labels would be exactly the unnamed
+         targets DS-131 forbids. */
+      b.setAttribute('aria-label', isSection
+        ? 'Go to ' + m.stageName + ': ' + m.title
+        : 'Go to slide ' + m.n + ': ' + m.title);
+      b.dataset.label = isSection ? m.stageName : m.title;
+      b.addEventListener('click', function(){ go(i); countIfSeen(); });
+      b.addEventListener('mouseenter', function(){ previewLabel(b.dataset.label); });
+      b.addEventListener('mouseleave', restoreLabel);
+      b.addEventListener('focus', function(){ previewLabel(b.dataset.label); });
+      b.addEventListener('blur', restoreLabel);
+      li.appendChild(b);
+      rulerTicks.appendChild(li);
+    });
+  }
+
+  function previewLabel(text){
+    rulerLabel.textContent = text;
+    rulerLabel.setAttribute('data-preview','');
+  }
+  function restoreLabel(){
+    rulerLabel.removeAttribute('data-preview');
+    var m = MAN[idx];
+    rulerLabel.textContent = m ? m.stageName : '';
+  }
+
+  /* Sized after layout, and again on resize - the controls' width is what decides capacity, and a
+     label can change it. */
+  function fitRuler(){
+    var lay = rulerLayout(MAN.length, rulerAvailableDu());
+    if (lay.dense) rulerEl.setAttribute('data-dense',''); else rulerEl.removeAttribute('data-dense');
+    /* Past the bound the small ticks are marks, not targets, so they leave the tab order and stop
+       being clickable. Section ticks stay targets at full pitch. */
+    Array.prototype.forEach.call(rulerTicks.children, function(li){
+      var b = li.querySelector('button');
+      if (!b) return;
+      var isMark = lay.dense && li.dataset.section === undefined;
+      b.disabled = isMark;
+      if (isMark) b.tabIndex = -1;
+    });
+    return lay;
+  }
+
+  /* DS-137: the precedence rule, decided rather than left to whichever listener runs first.
+     Arrow keys already advance the deck from a document-level listener, and the conventional idiom
+     for a tick group is arrow-to-move-within-it. Both cannot own the arrows.
+     RULE: while focus is inside the ruler, the arrows move between ticks and do NOT advance; Enter
+     or Space jumps. Everywhere else they advance the deck, unchanged. Same shape as DS-166, where
+     arrows advance and a separate key toggles disclosure - the two never interact. */
+  function tickButtons(){
+    return Array.prototype.slice.call(rulerTicks.querySelectorAll('button:not([disabled])'));
+  }
+  rulerTicks.addEventListener('keydown', function(e){
+    var bs = tickButtons();
+    var cur = bs.indexOf(document.activeElement);
+    if (cur < 0) return;
+    var to = -1;
+    if      (e.key === 'ArrowRight') to = Math.min(bs.length - 1, cur + 1);
+    else if (e.key === 'ArrowLeft')  to = Math.max(0, cur - 1);
+    else if (e.key === 'Home')       to = 0;
+    else if (e.key === 'End')        to = bs.length - 1;
+    else return;
+    e.preventDefault();
+    e.stopPropagation();      /* belt; the document handler also checks, so neither relies on order */
+    bs[cur].tabIndex = -1;
+    bs[to].tabIndex = 0;
+    bs[to].focus();
   });
 
   /* ---------------------------------------------------------- disclosure (one open at a time) */
@@ -1540,14 +1689,19 @@ svg{display:block}
     countBox.appendChild(strong);
     countBox.appendChild(document.createTextNode(' / ' + slides.length));
 
-    var st = parseInt(slides[i].dataset.stage, 10);
-    Array.prototype.forEach.call(ribbonBox.children, function(li){
-      if (li.dataset.stageIndex === undefined) return;
-      var lit = parseInt(li.dataset.stageIndex,10) === st;
+    /* The ruler lights the SLIDE, where the ribbon lit the stage - the tick is per slide now, and
+       the section ticks show the stage boundaries graphically. `aria-current` moves with it, as it
+       did on the ribbon. Roving tabindex follows too, so tabbing into the ruler lands on where you
+       actually are rather than on slide one. */
+    Array.prototype.forEach.call(rulerTicks.children, function(li, n){
+      var lit = n === i;
       if (lit) li.setAttribute('data-lit',''); else li.removeAttribute('data-lit');
       var b = li.querySelector('button');
-      if (b) { if (lit) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current'); }
+      if (!b) return;
+      if (lit) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current');
+      if (!b.disabled) b.tabIndex = lit ? 0 : -1;
     });
+    if (rulerLabel && !rulerLabel.hasAttribute('data-preview')) restoreLabel();
     var name = slides[i].dataset.name;
     document.title = (name === DECK) ? DECK : name + ' — ' + DECK;
     if (opts && opts.focus) slides[i].focus();
@@ -1556,6 +1710,12 @@ svg{display:block}
   document.addEventListener('keydown', function(e){
     if (e.target.matches('input,textarea')) return;
     var k = e.key;
+    /* DS-137, the stated half of the precedence rule. The ruler's own handler already stops these
+       propagating, and this says the same thing again on purpose: the rule is that the ruler owns
+       the arrows while it holds focus, and a rule that depends on which listener was registered
+       first is not a rule. */
+    if (e.target.closest && e.target.closest('.ruler-ticks') &&
+        (k === 'ArrowRight' || k === 'ArrowLeft' || k === 'Home' || k === 'End')) return;
     if (inDoc){
       if (k === 'Escape' || k === 'r' || k === 'R'){ setView(false); e.preventDefault(); }
       return;
@@ -1826,8 +1986,12 @@ svg{display:block}
   window.addEventListener('orientationchange', fit);
   document.addEventListener('fullscreenchange', fit);
   fit();
+  buildRuler();
   buildDoc();
   buildContents();
+  /* after fit(), because capacity is measured off the laid-out row rather than derived */
+  fitRuler();
+  window.addEventListener('resize', fitRuler);
   go(0);
   autoView();
   document.addEventListener('keyup', countIfSeen);
