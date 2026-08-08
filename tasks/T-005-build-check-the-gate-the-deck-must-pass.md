@@ -2,11 +2,11 @@
 id: T-005
 title: Build check — the gate the deck must pass
 type: deliverable
-status: proposed
+status: specified
 phase: specify
 parent: null
 blocked_by: []
-related: [T-001, T-002, T-004, T-007, T-016, T-018, T-021, T-032, T-034]
+related: [T-001, T-002, T-004, T-007, T-016, T-018, T-021, T-032, T-034, T-037]
 work_package: WP3
 owner: maintainer
 created: 2026-08-04
@@ -19,10 +19,84 @@ deliverables: []
 ## 1. Specify
 
 **Outcome**
-An automated check run on every generated deck.
+One check library with two entry points — called per batch and whole-deck by the pipeline, and
+exposed as a standalone command taking any HTML file — that returns a pass/fail verdict **per
+`DS-nnn` rule ID**, **declares which of the rules it owns it did not check and why**, and, when
+sources are supplied, reconciles every figure on a slide against them and against itself. A deck
+that passes it is not a good deck; it is a deck carrying no defect this gate was built to see, and
+the gate is the thing that has to say so.
 
 **Why this one**
 Cheap to build, and it converts several house rules from hopes into failures.
+
+**Scope**
+
+- In: the **109 rules [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) labels `auto` or `render`** —
+  65 and 44. That table is the jurisdiction, and the count is what the gate has to account for.
+- In: **the coverage declaration itself.** An owned rule that is neither checked nor excused in
+  writing is the defect class this task exists to end (**L-36**), so the account of all 109 is a
+  deliverable, not a line in a report.
+- In: the content half — the figure ledger
+  [`artifacts.md`](../skills/htmldeck/references/artifacts.md) already specifies (*Figure · Value ·
+  Origin · Used on*), **emitted as an output** rather than kept internal, plus the three
+  reconciliation checks over it.
+- In: the report format [T-004](T-004-critique-mode-blunt-section-by-section-review.md) consumes.
+- Out: **fixing anything.** The gate reports; the build step fixes, and
+  [`EVALUATION.md`](../docs/EVALUATION.md) §6.2 keeps the fix ledger. Settled 2026-08-07 and
+  restated here because it is the boundary most likely to erode: a gate that edits what it is
+  measuring cannot be trusted to have measured it.
+- Out: scoring. `hard` rules are gates and are never scored ([`EVALUATION.md`](../docs/EVALUATION.md)
+  §1), so this check contributes nothing to a total.
+- Out: the 43 `judge` rules and the five evaluation dimensions this gate is structurally blind to —
+  **S1 Claim, S2 Evidence, S4 Density, D1 Spine, D4 Consistency**, proven blind against the
+  seeded-defect deck. [T-004](T-004-critique-mode-blunt-section-by-section-review.md) owns them.
+- Out: `prefers-reduced-motion`, the 3D class and the second never-quiescent animation — none of
+  them exists until [T-016](T-016-the-interaction-and-motion-layer.md) lands. A re-entry, named
+  in *Known re-entries* below rather than left to be discovered.
+
+**Inputs**
+
+- [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — the rule table, read **by ID and by `Check`
+  value**. This is the scope. It does **not** yet say which rules no check can reach — that is
+  [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md), and the coverage
+  criterion is sequenced against it.
+- [`examples/reference-deck.html`](../examples/reference-deck.html) — must pass.
+- [`examples/reference-deck-seeded-defects.html`](../examples/reference-deck-seeded-defects.html) —
+  must fail, per seeded defect, and `examples/README.md` carries the ledger of what was seeded.
+- `tools/deck/` as it stands: `audit.py` (four stages, `render_data` / `render_verdicts` already
+  split so a suite can ask the same code that gates the real deck), `contract.py`, `contrast.py`,
+  `render.py`, and the three variant suites.
+- [`EVALUATION.md`](../docs/EVALUATION.md) §1, §2, §6.3 — the gate runs **first** in the pipeline,
+  and re-runs whole-deck **every** iteration, because a fix routinely reintroduces what an earlier
+  one removed.
+- [`pipeline.md`](../skills/htmldeck/references/pipeline.md) stages 2 and 6 — where the ledger is
+  built and where the per-batch run already belongs.
+
+**Where the gate actually stands — measured 2026-08-08, not estimated**
+
+| | Count | How it was counted |
+| :--- | ---: | :--- |
+| Rules owned (`auto` + `render`) | **109** | `Check` column of every `DS-nnn` row |
+| Emit a verdict on a live run | **41** | rule IDs in `audit.py` output, less the not-gated tail |
+| Excused, with the reason printed | **4** | DS-033, DS-061, DS-065, DS-072 |
+| **Silent — no verdict, no reason** | **64** | 35 `auto`, 29 `render` |
+| Demonstrated failing on purpose | **14** | `deliverable_variants.py` 7/7 + `contract_variants.py` 7/7 |
+| Content half | **0** | nothing under `tools/` reads a source document |
+
+The 64 is the number that sizes this task, and it is **not** the "five rules with no implementation"
+the 2026-08-07 log row recorded — that row counted the five [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md)
+happened to trip over, not the jurisdiction. Reproduce the table before trusting it; it is a
+count over a document and a program output, and both move.
+
+**Known re-entries** — accepted costs, not oversights:
+
+1. *The token-layer criterion* — "fails on a theme value hard-coded outside the token layer" cannot
+   be built before [T-007](T-007-define-the-parametric-theme-layer.md) exists.
+   [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) §3 took this deliberately:
+   one criterion of roughly thirty-three, cheaper to re-enter for than to delay the whole gate.
+2. *Motion and 3D* — [T-016](T-016-the-interaction-and-motion-layer.md) adds a second
+   never-quiescent animation, so **DS-221**'s pin-motion-off-before-capture gains a second subject
+   and the render gate gains one more thing to hold still before it measures.
 
 **Acceptance criteria**
 
@@ -62,9 +136,28 @@ Cheap to build, and it converts several house rules from hopes into failures.
 - [ ] Fails when the same figure appears twice in the deck with different values
 - [ ] Proven **failing** on each of those three before being trusted
 
+*Coverage — the gate accounts for its own jurisdiction*
+- [ ] **Every one of the 109 owned rules is in exactly one of three states at run time**: checked,
+      excused with a written reason, or failing. A rule in none of them is itself a failure of the
+      run — this is **L-36**'s second instance made impossible rather than found again
+- [ ] The account is **derived from the ruleset when the gate runs**, never a list kept by hand. A
+      hand-kept list is a stored copy of a derivable fact and drifts on the first amendment
+      (**L-08**): DS-225 and DS-226 were added on 2026-08-08 and must appear in the account without
+      anyone editing the gate
+- [ ] The gate **fails on *nothing measured*** and never passes on it — the case
+      [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) found, where stage 3
+      reported `NO RESULT` and `render.py measure` emitted a tolerance verdict computed from 16
+      values while the run stayed green
+- [ ] Adding a rule to `DESIGN-SYSTEM.md` with no implementation makes the gate **say so**, and
+      shipping one that silently does nothing is demonstrated to be impossible
+
 *Honesty*
 - [ ] The output states which half ran. "Presentation-only" is a legitimate result; reported as a
       clean pass, it is a false one
+- [ ] The banned-terminology check **states that it is necessary and not sufficient** and never
+      reports a clean pass as "reads as human-written" (**X-10**)
+- [ ] The report names the dimensions the gate is structurally blind to — **S1, S2, S4, D1, D4** —
+      so a clean run cannot be read as a good deck (**L-05**, **DS-191**)
 - [ ] Ships with a self-test on a case whose answer is known, and the self-test is part of the
       deliverable, not a one-off
 
@@ -76,6 +169,46 @@ passed its own review, and the figure that reached the board's decision cell was
 places. Nothing on this task's presentation list would have caught it.
 
 **Open questions**
+
+- ~~Does this task close all 64 silent rules, or ship the account and close a defined subset?~~
+  **Answered 2026-08-08 by the owner: the account, then triage.** The coverage declaration is built
+  first; the silent rules labelled `hard` are then closed, and **every rule left silent is excused in
+  writing, one reason per rule, each excusal a candidate task rather than a shrug.** The gate ships
+  honest about what it covers instead of dishonest about covering 109. What this rules out is
+  closing all 64 now, which would front-load 29 `render` rules behind a browser harness before
+  [T-002](T-002-build-mode-the-self-contained-deck-generator.md) exists to feed it any deck but the
+  two in `examples/`. **The triage line is where this task's scope will drift**, so it is stated as
+  a rule and not an intention: a rule leaves the silent list by being checked or by being excused in
+  writing, and by no third route.
+- ~~Where does "not machine-checkable" live, now that §11 is gone?~~ **Answered 2026-08-08 by the
+  owner: per rule, in the ruleset** — a rule no check can reach says so in its own row, on
+  [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md)'s precedent. **Raised as
+  [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md) rather than done here**, a
+  finding not being repaired where it is found: it amends the ruleset, this task builds a check, and
+  they are different deliverables. T-037 is `related`, **not** blocking — this §1 already assumes the
+  field exists, so landing it later leaves this spec incomplete rather than wrong, which is
+  [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md)'s test for whether an edge
+  gates. What the coverage criterion inherits: until T-037 lands, *derived from the ruleset* has
+  nothing to derive the excusals from, so that criterion is the one to sequence against it.
+  The finding, kept because it is the reason T-037 exists: two log rows and part
+  of the scope were written against `DESIGN-SYSTEM.md` **§11**, a list of 26 — later 33 — numbered
+  conditions that named which ones no check could reach. **That section no longer exists.**
+  [T-022](T-022-split-the-design-system-from-its-rationale.md) replaced the numbered list with
+  `DS-nnn` IDs and the document now ends at §9, so *"conditions 22 and 30 are not machine-checkable"*
+  points at nothing, and *"§11 conditions 13–19"* resolved only because
+  [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) translated one of them by hand
+  (*"the rule the original text called condition 17"* → DS-063). `check` cannot see any of this: it
+  validates links and paths, not section references. The carve-out now survives **only as print
+  statements inside `audit.py`**.
+- ~~Does the opt-in print row become an automated check, or stay a human procedure?~~ **Answered
+  2026-08-08 by the owner: automate the page count, and only that.** `print_variants.py` builds the
+  three variants and self-tests, but it emits **no DS-222–226 verdict**, and the `n` + 1 count is
+  asserted by a person printing and looking. The count is the silent failure the criterion was
+  written for — thirteen blank pages, which nothing on the presentation list can see — and it is
+  cheap: headless print-to-PDF, then enough PDF reading to count pages, and no more. **What stays
+  human is the part a person is better at**: *"disclosure content dropped, slides clip"* stays with
+  the print that CLAUDE.md rule 6 requires regardless, so the gate gains a check without the project
+  gaining a claim it cannot support.
 - ~~Is the check a separate command, or always part of build?~~ **Answered 2026-08-07 by the owner:
   both — one library, two entry points.** Called per batch and whole-deck by the pipeline
   ([`pipeline.md`](../skills/htmldeck/references/pipeline.md) stage 6 already requires the per-batch
@@ -122,6 +255,8 @@ places. Nothing on this task's presentation list would have caught it.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | → specified | **Three questions answered by the owner, and §1 is accepted.** *(1) The account, then triage* — the coverage declaration is built first, the silent `hard` rules are closed, and everything still silent is **excused in writing, one reason per rule**, each excusal a candidate task. A rule leaves the silent list by being checked or by being excused, and by no third route; that line is where this task's scope will drift, so it is written as a rule. Closing all 64 now was rejected as front-loading 29 `render` rules behind a browser harness before [T-002](T-002-build-mode-the-self-contained-deck-generator.md) can feed it anything but the two decks in `examples/`. *(2) The unreachable-rule carve-out belongs per rule in the ruleset* — **raised as [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md), not fixed here**, because it amends the ruleset while this task builds a check. `related`, not blocking: this §1 assumes the field, so landing T-037 later leaves the spec incomplete rather than wrong. The one coupling to sequence against it is the *derived from the ruleset* criterion, which until then has no excusals to derive. *(3) The print row automates the page count and nothing else* — the `n` + 1 count is the silent failure (thirteen blank pages, invisible to every presentation check) and is cheap; *disclosure dropped, slides clip* stays with the human print CLAUDE.md rule 6 requires anyway, so the gate gains a check without the project gaining a claim it cannot support. |
+| 2026-08-08 | (no change) | **`specify` worked: scope, inputs and a coverage account added, and the gate's real position measured rather than described.** §1 had no scope boundary and no input list at all, which is why it could grow in both directions across four log rows without anything registering. Both are now written, with *fixing* and the 43 `judge` rules explicitly out. **The measurement is the finding: this task owns 109 rules (65 `auto`, 44 `render`); 41 emit a verdict, 4 are excused with the reason printed, and 64 are silent — no verdict and no stated reason.** The 2026-08-07 row below records "five rules with no implementation", which counted what [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) tripped over, not the jurisdiction; the row stands as written and this one supersedes its number. Four **coverage** criteria added, turning L-36 from a defect to be found again into one the gate cannot ship — every owned rule checked, excused in writing, or failing, derived from the ruleset at run time rather than from a hand-kept list (**L-08**). Three criteria added under *Honesty* for X-10 and the five blind dimensions. **A stale anchor found and not silently repaired:** two rows below cite `DESIGN-SYSTEM.md` **§11**, the 26- then 33-condition list this task was written to consume — [T-022](T-022-split-the-design-system-from-its-rationale.md) replaced it with `DS-nnn` IDs and **the document now ends at §9**, so "conditions 22 and 30 are not machine-checkable" points at nothing and the carve-out survives only as print statements in `audit.py`. `check` validates links and paths, not section references, which is how it went unseen. Raised as an open question with a recommendation rather than fixed here, because where that carve-out lives is a ruleset decision. **Three open questions for the owner, each with a recommendation; status stays `proposed` until they are answered.** |
 | 2026-08-08 | (no change) | **The print row's three rules now have IDs, and its page count has an expiry date.** [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) adopted the paginated stylesheet in the reference deck and carried R7 §4's rules into the ruleset as **DS-222, DS-223 and DS-224** — the criterion described them in prose, which was correct when nothing else named them and is now a second copy. It also added three `render` rules to this task's scope; the counts in the 2026-08-06 row below are historical and were right when written. **The page count is the part to watch**: it is `n` pages for `n` slides today, and [T-034](T-034-a-contents-page-for-the-printed-deck.md) would make it `n` + 1 by putting a generated contents page in front — a printed page that is not a slide, which is exactly the kind of change a gate asserting a count discovers by failing. `related` gains T-032 and T-034. |
 | 2026-08-07 | (no change) | **Three questions answered by the owner, and one of them was inherited.** *Both entry points* — one library, called per batch and whole-deck by the pipeline and exposed as a standalone command, because two of this task's own criteria and all of [T-004](T-004-critique-mode-blunt-section-by-section-review.md) run against decks this plugin did not build. *Sources are read from their paths*, at pipeline stage 2 where the figure ledger is built; pasting is the fallback, not the contract. *The print row is earned, opt-in only* — [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) closed having deliberately deferred that call here, and it is now taken: [R7](../docs/research/R7-printable-mode.md) §4's three rules plus the page count. **Scope moved in both directions today.** It grew by the print row and by the figure ledger, which [T-004](T-004-critique-mode-blunt-section-by-section-review.md)'s counting-pass answer routes here — this task counts, that one prioritises, so the ledger has to be an output this check *emits*, not an internal. It did not grow by the fix loop: fixes stay with the build step. **`related` gains [T-004](T-004-critique-mode-blunt-section-by-section-review.md)**, written on both files: that mode consumes this check's report and its ledger, an edge [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) used to order the two and neither file recorded. |
 | 2026-08-07 | (no change) | **[T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) closed and handed this task a second variants suite and a refactor it should build on.** `audit.py` now splits `render_data(deck)` (the browser half) from `render_verdicts(data)` (pure, no browser), so a suite can seed a break, take one measurement, and ask **the same code that gates the real deck** rather than a copy of it — that split is the shape this task's gate wants, and it is already done. [`tools/deck/deliverable_variants.py`](../tools/deck/deliverable_variants.py) covers DS-202/203/205/216/217, 7 of 7 caught; with `contract_variants.py` that is **14 rules demonstrated failing on purpose**, against 36 checks still never shown to fail individually. Two findings bear directly on this task's criteria: **five rules labelled `auto` and `render` had no implementation at all** (L-36's second instance), so *"the gate checks what it says it checks"* needs to be a criterion here and not an assumption; and **the gate was driving the deck through chrome a design rule required deleting**, which made stage 3 report `NO RESULT` and made `render.py measure` emit a tolerance verdict computed from 16 values. A gate must fail on *nothing measured*, never pass on it. |
