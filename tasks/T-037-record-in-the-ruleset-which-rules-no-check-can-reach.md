@@ -311,9 +311,11 @@ written rather than as intended.
   rows, §8 included
 - `docs/DESIGN-RATIONALE.md` — §5.5, why per rule and not a list, and the conditions 22 / 30
   write-off
-- `tasks/T-004-...md`, `tasks/T-005-...md`, `tasks/T-030-...md` — the four surviving `§11` claims
-  annotated in place rather than erased, so the historical belief stays visible and the pointer no
-  longer misleads
+- [T-004](T-004-critique-mode-blunt-section-by-section-review.md),
+  [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) and
+  [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) — the four surviving `§11`
+  claims annotated in place rather than erased, so the historical belief stays visible and the
+  pointer no longer misleads
 
 ## 4. Review
 
