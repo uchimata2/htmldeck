@@ -67,7 +67,11 @@ explicitly instead of hunting for them — see the acceptance criteria.
 
 **Why nothing caught it.** `python tools/tasks/task.py check` validates markdown links and
 repo-relative paths. A `§11` written in prose is neither, so a reference to a section that never
-existed reads exactly like a reference to one that does.
+existed reads exactly like a reference to one that does. Generalised as **L-39** — cite the content,
+not the address — which also carries the second half of the diagnosis and the reason this task
+records the carve-out **per rule**: the missing §11 was a *parallel list*, the same rules restated
+in a different order, and a parallel list is the structure that can go absent without anything
+breaking.
 
 **Scope**
 - In: a per-rule way to say *no check can reach this, and here is why* — a `Check` value, an extra
