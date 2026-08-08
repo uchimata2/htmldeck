@@ -418,9 +418,36 @@ owner's, taken 2026-08-08, and each names which side moved (**L-37**).
   said so and refused to run. The defect it seeds is unchanged and now proves the **new** cap: a
   progress bar beside the ruler and the counter is a third encoding, and it is caught. — 2026-08-08
 
+- **A second tick style ships beside the first, as a theme parameter rather than a fork.**
+  Requested by the owner 2026-08-08 after seeing the bars: `data-ticks="dot"` gives **big dots for
+  stage starts, small dots for sub-pages, and a ring that slides between positions**. The two
+  styles share one manifest, one target set, one keyboard model and one degradation — only the mark
+  and the current-position treatment differ, which is what CLAUDE.md rule 4 asks for and what a
+  later template generator will pick between. **DS-131 as amended admits dots**: the prohibition
+  moved onto *unnamed*, and the twelve dots T-028 removed were unlabelled. `bar` stays the deck's
+  default because it is the one that has been gated and looked at end to end. — 2026-08-08
+- **The ring adds no motion to DS-140's vocabulary.** It is a **transition**, so DS-141 governs —
+  under 500 ms, ease-in-out — and it reuses `--scale-dur` (300 ms) rather than inventing a duration.
+  Its position is **measured off the current tick** rather than computed from the pitch, because
+  the pitch is only uniform while the ruler is undegraded. It is dropped in the degraded mode,
+  where a 30-unit ring would cover its neighbours. — 2026-08-08
+- **Size means structure, colour and the ring mean selection, and the two are kept apart.** The
+  first build grew the lit dot to stage size, which made slide 8 read as a stage start. Colour now
+  marks selection and size goes on meaning section-versus-slide. — 2026-08-08
+- **A defect in the capture harness, found because it looked exactly like a CSS bug.** The dots
+  rendered as ovals and the lit one refused to take the accent, through three rounds of chasing
+  specificity that was never wrong. **`*` does not match pseudo-elements**, so
+  [`render.py`](../tools/deck/render.py)'s motion-pinning — `*{transition:none!important}` — covered
+  every element and none of the `::before` marks the ruler draws its ticks with, and every capture
+  photographed a transition mid-flight. Fixed to `*,*::before,*::after`. **This is DS-221's rule
+  failing inside the instrument rather than in the deck**, and the reason it cost so much is that a
+  mid-transition capture does not look like a broken capture — it looks like broken CSS
+  (**L-35**: suspect the measurement first). — 2026-08-08
+
 **Outputs produced**
-- [`examples/reference-deck.html`](../examples/reference-deck.html) — the ruler, its label, the
-  degradation, and the keyboard precedence
+- [`examples/reference-deck.html`](../examples/reference-deck.html) — the ruler, both tick styles,
+  its label, the degradation, and the keyboard precedence
+- [`tools/deck/render.py`](../tools/deck/render.py) — motion-pinning that reaches pseudo-elements
 - [`tools/deck/chrome_row.py`](../tools/deck/chrome_row.py) — the two bounds, re-measurable
 - [`tools/deck/audit.py`](../tools/deck/audit.py) — amendment 1, enforced by verification
 - [`tools/deck/deliverable_variants.py`](../tools/deck/deliverable_variants.py) — re-anchored

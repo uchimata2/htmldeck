@@ -83,13 +83,17 @@ VARIANTS = [
         # unchanged and so is the rule it breaks - a progress bar beside the ruler and the counter
         # is a THIRD encoding, and DS-216's amended cap forbids a third however well it is argued.
         # This is the variant that proves the cap is enforced rather than merely written down.
+        # ONE anchor, and it is structural. This variant broke twice in a single session while it
+        # anchored on a CSS declaration line - first when the ribbon became the ruler, then when
+        # the ruler gained `position:relative`. Both times the suite refused to run, which is the
+        # designed behaviour and still two interruptions that bought nothing. The stylesheet now
+        # travels with the markup, so the only thing that can move is `</nav>`.
         ("</nav>\n",
-         '</nav>\n<div class="progress" role="presentation"><i id="bar"></i></div>\n'),
-        (".ruler{display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}",
-         ".ruler{display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}\n"
-         ".progress{position:absolute;left:0;right:0;bottom:0;height:calc(5*var(--du));"
-         "background:var(--line)}\n"
-         ".progress i{display:block;height:100%;background:var(--accent);width:0}")]),
+         '</nav>\n'
+         '<style>.progress{position:absolute;left:0;right:0;bottom:0;'
+         'height:calc(5*var(--du));background:var(--line)}\n'
+         '.progress i{display:block;height:100%;background:var(--accent);width:0}</style>\n'
+         '<div class="progress" role="presentation"><i id="bar"></i></div>\n')]),
 
     ("chrome-over-budget", "DS-217", [
         # Twelve per-slide targets back in the controls row - the exact thing the owner called

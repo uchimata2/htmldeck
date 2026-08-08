@@ -316,7 +316,7 @@ svg{display:block}
    compressed to absorb 69.5 du it did not have - so one more stage, or one longer name, wrapped it
    into the second row DS-217 exists to prevent. Tick marks have a fixed width, so the element's
    size stops depending on the words. */
-.ruler{display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}
+.ruler{position:relative;display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}
 .ruler-ticks{display:flex;align-items:center;flex:none}
 /* The cell IS the hit area and the mark is what you see, so the target size is the pitch rather
    than a minimum applied afterwards. `--disc-hit` is 52 du - the same target token the disclosure
@@ -353,6 +353,44 @@ svg{display:block}
   width:calc(4*var(--du));height:calc(10*var(--du))}
 .ruler[data-dense] .ruler-ticks li:not([data-section])[data-lit] button::before{
   background:var(--accent);height:calc(20*var(--du));width:calc(6*var(--du))}
+
+/* ---- TICK STYLE IS A THEME PARAMETER, not a fork of the component (CLAUDE.md rule 4).
+   `bar` and `dot` share one manifest, one set of targets, one keyboard model and one degradation;
+   only the mark and the current-position treatment differ, so a later template generator can pick
+   between them without re-deriving anything. Both are named targets, so DS-131 as amended admits
+   either - the prohibition moved onto *unnamed*, never onto the shape, and the twelve dots T-028
+   removed were unlabelled ones. */
+.ruler[data-ticks="dot"] .ruler-ticks button::before{
+  width:calc(8*var(--du));height:calc(8*var(--du));border-radius:50%}
+.ruler[data-ticks="dot"] .ruler-ticks li[data-section] button::before{
+  width:calc(14*var(--du));height:calc(14*var(--du))}
+/* Colour and the ring mark the selection; SIZE goes on meaning section-versus-slide. Growing a lit
+   small dot to section size would conflate the two encodings and make slide 8 read as a stage
+   start - so this rule sets the colour and deliberately leaves the size alone. */
+.ruler[data-ticks="dot"] .ruler-ticks li[data-lit] button::before{background:var(--accent)}
+
+/* The ring around the current dot. It TRANSLATES between positions rather than being redrawn, so
+   the eye follows one object along the ruler instead of watching two dots swap state - which is
+   the whole point of the alternative.
+   DS-140 fixes the motion vocabulary at four and this adds none: a ring sliding on slide change is
+   a TRANSITION, so DS-141 governs it - under 500 ms, ease-in-out - and it reuses --scale-dur (300)
+   rather than inventing a duration. Position comes from measurement, not from pitch arithmetic, so
+   it stays correct in the degraded mode where the cells are no longer uniform. */
+.ruler-ring{display:none}
+.ruler[data-ticks="dot"] .ruler-ring{
+  display:block;position:absolute;left:0;top:50%;
+  width:calc(30*var(--du));height:calc(30*var(--du));margin-top:calc(-15*var(--du));
+  border:var(--rule) solid var(--accent);border-radius:50%;
+  transform:translateX(calc(var(--rx,0px) - 15*var(--du)));
+  transition:transform var(--scale-dur) ease-in-out;
+  pointer-events:none;
+}
+/* first paint must not fly in from the left */
+.ruler[data-noanim] .ruler-ring{transition:none}
+/* Past the bound the cells stop being uniform and a 30-unit ring would cover its neighbours, so
+   the degraded mode keeps the enlarged accent mark and drops the ring. */
+.ruler[data-dense] .ruler-ring{display:none}
+:root[data-motion="off"] .ruler-ring{transition:none}
 
 /* The label names the tick under the cursor or the focus, and at rest names where you are. It is
    part of the ruler rather than a third encoding of position (DS-216): remove the ticks and it has
@@ -451,7 +489,9 @@ svg{display:block}
   .current{animation:none}
   .rise,.pulse,.opening{animation:none;opacity:1;transform:none}
   .slide{transition:none}
-  .ribbon button::before{transition:none}
+  /* was `.ribbon button::before` until T-035 replaced the ribbon with the ruler - a stale selector
+     here fails silently, since a rule that matches nothing looks exactly like a rule that passed */
+  .ruler-ticks button::before,.ruler-ring{transition:none}
 }
 
 /* ---------------------------------------------------------------- reflow view (DS-070..076) */
@@ -1345,8 +1385,9 @@ svg{display:block}
        no per-item label at rest - rather than trusting the attribute.
        The label is aria-hidden because every tick carries its own accessible name. The visible
        swap is a sighted-user affordance and must not be announced on every focus move. -->
-  <div class="ruler" id="ruler">
+  <div class="ruler" id="ruler" data-ticks="bar">
     <ul class="ruler-ticks" id="rulerTicks" data-scale></ul>
+    <i class="ruler-ring" id="rulerRing" aria-hidden="true"></i>
     <p class="ruler-label" id="rulerLabel" aria-hidden="true"></p>
   </div>
   <div class="controls">
@@ -1466,6 +1507,7 @@ svg{display:block}
   var rulerEl = document.getElementById('ruler');
   var rulerTicks = document.getElementById('rulerTicks');
   var rulerLabel = document.getElementById('rulerLabel');
+  var rulerRing = document.getElementById('rulerRing');
   var doc = document.getElementById('doc');
   var docBody = document.getElementById('docBody');
   var toDoc = document.getElementById('toDoc');
@@ -1588,6 +1630,21 @@ svg{display:block}
     });
   }
 
+  /* Where the ring sits, MEASURED off the current tick rather than computed from the pitch. The
+     pitch is only uniform while the ruler is undegraded, and a ring that assumed it would drift
+     the moment the small ticks collapsed - so it is read from the box instead. Inside the stage a
+     design unit is one CSS pixel before the transform, which is why dividing by --k gives units. */
+  function placeRing(){
+    if (!rulerRing) return;
+    var li = rulerTicks.children[idx];
+    if (!li) return;
+    var kk = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 1;
+    var lr = rulerEl.getBoundingClientRect();
+    var tr = li.getBoundingClientRect();
+    if (!tr.width) return;                      /* hidden, e.g. in the reading view */
+    rulerEl.style.setProperty('--rx', ((tr.left + tr.width / 2 - lr.left) / kk) + 'px');
+  }
+
   function previewLabel(text){
     rulerLabel.textContent = text;
     rulerLabel.setAttribute('data-preview','');
@@ -1603,6 +1660,7 @@ svg{display:block}
   function fitRuler(){
     var lay = rulerLayout(MAN.length, rulerAvailableDu());
     if (lay.dense) rulerEl.setAttribute('data-dense',''); else rulerEl.removeAttribute('data-dense');
+    placeRing();
     /* Past the bound the small ticks are marks, not targets, so they leave the tab order and stop
        being clickable. Section ticks stay targets at full pitch. */
     Array.prototype.forEach.call(rulerTicks.children, function(li){
@@ -1702,6 +1760,7 @@ svg{display:block}
       if (!b.disabled) b.tabIndex = lit ? 0 : -1;
     });
     if (rulerLabel && !rulerLabel.hasAttribute('data-preview')) restoreLabel();
+    placeRing();
     var name = slides[i].dataset.name;
     document.title = (name === DECK) ? DECK : name + ' — ' + DECK;
     if (opts && opts.focus) slides[i].focus();
@@ -1992,7 +2051,10 @@ svg{display:block}
   /* after fit(), because capacity is measured off the laid-out row rather than derived */
   fitRuler();
   window.addEventListener('resize', fitRuler);
+  /* the ring is placed for the first time without a transition, or it flies in from the left */
+  rulerEl.setAttribute('data-noanim','');
   go(0);
+  requestAnimationFrame(function(){ rulerEl.removeAttribute('data-noanim'); });
   autoView();
   document.addEventListener('keyup', countIfSeen);
   document.getElementById('next').addEventListener('click', countIfSeen);

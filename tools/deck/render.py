@@ -88,7 +88,13 @@ PROBE = r"""
     if (quiet){
       document.documentElement.setAttribute('data-motion','off');
       var s = document.createElement('style');
-      s.textContent = '*{transition:none!important;animation:none!important}' +
+      /* `*` DOES NOT MATCH PSEUDO-ELEMENTS, so this pinned motion on every element and on none of
+         the ::before marks - and the ruler's tick marks are ::before. A capture taken while one of
+         them was mid-transition read its animated height and colour instead of its settled ones,
+         which is DS-221's failure in the instrument rather than in the deck: it does not look like
+         a broken capture, it looks like broken CSS, and it cost a round of chasing specificity
+         that was never wrong. Found 2026-08-08 building the ruler's dot variant. */
+      s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}' +
                       '.rise,.pulse,.opening{opacity:1!important;transform:none!important}';
       document.head.appendChild(s);
     }
