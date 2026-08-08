@@ -2,11 +2,11 @@
 id: T-037
 title: Record in the ruleset itself which rules no check can reach
 type: decision
-status: planned
-phase: plan
+status: in_progress
+phase: implement
 parent: null
 blocked_by: []
-related: [T-005, T-014, T-021, T-022, T-033]
+related: [T-005, T-014, T-021, T-022, T-033, T-038]
 work_package: WP2
 owner: maintainer
 created: 2026-08-08
@@ -183,10 +183,64 @@ breaking.
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+
+- **`Reach` gains a fourth value, `—`, for every `judge` rule — 2026-08-09.** The plan's three
+  tokens had no answer for a rule that is outside the gate's jurisdiction to begin with. Marking
+  those `never` was rejected: it would claim the *evaluator* cannot decide them either, which is
+  false and is the opposite of what §1 is trying to make sayable. `—` is also the null the `Check`
+  column already uses (DS-007), so the document gains no new convention.
+- **The value is the first word of the cell; the reason is free text after it — 2026-08-09.** The
+  first contract said *"the reason follows an em dash"* and step 2 broke it immediately: `—` is
+  itself a value, so a `judge` row parsed as an **empty** value. Parsing on the leading token makes
+  `—`, `never` and `off-gate` structurally identical and the dash purely cosmetic. **This is the
+  defect step 2 existed to find, and it cost 19 rows instead of 154.**
+- **Two sections were spiked, not one — 2026-08-09.** The plan named §5.1 on the belief that it
+  held DS-072; DS-072 is in §2.5. Rather than re-point the step at one section, both were done:
+  §2.5 supplies the only real `off-gate` case in the ruleset and §5.1 supplies the `judge` rows, so
+  between them every cell shape is exercised. `never` needed no separate case — after the parse fix
+  it is the same shape as `off-gate`.
+- **`audit.py`'s *"Not gated here, and why"* tail is not a list of unreachable rules, and step 5
+  must not treat it as one — 2026-08-09.** §1 assumed its four entries were four reasons a check
+  cannot reach a rule. Reading them: **only DS-072 is one.** DS-061's says the rule *is* checked,
+  statically from the source rather than at render; DS-065's says the same and adds that DS-033
+  carries the real content of it; DS-033 appears only inside DS-065's explanation. Those are
+  *"checked in a different stage"* notes wearing the same heading as *"cannot be checked"*. Step 5
+  therefore migrates **one** reason and records the other three as `yes`, and the tail itself is a
+  gate-side defect that belongs to [T-005](T-005-build-check-the-gate-the-deck-must-pass.md).
+
+**Evidence — step 2, the spike**
+
+19 rows migrated (§2.5 and §5.1), then read back by a parser that has never heard of an individual
+rule. What it printed on the second run, after the parse contract was corrected:
+
+```
+Reach values found:
+  'off-gate'   x1
+  'yes'        x16
+  '—'          x2
+Rules the gate is expected to cover (Reach=yes, Check in auto/render): 16
+rows with a Reach value outside the vocabulary: 0
+rows marked never/off-gate with no reason: 0
+```
+
+On the **first** run the same parser reported `'' x2` and *"rows with a Reach value outside the
+vocabulary: 2"* — DS-136 and DS-137, the two `judge` rows. That is the format defect above, caught
+by reading the column back rather than by looking at it.
+
+**Escalated, not absorbed**
+
+- **Two `judge` rules are being mechanically gated, one of them under the wrong ID.**
+  `tools/deck/audit.py` emits a verdict for **DS-137** (*"panels open at once"*) and for **DS-161**
+  (*"panels closed by default: 0 open"*); the ruleset labels both `judge`. DS-161's actual rule is
+  *"Closed, the slide still makes its point"* — a judgement — and *"closed by default"* is a
+  precondition of it, not the rule. Raised as
+  [T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md). Not fixed here:
+  re-labelling a rule and correcting the gate are both outside §1's scope, and this task would be
+  changing the very column it is populating on the strength of its own reading.
 
 **Outputs produced**
-- <path>
+- `docs/DESIGN-SYSTEM.md` — the `Reach` vocabulary and parse contract; the column populated in
+  §2.5 and §5.1 (19 rows)
 
 ## 4. Review
 
@@ -201,6 +255,7 @@ breaking.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | → in_progress | **Steps 1 and 2 done, and step 2 earned its place.** The `Reach` vocabulary is written where `Check` is already defined, and the column is populated in **§2.5 and §5.1 — 19 rows** — then read back by a parser that has never heard of an individual rule. **The first read failed**, exactly as the step was designed to let it: the contract said *"the reason follows an em dash"*, `—` is itself a value, and the two `judge` rows parsed as **empty**. The contract is now *"the value is the first word, the rest is free text"*, which makes `—`, `never` and `off-gate` one shape and the dash cosmetic. Cost: 19 rows, against 154 had the format been trusted. **Two departures from the plan, both recorded in §3.** The spike covers two sections rather than one, because the plan named §5.1 believing it held DS-072 and DS-072 is in §2.5 — both were done rather than swapping, so `off-gate` and the `judge` null are each exercised. And **`Reach` gained a fourth value, `—`**, for rules outside the gate's jurisdiction; marking `judge` rules `never` would have claimed the evaluator cannot decide them either. **One §1 assumption is now false and step 5 shrinks because of it:** `audit.py`'s *"Not gated here, and why"* tail is **not** four reasons a rule cannot be reached — only DS-072 is that. DS-061 and DS-065 say the rule *is* checked, statically from source rather than at render, and DS-033 only appears inside DS-065's note. So one reason migrates, three rules are `yes`, and the tail is a gate-side defect for [T-005](T-005-build-check-the-gate-the-deck-must-pass.md). **[T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) raised**: two `judge` rules are gated mechanically and DS-161's verdict measures a precondition of its rule rather than its rule. Found by the row-by-row reading this column forces, without looking for it. |
 | 2026-08-08 | → planned | **The mechanism is a new column, ruled by the owner**, so *unreachable in principle* stays distinct from *unreachable by this gate* — a fourth `Check` value would have collapsed the two, and they oblige different things: one is permanent, the other is a gap someone may close. **Ten steps, and two structural facts measured before planning against them.** The ruleset is **17 tables**: 16 carry `\| ID \| Rule \| Label \| Check \|` over **154 rule rows**, and **§8 Boundaries carries 4 rows with no `Check` column at all** — outside the gate's jurisdiction today by omission rather than by decision, so step 4 rules on it explicitly. Rows already run to a median of 123 characters and a maximum of 2241 and the tables do not wrap, so **width was ruled out as a constraint by measurement** and the format chosen on meaning. Three decisions worth finding later: the reason sits **in the same cell as the value**, because a separate "unreachable rules and why" table is a second parallel list of the same rules in a different order — what §11 was, and what **L-39** now records the cost of; the vocabulary is **`yes` / `never` / `off-gate`**, named for what each obliges rather than for how it feels; and **`audit.py` is not touched** — step 5 copies its four reasons into the ruleset and leaves the tool printing its own, because editing the gate from a ruleset task is out of §1's scope and [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) owns making it derive. The criterion was already worded *"no longer holds the **only** copy"*, which is what makes that split legitimate rather than a fudge. Step 2 populates one section and reads it back before the other 15 are touched, so an unparseable format is discovered at 12 rows rather than 154. |
 | 2026-08-08 | → specified | **§1 corrected on evidence, and the correction makes this task's case stronger rather than smaller.** It was written saying [T-022](T-022-split-the-design-system-from-its-rationale.md) replaced §11's numbered conditions with `DS-nnn` IDs and the section went with the renumbering. **Checked against git before accepting the spec: that is wrong. §11 was never committed** — `docs/DESIGN-SYSTEM.md` has ended at §9 in all 13 commits of its life, created that way by the commit that closed [T-014](T-014-synthesise-research-into-the-design-system-reference.md) recording §11 as **met**. So this is not a stale-reference problem to tidy; it is a deliverable recorded as delivered on the evidence of a section number, which four task files then consumed for two months. **One acceptance criterion is settled by that check rather than left for `implement`:** the numbering is unrecoverable, proven — had the conditions been the hard rules in document order, condition 17 would be the 17th, and DS-063, the only one [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) ever translated, is the **31st**. Conditions 22 and 30 are therefore written off in the ruleset with the reason, not hunted for. A criterion was also added for the surviving `§11` references in T-004, T-005 and [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md). T-014's §4 verdict is corrected to `not met` and its log carries the account; **it is not reopened**, because its real deliverable exists and only the carve-out is missing — which is this task. The mechanism question stays open for `plan`, as written. |
 | 2026-08-08 | → proposed | **Raised from [T-005](T-005-build-check-the-gate-the-deck-must-pass.md)'s `specify`, and deliberately not fixed there** — a finding is not repaired where it is found. Working T-005's scope showed that the gate owns **109 rules** (65 `auto`, 44 `render`) of which **64 are silent**, and that its coverage account has to be *derived* from the ruleset rather than kept by hand (**L-08**). That derivation is impossible while the ruleset says only `auto` or `render`: an unreachable rule and an unbuilt one look identical. The reasons exist and are good — they are just in `audit.py`'s print statements. **The owner chose, 2026-08-08, that they belong per rule in the ruleset**, on [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md)'s precedent that a rule a shipped artifact contradicts is a defect in the ruleset rather than in the artifact. The task is `related` to T-005, not blocking it: T-005's §1 already assumes this field exists, so landing this later leaves that spec incomplete rather than wrong — [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md)'s test for whether an edge gates. |
