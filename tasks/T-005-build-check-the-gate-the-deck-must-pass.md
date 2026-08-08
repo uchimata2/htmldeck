@@ -6,11 +6,11 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: []
-related: [T-001, T-002, T-004, T-007, T-016, T-018, T-021]
+related: [T-001, T-002, T-004, T-007, T-016, T-018, T-021, T-032, T-034]
 work_package: WP3
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-07
+updated: 2026-08-08
 deliverables: []
 ---
 
@@ -40,11 +40,14 @@ Cheap to build, and it converts several house rules from hopes into failures.
       dropped or slides clip. Not run otherwise — printing is a mode, not a gate. **Owner,
       2026-08-07: the print path does earn its row, opt-in only** — inherited from
       [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md), which deferred the call
-      here. The row asserts [R7](../docs/research/R7-printable-mode.md) §4's three rules — the print
-      stylesheet asserts the view it wants **including `display`**, a slide stays a containing block
-      for its own overlays, entrance animations are disabled for print — **and the page count**,
-      because the measured failure is silent: thirteen blank pages, which nothing on the
-      presentation list above can see
+      here. The row asserts [R7](../docs/research/R7-printable-mode.md) §4's three rules — **which
+      have IDs since [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md):
+      DS-222** the print stylesheet asserts the view it wants including `display`, **DS-223** a
+      slide stays a containing block for its own overlays, **DS-224** entrance animations are
+      disabled for print — **and the page count**, because the measured failure is silent: thirteen
+      blank pages, which nothing on the presentation list above can see. **The page count is
+      `n` pages for `n` slides only until [T-034](T-034-a-contents-page-for-the-printed-deck.md)
+      lands**; a contents page makes it `n` + 1, and this row has to learn that when it does
 - [ ] Proven **failing** on each class before being trusted
 
 *Content — run when source documents are supplied*
@@ -113,6 +116,7 @@ places. Nothing on this task's presentation list would have caught it.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | (no change) | **The print row's three rules now have IDs, and its page count has an expiry date.** [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) adopted the paginated stylesheet in the reference deck and carried R7 §4's rules into the ruleset as **DS-222, DS-223 and DS-224** — the criterion described them in prose, which was correct when nothing else named them and is now a second copy. It also added three `render` rules to this task's scope; the counts in the 2026-08-06 row below are historical and were right when written. **The page count is the part to watch**: it is `n` pages for `n` slides today, and [T-034](T-034-a-contents-page-for-the-printed-deck.md) would make it `n` + 1 by putting a generated contents page in front — a printed page that is not a slide, which is exactly the kind of change a gate asserting a count discovers by failing. `related` gains T-032 and T-034. |
 | 2026-08-07 | (no change) | **Three questions answered by the owner, and one of them was inherited.** *Both entry points* — one library, called per batch and whole-deck by the pipeline and exposed as a standalone command, because two of this task's own criteria and all of [T-004](T-004-critique-mode-blunt-section-by-section-review.md) run against decks this plugin did not build. *Sources are read from their paths*, at pipeline stage 2 where the figure ledger is built; pasting is the fallback, not the contract. *The print row is earned, opt-in only* — [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) closed having deliberately deferred that call here, and it is now taken: [R7](../docs/research/R7-printable-mode.md) §4's three rules plus the page count. **Scope moved in both directions today.** It grew by the print row and by the figure ledger, which [T-004](T-004-critique-mode-blunt-section-by-section-review.md)'s counting-pass answer routes here — this task counts, that one prioritises, so the ledger has to be an output this check *emits*, not an internal. It did not grow by the fix loop: fixes stay with the build step. **`related` gains [T-004](T-004-critique-mode-blunt-section-by-section-review.md)**, written on both files: that mode consumes this check's report and its ledger, an edge [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) used to order the two and neither file recorded. |
 | 2026-08-07 | (no change) | **[T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) closed and handed this task a second variants suite and a refactor it should build on.** `audit.py` now splits `render_data(deck)` (the browser half) from `render_verdicts(data)` (pure, no browser), so a suite can seed a break, take one measurement, and ask **the same code that gates the real deck** rather than a copy of it — that split is the shape this task's gate wants, and it is already done. [`tools/deck/deliverable_variants.py`](../tools/deck/deliverable_variants.py) covers DS-202/203/205/216/217, 7 of 7 caught; with `contract_variants.py` that is **14 rules demonstrated failing on purpose**, against 36 checks still never shown to fail individually. Two findings bear directly on this task's criteria: **five rules labelled `auto` and `render` had no implementation at all** (L-36's second instance), so *"the gate checks what it says it checks"* needs to be a criterion here and not an assumption; and **the gate was driving the deck through chrome a design rule required deleting**, which made stage 3 report `NO RESULT` and made `render.py measure` emit a tolerance verdict computed from 16 values. A gate must fail on *nothing measured*, never pass on it. |
 | 2026-08-07 | (no change) | **[T-021](T-021-the-reflow-view-and-the-resolution-contract.md) closed and handed this task the resolution-contract checks built rather than specified**, so what remains here is absorption, not authorship — the pattern [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) §4 flagged as **L-32** for four tasks at once. What arrived: [`tools/deck/contract.py`](../tools/deck/contract.py) gating twelve of the fourteen §2.4 / §2.5 rules, stage 4 of `audit.py` (33 checks → 43), and [`tools/deck/contract_variants.py`](../tools/deck/contract_variants.py). **The variants file is the part worth reading before writing this task's criteria**: it broke each rule on purpose and caught **three of the new checks measuring nothing**, which is a stronger form of this task's own *"fails on a seeded-defect deck"* criterion than a fixture alone gives. Also relevant to the criterion about theme values: DS-065 was found **unenforceable as written** and reworded, so a check for it is not owed. |
