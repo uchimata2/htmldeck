@@ -12,3 +12,7 @@ __pycache__/
 # Local-only by construction: it contains client and personal data and must never publish.
 .kb/
 .assets-cache/
+
+# Printed output. The repository keeps the script and the numbers, never the artefact (R6),
+# and a printed PDF also carries whatever the print dialog put in its header.
+examples/*.pdf

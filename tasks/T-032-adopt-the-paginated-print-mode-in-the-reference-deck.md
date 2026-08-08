@@ -2,7 +2,7 @@
 id: T-032
 title: Adopt the paginated print mode in the reference deck, and decide whether print carries tier two
 type: deliverable
-status: review
+status: done
 phase: review
 parent: null
 blocked_by: []
@@ -157,8 +157,8 @@ But R7 §2 also measured that **`beforeprint` and `afterprint` fire from `file:/
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
 | The deck's `@media print` block prints the paginated stage, and the reading view is not the print target | pass | `.viewport,.viewport[hidden]{display:block!important…}` forces the stage back regardless of which view the deck has decided it is in; `.doc{display:none!important}` takes the reading view out. Verified in the live DOM that **all 10 print selectors match at least one element** — no dead rule in the block. |
-| Printed from a **double-clicked file** through the browser's own dialog, and **looked at** (L-01) — not headless | **not yet — owner action** | The only step here that cannot be done from this session: it needs a human double-click and the browser's own dialog, and headless is disqualified on this exact question (**L-35**). Everything checkable without printing was checked (rows above and below). Instructions are in the log row for 2026-08-08. |
-| Twelve pages, one slide per page, no blank page at either end | **predicted, not observed** | Structurally verified in the live DOM: **12 `section.slide`**, `section.slide:last-of-type` **is** the twelfth, and `.stage > :last-child` is `.chrome` — so the last slide's `break-after` is cancelled and no thirteenth page should be emitted. T-018's original thirteenth page came from this exact selector. **Counting the pages is the print run's job**, and this row is a prediction until it happens. |
+| Printed from a **double-clicked file** through the browser's own dialog, and **looked at** (L-01) — not headless | pass | Printed by the owner 2026-08-08 from the opened file through Chrome's own dialog, headers and footers off. **All twelve pages rasterised and looked at**, not sampled. No `file://` path on any page. |
+| Twelve pages, one slide per page, no blank page at either end | pass | **12 pages, 1440 × 810 pt** — exactly 1920 × 1080 px at 96 dpi, so the page is the slide and the dialog scaled nothing. No thirteenth page: `section.slide:last-of-type` did its job. Every page carries text (155–721 characters), so no page printed blank. |
 | The owner's tier-two ruling recorded with its rationale, and implemented | pass | Recorded in §1 and in the log; implemented as `.slide .disc{display:none!important}` — panels and control both hidden, so the paper advertises nothing it cannot deliver. The cooperative `beforeprint` expansion is **not** built, as ruled. The deck's own comment states the 38.6% and says the reading view carries it on screen. |
 | The three general rules R7 §4 identified are carried into `DESIGN-SYSTEM.md` with IDs | pass | **DS-222** assert the view including `display` (with the `:last-child` corollary), **DS-223** the slide stays a containing block, **DS-224** entrance animations off for print — all `hard` · `render`, in a new **§5.4** that also states the ruling. |
 | What print does not preserve is stated **to the user**, wherever the deck or the plugin tells them printing exists | pass | Nothing told them before — `pipeline.md` stage 7 now does, in three sentences, covering the pinned page size, the disclosure loss, and the `file://` header. |
@@ -167,13 +167,38 @@ But R7 §2 also measured that **`beforeprint` and `afterprint` fire from `file:/
 **7 of 7**; `contract_variants.py` **7 of 7**; `check_scaffold.py` **10 of 10 fixtures**, SKILL.md
 4 968 of 8 192 bytes; `print_variants.py` self-test **ok** and both variants build.
 
+**What the printed pages actually showed** — the part no check reaches:
+
+- **The chrome, the reading view and every disclosure control are absent**, and nothing left a hole
+  where it used to be. The 38.6% loss is invisible on paper rather than advertised, which is what
+  hiding the control was for.
+- **Backgrounds, rules and colour survived.** The paper is the deck's own ground, not white:
+  `print-color-adjust: exact` held on all twelve pages.
+- **Every bottom line printed, and none is clipped.** This was the element at risk — T-028 anchored
+  it to the foot of the slide, so it is the one a wrong `@page` margin loses first. `margin:0` and a
+  page sized to the slide leave it intact on all twelve.
+- **DS-224 is doing visible work.** No slide printed half-risen; the entrance state is resolved on
+  pages the reader never advanced to.
+- **The figures survived, which is the real test of a 16:9 page.** The network diagram and its
+  dashed timed-connection arrow, the decision flow, the trip bar, the timeline, the line chart, the
+  grouped corridor bars and the threshold bars all render at full fidelity.
+- **The sparse pages are the design, not loss.** Slide 1 carries **no disclosure panel at all**, so
+  its open middle is the title slide's own whitespace; the other ten each carry one panel, and those
+  are absolutely positioned overlays that leave no gap when hidden.
+
 **Child fix tasks raised**
 - none
+
+**Follow-on features raised** — both from the owner, on reading the printed deck:
+[T-034](T-034-a-contents-page-for-the-printed-deck.md) (a contents page in print) and
+[T-035](T-035-the-ruler-navigator.md) (the ruler navigator). Neither is a defect in this task's
+output; both are new design work this task's output made it possible to judge.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | → done | **Printed by the owner and looked at, page by page — the criterion no check reaches, and it passed.** 12 pages at 1440 × 810 pt, which is 1920 × 1080 px at 96 dpi: the page is the slide, so the dialog scaled nothing and no thirteenth page appeared. Chrome, reading view and disclosure controls all absent; backgrounds and rules intact; every bottom line printed unclipped, which was the element most at risk after T-028 anchored it to the foot of the slide; no slide half-risen, so DS-224 is doing visible work; and every figure survived, including the dashed timed-connection arrow that is the fussiest thing in the deck. **The sparse pages are the design**: slide 1 carries no disclosure panel at all, so its open middle is the title slide's own whitespace rather than something print lost. **Two features came out of reading it**, raised as [T-034](T-034-a-contents-page-for-the-printed-deck.md) and [T-035](T-035-the-ruler-navigator.md); neither is a defect here. The PDF itself is **not committed** — R6's rule is that the repository keeps the script and the numbers, never the output, so `examples/*.pdf` is now gitignored. |
 | 2026-08-08 | → review | **Steps 2, 5 and 6 are done; step 4 — the print run — is the owner's, and it is the only thing between this and `done`.** The deck now carries the paginated block (+4.0 KB), DS-222/223/224 are in a new `DESIGN-SYSTEM.md` §5.4, and `pipeline.md` tells the user at handover what printing does and does not do — **nothing told them before**, so the criterion was not a rewording, it was the first statement of it. Two things the adoption forced and neither was assumed: `.progress` came out of the hide list because T-028 deleted the element, and `print_variants.py` had to be repaired because adoption deleted the string its self-test anchored on. Everything checkable without paper was checked in the live DOM — 12 slides, `:last-of-type` **is** the twelfth, `.stage > :last-child` is `.chrome`, and all 10 print selectors match something. **What that does not settle is the page count**, which is the whole point of L-01 and is why this is `review` and not `done`. **To finish it:** double-click [`examples/reference-deck.html`](../examples/reference-deck.html) — do not open it in a preview pane (**L-15**) — print through the browser's own dialog with headers and footers **off**, save to PDF, and look at every page. Expect **12 pages**, one slide each, backgrounds intact, no disclosure controls, and no blank page at either end. |
 | 2026-08-07 | (no change) | **The tier-two decision is taken: the slides only, with the loss stated. §1 now has no open question and the plan lost a step.** The cooperative `beforeprint` expansion is declined — not as impossible, since [R7](../docs/research/R7-printable-mode.md) §2 measured both events firing from `file://`, but on cost: double the pages, a detail-page layout nobody has designed, and a second print rendering for [T-005](T-005-build-check-the-gate-the-deck-must-pass.md)'s print row to gate. **What makes the decline cheap is that nothing is unreachable** — the reading view carries all of tier two, so the 38.6% is not lost, only not on paper. **This task is now pure adoption**: replace the `@media print` block with the proven stylesheet, print it from a double-click and look at every page, carry R7 §4's three rules into the ruleset with IDs, and state the two limits — the disclosure loss and Chrome's `file://` header — in one place where the user is told printing exists. Steps 1 and 3 are struck; steps 2, 4, 5, 6 remain. |
 | 2026-08-07 | (no change) | **The `file://` header/footer question is answered: warn, once, where the plugin tells the user printing exists — not on the deck.** It folds into the existing criterion about stating what print does not preserve, so it costs one sentence rather than a print-only element on a stage whose chrome was just halved. The reason it is worth a sentence at all is that the path is **machine data printed on every page**, which this repository excludes from anything shared. **The task's other decision — whether print carries tier two — was not taken today and is now the only thing holding plan step 1.** Every other input it needs has existed since [R7](../docs/research/R7-printable-mode.md) closed. |
