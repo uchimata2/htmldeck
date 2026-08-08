@@ -570,13 +570,25 @@ svg{display:block}
      compresses vertically on its own with no second code path. */
   .contents-grid{
     flex:1;min-height:0;
-    display:grid;grid-template-columns:repeat(4,1fr);
+    display:grid;grid-template-columns:repeat(var(--ccols,4),1fr);
     grid-auto-rows:1fr;gap:var(--sp-3);
   }
   .cbox{
     display:flex;flex-direction:column;gap:var(--sp-1);overflow:hidden;
     padding:var(--sp-2);border:var(--hair) solid var(--line);border-radius:var(--radius);
+    /* Rows divide the page height, so a SHORT deck stretches each box far past its content -
+       at seven slides a box was 377 du holding about 150, and roughly 60% of every box was
+       empty. That does not read as a spacious page, it reads as content that failed to load.
+       The cap is 268 du, a little above the twelve-slide row height (242.8), so the target case
+       is untouched and only over-tall rows are pulled back. Boxes still STRETCH to
+       their row - `align-items` is deliberately left alone - or a twelve-slide page would
+       shrink to its content and lose the look this cap exists to protect. */
+    max-height:calc(268*var(--du));
   }
+  /* Five rows or more: the description is dropped rather than shrunk. Measured - at four rows it
+     still shows 1.55 lines, at five it shows 0.19, and 0.19 of a line is a few units of clipped
+     letterform that reads as a rendering fault, not as a compact mode. All or nothing. */
+  .contents[data-dense] .cbox-bottom{display:none}
   .cbox-top{display:flex;align-items:center;gap:var(--sp-2)}
   /* the stage name gives the icon a label - an unlabelled glyph on paper is decoration, and the
      reader has no legend to consult and nothing to hover */
@@ -1636,10 +1648,34 @@ svg{display:block}
      Each box's number and stage name are formatted exactly as the slide's own eyebrow renders
      them (`01 · WHY NOW`), so a reader matching a box to its page finds the identical string,
      and the per-stage icon has a label rather than being a glyph to decode. */
+  /* How many columns, and whether the page is too dense to carry descriptions. Pure arithmetic on
+     the slide count - no DOM, no measurement - so it gives the same answer on screen, in print and
+     to the measuring tool.
+
+     THREE columns below ten slides, four above. Columns are what decide the row count, and the row
+     count is what decides how tall a box gets stretched: seven slides at four columns is two rows
+     of 377 du boxes holding 150 du of content, while at three columns it is three rows of 243 -
+     the same height as the twelve-slide page, in wider boxes. The owner's rule was "no MORE than
+     four", so going narrower is available and this is what it is for. */
+  function contentsLayout(n){
+    var cols = n <= 9 ? 3 : 4;
+    var rows = Math.ceil(n / cols);
+    return { cols: cols, rows: rows, dense: rows >= 5 };
+  }
+  /* The one export, and it exists for a reason: tools/deck/contents_bound.py has to measure the
+     layout rule the deck SHIPS rather than a copy of it kept in step by hand (L-08). Nothing in
+     the deck reads this back, and it carries no DOM. */
+  window.htmldeckContentsLayout = contentsLayout;
+
   function buildContents(){
     var sec = document.createElement('section');
     sec.className = 'contents';
     sec.setAttribute('aria-label', 'Contents');
+
+    var lay = contentsLayout(slides.length);
+    sec.style.setProperty('--ccols', lay.cols);
+    sec.dataset.rows = lay.rows;
+    if (lay.dense) sec.dataset.dense = '';
 
     var head = document.createElement('div');
     head.className = 'contents-head';

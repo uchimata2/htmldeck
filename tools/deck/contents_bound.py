@@ -43,7 +43,10 @@ DECK = os.path.join(ROOT, "examples", "reference-deck.html")
 # why DS-226 states its floor in points and not in design units.
 PT_PER_DU = 0.75 * (841.89 / 1440.0)
 
-COUNTS = [8, 12, 13, 16, 17, 20, 21, 24, 25, 28, 32, 40]
+# The low end is here because it was missed the first time. The task framed compression as a
+# question about long decks, so the first sweep ran upward from twelve and never looked below it -
+# and a seven-slide page turned out to be the worse-looking of the two ends.
+COUNTS = [4, 6, 7, 8, 9, 10, 12, 13, 16, 17, 20, 21, 24, 25, 28, 32, 40]
 
 PROBE = r"""
 <script>
@@ -83,7 +86,21 @@ PROBE = r"""
       function lines(el){
         return el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight);
       }
+      /* The deck decides its own columns and its own density, and this asks it rather than
+         repeating the rule - a second copy here is what would silently stop measuring what
+         ships (L-08). */
+      var layout = window.htmldeckContentsLayout;
+      if (typeof layout !== 'function'){
+        out.error = 'the deck exports no htmldeckContentsLayout - this tool would be measuring '
+                  + 'its own copy of the layout rule instead of the deck\'s';
+        document.title = 'RESULT' + JSON.stringify(out) + 'ENDRESULT';
+        return;
+      }
       COUNTS.forEach(function(n){
+        var lay = layout(n);
+        contents.style.setProperty('--ccols', lay.cols);
+        contents.dataset.rows = lay.rows;
+        if (lay.dense) contents.dataset.dense = ''; else delete contents.dataset.dense;
         grid.innerHTML = '';
         for (var i=0;i<n;i++) grid.appendChild(originals[i % originals.length].cloneNode(true));
         grid.offsetHeight;
@@ -95,7 +112,7 @@ PROBE = r"""
           if (b.querySelector('.cbox-title').getBoundingClientRect().bottom > br.bottom + 0.5) cutTitle++;
           if (b.querySelector('.cnum').getBoundingClientRect().bottom > br.bottom + 0.5) cutNum++;
         });
-        out.rows.push({ n:n, gridRows:Math.ceil(n/4),
+        out.rows.push({ n:n, cols:lay.cols, gridRows:lay.rows, dense:!!lay.dense,
                         boxH:+boxes[0].getBoundingClientRect().height.toFixed(2),
                         descLines:+minBot.toFixed(2), cutTitle:cutTitle, cutNum:cutNum });
       });
@@ -154,6 +171,19 @@ def self_test(data):
     if any(b - a > 0.5 for a, b in zip(heights, heights[1:])):
         failures.append("box height does not fall monotonically as the deck grows - the grid is "
                         "not compressing, so the 'bound' measured here is not a bound")
+    # The sliver: a description showing part of a line. Either a full line fits or the row is
+    # dense and the description is dropped outright - a few units of clipped letterform reads as a
+    # rendering fault. This is the check that would have caught it at 17 slides.
+    slivers = [r["n"] for r in data["rows"]
+               if not r["dense"] and 0 < r["descLines"] < 1]
+    if slivers:
+        failures.append("part-line description at %s slide(s) - neither a full line nor dropped"
+                        % ", ".join(str(n) for n in slivers))
+    # The cap. A box stretched far past its content reads as content that failed to load.
+    over = [(r["n"], r["boxH"]) for r in data["rows"] if r["boxH"] > 268.5]
+    if over:
+        failures.append("box taller than the 268 du cap at %s - the cap is not in force"
+                        % ", ".join("%d slides (%.1f du)" % t for t in over))
     # The deck must be measured at the size it actually ships, or the reference case is unproven.
     if data.get("authored") != 12:
         failures.append("the deck built %r contents boxes, expected 12 - the reference deck "
@@ -190,20 +220,24 @@ def main():
     print("  grid height %.1f du of the page's 936 usable, at %d columns"
           % (data["gridH"], data["columns"]))
     print("  1 design unit = %.4f pt printed on A4 landscape\n" % PT_PER_DU)
-    print("  %-7s %-6s %-20s %-14s %s" % ("slides", "rows", "box height", "description", "verdict"))
+    print("  %-7s %-5s %-5s %-20s %-14s %s"
+          % ("slides", "cols", "rows", "box height", "description", "verdict"))
     bound = hard = None
     for r in data["rows"]:
         if r["cutTitle"] or r["cutNum"]:
             verdict = "BREAKS - entry clipped"
+        elif r["dense"]:
+            verdict = "compact - description dropped by design"
         elif r["descLines"] < 1:
-            verdict = "degraded - description gone"
+            verdict = "SLIVER - a part-line is showing, which should not happen"
         else:
             verdict = "holds"
             bound = r["n"]
         if not (r["cutTitle"] or r["cutNum"]):
             hard = r["n"]
-        print("  %-7d %-6d %8.1f du (%3.0f pt) %8.2f lines   %s"
-              % (r["n"], r["gridRows"], r["boxH"], r["boxH"] * PT_PER_DU, r["descLines"], verdict))
+        print("  %-7d %-5d %-5d %8.1f du (%3.0f pt) %8.2f lines   %s"
+              % (r["n"], r["cols"], r["gridRows"], r["boxH"], r["boxH"] * PT_PER_DU,
+                 r["descLines"], verdict))
     print("-" * 78)
     print("  THE BOUND      %s slides - the largest deck that still shows a description" % bound)
     print("  THE HARD LIMIT %s slides - the largest deck whose number and title render at all"

@@ -92,8 +92,11 @@ than recommended: seven line icons, one per stage, keyed to `data-stage`.
 **Scope**
 - In: a print-only contents page, generated from the slides at print time.
 - In: **seven line icons, one per stage**, drawn in the deck's existing icon vocabulary.
-- In: **the compression behaviour past twelve slides** — 4 columns, growing rows, a stated type
-  floor — and the measurement of where it stops holding.
+- In: **the compression behaviour past twelve slides** — at most 4 columns, growing rows, a stated
+  type floor — and the measurement of where it stops holding.
+- In: **the behaviour below twelve slides too.** Added 2026-08-08 after looking at a seven-slide
+  render: this scope originally ran in one direction only, and the low end turned out to be the
+  worse-looking of the two.
 - In: the amendment to `DESIGN-SYSTEM.md` §5.4, which the owner has now taken.
 - In: the statement of what print does not preserve, placed on the page.
 - In: the single-page bound — **measured on a deck longer than twelve slides**, not asserted.
@@ -199,13 +202,15 @@ the copy is what drifts — then grows the grid and reads the geometry back out 
 gets **780.3 du** of the page's 936 usable units, the rest going to the head and the screen-only
 line. Because rows are `ceil(n / 4)`, the result is a **step function, not a curve**:
 
-| Rows | Slides | Box height | Description visible | Verdict |
-| ---: | :--- | ---: | ---: | :--- |
-| 3 | 9–12 | 242.8 du (106 pt) | 3 lines | Comfortable — the reference deck sits here |
-| 4 | 13–**16** | 175.6 du (77 pt) | 1.55 lines | **Holds.** Number, title and a readable description |
-| 5 | 17–20 | 135.3 du (59 pt) | 0.19 lines | Number and title intact, **description gone** |
-| 6 | 21–24 | 108.4 du (48 pt) | 0 | Number and title intact, description gone |
-| 7+ | **25+** | 89.2 du (39 pt) | 0 | **Breaks — the title itself clips** |
+| Cols | Rows | Slides | Box height | Description | Verdict |
+| ---: | ---: | :--- | ---: | ---: | :--- |
+| 3 | 2 | ≤ 6 | 268.0 du (118 pt) — **capped** | 2 lines | Holds; the cap stops the stretch |
+| 3 | 3 | 7–9 | 242.8 du (106 pt) | 2 lines | Holds, in wider boxes |
+| 4 | 3 | 10–12 | 242.8 du (106 pt) | 3 lines | Comfortable — the reference deck sits here |
+| 4 | 4 | 13–**16** | 175.6 du (77 pt) | 1.55 lines | **Holds.** Number, title and a readable description |
+| 4 | 5 | 17–20 | 135.2 du (59 pt) | dropped | Compact — number and title, description dropped by design |
+| 4 | 6 | 21–24 | 108.4 du (48 pt) | dropped | Compact |
+| 4 | 7+ | **25+** | 89.2 du (39 pt) | dropped | **Breaks — the title itself clips** |
 
 **So there are two numbers, and conflating them would be the mistake.**
 
@@ -373,6 +378,31 @@ rather than a pre-animation one. Nothing to do — stated so it is not re-discov
   binding constraint — re-measured to confirm, 16 and 24 unchanged. **This is L-01 paying for
   itself**: a rendering-level defect invisible to `audit.py`, to both variant suites and to the
   geometry measurement, found in the first minute of looking at the page. — 2026-08-08
+- **Three columns below ten slides, and a 268 du cap on the box.** — Folded in 2026-08-08 on the
+  owner's instruction after looking at a seven-slide render. Rows divide the page height, so a
+  short deck stretched each box far past its content: at seven slides a box was **377 du holding
+  about 150**, roughly 60% empty, which reads as content that failed to load rather than as a
+  spacious page. Three columns turns that into three rows of 243 du — the same height as the
+  twelve-slide page, in wider boxes — and the cap catches what is left at six slides and below.
+  The owner's rule was "no **more** than four", so narrowing was already available; this is what it
+  is for. The twelve-slide page is untouched: its row is 242.8, under the cap, and the render is
+  pixel-identical to the one that was approved. — 2026-08-08
+- **The description is dropped outright at five rows, not shrunk.** — The other half of the same
+  fold-in. `contents_bound.py` had reported 17 slides as `0.19 lines` and I had written that up as
+  "description gone"; on the render it is not gone, it is **a few units of clipped letterform
+  under the title**, which reads as a rendering fault rather than a compact mode. The number was
+  right and my description of it was too generous. Five rows or more now drops the description
+  entirely — all or nothing — and the tool gained a self-test that fails on any part-line, which
+  is the check that would have caught it. — 2026-08-08
+- **The layout rule is exported as `window.htmldeckContentsLayout`, and that is deliberate.** It
+  is the one global the deck adds. `contents_bound.py` has to exercise the column and density rule
+  the deck **ships**, and the alternative was a second copy of the rule inside the measuring tool,
+  kept in step by hand — which is the drift this whole task was built to avoid (**L-08**). The
+  tool now fails loudly if the export is missing rather than measuring its own copy. — 2026-08-08
+- **`audit.py` caught a banned term in my own CSS comment (DS-106, "genuinely").** Worth recording
+  because it shows the gate scans the deck's *source*, not only its slide copy — which is CLAUDE.md's
+  "ship that list and enforce it at build time rather than hoping", working on the person editing
+  the deck as much as on the deck. — 2026-08-08
 - **The bound was re-measured on the sanctioned instrument after being taken in a preview pane.**
   The pane reported `window.innerWidth` as **0** — L-06/L-15's failure exactly. Its numbers for
   this element happened to be right, because the contents page is a fixed 1920 × 1080 box and its
@@ -402,7 +432,9 @@ rather than a pre-animation one. Nothing to do — stated so it is not re-discov
 | No slide ever absent from the page | **met, within the implemented range** | Number and title survive every compression to 24 slides. Past 24 the box is physically too small (89 du for 96 du of content) and an entry clips — the limit is measured, stated in DS-226, and raised as [T-036](T-036-the-second-contents-page-for-long-decks.md) rather than left to be found |
 | Fits one page at twelve, **and the count where it stops fitting is measured and written down** | **met** | [`contents_bound.py`](../tools/deck/contents_bound.py), real offline Chrome, self-testing. **Bound 16, hard limit 24**, full table in §1. At twelve the box is 242.8 du with three full lines of description — comfortable, not marginal |
 | Screen rendering unchanged; the page exists only under `@media print` | **met** | One screen rule, `.contents{display:none}`; everything else is inside `@media print`. Confirmed in the browser: computed `display` is `none`, and no console errors |
-| Printed from a double-clicked file and looked at (**L-01**, **L-35**) | **not done** | **Owed, and it is the owner's to do** — I cannot double-click a file, and synthesising the gesture would be the L-35 failure in miniature. This is what holds the task at `review` |
+| Printed from a double-clicked file and looked at (**L-01**, **L-35**) | **met** | Printed and looked at by the owner, 2026-08-08 — *"PDF looks great"*. **Given on commit `f3fee7d`, before the two fold-in fixes below.** Those change the layout only below ten slides and at five rows or more; the twelve-slide rendering is **pixel-identical**, verified by re-render, so the verdict carries. A confirming print before close is cheap and worth doing |
+| Below twelve slides the page does not stretch into empty boxes | **met** | Three columns under ten slides, and a 268 du cap on the box. At seven slides a box was 377 du holding ~150; it is now 242.8, the same as the twelve-slide page, in wider boxes. Rendered and looked at |
+| A description shows a full line or none | **met** | Dropped outright at five rows or more, rather than shrunk to the 0.19-line sliver the 17-slide render showed. `contents_bound.py` gained a self-test that fails on any part-line |
 | `audit.py`, both variant suites and `print_variants.py` still pass | **met** | `audit.py` 0 mechanical failures · `deliverable_variants.py` 7/7 · `contract_variants.py` 7/7 · `check_scaffold.py` OK · `print_variants.py` self-test ok, both anchor strings intact |
 
 **Child fix tasks raised**
@@ -413,6 +445,7 @@ rather than a pre-animation one. Nothing to do — stated so it is not re-discov
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | (no change) | **Two defects folded in on the owner's instruction, both found by rendering counts the spec never considered, and the print criterion discharged.** Asked to see 7 and 17 slides, and both ends were wrong. **At seven** the rows divide the page height regardless of content, so each box was stretched to 377 du around ~150 du of content — 60% empty, reading as content that failed to load. Fixed with three columns below ten slides plus a 268 du cap, which puts a seven-slide box at 242.8 — the same height as the twelve-slide page, in wider boxes. **At seventeen** the description was not "gone" as this task had recorded it but reduced to a **0.19-line sliver of clipped letterform**; the measurement was right and the write-up was too generous. It is now dropped outright at five rows or more, all or nothing, and the tool gained a self-test that fails on any part-line. Neither end is covered by [T-036](T-036-the-second-contents-page-for-long-decks.md), which starts at 25. The layout rule is exported as the deck's one global so [`contents_bound.py`](../tools/deck/contents_bound.py) exercises what ships rather than a hand-synchronised copy (**L-08**), and DS-226 was rewritten to state both directions — it previously described only the downward one. `audit.py` then failed on **DS-106** for the word "genuinely" in a CSS comment I had written, which is the banned-term list enforcing itself against the person editing the deck, not only against the slides. The twelve-slide render is pixel-identical to the approved one. **That is three defects on this page found by looking and none by a gate.** |
 | 2026-08-08 | → review | **Built, gated and measured; one criterion is owed and it is the owner's.** The deck gained a `manifest()` — number, title, bottom line, stage and mark, read off the slides — and the contents page is a *rendering* of it, so [T-035](T-035-the-ruler-navigator.md) consumes the same derivation rather than making a second one (**L-08**). Three findings changed the work as specified. **The icons were mostly already there**: the sprite declared nine symbols and used five, and six of the seven structural stages had an apt glyph already present, so one (`i-choice`) was drawn instead of seven — and the topical glyphs were deliberately left out of a structural mark. **A defect surfaced only under measurement**: the flex column shrank every child alike, so past 24 slides the *title* eroded rather than the description, breaking DS-226's invariant; `flex:none` confines compression to the description and makes the boundary sharp. **And the bound came out at 16 with a hard limit of 24**, against a target deck of 12 — so the second contents page is not built and is raised as [T-036](T-036-the-second-contents-page-for-long-decks.md), because a rule with a known unimplementable range needs a task, not a silence. The bound was first taken in a preview pane, which reported `window.innerWidth` as **0** (**L-06**/**L-15**); it was re-measured on real offline Chrome through the new [`contents_bound.py`](../tools/deck/contents_bound.py), and the two agree to the decimal. `DESIGN-SYSTEM.md` §5.4 was amended as the owner took it and gained **DS-225** and **DS-226**; T-005's print row now says `n` + 1; `print_variants.py`'s docstring claimed to be byte-identical to the deck's print block and no longer is, so it was corrected rather than left to drift. All five gates pass. **What is not done is the one thing no script can do**: the deck has not been printed from a double-click and looked at (**L-01**, **L-35**), which is why this is `review` and not `done`. |
 | 2026-08-08 | → planned | **§2 filled, and three approach decisions recorded with it.** The manifest is step 2 rather than a by-product of the page, because building the page first and factoring the manifest out afterwards is the same work in the order that lets the two derivations drift (**L-08**) and [T-035](T-035-the-ruler-navigator.md) is already specified against it. The icons are drawn before the page rather than stubbed, so the box arithmetic at steps 5–6 measures the box that ships. The bound at step 6 is measured on a **scratch deck built deliberately too long**, not by lengthening the reference deck. Printing is last because it is the expensive manual check (**L-35**) and everything mechanical is green before a sheet is looked at. |
 | 2026-08-08 | → specified | **All three open questions answered by the owner, and §1 gained a measurement correction plus a conversion the task cannot be built without.** The rulings: **one box per slide** (the differing answer from a possible per-stage [T-035](T-035-the-ruler-navigator.md) is defended rather than assumed — paper is navigated by page number, the ribbon is not); **a line icon per stage**, which as a side effect disposes of the slide-1-has-no-disclosure-panel non-uniformity, since no mark now derives from panel content; and **the §5.4 amendment taken as worded**. **A wrong number was corrected**: §1 said the usable area was 1728 × 1080, having subtracted `--pad-x` on both sides but never `--pad-y` — it is **1728 × 936**, and the "~432 × 360" per-box estimate rested on it. **And the conversion the type-size ruling turns on was missing entirely**: the stage is authored in design units but the reader meets points on A4 landscape, where fit-to-page is width-bound at 0.5847, so **1 du = 0.4385 pt printed**. That is what settled the owner's "page number 14 or bigger" — as design units it prints at **6.1 pt**, below any readable floor and smaller than `--fs-mono`, so it would have licensed the opposite of what it was asked for; taken as **points** it is a real floor at 32 du. The owner offered the scaling conditions as suggestions to evaluate; all four are recorded in *The compression rule* with what each was checked against, three adopted and one restated in different units. |
