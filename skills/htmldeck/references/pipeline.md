@@ -154,6 +154,24 @@ review second and the human third.
 **The user is shown the outcome and the findings, never the numbers.** A dimension at 0 or 1 reaches
 them as a finding naming the dimension.
 
+### Handing it over — say what printing does and does not do
+
+The deck prints. **Say so once, with its two limits, when you hand the deck over** — a printable
+mode whose limits are discovered on paper is worse than one that states them, and the person who
+needs to hear it is the one *about to* print, not the one holding the pages. Not on the deck's own
+surface: that would be print-only chrome on the stage.
+
+Three sentences, no more:
+
+- **It prints as slides — one per page**, at the deck's own 16:9 page size rather than A4. The
+  print dialog's layout controls will be greyed out, because here the page shape is the design.
+- **Everything behind a disclosure control stays on screen.** The panels are overlays on a fixed
+  slide, so they cannot open onto paper without covering what they explain; the control is hidden
+  in print too rather than advertising detail the page cannot reach. Read those on screen.
+- **Turn headers and footers off in the print dialog.** Chrome's default prints the file's full
+  local path across the foot of every page — someone else's directory layout on paper. It is not
+  reachable from CSS, so it can only be warned about.
+
 ---
 
 ## What this scaffold does not build

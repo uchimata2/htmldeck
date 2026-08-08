@@ -321,6 +321,23 @@ every archetype.
 | DS-169 | One meaningful interaction per slide, where it adds signal. Never decoration. | default | judge |
 | DS-170 | Push longer text behind interaction rather than onto the slide. When detail is unavoidable: hide it, or split to a new page. | default | judge |
 
+### 5.4 The printable mode
+
+**The printable mode is the paginated stage — one slide per page — and the reading view is not a
+print target.** Ruled by [`R7`](research/R7-printable-mode.md) §4 against a measured alternative,
+and adopted in [`examples/reference-deck.html`](../examples/reference-deck.html) by
+[T-032](../tasks/T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md). Printing stays a
+mode the user forces on, never a constraint on the design (§0): the reading view already serves the
+read-alone case **on screen**, and reshaping it so it paginates well is exactly printing becoming a
+constraint. What print does not preserve is stated to the user, never discovered on paper —
+[`R7`](research/R7-printable-mode.md) §5 is the list.
+
+| ID | Rule | Label | Check |
+| :--- | :--- | :--- | :--- |
+| DS-222 | **A print stylesheet asserts the view it wants, `display` included.** A deck that hands over to the reading view on a small stage scale (DS-071) hides the stage with `[hidden]`, and **printing is what makes it hand over** — printing changes the layout viewport. Overriding `position`, `transform` or `height` does not touch `display`, so the stage never reaches the page: it prints blank, or it prints the other view and looks fixed. Force `display` on both the element and its `[hidden]` state, and hide the view you did not choose. Two printed rounds were lost to this. **Corollary — check what a selector actually matches:** `:last-child` does not match the last slide, because the stage ends with the chrome, so the final slide keeps its `break-after` and emits an empty extra page. | hard | render |
+| DS-223 | **A slide stays a containing block for its own overlays in print.** `position: relative`, never `static`. A slide is the containing block for its absolutely positioned descendants — disclosure panels, the provenance line — and making it static hands them to the page, which scatters them across breaks. Relative keeps it in normal flow *and* keeps it a containing block. | hard | render |
+| DS-224 | **Entrance animations are disabled for print.** They hold their pre-animation state until played, so a slide the reader never advanced to prints blank or half-risen — the deck's own motion vocabulary (DS-140) turned into missing content on paper. This is DS-221's mechanism on a second medium: any rendering that captures the deck without playing it must pin motion off first. | hard | render |
+
 ---
 
 ## 6. Anti-patterns

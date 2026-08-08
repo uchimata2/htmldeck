@@ -11,13 +11,16 @@ assertion, so the same twelve-slide deck is emitted twice with different `@media
                 content it explains. That loss is a measurement, not an oversight.
     reflow      the READING view printed as a continuous document. `buildDoc()` already clones
                 every slide and opens every disclosure panel (DS-073), so tier two travels into
-                this rendering by construction. This is what the deck does today.
+                this rendering by construction. Measured and rejected: it prints badly for a
+                structural reason, and reshaping it would make printing a constraint on the
+                design (R7 §4).
 
 Both are written to `.assets-cache/print/`, gitignored, because they are artefacts: the repository
 keeps the script and the numbers, never the output (R6's rule).
 
-Neither variant is proposed for the reference deck. Which stylesheet - if either - lands there for
-good is T-021's and T-028's business.
+The paginated variant IS the reference deck's print stylesheet since T-032 adopted it, so that
+build is now a round-trip rather than a proposal. The script is kept for re-measuring: it is the
+only way to put the rejected rendering back on paper beside the adopted one.
 
 Pure standard library, by L-07. Writes LF (L-11) and UTF-8 (L-10).
 
@@ -184,9 +187,15 @@ def self_test(source):
     if len(hits) != 1:
         failures.append("expected exactly 1 existing @media print block, found %d - the deck has "
                         "changed and the replacement anchor is wrong" % len(hits))
-    if ".doc section{break-inside:avoid}" not in source:
+    # The anchor moved when T-032 adopted the paginated variant into the deck: the block this
+    # script replaces is now the paginated one, not the reading-view block it was written against.
+    # Anchoring on the rule the rendering lives or dies by, rather than on a line that could be
+    # tidied away, is what makes the failure mean "the deck changed" rather than "someone
+    # reformatted the CSS".
+    if "[hidden]{display:block!important" not in decls(source):
         failures.append("the deck's current print block is not the one this script was written "
-                        "against")
+                        "against - expected the adopted paginated block, which forces "
+                        ".viewport[hidden] back to display:block")
 
     # Both variants must survive substitution intact, and must differ. A copy-paste that left
     # them identical would produce two files and one measurement.

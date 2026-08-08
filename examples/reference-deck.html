@@ -458,12 +458,76 @@ svg{display:block}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
-/* printing is a mode the user forces on, never a constraint on the design (CLAUDE.md rule 5) */
+/* printing is a mode the user forces on, never a constraint on the design (CLAUDE.md rule 5)
+
+   THE PAGINATED STAGE - one slide per printed page. R7 ruled this the printable mode against a
+   measured alternative: the reading view prints as a continuous document, and prints badly for a
+   structural reason, so reshaping it to paginate well would be printing becoming a constraint on
+   the design. Adopted here by T-032; the stylesheet is the one T-018 printed and looked at.
+   What this rendering does not preserve is stated for the user in R7 §5. */
 @media print{
-  body{overflow:visible;background:#fff}
-  .viewport,.viewswitch{display:none!important}
-  .doc{display:block!important;height:auto;overflow:visible}
-  .doc section{break-inside:avoid}
+  /* The page is sized to the slide rather than the slide to the page. A4 would letterbox a
+     16:9 stage and leave the print dialog to scale it anyway; this way the dialog's "fit to
+     page" does the only scaling, and it does it to a page of the right shape. The cost is
+     stated rather than hidden: pinning `size` greys out the dialog's layout controls, which is
+     acceptable only because here the page shape IS the design (R7 §5.3). */
+  @page{ size:1920px 1080px; margin:0 }
+
+  html,body{background:#fff;overflow:visible;height:auto}
+  .viewswitch,.chrome,.controls{display:none!important}
+  .doc{display:none!important}
+
+  /* THE RULE THIS RENDERING LIVES OR DIES BY, and the one whose absence printed blank pages twice
+     (DS-222). The deck switches itself to the reading view when the stage scales below 0.5
+     (DS-071) and sets `viewport.hidden` when it does. PRINTING IS WHAT MAKES IT SWITCH, because
+     printing changes the layout viewport - and since the trigger became height-aware it fires on
+     more page geometries, not fewer.
+     `.viewport[hidden]{display:none}` then hides the stage, and overriding `position` does not
+     touch `display`. So the stage was never in the output at all: one run hid the reading view
+     too and printed nothing; the next left the reading view visible and printed THAT, which
+     looked like a fix and was not. */
+  .viewport,.viewport[hidden]{display:block!important;
+            position:static!important;inset:auto!important;overflow:visible!important;
+            height:auto!important;background:#fff!important}
+  .stage{
+    position:static!important;transform:none!important;
+    width:1920px!important;height:auto!important;
+    border:0!important;box-shadow:none!important;overflow:visible!important;
+  }
+
+  /* Slides are absolutely stacked with only [data-current] visible. Un-stack them, make every
+     one visible, and give each its own page.
+     `relative`, not `static`. A slide is the containing block for its own absolutely positioned
+     descendants - the disclosure panels and the provenance line - and making it static hands them
+     to the page instead, which scatters them across breaks (DS-223). */
+  .slide{
+    position:relative!important;
+    width:1920px!important;height:1080px!important;
+    opacity:1!important;visibility:visible!important;
+    transition:none!important;
+    break-after:page;break-inside:avoid;
+  }
+  /* :last-child does not match - the stage ends with the chrome nav, not with a slide - so the
+     twelfth slide would keep its page break and emit a thirteenth, empty page. Still true after
+     T-028 removed the progress bar: the nav is what follows the last slide. */
+  section.slide:last-of-type{break-after:auto}
+
+  /* Entrance animations hold their pre-animation state until played, so an unplayed slide
+     prints blank or half-risen (DS-224). */
+  .rise{opacity:1!important;transform:none!important;animation:none!important}
+
+  /* Tier two does not survive this rendering: the panels are absolutely positioned overlays on a
+     fixed 1920x1080 box, and opening them onto it covers the content they explain. So the whole
+     affordance goes, button included. Printing a "+ show detail" control onto paper is worse than
+     losing the detail silently - it advertises something the reader can see but cannot reach, on
+     a medium where nothing can be clicked.
+     This is 38.6% of the deck's text (10 panels, 3543 of 9177 characters). The owner ruled the
+     slides only, with the loss stated: the reading view carries all of tier two on screen, so it
+     is not lost, only not on paper (T-032). */
+  .slide .disc{display:none!important}
+
+  /* Backgrounds and rules are most of this design; without this they print as white. */
+  *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
 }
 </style>
 </head>
