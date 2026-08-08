@@ -723,10 +723,30 @@ result:
   transition, and the result is a convincingly blank slide that looks exactly like a real defect.
   Three "defects" chased this way were the harness, not the deck.
 
+**Pinning motion is two obligations, not one, and half of it is worse than none** — added 2026-08-08
+after both halves failed in the same session, on the same deck, each presenting as a CSS bug rather
+than a capture bug.
+
+- **The selector has to reach pseudo-elements.** `*` does not match `::before` or `::after`. A gate
+  pinning `*{transition:none!important}` covers every element and none of the marks a component
+  draws with a pseudo-element — so those keep transitioning and the capture reads their *animated*
+  size and colour. The ruler's tick marks are `::before`, and the result was dots rendering as
+  ovals through three rounds of chasing specificity that was never wrong. Pin
+  `*,*::before,*::after`.
+- **Killing the animation without restoring what it was going to reveal captures the pre-animation
+  state.** Entrance animations hold their start frame until played, so `animation:none` alone
+  freezes every risen element at `opacity:0` and photographs a blank slide — which is the very
+  defect DS-224 exists to prevent, reproduced by the instrument meant to check for it. Pin motion
+  **and** force the revealed state: `.rise,.pulse,.opening{opacity:1!important;transform:none!important}`.
+
 **How to apply.** Any automated render gate pins motion off and disables transitions before
 capturing, and measures content extents rather than element bounds. Both are one line each and both
 were discovered by disbelieving a result that did not match what the previous render showed —
-which is **L-06** again, now with a mechanism.
+which is **L-06** again, now with a mechanism. Write the pinning **once, in the harness**, and have
+every capture use that one string: both failures above came from ad-hoc capture scripts reinventing
+half of a pair that the harness already had complete. And when a rendering looks wrong in a way that
+implicates the artifact, check the capture first — **a mid-transition screenshot does not look like
+a broken screenshot, it looks like broken CSS** (**L-35**).
 
 ### L-27 — An audit of intended values passes defects in rendered values
 
