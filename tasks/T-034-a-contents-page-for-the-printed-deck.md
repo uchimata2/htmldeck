@@ -104,6 +104,52 @@ mark and the honest one. This is a recommendation, not a ruling — see the open
   every slide for the reading view, so the mechanism for reading titles and bottom lines at runtime
   exists and should not be written twice.
 
+### What the deck already does — measured 2026-08-08, so the specify pass need not re-derive it
+
+Read this before writing the detailed spec. It is the state of
+[`examples/reference-deck.html`](../examples/reference-deck.html) as it stands, not a proposal.
+
+**The data the page needs already exists, and here is where it lives.**
+
+| Field | Where | Note |
+| :--- | :--- | :--- |
+| Slide title | `data-name` on `<section class="slide">` | Also drives `document.title` (DS-135) |
+| Bottom line | `<p class="bottom-line rise">` | One per slide, all twelve present |
+| Stage | `data-stage` on the section | 0–6, so **seven stages** |
+| Number | The slide's index | Printed in the eyebrow as `01 · WHY NOW` |
+
+**Geometry, so the box arithmetic can be done on paper.** The printed page is `@page{size:1920px
+1080px;margin:0}` — 1440 × 810 pt, exactly 1920 × 1080 px at 96 dpi. `--pad-x` is **96 design
+units**, so a contents page has **1728 × 1080 usable units** inside the padding. Twelve boxes on a
+4 × 3 grid is ~432 × 360 units each before gaps.
+
+**The slides are not uniform, and one of them is the odd one.** Stage membership runs
+**1 · 1 · 2 · 2 · 3 · 2 · 1** across the seven stages. **Slide 1 carries no disclosure panel at
+all**; the other eleven carry exactly one each. Any per-box mark derived from slide content has to
+survive that.
+
+### Two traps in the print block, both of which have already cost a round
+
+1. **Where the contents section goes in the DOM is load-bearing, and putting it last reintroduces
+   the blank thirteenth page.** The stage is `<main class="stage">` containing exactly twelve
+   `<section class="slide">`, and the print block cancels the last slide's page break with
+   **`section.slide:last-of-type`**. That selector matches the last `<section>` **among its
+   siblings by element type** — so adding a `<section class="contents">` *after* slide 12 makes the
+   twelfth slide no longer the last section, the selector matches **nothing**, and the empty
+   thirteenth page T-018 spent a printed round finding comes straight back. **Put the contents
+   section first**, which is also where it belongs, or use a non-`<section>` element, or fix the
+   selector — but decide it deliberately. This is DS-222's corollary, live.
+2. **Do not disturb two strings the tooling anchors on.**
+   [`tools/deck/print_variants.py`](../tools/deck/print_variants.py) finds the block to replace with
+   a regex starting at the comment `/* printing is a mode the user forces on`, and its self-test
+   asserts `[hidden]{display:block!important` is present. Both must survive any restructuring of the
+   print CSS, or the script fails its own test — which is exactly how it failed when
+   [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) adopted the block.
+
+**One more thing print already does to the clones.** `.rise` is forced to `opacity:1` with
+`animation:none` in print, so bottom lines cloned into a contents page inherit a resolved state
+rather than a pre-animation one. Nothing to do — stated so it is not re-discovered.
+
 **Acceptance criteria**
 - [ ] The printed deck is *n* + 1 pages: a contents page, then one page per slide, still with no
       blank page at either end
@@ -159,5 +205,6 @@ mark and the honest one. This is a recommendation, not a ruling — see the open
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | (no change) | **§1 gained what the raising session had measured but never written down** — where each field the page needs actually lives in the markup, the printed geometry (**1728 × 1080 usable design units** inside `--pad-x`, on a page that is 1440 × 810 pt), the uneven stage membership **1 · 1 · 2 · 2 · 3 · 2 · 1**, and the fact that **slide 1 carries no disclosure panel** where the other eleven carry one, so any mark derived from slide content meets a non-uniform set. **Two traps are recorded because both have already cost a printed round elsewhere**: `section.slide:last-of-type` matches by *element type*, so a `<section>` placed after slide 12 makes it match nothing and silently reinstates T-018's blank thirteenth page — DS-222's corollary, live; and [`print_variants.py`](../tools/deck/print_variants.py) anchors on two strings inside the print block, which is exactly how it broke when [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) adopted that block. **None of this changes the specification** — it takes the measurements off the next session's critical path so the detailed spec starts from facts rather than from a re-derivation. |
 | 2026-08-08 | (no change) | **Answered the owner's question — the on-screen overlay index and this page share their content but not their rendering, and the shared part is a slide manifest rather than a page.** Both need each slide's number, title, bottom line, stage and mark, and deriving that twice is how the two drift (**L-08**); `buildDoc()` already sets the precedent of cloning slides instead of re-authoring them. What differs is real and should not be flattened: this page **must fit one page** and is read once to orient, the overlay scrolls and is read repeatedly to jump; this page owes the screen-only line, the overlay owes a current-position highlight; and **the mark can legitimately differ** — a slide clone is a texture at 0.22 scale on paper, but on screen it has no resolution limit and can enlarge on hover. So whichever of this and [T-035](T-035-the-ruler-navigator.md) lands first builds the manifest and the other consumes it. |
 | 2026-08-08 | → proposed | Raised by the owner on reading the printed deck from [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md). Recorded with two arguments the request did not make — **the description is free**, because DS-211's bottom line already exists on every slide and reading it means the page cannot drift from the deck; and **it is the only surface that reaches a paper reader**, so the disclosure loss finally has somewhere to be stated to the person actually holding the pages. One amendment is owed and is raised rather than taken (**L-37**): §5.4 says the printable mode *is* the paginated stage, and a contents page is a printed page that is not a slide. The thumbnail option is argued against rather than dropped: at twelve boxes a slide clone renders at ~0.22 scale, which puts body text at five design units — a texture that looks like content. |

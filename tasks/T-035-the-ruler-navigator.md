@@ -166,6 +166,52 @@ consumes it. The renderings legitimately differ; the manifest must not.
 - [`examples/reference-deck.html`](../examples/reference-deck.html) — the ribbon it replaces, and
   the 1450-of-1728 measurement in its own comment.
 
+### What the deck already does — measured 2026-08-08, so the specify pass need not re-derive it
+
+Read this before writing the detailed spec. It is the state of
+[`examples/reference-deck.html`](../examples/reference-deck.html) as it stands.
+
+**The row the ruler moves into.** `.chrome` is `position:absolute; left/right: --pad-x;
+bottom: 40du`, so it spans **1728 usable design units** and sits **40 units off the foot of the
+stage** — the number behind the DS-138 argument above. It carries two things: `<ul class="ribbon"
+id="ribbon">` on the left, and a `.controls` block on the right holding **five elements** —
+`#count`, `#prev`, `#next`, `#toDoc`, `#motion`. The ruler replaces the first; the second is what it
+must share the row with, and is what step 2's measurement has to price.
+
+**The ribbon is generated, not authored**, in a boot loop that fills `ribbonBox` and wires click
+handlers during boot — there is already a comment in the source explaining that its handler is a
+function declaration rather than a `var` **because it is called before its definition is reached**.
+The ruler inherits that ordering constraint.
+
+**The current-position idiom already exists and is the one the owner's degradation describes.** The
+lit stage gets `data-lit`, and CSS gives it `background: var(--accent)` plus **`transform:
+scale(1.5)`** on a **10-unit** dot. So "current one enlarged and coloured" is not a new mechanism —
+it is what ships. It also gives the mark-size measurement its anchor: **10 units renders at 5 CSS px
+at the 0.5 scale floor**, so a 4-unit mark lands at 2 px and a 2-unit mark at 1 px.
+`aria-current="true"` is already set on the lit item and must survive the rewrite.
+
+**The dot currently animates**, with `transition: background/transform var(--scale-dur) ease-in-out`.
+The title swap decided above must **not** inherit that — it is an instant swap, and a transition on
+a label that changes on every focus move is the flicker the decision is guarding against.
+
+### A keyboard collision this task has to resolve — DS-137
+
+**Arrow keys are already taken, globally.** The `keydown` listener is on `document` and its only
+guard is `e.target.matches('input,textarea')` — so `ArrowRight` / `ArrowLeft` / `PageUp` /
+`PageDown` / space / `Home` / `End` advance the deck **even when a chrome button has focus**. That is
+tolerable with seven ribbon buttons. **With thirty ticks it is a real conflict**, because the
+conventional keyboard idiom for a tick group is arrow-to-move-within-it, and those keys advance the
+slide instead. **DS-137 requires a defined precedence rule for exactly this**, and DS-166 already
+fixes the shape of the answer for disclosure — arrows advance, a separate key toggles, the two do
+not interact. Decide the same way here, deliberately: either ticks are Tab-reachable only, or the
+handler learns to yield when focus is inside the ruler. Do not leave it to whichever listener runs
+first.
+
+**`Escape` is already bound, and it matters for the overlay this task hands off to.** In the reading
+view `Escape` returns to the stage; on the stage it is free. So an ESC-opened slide index
+([T-016](T-016-the-interaction-and-motion-layer.md)) has a conflict to resolve in one of the two
+views, not in neither.
+
 **Acceptance criteria**
 - [ ] The chrome row's width **does not grow with the number of stages or the length of their
       names**, measured against the current ribbon on the same deck
@@ -183,6 +229,9 @@ consumes it. The renderings legitimately differ; the manifest must not.
 - [ ] The minimum mark size is **measured at the 0.5 scale floor on a 1× display**, not chosen
 - [ ] Interactive tick hit areas are ≥ 48 × 48 design units, or meet DS-168's spacing exception —
       checked, not eyeballed
+- [ ] The arrow-key precedence between advancing the deck and moving within the ruler is **decided
+      and written down** (DS-137), not left to listener order
+- [ ] `aria-current` still marks the current position, as the ribbon does today
 - [ ] The three amendments are in `DESIGN-SYSTEM.md` with the reasoning in `DESIGN-RATIONALE.md`
 - [ ] `audit.py` reports zero mechanical failures and both variant suites still catch 7 of 7
 - [ ] The deck is **looked at** at 1920 wide and at the 0.5 scale floor (**L-01**)
@@ -229,5 +278,6 @@ consumes it. The renderings legitimately differ; the manifest must not.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | (no change) | **§1 gained what the raising session had measured but never written down, and one of the findings is a conflict this task now has to settle.** The row's real geometry — 1728 usable design units, `bottom: 40du`, and the five elements in the `.controls` block the ruler must share the row with. The current-position idiom the owner's degradation describes **already ships**: `data-lit` plus `transform: scale(1.5)` on a 10-unit dot, which also anchors the mark-size measurement (10 units is 5 CSS px at the 0.5 scale floor, so a 4-unit mark is 2 px and a 2-unit mark is 1). The lit dot **transitions**, and the title swap must not inherit that. **The conflict: arrow keys are already taken globally.** The `keydown` listener is on `document` and guards only against `input,textarea`, so the arrows advance the deck even while a chrome button holds focus — tolerable with seven ribbon buttons, a genuine collision with thirty ticks, and **DS-137 requires the precedence rule to be stated** rather than left to listener order. DS-166 already fixes the shape of the answer for disclosure and should be followed here. Also recorded for [T-016](T-016-the-interaction-and-motion-layer.md): **`Escape` is already bound in the reading view**, so an ESC-opened slide index has a conflict in one of the two views. |
 | 2026-08-08 | (no change) | **Two refinements from the owner, both adopted, and one of them resolves a rule collision this task had not spotted.** (1) **The target's name replaces the title in the navigation bar rather than appearing as a tooltip** — and that turns out to be the *only* conformant option, not merely the tidier one: **DS-138** requires popovers to drop below their control and warns that a control near the foot of the stage cannot host one, and the chrome sits at `bottom: 40du`, so a tooltip on a tick has forty design units of room and nowhere to go. Added with the conditions that make it safe: instant swap, no transition, restore on blur, and an accessible name on every tick independent of the swap, because the swap is a sighted-user affordance. (2) **Past the bound the small ticks become marks rather than disappearing** — strictly better than the "section ticks only" degradation written yesterday, because it drops the *affordance* and keeps the *information*. **Its consequence is larger than it looks: DS-168 governs targets, so once small ticks are not targets the 48-unit floor applies only to the seven section ticks, and the ruler stops having a slide-count ceiling at all** — 1728 ÷ 48 ≈ 36 *sections*, which no real deck reaches. The derived ~30 survives as the point where the ruler **changes mode**, which is a more useful thing for DS-217 to state than a point where it fails. *"Almost pixel-size"* gained a measurable floor rather than a chosen number: at the 0.5 scale floor a 2-unit mark is one CSS pixel and will alias on a 1× display, so the minimum is measured there. **Also recorded: the overlay index and [T-034](T-034-a-contents-page-for-the-printed-deck.md)'s printed contents page are one content source rendered twice**, so whichever lands first builds the slide manifest and the other consumes it (**L-08**). |
 | 2026-08-08 | → proposed | Raised by the owner after presenting the deck. **The stated problem is confirmed rather than accepted**: the chrome row runs at ~1450 of 1728 design units with seven stage *names*, so the current design is one stage away from wrapping into the second row DS-217 exists to prevent. Recorded with three named amendments rather than as "allow dots again", because [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md) settled these exact rules hours earlier and **L-37** makes the amendment explicit: DS-217 counts a regular scale as one item rather than *n*; DS-217's *"around ten slides"* becomes a bound derived from DS-168's 48-design-unit target floor against 1728 usable units — around 30, to be **measured** on the real row; and DS-131's *"not one target per slide"* narrows to *not one **unnamed** target per slide*, which keeps yesterday's rule intact because its point was never the count. **Two changes to the proposal are argued for**: small ticks should announce their own slide rather than their section, or twelve targets carry seven labels and become the unnamed targets DS-131 is about; and hover cannot be the only route (DS-163), so focus parity is a requirement rather than a refinement. **The ESC overlay the request compares against is not the alternative** — DS-131 already names an on-demand slide index as the answer past the bound, and [T-016](T-016-the-interaction-and-motion-layer.md) owns it, so the two compose. |
