@@ -25,7 +25,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004, T-005 | - |
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | T-002 |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
-| [T-034](T-034-a-contents-page-for-the-printed-deck.md) | Add a contents page to the printed deck | WP2 | `review` | review | - | - |
 | [T-035](T-035-the-ruler-navigator.md) | Replace the stage ribbon with a ruler navigator, and rescope the chrome budget it breaks | WP2 | `proposed` | specify | - | - |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | WP2 | `proposed` | specify | - | - |
 
@@ -59,6 +58,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-031](T-031-stop-the-index-blocks-column-listing-closed-tasks.md) | Stop the index `Blocks` column listing closed downstream tasks | `done` | 2026-08-08 |
 | [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) | Adopt the paginated print mode in the reference deck, and decide whether print carries tier two | `done` | 2026-08-08 |
 | [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md) | Reconcile DS-131 with the chrome budget it now contradicts | `done` | 2026-08-08 |
+| [T-034](T-034-a-contents-page-for-the-printed-deck.md) | Add a contents page to the printed deck | `done` | 2026-08-08 |
 
 ## Next ID
 
