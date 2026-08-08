@@ -2,7 +2,7 @@
 id: T-037
 title: Record in the ruleset itself which rules no check can reach
 type: decision
-status: proposed
+status: specified
 phase: specify
 parent: null
 blocked_by: []
@@ -31,26 +31,43 @@ of all 109 owned rules to be **derived from the ruleset when the gate runs**, ne
 (**L-08**). That derivation is not possible today: the ruleset says `auto` or `render` and stops,
 and the exceptions live in `audit.py`'s output as prose.
 
-**The anchor that went stale, and how it survived**
+**The anchor never existed — established 2026-08-08, from git, not from memory**
 
-This carve-out used to have a home. [T-014](T-014-synthesise-research-into-the-design-system-reference.md)
-built `DESIGN-SYSTEM.md` **§11** — the hard rules restated as 26 numbered testable conditions, later
-33 — precisely so T-005 could consume them without reading the whole reference, and it named the two
-that **no check could reach** rather than dropping them to make the list look clean.
+This carve-out was supposed to have a home.
+[T-014](T-014-synthesise-research-into-the-design-system-reference.md) step 5 promised *"the
+check-facing section of the reference"* — the hard rules pulled into one list stated as testable
+conditions, so T-005 could consume them without re-reading the whole document — and T-014's §4
+recorded it **met**: *"§11 — 26 numbered conditions. Two (15 and 23) are not machine-checkable and
+say so, rather than being dropped to make the list look clean."*
 
-[T-022](T-022-split-the-design-system-from-its-rationale.md) then gave every rule a `DS-nnn` ID, and
-§11 went with the renumbering. **The document now ends at §9.** What was lost was not the rules —
-they all have IDs — but the *statement of which ones are unreachable*, which existed nowhere else.
-Three consequences, all live:
+**`docs/DESIGN-SYSTEM.md` has ended at §9 in every one of the 13 commits of its life.** It was
+created that way, by the same commit that closed T-014. There is no §10 and no §11, in any revision,
+under any heading level. So this is not a section that went stale in a later refactor: **the
+deliverable was recorded as met and was never committed**, and the evidence cited for it was a
+section number rather than the section's content.
 
-- T-005's log cites "conditions 22 and 30 are not machine-checkable". **Those numbers resolve to
-  nothing**, and which two rules they meant is not recoverable from the ruleset.
-- [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) hit the same staleness and worked
-  around it by hand, writing *"the rule the original text called condition 17"* → **DS-063** into its
-  own criteria. That translation is correct and it is also the only one anybody did.
-- `python tools/tasks/task.py check` **cannot see any of this.** It validates markdown links and
-  repo-relative paths; a `§11` written in prose is neither. This is the gap that let a dead anchor
-  sit in three task files across two months.
+What followed is the part worth keeping, because nothing caught it for two months:
+
+- Two of T-005's log rows consume §11 — first *"26 numbered testable conditions"*, then an
+  elaboration to 33 with *"the two not machine-checkable are 22 and 30"*. Both reason in detail
+  about a document that does not exist.
+- [T-004](T-004-critique-mode-blunt-section-by-section-review.md)'s log assigns itself *"§11
+  conditions 15 and 23"*.
+- [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) §3 ordered the build partly on
+  *"finishing it produces §11 conditions 13–19 as checks"*.
+- [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) is the one that noticed something was
+  off and worked around it by hand, writing *"the rule the original text called condition 17"* →
+  **DS-063** into its own criteria. It shipped a real check from it. Nobody did the other 32.
+
+**The numbering is not reconstructible, and that is now settled rather than assumed.** If the
+conditions had been the hard rules in document order, condition 17 would be the 17th; DS-063 is the
+**31st**. The ordering existed only in the list that was never written, so *which* rules 22 and 30
+were cannot be recovered from anything in the repository. This task therefore writes them off
+explicitly instead of hunting for them — see the acceptance criteria.
+
+**Why nothing caught it.** `python tools/tasks/task.py check` validates markdown links and
+repo-relative paths. A `§11` written in prose is neither, so a reference to a section that never
+existed reads exactly like a reference to one that does.
 
 **Scope**
 - In: a per-rule way to say *no check can reach this, and here is why* — a `Check` value, an extra
@@ -58,7 +75,8 @@ Three consequences, all live:
 - In: applying it to the rules that are genuinely unreachable, starting with the four `audit.py`
   already excuses in print: **DS-033, DS-061, DS-065, DS-072**, whose reasons are already written
   and merely live in the wrong place.
-- In: recovering, or explicitly writing off, the two rules §11 called 22 and 30.
+- In: **writing off** the two rules §11 called 22 and 30, in the ruleset, as unrecoverable — and
+  saying why, so the next reader does not re-run the search.
 - Out: **building or changing the gate.** T-005 consumes this; it does not depend on this task to
   be planned, and nothing here writes Python.
 - Out: re-auditing the 64 silent rules to decide which are unreachable. Most are simply unbuilt, and
@@ -83,9 +101,12 @@ Three consequences, all live:
       tool's output
 - [ ] The four reasons currently printed by `audit.py` (DS-033, DS-061, DS-065, DS-072) are in the
       ruleset, and `audit.py` no longer holds the only copy of any of them
-- [ ] §11's "conditions 22 and 30" are either identified as `DS-nnn` rules or **explicitly written
-      off as unrecoverable**, in writing. Quietly dropping them is the failure this task exists to
-      correct, so repeating it closes nothing
+- [ ] §11's "conditions 22 and 30" are **written off as unrecoverable, in the ruleset, with the
+      reason** — the numbering existed only in a list that was never committed, and DS-063 sitting
+      31st rather than 17th is the evidence that it was not document order. Quietly dropping them is
+      the failure this task exists to correct, so repeating it closes nothing
+- [ ] Every surviving `§11` reference in `tasks/` is corrected — T-004, T-005 and T-030 each cite it,
+      and a reader who follows one today lands on a document that ends at §9
 - [ ] A program can compute *"rules the gate is expected to cover"* from the ruleset alone, and the
       number it gets is stated here so T-005 can assert against it
 - [ ] `DESIGN-RATIONALE.md` records why the distinction is carried per rule rather than in a list —
@@ -129,4 +150,5 @@ Three consequences, all live:
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | → specified | **§1 corrected on evidence, and the correction makes this task's case stronger rather than smaller.** It was written saying [T-022](T-022-split-the-design-system-from-its-rationale.md) replaced §11's numbered conditions with `DS-nnn` IDs and the section went with the renumbering. **Checked against git before accepting the spec: that is wrong. §11 was never committed** — `docs/DESIGN-SYSTEM.md` has ended at §9 in all 13 commits of its life, created that way by the commit that closed [T-014](T-014-synthesise-research-into-the-design-system-reference.md) recording §11 as **met**. So this is not a stale-reference problem to tidy; it is a deliverable recorded as delivered on the evidence of a section number, which four task files then consumed for two months. **One acceptance criterion is settled by that check rather than left for `implement`:** the numbering is unrecoverable, proven — had the conditions been the hard rules in document order, condition 17 would be the 17th, and DS-063, the only one [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) ever translated, is the **31st**. Conditions 22 and 30 are therefore written off in the ruleset with the reason, not hunted for. A criterion was also added for the surviving `§11` references in T-004, T-005 and [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md). T-014's §4 verdict is corrected to `not met` and its log carries the account; **it is not reopened**, because its real deliverable exists and only the carve-out is missing — which is this task. The mechanism question stays open for `plan`, as written. |
 | 2026-08-08 | → proposed | **Raised from [T-005](T-005-build-check-the-gate-the-deck-must-pass.md)'s `specify`, and deliberately not fixed there** — a finding is not repaired where it is found. Working T-005's scope showed that the gate owns **109 rules** (65 `auto`, 44 `render`) of which **64 are silent**, and that its coverage account has to be *derived* from the ruleset rather than kept by hand (**L-08**). That derivation is impossible while the ruleset says only `auto` or `render`: an unreachable rule and an unbuilt one look identical. The reasons exist and are good — they are just in `audit.py`'s print statements. **The owner chose, 2026-08-08, that they belong per rule in the ruleset**, on [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md)'s precedent that a rule a shipped artifact contradicts is a defect in the ruleset rather than in the artifact. The task is `related` to T-005, not blocking it: T-005's §1 already assumes this field exists, so landing this later leaves that spec incomplete rather than wrong — [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md)'s test for whether an edge gates. |

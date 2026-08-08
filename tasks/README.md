@@ -26,7 +26,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | T-002 |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | WP2 | `proposed` | specify | - | - |
-| [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md) | Record in the ruleset itself which rules no check can reach | WP2 | `proposed` | specify | - | - |
+| [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md) | Record in the ruleset itself which rules no check can reach | WP2 | `specified` | specify | - | - |
 
 ## Closed
 
