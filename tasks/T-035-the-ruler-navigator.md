@@ -2,8 +2,8 @@
 id: T-035
 title: Replace the stage ribbon with a ruler navigator, and rescope the chrome budget it breaks
 type: deliverable
-status: proposed
-phase: specify
+status: planned
+phase: implement
 parent: null
 blocked_by: []
 related: [T-033, T-028, T-016, T-027, T-034]
@@ -45,7 +45,7 @@ it is a rule amendment with a named side, not a licence.
 
 | Rule | Says today | Does the ruler break it? |
 | :--- | :--- | :--- |
-| DS-216 | One encoding of position; a second only if it encodes a **different** fact — stage versus slide. | **No — it conforms better than what ships.** The ruler encodes slide *and* stage in **one** element, where the deck currently spends a ribbon plus a counter on the same two facts. |
+| DS-216 | One encoding of position; a second only if it encodes a **different** fact — stage versus slide. | **The ruler alone conforms better than what ships** — it carries slide *and* stage in **one** element, where the deck spends a ribbon plus a counter on the same two facts. **But keeping the counter breaks it**, because the ruler already holds both facts, so the counter is the same fact at a different precision rather than a different fact. Amended below, with a cap. |
 | DS-131 | Click-to-jump to a bounded set of **named** targets. *"Not one target per slide."* | **Yes, as written** — a tick per slide is one target per slide. |
 | DS-217 | Chrome budget ~12 labelled or interactive items; *"per-slide dots stop scaling somewhere around ten slides."* | **Yes, twice** — 12 ticks + 7 large + 4 buttons + a counter is ~24 items, and a 12-slide deck is already past "around ten". |
 
@@ -145,7 +145,10 @@ consumes it. The renderings legitimately differ; the manifest must not.
 **Scope**
 - In: the ruler component — small ticks per slide, large ticks per stage start, current position lit.
 - In: named jump targets on every tick, with hover **and** focus parity.
-- In: the three amendments above, once the owner takes them.
+- In: the **four** amendments above — DS-217 twice, DS-131 once, DS-216 once — which the owner has
+  now taken.
+- In: **the counter stays**, and DS-216 gains the two-element cap that keeps it from being a
+  precedent for a third.
 - In: measuring the target-count bound on the real chrome row rather than deriving it on paper.
 - In: whatever the right-hand controls and title need so the two sit together.
 - Out: building the on-demand slide index. Named as the answer past the bound; owned by
@@ -221,7 +224,10 @@ views, not in neither.
       near the foot of the stage
 - [ ] Every tick carries its own accessible name independent of the visible swap, and focus movement
       does not announce through a live region
-- [ ] Slide and stage are both readable from the one element, with no third encoding (DS-216)
+- [ ] Slide and stage are both readable from the one element, and the deck carries **exactly two**
+      position-encoding elements — the ruler and the counter — never a third (DS-216 as amended)
+- [ ] Every small tick names **itself**, not its section — checked on a stage that contains more
+      than one slide, where the two would otherwise be indistinguishable
 - [ ] The target-count bound is **measured on the real row** and written into DS-217 as the point
       where **small ticks stop being targets**, not where the ruler fails
 - [ ] Past the bound: section ticks stay large and selectable, per-slide ticks become marks with
@@ -232,30 +238,78 @@ views, not in neither.
 - [ ] The arrow-key precedence between advancing the deck and moving within the ruler is **decided
       and written down** (DS-137), not left to listener order
 - [ ] `aria-current` still marks the current position, as the ribbon does today
-- [ ] The three amendments are in `DESIGN-SYSTEM.md` with the reasoning in `DESIGN-RATIONALE.md`
+- [ ] The **four** amendments are in `DESIGN-SYSTEM.md` with the reasoning in `DESIGN-RATIONALE.md`,
+      each naming which side moved — including the definition of *regular repeating scale*, the
+      per-target naming clause in DS-131, and DS-216's two-element cap
 - [ ] `audit.py` reports zero mechanical failures and both variant suites still catch 7 of 7
 - [ ] The deck is **looked at** at 1920 wide and at the 0.5 scale floor (**L-01**)
 
-**Open questions**
-- **Do the three amendments stand as argued?** Each is narrower than "allow per-slide dots again",
-  and amendment 3 is the one that decides whether DS-131 keeps its point or loses it. — owner
-  decides.
-- **Do small ticks announce their own slide, or their section?** The analysis above argues own
-  slide; the request said section. It is the difference between a ruler of named targets and a
-  ruler of anonymous ones. — owner decides.
-- **What happens to the counter?** The ruler encodes slide position, so *"05 / 12"* may now be the
-  third encoding DS-216 forbids rather than the permitted second. — owner decides.
+**Open questions — all three answered by the owner 2026-08-08, and the answers added a fourth
+amendment. None is open.**
+
+- ~~Do the three amendments stand as argued?~~ **All three stand, with two tightenings, and both
+  tightenings narrow rather than widen.**
+  - **Amendment 1 gains a definition of *regular repeating scale*: uniform mark, uniform pitch, no
+    per-item label at rest.** Undefined, "scale" is a loophole — any evenly-spaced row of controls
+    could claim it and escape the budget entirely, which would leave DS-217 enforceable against
+    nothing. A row of twelve labelled buttons is not a scale however regularly it is spaced.
+  - **Amendment 3 gains: the naming is *per target*, not per group.** See the coupling below.
+- ~~Do small ticks announce their own slide, or their section?~~ **Their own slide.**
+- **These two answers are one decision, and separating them would break the rule they are meant to
+  preserve.** Amendment 3 narrows DS-131 from *not one target per slide* to *not one **unnamed**
+  target per slide. **It is only safe while ticks name themselves.** Had ticks announced their
+  section, twelve targets would carry seven labels — a reader still could not name a tick before
+  clicking it, so they would be exactly the unnamed targets DS-131 exists to forbid, and the
+  amendment would have gutted the rule while appearing to preserve it. That is why the per-target
+  naming clause is written **into the amended rule** rather than left as a fact about this deck:
+  the rule has to carry its own precondition.
+- ~~What happens to the counter?~~ **Kept — and it costs a fourth amendment, which is the widest of
+  the four and is therefore capped.** DS-216's test today is *a second encoding is permitted only
+  when it encodes a **different fact*** — stage versus slide. The ruler already carries both facts
+  in one element, so the counter is the same fact at a different **precision**: the ruler is read at
+  a glance, the counter states the position exactly. That argument is sound but it swaps DS-216's
+  test from *fact* to *register*, and **register is far easier to claim than fact** — a progress bar
+  reads as "approximate position" too, and this task's own scope excludes progress bars *because*
+  DS-216 forbade a third encoding. So the amendment is taken **with a cap that does the work the
+  old test used to**: a second encoding is permitted for a different fact **or a different
+  register**, and **the total is never more than two elements, regardless of how well a third is
+  justified**. Ruler plus counter is two. A progress bar would be a third and stays forbidden.
+
+**Four amendments, then, not three** — DS-217 twice, DS-131 once, DS-216 once. All four are the
+owner's, taken 2026-08-08, and each names which side moved (**L-37**).
 
 ## 2. Plan
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Take the three open questions and the three amendments | the rulings |
-| 2 | Measure the real chrome row: what the controls cost, what is left for ticks, the target count that fits at 48 du pitch, and the smallest mark that survives 0.5 scale on a 1× display | the two bounds |
-| 3 | Build the ruler as a component, with focus parity and the title-swap reveal from the start rather than retrofitted | edited deck |
-| 4 | Build the two-mode degradation — ticks as targets below the bound, marks above it | the degradation |
-| 5 | Amend DS-131, DS-217 and record the reasoning in `DESIGN-RATIONALE.md` | ruleset |
-| 6 | Re-run the gates and look at the deck at both ends of the scale range | the verdicts |
+| 1 | ~~Take the three open questions and the amendments~~ — **done 2026-08-08**, and the answers made it four | the rulings, in §1 |
+| 2 | Measure the real chrome row: what the five controls cost, what is left for ticks, the target count that fits at 48 du pitch, and the smallest mark that survives the 0.5 scale floor on a 1× display | the two bounds |
+| 3 | Build the ruler from **`manifest()`**, which [T-034](T-034-a-contents-page-for-the-printed-deck.md) already shipped — number, title, stage — rather than reading the slides again | the ruler component |
+| 4 | Wire the reveal: title-swap on hover **and** focus, instant, no transition, restore on blur, with a per-tick accessible name that does not depend on the swap | the reveal |
+| 5 | Settle the arrow-key precedence (**DS-137**) deliberately, following DS-166's shape, and write it down | the precedence rule |
+| 6 | Build the two-mode degradation — ticks as targets below the bound, marks above it | the degradation |
+| 7 | Amend DS-131, DS-216 and DS-217, and record the reasoning in `DESIGN-RATIONALE.md` | ruleset |
+| 8 | Re-run the gates, and look at the deck at 1920 and at the 0.5 scale floor (**L-01**) | the verdicts |
+
+**Approach decisions**
+
+- **The ruler consumes `manifest()`; it does not read the slides.** T-034 built the manifest for
+  exactly this and shipped it, so the coupling the two tasks were specified around is now real
+  rather than promised. If the ruler needs a field the manifest lacks, the field is added *there*
+  (**L-08**).
+- **Step 2 comes before step 3, and the bound is measured on the real row rather than derived on
+  paper.** §1's ~30 is arithmetic against 1728 usable units; the row also carries five controls
+  whose real cost is unmeasured, and the ruler has to share with them.
+- **The reveal and the accessible name are built together in step 4, not retrofitted.** The visible
+  title-swap is a sighted-user affordance and the accessible name is the non-visual route; building
+  one first and adding the other later is how the two end up disagreeing (**DS-163**).
+- **Step 5 is its own step because the collision already exists in the shipping deck.** The
+  `keydown` listener is on `document` and guards only `input,textarea`, so arrows advance the deck
+  while a chrome button holds focus. That is tolerable at seven buttons and a real conflict at
+  thirty ticks — and **L-38** applies: the failure is at a deck length nothing has been run at yet.
+- **The low end gets looked at as well as the high end (L-38).** The lesson T-034 just paid for is
+  that a sweep runs in the direction its brief names; this task's brief is all about *long* decks,
+  so a short one is the case that will go unrendered unless it is named here.
 
 ## 3. Implement
 
@@ -278,6 +332,7 @@ views, not in neither.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | → planned | **All open questions answered, and the answers turned three amendments into four.** The owner took amendments 1–3 **with two tightenings, both narrowing**: *regular repeating scale* is defined as uniform mark, uniform pitch and no per-item label at rest, because undefined it is a loophole any evenly-spaced row of controls could claim, leaving DS-217 enforceable against nothing; and DS-131's narrowing carries a **per-target naming clause** rather than a per-group one. That second tightening matters more than it reads: **amendment 3 and the own-slide answer are one decision**, since ticks announcing their *section* would give twelve targets seven labels — still unnamable before clicking, still exactly what DS-131 forbids — so the amendment would have gutted the rule while appearing to preserve it. The precondition is written into the rule rather than left as a fact about this deck. **The counter is kept, and that is the fourth amendment**: the ruler already carries both facts, so `05 / 12` is the same fact at a different *precision*, which swaps DS-216's test from **fact** to **register** — and register is far easier to claim, a progress bar being the obvious next claimant, which this task's own scope excludes on DS-216's authority. Taken with a **cap that does the work the old test used to**: a second encoding is permitted for a different fact or register, and the total is never more than two elements however well a third is argued. §2 was rewritten around the fact that [T-034](T-034-a-contents-page-for-the-printed-deck.md) has since **shipped `manifest()`**, so the ruler consumes it rather than reading the slides again, and around **L-38** — this task's brief is entirely about long decks, so a short one is the case that will go unrendered unless the plan names it. |
 | 2026-08-08 | (no change) | **§1 gained what the raising session had measured but never written down, and one of the findings is a conflict this task now has to settle.** The row's real geometry — 1728 usable design units, `bottom: 40du`, and the five elements in the `.controls` block the ruler must share the row with. The current-position idiom the owner's degradation describes **already ships**: `data-lit` plus `transform: scale(1.5)` on a 10-unit dot, which also anchors the mark-size measurement (10 units is 5 CSS px at the 0.5 scale floor, so a 4-unit mark is 2 px and a 2-unit mark is 1). The lit dot **transitions**, and the title swap must not inherit that. **The conflict: arrow keys are already taken globally.** The `keydown` listener is on `document` and guards only against `input,textarea`, so the arrows advance the deck even while a chrome button holds focus — tolerable with seven ribbon buttons, a genuine collision with thirty ticks, and **DS-137 requires the precedence rule to be stated** rather than left to listener order. DS-166 already fixes the shape of the answer for disclosure and should be followed here. Also recorded for [T-016](T-016-the-interaction-and-motion-layer.md): **`Escape` is already bound in the reading view**, so an ESC-opened slide index has a conflict in one of the two views. |
 | 2026-08-08 | (no change) | **Two refinements from the owner, both adopted, and one of them resolves a rule collision this task had not spotted.** (1) **The target's name replaces the title in the navigation bar rather than appearing as a tooltip** — and that turns out to be the *only* conformant option, not merely the tidier one: **DS-138** requires popovers to drop below their control and warns that a control near the foot of the stage cannot host one, and the chrome sits at `bottom: 40du`, so a tooltip on a tick has forty design units of room and nowhere to go. Added with the conditions that make it safe: instant swap, no transition, restore on blur, and an accessible name on every tick independent of the swap, because the swap is a sighted-user affordance. (2) **Past the bound the small ticks become marks rather than disappearing** — strictly better than the "section ticks only" degradation written yesterday, because it drops the *affordance* and keeps the *information*. **Its consequence is larger than it looks: DS-168 governs targets, so once small ticks are not targets the 48-unit floor applies only to the seven section ticks, and the ruler stops having a slide-count ceiling at all** — 1728 ÷ 48 ≈ 36 *sections*, which no real deck reaches. The derived ~30 survives as the point where the ruler **changes mode**, which is a more useful thing for DS-217 to state than a point where it fails. *"Almost pixel-size"* gained a measurable floor rather than a chosen number: at the 0.5 scale floor a 2-unit mark is one CSS pixel and will alias on a 1× display, so the minimum is measured there. **Also recorded: the overlay index and [T-034](T-034-a-contents-page-for-the-printed-deck.md)'s printed contents page are one content source rendered twice**, so whichever lands first builds the slide manifest and the other consumes it (**L-08**). |
 | 2026-08-08 | → proposed | Raised by the owner after presenting the deck. **The stated problem is confirmed rather than accepted**: the chrome row runs at ~1450 of 1728 design units with seven stage *names*, so the current design is one stage away from wrapping into the second row DS-217 exists to prevent. Recorded with three named amendments rather than as "allow dots again", because [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md) settled these exact rules hours earlier and **L-37** makes the amendment explicit: DS-217 counts a regular scale as one item rather than *n*; DS-217's *"around ten slides"* becomes a bound derived from DS-168's 48-design-unit target floor against 1728 usable units — around 30, to be **measured** on the real row; and DS-131's *"not one target per slide"* narrows to *not one **unnamed** target per slide*, which keeps yesterday's rule intact because its point was never the count. **Two changes to the proposal are argued for**: small ticks should announce their own slide rather than their section, or twelve targets carry seven labels and become the unnamed targets DS-131 is about; and hover cannot be the only route (DS-163), so focus parity is a requirement rather than a refinement. **The ESC overlay the request compares against is not the alternative** — DS-131 already names an on-demand slide index as the answer past the bound, and [T-016](T-016-the-interaction-and-motion-layer.md) owns it, so the two compose. |
