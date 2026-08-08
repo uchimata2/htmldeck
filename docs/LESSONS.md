@@ -847,6 +847,22 @@ out, every comparison is noise and every regeneration is a diff.
 **How to apply.** `.gitattributes` pins `eol=lf`; anything that writes a file passes
 `newline="\n"` so the output is identical on every platform.
 
+### L-40 — A gate you do not wait for is not a gate
+
+Running the check and then doing the thing anyway is worse than not running it, because the output
+scrolls past and everyone downstream believes it passed.
+
+`python tools/tasks/task.py index; python tools/tasks/task.py check; git add -A; git commit` chained
+with semicolons. `check` reported **three dead pointers** and the commit ran regardless, so a broken
+state landed with a message claiming the gate was green. The gate worked perfectly; nothing was
+listening. The same shape appears wherever a verdict and an action sit in one sequence — a test run
+before a deploy, a validator before a publish.
+
+**How to apply.** Chain a check to what follows it with `&&`, never `;`, so a failure stops the
+sequence rather than scrolling past it. When a command's whole purpose is to gate the next one, the
+two belong in one expression — and if the output is long, grep the verdict rather than trusting a
+glance at the tail.
+
 ---
 
 ---
