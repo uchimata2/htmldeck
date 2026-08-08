@@ -26,7 +26,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | T-002 |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | WP2 | `proposed` | specify | - | - |
-| [T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) | Stop the gate reporting judge rules, and one verdict under the wrong rule ID | WP3 | `proposed` | specify | - | - |
 
 ## Closed
 
@@ -61,6 +60,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-034](T-034-a-contents-page-for-the-printed-deck.md) | Add a contents page to the printed deck | `done` | 2026-08-08 |
 | [T-035](T-035-the-ruler-navigator.md) | Replace the stage ribbon with a ruler navigator, and rescope the chrome budget it breaks | `done` | 2026-08-08 |
 | [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md) | Record in the ruleset itself which rules no check can reach | `done` | 2026-08-09 |
+| [T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) | Stop the gate reporting judge rules, and one verdict under the wrong rule ID | `done` | 2026-08-09 |
 | [T-039](T-039-finish-the-record-t-037-left-in-the-wrong-places.md) | Finish the record T-037 left in the wrong places | `done` | 2026-08-09 |
 
 ## Next ID

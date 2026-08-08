@@ -26,14 +26,22 @@ failure into a score is how a deck ships with a wrong number on the title slide 
 
 | | Gate | Score |
 | :--- | :--- | :--- |
-| Which rules | 108 `hard` | 40 `default`, 6 `guidance`, and the dimensions in §3–§4 |
+| Which rules | 114 `hard` | 41 `default`, 6 `guidance`, and the dimensions in §3–§4 |
 | Result | pass / fail, per rule ID | 0–4 per dimension |
 | On failure | The deck is defective. Fix before scoring is meaningful. | A finding with a severity, entering the loop |
 
 > **Every count in this document is derived from `DESIGN-SYSTEM.md` and goes stale when a rule is
-> added.** These are as of 2026-08-06: 154 rules, counting DS-000. **Re-derive them, never adjust
+> added.** These are as of **2026-08-09: 161 rules**, counting DS-000. **Re-derive them, never adjust
 > them by hand** — the previous set was wrong by six, having been written before the rules T-027 and
 > T-025 added, and a hand-adjusted count is indistinguishable from a correct one.
+>
+> **It went stale again, exactly as predicted, and by more than the rules that caused the re-count.**
+> The 2026-08-06 set read 154 / 108 / 40 / 6 and 65 `auto`, 39 `render`. Re-derived on 2026-08-09 by
+> [T-038](../tasks/T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md), which added
+> two rules: **161 / 114 / 41 / 6, and 66 `auto`, 45 `render`.** The `render` figure had drifted by
+> **six** before this task touched anything — the warning above was written and then not acted on
+> through several rule-adding tasks, so re-deriving is now part of adding a rule rather than a note
+> beside the numbers.
 
 ---
 
@@ -43,8 +51,8 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 
 | # | Stage | Covers | Cost |
 | :--- | :--- | :--- | :--- |
-| 1 | **Auto gate** | 65 `auto` rules — static analysis of the file | Near zero. Runs first, always. |
-| 2 | **Render gate** | 39 `render` rules — measurement and a look at the rendered deck, **with motion pinned off** (DS-221) | One render, several measurements |
+| 1 | **Auto gate** | 66 `auto` rules — static analysis of the file | Near zero. Runs first, always. |
+| 2 | **Render gate** | 45 `render` rules — measurement and a look at the rendered deck, **with motion pinned off** (DS-221) | One render, several measurements |
 | 3 | **Per-slide score, by the author** | S3, S5, S6 (§3), per slide | Scales with slide count, but the author already holds the context |
 | 4 | **The judgement pass, in fresh context** | S1, S2, S4 across every slide, and D1–D4 (§4) | One pass over the finished artifact |
 | 5 | **Fix and re-enter** | §5 | Bounded by the iteration cap |

@@ -252,20 +252,27 @@ PROBE = r"""
     out.tabbables = t.length;
     out.tabbablesOffscreen = t.filter(function(el){
       var sl = el.closest('.slide'); return sl && !sl.hasAttribute('data-current'); }).length;
-    var curBtn = document.querySelector('.slide[data-current] .disc-btn');
-    out.currentDiscReachable = curBtn ? t.indexOf(curBtn) >= 0 : null;
+    // DS-130 is measured further down, on a slide that HAS a disclosure control. Taken here it
+    // landed on slide 1, which has none, so it reported `null` and the verdict passed on nothing
+    // measured - L-36's failure inside the instrument rather than in the deck (T-038).
 
     // DS-168 / 2.5.8 - every target at least 24 CSS px
     out.smallTargets = t.filter(function(el){
       var r = el.getBoundingClientRect(); return r.width < 24 || r.height < 24; }).length;
 
-    // DS-160/161 - closed by default. DS-137 - one panel at a time. DS-138 - it drops below.
+    // DS-227 - every panel closed at load. DS-228 - at most one open at a time, which is the
+    // precedence rule DS-137 requires and does not itself supply. DS-138 - the open one drops below
+    // its control. This comment read `DS-160/161 - closed by default` until T-038: DS-161 is the
+    // judgement about whether the slide's point survives closure, DS-160 is "two tiers, never
+    // three", and neither is what these three lines measure. Both rules the probe used to name are
+    // `judge`, so the ruleset says no check should be deciding them at all.
     out.panelsOpenInitially = document.querySelectorAll('.stage .disc-panel:not([hidden])').length;
     var btns = document.querySelectorAll('.stage .disc-btn');
     if (btns.length){
       btns[0].click();
       goTo(4);
       var b2 = document.querySelector('.slide[data-current] .disc-btn');
+      if (b2) out.currentDiscReachable = tabbables(document).indexOf(b2) >= 0;   // DS-130
       if (b2) b2.click();
       out.panelsOpenAfterTwo = document.querySelectorAll('.stage .disc-panel:not([hidden])').length;
       var p = document.querySelector('.slide[data-current] .disc-panel:not([hidden])');
@@ -277,6 +284,10 @@ PROBE = r"""
     // DS-070..076 - the reflow view
     if (doc){
       goTo(6);
+      // DS-076 is "position preserved in BOTH directions", so the verdict needs the slide we left
+      // as well as the one we came back to. Without it the check asserted only that some slide was
+      // current afterwards, which every deck satisfies - it named DS-076 and tested nothing (T-038).
+      out.leftFrom = (document.querySelector('.slide[data-current]') || {dataset:{}}).dataset.name;
       document.getElementById('toDoc').click();
       out.docOn = doc.hasAttribute('data-on');
       out.docSections = doc.querySelectorAll('#docBody > section').length;
@@ -304,7 +315,11 @@ PROBE = r"""
       out.backOnSlide = document.querySelector('.slide[data-current]').dataset.name;
     }
 
-    // DS-143 - reduced motion keeps the semantics: the dashed arrows stay dashed
+    // DS-140 - `Current` is a dashed flow, and this render says whether it is dashed. It is NOT
+    // DS-143: that rule is about what survives `prefers-reduced-motion`, and this render is taken
+    // in the default state, so a deck dropping the dasharray under reduced motion passes here.
+    // Deciding DS-143 needs a second render under the media feature - a new check, which is T-005's
+    // (T-038).
     var cur = document.querySelector('.current');
     if (cur) out.currentDasharray = getComputedStyle(cur).strokeDasharray;
 
@@ -393,9 +408,16 @@ def render_data(deck):
 
 def render_verdicts(data):
     """(rule, what, ok) for every rule stage 3 decides. Pure: no browser, so a variant suite can
-    seed a break, take one measurement, and ask the same code that gates the real deck."""
+    seed a break, take one measurement, and ask the same code that gates the real deck.
+
+    **Every row names the rule it tests, and only that rule** - swept for the first time by T-038,
+    which found the list claiming two `judge` rules the ruleset says no check should decide, and
+    four IDs cited by verdicts that measured something else. The discriminator is subject identity,
+    not completeness: a row deciding one clause of its rule is a partial check and belongs here; a
+    row whose measurement is a precondition, a proxy or a different rule's subject does not.
+    """
     return [
-        ("DS-080/081/082", "sections: %d" % data["slideCount"], 6 <= data["slideCount"]),
+        ("DS-081", "slides: %d" % data["slideCount"], 6 <= data["slideCount"]),
         ("DS-035", "text below 16 design units: %d" % len(data["underFloor"]),
          not data["underFloor"]),
         ("DS-091", "headlines over six words: %d" % len(data["longHeadlines"]),
@@ -417,15 +439,16 @@ def render_verdicts(data):
          data.get("chromeLabelled", 0) <= 12),
         ("DS-217", "chrome height: %s du" % data.get("chromeHeightDu"),
          data.get("chromeHeightDu", 999) <= 90),
-        ("DS-111", "inline SVG figures: %d" % data["figures"], data["figures"] > 0),
         ("DS-132", "tabbables from off-screen slides: %d" % data["tabbablesOffscreen"],
          data["tabbablesOffscreen"] == 0),
-        ("DS-130", "current slide's disclosure reachable: %s" % data.get("currentDiscReachable"),
-         data.get("currentDiscReachable") is not False),
+        # `is True`, not `is not False`: a null means the probe never found a control to measure,
+        # and a gate must fail on "nothing measured" rather than pass on it (L-36).
+        ("DS-130", "disclosure control in the tab order: %s" % data.get("currentDiscReachable"),
+         data.get("currentDiscReachable") is True),
         ("DS-168", "targets under 24 CSS px: %d" % data["smallTargets"], data["smallTargets"] == 0),
-        ("DS-161", "panels closed by default: %d open" % data["panelsOpenInitially"],
+        ("DS-227", "panels closed at load: %d open" % data["panelsOpenInitially"],
          data["panelsOpenInitially"] == 0),
-        ("DS-137", "panels open at once: %s" % data.get("panelsOpenAfterTwo"),
+        ("DS-228", "panels open at once: %s" % data.get("panelsOpenAfterTwo"),
          data.get("panelsOpenAfterTwo", 0) <= 1),
         ("DS-138", "panel drops below its control: %s" % data.get("panelBelowControl"),
          data.get("panelBelowControl") is not False),
@@ -434,7 +457,7 @@ def render_verdicts(data):
         ("DS-218", "control for motion over 5s: %s (%d looping)"
          % (data["motionControl"], len(data["infinite"])),
          len(data["infinite"]) == 0 or data["motionControl"]),
-        ("DS-143", "reduced motion keeps the dashes: %s"
+        ("DS-140", "`Current` renders dashed: %s"
          % (data.get("currentDasharray") or "no dashed flow in this deck"),
          data.get("currentDasharray") != "none"),
         ("DS-070", "reflow view engages: %s" % data.get("docOn"), data.get("docOn") is True),
@@ -446,8 +469,9 @@ def render_verdicts(data):
         ("DS-075", "reflow scrollWidth at 320 CSS px: %s (overflowing: %s)"
          % (data.get("at320ScrollWidth"), data.get("at320Overflowing")),
          data.get("at320ScrollWidth", 999) <= 321 and data.get("at320Overflowing") == 0),
-        ("DS-076", "position preserved returning from the reflow view: %r"
-         % data.get("backOnSlide"), bool(data.get("backOnSlide"))),
+        ("DS-076", "position preserved returning from the reflow view: left %r, back on %r"
+         % (data.get("leftFrom"), data.get("backOnSlide")),
+         bool(data.get("backOnSlide")) and data.get("backOnSlide") == data.get("leftFrom")),
         ("DS-214", "dead fill= attributes overridden by CSS: %d"
          % len(data.get("deadFillAttributes", [])), not data.get("deadFillAttributes")),
         ("DS-215", "text runs rendering under 4.5:1: %d"
@@ -490,6 +514,11 @@ def main(deck, skip_contract=False):
             failures.append(rule)
         print("  %-15s %-58s %s" % (rule, what, ok(good)))
 
+    # Reported, not gated. No rule requires a deck to carry a figure at all, and DS-111 governs what
+    # a diagram is MADE OF, which a count cannot decide. This was a DS-111 verdict passing on `> 0`
+    # until T-038 - a check that fails the all-canvas deck DS-111 explicitly permits, and passes a
+    # deck whose other eleven figures are card grids.
+    print("      inline SVG figures: %d  (measured, not gated)" % data["figures"])
     for du, text, slide in data["underFloor"][:6]:
         print("      %5.1f du  %-32s  [%s]" % (du, text, slide))
     for slide, text, fg, bg, r in data.get("renderedLowContrast", [])[:8]:

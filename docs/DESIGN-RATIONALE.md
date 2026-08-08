@@ -423,6 +423,44 @@ claim as `never` and must not be read as one. `judge` rules are decided by the e
 
 ---
 
+## 5.6 DS-227 and DS-228 — two rules the gate had been enforcing without them
+
+**Both were added because a check already existed for them and cited someone else's rule.** That is
+normally the wrong reason to write a rule, and the distinction is worth keeping because it will come
+up again: **inventing a rule so a check has somewhere to live is backwards; writing down a rule the
+system already depends on is not.** The test is whether anything breaks if the rule is deleted and
+the check with it.
+
+**DS-227 — closed at load.** Two rules lean on it. DS-161 asks whether the slide still makes its
+point with everything closed, which is a question about the state the reader *arrives in*; if a panel
+could be open at load, the question is about a state nobody sees. DS-073 requires the reflow view to
+render every panel open and inlined, and that is a **contrast** — a document rendering does not hide
+content behind an affordance, unlike the stage. Neither rule states the stage's side of it. Reading
+it out of DS-073 by negation was considered and rejected: DS-073 governs a different rendering, so
+the obligation would be derivable only by a reader who notices the inversion, which is the class of
+unstated dependency the whole of [T-038](../tasks/T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md)
+is about.
+
+**DS-228 — one panel open at a time.** DS-137 requires that two simultaneous interactions have a
+**defined precedence rule**; it does not define one, and it cannot, because it is a claim about every
+interaction pair a deck might have. *One panel at a time* is the definition for the one pair every
+deck in this system has. The two are different claims and a gate citing DS-137 for the measurement
+was asserting the general from the particular — the reason DS-137 stays `judge` and un-gated while
+DS-228 is checked.
+
+**Why DS-228 is `default` and DS-227 is `hard`.** A panel open at load has no coherent design behind
+it; it breaks the two rules above and there is nothing to argue. Two panels open together does have
+one — a slide comparing two things, each with its own detail — so it is a departure DS-000 permits
+with a stated reason, and DS-169 already treats more than one meaningful interaction on a slide as
+exactly that. The labels record which of the two has a defensible other side.
+
+**What this cost the coverage account.** Two rules with `Reach: yes` and a `Check` in {`auto`,
+`render`} were added, so the number [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md)
+must account for moved from **105 to 107** on 2026-08-09 — derived from the ruleset, as that task
+requires, and re-derivable rather than to be trusted from this line.
+
+---
+
 ## 6. Drops and amendments worth knowing
 
 **DS-011 — one palette per deck was dropped.** The corpus rule (C7) is `dominant`; it describes what
