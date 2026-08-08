@@ -323,20 +323,33 @@ every archetype.
 
 ### 5.4 The printable mode
 
-**The printable mode is the paginated stage — one slide per page — and the reading view is not a
-print target.** Ruled by [`R7`](research/R7-printable-mode.md) §4 against a measured alternative,
-and adopted in [`examples/reference-deck.html`](../examples/reference-deck.html) by
+**The printable mode is the paginated stage, preceded by a generated contents page — one slide per
+page — and the reading view is not a print target.** Ruled by [`R7`](research/R7-printable-mode.md)
+§4 against a measured alternative, and adopted in
+[`examples/reference-deck.html`](../examples/reference-deck.html) by
 [T-032](../tasks/T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md). Printing stays a
 mode the user forces on, never a constraint on the design (§0): the reading view already serves the
 read-alone case **on screen**, and reshaping it so it paginates well is exactly printing becoming a
 constraint. What print does not preserve is stated to the user, never discovered on paper —
 [`R7`](research/R7-printable-mode.md) §5 is the list.
 
+**The contents page is a printed page that is not a slide**, which is why the sentence above needed
+amending rather than merely extending: the printed artifact is now **`n` + 1 pages for `n` slides**.
+Amended 2026-08-08 by the owner for
+[T-034](../tasks/T-034-a-contents-page-for-the-printed-deck.md) (**L-37** — the answer that
+required it was recognised as a rule change and taken as one, with a named side). The reason it
+exists is that this stylesheet hides the chrome, so the spine ribbon that carries the structure on
+screen reaches a paper reader nowhere; and it is the **only** surface that reaches the person
+holding the pages, which is where R7 §5's loss is finally stated to them rather than to whoever was
+about to print.
+
 | ID | Rule | Label | Check |
 | :--- | :--- | :--- | :--- |
 | DS-222 | **A print stylesheet asserts the view it wants, `display` included.** A deck that hands over to the reading view on a small stage scale (DS-071) hides the stage with `[hidden]`, and **printing is what makes it hand over** — printing changes the layout viewport. Overriding `position`, `transform` or `height` does not touch `display`, so the stage never reaches the page: it prints blank, or it prints the other view and looks fixed. Force `display` on both the element and its `[hidden]` state, and hide the view you did not choose. Two printed rounds were lost to this. **Corollary — check what a selector actually matches:** `:last-child` does not match the last slide, because the stage ends with the chrome, so the final slide keeps its `break-after` and emits an empty extra page. | hard | render |
 | DS-223 | **A slide stays a containing block for its own overlays in print.** `position: relative`, never `static`. A slide is the containing block for its absolutely positioned descendants — disclosure panels, the provenance line — and making it static hands them to the page, which scatters them across breaks. Relative keeps it in normal flow *and* keeps it a containing block. | hard | render |
 | DS-224 | **Entrance animations are disabled for print.** They hold their pre-animation state until played, so a slide the reader never advanced to prints blank or half-risen — the deck's own motion vocabulary (DS-140) turned into missing content on paper. This is DS-221's mechanism on a second medium: any rendering that captures the deck without playing it must pin motion off first. | hard | render |
+| DS-225 | **The contents page is generated from the deck, never authored, and it is placed first.** Every box reads its title and its one-sentence description off the slide it points at — the description **is** the bottom line (DS-211), so it cannot drift from the deck and costs nothing to write (**L-08**). An authored contents page is a second copy of the argument and rots. **First, not last**, and that is mechanical rather than aesthetic: `break-after` is cancelled on `section.slide:last-of-type`, which matches by *element type*, so a `<section>` placed after the final slide makes that selector match nothing and silently restores the blank trailing page — DS-222's corollary. The mark on each box is keyed to the **stage**, never to slide content, so an uneven deck cannot produce an uneven set of marks. | hard | render |
+| DS-226 | **Printed type has a floor in points, not in design units.** A design unit is a stage abstraction whose printed size depends on the paper: on A4 landscape the 1920 × 1080 page box scales by **0.5847**, so one design unit is **0.4385 pt** and the deck's smallest screen type (18 du) lands at 7.9 pt. Setting a print floor in design units therefore says nothing about legibility — the same number is a different size on different paper. **The floor is 9 pt on the target paper (21 du on A4 landscape), and any page number a reader navigates by is ≥ 14 pt (32 du).** Where a generated page must compress to fit, it yields whitespace first, then type down to the floor, then clamps a description — **it never drops an entry**, because a contents page that silently omits a slide is confidently wrong about the shape of the argument. **Compression has a floor of its own, and past it the page continues onto a second sheet rather than clipping:** measured 2026-08-08, a 4-column contents page holds its full job to **16 entries** and holds number-and-title to **24**, beyond which a box has 89 du of height for 96 du of content and arithmetic decides the outcome. Confining the compression to the description — never to the number or the title — is what makes that boundary sharp instead of letting the entry erode across a range of deck sizes. The continuation itself is [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md); until it lands this rule is **implemented to 24 entries**, which is stated rather than left to be discovered. | hard | render |
 
 ---
 

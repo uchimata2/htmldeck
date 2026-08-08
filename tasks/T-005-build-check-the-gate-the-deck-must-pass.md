@@ -46,8 +46,14 @@ Cheap to build, and it converts several house rules from hopes into failures.
       slide stays a containing block for its own overlays, **DS-224** entrance animations are
       disabled for print — **and the page count**, because the measured failure is silent: thirteen
       blank pages, which nothing on the presentation list above can see. **The page count is
-      `n` pages for `n` slides only until [T-034](T-034-a-contents-page-for-the-printed-deck.md)
-      lands**; a contents page makes it `n` + 1, and this row has to learn that when it does
+      `n` + 1 for `n` slides, and has been since
+      [T-034](T-034-a-contents-page-for-the-printed-deck.md) added the contents page on
+      2026-08-08** — `DESIGN-SYSTEM.md` §5.4 was amended by the owner to match, and the row now
+      asserts **five** rules rather than three: **DS-225** the contents page is generated rather
+      than authored and is placed *first* (last would re-break the trailing-page selector), and
+      **DS-226** printed type has a floor in points rather than design units. The `n` + 1 count is
+      what makes the off-by-one visible in either direction: `n` means the contents page never
+      rendered, `n` + 2 means the trailing blank page is back
 - [ ] Proven **failing** on each class before being trusted
 
 *Content — run when source documents are supplied*

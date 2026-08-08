@@ -18,9 +18,19 @@ assertion, so the same twelve-slide deck is emitted twice with different `@media
 Both are written to `.assets-cache/print/`, gitignored, because they are artefacts: the repository
 keeps the script and the numbers, never the output (R6's rule).
 
-The paginated variant IS the reference deck's print stylesheet since T-032 adopted it, so that
-build is now a round-trip rather than a proposal. The script is kept for re-measuring: it is the
-only way to put the rejected rendering back on paper beside the adopted one.
+The paginated variant WAS byte-for-byte the reference deck's print stylesheet when T-032 adopted it.
+It no longer is, and the difference is deliberate: T-034 added the generated contents page to the
+deck's own print block on 2026-08-08, and this script does not carry it. That is not drift, it is
+the comparison staying still - both variants here are the T-018 measurement of a PAGINATION
+strategy, and adding a contents page to one side of it would change what the two runs compare while
+looking like an update. `EXISTING` replaces the deck's whole print block, so the contents rules are
+stripped from both outputs by construction and neither variant inherits half of a later feature.
+
+The consequence to know: **printing a variant from here gives n pages, printing the deck gives
+n + 1.** If what you want is the deck as it ships, print the deck.
+
+The script is kept for re-measuring: it is the only way to put the rejected rendering back on paper
+beside the adopted one.
 
 Pure standard library, by L-07. Writes LF (L-11) and UTF-8 (L-10).
 

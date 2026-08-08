@@ -187,6 +187,12 @@ svg{display:block}
 }
 .slide[data-current]{opacity:1;visibility:visible;transition-delay:0s,0s}
 
+/* The printed contents page (T-034) exists only on paper. It is generated into the stage so it
+   inherits the theme and the page box, and this is the single rule that keeps it off the screen -
+   everything else about it lives in `@media print`. The ribbon already carries the structure here;
+   an on-screen index is T-035's question, not this one. */
+.contents{display:none}
+
 .eyebrow{
   display:flex;align-items:center;gap:var(--sp-2);
   font-family:var(--font-mono);font-size:var(--fs-mono);
@@ -526,6 +532,97 @@ svg{display:block}
      is not lost, only not on paper (T-032). */
   .slide .disc{display:none!important}
 
+  /* ---------------------------------------------------------------- the contents page (T-034)
+     Twelve pages of slides arrive with no map: the spine ribbon carries the structure on screen
+     and this stylesheet hides the chrome, so the printed artifact loses the one element that
+     showed where you are. This page is the paper equivalent, and it is GENERATED from the slide
+     manifest - the title and the bottom line are read off the slides, so it cannot drift from
+     the deck it describes (L-08).
+
+     It is also the only surface that reaches the person holding the paper, which is why the
+     screen-only line lives here: what print does not preserve is stated to the reader, not
+     discovered by them (R7 §5).
+
+     PLACED FIRST IN THE DOM, and that is load-bearing rather than aesthetic. `break-after` is
+     cancelled on `section.slide:last-of-type`, which matches the last <section> among its
+     siblings BY ELEMENT TYPE. A <section> added after slide 12 would make that selector match
+     nothing and silently bring back the empty thirteenth page T-018 spent a printed round
+     finding (DS-222's corollary). First, the sections run contents - slide 1 ... slide 12, slide
+     12 is still the last of its type, and the page count is 1 + n with no blank at either end. */
+  .contents{
+    display:flex!important;flex-direction:column;
+    position:relative;width:1920px;height:1080px;
+    padding:var(--pad-y) var(--pad-x);
+    background:var(--paper);color:var(--ink);
+    break-after:page;break-inside:avoid;
+  }
+  .contents-head{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:var(--sp-4)}
+  .contents-eyebrow{
+    font-family:var(--font-mono);font-size:calc(21*var(--du));
+    letter-spacing:var(--track-mono);text-transform:uppercase;color:var(--accent);
+  }
+  .contents-title{font-family:var(--font-display);font-size:calc(52*var(--du));line-height:1.1}
+
+  /* Four columns is the pinned axis and rows are what give. A fifth column measures 324 du
+     (~2.0 in on A4 landscape) and a title is a claim of four to seven words (DS-210), so it
+     would set at three lines and the box would grow TALLER than the row the extra column was
+     meant to shorten. `1fr` rows then divide whatever height is left, so a longer deck
+     compresses vertically on its own with no second code path. */
+  .contents-grid{
+    flex:1;min-height:0;
+    display:grid;grid-template-columns:repeat(4,1fr);
+    grid-auto-rows:1fr;gap:var(--sp-3);
+  }
+  .cbox{
+    display:flex;flex-direction:column;gap:var(--sp-1);overflow:hidden;
+    padding:var(--sp-2);border:var(--hair) solid var(--line);border-radius:var(--radius);
+  }
+  .cbox-top{display:flex;align-items:center;gap:var(--sp-2)}
+  /* the stage name gives the icon a label - an unlabelled glyph on paper is decoration, and the
+     reader has no legend to consult and nothing to hover */
+  .cstage{
+    flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+    font-family:var(--font-mono);font-size:calc(21*var(--du));
+    letter-spacing:var(--track-mono);text-transform:uppercase;color:var(--ink-soft);
+  }
+  /* 32 du = 14.0 pt printed on A4 landscape, where the page scales by 0.5847 and a design unit
+     is worth 0.4385 pt. The number is the handle a paper reader navigates by - it is the one
+     thing on this page the ribbon never had to provide - so it is the largest mandated element
+     in the box rather than an afterthought. */
+  .cnum{
+    font-family:var(--font-mono);font-size:calc(32*var(--du));
+    letter-spacing:var(--track-mono);color:var(--ink);
+  }
+  /* keyed to the STAGE, never to slide content - so the fact that slide 1 carries no disclosure
+     panel where the other eleven carry one cannot reach the mark (DS-113/114) */
+  .cico{width:calc(34*var(--du));height:calc(34*var(--du));color:var(--accent);flex:none}
+  /* `flex:none` on both, so the ONLY thing that absorbs compression is the description. Without
+     it the flex column shrinks every child alike, and past 24 slides the title itself was being
+     cut off - measured. That would break DS-226's invariant: a box may lose its description, it
+     may never lose the entry. */
+  .cbox-top{flex:none}
+  .cbox-title{flex:none;font-family:var(--font-display);font-size:calc(26*var(--du));line-height:1.15}
+  /* The floor is 9 pt printed = 21 du, and it is stated in POINTS because "readable" is a
+     property of the reader's eye while a design unit converts at a rate that depends on the
+     paper. 22 du leaves a little headroom above it. This is the element that clamps under
+     compression - a map may shorten a sentence, and the unclamped one is on the slide's own
+     page a few sheets later. What it may never do is drop a box: a contents page that silently
+     omits a slide is confidently wrong about the shape of the argument. */
+  .cbox-bottom{
+    font-size:calc(22*var(--du));line-height:1.35;color:var(--ink-soft);
+    /* FOUR lines, not three, and the number was read off the printed page rather than chosen.
+       At the twelve-slide target a box has ~131 du below its title and a line costs 29.7, so
+       there is room for 4.4 lines - and a 3-line clamp was ellipsising four of the twelve
+       descriptions mid-word while leaving that room empty. Truncating a bottom line at the size
+       the deck actually ships is the map misstating the argument (DS-211). Past twelve the box,
+       not the clamp, is the binding constraint, so this costs nothing there. */
+    display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .contents-foot{
+    margin-top:var(--sp-3);font-family:var(--font-mono);font-size:calc(21*var(--du));
+    letter-spacing:var(--track-mono);color:var(--ink-soft);
+  }
+
   /* Backgrounds and rules are most of this design; without this they print as white. */
   *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
 }
@@ -543,6 +640,7 @@ svg{display:block}
  <symbol id="i-bus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></symbol>
  <symbol id="i-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
  <symbol id="i-corridor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></symbol>
+ <symbol id="i-choice" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/></symbol>
  <symbol id="i-growth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></symbol>
  <symbol id="i-gate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></symbol>
  <symbol id="i-cost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
@@ -1333,6 +1431,34 @@ svg{display:block}
     return 0;
   }
 
+  /* ------------------------------------------------------------------ the slide manifest */
+  /* Number, title, bottom line, stage and mark for every slide, read off the slides rather
+     than authored a second time. This is the ONE derivation: the printed contents page
+     (T-034) and the on-screen index (T-035) are two RENDERINGS of it, not two readings of
+     the deck - which is how the two would drift (L-08). Same principle as firstSlideOfStage
+     above and as buildDoc() cloning slides instead of re-authoring them.
+
+     Add a field here rather than reading a slide directly from a renderer. */
+  /* the mark is keyed to the STAGE, never to slide content - so it does not matter that
+     slide 1 carries no disclosure panel where the other eleven carry one */
+  var STAGE_ICON = ['i-gate','i-window','i-wait','i-choice','i-growth','i-cost','i-ask'];
+
+  function manifest(){
+    return slides.map(function(s, i){
+      var b = s.querySelector('.bottom-line');
+      var st = parseInt(s.dataset.stage, 10);
+      if (isNaN(st) || st < 0 || st >= STAGES.length) st = 0;
+      return {
+        n:         i + 1,
+        title:     s.dataset.name || '',
+        bottom:    b ? b.textContent.replace(/\s+/g, ' ').trim() : '',
+        stage:     st,
+        stageName: STAGES[st],
+        icon:      STAGE_ICON[st]
+      };
+    });
+  }
+
   STAGES.forEach(function(name, i){
     if (i) { var l = document.createElement('li'); l.className = 'link'; l.setAttribute('aria-hidden','true');
              ribbonBox.appendChild(l); }
@@ -1497,6 +1623,91 @@ svg{display:block}
     });
   }
 
+  /* ------------------------------------------------------------ the printed contents page */
+  /* A RENDERING of manifest(), not a second reading of the deck (T-034). The on-screen index
+     T-035 builds is the other rendering of the same manifest, and the two legitimately differ:
+     this one must fit a single page and is read once to orient, that one scrolls and is read
+     repeatedly to jump.
+
+     Built at start-up rather than on `beforeprint`, because the page has to exist for a print
+     triggered any way at all - the dialog, the menu, a capture - and twelve boxes of DOM is not
+     a cost worth deferring.
+
+     Each box's number and stage name are formatted exactly as the slide's own eyebrow renders
+     them (`01 · WHY NOW`), so a reader matching a box to its page finds the identical string,
+     and the per-stage icon has a label rather than being a glyph to decode. */
+  function buildContents(){
+    var sec = document.createElement('section');
+    sec.className = 'contents';
+    sec.setAttribute('aria-label', 'Contents');
+
+    var head = document.createElement('div');
+    head.className = 'contents-head';
+    var eyebrow = document.createElement('span');
+    eyebrow.className = 'contents-eyebrow';
+    eyebrow.textContent = 'Contents';
+    var title = document.createElement('h2');
+    title.className = 'contents-title';
+    title.textContent = DECK;
+    head.appendChild(eyebrow);
+    head.appendChild(title);
+    sec.appendChild(head);
+
+    var grid = document.createElement('div');
+    grid.className = 'contents-grid';
+
+    manifest().forEach(function(m){
+      var box = document.createElement('div');
+      box.className = 'cbox';
+
+      var top = document.createElement('div');
+      top.className = 'cbox-top';
+      var num = document.createElement('span');
+      num.className = 'cnum';
+      num.textContent = (m.n < 10 ? '0' : '') + m.n;
+      var st = document.createElement('span');
+      st.className = 'cstage';
+      st.textContent = m.stageName;
+      var ico = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      ico.setAttribute('class', 'cico');
+      ico.setAttribute('aria-hidden', 'true');
+      var use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttribute('href', '#' + m.icon);
+      ico.appendChild(use);
+      top.appendChild(num);
+      top.appendChild(st);
+      top.appendChild(ico);
+
+      var t = document.createElement('h3');
+      t.className = 'cbox-title';
+      t.textContent = m.title;
+
+      var b = document.createElement('p');
+      b.className = 'cbox-bottom';
+      b.textContent = m.bottom;
+
+      box.appendChild(top);
+      box.appendChild(t);
+      box.appendChild(b);
+      grid.appendChild(box);
+    });
+    sec.appendChild(grid);
+
+    /* The one line that reaches the person holding the paper. T-032 put the statement of what
+       print does not preserve into the handover text, which is read by whoever is ABOUT to
+       print and never by whoever is handed the pages (R7 §5). */
+    var foot = document.createElement('p');
+    foot.className = 'contents-foot';
+    foot.textContent = 'Detail behind the disclosure panels is on screen only — '
+                     + 'it is not on these pages.';
+    sec.appendChild(foot);
+
+    /* FIRST, and that is load-bearing: `section.slide:last-of-type` matches by element type, so
+       a <section> appended after slide 12 would make it match nothing and bring back the empty
+       thirteenth page (DS-222's corollary). */
+    stage.insertBefore(sec, stage.firstChild);
+  }
+
   function setView(toDocView){
     if (toDocView === inDoc) return;
     inDoc = toDocView;
@@ -1573,6 +1784,7 @@ svg{display:block}
   document.addEventListener('fullscreenchange', fit);
   fit();
   buildDoc();
+  buildContents();
   go(0);
   autoView();
   document.addEventListener('keyup', countIfSeen);
