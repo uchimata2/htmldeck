@@ -2,7 +2,7 @@
 id: T-035
 title: Replace the stage ribbon with a ruler navigator, and rescope the chrome budget it breaks
 type: deliverable
-status: planned
+status: in_progress
 phase: implement
 parent: null
 blocked_by: []
@@ -21,17 +21,24 @@ deliverables: []
 **Outcome**
 The deck's position indicator is a **ruler**: a small tick per slide, a large tick at each stage
 start, every tick a named jump target. It replaces the stage-name ribbon, which does not scale, and
-it fits in a fixed width no matter how long the deck is. Three rules in
-[`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) are amended to admit it, and the amendments are
-narrower than "allow dots again".
+it fits in a fixed width no matter how long the deck is. **Four** amendments to
+[`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) admit it — DS-217 twice, DS-131 once, DS-216 once —
+and each is narrower than "allow dots again".
 
 **Why this one**
-Raised by the owner 2026-08-08. The stated problem is real and is **measurable in the deck as it
-stands**: the chrome row carries seven stage *names*, and the deck's own CSS comment records the row
-at **~1450 of the 1728 available design units — 84% used with seven stages**. Text labels wrap.
-Add a stage, or lengthen a stage name, and the navigation takes a second line and starts competing
-with the slide, which is the exact failure DS-217 exists to prevent. **The current design is one
-stage away from the problem it was built to solve.**
+Raised by the owner 2026-08-08. The stated problem is real and is **measured in the deck as it
+stands** — see *The two bounds* below, which is the home of these numbers. The chrome row carries
+seven stage *names* costing **856 design units**, and the ribbon's content wants **1249.5 units
+inside the 1180-unit box** it is given; the six flexible connectors, each compressed to 22.0, absorb
+the difference, which is why the row still renders cleanly. Text labels wrap. Add a stage, or
+lengthen a stage name, and the connectors have nothing left to give, so the navigation takes a
+second line and starts competing with the slide — the exact failure DS-217 exists to prevent.
+**The current design is at capacity, not one stage away from it.**
+
+> *This paragraph originally cited the deck's own comment — "~1450 of the 1728 available design
+> units, 84% used". **That figure does not reproduce**: the ribbon is 1180 of 1726, or 68.4%, and
+> the comment predates the control labels growing. The premise was right and its evidence was
+> stale, so both the comment and this paragraph now carry measured numbers instead.*
 
 A ruler answers it structurally rather than by trimming: tick marks have a fixed small width, so the
 element's footprint stops depending on how the stages are named.
@@ -62,7 +69,9 @@ it is a rule amendment with a named side, not a licence.
    ≥ 24 × 24 CSS px, which **inside the stage means ≥ 48 × 48 design units**, because the stage
    bottoms out at 0.5 scale. The chrome row has **1728 usable design units**, so at most 36 targets
    fit, fewer once the right-hand controls take their share — call it **around 30, to be measured
-   rather than asserted.** *This was originally written as the point where the ruler degrades to
+   rather than asserted.** ***Measured 2026-08-08: it is 24.*** The controls cost 546 units, a third
+   of the row, which is what the eyeballed reduction from 36 underestimated — see *The two bounds*
+   below, which is the home of that number. *This was originally written as the point where the ruler degrades to
    section ticks only. The owner's degradation is better and replaces it — see below, and the
    consequence is that DS-168 stops governing the slide count at all.* The figure is still worth
    deriving: it is the first honest answer to *how long is too long*, where DS-217 has been guessing.
@@ -197,6 +206,56 @@ at the 0.5 scale floor**, so a 4-unit mark lands at 2 px and a 2-unit mark at 1 
 The title swap decided above must **not** inherit that — it is an instant swap, and a transition on
 a label that changes on every focus move is the flicker the decision is guarding against.
 
+### The two bounds, measured 2026-08-08 — plan step 2, and both estimates were wrong
+
+Measured by [`tools/deck/chrome_row.py`](../tools/deck/chrome_row.py) in real offline Chrome,
+self-testing, at two stage scales to prove the design-unit conversion is scale-independent.
+
+**The row, and where it actually goes.**
+
+| | Design units | Note |
+| :--- | ---: | :--- |
+| `.chrome` row | **1726.0** | Not 1728. The 2 units are the stage's own border |
+| ribbon box | 1180.0 | 68.4% of the row |
+| gap | 40.0 | real space, unusable by either side |
+| controls block | 506.0 | `count` 85.4 · `prev` 52 · `next` 52 · `toDoc` 82.8 · `motion` 143.8 |
+| **left for the ruler** | **1180.0** | the row is **100% allocated** — there is no spare |
+
+**The target bound is 24, not ~30, and the difference is the controls.** §1 derived ~30 from
+1728 ÷ 48 = 36 and then reduced it by eye. **The controls had never been measured, and they cost
+546 units — 32% of the row** once the gap is counted. Against the 1180 that is actually free,
+DS-168's 48-unit floor gives **1180 ÷ 48 = 24 targets**. So the number that goes into DS-217's
+amendment 2 is **24**, and it is the point where small ticks stop being targets — not where the
+ruler fails.
+
+**The premise is confirmed, but not by the number this task quoted.** §1 cites the deck's own
+comment — *"~1450 of the 1728 available design units — 84% used"*. **That does not reproduce**: the
+ribbon is 1180 of 1726, which is 68.4%, and the comment predates the control labels growing. The
+premise survives on better evidence than the figure it was resting on: the ribbon's content wants
+**1249.5 units inside a 1180 box**, and the six flexible connectors — each now compressed to 22.0
+units — absorb the 69.5-unit difference. Seven stage names alone are 856 units. **So the row is at
+capacity today, not one stage away from it**, and it renders cleanly only because the connectors
+are already giving up their space. The stale comment has been corrected in the deck.
+
+**The mark floor.** At the 0.5 hand-over — measured at k = 0.5056, since the stage is *hidden* at
+0.4685 and shown at 0.5056, so **DS-071's threshold behaves exactly as written** — a design unit is
+0.506 CSS px:
+
+| Mark | CSS px at the floor | Rendered verdict |
+| ---: | ---: | :--- |
+| 2 du | 1.01 | one device pixel — a speck, and the quiet colour disappears |
+| 3 du | 1.52 | still faint; quiet marks barely register |
+| **4 du** | **2.02** | **the first size that reads as a mark in both colours** |
+| 5 du | 2.53 | comfortable |
+| 10 du | 5.06 | what the lit dot ships at today |
+
+**The inactive marks are the binding constraint, not the current one.** The degraded mode has one
+accent mark and many quiet ones, and at 1–2 px the low-contrast quiet colour vanishes well before
+the accent does. **Recommended floor: 4 du, with 5 du if the ruler is to stay legible on a poor
+projector.** *This verdict was reached by rendering the candidates at native size and looking, and
+it is a one-to-two device pixel judgement made through a screenshot — the owner should confirm it
+on a real 1× display before it is written into a rule (**L-15**).*
+
 ### A keyboard collision this task has to resolve — DS-137
 
 **Arrow keys are already taken, globally.** The `keydown` listener is on `document` and its only
@@ -283,7 +342,7 @@ owner's, taken 2026-08-08, and each names which side moved (**L-37**).
 | # | Step | Output |
 | :-- | :--- | :--- |
 | 1 | ~~Take the three open questions and the amendments~~ — **done 2026-08-08**, and the answers made it four | the rulings, in §1 |
-| 2 | Measure the real chrome row: what the five controls cost, what is left for ticks, the target count that fits at 48 du pitch, and the smallest mark that survives the 0.5 scale floor on a 1× display | the two bounds |
+| 2 | ~~Measure the real chrome row~~ — **done 2026-08-08**, both estimates were wrong: the bound is **24**, not ~30, and the mark floor is **4 du** | the two bounds, in §1 |
 | 3 | Build the ruler from **`manifest()`**, which [T-034](T-034-a-contents-page-for-the-printed-deck.md) already shipped — number, title, stage — rather than reading the slides again | the ruler component |
 | 4 | Wire the reveal: title-swap on hover **and** focus, instant, no transition, restore on blur, with a per-tick accessible name that does not depend on the swap | the reveal |
 | 5 | Settle the arrow-key precedence (**DS-137**) deliberately, following DS-166's shape, and write it down | the precedence rule |
@@ -332,6 +391,7 @@ owner's, taken 2026-08-08, and each names which side moved (**L-37**).
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-08 | → in_progress | **Step 2 measured, and both estimates it was checking turned out wrong.** [`chrome_row.py`](../tools/deck/chrome_row.py) prices the row in real offline Chrome at two scales. **The target bound is 24, not ~30**: §1 derived 36 from 1728 ÷ 48 and reduced it by eye, but **the five controls had never been measured and they cost 546 units — 32% of the row**, leaving 1180, which is 24 targets at DS-168's floor. That is the number for DS-217's amendment 2. **The row is also 1726 units, not 1728** — the two are the stage's own border. **The premise is confirmed but its cited evidence is not**: the *"~1450 of 1728, 84% used"* quoted from the deck's own comment does not reproduce — the ribbon is 1180 of 1726, or 68.4% — because the comment predates the control labels growing. The premise stands on stronger evidence instead: the ribbon's content wants **1249.5 units in a 1180 box** and the six connectors, each compressed to 22.0, absorb the difference, so **the row is at capacity now rather than one stage short of it** and renders cleanly only because the connectors are already yielding. The stale comment was corrected in the deck rather than left to be quoted again. **The mark floor is 4 du (2.02 CSS px)**, measured at k = 0.5056 — and the run confirmed DS-071 empirically, the stage being hidden at 0.4685 and shown at 0.5056. **The binding constraint is the inactive marks, not the current one**: at one to two pixels the quiet colour vanishes well before the accent does, which the numbers alone would not have shown. That verdict is a one-to-two device pixel judgement taken through a screenshot and is flagged for the owner to confirm on real hardware (**L-15**). |
 | 2026-08-08 | → planned | **All open questions answered, and the answers turned three amendments into four.** The owner took amendments 1–3 **with two tightenings, both narrowing**: *regular repeating scale* is defined as uniform mark, uniform pitch and no per-item label at rest, because undefined it is a loophole any evenly-spaced row of controls could claim, leaving DS-217 enforceable against nothing; and DS-131's narrowing carries a **per-target naming clause** rather than a per-group one. That second tightening matters more than it reads: **amendment 3 and the own-slide answer are one decision**, since ticks announcing their *section* would give twelve targets seven labels — still unnamable before clicking, still exactly what DS-131 forbids — so the amendment would have gutted the rule while appearing to preserve it. The precondition is written into the rule rather than left as a fact about this deck. **The counter is kept, and that is the fourth amendment**: the ruler already carries both facts, so `05 / 12` is the same fact at a different *precision*, which swaps DS-216's test from **fact** to **register** — and register is far easier to claim, a progress bar being the obvious next claimant, which this task's own scope excludes on DS-216's authority. Taken with a **cap that does the work the old test used to**: a second encoding is permitted for a different fact or register, and the total is never more than two elements however well a third is argued. §2 was rewritten around the fact that [T-034](T-034-a-contents-page-for-the-printed-deck.md) has since **shipped `manifest()`**, so the ruler consumes it rather than reading the slides again, and around **L-38** — this task's brief is entirely about long decks, so a short one is the case that will go unrendered unless the plan names it. |
 | 2026-08-08 | (no change) | **§1 gained what the raising session had measured but never written down, and one of the findings is a conflict this task now has to settle.** The row's real geometry — 1728 usable design units, `bottom: 40du`, and the five elements in the `.controls` block the ruler must share the row with. The current-position idiom the owner's degradation describes **already ships**: `data-lit` plus `transform: scale(1.5)` on a 10-unit dot, which also anchors the mark-size measurement (10 units is 5 CSS px at the 0.5 scale floor, so a 4-unit mark is 2 px and a 2-unit mark is 1). The lit dot **transitions**, and the title swap must not inherit that. **The conflict: arrow keys are already taken globally.** The `keydown` listener is on `document` and guards only against `input,textarea`, so the arrows advance the deck even while a chrome button holds focus — tolerable with seven ribbon buttons, a genuine collision with thirty ticks, and **DS-137 requires the precedence rule to be stated** rather than left to listener order. DS-166 already fixes the shape of the answer for disclosure and should be followed here. Also recorded for [T-016](T-016-the-interaction-and-motion-layer.md): **`Escape` is already bound in the reading view**, so an ESC-opened slide index has a conflict in one of the two views. |
 | 2026-08-08 | (no change) | **Two refinements from the owner, both adopted, and one of them resolves a rule collision this task had not spotted.** (1) **The target's name replaces the title in the navigation bar rather than appearing as a tooltip** — and that turns out to be the *only* conformant option, not merely the tidier one: **DS-138** requires popovers to drop below their control and warns that a control near the foot of the stage cannot host one, and the chrome sits at `bottom: 40du`, so a tooltip on a tick has forty design units of room and nowhere to go. Added with the conditions that make it safe: instant swap, no transition, restore on blur, and an accessible name on every tick independent of the swap, because the swap is a sighted-user affordance. (2) **Past the bound the small ticks become marks rather than disappearing** — strictly better than the "section ticks only" degradation written yesterday, because it drops the *affordance* and keeps the *information*. **Its consequence is larger than it looks: DS-168 governs targets, so once small ticks are not targets the 48-unit floor applies only to the seven section ticks, and the ruler stops having a slide-count ceiling at all** — 1728 ÷ 48 ≈ 36 *sections*, which no real deck reaches. The derived ~30 survives as the point where the ruler **changes mode**, which is a more useful thing for DS-217 to state than a point where it fails. *"Almost pixel-size"* gained a measurable floor rather than a chosen number: at the 0.5 scale floor a 2-unit mark is one CSS pixel and will alias on a 1× display, so the minimum is measured there. **Also recorded: the overlay index and [T-034](T-034-a-contents-page-for-the-printed-deck.md)'s printed contents page are one content source rendered twice**, so whichever lands first builds the slide manifest and the other consumes it (**L-08**). |

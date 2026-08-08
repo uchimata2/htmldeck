@@ -296,10 +296,17 @@ svg{display:block}
 
 /* ---------------------------------------------------------------- chrome */
 /* One row since T-028. It was two because twelve dots made the controls too wide to sit beside
-   the stage names without colliding; with the dots gone the row is ~1450 of the 1728 available
-   design units, and the second row was costing 48du of a ~90du budget (DS-217) to solve a
-   problem that no longer existed. The stage is always 1920 units wide, so this fits or does not
-   fit deterministically - there is no viewport at which it reflows into a collision. */
+   the stage names without colliding; with the dots gone the second row was costing 48du of a
+   ~90du budget (DS-217) to solve a problem that no longer existed. The stage is always 1920
+   units wide, so this fits or does not fit deterministically - there is no viewport at which it
+   reflows into a collision.
+
+   MEASURED 2026-08-08 by tools/deck/chrome_row.py, correcting a "~1450 of the 1728 available
+   design units" written here before the control labels grew. The row is 1726 usable units, not
+   1728 - the two are the stage's own border - and EVERY one of them is allocated: ribbon 1180,
+   gap 40, controls 506. The ribbon's content wants 1249.5 units inside its 1180 box, and the six
+   flexible connectors absorb the 69.5 difference, which is why the row still renders cleanly
+   while having no slack left at all. It is at capacity now, not one stage short of it. */
 .chrome{
   position:absolute;left:var(--pad-x);right:var(--pad-x);bottom:calc(40*var(--du));
   display:flex;align-items:center;gap:var(--sp-4);z-index:8;
