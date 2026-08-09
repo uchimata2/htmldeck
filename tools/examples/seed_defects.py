@@ -12,7 +12,14 @@ Every edit below asserts that it matched. A seeding script that silently no-ops 
 with fewer defects than its own ledger claims, which is the one failure that would make the
 validation worthless (L-04).
 
-    python tools/examples/seed_defects.py
+    python tools/examples/seed_defects.py            # regenerate the fixture
+    python tools/examples/seed_defects.py --check    # fail if the committed fixture is stale
+
+**`--check` exists because "everything except the seeded defect is held constant" is a claim about
+a file on disk, and that claim went false twice without anything noticing** (T-044). The fixture
+was four reference-deck revisions behind its parent, differing in 601 lines and failing two rules
+its ledger does not name - and every gate in the repository was green throughout, because no gate
+compares these two files. A resolution to remember was already tried; this is the check instead.
 
 Pure standard library (L-07). Writes UTF-8 (L-10) with LF (L-11).
 """
@@ -54,7 +61,9 @@ def split_slides(html):
     return html[:start], parts, html[end:]
 
 
-def main():
+def build():
+    """The seeded deck as a string, plus nothing written. `main` decides what to do with it."""
+    del applied[:]
     html = open(SRC, "r", encoding="utf-8").read()
 
     # ---------------------------------------------------------------- per-slide dimensions
@@ -195,12 +204,11 @@ def main():
     slides[idx + 1:idx + 1] = [part2, part3]
     applied.append(("D2", "small multiple split into three near-identical slides (14 total)"))
 
-    html = head + "".join(slides) + tail
+    return head + "".join(slides) + tail
 
-    with open(DST, "w", encoding="utf-8", newline="\n") as fh:
-        fh.write(html)
 
-    print("wrote %s  (%.1f KB)\n" % (os.path.relpath(DST, ROOT), os.path.getsize(DST) / 1024))
+def ledger():
+    """What was seeded, printed the same way whether the run wrote the file or only checked it."""
     print("%-4s %s" % ("DIM", "seeded defect"))
     for dim, why in applied:
         print("%-4s %s" % (dim, why))
@@ -212,5 +220,69 @@ def main():
         sys.exit("MISSING a seeded defect for: %s" % ", ".join(missing))
 
 
+def self_test():
+    """The comparison must be able to tell a stale fixture from a current one (**L-04**).
+
+    Tested by mutating the freshly-built deck rather than by trusting `!=`: what has to work is
+    that ONE changed line is caught, because the way this fixture goes stale is a handful of lines
+    at a time in the deck it derives from - not a wholesale replacement.
+    """
+    fresh = build()
+    if differs(fresh, fresh):
+        sys.exit("SELF-TEST FAILED: a deck was reported stale against itself")
+    nudged = fresh.replace("</body>", "<!-- one line -->\n</body>", 1)
+    if nudged == fresh:
+        sys.exit("SELF-TEST FAILED: the mutation used to test the comparison did not apply")
+    if not differs(fresh, nudged):
+        sys.exit("SELF-TEST FAILED: a one-line difference was not detected")
+    return True
+
+
+def differs(a, b):
+    return a != b
+
+
+def check():
+    """Exit non-zero if the committed fixture is not what regenerating would produce."""
+    fresh = build()
+    if not os.path.exists(DST):
+        print("STALE: %s does not exist" % os.path.relpath(DST, ROOT))
+        return 1
+    have = open(DST, "r", encoding="utf-8", newline="").read().replace("\r\n", "\n")
+    if not differs(fresh, have):
+        print("OK - %s is exactly what regenerating produces (%d bytes)"
+              % (os.path.relpath(DST, ROOT), len(have.encode("utf-8"))))
+        ledger()
+        return 0
+    import difflib
+    diff = list(difflib.unified_diff(have.splitlines(), fresh.splitlines(),
+                                     "committed", "regenerated", lineterm="", n=0))
+    adds = len([d for d in diff if d.startswith("+") and not d.startswith("+++")])
+    dels = len([d for d in diff if d.startswith("-") and not d.startswith("---")])
+    print("STALE: %s no longer derives from %s"
+          % (os.path.relpath(DST, ROOT), os.path.relpath(SRC, ROOT)))
+    print("       regenerating would change %d line(s) (+%d/-%d).\n" % (adds + dels, adds, dels))
+    for line in diff[:12]:
+        print("  %s" % line[:150])
+    if len(diff) > 12:
+        print("  ... %d more diff line(s)" % (len(diff) - 12))
+    print("\n**The fixture is the only evidence the rubric works, and it is only evidence while")
+    print("everything except the seeded defect is held constant.** Run this without --check.")
+    return 1
+
+
+def main(argv=()):
+    self_test()
+    if "--check" in argv:
+        return check()
+
+    html = build()
+    with open(DST, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(html)
+    print("wrote %s  (%.1f KB)\n" % (os.path.relpath(DST, ROOT), os.path.getsize(DST) / 1024))
+    ledger()
+    return 0
+
+
 if __name__ == "__main__":
-    main()
+    sys.exit(main(sys.argv[1:]))

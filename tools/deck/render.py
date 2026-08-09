@@ -312,6 +312,20 @@ def cmd_shots(deck, which, w=1920, h=1234):
     print("\n%s" % OUT)
 
 
+def slide_count(deck):
+    """How many slides the deck has, read from the file rather than assumed.
+
+    Counts `<section class="slide...">`, which is what the stage iterates. A deck this cannot read
+    is a deck this tool should not silently render a guess at, so zero is fatal rather than empty.
+    """
+    html = open(deck, "r", encoding="utf-8").read()
+    n = len(re.findall(r'<section[^>]*\bclass="slide\b', html))
+    if not n:
+        sys.exit("no `<section class=\"slide\">` found in %s - refusing to guess a slide count"
+                 % os.path.relpath(deck, ROOT))
+    return n
+
+
 def self_test():
     """Refuse to measure if the harness itself is broken (L-04)."""
     if not CHROME:
@@ -336,7 +350,11 @@ def main(argv):
     cmd, deck = argv[0], os.path.abspath(argv[1])
     if not os.path.exists(deck):
         sys.exit("no such deck: %s" % deck)
-    which = [int(x) for x in argv[2].split(",")] if len(argv) > 2 else list(range(12))
+    # **Derived from the deck, never assumed.** This read `range(12)` until T-044, which is the
+    # reference deck's length and not any deck's: the 14-slide seeded fixture rendered 12 shots and
+    # said nothing about the two it dropped, so "look at the rendered deck" (CLAUDE.md rule 6) was
+    # being satisfied against an artifact two slides short (**L-05**).
+    which = [int(x) for x in argv[2].split(",")] if len(argv) > 2 else list(range(slide_count(deck)))
     print("browser: %s" % CHROME)
     print("deck:    %s\n" % os.path.relpath(deck, ROOT))
     if cmd == "measure":

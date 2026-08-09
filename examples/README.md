@@ -20,8 +20,9 @@ or place — see *Provenance*, below.
 *Buy frequency before bikes* — a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-**183 KB in one file.** Three embedded typefaces (97 KB of it), nine Lucide icons, seven
-hand-written SVG figures, and the deck shell. No libraries, no build step, no network.
+**214 KB in one file** — 219 083 bytes. Three embedded typefaces (97 KB of it as base64), nine
+Lucide icons in one sprite, seven hand-written SVG figures, and the deck shell. No libraries, no
+build step, no network.
 
 Every slide carries a **bottom line**: one factual sentence, at the foot of the slide, second in
 prominence only to the headline. It is what the slide delivers, and it is there so the deck reads
@@ -32,22 +33,29 @@ added it to all twelve; before that the deck had one on none of them, and passed
 
 | | |
 | :--- | :--- |
-| `←` `→` `space` `Home` `End` | Move between slides |
+| `←` `→` `space` `PageUp` `PageDown` `Home` `End` | Move between slides |
 | `d` | Open or close this slide's detail |
 | `r` | Switch between the presentation and the reading view |
 | `m` | Motion on or off |
 | `t` | Light or dark |
 | `f` | Fullscreen |
-| `Esc` | Close an open detail panel |
+| `Esc` | Close an open detail panel, or leave the reading view |
 
-The seven stage names in the ribbon are buttons — click one to jump to where that stage begins —
-and prev/next, swipe and the mouse wheel all work too. Disclosure never interacts with advancing:
+The navigator is a **ruler**: one small tick per slide, a large tick at each stage start, every
+tick a named jump target — click one to go there, hover or focus one to see where it lands.
+Prev/next, swipe and the mouse wheel all work too. While a tick holds focus the ruler owns the
+arrow keys and `Home`/`End` for moving *between ticks*; everywhere else they move between slides.
+That precedence is stated in both handlers on purpose, because a rule that depends on which
+listener was registered first is not a rule (DS-137). Disclosure never interacts with advancing:
 arrows move, `d` toggles, and neither affects the other.
 
-There used to be a dot per slide as well. T-028 removed them under DS-216 and DS-217: a spine
-ribbon, twelve dots and a progress bar are three answers to *where am I*, competing with the slide
-for attention. What remains is two, and they answer different questions — the ribbon says which
-stage, the `05 / 12` counter says how far through.
+The ruler replaced a stage-name ribbon in [T-035](../tasks/T-035-the-ruler-navigator.md), because
+seven text labels cost 856 design units inside a 1180-unit box and a longer deck or a longer stage
+name would have wrapped the row onto a second line — the exact failure DS-217 exists to prevent.
+There used to be a dot per slide as well; T-028 removed those under DS-216 and DS-217, since a
+navigator, twelve dots and a progress bar are three answers to *where am I*, all competing with the
+slide. What remains is two, and they answer different questions — the ruler says where in the
+deck, the `05 / 12` counter says how far through.
 
 ### The reading view
 
@@ -82,14 +90,20 @@ In real Chrome, from `file://`, with every DNS lookup black-holed:
 | :--- | :--- |
 | External references | **0** |
 | Embedded faces | 3, all reporting `loaded` offline |
-| Body text at 720p | **17.3 px** (26 design units × 0.667) — clears the 16 px floor |
+| Body text at 720p | **17.3 px** (26 design units × 0.667) on *Buy frequency before bikes*, over 3 sampled slides — clears the 16 px floor |
 | Two-resolution diff, non-text boxes | **40 values at 3840×2000 vs 1280×634; worst disagreement 0.00 design units** |
 | Two-resolution diff, text runs | 84 values, worst **1.07 design units** on an SVG mono-label height |
 | Reflow at 320 CSS px | `scrollWidth` **320**, zero elements overflowing, zero internal scrollers |
 | Reflow auto-engage | correct at all four sweep viewports, including 1280 × 400 (scale 0.37) |
-| Smallest interactive target | 30.5 CSS px at 1280×634 |
-| Chrome | **11 labelled or interactive items, 52 design units tall** — was 23 and 96 before T-028 |
-| Encodings of position | **2**, and they answer different questions (DS-216 permits a second only then) |
+| Reading-view type | 4 of 4 roles scale with the root font size (WCAG 1.4.4) |
+| Smallest interactive target | **43.3 CSS px** at 1622 × 1054; zero targets under the 24 px floor |
+| Chrome | **5 labelled or interactive items, 52 design units tall** — was 23 and 96 before T-028, and 11 until T-035 replaced seven stage names with one ruler, which DS-217 counts as a single item |
+| Encodings of position | **2** — the ruler and the slide counter — and they answer different questions (DS-216 permits a second only then) |
+
+**Both two-resolution figures come from a four-slide sample**, not the whole deck: slides 1, 5, 8
+and 12, chosen to span the archetypes. `contract.py` names the sample in its own source and it is
+a compromise, so a larger figure quoted elsewhere for the same rule is a different run over more
+slides rather than a contradiction.
 
 The layout is identical across a 3.15× scale ratio — every box lands on the same design-unit
 coordinate. The 1.07-unit disagreement is text, and it is glyph-advance rounding rather than
@@ -117,6 +131,13 @@ the rubric's response is attributable to the defect rather than to two decks dif
 ways. Every edit asserts that it matched; a seed that silently no-ops would produce a deck with
 fewer defects than this ledger claims.
 
+**That claim is only true while the file is regenerated**, and it has twice stopped being true —
+once before T-028 and once before [T-044](../tasks/T-044-restore-the-seeded-defect-fixture-and-its-claims.md),
+by which point the fixture was four reference-deck revisions behind and differed from its parent in
+601 lines. It is no longer left to habit: **`seed_defects.py --check` fails if the committed fixture
+is not what regenerating would produce**, and `check.py` is not the gate that notices, because the
+stale fixture passed every gate in the repository the whole time it was wrong.
+
 ### The ledger
 
 | Dim | Seeded defect | Where |
@@ -134,27 +155,67 @@ fewer defects than this ledger claims.
 
 ### What the mechanical gate caught
 
-Running the auto and render gates over both decks:
+`python tools/deck/check.py` over both decks. The good deck reports **0 failures**; the seeded deck
+reports **4**, across **3 of the 10 dimensions**:
 
-| Dimension | Good deck | Seeded deck | Caught mechanically |
-| :--- | :--- | :--- | :--- |
-| S3 | 7 figures, 0 card rows | 8 figures, **1 card row** | yes |
-| S5 | 0 runs below the floor | **12 runs at 11 units** | yes |
-| S6 | 1 infinite animation (the sanctioned `Current` flow) | **`seededThrob` on a static aside** | yes |
-| D2 | 12 sections | **14 sections** | yes |
-| D3 | last slide *Approve the frequency package* | last slide ***Thank you*** | yes |
-| S1, S2, S4, D1, D4 | — | — | **no — judgement only** |
+| Dim | Good deck | Seeded deck | Rule that fired | Caught |
+| :--- | :--- | :--- | :--- | :--- |
+| **S3** | reflow `scrollWidth` 320 | **851** | DS-075 | **only as collateral** — see below |
+| **S5** | 0 runs below the floor | **12 runs at 11 units** | DS-035 | yes |
+| **S6** | 0 looping motions on static content | **1**, at 2400 ms | DS-142, DS-141 | yes |
+| S1, S2, S4, D1, D2, D3, D4 | — | — | — | **no** |
 
-Five of ten seeded defects are invisible to any static or measured check, which is what
-`EVALUATION.md` predicts: those five are `judge` rules. **The gate is necessary and nowhere near
-sufficient**, and a pipeline that stops at the gate would ship a deck whose headline is a topic
-label, whose figures disagree with each other, and whose slides are ordered by topic.
+**Seven of ten seeded defects are invisible to every check in this repository.** Five of them are
+`judge` rules and `EVALUATION.md` predicts exactly that. **The other two are not, and they are the
+ones worth knowing about:**
+
+- **D2 — 14 slides passes.** DS-081 only forbids *fewer than six*. DS-082 is the rule that says
+  past 12 needs a recorded reason, and it is `default` and excused by the gate in writing, because
+  *"past 12 needs a recorded reason"* is not a fact the HTML records.
+- **D3 — a close slide reading *Thank you* passes.** Nothing measures whether the last slide asks
+  for anything. DS-203 and DS-205 check that a bottom line exists and is not behind a disclosure,
+  and the seed leaves both true while replacing the ask with a recap.
+
+**And the two failures the ledger does not claim are collateral, not seeder bugs.** Both were
+traced to a single seed:
+
+| Extra failure | Caused by | Why |
+| :--- | :--- | :--- |
+| **DS-075** — reflow `scrollWidth` 851 at 320 CSS px | the **S3** seed | The card row is a four-item flex row with `flex:1` and no wrap, so at 320 px it cannot compress below its content and the reading view scrolls sideways. Verified by applying the S3 seed alone: 320 → 851 |
+| **DS-141** — a duration over 500 ms outside DS-140's vocabulary | the **S6** seed | `seededThrob` runs at **2.4 s**, so the same animation trips both the *looping motion on static content* rule and the duration cap |
+
+They stay out of the ledger deliberately: the ledger is **one seeded defect per dimension**, and
+adding a row for a rule that fires as a side effect would break the property that gives the fixture
+its evidential value. DS-075 is worth noticing on its own account, though — it says the S3
+anti-pattern is not only a worse encoding but an accessibility failure, found by a rule aimed at
+something else entirely.
+
+**One caveat about the S3 seed.** It replaces the deck's only dashed `Current` flow, so on the
+seeded deck DS-140 reports *"no dashed flow in this deck"* — **and passes**, because the check has
+no subject rather than a conforming one. That is L-36 inside the instrument, it is not a property
+of the seed, and it is [T-051](../tasks/T-051-a-check-with-no-subject-must-not-report-a-pass.md).
+
+**The gate is necessary and nowhere near sufficient**, and this is sharper than the earlier count
+suggested: a pipeline stopping at the gate would ship a deck whose headline is a topic label, whose
+figures disagree with each other, whose slides are ordered by topic, whose length was set by
+dumping, and which ends by thanking the room instead of asking it for anything.
 
 ---
 
 ## Reproducing the measurements
 
-The deck is built by hand. Everything asserted about it above is reproducible:
+The deck is built by hand. Everything asserted about it above is reproducible. **Start here** — the
+gate subsumes the first three commands below and adds the coverage account:
+
+```bash
+python tools/deck/check.py examples/reference-deck.html
+```
+
+It runs the auto gate, the contrast audit, the render gate and the resolution contract in one pass,
+then declares what it did **not** check: 78 of the 111 rules a gate owns are decided, and the other
+33 are named with a reason each. The four commands after it still exist because each is useful
+alone — `audit.py` and `contract.py` when you want one stage's output without the account, and the
+two variant suites because they build decks rather than read one.
 
 ```bash
 python tools/deck/audit.py examples/reference-deck.html
@@ -181,7 +242,8 @@ python tools/examples/seed_defects.py
 ```
 
 `audit.py` runs the auto gate, the contrast audit, the render gate and the resolution contract —
-50 checks against `DS-nnn` rules. `contract.py` is that last stage on its own: it sweeps four
+**82 verdict rows against 77 distinct `DS-nnn` rules**, some rules carrying more than one row.
+`contract.py` is that last stage on its own: it sweeps four
 viewports and two resolutions, because §2.4 and §2.5 are claims about what happens *between*
 viewports and no single render can decide them. **`contract_variants.py` and
 `deliverable_variants.py` break each of those rules on purpose and require the gate to notice** —
@@ -195,6 +257,13 @@ replace. Both drive **real Chrome with a clean throwaway profile and every DNS l
 because a preview pane is not a faithful `file://` environment and has given this project a
 confident wrong answer four times (**L-06**, **L-15**).
 
-Running the audit over both decks is what produced the table above: the good deck reports **0
-mechanical failures**; the seeded deck reports **3** — and the other seven seeded defects are
-invisible to it.
+Running `check.py` over both decks is what produced the table above: the good deck reports **0
+failures**; the seeded deck reports **4**, spread across three dimensions — and the other seven
+seeded defects are invisible to it.
+
+```bash
+python tools/examples/seed_defects.py --check
+```
+
+Regenerates into a temporary file and compares it with the committed fixture, so a reference deck
+edited without regenerating is a red run rather than a discovery two audits later.

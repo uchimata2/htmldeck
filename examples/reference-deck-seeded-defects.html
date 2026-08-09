@@ -187,6 +187,12 @@ svg{display:block}
 }
 .slide[data-current]{opacity:1;visibility:visible;transition-delay:0s,0s}
 
+/* The printed contents page (T-034) exists only on paper. It is generated into the stage so it
+   inherits the theme and the page box, and this is the single rule that keeps it off the screen -
+   everything else about it lives in `@media print`. The ribbon already carries the structure here;
+   an on-screen index is T-035's question, not this one. */
+.contents{display:none}
+
 .eyebrow{
   display:flex;align-items:center;gap:var(--sp-2);
   font-family:var(--font-mono);font-size:var(--fs-mono);
@@ -290,33 +296,119 @@ svg{display:block}
 
 /* ---------------------------------------------------------------- chrome */
 /* One row since T-028. It was two because twelve dots made the controls too wide to sit beside
-   the stage names without colliding; with the dots gone the row is ~1450 of the 1728 available
-   design units, and the second row was costing 48du of a ~90du budget (DS-217) to solve a
-   problem that no longer existed. The stage is always 1920 units wide, so this fits or does not
-   fit deterministically - there is no viewport at which it reflows into a collision. */
+   the stage names without colliding; with the dots gone the second row was costing 48du of a
+   ~90du budget (DS-217) to solve a problem that no longer existed. The stage is always 1920
+   units wide, so this fits or does not fit deterministically - there is no viewport at which it
+   reflows into a collision.
+
+   MEASURED 2026-08-08 by tools/deck/chrome_row.py, correcting a "~1450 of the 1728 available
+   design units" written here before the control labels grew. The row is 1726 usable units, not
+   1728 - the two are the stage's own border - and EVERY one of them is allocated: ribbon 1180,
+   gap 40, controls 506. The ribbon's content wants 1249.5 units inside its 1180 box, and the six
+   flexible connectors absorb the 69.5 difference, which is why the row still renders cleanly
+   while having no slack left at all. It is at capacity now, not one stage short of it. */
 .chrome{
   position:absolute;left:var(--pad-x);right:var(--pad-x);bottom:calc(40*var(--du));
   display:flex;align-items:center;gap:var(--sp-4);z-index:8;
 }
-.ribbon{display:flex;align-items:center;gap:var(--sp-1);min-width:0;margin-right:auto}
-/* T-028: the stage names became the click target when the twelve dots went. DS-217 asks for a
-   compact indicator plus click-to-jump rather than one target per slide, and seven stages that
-   were already drawn are a cheaper target than twelve dots that were not labelled. */
-.ribbon li{display:flex;align-items:center;min-width:0}
-.ribbon li + li{margin-left:var(--sp-1)}
-.ribbon button{
-  display:flex;align-items:center;gap:var(--sp-1);min-height:var(--disc-hit);
-  padding:0 calc(4*var(--du));border-radius:var(--radius);
-  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
-  text-transform:uppercase;color:var(--ink-faint);white-space:nowrap;
+/* THE RULER (T-035), which replaced the stage-name ribbon. The ribbon's footprint depended on how
+   the stages were NAMED - measured at capacity with seven of them, its six connectors already
+   compressed to absorb 69.5 du it did not have - so one more stage, or one longer name, wrapped it
+   into the second row DS-217 exists to prevent. Tick marks have a fixed width, so the element's
+   size stops depending on the words. */
+.ruler{position:relative;display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}
+.ruler-ticks{display:flex;align-items:center;flex:none}
+/* The cell IS the hit area and the mark is what you see, so the target size is the pitch rather
+   than a minimum applied afterwards. `--disc-hit` is 52 du - the same target token the disclosure
+   buttons use, and deliberately above DS-168's 48-unit floor inside the stage. */
+.ruler-ticks li{
+  display:flex;align-items:center;justify-content:center;flex:none;
+  width:var(--disc-hit);height:var(--disc-hit);
 }
-.ribbon button::before{content:"";width:calc(10*var(--du));height:calc(10*var(--du));
-  border-radius:50%;background:var(--ui-line);flex:none;
-  transition:background var(--scale-dur) ease-in-out,transform var(--scale-dur) ease-in-out}
-.ribbon button:hover{color:var(--ink)}
-.ribbon li[data-lit] button{color:var(--ink)}
-.ribbon li[data-lit] button::before{background:var(--accent);transform:scale(1.5)}
-.ribbon .link{width:calc(22*var(--du));height:var(--hair);background:var(--line);flex:none}
+.ruler-ticks button{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;height:100%;border-radius:var(--radius);
+}
+/* A bar, not a dot. DS-131's history is twelve unlabelled DOTS, and drawing dots again would read
+   as the thing that was removed even though these are named targets. A ruler has tick lines. */
+.ruler-ticks button::before{
+  content:"";display:block;width:var(--rule);height:calc(14*var(--du));
+  border-radius:calc(2*var(--du));background:var(--ui-line);
+  transition:background var(--scale-dur) ease-in-out,height var(--scale-dur) ease-in-out;
+}
+/* the stage starts - the seven that stay targets past the bound */
+.ruler-ticks li[data-section] button::before{height:calc(26*var(--du));background:var(--line-firm)}
+.ruler-ticks button:hover::before{background:var(--ink-soft)}
+.ruler-ticks li[data-lit] button::before{background:var(--accent);height:calc(32*var(--du))}
+.ruler-ticks button:focus-visible{outline:var(--rule) solid var(--accent);outline-offset:calc(-3*var(--du))}
+
+/* DEGRADED MODE - past the measured capacity the small ticks stop being TARGETS and stay MARKS.
+   That drops the affordance and keeps the information, and it takes DS-168 out of the slide count:
+   the 48-unit floor then governs only the seven section ticks. 4 du is the measured floor - at the
+   0.5 stage hand-over it renders at 2.02 CSS px, and the quiet colour vanishes below that long
+   before the accent does. */
+.ruler[data-dense] .ruler-ticks li:not([data-section]){width:calc(8*var(--du));height:calc(26*var(--du))}
+.ruler[data-dense] .ruler-ticks li:not([data-section]) button{pointer-events:none}
+.ruler[data-dense] .ruler-ticks li:not([data-section]) button::before{
+  width:calc(4*var(--du));height:calc(10*var(--du))}
+.ruler[data-dense] .ruler-ticks li:not([data-section])[data-lit] button::before{
+  background:var(--accent);height:calc(20*var(--du));width:calc(6*var(--du))}
+/* The degraded marks above are bar-shaped. A circle needs equal sides or `border-radius:50%` turns
+   it into an oval, so the dot style restates them square - at 4 du, which is the measured floor:
+   2.02 CSS px at the 0.5 hand-over, below which the quiet colour stops registering at all. */
+.ruler[data-ticks="dot"][data-dense] .ruler-ticks li:not([data-section]) button::before{
+  width:calc(4*var(--du));height:calc(4*var(--du))}
+.ruler[data-ticks="dot"][data-dense] .ruler-ticks li:not([data-section])[data-lit] button::before{
+  width:calc(7*var(--du));height:calc(7*var(--du));background:var(--accent)}
+
+/* ---- TICK STYLE IS A THEME PARAMETER, not a fork of the component (CLAUDE.md rule 4).
+   `dot` is the shipped default and `bar` is the alternative; they share one manifest, one set of
+   targets, one keyboard model and one degradation, so only the mark and the current-position
+   treatment differ and a later template generator can pick between them without re-deriving
+   anything. Both are named targets, so DS-131 as amended admits either - the prohibition moved
+   onto *unnamed*, never onto the shape, and the twelve dots T-028 removed were unlabelled ones. */
+.ruler[data-ticks="dot"] .ruler-ticks button::before{
+  width:calc(8*var(--du));height:calc(8*var(--du));border-radius:50%}
+.ruler[data-ticks="dot"] .ruler-ticks li[data-section] button::before{
+  width:calc(14*var(--du));height:calc(14*var(--du))}
+/* Colour and the ring mark the selection; SIZE goes on meaning section-versus-slide. Growing a lit
+   small dot to section size would conflate the two encodings and make slide 8 read as a stage
+   start - so this rule sets the colour and deliberately leaves the size alone. */
+.ruler[data-ticks="dot"] .ruler-ticks li[data-lit] button::before{background:var(--accent)}
+
+/* The ring around the current dot. It TRANSLATES between positions rather than being redrawn, so
+   the eye follows one object along the ruler instead of watching two dots swap state - which is
+   the whole point of the alternative.
+   DS-140 fixes the motion vocabulary at four and this adds none: a ring sliding on slide change is
+   a TRANSITION, so DS-141 governs it - under 500 ms, ease-in-out - and it reuses --scale-dur (300)
+   rather than inventing a duration. Position comes from measurement, not from pitch arithmetic, so
+   it stays correct in the degraded mode where the cells are no longer uniform. */
+.ruler-ring{display:none}
+.ruler[data-ticks="dot"] .ruler-ring{
+  display:block;position:absolute;left:0;top:50%;
+  width:calc(30*var(--du));height:calc(30*var(--du));margin-top:calc(-15*var(--du));
+  border:var(--rule) solid var(--accent);border-radius:50%;
+  transform:translateX(calc(var(--rx,0px) - 15*var(--du)));
+  transition:transform var(--scale-dur) ease-in-out;
+  pointer-events:none;
+}
+/* first paint must not fly in from the left */
+.ruler[data-noanim] .ruler-ring{transition:none}
+/* Past the bound the cells stop being uniform and a 30-unit ring would cover its neighbours, so
+   the degraded mode keeps the enlarged accent mark and drops the ring. */
+.ruler[data-dense] .ruler-ring{display:none}
+:root[data-motion="off"] .ruler-ring{transition:none}
+
+/* The label names the tick under the cursor or the focus, and at rest names where you are. It is
+   part of the ruler rather than a third encoding of position (DS-216): remove the ticks and it has
+   nothing to say, which is the test - an independent encoding survives the others being removed.
+   No transition: arrowing through thirty ticks would otherwise flicker it thirty times. */
+.ruler-label{
+  flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  text-transform:uppercase;color:var(--ink-faint);
+}
+.ruler-label[data-preview]{color:var(--ink)}
 
 .controls{display:flex;align-items:center;gap:var(--sp-2);flex:none}
 /* the second encoding DS-216 permits, and it encodes a different fact: the ribbon says which
@@ -404,7 +496,9 @@ svg{display:block}
   .current{animation:none}
   .rise,.pulse,.opening{animation:none;opacity:1;transform:none}
   .slide{transition:none}
-  .ribbon button::before{transition:none}
+  /* was `.ribbon button::before` until T-035 replaced the ribbon with the ruler - a stale selector
+     here fails silently, since a rule that matches nothing looks exactly like a rule that passed */
+  .ruler-ticks button::before,.ruler-ring{transition:none}
 }
 
 /* ---------------------------------------------------------------- reflow view (DS-070..076) */
@@ -458,12 +552,179 @@ svg{display:block}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
-/* printing is a mode the user forces on, never a constraint on the design (CLAUDE.md rule 5) */
+/* printing is a mode the user forces on, never a constraint on the design (CLAUDE.md rule 5)
+
+   THE PAGINATED STAGE - one slide per printed page. R7 ruled this the printable mode against a
+   measured alternative: the reading view prints as a continuous document, and prints badly for a
+   structural reason, so reshaping it to paginate well would be printing becoming a constraint on
+   the design. Adopted here by T-032; the stylesheet is the one T-018 printed and looked at.
+   What this rendering does not preserve is stated for the user in R7 §5. */
 @media print{
-  body{overflow:visible;background:#fff}
-  .viewport,.viewswitch{display:none!important}
-  .doc{display:block!important;height:auto;overflow:visible}
-  .doc section{break-inside:avoid}
+  /* The page is sized to the slide rather than the slide to the page. A4 would letterbox a
+     16:9 stage and leave the print dialog to scale it anyway; this way the dialog's "fit to
+     page" does the only scaling, and it does it to a page of the right shape. The cost is
+     stated rather than hidden: pinning `size` greys out the dialog's layout controls, which is
+     acceptable only because here the page shape IS the design (R7 §5.3). */
+  @page{ size:1920px 1080px; margin:0 }
+
+  html,body{background:#fff;overflow:visible;height:auto}
+  .viewswitch,.chrome,.controls{display:none!important}
+  .doc{display:none!important}
+
+  /* THE RULE THIS RENDERING LIVES OR DIES BY, and the one whose absence printed blank pages twice
+     (DS-222). The deck switches itself to the reading view when the stage scales below 0.5
+     (DS-071) and sets `viewport.hidden` when it does. PRINTING IS WHAT MAKES IT SWITCH, because
+     printing changes the layout viewport - and since the trigger became height-aware it fires on
+     more page geometries, not fewer.
+     `.viewport[hidden]{display:none}` then hides the stage, and overriding `position` does not
+     touch `display`. So the stage was never in the output at all: one run hid the reading view
+     too and printed nothing; the next left the reading view visible and printed THAT, which
+     looked like a fix and was not. */
+  .viewport,.viewport[hidden]{display:block!important;
+            position:static!important;inset:auto!important;overflow:visible!important;
+            height:auto!important;background:#fff!important}
+  .stage{
+    position:static!important;transform:none!important;
+    width:1920px!important;height:auto!important;
+    border:0!important;box-shadow:none!important;overflow:visible!important;
+  }
+
+  /* Slides are absolutely stacked with only [data-current] visible. Un-stack them, make every
+     one visible, and give each its own page.
+     `relative`, not `static`. A slide is the containing block for its own absolutely positioned
+     descendants - the disclosure panels and the provenance line - and making it static hands them
+     to the page instead, which scatters them across breaks (DS-223). */
+  .slide{
+    position:relative!important;
+    width:1920px!important;height:1080px!important;
+    opacity:1!important;visibility:visible!important;
+    transition:none!important;
+    break-after:page;break-inside:avoid;
+  }
+  /* :last-child does not match - the stage ends with the chrome nav, not with a slide - so the
+     twelfth slide would keep its page break and emit a thirteenth, empty page. Still true after
+     T-028 removed the progress bar: the nav is what follows the last slide. */
+  section.slide:last-of-type{break-after:auto}
+
+  /* Entrance animations hold their pre-animation state until played, so an unplayed slide
+     prints blank or half-risen (DS-224). */
+  .rise{opacity:1!important;transform:none!important;animation:none!important}
+
+  /* Tier two does not survive this rendering: the panels are absolutely positioned overlays on a
+     fixed 1920x1080 box, and opening them onto it covers the content they explain. So the whole
+     affordance goes, button included. Printing a "+ show detail" control onto paper is worse than
+     losing the detail silently - it advertises something the reader can see but cannot reach, on
+     a medium where nothing can be clicked.
+     This is 38.6% of the deck's text (10 panels, 3543 of 9177 characters). The owner ruled the
+     slides only, with the loss stated: the reading view carries all of tier two on screen, so it
+     is not lost, only not on paper (T-032). */
+  .slide .disc{display:none!important}
+
+  /* ---------------------------------------------------------------- the contents page (T-034)
+     Twelve pages of slides arrive with no map: the ruler carries the structure on screen
+     and this stylesheet hides the chrome, so the printed artifact loses the one element that
+     showed where you are. This page is the paper equivalent, and it is GENERATED from the slide
+     manifest - the title and the bottom line are read off the slides, so it cannot drift from
+     the deck it describes (L-08).
+
+     It is also the only surface that reaches the person holding the paper, which is why the
+     screen-only line lives here: what print does not preserve is stated to the reader, not
+     discovered by them (R7 §5).
+
+     PLACED FIRST IN THE DOM, and that is load-bearing rather than aesthetic. `break-after` is
+     cancelled on `section.slide:last-of-type`, which matches the last <section> among its
+     siblings BY ELEMENT TYPE. A <section> added after slide 12 would make that selector match
+     nothing and silently bring back the empty thirteenth page T-018 spent a printed round
+     finding (DS-222's corollary). First, the sections run contents - slide 1 ... slide 12, slide
+     12 is still the last of its type, and the page count is 1 + n with no blank at either end. */
+  .contents{
+    display:flex!important;flex-direction:column;
+    position:relative;width:1920px;height:1080px;
+    padding:var(--pad-y) var(--pad-x);
+    background:var(--paper);color:var(--ink);
+    break-after:page;break-inside:avoid;
+  }
+  .contents-head{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:var(--sp-4)}
+  .contents-eyebrow{
+    font-family:var(--font-mono);font-size:calc(21*var(--du));
+    letter-spacing:var(--track-mono);text-transform:uppercase;color:var(--accent);
+  }
+  .contents-title{font-family:var(--font-display);font-size:calc(52*var(--du));line-height:1.1}
+
+  /* Four columns is the pinned axis and rows are what give. A fifth column measures 324 du
+     (~2.0 in on A4 landscape) and a title is a claim of four to seven words (DS-210), so it
+     would set at three lines and the box would grow TALLER than the row the extra column was
+     meant to shorten. `1fr` rows then divide whatever height is left, so a longer deck
+     compresses vertically on its own with no second code path. */
+  .contents-grid{
+    flex:1;min-height:0;
+    display:grid;grid-template-columns:repeat(var(--ccols,4),1fr);
+    grid-auto-rows:1fr;gap:var(--sp-3);
+  }
+  .cbox{
+    display:flex;flex-direction:column;gap:var(--sp-1);overflow:hidden;
+    padding:var(--sp-2);border:var(--hair) solid var(--line);border-radius:var(--radius);
+    /* Rows divide the page height, so a SHORT deck stretches each box far past its content -
+       at seven slides a box was 377 du holding about 150, and roughly 60% of every box was
+       empty. That does not read as a spacious page, it reads as content that failed to load.
+       The cap is 268 du, a little above the twelve-slide row height (242.8), so the target case
+       is untouched and only over-tall rows are pulled back. Boxes still STRETCH to
+       their row - `align-items` is deliberately left alone - or a twelve-slide page would
+       shrink to its content and lose the look this cap exists to protect. */
+    max-height:calc(268*var(--du));
+  }
+  /* Five rows or more: the description is dropped rather than shrunk. Measured - at four rows it
+     still shows 1.55 lines, at five it shows 0.19, and 0.19 of a line is a few units of clipped
+     letterform that reads as a rendering fault, not as a compact mode. All or nothing. */
+  .contents[data-dense] .cbox-bottom{display:none}
+  .cbox-top{display:flex;align-items:center;gap:var(--sp-2)}
+  /* the stage name gives the icon a label - an unlabelled glyph on paper is decoration, and the
+     reader has no legend to consult and nothing to hover */
+  .cstage{
+    flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+    font-family:var(--font-mono);font-size:calc(21*var(--du));
+    letter-spacing:var(--track-mono);text-transform:uppercase;color:var(--ink-soft);
+  }
+  /* 32 du = 14.0 pt printed on A4 landscape, where the page scales by 0.5847 and a design unit
+     is worth 0.4385 pt. The number is the handle a paper reader navigates by - it is the one
+     thing on this page the ribbon never had to provide - so it is the largest mandated element
+     in the box rather than an afterthought. */
+  .cnum{
+    font-family:var(--font-mono);font-size:calc(32*var(--du));
+    letter-spacing:var(--track-mono);color:var(--ink);
+  }
+  /* keyed to the STAGE, never to slide content - so the fact that slide 1 carries no disclosure
+     panel where the other eleven carry one cannot reach the mark (DS-113/114) */
+  .cico{width:calc(34*var(--du));height:calc(34*var(--du));color:var(--accent);flex:none}
+  /* `flex:none` on both, so the ONLY thing that absorbs compression is the description. Without
+     it the flex column shrinks every child alike, and past 24 slides the title itself was being
+     cut off - measured. That would break DS-226's invariant: a box may lose its description, it
+     may never lose the entry. */
+  .cbox-top{flex:none}
+  .cbox-title{flex:none;font-family:var(--font-display);font-size:calc(26*var(--du));line-height:1.15}
+  /* The floor is 9 pt printed = 21 du, and it is stated in POINTS because "readable" is a
+     property of the reader's eye while a design unit converts at a rate that depends on the
+     paper. 22 du leaves a little headroom above it. This is the element that clamps under
+     compression - a map may shorten a sentence, and the unclamped one is on the slide's own
+     page a few sheets later. What it may never do is drop a box: a contents page that silently
+     omits a slide is confidently wrong about the shape of the argument. */
+  .cbox-bottom{
+    font-size:calc(22*var(--du));line-height:1.35;color:var(--ink-soft);
+    /* FOUR lines, not three, and the number was read off the printed page rather than chosen.
+       At the twelve-slide target a box has ~131 du below its title and a line costs 29.7, so
+       there is room for 4.4 lines - and a 3-line clamp was ellipsising four of the twelve
+       descriptions mid-word while leaving that room empty. Truncating a bottom line at the size
+       the deck actually ships is the map misstating the argument (DS-211). Past twelve the box,
+       not the clamp, is the binding constraint, so this costs nothing there. */
+    display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .contents-foot{
+    margin-top:var(--sp-3);font-family:var(--font-mono);font-size:calc(21*var(--du));
+    letter-spacing:var(--track-mono);color:var(--ink-soft);
+  }
+
+  /* Backgrounds and rules are most of this design; without this they print as white. */
+  *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
 }
 
 /* ---- seeded defects only. None of this belongs in a deck that is meant to pass. ---- */
@@ -489,7 +750,7 @@ svg{display:block}
  <symbol id="i-wait" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
  <symbol id="i-bus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></symbol>
  <symbol id="i-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
- <symbol id="i-corridor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></symbol>
+ <symbol id="i-choice" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/></symbol>
  <symbol id="i-growth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></symbol>
  <symbol id="i-gate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></symbol>
  <symbol id="i-cost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
@@ -509,7 +770,7 @@ svg{display:block}
   <div class="body">
     <div class="title-foot rise" style="--i:3">
       <p class="title-note">Riverbend is an illustrative city. It does not exist. Every figure in this deck
-        is an output of the assumptions shown on the slide that uses it, and none is drawn from a real
+        is an output of the assumptions shown on the slide that uses it. None is drawn from a real
         agency, study or place.</p>
     </div>
   </div>
@@ -942,8 +1203,8 @@ svg{display:block}
       <div class="row"><span class="k">If we miss it</span><span>The programme runs on a three-year cycle. The next award lands in 2030 <span class="est">[est.]</span>.</span></div>
     </div>
   </div>
-  <p class="bottom-line rise" style="--i:4"><b>The grant closes on 31 March 2027, and the 12 March
-    budget vote is the only meeting that can commit it.</b></p>
+  <p class="bottom-line rise" style="--i:4"><b>The 12 March budget vote is the only meeting
+    that can commit the grant before 31 March 2027.</b></p>
   <p class="provenance">Illustrative model</p>
 </section>
 
@@ -1239,7 +1500,16 @@ svg{display:block}
 
 <!-- ============================================================ chrome -->
 <nav class="chrome" aria-label="Deck navigation">
-  <ul class="ribbon" id="ribbon"></ul>
+  <!-- The ruler (T-035). `data-scale` is not decoration: DS-217 counts a regular repeating scale
+       as ONE item rather than n, and the gate verifies the claim - uniform mark, uniform pitch,
+       no per-item label at rest - rather than trusting the attribute.
+       The label is aria-hidden because every tick carries its own accessible name. The visible
+       swap is a sighted-user affordance and must not be announced on every focus move. -->
+  <div class="ruler" id="ruler" data-ticks="dot">
+    <ul class="ruler-ticks" id="rulerTicks" data-scale></ul>
+    <i class="ruler-ring" id="rulerRing" aria-hidden="true"></i>
+    <p class="ruler-label" id="rulerLabel" aria-hidden="true"></p>
+  </div>
   <div class="controls">
     <p class="count" id="count" aria-hidden="true"></p>
     <button class="btn" id="prev" aria-label="Previous slide"><span class="chev l"></span></button>
@@ -1354,7 +1624,10 @@ svg{display:block}
   var viewport = document.getElementById('viewport');
   var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
   var countBox = document.getElementById('count');
-  var ribbonBox = document.getElementById('ribbon');
+  var rulerEl = document.getElementById('ruler');
+  var rulerTicks = document.getElementById('rulerTicks');
+  var rulerLabel = document.getElementById('rulerLabel');
+  var rulerRing = document.getElementById('rulerRing');
   var doc = document.getElementById('doc');
   var docBody = document.getElementById('docBody');
   var toDoc = document.getElementById('toDoc');
@@ -1383,18 +1656,167 @@ svg{display:block}
     return 0;
   }
 
-  STAGES.forEach(function(name, i){
-    if (i) { var l = document.createElement('li'); l.className = 'link'; l.setAttribute('aria-hidden','true');
-             ribbonBox.appendChild(l); }
-    var li = document.createElement('li');
-    li.dataset.stageIndex = i;
-    var b = document.createElement('button');
-    b.textContent = name;
-    /* the nav name and the page title come from one source (DS-135) */
-    b.setAttribute('aria-label', 'Go to ' + name + ': ' + slides[firstSlideOfStage(i)].dataset.name);
-    b.addEventListener('click', function(){ go(firstSlideOfStage(i)); countIfSeen(); });
-    li.appendChild(b);
-    ribbonBox.appendChild(li);
+  /* ------------------------------------------------------------------ the slide manifest */
+  /* Number, title, bottom line, stage and mark for every slide, read off the slides rather
+     than authored a second time. This is the ONE derivation: the printed contents page
+     (T-034) and the on-screen index (T-035) are two RENDERINGS of it, not two readings of
+     the deck - which is how the two would drift (L-08). Same principle as firstSlideOfStage
+     above and as buildDoc() cloning slides instead of re-authoring them.
+
+     Add a field here rather than reading a slide directly from a renderer. */
+  /* the mark is keyed to the STAGE, never to slide content - so it does not matter that
+     slide 1 carries no disclosure panel where the other eleven carry one */
+  var STAGE_ICON = ['i-gate','i-window','i-wait','i-choice','i-growth','i-cost','i-ask'];
+
+  function manifest(){
+    return slides.map(function(s, i){
+      var b = s.querySelector('.bottom-line');
+      var st = parseInt(s.dataset.stage, 10);
+      if (isNaN(st) || st < 0 || st >= STAGES.length) st = 0;
+      return {
+        n:         i + 1,
+        title:     s.dataset.name || '',
+        bottom:    b ? b.textContent.replace(/\s+/g, ' ').trim() : '',
+        stage:     st,
+        stageName: STAGES[st],
+        icon:      STAGE_ICON[st]
+      };
+    });
+  }
+
+  /* ------------------------------------------------------------------------ the ruler (T-035) */
+  /* Built from manifest(), the same derivation the printed contents page renders (T-034). The two
+     are renderings of one source rather than two readings of the deck (L-08).
+
+     48 du is the pitch, not a minimum bolted on afterwards: DS-168's target floor inside the stage
+     is 48 x 48, because the stage bottoms out at 0.5 scale. The label needs room on the same row,
+     so capacity is what is left after it - measured below rather than assumed. */
+  /* The pitch is `--disc-hit` = 52 du, the deck's existing target-size token, not DS-168's bare 48
+     floor - the token already sits above the floor on purpose and reusing it keeps a tick the same
+     size as every other hit target in the deck. Written here as a number because the arithmetic
+     needs one; tools/deck/chrome_row.py measures the rendered tick and fails if the two disagree. */
+  var TICK_PITCH_DU = 52;
+  var LABEL_MIN_DU = 260;
+
+  function rulerLayout(n, availDu){
+    var capacity = Math.floor((availDu - LABEL_MIN_DU) / TICK_PITCH_DU);
+    return { capacity: capacity, dense: n > capacity };
+  }
+  /* exported for tools/deck/chrome_row.py, so the bound it reports is the rule the deck SHIPS
+     rather than a copy kept in step by hand (L-08) */
+  window.htmldeckRulerLayout = rulerLayout;
+
+  /* What the ruler actually has: the row, less the controls, less the gap between them. Measured
+     rather than derived, because the controls cost 32% of the row and that was the number T-035's
+     paper estimate of "~30 targets" got wrong. */
+  function rulerAvailableDu(){
+    var kk = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 1;
+    var chromeEl = document.querySelector('.chrome');
+    var ctrlEl = document.querySelector('.controls');
+    if (!chromeEl || !ctrlEl || !kk) return 0;
+    var cw = chromeEl.getBoundingClientRect().width / kk;
+    var ow = ctrlEl.getBoundingClientRect().width / kk;
+    var gap = parseFloat(getComputedStyle(chromeEl).gap) / kk || 0;
+    return cw - ow - gap;
+  }
+
+  var MAN = manifest();
+
+  function buildRuler(){
+    MAN.forEach(function(m, i){
+      var isSection = firstSlideOfStage(m.stage) === i;
+      var li = document.createElement('li');
+      li.dataset.slide = i;
+      if (isSection) li.dataset.section = '';
+
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.tabIndex = -1;                 /* roving: only the current tick is in the tab order */
+      /* The accessible name is independent of the visible swap, because the swap is for the eye
+         (DS-163). A section tick names its stage AND its slide; a small tick names its own slide,
+         never its section - twelve targets carrying seven labels would be exactly the unnamed
+         targets DS-131 forbids. */
+      b.setAttribute('aria-label', isSection
+        ? 'Go to ' + m.stageName + ': ' + m.title
+        : 'Go to slide ' + m.n + ': ' + m.title);
+      b.dataset.label = isSection ? m.stageName : m.title;
+      b.addEventListener('click', function(){ go(i); countIfSeen(); });
+      b.addEventListener('mouseenter', function(){ previewLabel(b.dataset.label); });
+      b.addEventListener('mouseleave', restoreLabel);
+      b.addEventListener('focus', function(){ previewLabel(b.dataset.label); });
+      b.addEventListener('blur', restoreLabel);
+      li.appendChild(b);
+      rulerTicks.appendChild(li);
+    });
+  }
+
+  /* Where the ring sits, MEASURED off the current tick rather than computed from the pitch. The
+     pitch is only uniform while the ruler is undegraded, and a ring that assumed it would drift
+     the moment the small ticks collapsed - so it is read from the box instead. Inside the stage a
+     design unit is one CSS pixel before the transform, which is why dividing by --k gives units. */
+  function placeRing(){
+    if (!rulerRing) return;
+    var li = rulerTicks.children[idx];
+    if (!li) return;
+    var kk = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 1;
+    var lr = rulerEl.getBoundingClientRect();
+    var tr = li.getBoundingClientRect();
+    if (!tr.width) return;                      /* hidden, e.g. in the reading view */
+    rulerEl.style.setProperty('--rx', ((tr.left + tr.width / 2 - lr.left) / kk) + 'px');
+  }
+
+  function previewLabel(text){
+    rulerLabel.textContent = text;
+    rulerLabel.setAttribute('data-preview','');
+  }
+  function restoreLabel(){
+    rulerLabel.removeAttribute('data-preview');
+    var m = MAN[idx];
+    rulerLabel.textContent = m ? m.stageName : '';
+  }
+
+  /* Sized after layout, and again on resize - the controls' width is what decides capacity, and a
+     label can change it. */
+  function fitRuler(){
+    var lay = rulerLayout(MAN.length, rulerAvailableDu());
+    if (lay.dense) rulerEl.setAttribute('data-dense',''); else rulerEl.removeAttribute('data-dense');
+    placeRing();
+    /* Past the bound the small ticks are marks, not targets, so they leave the tab order and stop
+       being clickable. Section ticks stay targets at full pitch. */
+    Array.prototype.forEach.call(rulerTicks.children, function(li){
+      var b = li.querySelector('button');
+      if (!b) return;
+      var isMark = lay.dense && li.dataset.section === undefined;
+      b.disabled = isMark;
+      if (isMark) b.tabIndex = -1;
+    });
+    return lay;
+  }
+
+  /* DS-137: the precedence rule, decided rather than left to whichever listener runs first.
+     Arrow keys already advance the deck from a document-level listener, and the conventional idiom
+     for a tick group is arrow-to-move-within-it. Both cannot own the arrows.
+     RULE: while focus is inside the ruler, the arrows move between ticks and do NOT advance; Enter
+     or Space jumps. Everywhere else they advance the deck, unchanged. Same shape as DS-166, where
+     arrows advance and a separate key toggles disclosure - the two never interact. */
+  function tickButtons(){
+    return Array.prototype.slice.call(rulerTicks.querySelectorAll('button:not([disabled])'));
+  }
+  rulerTicks.addEventListener('keydown', function(e){
+    var bs = tickButtons();
+    var cur = bs.indexOf(document.activeElement);
+    if (cur < 0) return;
+    var to = -1;
+    if      (e.key === 'ArrowRight') to = Math.min(bs.length - 1, cur + 1);
+    else if (e.key === 'ArrowLeft')  to = Math.max(0, cur - 1);
+    else if (e.key === 'Home')       to = 0;
+    else if (e.key === 'End')        to = bs.length - 1;
+    else return;
+    e.preventDefault();
+    e.stopPropagation();      /* belt; the document handler also checks, so neither relies on order */
+    bs[cur].tabIndex = -1;
+    bs[to].tabIndex = 0;
+    bs[to].focus();
   });
 
   /* ---------------------------------------------------------- disclosure (one open at a time) */
@@ -1445,14 +1867,20 @@ svg{display:block}
     countBox.appendChild(strong);
     countBox.appendChild(document.createTextNode(' / ' + slides.length));
 
-    var st = parseInt(slides[i].dataset.stage, 10);
-    Array.prototype.forEach.call(ribbonBox.children, function(li){
-      if (li.dataset.stageIndex === undefined) return;
-      var lit = parseInt(li.dataset.stageIndex,10) === st;
+    /* The ruler lights the SLIDE, where the ribbon lit the stage - the tick is per slide now, and
+       the section ticks show the stage boundaries graphically. `aria-current` moves with it, as it
+       did on the ribbon. Roving tabindex follows too, so tabbing into the ruler lands on where you
+       actually are rather than on slide one. */
+    Array.prototype.forEach.call(rulerTicks.children, function(li, n){
+      var lit = n === i;
       if (lit) li.setAttribute('data-lit',''); else li.removeAttribute('data-lit');
       var b = li.querySelector('button');
-      if (b) { if (lit) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current'); }
+      if (!b) return;
+      if (lit) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current');
+      if (!b.disabled) b.tabIndex = lit ? 0 : -1;
     });
+    if (rulerLabel && !rulerLabel.hasAttribute('data-preview')) restoreLabel();
+    placeRing();
     var name = slides[i].dataset.name;
     document.title = (name === DECK) ? DECK : name + ' — ' + DECK;
     if (opts && opts.focus) slides[i].focus();
@@ -1461,6 +1889,12 @@ svg{display:block}
   document.addEventListener('keydown', function(e){
     if (e.target.matches('input,textarea')) return;
     var k = e.key;
+    /* DS-137, the stated half of the precedence rule. The ruler's own handler already stops these
+       propagating, and this says the same thing again on purpose: the rule is that the ruler owns
+       the arrows while it holds focus, and a rule that depends on which listener was registered
+       first is not a rule. */
+    if (e.target.closest && e.target.closest('.ruler-ticks') &&
+        (k === 'ArrowRight' || k === 'ArrowLeft' || k === 'Home' || k === 'End')) return;
     if (inDoc){
       if (k === 'Escape' || k === 'r' || k === 'R'){ setView(false); e.preventDefault(); }
       return;
@@ -1547,6 +1981,115 @@ svg{display:block}
     });
   }
 
+  /* ------------------------------------------------------------ the printed contents page */
+  /* A RENDERING of manifest(), not a second reading of the deck (T-034). The on-screen index
+     T-035 builds is the other rendering of the same manifest, and the two legitimately differ:
+     this one must fit a single page and is read once to orient, that one scrolls and is read
+     repeatedly to jump.
+
+     Built at start-up rather than on `beforeprint`, because the page has to exist for a print
+     triggered any way at all - the dialog, the menu, a capture - and twelve boxes of DOM is not
+     a cost worth deferring.
+
+     Each box's number and stage name are formatted exactly as the slide's own eyebrow renders
+     them (`01 · WHY NOW`), so a reader matching a box to its page finds the identical string,
+     and the per-stage icon has a label rather than being a glyph to decode. */
+  /* How many columns, and whether the page is too dense to carry descriptions. Pure arithmetic on
+     the slide count - no DOM, no measurement - so it gives the same answer on screen, in print and
+     to the measuring tool.
+
+     THREE columns below ten slides, four above. Columns are what decide the row count, and the row
+     count is what decides how tall a box gets stretched: seven slides at four columns is two rows
+     of 377 du boxes holding 150 du of content, while at three columns it is three rows of 243 -
+     the same height as the twelve-slide page, in wider boxes. The owner's rule was "no MORE than
+     four", so going narrower is available and this is what it is for. */
+  function contentsLayout(n){
+    var cols = n <= 9 ? 3 : 4;
+    var rows = Math.ceil(n / cols);
+    return { cols: cols, rows: rows, dense: rows >= 5 };
+  }
+  /* The one export, and it exists for a reason: tools/deck/contents_bound.py has to measure the
+     layout rule the deck SHIPS rather than a copy of it kept in step by hand (L-08). Nothing in
+     the deck reads this back, and it carries no DOM. */
+  window.htmldeckContentsLayout = contentsLayout;
+
+  function buildContents(){
+    var sec = document.createElement('section');
+    sec.className = 'contents';
+    sec.setAttribute('aria-label', 'Contents');
+
+    var lay = contentsLayout(slides.length);
+    sec.style.setProperty('--ccols', lay.cols);
+    sec.dataset.rows = lay.rows;
+    if (lay.dense) sec.dataset.dense = '';
+
+    var head = document.createElement('div');
+    head.className = 'contents-head';
+    var eyebrow = document.createElement('span');
+    eyebrow.className = 'contents-eyebrow';
+    eyebrow.textContent = 'Contents';
+    var title = document.createElement('h2');
+    title.className = 'contents-title';
+    title.textContent = DECK;
+    head.appendChild(eyebrow);
+    head.appendChild(title);
+    sec.appendChild(head);
+
+    var grid = document.createElement('div');
+    grid.className = 'contents-grid';
+
+    manifest().forEach(function(m){
+      var box = document.createElement('div');
+      box.className = 'cbox';
+
+      var top = document.createElement('div');
+      top.className = 'cbox-top';
+      var num = document.createElement('span');
+      num.className = 'cnum';
+      num.textContent = (m.n < 10 ? '0' : '') + m.n;
+      var st = document.createElement('span');
+      st.className = 'cstage';
+      st.textContent = m.stageName;
+      var ico = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      ico.setAttribute('class', 'cico');
+      ico.setAttribute('aria-hidden', 'true');
+      var use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttribute('href', '#' + m.icon);
+      ico.appendChild(use);
+      top.appendChild(num);
+      top.appendChild(st);
+      top.appendChild(ico);
+
+      var t = document.createElement('h3');
+      t.className = 'cbox-title';
+      t.textContent = m.title;
+
+      var b = document.createElement('p');
+      b.className = 'cbox-bottom';
+      b.textContent = m.bottom;
+
+      box.appendChild(top);
+      box.appendChild(t);
+      box.appendChild(b);
+      grid.appendChild(box);
+    });
+    sec.appendChild(grid);
+
+    /* The one line that reaches the person holding the paper. T-032 put the statement of what
+       print does not preserve into the handover text, which is read by whoever is ABOUT to
+       print and never by whoever is handed the pages (R7 §5). */
+    var foot = document.createElement('p');
+    foot.className = 'contents-foot';
+    foot.textContent = 'Detail behind the disclosure panels is on screen only — '
+                     + 'it is not on these pages.';
+    sec.appendChild(foot);
+
+    /* FIRST, and that is load-bearing: `section.slide:last-of-type` matches by element type, so
+       a <section> appended after slide 12 would make it match nothing and bring back the empty
+       thirteenth page (DS-222's corollary). */
+    stage.insertBefore(sec, stage.firstChild);
+  }
+
   function setView(toDocView){
     if (toDocView === inDoc) return;
     inDoc = toDocView;
@@ -1622,8 +2165,16 @@ svg{display:block}
   window.addEventListener('orientationchange', fit);
   document.addEventListener('fullscreenchange', fit);
   fit();
+  buildRuler();
   buildDoc();
+  buildContents();
+  /* after fit(), because capacity is measured off the laid-out row rather than derived */
+  fitRuler();
+  window.addEventListener('resize', fitRuler);
+  /* the ring is placed for the first time without a transition, or it flies in from the left */
+  rulerEl.setAttribute('data-noanim','');
   go(0);
+  requestAnimationFrame(function(){ rulerEl.removeAttribute('data-noanim'); });
   autoView();
   document.addEventListener('keyup', countIfSeen);
   document.getElementById('next').addEventListener('click', countIfSeen);

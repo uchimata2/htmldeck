@@ -810,9 +810,14 @@ PROBE = r"""
     // landed on slide 1, which has none, so it reported `null` and the verdict passed on nothing
     // measured - L-36's failure inside the instrument rather than in the deck (T-038).
 
-    // DS-168 / 2.5.8 - every target at least 24 CSS px
+    // DS-168 / 2.5.8 - every target at least 24 CSS px. The MINIMUM is reported as well as the
+    // count, because a threshold comparison alone tells a reader whether the deck passes and not
+    // by how much - and `examples/README.md` quoted a smallest-target figure that no command here
+    // printed, so it could only ever be re-measured by hand (T-044).
     out.smallTargets = t.filter(function(el){
       var r = el.getBoundingClientRect(); return r.width < 24 || r.height < 24; }).length;
+    out.smallestTarget = t.length ? Math.round(Math.min.apply(null, t.map(function(el){
+      var r = el.getBoundingClientRect(); return Math.min(r.width, r.height); })) * 10) / 10 : null;
 
     // DS-227 - every panel closed at load. DS-228 - at most one open at a time, which is the
     // precedence rule DS-137 requires and does not itself supply. DS-138 - the open one drops below
@@ -1091,7 +1096,8 @@ def render_verdicts(data):
         # and a gate must fail on "nothing measured" rather than pass on it (L-36).
         ("DS-130", "disclosure control in the tab order: %s" % data.get("currentDiscReachable"),
          data.get("currentDiscReachable") is True),
-        ("DS-168", "targets under 24 CSS px: %d" % data["smallTargets"], data["smallTargets"] == 0),
+        ("DS-168", "targets under 24 CSS px: %d (smallest %s)"
+         % (data["smallTargets"], data.get("smallestTarget")), data["smallTargets"] == 0),
         ("DS-227", "panels closed at load: %d open" % data["panelsOpenInitially"],
          data["panelsOpenInitially"] == 0),
         ("DS-228", "panels open at once: %s" % data.get("panelsOpenAfterTwo"),
