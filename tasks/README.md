@@ -44,6 +44,7 @@ happened.
 | [T-055](T-055-a-variant-that-leaves-malformed-markup.md) | Close the slide-is-not-a-section variant's open tag, so it tests the tag and not parser repair | `proposed` | specify | - | - |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `proposed` | specify | - | - |
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `proposed` | specify | - | - |
+| [T-059](T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md) | Theme swap overwrites its input when -o is omitted | `proposed` | specify | - | - |
 
 ## Closed
 
@@ -99,6 +100,6 @@ happened.
 
 ## Next ID
 
-`T-059`
+`T-060`
 
 <!-- end generated -->
