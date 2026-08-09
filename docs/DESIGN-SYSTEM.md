@@ -113,7 +113,7 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | DS-033 | Type is sized in **design units on the 1920×1080 stage**. A design unit is not a unit CSS has, so the stage declares one — **once**, as a token — and every size derives from it. **No bare `px` anywhere else inside the stage, and no `vw`, `vh` or `clamp()` at all**: those are what fight the transform. | hard | auto | yes |
 | DS-034 | **Body 24–28 design units** at line-height 1.55. Display ~67. Subhead ~34. | hard | auto | yes |
 | DS-035 | **Nothing below 16 design units, anywhere.** *Amended from 18 by the owner, 2026-08-06 — see [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §2.* | hard | auto | yes |
-| DS-036 | Mono labels 16–18 units, uppercase, tracked ~1.4px — **and never load-bearing.** The 16–17 band is reserved for marginalia; body type stays at DS-034's range. | hard | judge | — |
+| DS-036 | Mono labels 16–18 units, uppercase, tracked ~1.4px. **The 16–17 band is reserved for marginalia and is never load-bearing**; at 18 the mono role is a *label* and may carry meaning — a table's row headers, a legend, a figure's annotation. Body type stays at DS-034's range. *Amended 2026-08-09 by [T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md): the never-load-bearing clause used to bind the whole 16–18 range, which collided with **DS-026**'s requirement that the deck show a visible legend.* | hard | judge | — |
 | DS-037 | `text-wrap: balance` and slight negative tracking on display headings. | default | auto | yes |
 | DS-038 | The mono layer carries the domain vocabulary — key terms in mono, accent underline at first use. | default | judge | — |
 | DS-039 | Line length is a token (`--measure`), defaulting inside 45–75 characters. | default | render | yes |
@@ -221,7 +221,7 @@ modifier available to all the others (§5.3).
 | DS-104 | Mark assumptions subtly at the side, never as noise. | default | render | yes |
 | DS-105 | Provenance mark upper-right. A working link where sources are reachable from where the deck is presented; plain text where they are not. **Never a dead link.** | default | auto | yes |
 | DS-106 | **No banned terminology** — five categories: empty phrases · inflated adjectives (*crucial, pivotal, seamless, leverage, synergy, friction*) · structural tells · syntactic patterns · voice absence. Also *"which is precisely why"*, *"worth saying out loud"*, *genuinely / actually / arguably / precisely*. | hard | auto | yes |
-| DS-107 | **The word-list check is necessary and not sufficient, and must say so.** Text passes all five categories and still reads as machine-written when it has no voice. | hard | judge | — |
+| DS-107 | **The word-list check is necessary and not sufficient, and must say so.** Text passes all five categories and still reads as machine-written when it has no voice. *`Check` moved from `judge` to `—` on 2026-08-09 by [T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md): this binds whoever builds the check, not the deck, which is what `—` means and what DS-190, DS-191, DS-220 and DS-221 already carry.* | hard | — | — |
 
 > **DS-106 is owned by the `humanize-writing` skill.** Point at it; the list above is the inline
 > fallback for machines where it is absent, because a pointer that resolves to nothing checks nothing.

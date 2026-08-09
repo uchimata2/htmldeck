@@ -81,11 +81,13 @@ the two at close, not by either.
 - [ ] The output names condition 9 as the gate's boundary, not as satisfied
 
 **Open questions**
-- **Does the console-error check need a second render, or can the hook ride the existing one?** —
-  whoever builds it. *Recommended: the existing one.* The hook must be injected in `<head>`, before
-  the deck's own script, so a load-time error is caught; `render.make_probe` appends to `</body>`
-  today and would need a second injection point. That is a change to the harness, not a second
-  browser run.
+- ~~**Does the console-error check need a second render, or can the hook ride the existing one?**~~
+  **Answered 2026-08-09: the existing one**, as the recommendation stood. The hook must be injected
+  in `<head>`, before the deck's own script, so a load-time error is caught; `render.make_probe`
+  appends to `</body>` today and needs a second injection point. **That is one change to the
+  harness, not a second browser run** — it keeps `EVALUATION.md` §2's one-render-per-stage cost
+  model, and it avoids the failure mode a second render introduces: two runs that disagree, where
+  the error is real in one and absent in the other and nothing says which reading is the deck's.
 
 ## 2. Plan
 

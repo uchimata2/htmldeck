@@ -62,12 +62,21 @@ measurement and is not restated here:
 - [ ] Printed from a double-clicked file and **looked at** (**L-01**, **L-35**)
 
 **Open questions**
-- **Where does the split fall — by count, or by stage?** Filling sheet one and spilling the
-  remainder is simplest; breaking at a stage boundary keeps the argument's groups intact across the
-  sheets and is the answer more consistent with the deck's spine. — owner decides.
-- **Is the trigger the bound (16) or the hard limit (24)?** Splitting at 16 keeps every entry's
-  description; splitting at 24 keeps the page count down and accepts a description-free map in
-  between. — owner decides.
+- ~~**Where does the split fall — by count, or by stage?**~~ **Answered 2026-08-09: at a stage
+  boundary.** The contents page exists to show the argument's structure, so a split that cuts a
+  stage in half renders the argument as a paging artifact — the reader meets *where am I* at the
+  sheet break, which is the failure the ruler was built to prevent. Filling sheet one and spilling
+  the remainder is simpler to build and was rejected on that: the printed sheet **is** the
+  deliverable here, not an export of it.
+- ~~**Is the trigger the bound (16) or the hard limit (24)?**~~ **Answered 2026-08-09: 16, the
+  measured bound.** `contents_bound.py` measured **16 entries with descriptions against 24
+  without**, and the description is what makes a contents page more than a list of titles.
+  Splitting at 24 keeps the page count down and accepts a description-free map anywhere between 17
+  and 24 — a quality cliff nobody chose per deck and nothing would report.
+
+*Both answered while [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) was closing
+out the audit run, so the task is fully specified whenever it is picked up. **It stays parked**: it
+only bites past 24 slides and the target is 12.*
 
 ## 2. Plan
 

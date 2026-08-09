@@ -523,14 +523,43 @@ looked at because it assumed nobody would try.
 rules that were written off for a reason other than *this needs a reading of the content*, and
 closing them took the gate to 78 of 111.
 
+**DS-036 is the third, found the same way one layer up** —
+[T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md), 2026-08-09, from the
+hard-judge checklist's first run rather than from a mechanical check. *Mono labels 16–18 units …
+**and never load-bearing***, read across the whole range, fails the reference deck everywhere the
+mono role does its job: the ledger's row headers, the figure annotation reading `44% OF THE TRIP`,
+and the legend.
+
+**The legend is what settles it, because DS-026 requires one.** *Semantic roles fixed deck-wide …
+**with a visible legend*** is `hard`. If mono at 18 may not carry meaning, the legend cannot be
+mono; if the legend may not be mono it has to be body type, at which point the decoder for the
+colour semantics is typographically indistinguishable from the content it decodes. **Two `hard`
+rules binding against each other is the *"a compliant deck could not exist"* class from §2.1**, and
+it is settled the same way: by the reason, not by the wording.
+
+**The reason is in the rule's own second sentence.** *The 16–17 band is reserved for marginalia*
+already names the band the load-bearing ban is about — marginalia is what may not carry the
+argument. **18 is the label role**, and a label that carries no meaning is not a label. So the
+amendment binds *never load-bearing* to 16–17 and lets 18 do what the deck has always used it for.
+
+**The deck did not move, and that was the closer call of the two.** Changing it means taking the
+row headers and the legend out of mono, which reshapes the archetype
+[T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) validated the whole
+ruleset against, forces DS-035 and DS-063 to be re-measured, and solves a wording problem with a
+design change. **DS-208 went the other way in the same task** — *Frequency has no ribbon* became
+*The general fund carries this* — because there the rule's reason was intact and only the deck
+breached it: a reader who takes "ribbon" literally gets nothing, and the slide loses only the joke.
+**Two rules failed together and moved in opposite directions**, which is the point of asking which
+side the reason is on rather than which side is cheaper.
+
 ---
 
-## 5.8 The twenty-five `hard` `judge` rules — gated, not demoted
+## 5.8 The `hard` `judge` rules — gated, not demoted
 
 `EVALUATION.md` §1 declares every `hard` rule a gate. Eighty-five are `auto` or `render` and the
 mechanical gate owns them; four have `Check: —` and bind whoever builds a check rather than the deck.
-**The remaining twenty-five are `judge`, and until 2026-08-09 nothing produced a verdict for any of
-them** — eleven were not named anywhere in `EVALUATION.md`, four of those being §3.4's deliverable
+**The remaining twenty-five were `judge`, and until 2026-08-09 nothing produced a verdict for any of
+them** — twenty-four after DS-107 moved to `Check: —`, below — eleven were not named anywhere in `EVALUATION.md`, four of those being §3.4's deliverable
 contract, the section this document's §3 records as the one the owner named after reading the deck.
 
 **The choice was between gating them by judgement and dropping the word *gate*.** They are not the
@@ -549,7 +578,7 @@ wrong number on the title slide and an 84%.* That reason is about **dilution by 
 nothing about who observes the failure — so it forbids scoring them and does not permit ignoring
 them. The checklist emits rule IDs and no numbers, which is exactly what the reason asks for.
 
-**What made it affordable.** Twenty-five yes/no judgements inside a pass that already reads the whole
+**What made it affordable.** Two dozen yes/no judgements inside a pass that already reads the whole
 deck end to end, so §8.1's cost of two passes per measurement round is unchanged. A separate pass was
 rejected for the reason §8.1 already gives against a pass per slide: the second read buys nothing the
 first cannot see.

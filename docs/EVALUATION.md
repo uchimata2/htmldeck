@@ -58,8 +58,10 @@ python tools/deck/ruleset.py --gates
 | `Check: —` | Nobody. These bind whoever builds a check, not the deck |
 
 **The checklist exists because twenty-five `hard` rules were declared gates and gated by nothing.**
+*Twenty-four now — DS-107 moved to `Check: —` on 2026-08-09, its subject being the checker rather than
+the deck ([T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md)).*
 Stages 3 and 4 produce 0–4 dimension scores, and this section says `hard` rules are never scored —
-so those twenty-five were simultaneously declared gates and excluded from the only machinery that
+so those were simultaneously declared gates and excluded from the only machinery that
 touched them. Eleven were named nowhere in this document at all, four of them §3.4's deliverable
 contract. **That is L-41 one layer up**: [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md)
 made a silent *mechanical* rule a red run the same afternoon, and the judgement half had no
@@ -392,7 +394,7 @@ two rounds; 6 at the cap of 3. The alternatives were 0 passes (author scores eve
 25 passes for T-024's deck at a fresh-context pass per slide.
 
 **The hard-judge checklist (§1.1) runs inside this pass and does not change that cost.** It is
-twenty-five yes/no judgements over a deck the pass already reads end to end, taken **before** any
+twenty-four yes/no judgements over a deck the pass already reads end to end, taken **before** any
 scoring so a `hard` failure is a defect rather than a number. Giving it a pass of its own was
 rejected for the same reason §8.1 rejects a pass per slide: the second read buys nothing the first
 cannot see.

@@ -820,7 +820,7 @@ The case. [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md) clo
 half completely and correctly — every rule the ruleset puts in a gate's jurisdiction now ends each
 run **checked**, **excused in writing** or **failing**, and a rule in none of them fails the run the
 same afternoon. That device is sound. It is also scoped to `auto` and `render`, and
-`EVALUATION.md` §1 declares **114 `hard`** rules to be gates. **Twenty-five of them are `judge`**,
+`EVALUATION.md` §1 declares **114 `hard`** rules to be gates. **Twenty-five of them were `judge`**,
 so nothing produced a verdict for any of them, eleven were named nowhere in the document at all, and
 a `hard` `judge` rule could be added with nothing anywhere noticing it was unowned — for months,
 across an audit and four reviews ([T-042](../tasks/T-042-audit-the-whole-repository-against-itself.md),
