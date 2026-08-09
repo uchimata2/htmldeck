@@ -268,7 +268,7 @@ recording the fallback. The mechanism is worth copying; the specific tool is not
 **Consequence for the two `O/S` rules.** `humanize-writing` is the right owner of B22/B23, and
 htmldeck should defer to it — but under rule 2 above, the terminology check cannot *depend* on
 it. htmldeck ships its own word-list check as the primary path, states in the output that a word
-list is necessary and not sufficient (which is B23, and which R1 records as contradiction X-10),
+list is necessary and not sufficient (which is B23, and which R1 records as contradiction C-10),
 and treats a fuller voice pass as the enhancement.
 
 ## 8. What was outstanding — now closed

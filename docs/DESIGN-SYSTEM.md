@@ -386,6 +386,11 @@ about to print.
 Stated here so the critique pass and the standard cannot drift apart. **T-004 consumes this list; it
 does not own it.**
 
+**`X-nn` means one of these twelve and nothing else.** `DESIGN-RATIONALE.md` §2's source conflicts
+were also `X-n` until 2026-08-09, separated from these only by a leading zero and cited in the same
+sentences, which produced a wrong citation in the gate's own output; they are `C-nn` now
+([T-047](../tasks/T-047-give-the-rationale-conflicts-their-own-id-namespace.md)).
+
 | ID | Anti-pattern | Label |
 | :--- | :--- | :--- |
 | X-01 | **The agenda slide** — carries no claim, costs attention. | hard |

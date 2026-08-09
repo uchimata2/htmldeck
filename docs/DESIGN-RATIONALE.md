@@ -25,7 +25,7 @@ provenance in [`research/R4-prior-art.md`](research/R4-prior-art.md).
    DS-011, DS-030, DS-001, DS-002.
 2. **An E1/E2 external principle contradicting the habit** — the stated tie-break. **Fired once**, on
    the stage (§3 below).
-3. **A named contradiction X-1…X-11** — resolved individually, §2.
+3. **A named contradiction C-01…C-11** — resolved individually, §2.
 4. **Otherwise, keep.** An E3/E4 principle does not outrank a corpus habit, so it was never a
    conflict. This is most of why the keep count is high.
 
@@ -54,19 +54,28 @@ below by [T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-r
 The generalisation is **L-24**: reading a ruleset tells you whether it is coherent, and building to
 it tells you whether it is possible. These sixteen came from reading. Thirteen more were waiting.
 
+> **These conflicts were `X-1`…`X-11` until 2026-08-09.** They were renamed to `C-nn` by
+> [T-047](../tasks/T-047-give-the-rationale-conflicts-their-own-id-namespace.md), because
+> `DESIGN-SYSTEM.md` §6's twelve **anti-patterns** are also `X-nn` and the two were cited in the
+> same sentences, separated only by a leading zero. It had already produced a wrong citation in the
+> gate's own output. The conflicts moved rather than the anti-patterns, by the *which side moves*
+> test in §3: anti-patterns are cited from five documents and exist to stop the critique pass and
+> the standard drifting apart, and these were cited from one. **An `X-n` in a document older than
+> that date is a conflict, and `C-0n` is where it went.**
+
 | # | The tension | Resolution |
 | :--- | :--- | :--- |
-| **X-1** | CDN libraries **vs** self-contained | Self-containment, and it generalises. The icon-sprite pattern is the general principle: embed only what is used. R5 measured a whole deck at 192 KB — no cost argument remains. → DS-001, DS-113 |
-| **X-2** | Never hand-draw icons **vs** no external references | Not a conflict. Embedding an icon set's *official* symbols is using the set. → DS-112, DS-113 |
-| **X-3** | "No overdose", "no ambient motion" **vs** the brief's rich animation | Resolved by §4 — motion must encode something. The four-motion vocabulary already implements it. *The sharpest conflict in the set, and it dissolved rather than being arbitrated.* → DS-140, DS-150 |
-| **X-4** | Canvas effects read as artificial **vs** 3D now wanted | The restraint survives; the suspicion of canvas does not. A particle field that encodes nothing fails in SVG, canvas or WebGL alike. → DS-115, DS-150 |
-| **X-5** | "Aim 8, max 10" **vs** "do not exceed 18" **vs** "completeness overwrites the size limitations" | Three rulings, three decks, all the owner's. **Deck length is a per-deck decision, not a house rule** — averaging would invent a rule no deck follows. What holds across all three is kept: single clean message per slide, and nothing is dropped, it is folded. → DS-082, DS-083, DS-084 |
-| **X-6** | Stated rules run ahead of the artefacts | **Frequency is evidence of effort, not of intent.** A `stated` rule the corpus under-delivered is still a rule — the specs are the considered position, the decks are what time allowed. Applied: `prefers-reduced-motion` (5/12 in the corpus) is promoted to hard, not weakened. → DS-143 |
-| **X-7** | Provenance mark: plain text, no dead links **vs** the owner praising the working link | Both, conditioned on reachability. The underlying rule is *never ship a dead link*; the two decks differ in circumstance, not principle. → DS-105 |
-| **X-8** | "No 3D spins" **vs** "Turn: `rotateY` with `preserve-3d`" | Not a conflict. A 3D *transition between slides* is forbidden; a 3D *reveal of a card* is prescribed. Stated precisely so the ban is not read too widely. → DS-144 |
-| **X-9** | Icons via CDN **vs** self-containment | As X-1. → DS-113 |
-| **X-10** | A word-list check **vs** "text can pass all five and still sound like AI" | Both true. The check is necessary and not sufficient and **must say so** — a clean terminology pass may never be reported as "this reads as human-written". → DS-106, DS-107 |
-| **X-11** | `100dvh` flex slides **vs** the fixed scaled stage | **The stage, and the alternative is ruled out rather than dispreferred** — see §3. |
+| **C-01** | CDN libraries **vs** self-contained | Self-containment, and it generalises. The icon-sprite pattern is the general principle: embed only what is used. R5 measured a whole deck at 192 KB — no cost argument remains. → DS-001, DS-113 |
+| **C-02** | Never hand-draw icons **vs** no external references | Not a conflict. Embedding an icon set's *official* symbols is using the set. → DS-112, DS-113 |
+| **C-03** | "No overdose", "no ambient motion" **vs** the brief's rich animation | Resolved by §4 — motion must encode something. The four-motion vocabulary already implements it. *The sharpest conflict in the set, and it dissolved rather than being arbitrated.* → DS-140, DS-150 |
+| **C-04** | Canvas effects read as artificial **vs** 3D now wanted | The restraint survives; the suspicion of canvas does not. A particle field that encodes nothing fails in SVG, canvas or WebGL alike. → DS-115, DS-150 |
+| **C-05** | "Aim 8, max 10" **vs** "do not exceed 18" **vs** "completeness overwrites the size limitations" | Three rulings, three decks, all the owner's. **Deck length is a per-deck decision, not a house rule** — averaging would invent a rule no deck follows. What holds across all three is kept: single clean message per slide, and nothing is dropped, it is folded. → DS-082, DS-083, DS-084 |
+| **C-06** | Stated rules run ahead of the artefacts | **Frequency is evidence of effort, not of intent.** A `stated` rule the corpus under-delivered is still a rule — the specs are the considered position, the decks are what time allowed. Applied: `prefers-reduced-motion` (5/12 in the corpus) is promoted to hard, not weakened. → DS-143 |
+| **C-07** | Provenance mark: plain text, no dead links **vs** the owner praising the working link | Both, conditioned on reachability. The underlying rule is *never ship a dead link*; the two decks differ in circumstance, not principle. → DS-105 |
+| **C-08** | "No 3D spins" **vs** "Turn: `rotateY` with `preserve-3d`" | Not a conflict. A 3D *transition between slides* is forbidden; a 3D *reveal of a card* is prescribed. Stated precisely so the ban is not read too widely. → DS-144 |
+| **C-09** | Icons via CDN **vs** self-containment | As C-01. → DS-113 |
+| **C-10** | A word-list check **vs** "text can pass all five and still sound like AI" | Both true. The check is necessary and not sufficient and **must say so** — a clean terminology pass may never be reported as "this reads as human-written". → DS-106, DS-107 |
+| **C-11** | `100dvh` flex slides **vs** the fixed scaled stage | **The stage, and the alternative is ruled out rather than dispreferred** — see §3. |
 | **R2 §12.1** | Richness **vs** Mayer's coherence principle | Motion must encode something. §4. |
 | **R2 §12.2** | Line length: reading speed **vs** preference | Optimise for preference, make it a token. A deck is read voluntarily by a reader who can stop, so comfort dominates throughput. → DS-039 |
 | **R2 §12.3** | WCAG 2 **vs** APCA | Conform to AA, design with APCA, never report APCA as conformance. |

@@ -95,7 +95,7 @@ because a shared vocabulary for "how bad is this" is part of the standard, not p
       original wording would have closed clean on a document with no motion rules in it.
 - [ ] No section left as a placeholder
 - [ ] Every rule carries a source reference and a hard/default/guidance label
-- [ ] **All sixteen named conflicts resolved, by ID, with the reason** — X-1…X-11 in
+- [ ] **All sixteen named conflicts resolved, by ID, with the reason** — C-01…C-11 in
       `R1-rules-candidate.md` § *Contradictions to resolve at T-014*, and R2 §12.1…§12.5. Made
       countable during specify: "every conflict found in research" cannot be verified, and this
       project's own *count, don't read* lesson says why that matters.
@@ -162,7 +162,7 @@ was settled; it said "surface and resolve conflicts" when the conflicts are now 
 | # | Step | Output |
 | :-- | :--- | :--- |
 | 1 | Fill the Verdict column on all 154 rules — **by lookup**, not on the merits: R4 §9 gives provenance, R2 gives the evidence grade, and the tie-break turns the pair into a verdict | completed Verdict column in `R1-rules-candidate.md` |
-| 2 | Resolve the sixteen named conflicts by ID — X-1…X-11 and R2 §12.1…§12.5 | resolution table, keyed by ID |
+| 2 | Resolve the sixteen named conflicts by ID — C-01…C-11 and R2 §12.1…§12.5 | resolution table, keyed by ID |
 | 3 | Rule the four candidate changes of direction, each adopted or overruled with the reason | decisions, recorded in §3 below and in the reference |
 | 4 | Write the seven parts of the reference against the *Structure* mapping, every rule labelled **hard / default / guidance** with its source | `docs/DESIGN-SYSTEM.md` |
 | 5 | Pull the **hard** rules into one list stated as testable conditions, for T-005 to consume without re-reading the whole reference | the check-facing section of the reference |
@@ -195,7 +195,7 @@ was settled; it said "surface and resolve conflicts" when the conflicts are now 
   26 defers are boundary (T-020 process, T-005 mechanics, T-004 report format), not indecision.
   Two verification rules were kept **against** the boundary — K1 and K5 — because they are claims
   about what a check may assert, not about how it runs.
-- **Deck length was demoted from a house rule to a per-deck decision — 2026-08-06.** X-5 is three
+- **Deck length was demoted from a house rule to a per-deck decision — 2026-08-06.** C-05 is three
   contradictory rulings on three decks, all the owner's. Averaging them would have invented a rule
   no deck follows. Default 8–12, past 12 needs a recorded reason.
 - **L1 was escalated rather than ruled — 2026-08-06.** The tie-break's answer is clear (1.4.4 and
@@ -220,7 +220,7 @@ Verified by counting, per step 7 of the plan and this project's own *count, don'
 | Every one of the thirteen coverage areas has a home, **and** motion, theming and portability are covered | **met** | Mapping table in §1 above; motion §5.2, theming §1.2, portability §1.1 |
 | No section left as a placeholder | **met** | Zero `TODO`/`TBD`/placeholder matches across the file |
 | Every rule carries a source reference and a hard/default/guidance label | **met** | 140 labelled rule rows; every table row carries both columns |
-| All sixteen named conflicts resolved, by ID, with the reason | **met** | §10 — X-1…X-11 and R2 §12.1…§12.5, counted at exactly 16 rows |
+| All sixteen named conflicts resolved, by ID, with the reason | **met** | §10 — C-01…C-11 and R2 §12.1…§12.5, counted at exactly 16 rows |
 | The Verdict column filled for all 154 rules | **met** | 110 keep · 17 amend · 1 drop · 26 defer = 154; zero empty verdict cells |
 | The four candidate changes of direction each adopted or overruled explicitly | **met** | §9.2 motion-encodes · §9.3 disclosure load-bearing · §9.4 semantic heading · §9.5 A-13 as modifier. All four **adopted** |
 | Ends with a re-scoping proposal where research contradicts `docs/BRIEF.md` | **met** | §9, six entries. §9.1 needs an owner decision; §9.2 asks a wording change only |

@@ -362,7 +362,7 @@ def report(res, verbose=True):
     print("""
 **This gate is necessary and nowhere near sufficient, and the banned-terminology row is the
 sharpest case: text can pass all five categories and still read as machine-written, so a clean
-DS-106 is never "reads as human-written" (DS-107, X-10).** Five of the ten evaluation dimensions -
+DS-106 is never "reads as human-written" (DS-107, C-10).** Five of the ten evaluation dimensions -
 %s - are invisible to any check here and were proven so
 against a seeded-defect deck. A clean run is not a good deck; it is a deck carrying no defect this
 gate was built to see (L-05, DS-191).""" % res["blindTo"])

@@ -58,7 +58,7 @@ a single instance · `stated` written down but under-delivered.
 >    amended D1, J1 and J2.
 > 2. **An E1/E2 external principle that contradicts the habit** — the owner's tie-break. It fired
 >    once, on **L1**, and the result is a re-scoping proposal rather than a ruling.
-> 3. **A named contradiction X-1…X-11** — resolved by its own entry below.
+> 3. **A named contradiction C-01…C-11** — resolved by its own entry below.
 > 4. **Otherwise, keep.** An E3/E4 principle does not outrank a corpus habit, so it was never a
 >    conflict — which is most of why the keep count is high.
 >
@@ -73,13 +73,13 @@ a single instance · `stated` written down but under-delivered.
 | ID | Rule | Freq | Verdict |
 | :--- | :--- | :--- | :--- |
 | A1 | `<section>` per slide | dominant | **keep** |
-| A2 | Target 8 slides, hard ceiling 10; past 8 needs a stated reason | stated | **amend** — X-5 |
+| A2 | Target 8 slides, hard ceiling 10; past 8 needs a stated reason | stated | **amend** — C-05 |
 | A3 | Never fewer than 6 | dominant | **keep** |
 | A4 | Specify slide-by-slide before building — structure, text, visuals, animations, interactions, title, bottom line | stated | **defer → T-020** |
 | A5 | Build the specification page by page, explicitly not in one pass | stated | **defer → T-020** |
 | A6 | Review the *specification* slide-by-slide before any HTML exists | stated | **defer → T-020** |
 | A7 | Build slides in batches so feedback lands mid-build | stated | **defer → T-020** |
-| A8 | Pages sit in a container giving each a boundary, resolution-independent | stated | **keep** — see L1/X-11 |
+| A8 | Pages sit in a container giving each a boundary, resolution-independent | stated | **keep** — see L1/C-11 |
 | A9 | One strong closing line plus one subtle supporting line — nothing else | stated | **keep** |
 | A10 | No speaker notes, presenter markers or script. Deck only | stated | **amend** — BRIEF Q4 |
 
@@ -120,7 +120,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 | B7 | Avoid AI-favoured terminology (the corpus names "friction"; a fuller list must be built) | stated | **amend** — point to `humanize-writing`, carry the list inline (R2 §3.1) |
 | B8 | Embed the domain's key terms naturally throughout — demonstrate the language, don't refer to it | stated | **keep** |
 | B9 | Mark assumptions subtly at the side; never as noise | stated | **keep** |
-| B10 | Provenance label in the upper-right corner — plain text, never a link | stated | **amend** — X-7 |
+| B10 | Provenance label in the upper-right corner — plain text, never a link | stated | **amend** — C-07 |
 | B11 | Grade honestly: solved / substantially / partial / deferred. Being explicit beats implying everything is solved | stated | **keep** |
 | B12 | Visuals aid comprehension for non-expert audiences | stated | **keep** |
 | B13 | **Sentence under 20 words**; paragraph 3–4 sentences; table cell one line | stated | **keep** |
@@ -133,7 +133,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 | B20 | Delete "which is precisely why", "worth saying out loud", genuinely/actually/arguably/precisely | stated | **keep** |
 | B21 | **The reader is bright and new to the field. Anything the owner would have to look up is a defect** | stated | **keep** |
 | B22 | Ban the five AI-tell categories: empty phrases · inflated adjectives (crucial, pivotal, seamless, leverage, synergy, friction) · structural tells · syntactic patterns · voice absence | stated | **amend** — same pointer treatment as B7 |
-| B23 | **A word-list check is not sufficient** — text can pass all five and still read as AI when it has no voice. Voice = a position, varied rhythm, ambivalence, first person where it fits, tolerated imperfection | stated | **keep** — and it binds T-005 (X-10) |
+| B23 | **A word-list check is not sufficient** — text can pass all five and still read as AI when it has no voice. Voice = a position, varied rhythm, ambivalence, first person where it fits, tolerated imperfection | stated | **keep** — and it binds T-005 (C-10) |
 | B24 | Explain by example, not definition — show the model doing work on a real number | variant | **keep** |
 | B25 | Honesty markers visible: `[est.]` preserved, every figure sourced, **no fabricated metrics** | variant | **keep** |
 
@@ -194,17 +194,17 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 | :--- | :--- | :--- | :--- |
 | E1 | **Never hand-draw icons.** Complex objects come from an icon set | stated | **keep** |
 | E2 | Draw particles, connectors and custom diagrams freely in SVG or canvas | stated | **keep** — and the Render-technique decision widens it to WebGL |
-| E3 | Embed the icon set as its official SVG symbols — that is *using* the set, not drawing | stated | **keep** — X-2 |
+| E3 | Embed the icon set as its official SVG symbols — that is *using* the set, not drawing | stated | **keep** — C-02 |
 | E4 | Diagrams as inline SVG; authoring source may keep them as separate files | dominant | **keep** — CLAUDE.md rule 3 prefers SVG where it is as good |
 | E5 | No raster images | dominant | **keep** |
-| E6 | Canvas particle/emission effects read as artificial — use only when extremely restrained | stated | **amend** — X-4: the restraint survives as the *encode* test, not as suspicion of canvas |
+| E6 | Canvas particle/emission effects read as artificial — use only when extremely restrained | stated | **amend** — C-04: the restraint survives as the *encode* test, not as suspicion of canvas |
 | E7 | An accumulation effect must actually accumulate, not fall through | stated | **keep** |
 | E8 | Give `<canvas>` fixed pixel dimensions via HTML attributes; let CSS scale it | stated | **keep** |
 | E9 | **"Boxes everywhere" is the rejected pattern** — card grids, stat strips, pill rows, tables and bulleted lists instead of diagrams is a severity-H failure | stated | **keep** — one of the seventeen unflagged departures; R2 P-01/P-02 back it |
 | E10 | **Branch where the process branches.** Four boxes joined by arrow glyphs is not a flow diagram | stated | **keep** |
 | E11 | Connector lines must have arrowheads and must actually meet their target | stated | **keep** — and R2 P-17 sharpens it: label the arrow too |
 | E12 | Icon set: **Lucide primary, Font Awesome free fallback** | dominant | **keep** |
-| E13 | Embed the icon set as an **SVG symbol sprite containing only the icons used**, referenced by `<use>` | one-off | **keep** — X-1, X-9: this is the general resolution, not a one-off |
+| E13 | Embed the icon set as an **SVG symbol sprite containing only the icons used**, referenced by `<use>` | one-off | **keep** — C-01, C-09: this is the general resolution, not a one-off |
 | E14 | **One icon per concept, used consistently** — a repeated icon is a repeated idea | stated | **keep** |
 | E15 | Every SVG and chart is **theme-aware** — a hard-coded `fill="#ffffff"` stays white in dark mode | stated | **keep** |
 | E16 | Vary chart types deliberately across a deck | stated | **keep** — but subordinate to R2 P-16's encoding ranking; variety never buys a worse encoding |
@@ -223,10 +223,10 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 | F8 | Soft shadows, transparency, shaders allowed — "no overdose" | stated | **amend** — "no overdose" is not testable; replaced by the encode test |
 | F9 | Always respect `prefers-reduced-motion` | stated (5/12) | **keep** — promoted from `stated` to hard; R2 §9 adopts WCAG 2.3.3 above the AA floor deliberately |
 | F10 | Entrance animations with `fill-mode: forwards` keep their stacking context — raise the hovered holder, not the popover | stated | **keep** |
-| F11 | **A named motion vocabulary of exactly four**: Rise (entry, 340 ms, `cubic-bezier(.22,1,.36,1)`, 60 ms stagger) · Current (flow, dasharray 7 6, 4.5 s linear infinite) · Open/Turn/Scale (reveals, 380/420/300 ms) · Pulse-once (1.2 s, never looping) | one-off | **keep** — X-3's resolution rests on it |
+| F11 | **A named motion vocabulary of exactly four**: Rise (entry, 340 ms, `cubic-bezier(.22,1,.36,1)`, 60 ms stagger) · Current (flow, dasharray 7 6, 4.5 s linear infinite) · Open/Turn/Scale (reveals, 380/420/300 ms) · Pulse-once (1.2 s, never looping) | one-off | **keep** — C-03's resolution rests on it |
 | F12 | **Animations max 500 ms**, ease-in-out; inter-slide transition 400–500 ms | stated | **keep** |
 | F13 | Reduced motion degrades the motion but **keeps the semantics** — the dashed arrows stay dashed | stated | **keep** |
-| F14 | **No 3D spins, no flashy zooms, no punchy cuts** — stated independently in two specs | stated | **amend** — X-8: forbids 3D *transitions between slides*, permits the 3D *reveal of a card*. Stated precisely so the ban is not read too widely |
+| F14 | **No 3D spins, no flashy zooms, no punchy cuts** — stated independently in two specs | stated | **amend** — C-08: forbids 3D *transitions between slides*, permits the 3D *reveal of a card*. Stated precisely so the ban is not read too widely |
 | F15 | Charts draw in once; never re-animate on back-navigation | stated | **keep** |
 | F16 | Count-up on headline statistics; one emphasis pulse on the key number per slide | variant | **keep** |
 | F17 | **Interaction reveals otherwise-lost information — never decoration.** One meaningful interaction per slide where it adds signal | stated | **keep** |
@@ -248,7 +248,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 | G6 | **Mouse-wheel navigation between slides** | stated | **keep** |
 | G7 | Click-to-jump from the dots; touch/swipe | stated | **keep** |
 | G8 | The page title and the nav-bar name for that page **must match** | stated | **keep** |
-| G9 | Provenance mark upper-right. *Plain text on one deck, a working link on another — the owner praised the link. Per-deck decision.* | variant | **amend** — X-7 |
+| G9 | Provenance mark upper-right. *Plain text on one deck, a working link on another — the owner praised the link. Per-deck decision.* | variant | **amend** — C-07 |
 | G10 | Assumption marker on the right edge, silent until wanted | one-off | **keep** |
 | G11 | **A spine ribbon showing the deck's argument with the current stage lit** — "the audience never loses the thread" | one-off | **keep** — owner-authored, and R2 P-06/P-20 support it as signalling. R3 A-02 is the structure it displays |
 | G12 | Appendix pages named "Appendix", and the back link names where it goes | stated | **keep** |
@@ -263,7 +263,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 
 | ID | Rule | Freq | Verdict |
 | :--- | :--- | :--- | :--- |
-| L1 | **Fixed 1600×900 stage scaled with `transform: scale()`** — nothing reflows, pixel-identical on any projector, and what was rehearsed is what appears | one-off | **amend** — X-11, and it carries a re-scoping proposal. See below |
+| L1 | **Fixed 1600×900 stage scaled with `transform: scale()`** — nothing reflows, pixel-identical on any projector, and what was rehearsed is what appears | one-off | **amend** — C-11, and it carries a re-scoping proposal. See below |
 | L2 | The stage floats on a darker field with a soft shadow and hairline edge, giving each page its boundary | one-off | **keep** |
 | L3 | A named, reused set of slide archetypes — Hero/Statement · Stat focus · Split compare (ledger) · Process/flow · Chart focus · Timeline · Case file · Loop/chapter marker · Verdict | dominant | **amend** — superseded by R3's 14-archetype catalogue, with Case File promoted out of it as a modifier |
 | L4 | One dominant accent per slide for rhythm | stated | **keep** |
@@ -289,7 +289,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 > stated honestly: drop the fixed stage, or accept a documented deviation from the AA floor and stop
 > claiming AA. Silently keeping both claims is the one option ruled out.
 >
-> X-11's other half — mobile (gap G-11) — is unaffected either way, since the Portability decision
+> C-11's other half — mobile (gap G-11) — is unaffected either way, since the Portability decision
 > already makes mobile secondary.
 
 ## H. Layout
@@ -386,22 +386,30 @@ itself** — they were not silences, they were documents I had not yet read.
 | G-9 | **3D is unexplored, and the corpus argues against it.** 3D transforms in 2/12, WebGL in 0/12, and two specs explicitly forbid 3D spins. The owner now wants 3D | Open | T-011, T-016, T-017 |
 | G-11 | **No mobile position.** Nothing addresses small screens — and the fixed-stage technique (L1) has direct consequences here | Open | owner |
 | G-13 | **No file-size ceiling.** The one self-contained deck is 282 KB with 7 embedded faces; nothing says what is too big | Open | owner → T-013 |
-| G-14 | **Deck-length rule is genuinely contradictory**, not absent — see X-5 | Open | owner |
+| G-14 | **Deck-length rule is genuinely contradictory**, not absent — see C-05 | Open | owner |
 
 ---
 
 ## Contradictions to resolve at T-014
 
+> **Named `X-1`…`X-11` when this note was written, renamed to `C-nn` on 2026-08-09** by
+> [T-047](../../tasks/T-047-give-the-rationale-conflicts-their-own-id-namespace.md). They collided
+> with `DESIGN-SYSTEM.md` §6's anti-patterns, which are also `X-nn`. **The IDs were renamed here
+> rather than left as written, because these are the same eleven objects
+> [`DESIGN-RATIONALE.md`](../DESIGN-RATIONALE.md) §2 resolves** — leaving one document on the old
+> name would have reproduced the two-names-for-one-thing defect in mirror image. Nothing else in
+> this note changed; the findings and their evidence are as recorded.
+
 | # | Tension | Between |
 | :--- | :--- | :--- |
-| X-1 | Use CDN libraries for eye-candy **vs** ship self-contained | E-rules / J1 — resolved once by embedding icons as SVG symbols; does it generalise to a 3D library? |
-| X-2 | Never hand-draw icons **vs** no external references | E1 / J1 — same resolution, worth stating as a general principle |
-| X-3 | "No overdose", "no ambient motion" **vs** the owner's new brief for rich 2D/3D animation | F7 / F8 vs the 2026-08-06 decisions. **The sharpest conflict in the set** |
-| X-4 | Canvas effects read as artificial **vs** 3D effects now wanted | E6 vs the 2026-08-06 decisions |
-| X-5 | **"Aim 8, max 10"** vs **"do not exceed 18"** vs **"completeness overwrites the size limitations"** — three different rulings, three different decks, all the owner's own | A2 — deck length is a **per-deck decision, not a house rule**. But "single clean messages per slide is more important than concision" holds across all three, and progressive disclosure is the stated reconciler: *"nothing is dropped; it is folded"* |
-| X-6 | Stated rules run ahead of the artefacts | §7 of R1 — general policy needed, not case-by-case |
-| X-7 | **Provenance: "plain label, no link, no dead links on an unfamiliar machine"** vs **"the upper right corner link made my day, it's so useful"** | Two decks, opposite rulings, both the owner's. Depends on whether the sources are reachable where the deck is presented |
-| X-8 | **"No 3D spins, no flashy zooms"** and **"Turn: `rotateY` with `preserve-3d`"** | Not actually a conflict — 3D *transition* between slides is forbidden, 3D *reveal* of a card is prescribed. Worth stating precisely so the plugin does not read the ban too widely |
-| X-9 | **Icons via CDN** (Lucide, Font Awesome) vs **self-containment** | Resolved once by embedding an SVG symbol sprite of only the icons used. Does that generalise to Lucide? |
-| X-10 | **A word-list check for AI tells** vs **"text can pass all five and still sound like AI"** | B22 vs B23. Constrains what T-005 may claim: the check is necessary, not sufficient, and must say so |
-| X-11 | **`100dvh` flex slides** (the general convention) vs **fixed 1600×900 scaled stage** (the strongest deck) | L1 — a real fork with consequences for mobile (G-11) and for how overflow is checked (K2–K3) |
+| C-01 | Use CDN libraries for eye-candy **vs** ship self-contained | E-rules / J1 — resolved once by embedding icons as SVG symbols; does it generalise to a 3D library? |
+| C-02 | Never hand-draw icons **vs** no external references | E1 / J1 — same resolution, worth stating as a general principle |
+| C-03 | "No overdose", "no ambient motion" **vs** the owner's new brief for rich 2D/3D animation | F7 / F8 vs the 2026-08-06 decisions. **The sharpest conflict in the set** |
+| C-04 | Canvas effects read as artificial **vs** 3D effects now wanted | E6 vs the 2026-08-06 decisions |
+| C-05 | **"Aim 8, max 10"** vs **"do not exceed 18"** vs **"completeness overwrites the size limitations"** — three different rulings, three different decks, all the owner's own | A2 — deck length is a **per-deck decision, not a house rule**. But "single clean messages per slide is more important than concision" holds across all three, and progressive disclosure is the stated reconciler: *"nothing is dropped; it is folded"* |
+| C-06 | Stated rules run ahead of the artefacts | §7 of R1 — general policy needed, not case-by-case |
+| C-07 | **Provenance: "plain label, no link, no dead links on an unfamiliar machine"** vs **"the upper right corner link made my day, it's so useful"** | Two decks, opposite rulings, both the owner's. Depends on whether the sources are reachable where the deck is presented |
+| C-08 | **"No 3D spins, no flashy zooms"** and **"Turn: `rotateY` with `preserve-3d`"** | Not actually a conflict — 3D *transition* between slides is forbidden, 3D *reveal* of a card is prescribed. Worth stating precisely so the plugin does not read the ban too widely |
+| C-09 | **Icons via CDN** (Lucide, Font Awesome) vs **self-containment** | Resolved once by embedding an SVG symbol sprite of only the icons used. Does that generalise to Lucide? |
+| C-10 | **A word-list check for AI tells** vs **"text can pass all five and still sound like AI"** | B22 vs B23. Constrains what T-005 may claim: the check is necessary, not sufficient, and must say so |
+| C-11 | **`100dvh` flex slides** (the general convention) vs **fixed 1600×900 scaled stage** (the strongest deck) | L1 — a real fork with consequences for mobile (G-11) and for how overflow is checked (K2–K3) |
