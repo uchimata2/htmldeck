@@ -31,6 +31,24 @@ exception — plus one use of it on real text, because a rule nobody has run is 
 the deliverable, not a sweep**: a sweep covers the files that exist on the day it runs, and every
 document written afterwards is uncovered.
 
+**Raised to a deployment rule by the owner, 2026-08-09.** *"No release can be published without
+humanizing human-facing information. Plugin files are not human facing and must be kept AI
+optimized."* Two consequences, and neither is cosmetic:
+
+- **It binds every release, not this one.** A `blocked_by` edge on
+  [T-008](T-008-package-document-and-publish.md) is spent the moment T-008 closes, so the edge
+  cannot carry a standing rule and was never going to. The constraint now lives in
+  [`CLAUDE.md`](../CLAUDE.md) *Publishing constraints*, beside the three rules of the same kind, and
+  the edge stays as the gate on the **first** release.
+- **The agent-facing exclusion is a rule, not a scope note.** It was already listed under *Out*
+  below as a boundary this task would not cross. The owner has made it a positive requirement:
+  plugin files **must be kept** AI-optimized, so a humanizer pass over `SKILL.md` is now a defect
+  rather than merely out of scope, and this task's job includes saying so where a later reader
+  looks.
+
+What that leaves for this task is the **detail and the use**: the covered-set test, the verbatim
+exception, the DS-106 boundary, and one run against real text. The decision itself is taken.
+
 **Why this one**
 Every document here was drafted in an agent session, and the tell is uniform prose rather than any
 one sentence. A reader who bounces off the README never reaches the plugin. This repository already
@@ -83,8 +101,13 @@ stripping them would flatten the structure that makes a document skimmable rathe
 **Acceptance criteria**
 - [ ] The rule exists in one home, states what it covers and what it excludes, and carries the
       exception verbatim
-- [ ] `CLAUDE.md` gains a pointer to it and not the rule itself, so the cost is paid at publication
-      rather than on every turn
+- [ ] ~~`CLAUDE.md` gains a pointer to it~~ — **done ahead of this task, 2026-08-09**, when the owner
+      raised it to a deployment rule. What remains is that the pointer still resolves to the written
+      rule once it exists, and that the summary in `CLAUDE.md` and the rule do not disagree
+- [ ] **The rule binds releases, not this release** — stated so that closing T-008 does not retire it,
+      and so a second release is covered by the same words
+- [ ] **Keeping plugin files AI-optimized is written as a requirement**, not only as this task's
+      *Out* list, since the owner made it one
 - [ ] The rule's covered set is stated as a test a future document can be held against, not as a
       list of today's files
 - [ ] The rule says how it relates to DS-106, so a later reader does not apply both to one text
@@ -125,7 +148,8 @@ gates it on the same reasoning T-079 used: after publishing, the first impressio
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Answer the enablement question, then settle where the rule lives against the cost of `CLAUDE.md` being read every turn | The decision and its rejections, in §3 |
+| 0 | ~~Settle whether the constraint binds at all~~ — **taken by the owner, 2026-08-09**, and already in `CLAUDE.md` *Publishing constraints* | The bullet, and this row as its record |
+| 1 | Answer the enablement question, then settle where the rule's **detail** lives against the cost of `CLAUDE.md` being read every turn | The decision and its rejections, in §3 |
 | 2 | Write the rule: the covered set as a test, the exclusions with the owner's reason, the exception verbatim, the DS-106 boundary, and the *Voice Calibration* escape that is not being taken | `PUBLISHING.md` under `docs/`, or wherever step 1 lands it |
 | 3 | Add the pointer from `CLAUDE.md`, and measure what it costs there | The edited section, and the character count before and after |
 | 4 | Use the rule on real text: draft the repository description a stranger reads, run the skill's draft / audit / final loop on it, and record all three | The before, the audit answers, and the final text, in §3 |
@@ -173,4 +197,5 @@ every project rather than inside this task.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | (no change) | **Raised to a deployment rule by the owner** — *"no release can be published without humanizing human-facing information; plugin files are not human facing and must be kept AI optimized."* The important half is that it binds **every** release: a `blocked_by` edge on [T-008](T-008-package-document-and-publish.md) is spent when T-008 closes, so the constraint could never have lived there and now sits in [`CLAUDE.md`](../CLAUDE.md) *Publishing constraints* beside the three rules of its kind. The edge stays as the gate on the first release. The second half turns this task's *Out* list into a positive requirement: a humanizer pass over `SKILL.md` is now a **defect**, not merely out of scope. Step 3 was therefore done ahead of the task and step 0 records it; what is left here is the detail and one use of it, which is what the task was always for. |
 | 2026-08-09 | → proposed | Adapted from `T-079` in the **taskmd** project at the owner's request, who wants the rule applied across every repository that gets published. The owner's exception is carried **verbatim** and its three pattern numbers were **re-verified against the installed skill** rather than trusted from the copy — `humanizer@humanizer` 2.9.1 does have 15 Overuse of Boldface, 16 Inline-Header Vertical Lists and 18 Emojis, and 14 is the em-dash rule with the *Voice Calibration* escape. Four differences from the source are named in their own section rather than absorbed: **the README already exists here**, so it is the subject rather than something to route around; **DS-106 already governs machine-written terminology for decks and is gated**, so the new rule has to state where its jurisdiction ends; there is no `PUBLISHING.md` under `docs/` to write into; and **every figure in this README is pasted from a run**, which makes "preserve code blocks" a stronger obligation than it was in the source. Made a blocker on [T-008](T-008-package-document-and-publish.md) on the source's reasoning: after publishing, the first impression has been made. |

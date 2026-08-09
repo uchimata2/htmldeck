@@ -30,6 +30,10 @@ The example deck must be written new on a neutral topic — the corpus is real t
 - [ ] Renders offline
 - [ ] No personal, client or machine data anywhere
 - [ ] Installs from a clean clone
+- [ ] **Human-facing text has been humanized, and nothing agent-facing has been** — `CLAUDE.md`
+      *Publishing constraints*, and [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md)
+      for the covered-set test and the owner's exception. **This criterion belongs to every release,
+      not to this task**: closing T-008 retires the blocker edge and not the rule
 
 **Open questions**
 - ~~Marketplace plugin, plain skill package, or both?~~ **Answered 2026-08-07 by the owner: both,

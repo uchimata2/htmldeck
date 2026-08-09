@@ -75,6 +75,14 @@ This repository goes to GitHub. Everything written here must be:
 - **Out-of-the-box.** Clone and run, no path editing.
 - **Font-licence aware.** If fonts are embedded, only ones whose licence permits redistribution.
   Record the licence next to each.
+- **Humanized where a human reads it.** **No release ships until the human-facing text has been
+  through the humanizer** — every release, not the first. The test is *what a stranger reads before
+  installing anything*: today `README.md` and the repository description. **Plugin files are not
+  human-facing and must stay AI-optimized** — the skill, this file, tool docstrings, commit messages
+  and the task record — and a humanizer pass over them is a defect, not a courtesy. Deck copy is
+  DS-106's, gated by `check.py`. Detail and the owner's exception:
+  [T-056](tasks/T-056-humanize-the-human-facing-documents-before-publishing.md), which gates
+  publication until it lands.
 
 ## Verifying
 
