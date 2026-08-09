@@ -53,20 +53,6 @@ ROOT = render.ROOT
 # in the ruleset's `Reach` column, which this file reads rather than restates; a rule the ruleset
 # already excuses never reaches this table.
 DEFERRED = {
-    # ---- the rule and the reference deck disagree, and only the owner can settle which moves
-    "DS-045": "Two readings that disagree about the reference deck. `b{...}` unscoped, which the "
-              "deck does not do, or any descendant `b` selector, which it does four times - "
-              "`.bottom-line b`, `.count b`, `.ledger b`, `.doc .bottom-line b`. The wide reading "
-              "condemns a pattern T-027 and T-028 adopted across twelve slides and that this "
-              "gate's own DS-203 check depends on. CLOSES WHEN: the owner picks a reading. The "
-              "wide check is built and unwired in `audit.ds045_no_bare_b`.",
-    "DS-219": "The rule says *never* and its reason says *no neutral does both*. This deck sets "
-              "three labels inside ACCENT bars, and the accent clears 1.4.11 against the ground "
-              "and 1.4.3 under the label - `contrast.py` measures that pair at 4.5:1 and passes "
-              "it. So the prohibition is wider than the argument it gives. CLOSES WHEN: the rule "
-              "gains a clause for a non-neutral mark, or the three labels move outside the bars. "
-              "The measurement is built: `data['textOnDataMark']`.",
-
     # ---- the rule's subject is a reading of the content, not a fact the file records
     "DS-041": "Which rows are *correlated* is a reading of the content. The DOM records the "
               "tracks; it does not record which values a reader expects to line up, so a grid "

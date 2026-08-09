@@ -232,13 +232,26 @@ def ds044_headings_reset(h):
 
 
 def ds045_no_bare_b(h):
-    """DS-045 - never style a bare `<b>` inside a component. A selector ending in a descendant
-    `b` with no class of its own is exactly that."""
+    """DS-045 as clarified 2026-08-09 - never style the bare `b` ELEMENT SELECTOR.
+
+    The banned shape is a selector whose rightmost compound is `b` and which carries no class, id
+    or attribute anywhere: `b`, `p b`, `section b`. Those reach every `<b>` in the deck, so one
+    component's look becomes a default nothing declared.
+
+    `.bottom-line b` is allowed and is how the deliverable is set - the scope is precisely what
+    stops the leak. The wide reading was tried first, failed the reference deck four times over a
+    pattern twelve slides use, and lost to the harm the rule actually describes.
+    """
     for sel in re.findall(r"([^{}]+)\{", css(h)):
+        if "@" in sel:
+            continue                             # an at-rule prelude, not a selector list
         for part in sel.split(","):
             part = part.strip()
-            if re.search(r"[.#\[][^\s]*\s+b$", part):
-                return False
+            if not part or not re.search(r"(^|\s)b$", part):
+                continue
+            if re.search(r"[.#\[:]", part):
+                continue                         # scoped by a class, id, attribute or pseudo
+            return False
     return True
 
 
@@ -434,9 +447,7 @@ STATIC = [
     ("DS-037", "text-wrap: balance on display headings", ds037_display_headings_balanced),
     ("DS-040", "grid and flexbox both used", ds040_grid_and_flex),
     ("DS-044", "every heading level in use is reset", ds044_headings_reset),
-    # DS-045 is deliberately absent - see `check.py`'s DEFERRED register. The rule admits two
-    # readings that disagree about the reference deck, and `ds045_no_bare_b` below implements the
-    # wide one so the owner can see what it costs before choosing.
+    ("DS-045", "no unscoped rule on the bare b element", ds045_no_bare_b),
     ("DS-065", "no vw/vh/vmin/vmax/pt/cm/in outside print", ds065_units_ride_the_transform),
     ("DS-111", "no embedded object standing in for a diagram", ds111_figures_are_drawn),
     ("DS-118", "no literal colour in a fill= or stroke=", ds118_svg_colour_from_css),
@@ -944,10 +955,21 @@ PROBE = r"""
       }
       return getComputedStyle(document.body).backgroundColor;
     }
-    // DS-219 - never set text on a data mark. A text run whose nearest painted background is an
-    // SVG shape rather than the page is sitting on a mark, and `paintedBehind` is already the
-    // project's definition of "behind" - sharing it is what stops two answers to one question.
-    out.textOnDataMark = [];
+    // DS-219 as amended 2026-08-09 - a label may sit on a mark, and then the mark owes TWO
+    // numbers: itself against the ground at 3:1 (1.4.11) and the label against it at 4.5:1
+    // (1.4.3). The old blanket ban was wider than its own reason, which is about NEUTRALS - and
+    // the amended rule is stricter in one direction the ban never looked at, because it also
+    // catches a mark too PALE to clear the ground under a label that reads perfectly well.
+    out.textOnDataMark = []; out.markPairsFailing = [];
+    function groundOf(el){
+      var n = el.ownerSVGElement || el;
+      while (n && n !== document.documentElement){
+        var bg = getComputedStyle(n).backgroundColor;
+        if (bg && bg !== 'rgba(0, 0, 0, 0)') return bg;
+        n = n.parentElement;
+      }
+      return getComputedStyle(document.body).backgroundColor;
+    }
     var figs2 = stage.querySelectorAll('svg.fig');
     for (var f2=0; f2<figs2.length; f2++){
       var ftexts = figs2[f2].querySelectorAll('text');
@@ -955,18 +977,30 @@ PROBE = r"""
         var te = ftexts[t3];
         if (!(te.textContent||'').trim()) continue;
         var r3 = te.getBoundingClientRect();
-        var cx3 = r3.left + r3.width/2, cy3 = r3.top + r3.height/2, on = null;
+        var cx3 = r3.left + r3.width/2, cy3 = r3.top + r3.height/2, on = null, onFill = null;
         var shapes3 = figs2[f2].querySelectorAll('rect,circle,ellipse,polygon');
         for (var s3=0; s3<shapes3.length; s3++){
           var sr3 = shapes3[s3].getBoundingClientRect();
           if (sr3.width < 4 || sr3.height < 4) continue;
           var fill3 = getComputedStyle(shapes3[s3]).fill;
           if (!fill3 || fill3 === 'none' || fill3 === 'rgba(0, 0, 0, 0)') continue;
-          if (cx3 >= sr3.left && cx3 <= sr3.right && cy3 >= sr3.top && cy3 <= sr3.bottom)
+          if (cx3 >= sr3.left && cx3 <= sr3.right && cy3 >= sr3.top && cy3 <= sr3.bottom){
             on = shapes3[s3].getAttribute('class') || shapes3[s3].tagName;
+            onFill = fill3;
+          }
         }
-        if (on) out.textOnDataMark.push([(te.closest('.slide')||{dataset:{}}).dataset.name,
-                                         (te.textContent||'').trim().slice(0,20), on]);
+        if (!on) continue;
+        var name3 = (te.closest('.slide')||{dataset:{}}).dataset.name;
+        var label3 = (te.textContent||'').trim().slice(0,20);
+        var onText = contrastOf(getComputedStyle(te).fill, onFill);
+        var onGround = contrastOf(onFill, groundOf(te));
+        out.textOnDataMark.push([name3, label3, on,
+                                 onText === null ? null : +onText.toFixed(2),
+                                 onGround === null ? null : +onGround.toFixed(2)]);
+        if (onText === null || onGround === null || onText < 4.5 || onGround < 3)
+          out.markPairsFailing.push([name3, label3, on,
+                                     onText === null ? null : +onText.toFixed(2),
+                                     onGround === null ? null : +onGround.toFixed(2)]);
       }
     }
 
@@ -1116,6 +1150,9 @@ def render_verdicts(data):
         ("DS-160", "third-tier disclosure inside a panel: %d, over %d panel(s)"
          % (data.get("thirdTier", 0), data.get("panelCount", 0)),
          not data.get("thirdTier") and data.get("panelCount", 0) > 0),
+        ("DS-219", "labels on a data mark failing 3:1 to ground or 4.5:1 to text: %d of %d"
+         % (len(data.get("markPairsFailing", [])), len(data.get("textOnDataMark", []))),
+         not data.get("markPairsFailing")),
     ]
 
 

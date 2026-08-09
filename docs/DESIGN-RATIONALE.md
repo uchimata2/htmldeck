@@ -461,6 +461,47 @@ requires, and re-derivable rather than to be trusted from this line.
 
 ---
 
+## 5.7 DS-045 and DS-219 — two rules that said more than they meant
+
+**Both were found by building their checks, and neither was found by reading them.**
+[T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md) wrote a check for each, ran it
+against the reference deck, and got a failure that was not a defect — which is the signal that the
+rule and its reason have come apart. Both were settled the same way: **the reason is the rule, and
+the wording moves to match it.**
+
+**DS-045 — the harm is the leak, not the element.** *Never style a bare `<b>` inside a component*
+admits two readings. Under the wide one — any descendant `b` selector — the reference deck breaks it
+four times, in a pattern [T-027](../tasks/T-027-specify-the-slide-deliverable-and-the-outline-contract.md)
+and [T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) adopted across
+twelve slides and that the gate's own DS-203 check depends on. The narrow one bans `b { … }` and
+leaves `.bottom-line b` alone. **The narrow reading is the one that matches the harm the rule
+describes:** a rule on the element itself reaches every `<b>` in the file, so a component's styling
+becomes a default nothing declared, and the next `<b>` written for emphasis inside that component is
+indistinguishable from the deliverable. A scoped selector cannot leak — the scope is the fix. The
+wide reading would have cost every generated deck a class on every emphasis span and bought no
+reader anything.
+
+**DS-219 — the prohibition outran its own argument.** The rule says *never*, and the reason it gives
+is that **no neutral** clears 3:1 against the ground and carries 4.5:1 text at the same time. That is
+true and it is about neutrals. The reference deck sets three values inside **accent** bars, and the
+accent clears both — `contrast.py` has been measuring that exact pair, *ground text on an accent
+fill*, and passing it, on every run since the module existed. So the rule forbade something its own
+mechanism permits, and the rule's last sentence rules out reading it as taste: *a consequence of the
+accessibility floor, not a stylistic preference.*
+
+The amendment makes the floor's requirement explicit and hands it to the gate: a labelled mark owes
+**two** measurements rather than an exemption. **That is what stops the clause becoming a loophole**
+— *the accent is fine* is an assumption, and `mark ≥ 3:1 against the ground, text ≥ 4.5:1 against the
+mark` is a number. The check is stricter than the old blanket ban in one direction that matters: it
+also catches a mark that is too *pale* to clear the ground, which *never set text on a mark* never
+looked at because it assumed nobody would try.
+
+**Both rules gained coverage by being corrected.** They were the last two of T-005's 31 written-off
+rules that were written off for a reason other than *this needs a reading of the content*, and
+closing them took the gate to 79 of 111.
+
+---
+
 ## 6. Drops and amendments worth knowing
 
 **DS-011 — one palette per deck was dropped.** The corpus rule (C7) is `dominant`; it describes what

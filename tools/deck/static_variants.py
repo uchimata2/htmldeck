@@ -61,6 +61,11 @@ STATIC_VARIANTS = [
          '<line class="axis" x1="150" y1="420" x2="1660" y2="420" stroke="#8D8572"/>')]),
     ("animation-over-the-cap", "DS-141", [
         ("--slide-dur:420ms;", "--slide-dur:900ms;")]),
+    ("styled-bare-b", "DS-045", [
+        # The narrow reading, which is the rule as clarified 2026-08-09: a rule on the ELEMENT
+        # reaches every `<b>` in the deck, so the deliverable's weight becomes a global default.
+        # `.bottom-line b` is deliberately NOT this, and the deck keeps four such selectors.
+        ("</nav>\n", "</nav>\n<style>b{font-weight:800;letter-spacing:.02em}</style>\n")]),
     ("hover-only-reveal", "DS-163", [
         (".disc-btn:hover{border-color:var(--accent);color:var(--ink)}",
          ".disc-btn:hover{border-color:var(--accent);color:var(--ink)}\n"
@@ -85,6 +90,14 @@ RENDER_VARIANTS = [
         ('<div class="disc-panel" id="p2" hidden>',
          '<div class="disc-panel" id="p2" hidden><button class="disc-btn" '
          'aria-expanded="false">More still</button>')]),
+    ("mark-too-pale-to-clear-the-ground", "DS-219", [
+        # **The half the old blanket ban never looked at.** The mark is washed out until it fails
+        # 1.4.11 against the paper, and the label is darkened so it still reads perfectly well on
+        # it - so DS-215 passes, the slide looks fine in a screenshot, and the chart's bars have
+        # stopped being distinguishable from the page. Only DS-219 has anything to say about it.
+        ("</nav>\n",
+         "</nav>\n<style>svg.fig rect.accent{fill:#EBE7F5}\n"
+         "svg.fig text.t-paper{fill:#23211D}</style>\n")]),
     ("chevron-with-no-label", "DS-164", [
         ('<button class="disc-btn" aria-expanded="false" aria-controls="p2">',
          '<button class="disc-btn" aria-expanded="false" aria-controls="p2"><i></i></button>'

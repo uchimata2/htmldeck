@@ -281,11 +281,11 @@ gate honest about a jurisdiction it barely covers, and only then does step 4 sta
 | | Before | After | How it was counted |
 | :--- | ---: | ---: | :--- |
 | Rules owned (`auto` + `render`) | 111 | **111** | `ruleset.py`, from the `Check` column |
-| Checked — a verdict naming that rule | 44 | **77** | rule IDs in `check.py`'s row list |
+| Checked — a verdict naming that rule | 44 | **79** | rule IDs in `check.py`'s row list |
 | Excused **in the ruleset** by `Reach` | 4 | **4** | DS-042, DS-072, DS-210, DS-211 |
-| Excused **in the gate**, in writing | 0 | **31** | `check.DEFERRED`, one reason each |
+| Excused **in the gate**, in writing | 0 | **29** | `check.DEFERRED`, one reason each |
 | **Silent — no verdict, no reason** | **64** | **0** | owned − checked − excused |
-| Demonstrated failing on purpose | 14 | **32** | four suites: 7 + 7 + 3 + 15 |
+| Demonstrated failing on purpose | 14 | **34** | four suites: 7 + 7 + 3 + 17 |
 | Content half | 0 | **3 checks + the ledger** | `content.py` |
 
 **The 64 did not become 64 checks, and it was never going to.** The owner's answer was *the account,
@@ -382,16 +382,29 @@ state** — a rule cannot be quietly absent, because absence is what fails the r
   defects the new checks found in the reference deck: two sentences over DS-092's 20-word cap, and
   a sprite icon nothing used.
 
-**Two questions for the owner, both excused in writing until answered**
-- **DS-045** — which reading? The narrow one costs nothing; the wide one makes the reference deck
-  non-conformant in four places.
-- **DS-219** — the rule says *never* and its reason says *no neutral does both*. Does a non-neutral
-  mark get a clause, or do three labels move outside their bars?
+**The two questions raised here were settled the same day — 2026-08-09**
+
+The owner delegated both. Each was decided **for the reason the rule already gives**, which is the
+only ground available when a rule and a conforming deck disagree: the wording moves to match the
+argument, not the other way round. Both rules gained a real check, so the account went **77 → 79
+checked and 31 → 29 excused**, and the rationale for each is in
+[`DESIGN-RATIONALE.md`](../docs/DESIGN-RATIONALE.md) §5.7.
+
+- **DS-045 — the narrow reading.** *Never style the bare `b` element selector.* A rule on the
+  element reaches every `<b>` in the deck; a scoped one cannot leak, and the scope is the fix the
+  harm describes. `.bottom-line b` stays. Checked, and `styled-bare-b` proves it fails.
+- **DS-219 — the clause, with two numbers rather than an exemption.** A label may sit on a mark when
+  that mark's own pair is **measured**: ≥ 3:1 against the ground and ≥ 4.5:1 under the text. The
+  deck's three labelled accent bars measure **6.5:1 on both**, so the blanket ban was forbidding
+  something its own mechanism permits. **The amended rule is stricter in the direction the ban never
+  looked**: `mark-too-pale-to-clear-the-ground` seeds a washed-out bar with a dark, perfectly
+  legible label — DS-215 passes, the slide looks fine, and only DS-219 objects.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | (no change) | **Both open questions settled, by the owner's delegation, and both rules gained a check rather than an exemption.** DS-045 takes the narrow reading and DS-219 gains the two measurements its own reason implies. **Neither was decided on taste:** a rule and a conforming deck disagreeing means the wording has drifted from the argument, and the argument is what survives. DS-219 is now *stricter* than the ban it replaced - it catches a mark too pale to clear the ground, which *never set text on a mark* never looked at because it assumed nobody would try. Account: **79 checked, 29 excused, 0 silent**, and the seeded-defect count is 34. |
 | 2026-08-09 | → done | **Silent went from 64 to 0, and that is the deliverable — not the 33 new checks.** 77 of 111 rules are decided and the other 34 are named with a reason and a closing condition, derived from the ruleset every run. **The self-tests earned their place twice on the way:** the gate refused to run over an excusal written as *"See DS-222"* rather than as an argument, and the new variant suite caught **two of its own checks unable to see their own seeded defect** — DS-141 could not read a duration held in a token, which is where DS-033 requires every duration to live, and DS-092's sentence splitter cut `$5.6M` in half so a 28-word sentence read as three short ones. Both were green before the suite existed. **One criterion is not met and is named rather than reworded:** the console-error hook was planned and not built, so a deck that logs an error and carries on passes. **Three genuine defects in the reference deck** went to [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md) rather than being fixed here. **Two ruleset questions are the owner's** — DS-045's two readings and DS-219's *never* against its own reason — and both are excused with the argument on each side rather than settled by whoever was writing a check. |
 | 2026-08-09 | → in_progress | Planned in 14 steps after re-deriving the jurisdiction, which the note above §2 required and which mattered: the 64 silent rules are **not the same 64** the 2026-08-08 row counted. Four left the checked set when T-038 removed verdicts citing rules they did not test, and two arrived with the rules it added. |
 | 2026-08-09 | (no change) | **[T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) closed, and it moved the numbers this task plans against — re-derive, do not carry them.** Two rules were added, **DS-227** (closed at load) and **DS-228** (one panel open at a time), so **rules owned is 111** and the count to account for is **107**, not 105. Yesterday's row said *plan against 105*; that number is one day old and already superseded, which is the behaviour the criterion's *derived from the ruleset* wording exists to survive. **The gate's claimed coverage shrank as well as grew.** T-038 swept all 40 verdicts and found seven wrong; four rules — **DS-080, DS-082, DS-111, DS-143** — had a verdict citing them that tested something else, and now have none. All four keep `Reach: yes`, so **the coverage declaration owes each of them a checked-or-excused line**, and this task inherits four gaps that were previously invisible because they read as covered. **DS-137 and DS-161 are no longer a trap for the coverage count** — they are `judge`, the gate has stopped claiming them, and no naive count can score them as covered any more. The *"Not gated here, and why"* tail is still this task's to retire, and `contrast.py`'s failures still carry a pair label rather than §7's criterion number, which is the same defect one file over. |
