@@ -2,8 +2,8 @@
 id: T-067
 title: The published upgrade instructions do not upgrade anything
 type: fix
-status: proposed
-phase: specify
+status: review
+phase: implement
 parent: null
 blocked_by: []
 related: [T-056, T-061]
@@ -13,7 +13,9 @@ business_value: high
 effort: xs
 created: 2026-08-10
 updated: 2026-08-10
-deliverables: []
+deliverables:
+  - README.md
+  - .claude-plugin/plugin.json
 ---
 
 # T-067 — The published upgrade instructions do not upgrade anything
@@ -84,10 +86,51 @@ worth noticing: that pass checks how prose reads, not whether a command works.
 ## 3. Implement
 
 **Decisions & assumptions**
-- <recorded as the work is done>
+
+- **The open question is answered, and the answer is that there is no in-session equivalent —
+  2026-08-10.** `claude plugin --help` lists `update [options] <plugin>`, *"Update a plugin to the
+  latest version (restart required to apply)"*. The published documentation for installing and
+  managing plugins lists `/plugin install`, `/plugin list`, `/plugin enable`, `/plugin disable`,
+  `/plugin uninstall`, and `/plugin marketplace add|list|update|remove` — **and no per-plugin
+  `/plugin update`**. So the README's in-session voice cannot be kept for this instruction, and the
+  upgrade section says "in a terminal rather than inside Claude Code" rather than implying a
+  symmetry that does not exist.
+
+- **The reason `marketplace update` does nothing is worth stating, because without it the correction
+  reads as an arbitrary second command.** Claude Code does update installed plugins after a
+  marketplace refresh — but only where **auto-update is enabled for that marketplace, and
+  third-party marketplaces have it off by default.** That single fact explains the whole report:
+  the catalog moved to 0.1.2, the install record stayed at 0.1.1, and `/plugin install` then
+  correctly reported the plugin was already installed. It also yields a second working route, which
+  the README now gives: enable auto-update for the marketplace in the `/plugin` panel.
+
+- **The bare name was tested rather than quoted from the report:**
+
+```
+$ claude plugin update htmldeck
+Checking for updates for plugin "htmldeck" at user scope…
+✘ Failed to update plugin "htmldeck": Plugin "htmldeck" not found
+```
+
+- **Both release notes were edited by pattern match, requiring exactly one hit each**, so a silent
+  partial edit was not possible. Each reported `1 replacement(s)` before anything was published.
+
+- **Two README figures were stale and are re-derived, per `PUBLISHING.md` §6.** `refcheck.py` reads
+  1034 pointers and 1188 unbound section references, against 1031 and 1184 on the page. **This is
+  L-52 firing for the second time in two days**, and neither drift came from the edit that caused
+  it — the documents grew.
+
+- **A third README claim had gone false and is not a figure.** *"one project … found three defects
+  in two days … All three are fixed"* is now four, and the third took two attempts. Written that way
+  rather than incremented, because "the first fix looked for other instances with a throwaway script
+  that read only part of what it claimed to have read" is the fact a reader deciding whether to
+  trust this plugin should have.
 
 **Outputs produced**
-- <path>
+- `README.md` (the *Upgrade it* section, two re-derived figures, the defect count)
+- `.claude-plugin/plugin.json` (0.1.3)
+- the v0.1.1 and v0.1.2 release notes on GitHub, edited in place
+- `CLAUDE.md`, `docs/BRIEF.md` (the release state)
 
 ## 4. Review
 

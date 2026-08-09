@@ -38,6 +38,28 @@ skill directory is still wired up.
 
 ---
 
+## Upgrade it
+
+Refreshing the marketplace is not an upgrade. `/plugin marketplace update htmldeck` fetches the new
+catalog and stops there, because third-party marketplaces have auto-update switched off by default.
+The version you have installed does not move, and running `/plugin install` again only reports that
+the plugin is already there.
+
+The command that moves it runs in a terminal rather than inside Claude Code:
+
+```bash
+claude plugin update htmldeck@htmldeck
+```
+
+Restart Claude Code afterwards. The `@htmldeck` suffix names the marketplace and is not optional: the
+bare name reports `Plugin "htmldeck" not found`.
+
+If you would rather not run it yourself, open `/plugin`, go to the **Marketplaces** tab, select
+`htmldeck` and choose **Enable auto-update**. Claude Code then refreshes the marketplace and updates
+the installed plugin a few minutes after each session starts.
+
+---
+
 ## What is actually here
 
 | | |
@@ -126,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1031 document pointer(s) checked, 0 broken
-     493 section reference(s) resolved, 0 dead; 1184 not bound to a document and skipped.
+OK - 1035 document pointer(s) checked, 0 broken
+     493 section reference(s) resolved, 0 dead; 1189 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -227,15 +249,17 @@ sources were supplied. That is why the report always says which half it checked.
 Listed here rather than left to be inferred, so nobody has to work out which parts of this page
 describe a plan.
 
-- **It has been installed and used by one project other than this one**, which found three defects
-  in two days: a manifest the installer rejected, a crash on any deck outside the plugin's own
-  drive, and a gate failing decks for not containing what its rules judge. All three are fixed. The
-  sample is one.
+- **It has been installed and used by one project other than this one**, which found four defects in
+  two days: a manifest the installer rejected, a crash on any deck outside the plugin's own drive, a
+  gate failing decks for not containing what its rules judge, and upgrade instructions that upgraded
+  nothing. All four are fixed. The third took two goes, because the first fix looked for other
+  instances with a throwaway script that read only part of what it claimed to have read. The sample
+  is one.
 - **The gate names seven glitch-free conditions it does not check**, and there is no frame-rate
   figure. Both are v0.2, not oversights.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
-is split into two releases. **v0.1** is what a first working plugin needs. It shipped, and is at v0.1.2 after two patches.
+is split into two releases. **v0.1** is what a first working plugin needs. It shipped, and is at v0.1.3 after three patches.
 **v0.2** is everything else already known, including 3D visuals, the frame-rate figure and those
 seven conditions. [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 

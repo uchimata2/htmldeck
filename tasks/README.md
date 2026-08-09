@@ -35,7 +35,7 @@ happened.
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `v0.2` | `proposed` | `specify` | - | - | - | - | T-005, T-016 |
 | [T-059](T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md) | Theme swap overwrites its input when -o is omitted | `v0.2` | `proposed` | `specify` | - | - | - | - | T-007 |
 | [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md) | Check that the README's pasted figures still match the commands that produced them | `v0.2` | `proposed` | `specify` | - | - | - | - | T-050, T-056 |
-| [T-067](T-067-the-published-upgrade-instructions-do-not-upgrade.md) | The published upgrade instructions do not upgrade anything | `v0.1` | `proposed` | `specify` | - | - | - | - | T-056, T-061 |
+| [T-067](T-067-the-published-upgrade-instructions-do-not-upgrade.md) | The published upgrade instructions do not upgrade anything | `v0.1` | `review` | `implement` | - | - | - | - | T-056, T-061 |
 
 ## Closed
 
