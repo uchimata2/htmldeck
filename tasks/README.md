@@ -21,13 +21,14 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | WP3 | `proposed` | specify | T-007, T-016 | T-008, T-019 |
 | [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | WP3 | `proposed` | specify | - | T-008 |
 | [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | WP2 | `proposed` | specify | - | T-002 |
-| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004 | - |
+| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004, T-056 | - |
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | T-002 |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | WP2 | `proposed` | specify | - | - |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | WP3 | `proposed` | specify | - | - |
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | none | `proposed` | specify | - | - |
 | [T-055](T-055-a-variant-that-leaves-malformed-markup.md) | Close the slide-is-not-a-section variant's open tag, so it tests the tag and not parser repair | none | `proposed` | specify | - | - |
+| [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | final | `proposed` | specify | - | T-008 |
 
 ## Closed
 
@@ -81,6 +82,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 
 ## Next ID
 
-`T-056`
+`T-057`
 
 <!-- end generated -->
