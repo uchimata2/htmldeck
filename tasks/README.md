@@ -28,7 +28,7 @@ happened.
 
 | ID | Title | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | `proposed` | specify | - | T-008, T-019 |
+| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | `planned` | implement | - | T-008, T-019 |
 | [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | `proposed` | specify | - | T-008 |
 | [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `proposed` | specify | T-002, T-004, T-056 | - |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `proposed` | specify | - | T-008 |
