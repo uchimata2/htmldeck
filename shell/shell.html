@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+
+<!--
+{{NOTE}}
+
+  EMBEDDED FONT LICENCES — all three faces are SIL Open Font License 1.1, which permits
+  redistribution and embedding provided this notice travels with the font.
+
+    Instrument Serif  Copyright 2022 The Instrument Serif Project Authors
+                      https://github.com/Instrument/instrument-serif
+    Space Grotesk     Copyright 2020 The Space Grotesk Project Authors
+                      https://github.com/floriankarsten/space-grotesk
+    JetBrains Mono    Copyright 2020 The JetBrains Mono Project Authors
+                      https://github.com/JetBrains/JetBrainsMono
+
+    SIL Open Font License 1.1: https://scripts.sil.org/OFL
+    Latin subsets only (DS-008). Sources retrieved from the Google Fonts CSS API.
+
+  Lucide icons, ISC licence (Feather-derived icons additionally MIT).
+    Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022 as part of Feather (MIT).
+    All other copyright (c) for Lucide are held by Lucide Contributors 2022.
+    https://github.com/lucide-icons/lucide/blob/main/LICENSE
+-->
+
+<style id="theme">{{THEME}}</style>
+
+<style>{{COMPONENTS}}</style>
+</head>
+<body>
+
+<!-- icon sprite: only the icons this deck uses, one per concept (DS-113/114) -->
+<svg class="sr" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <g id="lucide" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
+ </defs>
+{{ICONS}}
+</svg>
+
+<div class="viewport" id="viewport">
+<main class="stage" id="stage" aria-label="Presentation">
+{{SLIDES}}
+<!-- ============================================================ chrome -->
+<nav class="chrome" aria-label="Deck navigation">
+  <!-- The ruler (T-035). `data-scale` is not decoration: DS-217 counts a regular repeating scale
+       as ONE item rather than n, and the gate verifies the claim - uniform mark, uniform pitch,
+       no per-item label at rest - rather than trusting the attribute.
+       The label is aria-hidden because every tick carries its own accessible name. The visible
+       swap is a sighted-user affordance and must not be announced on every focus move. -->
+  <div class="ruler" id="ruler" data-ticks="dot">
+    <ul class="ruler-ticks" id="rulerTicks" data-scale></ul>
+    <i class="ruler-ring" id="rulerRing" aria-hidden="true"></i>
+    <p class="ruler-label" id="rulerLabel" aria-hidden="true"></p>
+  </div>
+  <div class="controls">
+    <p class="count" id="count" aria-hidden="true"></p>
+    <button class="btn" id="prev" aria-label="Previous slide"><span class="chev l"></span></button>
+    <button class="btn" id="next" aria-label="Next slide"><span class="chev r"></span></button>
+    <button class="btn" id="toDoc">Read</button>
+    <button class="btn" id="motion" aria-pressed="false">Motion on</button>
+  </div>
+</nav>
+
+</main>
+</div>
+
+<!-- the conforming alternate version. Carries all content, tier two included (DS-070..076) -->
+<article class="doc" id="doc" aria-label="Reading view">
+  <div class="doc-inner">
+    <header class="doc-head">
+      <h1 class="t">{{DOC_TITLE}}</h1>
+      <p class="s">{{DOC_SUB}}</p>
+    </header>
+    <div id="docBody"></div>
+  </div>
+</article>
+<button class="viewswitch" id="toStage">Presentation</button>
+
+<style id="slides">{{COMPOSITION}}</style>
+
+<script>{{SCRIPT}}</script>
+</body>
+</html>

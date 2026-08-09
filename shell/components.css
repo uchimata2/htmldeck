@@ -1,0 +1,581 @@
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--field);color:var(--ink);font-family:var(--font-text);
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+/* every heading level reset, h4 and h5 included — a partial reset is worse than none (DS-044) */
+h1,h2,h3,h4,h5,h6{margin:0;font-weight:400;font-size:inherit;line-height:1.1}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;margin:0;padding:0;cursor:pointer}
+svg{display:block}
+:focus-visible{outline:var(--focus-w) solid var(--accent);outline-offset:var(--focus-offset);
+  border-radius:var(--radius-sm)}   /* 2.4.7 + 2.4.13 adopted */
+
+/* ---------------------------------------------------------------- the stage (DS-060..065) */
+/* DS-200. `transform: scale()` leaves the layout box at 1920x1080, so grid or flex centring
+   positions the UNSCALED box: the track sizes to 1920, start-aligns it, and the scaled stage
+   lands off-centre and clips at the far edge. Anchor at 50%/50% and translate instead. */
+.viewport{position:fixed;inset:0;background:var(--field);overflow:hidden}
+.stage{
+  position:absolute;left:50%;top:50%;
+  width:calc(1920*var(--du));height:calc(1080*var(--du));
+  background:var(--paper);
+  border:var(--hair) solid var(--line-firm);
+  box-shadow:0 var(--shadow-y) var(--shadow-blur) var(--shadow);
+  transform:translate(-50%,-50%) scale(var(--k,1));
+  transform-origin:center center;
+  overflow:hidden;
+  font-size:var(--fs-body);line-height:var(--lh-body);
+}
+.viewport[hidden]{display:none}
+
+/* ---------------------------------------------------------------- slides */
+.slide{
+  position:absolute;inset:0;
+  display:grid;grid-template-rows:auto auto 1fr auto;
+  padding:var(--pad-y) var(--pad-x) var(--pad-bottom);
+  opacity:0;visibility:hidden;
+  transition:opacity var(--slide-dur) var(--slide-ease),visibility 0s linear var(--slide-dur);
+}
+.slide[data-current]{opacity:1;visibility:visible;transition-delay:0s,0s}
+
+/* The printed contents page (T-034) exists only on paper. It is generated into the stage so it
+   inherits the theme and the page box, and this is the single rule that keeps it off the screen -
+   everything else about it lives in `@media print`. The ribbon already carries the structure here;
+   an on-screen index is T-035's question, not this one. */
+.contents{display:none}
+
+.eyebrow{
+  display:flex;align-items:center;gap:var(--sp-2);
+  font-family:var(--font-mono);font-size:var(--fs-mono);
+  letter-spacing:var(--track-mono);text-transform:uppercase;color:var(--ink-faint);
+}
+.eyebrow .tick{width:var(--tick-len);height:var(--hair);background:var(--line-firm)}
+
+.headline{
+  font-family:var(--font-display);font-size:var(--fs-display);
+  letter-spacing:var(--track-display);text-wrap:balance;
+  margin-top:var(--sp-2);color:var(--ink);
+}
+/* Demoted from --fs-lead by T-028. It used to be the second-most-prominent text on the slide,
+   which is the slot DS-203 reserves for the bottom line. It now does the one job it is good at:
+   setting up the slide. On slide 4 it was carrying the deliverable outright; that sentence moved
+   down to the bottom line and this one was rewritten as setup. */
+.standfirst{
+  font-size:var(--fs-body);color:var(--ink-soft);max-width:var(--measure);
+  margin-top:var(--sp-2);
+}
+
+/* ---------------------------------------------------------------- the bottom line (DS-202/203) */
+/* One component, twelve uses. The rule is what makes it findable in two seconds without reading
+   it (DS-203), and it carries the accent so the sentence itself can stay full-strength ink:
+   accent-coloured body text would be the weaker pair against paper, and DS-215 says judge the
+   colour that renders. Anchored to the foot of the slide by its own grid row, so it lands in the
+   same place on all twelve regardless of what the body above it does. */
+.bottom-line{
+  grid-row:4;align-self:end;
+  display:grid;gap:var(--sp-2);
+  margin-top:var(--sp-3);max-width:var(--bottom-measure);
+}
+.bottom-line::before{
+  content:"";width:var(--rule-len);height:var(--rule);background:var(--accent);
+}
+.bottom-line b{
+  font-family:var(--font-display);font-size:var(--fs-bottom);line-height:1.2;
+  font-weight:400;color:var(--ink);text-wrap:pretty;
+}
+.bottom-line--center{justify-items:center;text-align:center;justify-self:center}
+
+/* Rows are placed explicitly, not by source order: a slide with no disclosure would otherwise
+   auto-place its body into the `auto` track and leave the `1fr` one empty. */
+.slide > header{grid-row:1}
+.slide > .disc{grid-row:2}
+.body{grid-row:3;margin-top:var(--sp-3);min-height:0}
+
+/* provenance, upper right, plain text because the source is the model itself (DS-105) */
+.provenance{
+  position:absolute;top:var(--pad-y);right:var(--pad-x);
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  text-transform:uppercase;color:var(--ink-faint);text-align:right;
+}
+
+/* ---------------------------------------------------------------- disclosure (DS-160..170) */
+/* The control sits under the header, not at the foot of the slide. DS-138 requires the panel to
+   drop below its control, and a four-row panel does not fit below a foot-anchored button on a
+   1080-unit stage — so the control moves up rather than the panel opening upward. */
+.disc{position:relative;justify-self:start;margin-top:var(--sp-3);z-index:20}
+.disc-btn{
+  display:inline-flex;align-items:center;gap:var(--sp-2);
+  min-height:var(--disc-hit);padding:0 var(--sp-3) 0 var(--sp-2);
+  border:var(--hair) solid var(--ui-line);border-radius:var(--radius);
+  background:var(--paper-sunk);color:var(--ink-soft);
+  font-size:var(--fs-small);
+}
+.disc-btn:hover{border-color:var(--accent);color:var(--ink)}
+.disc-mark{
+  position:relative;flex:none;
+  width:var(--disc-mark-size);height:var(--disc-mark-size);
+  border-radius:var(--radius-sm);background:var(--accent-wash);
+}
+.disc-mark::before,.disc-mark::after{
+  content:"";position:absolute;left:50%;top:50%;background:var(--accent);
+  transform:translate(-50%,-50%);
+}
+.disc-mark::before{width:var(--disc-mark-bar);height:var(--disc-mark-stroke)}
+.disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);
+  transition:transform var(--turn-dur) var(--turn-ease)}
+.disc-btn[aria-expanded="true"] .disc-mark::after{transform:translate(-50%,-50%) rotate(90deg)}
+.disc-panel{                                     /* opens below the control (DS-138) */
+  position:absolute;top:calc(100% + var(--sp-2));left:0;
+  width:var(--disc-panel-w);
+  padding:var(--sp-3);border:var(--hair) solid var(--line);border-radius:var(--radius);
+  background:var(--paper-sunk);box-shadow:0 var(--shadow-y-sm) var(--shadow-blur-sm) var(--shadow-soft);
+  color:var(--ink-soft);font-size:var(--fs-small);
+}
+.disc-panel[hidden]{display:none}
+.disc-panel .row{display:flex;gap:var(--sp-2);padding:var(--sp-0) 0}
+.disc-panel .row + .row{border-top:var(--hair) solid var(--line)}
+.disc-panel .k{font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  text-transform:uppercase;color:var(--ink-faint);flex:none;width:var(--disc-key-w);
+  padding-top:var(--sp-0)}
+.opening{animation:open var(--open-dur) var(--open-ease) both}
+@keyframes open{from{opacity:0;transform:translateY(calc(-1 * var(--open-rise))) scaleY(var(--open-squash));
+  transform-origin:top center}to{opacity:1;transform:none}}
+
+/* the assumption marker: same component, right edge, silent until wanted (DS-104/139) */
+.disc--edge{justify-self:end}
+.disc--edge .disc-panel{left:auto;right:0;text-align:left}
+
+/* ---------------------------------------------------------------- chrome */
+/* One row since T-028. It was two because twelve dots made the controls too wide to sit beside
+   the stage names without colliding; with the dots gone the second row was costing 48du of a
+   ~90du budget (DS-217) to solve a problem that no longer existed. The stage is always 1920
+   units wide, so this fits or does not fit deterministically - there is no viewport at which it
+   reflows into a collision.
+
+   MEASURED 2026-08-08 by tools/deck/chrome_row.py, correcting a "~1450 of the 1728 available
+   design units" written here before the control labels grew. The row is 1726 usable units, not
+   1728 - the two are the stage's own border - and EVERY one of them is allocated: ribbon 1180,
+   gap 40, controls 506. The ribbon's content wants 1249.5 units inside its 1180 box, and the six
+   flexible connectors absorb the 69.5 difference, which is why the row still renders cleanly
+   while having no slack left at all. It is at capacity now, not one stage short of it. */
+.chrome{
+  position:absolute;left:var(--pad-x);right:var(--pad-x);bottom:var(--chrome-inset);
+  display:flex;align-items:center;gap:var(--sp-4);z-index:8;
+}
+/* THE RULER (T-035), which replaced the stage-name ribbon. The ribbon's footprint depended on how
+   the stages were NAMED - measured at capacity with seven of them, its six connectors already
+   compressed to absorb 69.5 du it did not have - so one more stage, or one longer name, wrapped it
+   into the second row DS-217 exists to prevent. Tick marks have a fixed width, so the element's
+   size stops depending on the words. */
+.ruler{position:relative;display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}
+.ruler-ticks{display:flex;align-items:center;flex:none}
+/* The cell IS the hit area and the mark is what you see, so the target size is the pitch rather
+   than a minimum applied afterwards. `--disc-hit` is 52 du - the same target token the disclosure
+   buttons use, and deliberately above DS-168's 48-unit floor inside the stage. */
+.ruler-ticks li{
+  display:flex;align-items:center;justify-content:center;flex:none;
+  width:var(--disc-hit);height:var(--disc-hit);
+}
+.ruler-ticks button{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;height:100%;border-radius:var(--radius);
+}
+/* A bar, not a dot. DS-131's history is twelve unlabelled DOTS, and drawing dots again would read
+   as the thing that was removed even though these are named targets. A ruler has tick lines. */
+.ruler-ticks button::before{
+  content:"";display:block;width:var(--rule);height:calc(14*var(--du));
+  border-radius:var(--radius-xs);background:var(--ui-line);
+  transition:background var(--scale-dur) var(--scale-ease),height var(--scale-dur) var(--scale-ease);
+}
+/* the stage starts - the seven that stay targets past the bound */
+.ruler-ticks li[data-section] button::before{height:calc(26*var(--du));background:var(--line-firm)}
+.ruler-ticks button:hover::before{background:var(--ink-soft)}
+.ruler-ticks li[data-lit] button::before{background:var(--accent);height:calc(32*var(--du))}
+.ruler-ticks button:focus-visible{outline:var(--rule) solid var(--accent);outline-offset:calc(-1 * var(--focus-offset))}
+
+/* DEGRADED MODE - past the measured capacity the small ticks stop being TARGETS and stay MARKS.
+   That drops the affordance and keeps the information, and it takes DS-168 out of the slide count:
+   the 48-unit floor then governs only the seven section ticks. 4 du is the measured floor - at the
+   0.5 stage hand-over it renders at 2.02 CSS px, and the quiet colour vanishes below that long
+   before the accent does. */
+.ruler[data-dense] .ruler-ticks li:not([data-section]){width:calc(8*var(--du));height:calc(26*var(--du))}
+.ruler[data-dense] .ruler-ticks li:not([data-section]) button{pointer-events:none}
+.ruler[data-dense] .ruler-ticks li:not([data-section]) button::before{
+  width:calc(4*var(--du));height:calc(10*var(--du))}
+.ruler[data-dense] .ruler-ticks li:not([data-section])[data-lit] button::before{
+  background:var(--accent);height:calc(20*var(--du));width:calc(6*var(--du))}
+/* The degraded marks above are bar-shaped. A circle needs equal sides or `border-radius:50%` turns
+   it into an oval, so the dot style restates them square - at 4 du, which is the measured floor:
+   2.02 CSS px at the 0.5 hand-over, below which the quiet colour stops registering at all. */
+.ruler[data-ticks="dot"][data-dense] .ruler-ticks li:not([data-section]) button::before{
+  width:calc(4*var(--du));height:calc(4*var(--du))}
+.ruler[data-ticks="dot"][data-dense] .ruler-ticks li:not([data-section])[data-lit] button::before{
+  width:calc(7*var(--du));height:calc(7*var(--du));background:var(--accent)}
+
+/* ---- TICK STYLE IS A THEME PARAMETER, not a fork of the component (CLAUDE.md rule 4).
+   `dot` is the shipped default and `bar` is the alternative; they share one manifest, one set of
+   targets, one keyboard model and one degradation, so only the mark and the current-position
+   treatment differ and a later template generator can pick between them without re-deriving
+   anything. Both are named targets, so DS-131 as amended admits either - the prohibition moved
+   onto *unnamed*, never onto the shape, and the twelve dots T-028 removed were unlabelled ones. */
+.ruler[data-ticks="dot"] .ruler-ticks button::before{
+  width:calc(8*var(--du));height:calc(8*var(--du));border-radius:50%}
+.ruler[data-ticks="dot"] .ruler-ticks li[data-section] button::before{
+  width:calc(14*var(--du));height:calc(14*var(--du))}
+/* Colour and the ring mark the selection; SIZE goes on meaning section-versus-slide. Growing a lit
+   small dot to section size would conflate the two encodings and make slide 8 read as a stage
+   start - so this rule sets the colour and deliberately leaves the size alone. */
+.ruler[data-ticks="dot"] .ruler-ticks li[data-lit] button::before{background:var(--accent)}
+
+/* The ring around the current dot. It TRANSLATES between positions rather than being redrawn, so
+   the eye follows one object along the ruler instead of watching two dots swap state - which is
+   the whole point of the alternative.
+   DS-140 fixes the motion vocabulary at four and this adds none: a ring sliding on slide change is
+   a TRANSITION, so DS-141 governs it - under 500 ms, eased rather than linear - and it reuses
+   Scale's pair of dials rather than inventing a duration or a curve of its own. Position comes from measurement, not from pitch arithmetic, so
+   it stays correct in the degraded mode where the cells are no longer uniform. */
+.ruler-ring{display:none}
+.ruler[data-ticks="dot"] .ruler-ring{
+  display:block;position:absolute;left:0;top:50%;
+  width:calc(30*var(--du));height:calc(30*var(--du));margin-top:calc(-15*var(--du));
+  border:var(--rule) solid var(--accent);border-radius:50%;
+  transform:translateX(calc(var(--rx,0px) - 15*var(--du)));
+  transition:transform var(--scale-dur) var(--scale-ease);
+  pointer-events:none;
+}
+/* first paint must not fly in from the left */
+.ruler[data-noanim] .ruler-ring{transition:none}
+/* Past the bound the cells stop being uniform and a 30-unit ring would cover its neighbours, so
+   the degraded mode keeps the enlarged accent mark and drops the ring. */
+.ruler[data-dense] .ruler-ring{display:none}
+:root[data-motion="off"] .ruler-ring{transition:none}
+
+/* The label names the tick under the cursor or the focus, and at rest names where you are. It is
+   part of the ruler rather than a third encoding of position (DS-216): remove the ticks and it has
+   nothing to say, which is the test - an independent encoding survives the others being removed.
+   No transition: arrowing through thirty ticks would otherwise flicker it thirty times. */
+.ruler-label{
+  flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  text-transform:uppercase;color:var(--ink-faint);
+}
+.ruler-label[data-preview]{color:var(--ink)}
+
+.controls{display:flex;align-items:center;gap:var(--sp-2);flex:none}
+/* the second encoding DS-216 permits, and it encodes a different fact: the ribbon says which
+   stage, this says how far through the deck. Numerals, not twelve targets. */
+.count{
+  margin-left:var(--sp-3);font-family:var(--font-mono);font-size:var(--fs-mono);
+  letter-spacing:var(--track-mono);color:var(--ink-faint);white-space:nowrap;
+}
+.count b{font-weight:400;color:var(--ink)}
+
+.btn{
+  min-height:var(--disc-hit);min-width:var(--disc-hit);flex:none;white-space:nowrap;
+  padding:0 var(--sp-2);display:inline-flex;align-items:center;gap:var(--sp-1);
+  border:var(--hair) solid var(--ui-line);border-radius:var(--radius);
+  color:var(--ink-soft);font-family:var(--font-mono);font-size:var(--fs-mono);
+  letter-spacing:var(--track-mono);text-transform:uppercase;
+}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn svg{width:var(--icon-ui);height:var(--icon-ui)}
+.btn .chev{width:var(--chev);height:var(--chev);border-right:var(--chev-stroke) solid currentColor;
+  border-bottom:var(--chev-stroke) solid currentColor}
+.btn .chev.l{transform:rotate(135deg)}
+.btn .chev.r{transform:rotate(-45deg)}
+
+/* DS-133 wants a progress indicator that encodes real position; the `05 / 12` counter above is
+   it. The accent bar that used to run along the foot of the stage was a THIRD encoding of the
+   same fact the ribbon and the counter already carry, which is what DS-216 forbids - removed by
+   T-028 rather than kept as decoration. */
+
+/* ---------------------------------------------------------------- shared pieces */
+.icon{width:var(--icon);height:var(--icon);color:var(--accent);flex:none}
+.icon.sm{width:var(--icon-sm);height:var(--icon-sm)}
+.mono{font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  text-transform:uppercase;color:var(--ink-faint)}
+.est{font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  color:var(--ink-faint);text-transform:none}
+.legend{display:flex;gap:var(--sp-3);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:var(--sp-1);white-space:nowrap;
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  text-transform:uppercase;color:var(--ink-soft)}
+.legend i{width:var(--swatch);height:var(--swatch);border-radius:var(--radius-xs);display:block}
+
+/* diagrams inherit the theme; nothing is hard-coded (DS-118) */
+.fig{width:100%;height:100%}
+.fig text{font-family:var(--font-text);fill:var(--ink)}
+.fig .lab{font-family:var(--font-mono);letter-spacing:var(--track-mono);fill:var(--ink-faint);
+  text-transform:uppercase;font-size:var(--fs-mono)}
+.fig .val{font-family:var(--font-mono);fill:var(--ink);font-size:var(--fs-small)}
+/* DS-214: colour SVG text through classes. A presentation attribute loses to any class
+   rule, so `fill=` on a classed element is dead markup that renders the wrong colour. */
+.fig text.t-accent{fill:var(--accent)}
+.fig text.t-soft{fill:var(--ink-soft)}
+.fig text.t-faint{fill:var(--ink-faint)}
+.fig text.t-paper{fill:var(--paper)}
+.fig text.t-ink{fill:var(--ink)}
+.fig text.t-caution{fill:var(--caution)}
+.fig .name{font-size:var(--fs-small);fill:var(--ink)}
+.fig .axis{stroke:var(--data-quiet);stroke-width:1.5;fill:none}
+.fig .grid{stroke:var(--line);stroke-width:1.5;fill:none}
+.fig .accent{fill:var(--accent)}
+.fig .accent-s{stroke:var(--accent);fill:none}
+.fig .quiet{fill:var(--data-quiet)}
+.fig .quiet-s{stroke:var(--data-quiet);fill:none}
+.fig .pos{fill:var(--pos)}
+.fig .neg{fill:var(--neg)}
+.fig .caution{fill:var(--caution)}
+
+/* ---------------------------------------------------------------- motion (DS-140..150) */
+.rise{opacity:0;transform:translateY(var(--rise-dist))}
+.slide[data-played] .rise{animation:rise var(--rise-dur) var(--rise-ease) both;
+  animation-delay:calc(var(--i,0) * var(--rise-stagger))}
+@keyframes rise{from{opacity:0;transform:translateY(var(--rise-dist))}to{opacity:1;transform:none}}
+
+.current{stroke-dasharray:var(--current-dash);animation:current var(--current-dur) linear infinite}
+@keyframes current{to{stroke-dashoffset:-26}}
+
+.pulse{animation:pulse var(--pulse-dur) var(--pulse-ease) 1 both;animation-delay:var(--pulse-delay)}
+@keyframes pulse{0%,100%{transform:scale(1)}45%{transform:scale(1.035)}}
+
+:root[data-motion="off"] .current{animation:none}
+:root[data-motion="off"] .rise,:root[data-motion="off"] .pulse,
+:root[data-motion="off"] .opening{animation:none;opacity:1;transform:none}
+/* reduced motion keeps the semantics: the dashed arrows stay dashed (DS-143) */
+@media (prefers-reduced-motion:reduce){
+  .current{animation:none}
+  .rise,.pulse,.opening{animation:none;opacity:1;transform:none}
+  .slide{transition:none}
+  /* was `.ribbon button::before` until T-035 replaced the ribbon with the ruler - a stale selector
+     here fails silently, since a rule that matches nothing looks exactly like a rule that passed */
+  .ruler-ticks button::before,.ruler-ring{transition:none}
+}
+
+/* ---------------------------------------------------------------- reflow view (DS-070..076) */
+.doc{
+  display:none;height:100%;overflow-y:auto;overflow-x:hidden;
+  background:var(--paper);color:var(--ink);
+  font-size:var(--doc-fs);line-height:1.6;
+}
+.doc[data-on]{display:block}
+.doc-inner{max-width:var(--doc-measure);margin:0 auto;padding:var(--doc-sp-lg) var(--doc-sp) var(--doc-pad-b)}
+.doc-head{border-bottom:var(--doc-hair) solid var(--line);padding-bottom:var(--doc-sp);margin-bottom:var(--doc-sp-lg)}
+.doc-head .t{font-family:var(--font-display);font-size:var(--doc-fs-title);line-height:1.15}
+.doc-head .s{color:var(--ink-soft);margin-top:var(--doc-sp-xs)}
+.doc section{padding:var(--doc-sp-lg) 0;border-top:var(--doc-hair) solid var(--line)}
+.doc section:first-of-type{border-top:0}
+.doc .eyebrow{font-size:var(--doc-fs-mono);letter-spacing:var(--doc-track-mono);gap:var(--doc-sp-sm)}
+.doc .eyebrow .tick{width:var(--doc-tick);height:var(--doc-hair)}
+.doc .headline{font-size:var(--doc-fs-head);margin-top:var(--doc-sp-xs);letter-spacing:normal}
+.doc .standfirst{font-size:var(--doc-fs);margin-top:var(--doc-sp-sm);max-width:none}
+.doc .body{margin-top:var(--doc-sp)}
+.doc .figwrap{height:auto}
+.doc .fig{height:auto}
+.doc .provenance{position:static;text-align:left;font-size:var(--doc-fs-mono);margin-top:var(--doc-sp-lg);letter-spacing:var(--doc-track-mono)}
+.doc .disc{position:static;margin-top:var(--doc-sp-lg)}
+.doc .disc-btn{display:none}
+/* The stage panel is absolutely positioned at a fixed design-unit width. The reading view is a
+   document, not a scaled stage (DS-074), so both have to be undone or it cannot reflow. */
+.doc .disc-panel{position:static;width:auto;max-width:none;font-size:var(--doc-fs-sm);margin-top:0;
+  box-shadow:none}
+.doc .disc-panel .row{display:block}
+.doc .disc-panel .row + .row{margin-top:var(--doc-sp-xs);padding-top:var(--doc-sp-xs)}
+.doc .disc-panel .k{display:block;width:auto;font-size:var(--doc-fs-mono);letter-spacing:var(--doc-track-mono);
+  padding-top:0;margin-bottom:var(--doc-sp-2xs)}
+.doc .disc-lead{font-family:var(--font-mono);font-size:var(--doc-fs-mono);letter-spacing:var(--doc-track-mono);
+  text-transform:uppercase;color:var(--ink-faint);margin-bottom:var(--doc-sp-xs)}
+.doc .mono,.doc .lab{font-size:var(--doc-fs-mono);letter-spacing:var(--doc-track-mono)}
+.doc .rise{opacity:1;transform:none;animation:none}
+.doc .stat-figure{font-size:var(--doc-fs-figure)}
+.doc .ledger{font-size:var(--doc-fs-sm)}
+
+.viewswitch{
+  position:fixed;top:var(--doc-sp-sm);right:var(--doc-sp-sm);z-index:40;
+  min-height:var(--doc-hit);padding:0 var(--doc-sp);display:none;align-items:center;gap:var(--doc-sp-xs);
+  border:var(--doc-hair) solid var(--line-firm);border-radius:var(--doc-radius);
+  background:var(--paper);color:var(--ink-soft);
+  font-family:var(--font-mono);font-size:var(--doc-fs-mono);letter-spacing:var(--doc-track-mono);text-transform:uppercase;
+}
+.viewswitch[data-on]{display:inline-flex}
+.viewswitch:hover{border-color:var(--accent);color:var(--ink)}
+
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* printing is a mode the user forces on, never a constraint on the design (CLAUDE.md rule 5)
+
+   THE PAGINATED STAGE - one slide per printed page. R7 ruled this the printable mode against a
+   measured alternative: the reading view prints as a continuous document, and prints badly for a
+   structural reason, so reshaping it to paginate well would be printing becoming a constraint on
+   the design. Adopted here by T-032; the stylesheet is the one T-018 printed and looked at.
+   What this rendering does not preserve is stated for the user in R7 §5. */
+@media print{
+  /* The page is sized to the slide rather than the slide to the page. A4 would letterbox a
+     16:9 stage and leave the print dialog to scale it anyway; this way the dialog's "fit to
+     page" does the only scaling, and it does it to a page of the right shape. The cost is
+     stated rather than hidden: pinning `size` greys out the dialog's layout controls, which is
+     acceptable only because here the page shape IS the design (R7 §5.3). */
+  @page{ size:1920px 1080px; margin:0 }
+
+  html,body{background:#fff;overflow:visible;height:auto}
+  .viewswitch,.chrome,.controls{display:none!important}
+  .doc{display:none!important}
+
+  /* THE RULE THIS RENDERING LIVES OR DIES BY, and the one whose absence printed blank pages twice
+     (DS-222). The deck switches itself to the reading view when the stage scales below 0.5
+     (DS-071) and sets `viewport.hidden` when it does. PRINTING IS WHAT MAKES IT SWITCH, because
+     printing changes the layout viewport - and since the trigger became height-aware it fires on
+     more page geometries, not fewer.
+     `.viewport[hidden]{display:none}` then hides the stage, and overriding `position` does not
+     touch `display`. So the stage was never in the output at all: one run hid the reading view
+     too and printed nothing; the next left the reading view visible and printed THAT, which
+     looked like a fix and was not. */
+  .viewport,.viewport[hidden]{display:block!important;
+            position:static!important;inset:auto!important;overflow:visible!important;
+            height:auto!important;background:#fff!important}
+  .stage{
+    position:static!important;transform:none!important;
+    width:1920px!important;height:auto!important;
+    border:0!important;box-shadow:none!important;overflow:visible!important;
+  }
+
+  /* Slides are absolutely stacked with only [data-current] visible. Un-stack them, make every
+     one visible, and give each its own page.
+     `relative`, not `static`. A slide is the containing block for its own absolutely positioned
+     descendants - the disclosure panels and the provenance line - and making it static hands them
+     to the page instead, which scatters them across breaks (DS-223). */
+  .slide{
+    position:relative!important;
+    width:1920px!important;height:1080px!important;
+    opacity:1!important;visibility:visible!important;
+    transition:none!important;
+    break-after:page;break-inside:avoid;
+  }
+  /* :last-child does not match - the stage ends with the chrome nav, not with a slide - so the
+     twelfth slide would keep its page break and emit a thirteenth, empty page. Still true after
+     T-028 removed the progress bar: the nav is what follows the last slide. */
+  section.slide:last-of-type{break-after:auto}
+
+  /* Entrance animations hold their pre-animation state until played, so an unplayed slide
+     prints blank or half-risen (DS-224). */
+  .rise{opacity:1!important;transform:none!important;animation:none!important}
+
+  /* Tier two does not survive this rendering: the panels are absolutely positioned overlays on a
+     fixed 1920x1080 box, and opening them onto it covers the content they explain. So the whole
+     affordance goes, button included. Printing a "+ show detail" control onto paper is worse than
+     losing the detail silently - it advertises something the reader can see but cannot reach, on
+     a medium where nothing can be clicked.
+     This is 38.6% of the deck's text (10 panels, 3543 of 9177 characters). The owner ruled the
+     slides only, with the loss stated: the reading view carries all of tier two on screen, so it
+     is not lost, only not on paper (T-032). */
+  .slide .disc{display:none!important}
+
+  /* ---------------------------------------------------------------- the contents page (T-034)
+     Twelve pages of slides arrive with no map: the ruler carries the structure on screen
+     and this stylesheet hides the chrome, so the printed artifact loses the one element that
+     showed where you are. This page is the paper equivalent, and it is GENERATED from the slide
+     manifest - the title and the bottom line are read off the slides, so it cannot drift from
+     the deck it describes (L-08).
+
+     It is also the only surface that reaches the person holding the paper, which is why the
+     screen-only line lives here: what print does not preserve is stated to the reader, not
+     discovered by them (R7 §5).
+
+     PLACED FIRST IN THE DOM, and that is load-bearing rather than aesthetic. `break-after` is
+     cancelled on `section.slide:last-of-type`, which matches the last <section> among its
+     siblings BY ELEMENT TYPE. A <section> added after slide 12 would make that selector match
+     nothing and silently bring back the empty thirteenth page T-018 spent a printed round
+     finding (DS-222's corollary). First, the sections run contents - slide 1 ... slide 12, slide
+     12 is still the last of its type, and the page count is 1 + n with no blank at either end. */
+  .contents{
+    display:flex!important;flex-direction:column;
+    position:relative;width:1920px;height:1080px;
+    padding:var(--pad-y) var(--pad-x);
+    background:var(--paper);color:var(--ink);
+    break-after:page;break-inside:avoid;
+  }
+  .contents-head{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:var(--sp-4)}
+  .contents-eyebrow{
+    font-family:var(--font-mono);font-size:calc(21*var(--du));
+    letter-spacing:var(--track-mono);text-transform:uppercase;color:var(--accent);
+  }
+  .contents-title{font-family:var(--font-display);font-size:calc(52*var(--du));line-height:1.1}
+
+  /* Four columns is the pinned axis and rows are what give. A fifth column measures 324 du
+     (~2.0 in on A4 landscape) and a title is a claim of four to seven words (DS-210), so it
+     would set at three lines and the box would grow TALLER than the row the extra column was
+     meant to shorten. `1fr` rows then divide whatever height is left, so a longer deck
+     compresses vertically on its own with no second code path. */
+  .contents-grid{
+    flex:1;min-height:0;
+    display:grid;grid-template-columns:repeat(var(--ccols,4),1fr);
+    grid-auto-rows:1fr;gap:var(--sp-3);
+  }
+  .cbox{
+    display:flex;flex-direction:column;gap:var(--sp-1);overflow:hidden;
+    padding:var(--sp-2);border:var(--hair) solid var(--line);border-radius:var(--radius);
+    /* Rows divide the page height, so a SHORT deck stretches each box far past its content -
+       at seven slides a box was 377 du holding about 150, and roughly 60% of every box was
+       empty. That does not read as a spacious page, it reads as content that failed to load.
+       The cap is 268 du, a little above the twelve-slide row height (242.8), so the target case
+       is untouched and only over-tall rows are pulled back. Boxes still STRETCH to
+       their row - `align-items` is deliberately left alone - or a twelve-slide page would
+       shrink to its content and lose the look this cap exists to protect. */
+    max-height:calc(268*var(--du));
+  }
+  /* Five rows or more: the description is dropped rather than shrunk. Measured - at four rows it
+     still shows 1.55 lines, at five it shows 0.19, and 0.19 of a line is a few units of clipped
+     letterform that reads as a rendering fault, not as a compact mode. All or nothing. */
+  .contents[data-dense] .cbox-bottom{display:none}
+  .cbox-top{display:flex;align-items:center;gap:var(--sp-2)}
+  /* the stage name gives the icon a label - an unlabelled glyph on paper is decoration, and the
+     reader has no legend to consult and nothing to hover */
+  .cstage{
+    flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+    font-family:var(--font-mono);font-size:calc(21*var(--du));
+    letter-spacing:var(--track-mono);text-transform:uppercase;color:var(--ink-soft);
+  }
+  /* 32 du = 14.0 pt printed on A4 landscape, where the page scales by 0.5847 and a design unit
+     is worth 0.4385 pt. The number is the handle a paper reader navigates by - it is the one
+     thing on this page the ribbon never had to provide - so it is the largest mandated element
+     in the box rather than an afterthought. */
+  .cnum{
+    font-family:var(--font-mono);font-size:calc(32*var(--du));
+    letter-spacing:var(--track-mono);color:var(--ink);
+  }
+  /* keyed to the STAGE, never to slide content - so the fact that slide 1 carries no disclosure
+     panel where the other eleven carry one cannot reach the mark (DS-113/114) */
+  .cico{width:calc(34*var(--du));height:calc(34*var(--du));color:var(--accent);flex:none}
+  /* `flex:none` on both, so the ONLY thing that absorbs compression is the description. Without
+     it the flex column shrinks every child alike, and past 24 slides the title itself was being
+     cut off - measured. That would break DS-226's invariant: a box may lose its description, it
+     may never lose the entry. */
+  .cbox-top{flex:none}
+  .cbox-title{flex:none;font-family:var(--font-display);font-size:calc(26*var(--du));line-height:1.15}
+  /* The floor is 9 pt printed = 21 du, and it is stated in POINTS because "readable" is a
+     property of the reader's eye while a design unit converts at a rate that depends on the
+     paper. 22 du leaves a little headroom above it. This is the element that clamps under
+     compression - a map may shorten a sentence, and the unclamped one is on the slide's own
+     page a few sheets later. What it may never do is drop a box: a contents page that silently
+     omits a slide is confidently wrong about the shape of the argument. */
+  .cbox-bottom{
+    font-size:calc(22*var(--du));line-height:1.35;color:var(--ink-soft);
+    /* FOUR lines, not three, and the number was read off the printed page rather than chosen.
+       At the twelve-slide target a box has ~131 du below its title and a line costs 29.7, so
+       there is room for 4.4 lines - and a 3-line clamp was ellipsising four of the twelve
+       descriptions mid-word while leaving that room empty. Truncating a bottom line at the size
+       the deck actually ships is the map misstating the argument (DS-211). Past twelve the box,
+       not the clamp, is the binding constraint, so this costs nothing there. */
+    display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .contents-foot{
+    margin-top:var(--sp-3);font-family:var(--font-mono);font-size:calc(21*var(--du));
+    letter-spacing:var(--track-mono);color:var(--ink-soft);
+  }
+
+  /* Backgrounds and rules are most of this design; without this they print as white. */
+  *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
+}
