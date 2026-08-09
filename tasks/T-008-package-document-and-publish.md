@@ -31,9 +31,16 @@ The example deck must be written new on a neutral topic — the corpus is real t
 - [ ] No personal, client or machine data anywhere
 - [ ] Installs from a clean clone
 - [ ] **Human-facing text has been humanized, and nothing agent-facing has been** — `CLAUDE.md`
-      *Publishing constraints*, and [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md)
-      for the covered-set test and the owner's exception. **This criterion belongs to every release,
-      not to this task**: closing T-008 retires the blocker edge and not the rule
+      *Publishing constraints*, and [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) for the
+      covered-set test, the exclusions and the owner's verbatim exception. **This criterion belongs
+      to every release, not to this task**: closing T-008 retires the blocker edge and not the rule.
+      For the first release it is already satisfied for `README.md`, by
+      [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md)
+- [ ] **The repository description is set to the drafted text, not written at the console.** It is in
+      [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) §3, humanized and
+      recorded with its draft and audit. It is covered by the rule above, so a description typed
+      fresh into the GitHub field at push time is an **unhumanized human-facing text** and fails this
+      task's own criterion. Copy it; do not retype it
 
 **Open questions**
 - ~~Marketplace plugin, plain skill package, or both?~~ **Answered 2026-08-07 by the owner: both,
@@ -74,6 +81,7 @@ The example deck must be written new on a neutral topic — the corpus is real t
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | (no change) | **The fourth blocker is cleared and it left this task an artifact.** [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) closed, so **publishing now waits on nothing** — all four blockers are done and the only open v0.1 task is this one. Two things landed here rather than being described. The **repository description is drafted, humanized and recorded** in T-056 §3, which closes the gap the row below identified: an output this task needs at publication that nothing here produced. It is now a criterion, worded so that retyping it at the console is a visible failure rather than a quiet one, because a description typed fresh into the GitHub field is an unhumanized human-facing text by the rule's own test. And the humanizing criterion now points at [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) rather than at T-056: the rule outlives the task, and a criterion pointing at a closed task is the spent-edge failure one level up. |
 | 2026-08-09 | (no change) | **Gained a fourth blocker, [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md)** — the humanizing rule for the documents a stranger reads before installing anything, adapted from the taskmd project at the owner's request. A blocker rather than a follow-up, on the source task's reasoning: after publishing, the first impression has been made. It also lands one output *inside* this task's step list — T-056 step 4 drafts the repository description, which is text this task needs at publication and which nothing here currently produces. |
 | 2026-08-09 | (no change) | **Publishing is deliberately held until there is a first publishable version** — the owner's decision, 2026-08-09, taken when [T-050](T-050-write-the-repository-readme.md) made the repository presentable and the question *push it now?* became live. It changes no edge: this task's two remaining blockers are already **T-002** and **T-004**, the two modes the README names as unbuilt, and *mature enough to publish* is that same line seen from the other side. **Three facts about the repository state that whoever publishes will need, none of them obvious from the task record.** There is **no git remote configured at all** — every commit of this project is local, so publishing is a create-and-push, not a push. The work lives entirely on `build/wp2-design-system-and-reference-deck`; **`master` is 96 commits divergent and sits at the line-endings scaffold**, so publishing without deciding what `master` becomes lands a visitor on a repository with no README and none of the ruleset. And the deck's own *Example deck written fresh, on a neutral topic* criterion is **already met** by [`examples/reference-deck.html`](../examples/reference-deck.html) — Riverbend is illustrative and the README says so — which is worth noticing before it is re-planned as outstanding work. |
 | 2026-08-09 | (no change) | **The deck is 214 KB, not the 183 KB the two 2026-08-07 rows below state.** Those rows are left as written — they record what was measured on the day, before [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md), [T-034](T-034-a-contents-page-for-the-printed-deck.md) and [T-035](T-035-the-ruler-navigator.md) added the print mode, the contents page and the ruler — and this row is where a reader picking up packaging finds the current figure. Re-measured by [T-044](T-044-restore-the-seeded-defect-fixture-and-its-claims.md): 219 083 bytes, still zero external references. **The packaging argument is unchanged**: whichever form ships, the package carries one file, and 214 KB is no more of an obstacle than 183 KB was. |

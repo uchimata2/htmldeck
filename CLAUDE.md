@@ -15,9 +15,9 @@ the component contract, the editorial split rule and build mode are all built** 
 tools/deck/check.py <deck>` decides 81 of the 113 rules a gate owns and names the other 32 with a
 reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed specification into a
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
-**`examples/sort-window/` is the first deck nobody authored by hand.** What v0.1 still needs is the
-humanizer pass and publication. Read the brief first — its "Decisions taken" section overrides
-anything older in it.
+**`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
+2026-08-09 as `docs/PUBLISHING.md`, so **v0.1 is down to publication**. Read the brief first — its
+"Decisions taken" section overrides anything older in it.
 
 **The backlog is two release phases, set 2026-08-09 by the owner: `v0.1` and `v0.2`.** v0.1 is a
 working plugin someone can install — build mode, critique mode, the humanizer pass, publish — and
@@ -90,9 +90,11 @@ This repository goes to GitHub. Everything written here must be:
   installing anything*: today `README.md` and the repository description. **Plugin files are not
   human-facing and must stay AI-optimized** — the skill, this file, tool docstrings, commit messages
   and the task record — and a humanizer pass over them is a defect, not a courtesy. Deck copy is
-  DS-106's, gated by `check.py`. Detail and the owner's exception:
-  [T-056](tasks/T-056-humanize-the-human-facing-documents-before-publishing.md), which gates
-  publication until it lands.
+  DS-106's, gated by `check.py`. The covered-set test, the exclusions and the owner's verbatim
+  exception: [`docs/PUBLISHING.md`](docs/PUBLISHING.md), which is the rule and outlives any task.
+  The first release's pass is recorded in
+  [T-056](tasks/T-056-humanize-the-human-facing-documents-before-publishing.md); **every release
+  after it runs the rule again.**
 
 ## Verifying
 

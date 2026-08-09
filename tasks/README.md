@@ -28,8 +28,7 @@ happened.
 
 | ID | Title | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `proposed` | specify | T-056 | - |
-| [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `proposed` | specify | - | T-008 |
+| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `proposed` | specify | - | - |
 
 ### v0.2
 
@@ -43,6 +42,7 @@ happened.
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `proposed` | specify | - | - |
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `proposed` | specify | - | - |
 | [T-059](T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md) | Theme swap overwrites its input when -o is omitted | `proposed` | specify | - | - |
+| [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md) | Check that the README's pasted figures still match the commands that produced them | `proposed` | specify | - | - |
 
 ## Closed
 
@@ -97,9 +97,10 @@ happened.
 | [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | `done` | 2026-08-09 |
 | [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | Settle the two hard-judge failures the checklist's first run found in the reference deck | `done` | 2026-08-09 |
 | [T-053](T-053-enforce-the-headline-ds-091-requires.md) | Enforce the headline DS-091 requires, and excuse the fragment count no check can reach | `done` | 2026-08-09 |
+| [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `done` | 2026-08-09 |
 
 ## Next ID
 
-`T-060`
+`T-061`
 
 <!-- end generated -->
