@@ -408,7 +408,7 @@ Everything below is load-bearing for that sentence and nothing else is in.
 
 | | Why it is in v0.1 |
 | :--- | :--- |
-| [T-016](../tasks/T-016-the-interaction-and-motion-layer.md) — the editorial split rule, its last step | §5.3 gives build mode the mechanics of progressive disclosure and no editorial test, so without it the generator has to guess what belongs behind a click. |
+| ~~[T-016](../tasks/T-016-the-interaction-and-motion-layer.md) — the editorial split rule, its last step~~ **done 2026-08-09** | §5.3 gave build mode the mechanics of progressive disclosure and no editorial test, so without it the generator had to guess what belongs behind a click. **DS-230** now names the four kinds tier two comes in and closes the list, and **DS-231** is the one clause of DS-161 a check can decide. Struck through rather than deleted: what a release phase contained is a fact about the decision, and an item that vanishes is one nobody can check was delivered. |
 | [T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md) — build mode | **Nothing writes a deck.** The gate, the ruleset, both contracts and the reference deck all exist to serve a generator that does not. This is the release. |
 | [T-004](../tasks/T-004-critique-mode-blunt-section-by-section-review.md) — critique mode | CLAUDE.md makes it first-class, and the reason is that it is *the part users cannot do for their own work*. Five of the ten rubric dimensions are invisible to every mechanical check, so a build-only release ships the half a machine can already do. |
 | [T-056](../tasks/T-056-humanize-the-human-facing-documents-before-publishing.md) — humanize the front door | A standing publishing constraint in CLAUDE.md, not a task's preference. It binds every release. |

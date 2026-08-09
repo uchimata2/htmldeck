@@ -10,10 +10,11 @@ plus the prompt structure that briefs them and the critique pass that fixes them
 Grounded in a corpus of real decks, prompts and written style guides from a training programme.
 `docs/BRIEF.md` records what that evidence shows and what to build; `reference/` holds the source
 prompt. **Status: the research is complete; the plugin scaffold exists and runs its own pipeline**
-(`.claude-plugin/`, `skills/htmldeck/`), **and as of 2026-08-09 the build check, the theme contract
-and the component contract are built** — `python tools/deck/check.py <deck>` decides 81 of the 113
-rules a gate owns and names the other 32 with a reason each. **What does not exist yet is build
-mode**: nothing writes a deck, so the reference deck is still the only one there is. Read the brief
+(`.claude-plugin/`, `skills/htmldeck/`), **and as of 2026-08-09 the build check, the theme contract,
+the component contract and the editorial split rule are built** — `python tools/deck/check.py <deck>`
+decides 81 of the 113 rules a gate owns and names the other 32 with a reason each. **What does not
+exist yet is build mode**: nothing writes a deck, so the reference deck is still the only one there
+is, and **it is now the last thing between this repository and a v0.1 that ships**. Read the brief
 first — its "Decisions taken" section overrides anything older in it.
 
 **The backlog is two release phases, set 2026-08-09 by the owner: `v0.1` and `v0.2`.** v0.1 is a
