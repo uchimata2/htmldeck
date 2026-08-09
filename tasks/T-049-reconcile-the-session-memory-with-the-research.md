@@ -34,6 +34,13 @@ contradicts it where a session would look.
 published. `deliverables:` is therefore empty by intent rather than by omission, and the review
 records what changed instead of a path.
 
+**Do the first row before the others, and preferably before the rest of
+[T-042](T-042-audit-the-whole-repository-against-itself.md)'s children are worked.** The ask-versus-
+decide contradiction is not one stale fact among four — it governs **how the fix run itself is
+worked**. A session that reads *ask rather than guess* first will hand the open questions in T-046
+and T-048 back instead of deciding them, which is the opposite of the instruction the owner gave
+twice on 2026-08-09. The other three rows are ordinary staleness and can wait.
+
 **The four**
 
 | Memory | What is wrong | What it should say |

@@ -100,6 +100,11 @@ after reading the reference deck, and the reason the publishing gate and
 - [ ] Run once against `examples/reference-deck-seeded-defects.html` and shown to **fail** on at
       least one seeded defect the mechanical gate misses
 - [ ] `DESIGN-RATIONALE.md` records why the 25 are gated by judgement rather than demoted
+- [ ] The generic form is promoted to [`docs/LESSONS.md`](../docs/LESSONS.md) — **a completeness
+      device built for one class makes the classes it does not cover harder to see, not easier**,
+      because the green run now covers for them. It is deliberately **not** written before this task
+      lands: a lesson has to state how to act, and what to do about an unowned `hard` rule is exactly
+      what this task decides
 
 **Open questions**
 - ~~Do the 25 get a pass/fail checklist, or does §1 stop calling them gates?~~ **Answered 2026-08-09
