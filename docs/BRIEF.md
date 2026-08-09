@@ -229,7 +229,7 @@ moment. T-020 §3.3 has the mapping and R1 §14's own findings as the evidence.
 >
 > | | |
 > | :--- | :--- |
-> | [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) | **The operative ruleset.** **158 rules as of 2026-08-09**, each with a stable `DS-nnn` ID, a **hard/default/guidance** label, a **Check** value — `auto` (65) · `render` (44) · `judge` (43) · none (6) — and a **Reach** value, added 2026-08-09 by [T-037](../tasks/T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md). `Check` routes a rule to the build check, the render pass or the evaluator; **`Reach` says whether a check can get at it at all**, which `Check` never did: `yes` (105) · `off-gate` (3) · `never` (1) · `—` (49, every `judge` rule). Loaded on demand; the skill body must not paraphrase it. **Counts are derived and go stale when a rule is added — re-derive, never adjust by hand** (`EVALUATION.md` §1). *The previous figures were `render` (39) against a stated total of 154, which did not sum — the instruction above was already there and had not been followed.* |
+> | [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) | **The operative ruleset.** **160 rules as of 2026-08-09**, each with a stable `DS-nnn` ID, a **hard/default/guidance** label, a **Check** value — `auto` (66) · `render` (45) · `judge` (43) · none (6) — and a **Reach** value, added 2026-08-09 by [T-037](../tasks/T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md). `Check` routes a rule to the build check, the render pass or the evaluator; **`Reach` says whether a check can get at it at all**, which `Check` never did: `yes` (107) · `off-gate` (3) · `never` (1) · `—` (49, every `judge` rule). *Re-derived after [T-038](../tasks/T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) added DS-227 and DS-228 the same day — which is the second time in one day these figures went stale, and the reason `tools/deck/ruleset.py` now computes them.* Loaded on demand; the skill body must not paraphrase it. **Counts are derived and go stale when a rule is added — re-derive, never adjust by hand** (`EVALUATION.md` §1). *The previous figures were `render` (39) against a stated total of 154, which did not sum — the instruction above was already there and had not been followed.* |
 > | [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) | **Why each rule is what it is** — drops, provenance, derivations, and **twenty-nine conflicts**: sixteen found by reading the sources against each other, thirteen more found by building a deck strictly to the finished ruleset. **No runtime loads it.** |
 > | [`EVALUATION.md`](EVALUATION.md) | **How a deck is scored and when it is good enough.** Ten dimensions with anchors, a threshold, and a convergence loop with four distinct stop conditions. **§8 is settled**: the author scores three per-slide dimensions, one fresh-context pass scores the five no check can reach, and **the user is shown the outcome and the findings, never the numbers.** |
 >
@@ -244,8 +244,13 @@ Plus a **check** the build must pass: no external references, no banned terminol
 contrast meets WCAG AA, and it renders glitch-free from `file://` in
 the target browser. *(Printing was on this list; it is now an opt-in mode, not a gate — see
 "Decisions taken".)* **"Glitch-free" is now defined as nine testable conditions** in
-[R6 §8](research/R6-portability-contract.md) — T-005 implements them; two of the nine exist
-because this project has watched a font check and a WebGL check both pass on a broken render.
+[R6 §8](research/R6-portability-contract.md) — two of the nine exist because this project has
+watched a font check and a WebGL check both pass on a broken render. **R6 proposed them *for T-005
+to implement* and T-005's own §1 never adopted them**, so it closed on 2026-08-09 having built
+condition 1 and the restricted-origin half of condition 2 (DS-001, DS-005, DS-006) and having said
+nothing about the other seven. Caught reconciling the two documents against each other rather than
+by either of them; the remainder is
+[T-041](../tasks/T-041-implement-the-nine-glitch-free-conditions.md).
 
 Those are all presentation checks. **When the user supplies source documents, the check also
 reconciles content:** every figure on a slide appears in a source with the same value, and every
@@ -462,15 +467,15 @@ remain are both about the build and critique modes, not about the deck.***
   [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 183 KB, zero
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
-- The build check demonstrated failing on each class of problem it claims to catch. *Open —
-  [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md), and **closer than it was**.
-  The measurement layer at `tools/deck/` reports 0 mechanical failures on the reference deck against
-  3 on the seeded one, and as of 2026-08-07 the **resolution-contract subset is demonstrated failing
-  on each of its seven classes** — `tools/deck/contract_variants.py` breaks one rule per deck and
-  requires the gate to notice. `tools/deck/deliverable_variants.py` does the same for the five
-  deliverable and chrome rules as of 2026-08-07. Between them, that exercise has caught **five
-  checks passing decks that violated them**, which is the argument for this criterion in one line.
-  The other 36 checks have still not been shown to fail individually.*
+- ~~The build check demonstrated failing on each class of problem it claims to catch.~~ **Met
+  2026-08-09** by [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md).
+  `python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]` decides **79 of the
+  111 rules** the ruleset puts in a gate's jurisdiction and **names the other 32 with a reason and a
+  closing condition**; a rule in neither state fails the run, so silent coverage is now impossible
+  rather than merely discouraged. **34 seeded defects across four suites, all caught** — and the
+  exercise has now caught **seven checks that passed decks violating them**, two of them found the
+  day they were written (**L-42**). What is *not* met and is named: a console error that does not
+  stop the deck is still invisible to it.
 - The critique mode run against a deck with known defects, and found them. *Open —
   [T-004](../tasks/T-004-critique-mode-blunt-section-by-section-review.md). The seeded-defect deck it
   needs now exists.*

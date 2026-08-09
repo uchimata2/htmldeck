@@ -40,9 +40,11 @@ Cheap to build, and it converts several house rules from hopes into failures.
 
 - In: the **109 rules [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) labels `auto` or `render`** —
   65 and 44. That table is the jurisdiction, and the count is what the gate has to account for.
+  *(**111**, 66 and 45, when this was built — see the superseded note under the table below. The
+  scope is the `Check` column, not the number, which is why the number moving did not move it.)*
 - In: **the coverage declaration itself.** An owned rule that is neither checked nor excused in
-  writing is the defect class this task exists to end (**L-36**), so the account of all 109 is a
-  deliverable, not a line in a report.
+  writing is the defect class this task exists to end (**L-36**), so the account of all 109 — **111
+  as built** — is a deliverable, not a line in a report.
 - In: the content half — the figure ledger
   [`artifacts.md`](../skills/htmldeck/references/artifacts.md) already specifies (*Figure · Value ·
   Origin · Used on*), **emitted as an output** rather than kept internal, plus the three
