@@ -2,8 +2,8 @@
 id: T-005
 title: Build check — the gate the deck must pass
 type: deliverable
-status: specified
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-001, T-002, T-004, T-007, T-016, T-018, T-021, T-032, T-034, T-037, T-038]
@@ -11,7 +11,14 @@ work_package: WP3
 owner: maintainer
 created: 2026-08-04
 updated: 2026-08-09
-deliverables: []
+deliverables:
+  - tools/deck/check.py
+  - tools/deck/ruleset.py
+  - tools/deck/content.py
+  - tools/deck/printpages.py
+  - tools/deck/static_variants.py
+  - tools/deck/content_variants.py
+  - examples/sources/README.md
 ---
 
 # T-005 — Build check — the gate the deck must pass
@@ -239,31 +246,154 @@ places. Nothing on this task's presentation list would have caught it.
 
 ## 2. Plan
 
+**Re-derived 2026-08-09, before planning, as the note above the table requires.** The jurisdiction is
+**111** rules (66 `auto`, 45 `render`), **85** of them `hard`. **44** are cited by a verdict today;
+**4** are excused in the ruleset by their `Reach` value; **64 are silent — 44 `hard` and 20
+`default`.** The 64 is the same number the 2026-08-08 row recorded and it is not the same 64: four
+rules left the checked set when T-038 removed verdicts that cited them, and two arrived with the
+rules it added. **DS-072 is checked *and* excused in the ruleset**, which is a contradiction this
+task resolves rather than inherits.
+
+The answered question sets the order — **the account first, then triage** — so steps 1–3 make the
+gate honest about a jurisdiction it barely covers, and only then does step 4 start closing it.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
+| 1 | Parse the ruleset into records — id, label, `Check`, `Reach`, reason — reading `Reach` as a leading token with free text after it. Self-test on known rows, on the `—`-is-a-value trap, and on duplicate IDs | `tools/deck/ruleset.py` |
+| 2 | Make the three verdict producers return rows rather than only print them, and **give `contrast.py`'s failures a rule ID** — §7 says its criterion numbers *are* the IDs, so they cite **1.4.3** instead of a colour-pair label | `audit.py`, `contrast.py` |
+| 3 | Build the gate. It composes the stages, **derives the account at run time** from the ruleset, and fails when any owned rule is in none of the three states, when a verdict measured nothing, and when a deferral names a rule that is actually checked — a stale excusal is the same defect as a missing one | `tools/deck/check.py` |
+| 4 | Add the load-time error capture the criteria ask for: a hook injected **in `<head>`**, before the deck's own script, catching `error`, `unhandledrejection` and `console.error` on load and across navigation. A probe appended to `</body>` cannot see a load-time failure, which is the `file://` restricted-origin class the criterion names | `check.py` probe |
+| 5 | **Triage the 44 silent `hard` rules, one at a time.** Build the check where the rule's own subject is decidable from the file or the render; **excuse it in writing where it is not**, naming what would close it. T-038's discriminator governs every new verdict: the thing measured is the thing cited, or it does not ship | ~20 new verdicts, and a deferral register |
+| 6 | The 20 silent `default` rules are **excused in writing**, not checked — the answered question closes `hard` first, and a rule leaves the silent list by being checked or excused and by no third route | deferral register |
+| 7 | Write a source set for the reference deck's own topic, fresh and neutral, so the content half has a real case rather than a fixture that agrees with itself by construction | `examples/sources/` |
+| 8 | The content half: extract every figure with its label and slide, emit the **Figure · Value · Origin · Used on** ledger `artifacts.md` specifies, and run the three reconciliation checks over it | `tools/deck/content.py` |
+| 9 | Prove the content half fails on each of its three classes, by the method the other two suites use — seed one break at a time into a copy, assert the edit matched, require the gate to object | `tools/deck/content_variants.py` |
+| 10 | The print page count: headless print-to-PDF, count pages, assert **`n` + 1**. Opt-in, and it emits no DS-222–226 verdict — the owner's answer automates the count and only the count | `tools/deck/printpages.py` |
+| 11 | Prove the new presentation checks fail, extending the existing suites rather than starting a third | `deliverable_variants.py` and a new static suite |
+| 12 | The report: human text plus **JSON for [T-004](T-004-critique-mode-blunt-section-by-section-review.md)**, carrying which half ran, the account, the ledger, and the blind-dimension statement | `check.py --json` |
+| 13 | Retire `audit.py`'s *"Not gated here, and why"* tail, which the ruleset's `Reach` column now supersedes and contradicts | `contract.py` |
+| 14 | Point the docs at the gate — `pipeline.md` stage 6, `EVALUATION.md` §2, and the counts both carry | docs |
 
 ## 3. Implement
 
-**Decisions & assumptions**
-- <decision — rationale — date>
+### Where the gate stands now — measured 2026-08-09
 
-**Outputs produced**
-- <path>
+| | Before | After | How it was counted |
+| :--- | ---: | ---: | :--- |
+| Rules owned (`auto` + `render`) | 111 | **111** | `ruleset.py`, from the `Check` column |
+| Checked — a verdict naming that rule | 44 | **77** | rule IDs in `check.py`'s row list |
+| Excused **in the ruleset** by `Reach` | 4 | **4** | DS-042, DS-072, DS-210, DS-211 |
+| Excused **in the gate**, in writing | 0 | **31** | `check.DEFERRED`, one reason each |
+| **Silent — no verdict, no reason** | **64** | **0** | owned − checked − excused |
+| Demonstrated failing on purpose | 14 | **32** | four suites: 7 + 7 + 3 + 15 |
+| Content half | 0 | **3 checks + the ledger** | `content.py` |
+
+**The 64 did not become 64 checks, and it was never going to.** The owner's answer was *the account,
+then triage*: 33 rules gained a real check, and the other 31 gained a written reason and a named
+condition that would close it. The distinction the account enforces is that **there is no third
+state** — a rule cannot be quietly absent, because absence is what fails the run.
+
+### Decisions & assumptions
+
+- **The account is checked in both directions — 2026-08-09.** A rule nothing decided fails the run,
+  and so does an excusal for a rule that **is** decided. Only the first is the famous failure; the
+  second is the one that rots quietly, because a stale note reads exactly like a live one. The
+  self-test seeds both.
+- **A rule leaves the silent list by being checked or excused, and the excusal has to be an
+  argument — 2026-08-09.** `check.py`'s self-test refuses a reason under 40 characters, and it fired
+  during the build: three print rules had been excused with *"See DS-222 — the same ruling"*, which
+  is a cross-reference and not a reason. All three were written out.
+- **Where a rule and the reference deck disagreed, neither was assumed right — 2026-08-09.** Two
+  cases, both excused with the argument on both sides and handed to the owner: **DS-045**, whose two
+  readings disagree about a pattern twelve slides use and this gate's own DS-203 check depends on;
+  and **DS-219**, which says *never* while its stated reason says *no neutral does both* — and the
+  deck's marks are the accent, which clears both criteria. Deciding either unilaterally would have
+  been a ruleset amendment made by whoever happened to be writing a check.
+- **Where a rule's subject is a reading of the content, the check was not built — 2026-08-09.**
+  DS-041, DS-101, DS-117, DS-120, DS-149, DS-209, DS-026. Each is excused with what it would take,
+  and in four of them the **measurement exists and is reported** — the missing part is the
+  threshold, and inventing one is how a gate starts lying (**L-38**, and T-038's whole subject).
+- **The content checks carry their own IDs, `FIG-1` to `FIG-3` — 2026-08-09.** DS-102 is the rule in
+  the neighbourhood and it is `judge`: a program can compare a slide's number to a file's, and it
+  cannot decide whether a figure is fabricated. Citing DS-102 would have been T-038's defect
+  re-committed in a new file, three days after it was swept out of the old one.
+- **The sources are written, not generated — 2026-08-09.** A source set derived from the deck agrees
+  with it by construction and proves nothing. `examples/sources/` is three documents written as the
+  model the deck's figures are outputs of, and the first run against them found a real mismatch in
+  the *reader*, not the deck: sources were being read line by line, so a wrapped `16\nstations` was
+  not in the file at all.
+- **`audit.py`'s "Not gated here, and why" tail is retired — 2026-08-09.** It listed four rules and
+  only one of them was a reachability statement; the rest were *checked in another stage*, which is
+  a fact about how the gate is arranged today. DS-065 in particular is no longer unchecked at all —
+  T-021 reworded the rule so it could be false, and the check that rewording made possible is built.
+- **Three defects in the reference deck were found and NOT fixed here — 2026-08-09.** §1 puts fixing
+  out, and the reason is restated there as the boundary most likely to erode. They went to
+  [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md), which fixed them.
+
+### Outputs produced
+
+- [`tools/deck/check.py`](../tools/deck/check.py) — the gate, the account, the excusal register, the
+  JSON report
+- [`tools/deck/ruleset.py`](../tools/deck/ruleset.py) — the ruleset as data, so no list is kept by
+  hand
+- [`tools/deck/content.py`](../tools/deck/content.py) — the figure ledger and its three
+  reconciliations
+- [`tools/deck/printpages.py`](../tools/deck/printpages.py) — the printed page count
+- [`tools/deck/static_variants.py`](../tools/deck/static_variants.py) ·
+  [`tools/deck/content_variants.py`](../tools/deck/content_variants.py) — 18 more seeded defects
+- [`tools/deck/audit.py`](../tools/deck/audit.py) — 22 static and 11 rendered verdicts added
+- [`tools/deck/contrast.py`](../tools/deck/contrast.py) — verdicts citing §7's criterion numbers, and
+  DS-013 and DS-027
+- [`examples/sources/`](../examples/sources/README.md) — the source set the content half reconciles
+  against
+- [`docs/EVALUATION.md`](../docs/EVALUATION.md) ·
+  [`skills/htmldeck/references/pipeline.md`](../skills/htmldeck/references/pipeline.md) — both now
+  point at the command
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Fails on any external reference | **met** | DS-001, and DS-002 for the CDN case; `cdn-reference` variant caught |
+| Fails on banned terminology | **met** | DS-106, unchanged from before this task |
+| Fails on a `<section>` with no heading | **met, in substance** | DS-080 fails a slide that is not a `<section>` (`slide-is-not-a-section` caught) and DS-091 decides its headline. *No heading at all* is the intersection and no separate row asserts it |
+| Checks contrast against WCAG AA | **met** | 1.4.3 and 1.4.11 now cite the criterion numbers rather than a colour-pair label, in both themes, with the evaluated-pair count in the verdict |
+| Fails when the deck does not render glitch-free from `file://` | **met** | DS-005 fails a deck that calls `fetch`, XHR or a dynamic import, which is the restricted-origin class; `script-reads-a-file` caught. DS-006 covers the module-specifier case |
+| Fails on a console error or unhandled rejection | **not met** | The load-time hook was planned as step 4 and is **not built**. `render_data` returning nothing already fails the run, so a deck that throws hard is caught; one that logs an error and carries on is not. The smallest remaining gap, and named |
+| Fails on a theme value hard-coded outside the token layer | **met, for colour** | DS-010; `colour-outside-the-tokens` caught. The rule's wider subject — any value that could differ between themes — needs [T-007](T-007-define-the-parametric-theme-layer.md), which §1 named as a known re-entry |
+| *Opt-in:* the print row, and the page count | **met** | `--print-pages`: 13 declared, 13 counted, wanted 13. DS-222–226 emit no verdict, per the owner's ruling, and are excused in writing |
+| Proven failing on each class before being trusted | **met** | 32 seeded defects across four suites, all caught. **Two were missed on the first run and both were real gaps** — DS-141 could not see a duration held in a token, and DS-092's sentence splitter cut `$5.6M` in half |
+| Fails when a figure appears in no source | **met** | FIG-1; `figure-in-no-source` caught |
+| Fails when a figure disagrees with its source | **met** | FIG-2; `figure-disagrees-with-source` caught |
+| Fails when one figure has two values in the deck | **met, with a stated limit** | FIG-3; `same-figure-two-values` caught. **Restricted to different slides**, because A-07 draws the same diagram twice with one edge changed — a before/after slide is one subject with two values by design |
+| Proven failing on each of those three | **met** | `content_variants.py`, 3 of 3 |
+| Every owned rule is checked, excused in writing, or failing | **met** | `SILENT 0` of 111. The run fails if that number is not zero |
+| The account is derived from the ruleset at run time | **met** | `ruleset.py` parses `DESIGN-SYSTEM.md` on every run; DS-227 and DS-228, added yesterday, appear in the account with nobody having edited the gate |
+| The gate fails on *nothing measured* | **met** | A `NO RESULT` render is a `FAIL` row, not a skipped stage; DS-130 now fails on a null; every count-based verdict carries its denominator, so `0 of 0` is visible |
+| Adding a rule with no implementation makes the gate say so | **met** | It lands in `silent` and the run goes red. Demonstrated in reverse throughout the build: the count fell 64 → 2 → 0 as checks landed |
+| The output states which half ran | **met** | `content half: NOT RUN — no sources supplied. A presentation-only run is a legitimate result and is not a clean one`, and the same for the page count |
+| The banned-terminology check says it is not sufficient | **met** | The closing block names DS-106 as the sharpest case and DS-107 as the reason |
+| The report names the blind dimensions | **met** | S1, S2, S4, D1, D4, on every run |
+| Ships with a self-test that is part of the deliverable | **met** | Five self-tests run before any verdict: `ruleset`, `render`, `contrast`, `contract`, `content`, plus the gate's own. **The gate's fired during the build** and refused to run over a three-word excusal |
+| The report format T-004 consumes | **met** | `--json`: rows, the full account, the ledger, the notes, and the blind list. 88 rows on the reference deck |
 
 **Child fix tasks raised**
-- none
+- [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md) — **done.** The three
+  defects the new checks found in the reference deck: two sentences over DS-092's 20-word cap, and
+  a sprite icon nothing used.
+
+**Two questions for the owner, both excused in writing until answered**
+- **DS-045** — which reading? The narrow one costs nothing; the wide one makes the reference deck
+  non-conformant in four places.
+- **DS-219** — the rule says *never* and its reason says *no neutral does both*. Does a non-neutral
+  mark get a clause, or do three labels move outside their bars?
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | → done | **Silent went from 64 to 0, and that is the deliverable — not the 33 new checks.** 77 of 111 rules are decided and the other 34 are named with a reason and a closing condition, derived from the ruleset every run. **The self-tests earned their place twice on the way:** the gate refused to run over an excusal written as *"See DS-222"* rather than as an argument, and the new variant suite caught **two of its own checks unable to see their own seeded defect** — DS-141 could not read a duration held in a token, which is where DS-033 requires every duration to live, and DS-092's sentence splitter cut `$5.6M` in half so a 28-word sentence read as three short ones. Both were green before the suite existed. **One criterion is not met and is named rather than reworded:** the console-error hook was planned and not built, so a deck that logs an error and carries on passes. **Three genuine defects in the reference deck** went to [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md) rather than being fixed here. **Two ruleset questions are the owner's** — DS-045's two readings and DS-219's *never* against its own reason — and both are excused with the argument on each side rather than settled by whoever was writing a check. |
+| 2026-08-09 | → in_progress | Planned in 14 steps after re-deriving the jurisdiction, which the note above §2 required and which mattered: the 64 silent rules are **not the same 64** the 2026-08-08 row counted. Four left the checked set when T-038 removed verdicts citing rules they did not test, and two arrived with the rules it added. |
 | 2026-08-09 | (no change) | **[T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) closed, and it moved the numbers this task plans against — re-derive, do not carry them.** Two rules were added, **DS-227** (closed at load) and **DS-228** (one panel open at a time), so **rules owned is 111** and the count to account for is **107**, not 105. Yesterday's row said *plan against 105*; that number is one day old and already superseded, which is the behaviour the criterion's *derived from the ruleset* wording exists to survive. **The gate's claimed coverage shrank as well as grew.** T-038 swept all 40 verdicts and found seven wrong; four rules — **DS-080, DS-082, DS-111, DS-143** — had a verdict citing them that tested something else, and now have none. All four keep `Reach: yes`, so **the coverage declaration owes each of them a checked-or-excused line**, and this task inherits four gaps that were previously invisible because they read as covered. **DS-137 and DS-161 are no longer a trap for the coverage count** — they are `judge`, the gate has stopped claiming them, and no naive count can score them as covered any more. The *"Not gated here, and why"* tail is still this task's to retire, and `contrast.py`'s failures still carry a pair label rather than §7's criterion number, which is the same defect one file over. |
 | 2026-08-09 | (no change) | **[T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md) closed, and the one coupling this task was sequenced against is discharged.** The *derived from the ruleset* coverage criterion now has something to derive from: [`DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) carries a **`Reach`** column on all **158** rule rows, and a program that has never heard of an individual rule can compute **the number this task must account for: 105** — `Reach: yes` with `Check` in {`auto`, `render`}. **Plan against 105, not 109.** The other four of the 109 are excused *in the ruleset, with their reasons*, and are not this task's to close: DS-042 `never`, DS-072, DS-210 and DS-211 `off-gate`. **Three consequences worth having before planning.** (1) The gate's own excuse list is now redundant and contradicted — `audit.py`'s *"Not gated here, and why"* tail conflates *checked in another stage* with *cannot be checked*, which is why only one of its four entries moved to the ruleset; making the gate derive its account from `Reach` is what retires it, and that is this task's work. (2) `Reach` deliberately says **nothing about which part of the gate checks a rule** — a rule decided statically rather than at render is still `yes` — so the coverage account must not encode stage, or the ruleset goes stale on the next refactor. (3) [T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) is open against a defect this task will otherwise inherit: the gate emits verdicts for two `judge` rules, one of them under an ID whose rule it does not test, so a naive coverage count would score them as covered. `related` gains T-037 and T-038. |
 | 2026-08-08 | (no change) | **Correction, from git rather than from reading: §11 was never committed.** Yesterday's row and this task's §1 both said [T-022](T-022-split-the-design-system-from-its-rationale.md) replaced the numbered conditions with `DS-nnn` IDs and §11 went with the renumbering. That was wrong. `docs/DESIGN-SYSTEM.md` has ended at **§9 in all 13 commits of its life**, created that way by the very commit that closed [T-014](T-014-synthesise-research-into-the-design-system-reference.md) recording *"§11 — 26 numbered conditions"* as **met**. Nothing was deleted; the section was never written. The practical consequence for this task is that *"conditions 22 and 30 are not machine-checkable"* was never recoverable, and now provably is not: had the conditions been the hard rules in document order, condition 17 would be the 17th, and DS-063 — the one mapping [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) made by hand — is the **31st**. [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md) writes the two off explicitly rather than leaving a search for someone to re-run. **Two counts confirmed while checking this**, because they are close enough to be mistaken for each other: this task owns **109** `auto`+`render` rules, and there are also **109** rules labelled `hard` — different sets, overlapping in 84. The triage decision's *"close the silent rules labelled `hard`"* means that 84, not the 109. |

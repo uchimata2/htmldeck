@@ -53,6 +53,19 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 | :--- | :--- | :--- | :--- |
 | 1 | **Auto gate** | 66 `auto` rules — static analysis of the file | Near zero. Runs first, always. |
 | 2 | **Render gate** | 45 `render` rules — measurement and a look at the rendered deck, **with motion pinned off** (DS-221) | One render, several measurements |
+
+**Stages 1 and 2 are one command**, built by
+[T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md) on 2026-08-09:
+
+```
+python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]
+```
+
+It decides **77** of the 111 owned rules and **names the other 34 with a reason each**, derived from
+the ruleset when it runs rather than from any list. **A rule in neither state fails the run**, so a
+rule added here with nothing behind it is a red run rather than a discovery two months later — which
+is what happened twice (**L-36**). `--sources` adds the figure ledger and its three reconciliations;
+`--json` is the report the critique mode consumes.
 | 3 | **Per-slide score, by the author** | S3, S5, S6 (§3), per slide | Scales with slide count, but the author already holds the context |
 | 4 | **The judgement pass, in fresh context** | S1, S2, S4 across every slide, and D1–D4 (§4) | One pass over the finished artifact |
 | 5 | **Fix and re-enter** | §5 | Bounded by the iteration cap |

@@ -776,6 +776,40 @@ system already leans on the fact, because **inventing a rule so a check has some
 backwards, and writing down one the system already depends on is not**. And when a verdict prints a
 null or an empty count, make it fail: *nothing measured* must never render as `pass` (**L-36**).
 
+### L-42 — A check reads a model of the artifact, and the model is where it goes blind
+
+Every check simplifies what it reads: CSS becomes a regex, prose becomes tokens, a file becomes a
+string. **The simplification is invisible while the check passes**, and it is almost always where
+the missing defect lives — because the thing that made the check easy to write is the same thing
+that made it unable to see.
+
+Two instances arrived within an hour of each other, both from
+[T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md)'s new variant suite, and both
+checks had been reporting `pass` on the reference deck before the suite existed:
+
+- **The indirection the design system requires.** DS-141 caps animation durations at 500 ms, and the
+  check scanned `animation:` and `transition:` declarations for a number. It found none over the
+  cap, and there was none to find: **DS-033 requires every value inside the stage to come from a
+  token**, so durations are written `transition: transform var(--slide-dur)` and the number lives
+  one hop away. Seeding `--slide-dur:900ms` broke the rule and the check read `var(--slide-dur)` and
+  passed. *The system's own rule about where values live is what defeated the check.*
+- **The tokeniser that met real content.** DS-092 caps a sentence at 20 words, and the splitter cut
+  on `[.!?]`. A deck about money is full of `$5.6M`, so a 28-word sentence split into `Spend the
+  whole of the $5`, a middle, and `.5M for bike-share…` — three short sentences, none over the cap.
+  The rule found two genuine violations elsewhere and looked like it worked.
+
+**How to apply.** For every check, write down **the model it reads** — *declarations matching this
+pattern*, *text split on these characters* — and then ask what the real artifact does that the model
+does not represent. Two questions find most of it: **what indirection does the system require here**
+(tokens, variables, generated content, a manifest read at run time), and **what does real content
+contain that the tokeniser will mistake** (decimals, abbreviations, currency, embedded payloads —
+an earlier version of the same check reported six animations over the cap, all of them fragments of
+a base64 typeface). The general form of the fix is to make the check resolve what the artifact
+resolves: expand the variables, split the way the content is written. And **seed the defect**, since
+that is what turned both of these from green rows into found bugs — this is
+[L-36](#l-36--a-stated-tolerance-is-a-claim-about-the-instrument-not-only-about-the-artifact)
+arriving from a third direction, and it is why a check ships with a variant that breaks it.
+
 ---
 
 ## Tooling

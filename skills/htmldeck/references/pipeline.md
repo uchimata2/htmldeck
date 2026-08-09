@@ -183,5 +183,5 @@ lands. Stated so a run is not mistaken for a finished plugin:
 | :--- | :--- | :--- |
 | 5 · spec review, 7 · build review | Critique mode | The rubric in `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` is complete and can be applied by hand; the report formats are not yet fixed. |
 | 6 · build | Build mode | Build to `${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md` directly, using `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` as the structural reference. |
-| 6 · per-batch automatic checks | The build check | `${CLAUDE_PLUGIN_ROOT}/tools/deck/` runs a subset today. |
+| 6 · per-batch automatic checks | ~~The build check~~ — **built 2026-08-09.** `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]` gates 77 of the 111 rules the ruleset puts in its jurisdiction and **names every one of the other 34, with a reason**. | — |
 | 6 · tokens, components, motion | The theme and interaction layers | `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` carries a working first instance of both. |

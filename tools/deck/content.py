@@ -1,0 +1,312 @@
+#!/usr/bin/env python3
+"""The content half — the figure ledger, and the three reconciliations over it.
+
+**A deck can pass every presentation check and still put a wrong number in front of a board.** The
+evidence is in `docs/BRIEF.md`: a five-document set where every document passed its own review, and
+the figure that reached the board's decision cell was wrong in eight places. Nothing on the
+presentation list would have caught it, and nothing here would have caught the rest.
+
+**These checks do not cite DS-102, and the reason matters.** DS-102 — *no fabricated metrics; every
+figure sourced* — is `judge`, and it is judge because deciding whether a figure is fabricated needs
+someone to read the source and think. What a program can do is narrower and worth having: compare
+the numbers on the slides against the numbers in the files they came from, and against each other.
+So these carry their own IDs, `FIG-1` to `FIG-3`, the way §7's criteria do. Citing DS-102 for them
+would be the defect T-038 spent a whole task sweeping out of `audit.py`.
+
+**The matching is a heuristic and says so.** A figure is recognised by shape, and a label by the
+words around it, so a source that phrases a quantity differently from the slide will read as
+unsourced. That direction is the safe one: it over-reports rather than passing a wrong number.
+
+    python tools/deck/content.py examples/reference-deck.html examples/sources
+
+Pure standard library (**L-07**).
+"""
+
+import io
+import os
+import re
+import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# A figure is a quantity a reader would repeat: money, a count, a percentage, a duration. A bare
+# small integer is not - "3 corridors" is a figure and "3" inside `translate(0,3)` is geometry, so
+# the number has to carry a currency mark, a separator, a decimal, a magnitude or a unit word.
+UNITS = (r"%|per cent|percent|minutes?|mins?|hours?|days?|weeks?|months?|years?|"
+         r"stations?|routes?|riders?|trips?|people|buses|corridors?|stops?|km|m\b")
+FIGURE = re.compile(
+    r"(?<![\w.$])(\$\s?\d[\d,]*(?:\.\d+)?\s?[MKB]?|"          # $5.6M, $1.5M
+    r"\d[\d,]*\.\d+\s?[MKB]?|"                                # 6.8, 4.1M
+    r"\d{1,3}(?:,\d{3})+|"                                    # 38,000
+    r"\d+\s?[MKB]\b|"                                         # 5M
+    r"\d+\s?(?:" + UNITS + r"))", re.I)
+
+STOP = set(("the a an of in on for and or to is are was with by at from that this it its as "
+            "be but not no than then so under over into per one two").split())
+
+
+def normalise(value):
+    """`$5.6M`, `$5.6 M` and `5.6M` are one figure. Case, spacing and the currency mark are
+    presentation; the magnitude is the figure."""
+    v = value.lower().replace(",", "").replace("$", "").replace(" ", "")
+    m = re.match(r"^([\d.]+)([mkb])?(.*)$", v)
+    if not m:
+        return v
+    num, mag, rest = m.group(1), m.group(2) or "", m.group(3) or ""
+    num = num.rstrip(".")
+    if "." in num:
+        num = num.rstrip("0").rstrip(".")
+    rest = re.sub(r"s$", "", rest)                    # months / month
+    rest = {"min": "minute", "mins": "minute", "yr": "year"}.get(rest, rest)
+    return num + mag + rest
+
+
+def label_of(context, value):
+    """The words a figure is about, taken from its own sentence with the figure removed. Kept as a
+    SET of significant words rather than a phrase, because a source rarely repeats a slide's word
+    order and comparing phrases would report every match as a miss."""
+    text = context.replace(value, " ")
+    words = [w for w in re.findall(r"[A-Za-z][A-Za-z-]+", text.lower())
+             if w not in STOP and len(w) > 2]
+    return words[:12]
+
+
+# Inline tags carry emphasis inside one run of prose; everything else starts a new one. The split
+# matters more than it looks: `<b>$5.6M</b> · the whole grant` is one figure with a label, and
+# `<text class="lab">2,000</text>` beside `<text class="lab">4,000</text>` is a scale. Reading the
+# whole slide as one string merged the second into the first and produced axis gridlines with
+# borrowed labels - and `Route 3` next to `Route 7` came back as the figure "3 Route".
+INLINE = re.compile(r"</?(?:b|strong|i|em|span|small|sup|sub|a|code|u|mark|tspan)\b[^>]*>", re.I)
+
+
+def runs(fragment):
+    """The text runs of a fragment, split at every non-inline tag."""
+    frag = re.sub(r"<!--.*?-->", " ", fragment, flags=re.S)
+    frag = re.sub(r"<(script|style)\b.*?</\1>", " ", frag, flags=re.S | re.I)
+    frag = INLINE.sub("", frag)
+    out = []
+    for part in re.split(r"<[^>]+>", frag):
+        t = re.sub(r"\s+", " ", part).replace("&nbsp;", " ").replace("&amp;", "&").strip()
+        if t:
+            out.append(t)
+    return out
+
+
+def deck_figures(deck):
+    """Every figure on a slide, with the slide it is on and the words around it.
+
+    Read per `<section class="slide">` so *Used on* is a real answer rather than a guess.
+
+    **A number alone in its own run is a mark on a scale, not a figure**, and it is dropped: an
+    axis tick is not something a reader repeats or a board decides on, and requiring a source for
+    one would make every chart unsourceable.
+    """
+    html = io.open(deck, encoding="utf-8").read()
+    out = []
+    for m in re.finditer(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>(.*?)</section>',
+                         html, re.S | re.I):
+        block = m.group(0)
+        name = re.search(r'data-name="([^"]*)"', block)
+        name = name.group(1) if name else "?"
+        for run in runs(m.group(1)):
+            for f in FIGURE.finditer(run):
+                label = label_of(run, f.group(1))
+                if not label:
+                    continue
+                out.append({"value": f.group(1).strip(), "norm": normalise(f.group(1)),
+                            "slide": name, "label": label, "context": run[:110]})
+    return out
+
+
+def source_units(text):
+    """A source read as units of meaning rather than as lines.
+
+    **Line by line was wrong and quietly so.** A prose source wraps, so `16` and `stations` land on
+    different lines and the figure is not there at all — the reference deck's `16 stations` read as
+    unsourced against a file that says it. Paragraphs are joined; a markdown table row stays its
+    own unit, because a whole table collapsed into one string gives every figure in it the same
+    label and makes the disagreement check meaningless.
+    """
+    units = []
+    for para in re.split(r"\n\s*\n", text):
+        for unit in re.split(r"\n(?=\s*\|)", para):
+            u = re.sub(r"\s+", " ", unit).strip()
+            if u:
+                units.append(u)
+    return units
+
+
+def source_figures(paths):
+    """Every figure in the supplied sources, with its unit as context. Text files are read as
+    text; a source that is not one is reported rather than silently skipped."""
+    out, files, skipped = [], [], []
+    for path in paths:
+        if os.path.splitext(path)[1].lower() not in (".md", ".txt", ".csv", ".markdown"):
+            skipped.append(path)
+            continue
+        files.append(path)
+        for unit in source_units(io.open(path, encoding="utf-8").read()):
+            for f in FIGURE.finditer(unit):
+                out.append({"value": f.group(1).strip(), "norm": normalise(f.group(1)),
+                            "origin": os.path.basename(path),
+                            "label": label_of(unit, f.group(1)), "context": unit[:110]})
+    return out, files, skipped
+
+
+def collect(sources):
+    if os.path.isfile(sources):
+        return [sources]
+    found = []
+    for base, _dirs, names in os.walk(sources):
+        for n in sorted(names):
+            found.append(os.path.join(base, n))
+    return found
+
+
+def overlap(a, b):
+    """How many significant words two labels share."""
+    return len(set(a) & set(b))
+
+
+def similarity(a, b):
+    """Jaccard over the two label sets. Overlap alone says two figures are discussed together;
+    similarity says they are about **the same thing**, which is what a contradiction needs."""
+    sa, sb = set(a), set(b)
+    return len(sa & sb) / float(len(sa | sb)) if (sa or sb) else 0.0
+
+
+def kind(norm):
+    """The unit a figure is in, stripped of its magnitude. Two numbers in different units are not
+    two answers to one question - `0 minutes` and `14,800 trips` were being compared."""
+    return re.sub(r"^[\d.]+", "", norm)
+
+
+def build_ledger(deck, sources):
+    """The **Figure · Value · Origin · Used on** table `artifacts.md` specifies, emitted rather
+    than kept internal — [T-004] prioritises what this one counts."""
+    figs = deck_figures(deck)
+    src, files, skipped = source_figures(collect(sources))
+    by_norm = {}
+    for s in src:
+        by_norm.setdefault(s["norm"], []).append(s)
+
+    rows, unsourced, disagreeing = [], [], []
+    for f in figs:
+        matches = by_norm.get(f["norm"], [])
+        origin = matches[0]["origin"] if matches else None
+        if not matches:
+            # Does a source talk about this SUBJECT with a different number? That is the more
+            # dangerous case and it is reported as a disagreement, not merely as unsourced.
+            # **Same unit, or it is not a rival**: `0 minutes` and `14,800 trips` are not two
+            # answers to one question, and matching on words alone said they were.
+            rival = None
+            for s in src:
+                if kind(s["norm"]) != kind(f["norm"]):
+                    continue
+                if overlap(f["label"], s["label"]) >= 3:
+                    rival = s
+                    break
+            if rival:
+                disagreeing.append((f["slide"], f["value"], rival["value"], rival["origin"],
+                                    rival["context"]))
+            else:
+                unsourced.append((f["slide"], f["value"], f["context"]))
+        rows.append({"figure": " ".join(f["label"][:4]) or f["value"], "value": f["value"],
+                     "origin": origin or "-", "usedOn": f["slide"]})
+
+    # The same figure twice in the deck with different values, which is the failure that put a
+    # wrong number in a board's decision cell. Three conditions, each of which had to be added
+    # after the version without it fired on a conforming deck:
+    #
+    #  - **different slides.** A-07 draws the same diagram twice with one edge changed, so a
+    #    before/after slide IS one subject with two values, by design. The cost: a contradiction
+    #    inside one slide is not reported, and that is the trade taken.
+    #  - **different runs**, so a sentence listing three quantities is not three contradictions.
+    #  - **the same unit and a similar label**, not merely a shared word: `$4.1M of the grant` and
+    #    `$6.8M a year from the general fund` share *general*, *fund* and *year* and are two facts.
+    contradictions = []
+    for i, a in enumerate(figs):
+        for b in figs[i + 1:]:
+            if a["norm"] == b["norm"] or a["slide"] == b["slide"]:
+                continue
+            if a["context"] == b["context"] or kind(a["norm"]) != kind(b["norm"]):
+                continue
+            if similarity(a["label"], b["label"]) >= 0.6:
+                contradictions.append((a["slide"], a["value"], b["slide"], b["value"],
+                                       " ".join(sorted(set(a["label"]) & set(b["label"])))))
+    return {"rows": rows, "unsourced": unsourced, "disagreeing": disagreeing,
+            "contradictions": contradictions, "sourceCount": len(files),
+            "sourceFiles": [os.path.basename(f) for f in files],
+            "skipped": [os.path.basename(s) for s in skipped],
+            "deckFigures": len(figs), "sourceFigureCount": len(src)}
+
+
+def audit(deck, sources):
+    """`(ledger, rows)` in the shape every other stage returns."""
+    L = build_ledger(deck, sources)
+    rows = [
+        ("FIG-1", "figures on a slide that appear in no source: %d of %d"
+         % (len(L["unsourced"]), L["deckFigures"]),
+         not L["unsourced"] and L["deckFigures"] > 0),
+        ("FIG-2", "figures disagreeing with the source they came from: %d"
+         % len(L["disagreeing"]), not L["disagreeing"]),
+        ("FIG-3", "figures appearing twice in the deck with different values: %d"
+         % len(L["contradictions"]), not L["contradictions"]),
+    ]
+    if L["skipped"]:
+        rows.append(("FIG-0", "source files this reader cannot open: %d (%s)"
+                     % (len(L["skipped"]), ", ".join(L["skipped"])), False))
+    return L, rows
+
+
+def self_test():
+    """Known answers, on strings rather than files (**L-04**)."""
+    if normalise("$5.6M") != normalise("5.6 m"):
+        sys.exit("SELF-TEST FAILED: the currency mark and spacing changed a figure's identity")
+    if normalise("38,000") != "38000":
+        sys.exit("SELF-TEST FAILED: a thousands separator survived normalisation")
+    if normalise("14 months") != normalise("14 month"):
+        sys.exit("SELF-TEST FAILED: a plural changed a figure's identity")
+    if normalise("4.10") != "4.1":
+        sys.exit("SELF-TEST FAILED: a trailing zero changed a figure's identity")
+    found = [m.group(1) for m in FIGURE.finditer("the $5.6M grant reaches 38,000 riders in "
+                                                 "14 months, at 12 min headway")]
+    if len(found) != 4:
+        sys.exit("SELF-TEST FAILED: the figure pattern found %d of 4 in a known line: %s"
+                 % (len(found), found))
+    if FIGURE.search("translate(0,18)"):
+        sys.exit("SELF-TEST FAILED: an SVG coordinate parsed as a figure")
+    if overlap(label_of("the grant is $5.6M in total", "$5.6M"),
+               label_of("a grant of $5.6M", "$5.6M")) < 1:
+        sys.exit("SELF-TEST FAILED: two labels about one subject shared no significant word")
+    return True
+
+
+def main(deck, sources):
+    self_test()
+    L, rows = audit(deck, sources)
+    print("deck:    %s" % os.path.relpath(deck, ROOT))
+    print("sources: %d file(s) - %s" % (L["sourceCount"], ", ".join(L["sourceFiles"]) or "none"))
+    print("\n| Figure | Value | Origin | Used on |")
+    print("| :--- | :--- | :--- | :--- |")
+    for r in L["rows"]:
+        print("| %s | %s | %s | %s |" % (r["figure"], r["value"], r["origin"], r["usedOn"]))
+    print("\n%d figures on the slides, %d in the sources" % (L["deckFigures"],
+                                                             L["sourceFigureCount"]))
+    for rule, what, ok in rows:
+        print("  %-6s %-62s %s" % (rule, what, "pass" if ok else "FAIL"))
+    for slide, value, ctx in L["unsourced"][:12]:
+        print("      unsourced  %-34s %-10s %s" % (slide[:34], value, ctx[:50]))
+    for slide, value, was, origin, ctx in L["disagreeing"][:12]:
+        print("      disagrees  %-34s %s vs %s in %s" % (slide[:34], value, was, origin))
+    for sa, va, sb, vb, shared in L["contradictions"][:12]:
+        print("      two values %s=%s / %s=%s  (%s)" % (sa[:20], va, sb[:20], vb, shared))
+    return 0 if all(ok for _r, _w, ok in rows) else 1
+
+
+if __name__ == "__main__":
+    a = sys.argv[1:]
+    sys.exit(main(os.path.abspath(a[0]), os.path.abspath(a[1])))

@@ -348,24 +348,27 @@ def main(deck, which=None):
             failures.append(rule)
         print("  %-8s %-78s %s" % (rule, what, "pass" if good else "FAIL"))
     print("\n%d failure(s): %s" % (len(failures), ", ".join(failures) or "none"))
-    print(UNCHECKED)
+    if UNCHECKED:
+        print(UNCHECKED)
+    print("\nWhat this stage does NOT check is not listed here any more - "
+          "`python tools/deck/check.py` derives the whole account from the ruleset's `Reach` "
+          "column and names every rule it did not decide, with a reason (T-005).")
     return 1 if failures else 0
 
 
-# Stated rather than dropped. A rule silently left unenforced is what T-021 exists to end; a rule
-# named as unenforceable is an honest close (L-05).
-UNCHECKED = """
-Not gated here, and why:
-
-  DS-061  no media query reshaping the stage - `audit.py` decides it statically, from the source.
-  DS-065  no decoration in a unit that does not ride the transform. **Not checkable at runtime,
-          and building the check is what showed why**: inside the stage one design unit IS one
-          CSS pixel before the transform, so the rule's old wording - "absolute pixels rather
-          than design units" - could not be false. DS-033 decides the real content of it
-          statically, in `audit.py`. The rule was reworded rather than worked around (T-021).
-  DS-072  observed against a defined-property double, never a real fullscreen. Headless has no
-          user gesture to request one with, and a check that implied otherwise would be the L-35
-          failure in miniature. The real demonstration is a person pressing F11 and looking."""
+# **Retired by T-005, and the reason is that it was answering a question this file cannot answer.**
+# It listed four rules as "not gated here", and only one of the four was a REACHABILITY statement:
+# DS-061 and DS-065 are *checked in another stage*, which is a fact about how the gate is arranged
+# today, and DS-033 was never a rule this file could reach in the first place. Conflating the two
+# is what T-037 found and what the ruleset's `Reach` column now records per rule, and `check.py`
+# derives the whole account from that column at run time rather than from a paragraph here.
+#
+# DS-065 in particular is no longer unchecked at all: T-021 reworded the rule so it could be false,
+# and T-005 built the check `audit.ds065_units_ride_the_transform` the rewording made possible.
+#
+# The constant is kept, empty, because `audit.py` prints it and a caller that expects a string
+# should get one. Its content lives in `check.py`'s coverage account and in `DESIGN-SYSTEM.md`.
+UNCHECKED = ""
 
 
 if __name__ == "__main__":

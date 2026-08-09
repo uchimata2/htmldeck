@@ -131,6 +131,70 @@ def audit(html, verbose=True):
     return failures
 
 
+# DS-013's checkable clause is NOT the token names. The rule lists `--bg` where this deck ships
+# `--paper`, so names are illustrative; what the rule spends its sentence on is the separation -
+# **a data-series role and a UI-line role, both separate from `--line`** - because 1.4.11 puts a
+# 3:1 obligation on a chart mark and an interactive border that a hairline separator does not
+# carry. A deck reusing `--line` for either fails a criterion no token in the list names.
+#
+# Reading the deck's vocabulary by name couples this file to the one shipping theme, which DS-011
+# fixes at one. T-007 owns the parametric layer; when it lands, this is the list that moves.
+SEPARATE_FROM_LINE = ("ui-line", "data-quiet")
+
+
+def verdicts(html):
+    """(rule, what, ok) rows, in the shape every other stage returns.
+
+    **The citation is the criterion number**, because §7 says so in its own words: *Criterion
+    numbers are the IDs*. Until T-005 a contrast failure entered the gate's failure list as
+    `contrast/<colour pair>`, which is a label rather than a rule - the same defect T-038 swept out
+    of `audit.py`, one file over.
+
+    Pair counts travel in the verdict text on purpose: a ratio check that evaluated no pairs reads
+    exactly like one where every pair passed, and the count is what separates them (**L-36**).
+    """
+    themes = read_tokens(html)
+    fails = audit(html, verbose=False)
+    evaluated = {"1.4.3": 0, "1.4.11": 0}
+    for theme in ("light", "dark"):
+        T = themes[theme]
+        for _label, fg, bg, _need, why in PAIRS:
+            if fg in T and bg in T:
+                evaluated["1.4.3" if why.startswith("1.4.3") else "1.4.11"] += 1
+    text = [f for f in fails if f[5] == 4.5]
+    nontext = [f for f in fails if f[5] != 4.5]
+
+    # Read from the light theme's own declarations: dark inherits from light, so an override
+    # cannot introduce a role that was never declared in the first place.
+    T = themes["light"]
+    bad = sorted(t for t in SEPARATE_FROM_LINE
+                 if t not in T or ("line" in T and T[t] == T["line"]))
+    # DS-027 - BOTH themes readable, and no component inverting into white-on-light. The second
+    # clause is the mechanism of the first: a component that inverts renders light on light, which
+    # is a ratio failure in one theme and a pass in the other. So the rule's subject is the pair of
+    # themes, and its verdict is that both were evaluated and neither failed - which is a different
+    # claim from 1.4.3's, and the reason it gets its own row rather than being folded in.
+    per_theme = {}
+    for theme in ("light", "dark"):
+        T = themes[theme]
+        n = len([1 for _l, fg, bg, _n, _w in PAIRS if fg in T and bg in T])
+        per_theme[theme] = (n, len([f for f in fails if f[0] == theme]))
+
+    return [
+        ("DS-027", "both themes evaluated: light %d pairs / %d failing, dark %d pairs / %d failing"
+         % (per_theme["light"][0], per_theme["light"][1],
+            per_theme["dark"][0], per_theme["dark"][1]),
+         per_theme["light"][0] > 0 and per_theme["dark"][0] > 0
+         and not per_theme["light"][1] and not per_theme["dark"][1]),
+        ("1.4.3", "text pairs under 4.5:1: %d of %d evaluated"
+         % (len(text), evaluated["1.4.3"]), not text and evaluated["1.4.3"] > 0),
+        ("1.4.11", "non-text pairs under 3:1: %d of %d evaluated"
+         % (len(nontext), evaluated["1.4.11"]), not nontext and evaluated["1.4.11"] > 0),
+        ("DS-013", "data and UI roles declared and distinct from --line: %s"
+         % ("yes" if not bad else "no (%s)" % ", ".join(bad)), not bad),
+    ]
+
+
 def main(path):
     self_test()
     html = open(path, "r", encoding="utf-8").read()

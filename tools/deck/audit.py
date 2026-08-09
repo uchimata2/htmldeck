@@ -31,6 +31,357 @@ if hasattr(sys.stdout, "reconfigure"):
 
 ROOT = render.ROOT
 
+# ---------------------------------------------------------------------------- static helpers
+# Named rather than inlined, because each one is a claim about what a rule means and the claim
+# needs somewhere to be argued. T-038's discriminator governs all of them: the thing measured is
+# the thing cited, or the check does not ship and the rule is excused in writing instead.
+
+STYLE = re.compile(r"<style[^>]*>(.*?)</style>", re.S)
+HEXLIT = re.compile(r"#[0-9A-Fa-f]{3}(?:[0-9A-Fa-f]{3}(?:[0-9A-Fa-f]{2})?)?\b")
+FUNCLIT = re.compile(r"\b(?:rgb|rgba|hsl|hsla|oklch|color)\s*\(")
+
+
+def css(h):
+    """Every `<style>` block joined, with embedded font payloads removed.
+
+    **The payloads have to go before anything scans this.** A base64 woff2 is a 100 KB run of
+    random-looking characters, and `\\d+s` matches inside it: the first version of the DS-141
+    duration check reported six animations over 500 ms, all of them fragments of a typeface."""
+    return re.sub(r"url\(\s*data:[^)]*\)", "url(data:)", "\n".join(STYLE.findall(h)), flags=re.S)
+
+
+def screen_css(h):
+    """The CSS that governs the screen. `@media print` is a different medium with no theme and a
+    paper ground, so the rules about theming and about stage units do not reach into it - DS-226
+    requires a floor in POINTS there, which the stage's own rules forbid."""
+    return re.split(r"@media\s+print\s*\{", css(h))[0]
+
+
+def blocks(text, selector):
+    """The bodies of every rule whose selector matches, non-nested. Custom-property blocks and
+    component rules do not nest braces, so a non-greedy match is right here and a brace counter
+    would only add a way to be wrong."""
+    return re.findall(selector + r"\s*\{(.*?)\}", text, re.S)
+
+
+def token_layer(h):
+    """The theme's own declarations: `:root` plus the dark override. DS-010's *token layer*."""
+    c = css(h)
+    return "\n".join(blocks(c, r":root(?:\s*\[[^\]]*\])?"))
+
+
+def outside_token_layer(h):
+    """Screen CSS with the token layer removed, so a colour literal found here is one DS-010
+    forbids. Print is excluded with the rest of `@media print`: `background:#fff` on paper is not
+    a theme value that could differ between themes, it is the paper."""
+    c = screen_css(h)
+    for body in blocks(c, r":root(?:\s*\[[^\]]*\])?"):
+        c = c.replace(body, "")
+    return re.sub(r"/\*.*?\*/", "", c, flags=re.S)
+
+
+def ds010_colours_tokenised(h):
+    """DS-010 - a value that could differ between themes is a custom property. Colour is the
+    class of value that always could, and a literal outside the token layer is the observable
+    form of the defect. `currentColor`, `transparent` and `none` are not literals in this sense.
+
+    **The rule's full subject is wider than colour** - any theme-varying value - and deciding
+    *which* values could differ needs the parametric layer T-007 owns. This check is the colour
+    half, which is the half that has ever gone wrong."""
+    out = outside_token_layer(h)
+    return not HEXLIT.search(out) and not FUNCLIT.search(out)
+
+
+def ds011_one_palette(h):
+    """DS-011 - one fully-resolved theme, never a palette per topic. Observable: exactly one
+    `:root` palette declaration and at most one theme override of it."""
+    c = css(h)
+    roots = re.findall(r":root(?:\s*\[[^\]]*\])?\s*\{", c)
+    palettes = [b for b in blocks(c, r":root(?:\s*\[[^\]]*\])?")
+                if HEXLIT.search(b) or FUNCLIT.search(b)]
+    return len(roots) <= 3 and len(palettes) <= 2
+
+
+def ds012_dark_is_overrides(h):
+    """DS-012 - dark mode is one block of custom-property overrides, never a redesign. So the
+    dark block declares custom properties and nothing else: a `display`, a `margin` or a
+    `grid-template` in there is the redesign the rule forbids."""
+    dark = blocks(css(h), r':root\s*\[data-theme\s*=\s*"dark"\]')
+    if not dark:
+        return True                    # a deck with no dark theme has nothing to redesign
+    body = re.sub(r"/\*.*?\*/", "", "\n".join(dark), flags=re.S)
+    decls = [d.strip() for d in body.split(";") if d.strip()]
+    return all(d.startswith("--") for d in decls)
+
+
+def _hue(hexstr):
+    h = hexstr.lstrip("#")
+    if len(h) == 3:
+        h = "".join(c * 2 for c in h)
+    if len(h) < 6:
+        return None
+    r, g, b = (int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
+    mx, mn = max(r, g, b), min(r, g, b)
+    if mx - mn < 0.04:
+        return None                    # a neutral has no hue to compare
+    if mx == r:
+        deg = 60 * (((g - b) / (mx - mn)) % 6)
+    elif mx == g:
+        deg = 60 * (((b - r) / (mx - mn)) + 2)
+    else:
+        deg = 60 * (((r - g) / (mx - mn)) + 4)
+    return deg
+
+
+def _hue_gap(a, b):
+    d = abs(a - b) % 360
+    return min(d, 360 - d)
+
+
+def ds020_one_accent(h):
+    """DS-020 - neutral ground plus **exactly one** accent.
+
+    Counted as hue families, not as tokens: an accent wash and an accent ink are shades of one
+    accent, and the rule is about the accent rather than about how many variables carry it. The
+    three semantic roles are a separate vocabulary DS-026 fixes deck-wide, and are excluded by
+    name.
+
+    **The ground is what defines *neutral*, and it is not achromatic here.** DS-023 requires a
+    warm paper ground and warm-charcoal ink, so the neutrals carry a real hue - measured on this
+    deck, 38 to 46 degrees. Saturation was tried as the discriminator first and the margin was
+    thin enough to be luck: the darkest neutral sits at 0.21 against the accent's 0.31. Grouping
+    by distance from the ground's own hue has no such constant in it."""
+    toks = dict(re.findall(r"--([a-z0-9-]+)\s*:\s*(#[0-9A-Fa-f]{3,8})\s*;", token_layer(h)))
+    roles = ("pos", "neg", "caution")
+    ground = None
+    for name in ("paper", "bg", "ink"):
+        if name in toks:
+            ground = _hue(toks[name])
+            if ground is not None:
+                break
+    families = []
+    for name, value in sorted(toks.items()):
+        if name.startswith(roles):
+            continue
+        d = _hue(value)
+        if d is None:
+            continue                             # achromatic: part of the ground by definition
+        if ground is not None and _hue_gap(d, ground) <= 30:
+            continue                             # the neutral family
+        if not any(_hue_gap(d, f) <= 30 for f in families):
+            families.append(d)
+    return len(families) == 1
+
+
+def ds023_no_pure_black_or_white(h):
+    toks = re.findall(r"--[a-z0-9-]+\s*:\s*(#[0-9A-Fa-f]{3,8})\s*;", token_layer(h))
+    bad = {"#fff", "#ffffff", "#000", "#000000"}
+    return not [t for t in toks if t.lower() in bad]
+
+
+def ds024_light_by_default(h):
+    """DS-024 - light by default. The default is what `:root` declares; dark is the override, so
+    the unqualified block must be the lighter of the two."""
+    plain = blocks(css(h), r":root")
+    dark = blocks(css(h), r':root\s*\[data-theme\s*=\s*"dark"\]')
+    if not plain or not dark:
+        return bool(plain)
+    def lum(block):
+        m = re.search(r"--paper\s*:\s*(#[0-9A-Fa-f]{3,8})|--bg\s*:\s*(#[0-9A-Fa-f]{3,8})", block)
+        if not m:
+            return None
+        v = (m.group(1) or m.group(2)).lstrip("#")
+        if len(v) == 3:
+            v = "".join(c * 2 for c in v)
+        return sum(int(v[i:i + 2], 16) for i in (0, 2, 4))
+    a, b = lum(plain[0]), lum(dark[0])
+    return a is not None and b is not None and a > b
+
+
+def ds034_body_type(h):
+    """DS-034 - body 24-28 design units at line-height 1.55. Read off the tokens, which is where
+    DS-033 requires every size to come from, so this reads the one declaration that decides it."""
+    m = re.search(r"--fs-body\s*:\s*calc\(\s*([\d.]+)\s*\*\s*var\(--du\)", css(h))
+    lh = re.search(r"--lh-body\s*:\s*([\d.]+)", css(h))
+    return bool(m) and 24 <= float(m.group(1)) <= 28 and bool(lh) and abs(float(lh.group(1)) - 1.55) < 0.01
+
+
+def ds006_module_specifiers(h):
+    """DS-006 - a relative specifier cannot resolve from a `blob:` base, so an inline module may
+    not carry one. Vacuously true in a deck with no modules, which is the common case and is
+    reported as such rather than as a pass over nothing."""
+    mods = re.findall(r'<script\b[^>]*type=["\']module["\'][^>]*>(.*?)</script>', h, re.S)
+    for body in mods:
+        for spec in re.findall(r'\b(?:from|import)\s+["\']([^"\']+)["\']', body):
+            if not spec.startswith(("data:", "blob:")):
+                return False
+    return True
+
+
+def ds044_headings_reset(h):
+    """DS-044 - reset every heading level, `h4` and `h5` included; a partial reset is worse than
+    none. Checked against the levels the deck actually uses: a reset for `h6` in a deck with no
+    `h6` proves nothing, and a missing one for a level in use is the defect."""
+    used = set(re.findall(r"<(h[1-6])\b", h))
+    c = css(h)
+    reset = set()
+    for sel in re.findall(r"([^{}]+)\{", c):
+        for lvl in re.findall(r"\bh[1-6]\b", sel):
+            reset.add(lvl)
+    return used.issubset(reset)
+
+
+def ds045_no_bare_b(h):
+    """DS-045 - never style a bare `<b>` inside a component. A selector ending in a descendant
+    `b` with no class of its own is exactly that."""
+    for sel in re.findall(r"([^{}]+)\{", css(h)):
+        for part in sel.split(","):
+            part = part.strip()
+            if re.search(r"[.#\[][^\s]*\s+b$", part):
+                return False
+    return True
+
+
+NON_TRANSFORM_UNITS = re.compile(r"[:\s(]\d[\d.]*(vw|vh|vmin|vmax|pt|cm|in|mm|pc)\b")
+
+
+def ds065_units_ride_the_transform(h):
+    """DS-065 as reworded by T-021 - no element positioned in a unit resolved against the
+    VIEWPORT or the physical page rather than the design space. Print CSS is exempt by
+    construction: DS-226 requires a floor in points, so `pt` inside an `@media print` block is
+    the ruleset asking for it.
+
+    This is the check `contract.py`'s tail said could not be built. It could not be built against
+    the rule's OLD wording, which named a distinction that does not exist inside the stage; T-021
+    reworded the rule and the check has been owed since."""
+    return not NON_TRANSFORM_UNITS.search(screen_css(h))
+
+
+def ds028_no_full_page_gradient(h):
+    """DS-028 - no full-page gradients, no gradient blobs. The mechanical half is the ground:
+    a gradient on `html`, `body`, the stage or a slide's own background."""
+    for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css(h)):
+        if "gradient(" not in body:
+            continue
+        s = sel.strip()
+        if re.search(r"(^|,)\s*(html|body|\.stage|#stage|\.slide)\s*(,|$)", s):
+            return False
+    return True
+
+
+def ds037_display_headings_balanced(h):
+    return "text-wrap:balance" in css(h).replace(" ", "") or \
+           "text-wrap: balance" in css(h)
+
+
+def ds040_grid_and_flex(h):
+    c = css(h).replace(" ", "")
+    return "display:grid" in c and "display:flex" in c
+
+
+def ds111_figures_are_drawn(h):
+    """DS-111 - diagrams are inline SVG, with `<canvas>` and WebGL where they render better. The
+    checkable content is what a figure is MADE OF: an embedded object is neither, and no deck may
+    ship one. T-038 removed the previous verdict here, which passed on `svg.fig` count > 0 and so
+    failed an all-canvas deck the rule permits."""
+    return not re.search(r"<(object|embed|iframe)\b", h, re.I)
+
+
+def ds118_svg_colour_from_css(h):
+    """DS-118 - every SVG is theme-aware; no hard-coded fill or stroke. A literal colour in a
+    presentation attribute is the hard-coding. `none`, `currentColor` and a `url(#...)` paint
+    server are not colours in this sense, and `var(...)` is the tokenised form the rule wants -
+    DS-214 is what catches a `var()` attribute that CSS then overrides."""
+    for m in re.finditer(r'\b(?:fill|stroke)="([^"]+)"', h):
+        v = m.group(1).strip()
+        if v.startswith(("var(", "url(", "#")) and not HEXLIT.fullmatch(v):
+            continue
+        if v.lower() in ("none", "currentcolor", "transparent", "inherit"):
+            continue
+        return False
+    return True
+
+
+def ds119_canvas_dimensions(h):
+    for tag in re.findall(r"<canvas\b([^>]*)>", h, re.I):
+        if not (re.search(r'\bwidth="\d+"', tag) and re.search(r'\bheight="\d+"', tag)):
+            return False
+    return True
+
+
+# DS-140's vocabulary is the only licence for a duration over DS-141's cap, by name.
+DS140_LONG = (1.2, 4.5)
+
+
+def _custom_properties(c):
+    return dict(re.findall(r"--([a-z0-9-]+)\s*:\s*([^;{}]+);", c))
+
+
+def _expand_vars(value, toks, depth=4):
+    """Resolve `var(--x)` from the deck's own token declarations.
+
+    **Without this the check reads nothing**, and the variant suite is how that was found: DS-033
+    requires every value inside the stage to come from a token, so a duration is written
+    `transition: transform var(--slide-dur)` and the number lives one indirection away. Seeding
+    `--slide-dur:900ms` broke DS-141 and the check saw only `var(--slide-dur)` and passed."""
+    for _ in range(depth):
+        if "var(" not in value:
+            break
+        value = re.sub(r"var\(\s*--([a-z0-9-]+)[^)]*\)",
+                       lambda m: toks.get(m.group(1), ""), value)
+    return value
+
+
+def ds141_durations(h):
+    """DS-141 - entry and transition animations max 500 ms, with DS-140's named vocabulary as the
+    specific override. So: every duration over 500 ms is one of DS-140's two long motions.
+
+    **Only duration-bearing declarations are read.** `animation-delay:600ms` is not a duration and
+    scanning the file for `\\d+s` counted one, alongside six fragments of an embedded typeface."""
+    c = css(h)
+    toks = _custom_properties(c)
+    for value in re.findall(r"\b(?:animation|transition)(?:-duration)?\s*:\s*([^;{}]+)", c):
+        for m in re.finditer(r"(\d+(?:\.\d+)?)(ms|s)\b", _expand_vars(value, toks)):
+            secs = float(m.group(1)) / (1000.0 if m.group(2) == "ms" else 1.0)
+            if secs > 0.5 and not any(abs(secs - n) < 0.01 for n in DS140_LONG):
+                return False
+    return True
+
+
+def ds144_no_3d_between_slides(h):
+    """DS-144 - no 3D transitions between slides. The 3D reveal of a card is permitted, so the
+    check is scoped to rules that target a slide rather than to the file."""
+    for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css(h)):
+        if not re.search(r"rotateX|rotateY|rotate3d|translateZ|perspective", body):
+            continue
+        if re.search(r"\.slide\b", sel) and ".card" not in sel:
+            return False
+    return True
+
+
+def ds163_no_hover_only(h):
+    """DS-163 - never hover-only. A `:hover` rule that changes `display` or `visibility` is
+    revealing content on hover; colour, border and transform changes are supplementary and are
+    what the rule's *tooltips may supplement* clause allows."""
+    for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css(h)):
+        if ":hover" not in sel:
+            continue
+        if re.search(r"\b(display|visibility)\s*:", body):
+            return False
+    return True
+
+
+def ds165_one_disclosure_mark(h):
+    """DS-165 - the disclosure mark is a tokenised element of the theme, not a per-slide
+    invention. Observable: no rule scoped to one slide restyles it."""
+    for sel in re.findall(r"([^{}]+)\{", css(h)):
+        if "disc-mark" not in sel:
+            continue
+        if re.search(r'\[data-name|\.slide-\d|#s\d', sel):
+            return False
+    return True
+
+
 # ---------------------------------------------------------------------------- stage 1: static
 # Each entry is (rule id, what it asserts, predicate). Only rules a file scan can actually
 # decide - anything needing a render lives in stage 2, anything needing judgement is not here.
@@ -66,6 +417,34 @@ STATIC = [
     ("DS-106", "no banned terminology",
      lambda h: not re.search(r"\b(crucial|pivotal|seamless|leverage|synerg\w*|friction|"
                              r"genuinely|arguably|precisely|delve)\b", h, re.I)),
+    # ---- added by T-005, closing rules that were labelled `auto` and checked by nothing (L-36)
+    ("DS-002", "no CDN host referenced - `linked` is not a shipping mode",
+     lambda h: not re.search(r"cdn\.|unpkg\.com|jsdelivr|cdnjs|googleapis\.com", h, re.I)),
+    ("DS-005", "no fetch, XHR or dynamic import - element access, not file reads",
+     lambda h: not re.search(r"\bfetch\s*\(|XMLHttpRequest|\bimport\s*\(", h)),
+    ("DS-006", "no relative module specifier in an inline module", ds006_module_specifiers),
+    ("DS-010", "no colour literal outside the token layer", ds010_colours_tokenised),
+    ("DS-011", "one resolved palette, not one per topic", ds011_one_palette),
+    ("DS-012", "dark mode is custom-property overrides only", ds012_dark_is_overrides),
+    ("DS-020", "exactly one accent hue, roles excluded", ds020_one_accent),
+    ("DS-023", "never pure white, never pure black", ds023_no_pure_black_or_white),
+    ("DS-024", "light is the default, dark is the override", ds024_light_by_default),
+    ("DS-028", "no gradient on the ground, the stage or a slide", ds028_no_full_page_gradient),
+    ("DS-034", "body 24-28 du at line-height 1.55", ds034_body_type),
+    ("DS-037", "text-wrap: balance on display headings", ds037_display_headings_balanced),
+    ("DS-040", "grid and flexbox both used", ds040_grid_and_flex),
+    ("DS-044", "every heading level in use is reset", ds044_headings_reset),
+    # DS-045 is deliberately absent - see `check.py`'s DEFERRED register. The rule admits two
+    # readings that disagree about the reference deck, and `ds045_no_bare_b` below implements the
+    # wide one so the owner can see what it costs before choosing.
+    ("DS-065", "no vw/vh/vmin/vmax/pt/cm/in outside print", ds065_units_ride_the_transform),
+    ("DS-111", "no embedded object standing in for a diagram", ds111_figures_are_drawn),
+    ("DS-118", "no literal colour in a fill= or stroke=", ds118_svg_colour_from_css),
+    ("DS-119", "every <canvas> carries pixel dimensions", ds119_canvas_dimensions),
+    ("DS-141", "no duration over 500 ms outside DS-140's vocabulary", ds141_durations),
+    ("DS-144", "no 3D transform on a slide transition", ds144_no_3d_between_slides),
+    ("DS-163", "no :hover rule revealing content", ds163_no_hover_only),
+    ("DS-165", "the disclosure mark is not restyled per slide", ds165_one_disclosure_mark),
 ]
 
 # ---------------------------------------------------------------------------- stage 2: rendered
@@ -149,6 +528,170 @@ PROBE = r"""
 
     // DS-111 / DS-123 - figures present, and card rows standing in for a diagram
     out.figures = stage.querySelectorAll('svg.fig').length;
+
+    // ---- T-005 -------------------------------------------------------------------------
+    // DS-080 - a <section> per slide. Counted by TAG, because the probe finds slides by class
+    // and a `div.slide` would satisfy every other measurement here while breaking this rule.
+    out.notSections = [];
+    for (var s=0;s<slides.length;s++)
+      if (slides[s].tagName.toLowerCase() !== 'section')
+        out.notSections.push([slides[s].dataset.name, slides[s].tagName.toLowerCase()]);
+
+    // DS-092 - sentence under 20 words, paragraph 3-4 sentences. Measured on rendered prose, so
+    // a sentence broken across two elements is two runs, which is what a reader sees.
+    // A terminator only ends a sentence when whitespace or the end follows it. **A decimal point
+    // is not a full stop**, and splitting on the bare character cut `$5.6M` in half: a 28-word
+    // sentence read as three short ones and the variant suite caught DS-092 missing its own seed.
+    // Same rule the DS-202 bottom-line check already uses, and now the same expression.
+    function sentences(t){
+      var s = t.replace(/\s+/g,' ').trim();
+      if (!s) return [];
+      return s.split(/(?<=[.!?])\s+/).filter(function(x){ return x.trim().length > 1; });
+    }
+    out.longSentences = []; out.longParagraphs = [];
+    var proseRuns = stage.querySelectorAll('.slide p, .slide li, .slide td');
+    for (var p=0;p<proseRuns.length;p++){
+      var el = proseRuns[p];
+      if (el.querySelector('p,li,td')) continue;
+      var txt = (el.textContent||'').replace(/\s+/g,' ').trim();
+      if (!txt) continue;
+      var ss = sentences(txt);
+      if (el.tagName.toLowerCase() === 'p' && ss.length > 4)
+        out.longParagraphs.push([(el.closest('.slide')||{dataset:{}}).dataset.name, ss.length]);
+      for (var q=0;q<ss.length;q++){
+        var w = ss[q].trim().split(/\s+/).filter(Boolean).length;
+        if (w > 20) out.longSentences.push(
+          [(el.closest('.slide')||{dataset:{}}).dataset.name, w, ss[q].trim().slice(0,48)]);
+      }
+    }
+
+    // DS-101 / DS-209 - emphasis. Counted as rendered weight rather than as tag, since a class
+    // can bold anything and `<b>` can be reset. Recorded per slide, and separately for the runs
+    // OUTSIDE the deliverable, which is the distinction DS-209 turns on.
+    out.boldRuns = []; out.emphasisOutsideBottomLine = [];
+    for (var s=0;s<slides.length;s++){
+      var nm = slides[s].dataset.name, n = 0, outside = [];
+      var runs = slides[s].querySelectorAll('p,h1,h2,h3,h4,li,td,span,b,strong,text,div');
+      for (var r=0;r<runs.length;r++){
+        var el = runs[r];
+        if (el.children.length || !(el.textContent||'').trim()) continue;
+        if (el.closest('.disc-panel') || el.closest('.eyebrow')) continue;
+        var wgt = parseInt(getComputedStyle(el).fontWeight, 10) || 400;
+        if (wgt < 600) continue;
+        n++;
+        if (!el.closest('.bottom-line') && !el.closest('.headline'))
+          outside.push((el.textContent||'').trim().slice(0,28));
+      }
+      out.boldRuns.push([nm, n]);
+      if (outside.length) out.emphasisOutsideBottomLine.push([nm, outside.length, outside[0]]);
+    }
+
+    // DS-113 - the sprite carries ONLY the icons used. Read after start-up, because the printed
+    // contents page builds its own `<use>` set from the manifest and a source scan sees none of
+    // them - four of this deck's ten symbols are referenced only from there.
+    out.unusedSymbols = [];
+    var used = {};
+    var uses = document.querySelectorAll('use');
+    for (var u=0;u<uses.length;u++){
+      var href = uses[u].getAttribute('href') || uses[u].getAttribute('xlink:href') || '';
+      if (href.charAt(0) === '#') used[href.slice(1)] = 1;
+    }
+    var syms = document.querySelectorAll('symbol[id]');
+    for (var y=0;y<syms.length;y++)
+      if (!used[syms[y].id]) out.unusedSymbols.push(syms[y].id);
+    out.symbolCount = syms.length;
+
+    // DS-117 - connectors are labelled, always. Distance from the connector's own midpoint to
+    // the nearest text in the same figure, in design units, so the number is comparable across
+    // figures drawn at different viewBox scales.
+    out.connectorLabelGap = [];
+    var figs = stage.querySelectorAll('svg.fig');
+    for (var f=0;f<figs.length;f++){
+      var conns = figs[f].querySelectorAll('[marker-end]');
+      var labels = figs[f].querySelectorAll('text');
+      for (var c=0;c<conns.length;c++){
+        var cr = conns[c].getBoundingClientRect();
+        var cx = cr.left + cr.width/2, cy = cr.top + cr.height/2, best = 1e9;
+        for (var l=0;l<labels.length;l++){
+          var lr = labels[l].getBoundingClientRect();
+          var dx = (lr.left + lr.width/2) - cx, dy = (lr.top + lr.height/2) - cy;
+          best = Math.min(best, Math.sqrt(dx*dx + dy*dy) / k);
+        }
+        out.connectorLabelGap.push([+best.toFixed(0),
+          (conns[c].closest('.slide')||{dataset:{}}).dataset.name || '']);
+      }
+    }
+
+    // DS-219 - never set text on a data mark. A text run whose nearest painted background is an
+    // SVG shape rather than the page is sitting on a mark; `paintedBehind` below already does
+    // exactly this geometry for DS-215, so the two share one definition of "behind".
+    // (measured further down, where paintedBehind is defined)
+
+    // DS-135 - the page title and the nav-bar name for that page must match.
+    var brand = document.querySelector('.chrome .deck, .chrome .brand, .chrome h1, .ruler-label');
+    out.chromeName = brand ? (brand.textContent||'').trim() : null;
+    out.docTitle = document.title;
+
+    // DS-164 - a visible affordance with a REAL LABEL; a bare chevron does not qualify.
+    out.unlabelledDiscControls = [];
+    var dbtns = stage.querySelectorAll('.disc-btn');
+    for (var d=0;d<dbtns.length;d++){
+      var words = (dbtns[d].textContent||'').replace(/\s+/g,' ').trim();
+      if (words.replace(/[^A-Za-z0-9]/g,'').length < 3)
+        out.unlabelledDiscControls.push([(dbtns[d].closest('.slide')||{dataset:{}}).dataset.name,
+                                         words.slice(0,20)]);
+    }
+    out.discControls = dbtns.length;
+
+    // DS-026 - semantic roles ship WITH A VISIBLE LEGEND. Only slides that actually use a role
+    // colour owe one, so the subject is found before it is judged.
+    out.rolesWithoutLegend = []; out.slidesUsingRoles = 0;
+    function cls(el){
+      var c = el.className;
+      return (c && c.baseVal !== undefined) ? c.baseVal : (c || '');
+    }
+    for (var s=0;s<slides.length;s++){
+      var usesRole = false;
+      var kids = slides[s].querySelectorAll('*');
+      for (var r=0;r<kids.length && !usesRole;r++)
+        usesRole = /(^|[\s-])(pos|neg|caution)($|[\s-])/.test(cls(kids[r]));
+      if (!usesRole) continue;
+      out.slidesUsingRoles++;
+      if (!slides[s].querySelector('.legend, .sm-legend'))
+        out.rolesWithoutLegend.push(slides[s].dataset.name);
+    }
+
+    // DS-043 - no box nested in a box with its own text. A "box" is what a reader sees as one:
+    // a painted background or a real border. Nesting alone is not the defect - the outer box
+    // carrying its own text is, because that is when the two read as one thing and are two.
+    function isBox(el){
+      var st = getComputedStyle(el);
+      if (st.backgroundColor && st.backgroundColor !== 'rgba(0, 0, 0, 0)'){
+        var pr = el.parentElement ? getComputedStyle(el.parentElement).backgroundColor : '';
+        if (st.backgroundColor !== pr) return true;
+      }
+      return parseFloat(st.borderTopWidth) > 0.4 || parseFloat(st.borderLeftWidth) > 0.4;
+    }
+    function ownText(el){
+      for (var i=0;i<el.childNodes.length;i++)
+        if (el.childNodes[i].nodeType === 3 && el.childNodes[i].nodeValue.trim()) return true;
+      return false;
+    }
+    out.nestedTextBoxes = [];
+    var boxy = stage.querySelectorAll('.slide *');
+    for (var b=0;b<boxy.length;b++){
+      var el = boxy[b];
+      if (el.ownerSVGElement || !isBox(el)) continue;
+      var up = el.parentElement;
+      while (up && up !== stage){
+        if (!up.ownerSVGElement && isBox(up) && ownText(up)){
+          out.nestedTextBoxes.push([(el.closest('.slide')||{dataset:{}}).dataset.name,
+            (up.className||'') + ' > ' + (el.className||'')]);
+          break;
+        }
+        up = up.parentElement;
+      }
+    }
 
     // ---- DS-202/203/205 - the deliverable. T-027 wrote these rules and labelled them auto and
     // render; nothing enforced them until T-028, which is how a deck with a bottom line on none
@@ -267,6 +810,11 @@ PROBE = r"""
     // three", and neither is what these three lines measure. Both rules the probe used to name are
     // `judge`, so the ruleset says no check should be deciding them at all.
     out.panelsOpenInitially = document.querySelectorAll('.stage .disc-panel:not([hidden])').length;
+    // DS-160 - two tiers, never three. A third tier is a disclosure control or panel living
+    // INSIDE a panel, which is the only shape slide -> detail -> further detail can take.
+    out.thirdTier = document.querySelectorAll(
+      '.stage .disc-panel .disc-panel, .stage .disc-panel .disc-btn').length;
+    out.panelCount = document.querySelectorAll('.stage .disc-panel').length;
     var btns = document.querySelectorAll('.stage .disc-btn');
     if (btns.length){
       btns[0].click();
@@ -278,7 +826,45 @@ PROBE = r"""
       var p = document.querySelector('.slide[data-current] .disc-panel:not([hidden])');
       if (p) out.panelBelowControl =
         p.getBoundingClientRect().top >= p.parentNode.querySelector('.disc-btn').getBoundingClientRect().bottom - 1;
-      document.dispatchEvent(new KeyboardEvent('keydown', {key:'Escape', bubbles:true}));
+      // Dispatched on BODY, never on `document`. The deck's handler opens with
+      // `e.target.matches('input,textarea')`, and `document` has no `matches` - so an event
+      // dispatched on the document throws inside the deck's own listener and the key does
+      // nothing, silently. Found by DS-166 reporting that an arrow did not advance the deck.
+      document.body.dispatchEvent(new KeyboardEvent('keydown', {key:'Escape', bubbles:true}));
+
+      // DS-166 - disclosure state is never required to advance, and the two do not interact.
+      // Both halves are observed: an arrow with everything closed must move the deck, and the
+      // disclosure toggle must not. Driven through the keyboard rather than the buttons, because
+      // the rule is written about keys.
+      function at(){
+        var cur = document.querySelector('.slide[data-current]');
+        return Array.prototype.indexOf.call(slides, cur);
+      }
+      var before = at();
+      document.body.dispatchEvent(new KeyboardEvent('keydown', {key:'ArrowRight', bubbles:true}));
+      out.arrowAdvancesClosed = at() === before + 1;
+      var afterArrow = at();
+      document.body.dispatchEvent(new KeyboardEvent('keydown', {key:'d', bubbles:true}));
+      out.toggleDoesNotAdvance = at() === afterArrow;
+      // DS-135 - the page title and the nav-bar name for that page must match. Read AFTER a
+      // navigation, because on slide one the deck's own title collapses to the deck name and the
+      // check would be true of any title at all.
+      out.titleCarriesSlide = document.title.indexOf(slides[at()].dataset.name) >= 0;
+      out.titleSample = [document.title, slides[at()].dataset.name];
+      // Dispatched on BODY, never on `document`. The deck's handler opens with
+      // `e.target.matches('input,textarea')`, and `document` has no `matches` - so an event
+      // dispatched on the document throws inside the deck's own listener and the key does
+      // nothing, silently. Found by DS-166 reporting that an arrow did not advance the deck.
+      document.body.dispatchEvent(new KeyboardEvent('keydown', {key:'Escape', bubbles:true}));
+
+      // DS-146 - charts draw in ONCE, never again on the way back. The deck marks a slide played
+      // and the mark is what must survive the round trip; an animation that re-ran would have
+      // needed the mark cleared.
+      var playedAt = at();
+      var wasPlayed = slides[playedAt].hasAttribute('data-played');
+      goTo(playedAt > 0 ? playedAt - 1 : playedAt + 1);
+      goTo(playedAt);
+      out.playedSurvivesReturn = wasPlayed && slides[playedAt].hasAttribute('data-played');
     }
 
     // DS-070..076 - the reflow view
@@ -358,6 +944,32 @@ PROBE = r"""
       }
       return getComputedStyle(document.body).backgroundColor;
     }
+    // DS-219 - never set text on a data mark. A text run whose nearest painted background is an
+    // SVG shape rather than the page is sitting on a mark, and `paintedBehind` is already the
+    // project's definition of "behind" - sharing it is what stops two answers to one question.
+    out.textOnDataMark = [];
+    var figs2 = stage.querySelectorAll('svg.fig');
+    for (var f2=0; f2<figs2.length; f2++){
+      var ftexts = figs2[f2].querySelectorAll('text');
+      for (var t3=0; t3<ftexts.length; t3++){
+        var te = ftexts[t3];
+        if (!(te.textContent||'').trim()) continue;
+        var r3 = te.getBoundingClientRect();
+        var cx3 = r3.left + r3.width/2, cy3 = r3.top + r3.height/2, on = null;
+        var shapes3 = figs2[f2].querySelectorAll('rect,circle,ellipse,polygon');
+        for (var s3=0; s3<shapes3.length; s3++){
+          var sr3 = shapes3[s3].getBoundingClientRect();
+          if (sr3.width < 4 || sr3.height < 4) continue;
+          var fill3 = getComputedStyle(shapes3[s3]).fill;
+          if (!fill3 || fill3 === 'none' || fill3 === 'rgba(0, 0, 0, 0)') continue;
+          if (cx3 >= sr3.left && cx3 <= sr3.right && cy3 >= sr3.top && cy3 <= sr3.bottom)
+            on = shapes3[s3].getAttribute('class') || shapes3[s3].tagName;
+        }
+        if (on) out.textOnDataMark.push([(te.closest('.slide')||{dataset:{}}).dataset.name,
+                                         (te.textContent||'').trim().slice(0,20), on]);
+      }
+    }
+
     out.renderedLowContrast = [];
     out.deadFillAttributes = [];
     for (var sl=0; sl<slides.length; sl++){
@@ -476,6 +1088,34 @@ def render_verdicts(data):
          % len(data.get("deadFillAttributes", [])), not data.get("deadFillAttributes")),
         ("DS-215", "text runs rendering under 4.5:1: %d"
          % len(data.get("renderedLowContrast", [])), not data.get("renderedLowContrast")),
+        # ---- added by T-005
+        ("DS-080", "slides that are not a <section>: %d" % len(data.get("notSections", [])),
+         not data.get("notSections")),
+        ("DS-092", "sentences over 20 words: %d, paragraphs over 4 sentences: %d"
+         % (len(data.get("longSentences", [])), len(data.get("longParagraphs", []))),
+         not data.get("longSentences") and not data.get("longParagraphs")),
+        ("DS-113", "sprite icons never used: %d of %d"
+         % (len(data.get("unusedSymbols", [])), data.get("symbolCount", 0)),
+         not data.get("unusedSymbols") and data.get("symbolCount", 0) > 0),
+        ("DS-135", "the page title carries the slide's name: %s (%r)"
+         % (data.get("titleCarriesSlide"), data.get("titleSample")),
+         data.get("titleCarriesSlide") is True),
+        ("DS-164", "disclosure controls with no real label: %d of %d"
+         % (len(data.get("unlabelledDiscControls", [])), data.get("discControls", 0)),
+         not data.get("unlabelledDiscControls") and data.get("discControls", 0) > 0),
+        ("DS-166", "arrow advances with everything closed: %s; the toggle does not advance: %s"
+         % (data.get("arrowAdvancesClosed"), data.get("toggleDoesNotAdvance")),
+         data.get("arrowAdvancesClosed") is True and data.get("toggleDoesNotAdvance") is True),
+        ("DS-146", "the played mark survives navigating away and back: %s"
+         % data.get("playedSurvivesReturn"), data.get("playedSurvivesReturn") is True),
+        # DS-026 is measured (`rolesWithoutLegend`) and NOT emitted as a verdict: the rule wants a
+        # *visible* legend and the tripwire slide draws one as two unmarked SVG swatches, which a
+        # class-based check reports as missing. Excused in `check.py`, with the argument.
+        ("DS-043", "boxes nested in a box that has its own text: %d"
+         % len(data.get("nestedTextBoxes", [])), not data.get("nestedTextBoxes")),
+        ("DS-160", "third-tier disclosure inside a panel: %d, over %d panel(s)"
+         % (data.get("thirdTier", 0), data.get("panelCount", 0)),
+         not data.get("thirdTier") and data.get("panelCount", 0) > 0),
     ]
 
 
@@ -537,7 +1177,8 @@ def main(deck, skip_contract=False):
             if not good:
                 failures.append(rule)
             print("  %-15s %-4s  %s" % (rule, ok(good), what))
-        print(contract.UNCHECKED)
+        if contract.UNCHECKED:
+            print(contract.UNCHECKED)
 
     print("\n%d mechanical failure(s): %s" % (len(failures), ", ".join(failures) or "none"))
     print("""
