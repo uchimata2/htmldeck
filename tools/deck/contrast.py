@@ -56,6 +56,16 @@ def self_test():
             sys.exit("SELF-TEST FAILED: ratio(%s,%s) = %.3f, expected %.2f" % (fg, bg, got, want))
     if abs(ratio("#000", "#FFF") - 21.0) > 0.02:
         sys.exit("SELF-TEST FAILED: three-digit hex not expanded")
+
+    # A deck with one theme must not report two (**L-36**, T-051). Held on strings, so it costs
+    # nothing and runs before any deck is read.
+    one = ':root{--ink:#23211D;--paper:#F3F0E8;}'
+    two = one + ':root[data-theme="dark"]{--ink:#F3F0E8;--paper:#23211D;}'
+    if read_tokens(one)["darkDeclared"] or not read_tokens(two)["darkDeclared"]:
+        sys.exit("SELF-TEST FAILED: a declared dark theme cannot be told from an absent one")
+    if [ok for r, _w, ok in verdicts(one) if r == "DS-027"] != [False]:
+        sys.exit("SELF-TEST FAILED: DS-027 passed a deck with no dark theme - 'both themes "
+                 "readable' was decided against the light theme read twice")
     return True
 
 
@@ -65,7 +75,18 @@ TOKEN = re.compile(r"--([a-z0-9-]+)\s*:\s*(#[0-9A-Fa-f]{3,8})\s*;")
 
 
 def read_tokens(html):
-    """Return {'light': {...}, 'dark': {...}} of colour tokens, dark inheriting from light."""
+    """Return {'light': {...}, 'dark': {...}, 'darkDeclared': bool} of colour tokens.
+
+    **`darkDeclared` is the whole point of the third key.** Dark inherits from light, so when a deck
+    declares no dark block the fallback used to hand back a copy of the light theme under the name
+    `dark` - and every pair was then evaluated twice against the same colours. Deleting the entire
+    dark theme from the reference deck produced zero failures and a row reading *dark 17 pairs / 0
+    failing*, which is a measurement of a theme that does not exist (T-051).
+
+    The pair counts below were added for exactly this class of fault and did not catch it: they
+    prove the ratio maths ran, not that there were two themes to run it on. **A denominator guards
+    only the quantity it counts** - the count was of pairs, and the absent subject was a theme.
+    """
     light, dark = {}, {}
 
     root = re.search(r":root\s*\{(.*?)\}", html, re.S)
@@ -79,7 +100,7 @@ def read_tokens(html):
 
     if not light:
         sys.exit("no :root colour tokens found - is this a deck?")
-    return {"light": light, "dark": dark or dict(light)}
+    return {"light": light, "dark": dark or dict(light), "darkDeclared": bool(dk)}
 
 
 # ---------------------------------------------------------------------------- the pairs
@@ -180,11 +201,19 @@ def verdicts(html):
         n = len([1 for _l, fg, bg, _n, _w in PAIRS if fg in T and bg in T])
         per_theme[theme] = (n, len([f for f in fails if f[0] == theme]))
 
+    # **Two themes have to exist before "both are readable" can be true of them.** DS-027 is `hard`
+    # and states a property of the pair, so a deck declaring one theme fails it rather than lacking
+    # a subject - which is the distinction T-051 drew, and this rule falls the other side of it from
+    # DS-140. Written against `darkDeclared` rather than the pair count, because the count was the
+    # guard that let this through: the fallback theme is a copy of the light one and counts fine.
     return [
-        ("DS-027", "both themes evaluated: light %d pairs / %d failing, dark %d pairs / %d failing"
+        ("DS-027", "both themes evaluated: light %d pairs / %d failing, dark %d pairs / %d failing%s"
          % (per_theme["light"][0], per_theme["light"][1],
-            per_theme["dark"][0], per_theme["dark"][1]),
-         per_theme["light"][0] > 0 and per_theme["dark"][0] > 0
+            per_theme["dark"][0], per_theme["dark"][1],
+            "" if themes["darkDeclared"]
+            else "  [NO DARK THEME DECLARED - the dark column is the light theme read twice]"),
+         themes["darkDeclared"]
+         and per_theme["light"][0] > 0 and per_theme["dark"][0] > 0
          and not per_theme["light"][1] and not per_theme["dark"][1]),
         ("1.4.3", "text pairs under 4.5:1: %d of %d evaluated"
          % (len(text), evaluated["1.4.3"]), not text and evaluated["1.4.3"] > 0),

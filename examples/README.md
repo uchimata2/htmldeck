@@ -190,10 +190,22 @@ its evidential value. DS-075 is worth noticing on its own account, though — it
 anti-pattern is not only a worse encoding but an accessibility failure, found by a rule aimed at
 something else entirely.
 
-**One caveat about the S3 seed.** It replaces the deck's only dashed `Current` flow, so on the
-seeded deck DS-140 reports *"no dashed flow in this deck"* — **and passes**, because the check has
-no subject rather than a conforming one. That is L-36 inside the instrument, it is not a property
-of the seed, and it is [T-051](../tasks/T-051-a-check-with-no-subject-must-not-report-a-pass.md).
+**One thing the S3 seed exposed, and the fixture is the only deck that could.** It replaces the
+deck's only dashed `Current` flow, so DS-140's subject stops existing — and until
+[T-051](../tasks/T-051-a-check-with-no-subject-must-not-report-a-pass.md) the rule **passed on its
+own absence**, reporting *"no dashed flow in this deck"* beside the same `pass` the conforming deck
+earned. It now reports `NO SUBJECT`, the rule falls to `SILENT`, and the seeded deck's account reads
+**77 checked, 1 silent** against the good deck's 78 and 0:
+
+```
+  checked               77
+  SILENT                 1   DS-140
+      of which NO SUBJECT  DS-140
+```
+
+That is not one of the ten seeded defects and is not counted among the four failures — it is the
+gate declining to make a claim, which is the point. **This is what a fixture built to be missing
+things is for**: no deck that has everything can show a check passing on nothing.
 
 **The gate is necessary and nowhere near sufficient**, and this is sharper than the earlier count
 suggested: a pipeline stopping at the gate would ship a deck whose headline is a topic label, whose

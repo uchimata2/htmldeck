@@ -131,7 +131,9 @@ def render_failures(path):
     if not data:
         return None, [("PROBE", (err or "")[:120], False)]
     rows = audit.render_verdicts(data)
-    return {r for r, _w, ok in rows if not ok}, rows
+    # `is False`: a row reporting `None` decided nothing, and counting that as a catch would let a
+    # variant look caught because the seed removed the rule's subject rather than broke it (T-051).
+    return {r for r, _w, ok in rows if ok is False}, rows
 
 
 def self_test():
@@ -163,8 +165,9 @@ def run(variants, failures_of, label):
             bad.append((name, rule, caught))
         print("  %-28s breaks %-7s -> %s" % (name, rule, "CAUGHT" if good else "MISSED"))
         for r, what, ok in rows:
-            if not ok:
-                print("      %-8s %s" % (r, what))
+            if ok is not True:
+                print("      %-8s %-58s %s"
+                      % (r, what[:58], "NO SUBJECT" if ok is None else "FAIL"))
     print("  %d of %d %s variants caught.\n" % (len(variants) - len(bad), len(variants), label))
     return bad
 

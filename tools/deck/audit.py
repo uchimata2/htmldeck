@@ -1048,13 +1048,72 @@ PROBE = r"""
 
 
 def ok(flag):
-    return "pass" if flag else "FAIL"
+    """`None` is neither. A row that found no subject decided nothing, and printing it as either
+    answer is the claim T-051 removed (**L-36**)."""
+    return "NO SUBJECT" if flag is None else "pass" if flag else "FAIL"
 
 
 def render_data(deck):
     """Run the stage-3 probe once. Returns (measurements, error) - the browser half."""
     probe = render.make_probe(deck, name="audit.html", extra=PROBE)
     return render.read_result(render.file_url(probe), 1622, 1054)
+
+
+# --------------------------------------------------------------- passing on an absent subject
+# **A row that cannot tell *nothing wrong* from *nothing there* is not a check.** Three shapes are
+# legitimate and one is the defect, and the difference is the rule's own quantifier:
+#
+#   prohibition   never X, at most n X   - the subject is the deck, which exists. Zero X is a pass.
+#   conditional   if X then Y            - no X, no obligation. Vacuous truth is the right answer.
+#   guarded by R  every X is Y           - vacuous, but row R fails when the subject is absent, so
+#                                          no deck reaches a clean run without one.
+#   ------------- every X is Y, unguarded - THE DEFECT. Reports `None`, and the rule goes silent.
+#
+# Every rule whose row still passes against a measurement in which nothing was found is declared
+# here, with the shape and the subject, and `self_test` refuses to run if one is missing. **A `guarded
+# by` claim is verified rather than trusted**: the self-test requires one of the named rows to be
+# failing on that measurement, so a guard that stops guarding is a red run and not a comment that
+# quietly went out of date. Naming several is not hedging - a bottom-line rule is vacuous either
+# because the deck has no slides or because its slides carry no bottom line, and those are two rows.
+#
+# This table is the answer to *why does the same fault keep being found one instance at a time* -
+# three times before T-051, each fixed in place. It was never that the fix was hard; it was that
+# nothing made the next one loud.
+ABSENCE_IS_A_PASS = {
+    "DS-035": ("prohibition", "no text run under 16 design units; the subject is the deck's text"),
+    "DS-043": ("prohibition", "no box nested in a box that carries its own text"),
+    "DS-073": ("guarded by DS-070", "the reflow view's sections; DS-070 fails when it never "
+                                    "engaged, so there is no run in which this is the only silence"),
+    "DS-080": ("guarded by DS-081", "a filter over the slides"),
+    "DS-091": ("prohibition", "no headline over six words. **A deck whose slides carry no headline "
+                              "at all passes this and nothing else objects** - no rule in the "
+                              "ruleset requires a headline, so the gap is the ruleset's, not this "
+                              "row's, and it is recorded in T-051 §4 rather than invented here"),
+    "DS-092": ("prohibition", "no sentence over 20 words, no paragraph over 4 sentences"),
+    "DS-132": ("prohibition", "nothing tabbable on an off-screen slide"),
+    "DS-142": ("prohibition", "no looping motion on static content"),
+    "DS-202": ("guarded by DS-081", "a filter over the slides; the first row IS the presence "
+                                    "check, and the second is guarded by the first"),
+    "DS-203": ("guarded by DS-202/DS-081", "prose outranking a bottom line that exists"),
+    "DS-205": ("guarded by DS-202/DS-081", "a bottom line that exists, hidden behind a disclosure"),
+    "DS-214": ("prohibition", "no fill= attribute the computed style overrides"),
+    "DS-215": ("prohibition", "no text run rendering under 4.5:1"),
+    "DS-216": ("prohibition", "at most two encodings of position. Zero is a deck with no position "
+                              "indicator, which is DS-133's subject and not this budget's"),
+    "DS-217": ("prohibition", "a budget - at most 12 chrome items, at most 90 du tall. A deck with "
+                              "no chrome is not over it"),
+    "DS-218": ("conditional", "a control is owed for motion that loops; no looping motion, no "
+                              "obligation. This is the shape DS-140's `Current` triggers"),
+    "DS-219": ("conditional", "a label sitting on a data mark owes two ratios; no label on a mark, "
+                              "no pair to measure. The row prints its own denominator, `0 of 0`"),
+    "DS-227": ("prohibition", "no panel open at load"),
+}
+
+# The keys the probe emits unconditionally, so a measurement without them is malformed rather than
+# empty. `self_test` builds its nothing-was-found measurement from exactly these; if a verdict grows
+# a `data[...]` access to something outside the set, the self-test says so by name.
+ALWAYS_MEASURED = ("slideCount", "underFloor", "longHeadlines", "tabbablesOffscreen",
+                   "smallTargets", "panelsOpenInitially", "motionControl", "infinite")
 
 
 def render_verdicts(data):
@@ -1066,6 +1125,12 @@ def render_verdicts(data):
     four IDs cited by verdicts that measured something else. The discriminator is subject identity,
     not completeness: a row deciding one clause of its rule is a partial check and belongs here; a
     row whose measurement is a precondition, a proxy or a different rule's subject does not.
+
+    **`ok` has three values, not two.** `True` and `False` are the deck's answer; **`None` means the
+    check ran and the deck contains no subject to judge**, which is not a pass and is not a defect
+    either. It travels to `check.py`, where the rule lands in `silent` and the run fails - the same
+    place a rule with no check at all lands, because both are the gate declining to make a claim
+    (**L-36**). What the account adds is which of the two it was, since the fixes differ.
     """
     return [
         ("DS-081", "slides: %d" % data["slideCount"], 6 <= data["slideCount"]),
@@ -1096,28 +1161,46 @@ def render_verdicts(data):
         # and a gate must fail on "nothing measured" rather than pass on it (L-36).
         ("DS-130", "disclosure control in the tab order: %s" % data.get("currentDiscReachable"),
          data.get("currentDiscReachable") is True),
+        # `smallestTarget` is null when nothing tabbable was measured, and a count of 0 then means
+        # no target rather than no small one. The minimum is the denominator (T-051).
         ("DS-168", "targets under 24 CSS px: %d (smallest %s)"
-         % (data["smallTargets"], data.get("smallestTarget")), data["smallTargets"] == 0),
+         % (data["smallTargets"], data.get("smallestTarget")),
+         None if data.get("smallestTarget") is None else data["smallTargets"] == 0),
         ("DS-227", "panels closed at load: %d open" % data["panelsOpenInitially"],
          data["panelsOpenInitially"] == 0),
+        # Both keys exist only on a deck with a disclosure control - the probe emits them inside
+        # `if (btns.length)`. A `.get()` default that passes, and `is not False` on a null, were the
+        # same fault DS-140 had: absence read as conformance (T-051).
         ("DS-228", "panels open at once: %s" % data.get("panelsOpenAfterTwo"),
-         data.get("panelsOpenAfterTwo", 0) <= 1),
+         None if data.get("panelsOpenAfterTwo") is None
+         else data["panelsOpenAfterTwo"] <= 1),
         ("DS-138", "panel drops below its control: %s" % data.get("panelBelowControl"),
-         data.get("panelBelowControl") is not False),
+         None if data.get("panelBelowControl") is None
+         else data["panelBelowControl"] is True),
         ("DS-142", "looping motion on static content: %d" % len(data.get("ambient", [])),
          not data.get("ambient")),
         ("DS-218", "control for motion over 5s: %s (%d looping)"
          % (data["motionControl"], len(data["infinite"])),
          len(data["infinite"]) == 0 or data["motionControl"]),
+        # **The instance T-051 was raised for.** `.current` is the only subject this row has, the
+        # probe emits the key only when it finds one, and `None != "none"` is `True` - so the rule
+        # passed on its own absence, and the seeded fixture that deletes the deck's only dashed flow
+        # reported the same `pass` as the deck that has one. A deck with no flow is legitimate and
+        # this is not a failure; it is the rule going undecided, which the account calls silent.
         ("DS-140", "`Current` renders dashed: %s"
          % (data.get("currentDasharray") or "no dashed flow in this deck"),
-         data.get("currentDasharray") != "none"),
+         None if data.get("currentDasharray") is None
+         else data["currentDasharray"] != "none"),
         ("DS-070", "reflow view engages: %s" % data.get("docOn"), data.get("docOn") is True),
         ("DS-073", "sections carrying less text than their slide: %d"
          % len(data.get("docShorterThanSlide", [])), not data.get("docShorterThanSlide")),
+        # Two nulls compare equal, so a deck with no reflow view reported a pass here on
+        # `None == None`. DS-070 goes red in that case, so no deck escaped the run - but the row
+        # itself was still claiming a rule it had not decided (T-051).
         ("DS-073", "tier-two panels open in the reflow view: %s/%s"
          % (data.get("docPanelsOpen"), data.get("docPanelsTotal")),
-         data.get("docPanelsOpen") == data.get("docPanelsTotal")),
+         None if data.get("docPanelsTotal") is None
+         else data["docPanelsOpen"] == data["docPanelsTotal"]),
         ("DS-075", "reflow scrollWidth at 320 CSS px: %s (overflowing: %s)"
          % (data.get("at320ScrollWidth"), data.get("at320Overflowing")),
          data.get("at320ScrollWidth", 999) <= 321 and data.get("at320Overflowing") == 0),
@@ -1162,6 +1245,76 @@ def render_verdicts(data):
     ]
 
 
+def self_test():
+    """No verdict may report a pass against a measurement in which nothing was found (**L-36**).
+
+    **This is the check that was missing for three instances.** DS-130 was fixed in place by T-038,
+    DS-087 is excused in `check.py` for the same reason in its own words, and DS-140 was found a
+    third time by a fixture built to be missing things - and after each one the gate went back to
+    having no way to notice a fourth. Reading forty predicates by eye is what produced that record.
+
+    `render_verdicts` is pure, so the fourth instance costs one dictionary and no browser: build the
+    measurement a probe returns when it finds nothing, run every row against it, and require each
+    row that still passes to be declared in `ABSENCE_IS_A_PASS` with its shape and its subject. A
+    row added tomorrow with a `.get()` default that passes has to be argued for in writing before
+    the gate will run at all.
+    """
+    empty = dict.fromkeys(ALWAYS_MEASURED, 0)
+    empty.update({"underFloor": [], "longHeadlines": [], "infinite": [], "motionControl": None})
+    try:
+        rows = render_verdicts(empty)
+    except KeyError as exc:
+        sys.exit("SELF-TEST FAILED: a verdict reads data[%s] unconditionally, so it is not in "
+                 "ALWAYS_MEASURED and the nothing-was-found measurement cannot be built. Add the "
+                 "key there if the probe always emits it, or read it with .get()" % exc)
+
+    passing = sorted({r for r, _w, ok in rows if ok is True})
+    undeclared = [r for r in passing if r not in ABSENCE_IS_A_PASS]
+    if undeclared:
+        sys.exit("SELF-TEST FAILED: %s pass against a measurement in which nothing was found and "
+                 "are not declared in ABSENCE_IS_A_PASS.\n  A rule of the form *every X is Y* whose "
+                 "X is absent is not passing - it is undecided, and reports None. A prohibition or "
+                 "a conditional IS passing, and says so there in writing."
+                 % ", ".join(undeclared))
+    stale = [r for r in ABSENCE_IS_A_PASS if r not in passing]
+    if stale:
+        sys.exit("SELF-TEST FAILED: %s are declared to pass on an absent subject and do not - the "
+                 "declaration outlived the row it excuses" % ", ".join(sorted(stale)))
+
+    # A `guarded by` claim is a testable statement about another row, so it is tested. Without this
+    # the table would be a set of comments, and a comment is what three previous fixes left behind.
+    failing = {r for r, _w, ok in rows if ok is False}
+    for rid, (shape, why) in sorted(ABSENCE_IS_A_PASS.items()):
+        if not shape.startswith("guarded by"):
+            if shape not in ("prohibition", "conditional"):
+                sys.exit("SELF-TEST FAILED: %s declares shape %r, which is not one of "
+                         "prohibition, conditional, guarded by <rule>" % (rid, shape))
+            continue
+        guards = [g.strip() for g in shape[len("guarded by"):].split("/")]
+        if not any(g in failing for g in guards):
+            sys.exit("SELF-TEST FAILED: %s claims to be guarded by %s, and none of them fails on a "
+                     "measurement in which nothing was found. The guard has stopped guarding"
+                     % (rid, " or ".join(guards)))
+        if len(why) < 20:
+            sys.exit("SELF-TEST FAILED: %s names its subject in a phrase, not in writing" % rid)
+
+    # All three states exercised on one row, because a `None` that is never contrasted with a real
+    # pass and a real failure proves only that the row returns something. DS-140 is the row the task
+    # was raised for, so it is the one held to it.
+    def ds140(**kw):
+        return {r: ok for r, _w, ok in render_verdicts(dict(empty, **kw))}["DS-140"]
+
+    for want, state, kw in ((None, "undecided with no dashed flow", {}),
+                            (True, "a pass on a dashed flow", {"currentDasharray": "7px, 6px"}),
+                            (False, "a failure on a flow that is not dashed",
+                             {"currentDasharray": "none"})):
+        if ds140(**kw) is not want:
+            sys.exit("SELF-TEST FAILED: DS-140 does not report %s - it gave %r. The fault T-051 "
+                     "exists for is back, or the row has stopped deciding anything"
+                     % (state, ds140(**kw)))
+    return True
+
+
 def main(deck, skip_contract=False):
     render.self_test()
     contrast.self_test()
@@ -1193,7 +1346,7 @@ def main(deck, skip_contract=False):
     print("\n=== stage 3  render gate (measured, viewport %d)" % data["vw"])
     rows = render_verdicts(data)
     for rule, what, good in rows:
-        if not good:
+        if good is False:
             failures.append(rule)
         print("  %-15s %-58s %s" % (rule, what, ok(good)))
 

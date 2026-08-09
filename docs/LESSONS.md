@@ -839,6 +839,57 @@ the covered part: `ruleset.py --gates` partitions all 114 `hard` rules across th
 when the parts do not sum, which is the assertion that would have caught this on day one. The test to
 apply to any coverage claim: **what is the denominator, and who chose it?**
 
+### L-44 — A check whose subject is absent reports conformance, and every idiom in the language helps it
+
+**L-36** is a rule with no check. This is a rule *with* a check, that ran, found nothing to look at,
+and said `pass`. It is harder to see, because the row is there and it is green.
+
+The case, and the reason it is a lesson rather than a bug. The same fault was found and fixed
+**three times, one instance at a time**, and none of the three generalised:
+
+| Found | Rule | The expression | What it meant |
+| :--- | :--- | :--- | :--- |
+| [T-038](../tasks/T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) | DS-130 | `is not False` on a null | measured on a slide with no disclosure control |
+| [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md) | DS-087 | — | excused *in writing*, for exactly this reason, and the reason stayed local to it |
+| [T-051](../tasks/T-051-a-check-with-no-subject-must-not-report-a-pass.md) | DS-140 | `None != "none"` | the deck's only dashed flow was gone |
+
+**The mechanism is that vacuity is the default in every idiom the check would naturally use.**
+`not []`, `None != "none"`, `None is not False`, `None == None`, `data.get(k, 0) <= 12`,
+`set().issubset(x)` — every one of them returns the passing answer when there is nothing there. So
+the author writes the obvious expression, the row is correct on the deck in front of them, and the
+defect appears only on a deck missing the thing. **You cannot find this by reading the predicate**;
+it reads correctly. It was found, all three times, by a deck built to be missing something.
+
+**Absence is not uniformly a defect, and a gate that treats it that way fails legitimate work.**
+The rule's own quantifier decides:
+
+- **prohibition** — *never X*, *at most n X*. The subject is the artefact, which exists. Zero X is a
+  genuine pass, and treating it as undecided would make every clean deck red.
+- **conditional** — *if X then Y*. No X, no obligation. Vacuous truth is the correct answer here.
+- **requirement** — *every X is Y*. **This is the one.** No X and the rule is not decided, which is
+  neither a pass nor a failure, and reporting either is a claim the check did not earn.
+
+**A denominator guards only the quantity it counts** — the trap that caught the one place that had
+already learned the lesson. `contrast.py` carries a pair count for precisely this reason and cites
+L-36 for it, and DS-027 (*both themes readable*) still passed a deck with no dark theme: the token
+reader fell back to a copy of the light theme, so there were seventeen pairs to count and one theme
+to read them from. The guard counted pairs; the absent subject was a **theme**.
+
+**How to apply.**
+
+1. **Make the third state real.** A verdict is `True`, `False`, or **undecided**, and undecided is
+   routed where a rule with no check goes — silent, and the run fails. Do not give it a forgiving
+   bucket of its own: coverage then drains into it artefact by artefact while the gate reports
+   green, which is L-36 rebuilt one storey up.
+2. **Fix it once, with a forcing function, not per row.** Drive every check against an input in
+   which *nothing was found*, and require each row that still passes to be declared in writing as a
+   prohibition or a conditional. The declaration is cheap, and it is what makes the next instance
+   cost a sentence instead of an audit. Where a row is saved by a sibling that fails instead,
+   **name the sibling and test the claim** — an untested "something else catches this" is the
+   comment three previous fixes left behind.
+3. **Ask what the subject is, then ask what would be true if there were none of it.** Not *is the
+   predicate right* — it is.
+
 ---
 
 ## Tooling

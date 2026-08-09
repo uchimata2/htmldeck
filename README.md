@@ -57,6 +57,12 @@ is making a claim it has not earned. Every rule in a gate's jurisdiction ends ea
 those three states *fails the run*. So a rule added to the ruleset with nothing behind it is a red
 run the same afternoon, not a discovery two months later.
 
+**A check that runs and finds nothing to judge lands there too.** A rule of the form *every X is Y*,
+on a deck with no X, is **undecided** — not passing — and the account separates the two, because a
+rule with no check behind it and a rule whose check found no subject need opposite fixes. The gate
+passed on its own absence three times before that distinction existed
+([`docs/LESSONS.md`](docs/LESSONS.md) L-44).
+
 **Every count the documents state, derived rather than re-typed.**
 
 ```bash

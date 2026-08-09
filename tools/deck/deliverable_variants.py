@@ -139,7 +139,9 @@ def failed_rules(deck):
         # crash as a pass, which is how the dots removal read as "NO RESULT" for a whole run.
         return None, [("PROBE", (err or "")[:120], False)]
     rows = audit.render_verdicts(data)
-    return {rule for rule, _what, good in rows if not good}, rows
+    # `is False`: `None` means the row found no subject and decided nothing, which is not a catch
+    # (T-051).
+    return {rule for rule, _what, good in rows if good is False}, rows
 
 
 def self_test():
@@ -175,8 +177,9 @@ def main():
             bad.append((name, rule, caught))
         print("  %-32s breaks %-7s -> %s" % (name, rule, "CAUGHT" if good else "MISSED"))
         for r, what, ok_ in rows:
-            if not ok_:
-                print("      %-8s %s" % (r, what))
+            if ok_ is not True:
+                print("      %-8s %-58s %s"
+                      % (r, what[:58], "NO SUBJECT" if ok_ is None else "FAIL"))
 
     print("\n%d of %d variants caught." % (len(VARIANTS) - len(bad), len(VARIANTS)))
     if bad:

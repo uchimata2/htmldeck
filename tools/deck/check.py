@@ -208,12 +208,21 @@ def account(rows):
     counting it claims a reach the ruleset denies. The measurement is not discarded - it is
     reported under `measuredThoughExcused`, and **it still fails the run when it comes out false**,
     because the account is a claim about coverage and a failure is a fact about the deck.
+
+    **A row whose `ok` is `None` decided nothing**, so the rule is not `checked` and falls to
+    `silent` with everything else nothing decided. It stays a failure of the run: a fourth,
+    forgiving bucket would let coverage drain into it deck by deck while the gate reported green,
+    which is **L-36 rebuilt one storey up**. What it earns is a reason - `silentNoSubject` names the
+    rules whose check ran and found no subject, against the rest, which have no check at all. The
+    two need opposite fixes, and until T-051 the account could not tell them apart because a
+    subjectless check reported `pass` and never reached this function at all.
     """
     own = ruleset.owned()
-    measured = {r for r, _w, _ok in rows if r in own}
-    failed = {r for r, _w, ok in rows if r in own and not ok}
+    decided = {r for r, _w, ok in rows if r in own and ok is not None}
+    failed = {r for r, _w, ok in rows if r in own and ok is False}
+    no_subject = {r for r, _w, ok in rows if r in own and ok is None} - decided
     by_ruleset = {k for k, v in own.items() if v.excused}
-    cited = measured - by_ruleset
+    cited = decided - by_ruleset
     deferred = {k for k in DEFERRED if k in own}
     silent = set(own) - cited - by_ruleset - deferred
     stale = deferred & (cited | by_ruleset)
@@ -223,8 +232,9 @@ def account(rows):
         "owned": sorted(own), "checked": sorted(cited), "failing": sorted(failed),
         "excusedByRuleset": sorted(by_ruleset), "deferred": sorted(deferred),
         "silent": sorted(silent), "staleExcusals": sorted(stale),
+        "silentNoSubject": sorted(no_subject & silent),
         "excusalsForRulesNotOwned": sorted(unknown),
-        "measuredThoughExcused": sorted(measured & by_ruleset),
+        "measuredThoughExcused": sorted((decided | no_subject) & by_ruleset),
         "bucketSum": buckets, "partitionError": buckets - len(own),
     }
 
@@ -236,11 +246,18 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
     contrast.self_test()
     contract.self_test()
     content.self_test()
+    audit.self_test()
     self_test()
 
     rows, data, notes, ledger = gather(deck, sources, print_pages, skip_contract)
     acct = account(rows)
-    failures = [(r, w) for r, w, ok in rows if not ok]
+    # `is False`, not `not ok`: a row that decided nothing is not a defect in the deck, and folding
+    # it into the failure list would report a missing subject as a broken one (T-051).
+    failures = [(r, w) for r, w, ok in rows if ok is False]
+    if acct["silentNoSubject"]:
+        notes.append("subject absent: %s - the check ran and this deck contains nothing for it to "
+                     "judge, so the rule is undecided rather than passing"
+                     % " ".join(acct["silentNoSubject"]))
     coverage_faults = (acct["silent"] + acct["staleExcusals"]
                        + acct["excusalsForRulesNotOwned"])
     if acct["partitionError"]:
@@ -323,8 +340,9 @@ def report(res, verbose=True):
     if verbose:
         print("\n=== verdicts")
         for row in res["rows"]:
-            print("  %-15s %-62s %s" % (row["rule"], row["what"][:62],
-                                        "pass" if row["ok"] else "FAIL"))
+            print("  %-15s %-62s %s"
+                  % (row["rule"], row["what"][:62],
+                     "NO SUBJECT" if row["ok"] is None else "pass" if row["ok"] else "FAIL"))
     print("\n=== coverage account (derived from DESIGN-SYSTEM.md at run time)")
     print("  owned by a gate      %3d" % len(a["owned"]))
     print("  checked              %3d" % len(a["checked"]))
@@ -333,6 +351,11 @@ def report(res, verbose=True):
                                                " ".join(a["excusedByRuleset"])))
     print("  excused here         %3d" % len(a["deferred"]))
     print("  SILENT               %3d   %s" % (len(a["silent"]), " ".join(a["silent"])))
+    if a["silentNoSubject"]:
+        print("      of which NO SUBJECT  %s" % " ".join(a["silentNoSubject"]))
+        print("      The check ran and found nothing in this deck to judge. That is a different\n"
+              "      fault from a rule with no check behind it, and it is fixed in the deck or in\n"
+              "      the rule's jurisdiction rather than in the gate.")
     print("  ------------------------")
     print("  buckets sum to       %3d   %s"
           % (a["bucketSum"],
