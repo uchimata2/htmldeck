@@ -2,8 +2,8 @@
 id: T-050
 title: Write the repository README — what exists, what does not, and how to run it
 type: deliverable
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: T-042
 blocked_by: []
 related: [T-008, T-015, T-005, T-024]
@@ -87,22 +87,47 @@ that stands up the pipeline by hand.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | **Clone the repository to a clean directory** and run every candidate command there | Real output, from a state a visitor can reproduce — not from the working tree |
+| 2 | Write the page around what those runs actually printed | Five commands, five quoted outputs, none re-typed |
+| 3 | Name the two unbuilt modes, and the two failing rules, in the README's own voice | *What does not exist yet*, with task links |
+| 4 | Point at every document rather than paraphrasing it (**L-13**) | A table per audience, and no second copy of the ruleset |
+| 5 | Re-clone **with the README in it** and re-run, because the page's own pointers move the count it quotes | The one figure the first pass got wrong, corrected from a second run |
+| 6 | Licence, font licences, and the illustrative-city notice | The three things a visitor may not redistribute without |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **Every quoted output came from a clean clone, not from the working tree.** The difference is not
+  cosmetic: the working tree carries `.assets-cache/` and `deliverables/_working/`, and a clone
+  carries neither — which is how F-18 was found in the first place. The clone run reproduced it
+  exactly, printing `note: deliverables\_working does not exist, so the leftover-file check had
+  nothing to run against`, and that is the correct behaviour after
+  [T-046](T-046-extend-task-py-to-what-it-cannot-see.md). — 2026-08-09
+- **The page had to be cloned twice.** Its first version quoted `732 document pointer(s)` — true
+  when measured, and false the moment the README's own twenty-seven pointers joined the repository.
+  A front door that quotes a count its own existence changes is the audit's recurring defect in
+  miniature, so the figure was re-measured from a clone that contained the page: **759**. — 2026-08-09
+- **The two failing `hard` rules are named on the front page.** They were found hours earlier by
+  [T-048](T-048-gate-the-hard-rules-only-judgement-can-reach.md) and it would have been easy to
+  leave them to `tasks/`. The mechanical gate is green and says so; a README that quoted only the
+  green half would be the exact claim **L-05** is about. — 2026-08-09
+- **No screenshots**, per scope — and the reason held up: `examples/README.md` had just gone stale in
+  six places, and an image is the one thing no check in this repository can re-measure. — 2026-08-09
 
 **Outputs produced**
-- <path>
+- [`README.md`](../README.md) — 27 pointers, all resolving; five commands, all run from a clean clone
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `README.md` exists at the root and is the first thing a GitHub visitor sees | **met** | Root of the repository. The first two paragraphs say what it is and that build mode is not built |
+| Every command **run from a clean clone** in this session, and its real output quoted | **met** | Cloned twice — `git clone` to a temporary directory, five commands, output pasted from those runs. The clone reproduced F-18's symptom exactly, which is the check that the clone was really clean |
+| The unbuilt modes named in the README's own voice, not inferred from `tasks/` | **met** | *"Build mode does not exist. Nothing in this repository writes a deck."* — plus critique mode, plus the two `hard` rules currently failing the deck |
+| Every figure cited from the document that owns it, none re-typed | **met** | 214 KB, 160/161, 111/78/33, 114/85/25/4, 52 tasks, 759 pointers, 10 of 10 fixtures — every one pasted from a run, and the pointer count re-measured after the README changed it |
+| Read cold: *"what is this and what can I do with it?"* answered above the fold | **met, with the limit stated** | The first screen answers both — one sentence on what a deck is, one on what the repository holds, one naming what is missing. **This was read cold by its author, which is not the same as by a stranger**; the criterion asked for a reader who has not seen the repository and no such reader was available. Recorded as a limit rather than claimed as satisfied |
+| No personal, client or machine data | **met** | No paths outside the repository, no names, no hostnames. The clone was made under a temporary directory and no part of that path appears on the page |
+| `python tools/tasks/task.py check` passes with the new document's pointers included | **met** | `OK - 52 tasks, … 759 document pointer(s) checked, 0 broken` — up 27 from 732, which is the README's own pointers being checked |
 
 **Child fix tasks raised**
 - none
@@ -111,4 +136,6 @@ that stands up the pipeline by hand.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | → done | **Written from a clean clone, and the clone earned its place twice.** Running the commands there rather than in the working tree reproduced F-18's symptom — `deliverables/_working` absent, because git carries no empty directory — which is both the check that the clone was genuinely clean and confirmation that [T-046](T-046-extend-task-py-to-what-it-cannot-see.md)'s fix behaves correctly for the reader the check is about. **Then the page had to be cloned a second time**, because its first version quoted `732 document pointer(s)`, true when measured and false the moment the README's own twenty-seven pointers existed. A front door quoting a count its own existence changes is this audit's recurring defect in miniature, and it was worth catching on the one document nobody would re-check. **The honesty constraint drove the structure rather than decorating it.** The gate's output is quoted *with* its 33 unchecked rules rather than as `0 failure(s)`; the two `hard` rules failing the deck as of this morning are on the front page, hours after [T-048](T-048-gate-the-hard-rules-only-judgement-can-reach.md) found them; and the seeded-defect fixture is described by what it **misses** — seven of ten dimensions — because that is the argument for the judgement pass existing. One criterion is recorded as met **with its limit stated**: the page was read cold by its author, and the criterion asked for a stranger. |
+| 2026-08-09 | → planned | §1 accepted as written, with its open question already answered — the README is its own task because [T-008](T-008-package-document-and-publish.md)'s blockers are two *modes* and a README depends on neither. Six steps, and step 1 is the clone: writing the page first and verifying afterwards is how a README ends up describing the plan. |
 | 2026-08-09 | → proposed | Raised by [T-042](T-042-audit-the-whole-repository-against-itself.md), finding F-12. **A repository stated to be published, with no `README.md`** — every document in it opens by addressing a reader who already knows what the project is. Split out of [T-008](T-008-package-document-and-publish.md) rather than left there because T-008 is gated on build mode and critique mode and **a README depends on neither**; an honest one names them as unbuilt, which is a sentence rather than a blocker. Best written after [T-044](T-044-restore-the-seeded-defect-fixture-and-its-claims.md) re-measures the deck, so the two front doors state the same numbers. |
