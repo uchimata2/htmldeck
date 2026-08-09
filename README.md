@@ -78,8 +78,8 @@ python tools/deck/ruleset.py --gates
 ```
   hard rules                        114
   gated mechanically (auto|render)   85   tools/deck/check.py
-  gated by judgement (judge)         25   EVALUATION.md 1.1, the hard-judge checklist
-  bind the checker, not the deck      4   DS-190 DS-191 DS-220 DS-221
+  gated by judgement (judge)         24   EVALUATION.md 1.1, the hard-judge checklist
+  bind the checker, not the deck      5   DS-107 DS-190 DS-191 DS-220 DS-221
   ------------------------
   114 = hard, so every hard rule has an owner
 ```
@@ -91,8 +91,8 @@ python tools/tasks/task.py check
 ```
 
 ```
-OK - 52 tasks, vocabulary valid, task references resolve, 759 document pointer(s) checked, 0 broken
-     428 section reference(s) resolved, 0 dead; 971 not bound to a document and skipped.
+OK - 52 tasks, vocabulary valid, task references resolve, 776 document pointer(s) checked, 0 broken
+     430 section reference(s) resolved, 0 dead; 990 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose, and every `<named document> §n`
@@ -142,10 +142,11 @@ Stated here rather than left to be inferred, because a README describing the pla
 - **Critique mode does not exist.** The rubric in `EVALUATION.md` is complete and can be applied by
   hand; nothing automates the report —
   [T-004](tasks/T-004-critique-mode-blunt-section-by-section-review.md).
-- **Two `hard` rules currently fail the reference deck** on the judgement half of the gate, found on
-  its first run — [T-052](tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md). The
-  mechanical gate is green and has been throughout, which is exactly the point of having a second
-  half.
+- **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the
+  judgement half's first run and were settled the same day —
+  [T-052](tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md), one by amending the rule
+  and one by editing the deck. The mechanical gate was green throughout, which is exactly the
+  point of having a second half.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log.
 
