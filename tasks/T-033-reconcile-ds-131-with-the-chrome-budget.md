@@ -46,7 +46,7 @@ DS-131 rather than reconciled *with* it.
 
 **Why this is a task and not an edit**
 T-028's scope put rule changes out, and routed any finding to
-[T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md) — which is `done`,
+[T-025](T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md) — which is `done`,
 so that route no longer exists. This is the finding, carrying its own file.
 
 **Scope**

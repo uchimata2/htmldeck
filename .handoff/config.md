@@ -36,9 +36,10 @@ Corpus research (T-009) is done. Its measurements are in `docs/research/R1-*.md`
 extraction sits in a local, gitignored knowledgebase so the private source folder should not need
 reopening. `tools/kb/extract.py` reproduces the measurements and self-tests first.
 
-`reference/` holds proven prior art. It is **not** the plugin: it works, but it is written
-around one project's assumptions. Read it for behaviour that is already verified, not for code
-to copy wholesale.
+`reference/` holds **one file** — `example-prompt.md`, 1.2 KB, the source prompt this project was
+briefed from. It is a prompt, not a codebase; nothing in it is code to copy or behaviour to verify.
+*This paragraph described a working prior-art codebase until 2026-08-09, which was never what is
+there.*
 
 This repository will be published. Nothing personal, client-specific or machine-specific goes
 in — see `CLAUDE.md`.

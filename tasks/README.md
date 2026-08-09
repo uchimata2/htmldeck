@@ -27,7 +27,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | WP2 | `proposed` | specify | - | - |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | WP3 | `proposed` | specify | - | - |
 | [T-042](T-042-audit-the-whole-repository-against-itself.md) | Audit the repository against itself — stale claims, unreachable rules, and unchecked references | none | `proposed` | specify | - | - |
-| [T-045](T-045-sweep-the-stale-claims-across-the-live-documents.md) | Sweep the nine stale claims the audit found across the live documents | none | `proposed` | specify | - | - |
 | [T-046](T-046-extend-task-py-to-what-it-cannot-see.md) | Extend task.py to the three things it cannot currently see | none | `proposed` | specify | - | - |
 | [T-048](T-048-gate-the-hard-rules-only-judgement-can-reach.md) | Gate the twenty-five hard rules only a judgement pass can reach | WP2 | `proposed` | specify | - | - |
 | [T-050](T-050-write-the-repository-readme.md) | Write the repository README — what exists, what does not, and how to run it | final | `proposed` | specify | - | - |
@@ -55,7 +54,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-022](T-022-split-the-design-system-from-its-rationale.md) | Split the operative ruleset from its rationale, and give every rule an ID | `done` | 2026-08-06 |
 | [T-023](T-023-the-deck-evaluation-rubric-and-convergence-loop.md) | Define the deck evaluation rubric and the convergence loop that uses it | `done` | 2026-08-06 |
 | [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md) | Build the reference deck by hand and find out whether the ruleset works | `done` | 2026-08-06 |
-| [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md) | Reconcile the thirteen ruleset findings the reference deck produced | `done` | 2026-08-06 |
+| [T-025](T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md) | Reconcile the thirteen ruleset findings the reference deck produced | `done` | 2026-08-06 |
 | [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md) | Settle who scores a deck, and whether the score reaches the user | `done` | 2026-08-06 |
 | [T-027](T-027-specify-the-slide-deliverable-and-the-outline-contract.md) | Specify the slide deliverable and the outline contract, and the rules the owner's deck review implies | `done` | 2026-08-06 |
 | [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | `done` | 2026-08-07 |
@@ -72,6 +71,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md) | Fix the three reference-deck defects the completed gate found | `done` | 2026-08-09 |
 | [T-043](T-043-make-the-gates-coverage-account-provable.md) | Make the gate's coverage account provable, and derive the counts the documents state | `done` | 2026-08-09 |
 | [T-044](T-044-restore-the-seeded-defect-fixture-and-its-claims.md) | Restore the seeded-defect fixture, and re-measure everything examples/README claims | `done` | 2026-08-09 |
+| [T-045](T-045-sweep-the-stale-claims-across-the-live-documents.md) | Sweep the nine stale claims the audit found across the live documents | `done` | 2026-08-09 |
 | [T-047](T-047-give-the-rationale-conflicts-their-own-id-namespace.md) | Give the rationale's conflicts their own ID namespace, and fix the mis-citation it has already caused | `done` | 2026-08-09 |
 | [T-049](T-049-reconcile-the-session-memory-with-the-research.md) | Reconcile the session memory with what the research settled and the owner last said | `done` | 2026-08-09 |
 

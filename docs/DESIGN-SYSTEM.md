@@ -144,7 +144,7 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | DS-060 | The presentation view is a **fixed 1920×1080 design space, uniformly scaled** with `transform: scale()`. | hard | auto | yes |
 | DS-061 | **Exactly one layout.** No media queries, no breakpoints, no `max-width` containers inside the stage. | hard | auto | yes |
 | DS-062 | Aspect ratio is 16:9 and fixed. A non-16:9 viewport letterboxes; it never reflows. | hard | render | yes |
-| DS-063 | Rendered at 3840×2000 and at 1280×634, the stage is **identical up to a uniform scale factor, within a stated tolerance**. **The tolerance is split by element kind, not by axis:** a non-text box's whole rect ≤ **0.25 design units**; a **text run's whole rect** ≤ **2 design units**. Exact equality is unachievable for text — glyph advances round to device pixels, so any deck containing text fails an equality check — but that rounding moves a text run's *position and height too*, not only its width. *Measured 2026-08-07 over a full 12-slide deck: **116 non-text values disagreed by 0.000 du** and 336 text values by at most 1.17, at a scale ratio of 3.15. [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §2 carries what the earlier figure got wrong.* | hard | render | yes |
+| DS-063 | Rendered at 3840×2000 and at 1280×634, the stage is **identical up to a uniform scale factor, within a stated tolerance**. **The tolerance is split by element kind, not by axis:** a non-text box's whole rect ≤ **0.25 design units**; a **text run's whole rect** ≤ **2 design units**. Exact equality is unachievable for text — glyph advances round to device pixels, so any deck containing text fails an equality check — but that rounding moves a text run's *position and height too*, not only its width. *Measured 2026-08-07 over a full 12-slide deck: **116 non-text values disagreed by 0.000 du** and 336 text values by at most 1.17, at a scale ratio of 3.15. **A routine run samples four slides and reports 40 and 84** — same rule, smaller sample, and the reason two sets of figures are in circulation. [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §2 carries what the earlier figure got wrong and which run is which.* | hard | render | yes |
 | DS-064 | Body text measures ≥ 16 px in a 720p capture of the presented deck. | hard | render | yes |
 | DS-065 | No decorative element positioned in a **unit that does not ride the transform** — `vw`, `vh`, `vmin`, `vmax`, `pt`, `cm`, `in`. *Reworded 2026-08-07 by [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md), which tried to build the check and found the rule could not be false.* The old wording — *"absolute pixels rather than design units"* — names a distinction that **does not exist inside the stage**: a design unit *is* one CSS pixel before the transform (`--du:1px`), so a px offset and a design-unit offset compute to the same value and nothing at runtime can tell them apart. What actually breaks the stage is a length resolved against the **viewport** instead of the design space. DS-033 bans those units inside the stage already; this rule now says the same thing about decoration instead of stating something unfalsifiable. | hard | auto | yes |
 | DS-200 | **Centre the scaled stage by a technique that survives the transform.** `transform: scale()` does not change layout size, so flex or grid centring positions the **unscaled** 1920×1080 box: the track sizes to 1920, start-aligns it, and the scaled stage lands off-centre and clips at the far edge. Anchor at 50%/50% and translate, or size the wrapper to the scaled dimensions. **Measure the stage's rect against the viewport at several widths — the bug is invisible at full size.** | hard | render | yes |
@@ -487,15 +487,21 @@ resolve to nothing, and a check that silently checks nothing is worse than a sho
 **Tested once, by building a deck** — [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md)
 built [`examples/reference-deck.html`](../examples/reference-deck.html) strictly to this document and
 produced **thirteen findings**, four of them conflicts between two `hard` rules. All thirteen are
-reconciled by [T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md),
+reconciled by [T-025](../tasks/T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md),
 which amended nine rules and added four; **each conflicting pair now names which rule yields, in the
 rule text.** What that reconciliation is worth is bounded by what produced it: **one deck**. Every
 amendment is a correction from a single build, and a second deck would be expected to find more.
 
 **What that build did not test.** It was one deck, one topic, one author, and it was scored by the
-agent that wrote it. §3.4 and §3.5 arrived *after* it, from the owner's review, so **no deck in this
-repository yet satisfies the deliverable contract** — the rules that matter most are the least
-exercised. The reproducibility rulings still come from R6's capability matrix, which answers *"is
+agent that wrote it. §3.4 and §3.5 arrived *after* it, from the owner's review. **That gap closed on
+2026-08-07**: [T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md)
+rewrote the reference deck to the deliverable contract, all twelve slides carry a bottom line, and
+DS-202/203/205/216/217 are gated rather than asserted — `BRIEF.md` records the release gate as clear.
+**The other half of that sentence still holds and is the part worth keeping: the rules that matter
+most are the least exercised.** One conforming deck is one deck, and four of the nine
+deliverable-contract rules are named nowhere in `EVALUATION.md`
+([T-048](../tasks/T-048-gate-the-hard-rules-only-judgement-can-reach.md)). The reproducibility
+rulings still come from R6's capability matrix, which answers *"is
 this available?"* rather than *"does this read well?"* CLAUDE.md rule 6 governs the second question,
 and it is answered by looking, not by this document.
 

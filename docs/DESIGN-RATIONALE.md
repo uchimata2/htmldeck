@@ -6,7 +6,7 @@ holds the operative ruleset and nothing else.
 **No runtime loads this file.** It is for whoever maintains the ruleset, argues with it, or needs to
 know whether a rule was measured, inherited, or decided. Entries are keyed by `DS-nnn`.
 
-**Sources.** `R1`–`R6` in [`research/`](research/); corpus rule IDs (`C1`, `F11`) and their verdicts
+**Sources.** `R1`–`R7` in [`research/`](research/); corpus rule IDs (`C1`, `F11`) and their verdicts
 in [`research/R1-rules-candidate.md`](research/R1-rules-candidate.md); external principles (`P-01`)
 with E1–E4 evidence grades in [`research/R2-external-principles.md`](research/R2-external-principles.md);
 archetypes and anti-patterns in [`research/R3-exemplar-decks.md`](research/R3-exemplar-decks.md);
@@ -49,7 +49,7 @@ of an answer.
 found by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) building a deck
 strictly to the finished ruleset**, and four of those are conflicts between two rules both labelled
 `hard` — a compliant deck could not exist. They are recorded on T-024 §3.3 and reconciled in §2.1
-below by [T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md).
+below by [T-025](../tasks/T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md).
 
 The generalisation is **L-24**: reading a ruleset tells you whether it is coherent, and building to
 it tells you whether it is possible. These sixteen came from reading. Thirteen more were waiting.
@@ -318,6 +318,13 @@ Two corrections came out of measuring it properly, over the full 12-slide deck:
    the reference deck on 27 of 336 values while its layout was provably identical — a false
    positive on a `hard` rule, which is the expensive kind.
 
+**Which run these figures come from, since two sets are in circulation.** 116 non-text and 336 text
+values are a sweep of **all twelve slides**. `contract.py`'s default samples **four** — slides 1, 5,
+8 and 12, spanning the archetypes — and reports 40 and 84, which is what a routine
+`check.py` run prints and what `examples/README.md` quotes. Neither figure contradicts the other;
+they are different sample sizes, and the smaller one is a stated compromise rather than a
+disagreement.
+
 **The generalisable part is neither number.** A tolerance was stated, sourced, and cited for a
 category the instrument could not see, and it survived review and a full ruleset split. That is
 **DS-191** arriving from underneath: a measurement confirms geometry you suspect, and it says
@@ -395,6 +402,13 @@ an observation: if the deck reads acceptably only because the reader is assumed 
 split is wrong.**
 
 ---
+
+> **There is no §5.1–§5.4, and there never was.** §5.5 to §5.7 were numbered that way so later
+> sections could be added without renumbering §6 onward, which is cheap; the cost is that the
+> sequence reads as four missing sections. **Stated rather than renumbered** (2026-08-09): §5.5 is
+> cited from four task files, and a rename would break those pointers to fix an appearance — which
+> is precisely the class of defect [T-042](../tasks/T-042-audit-the-whole-repository-against-itself.md)
+> exists to remove.
 
 ## 5.5 The `Reach` column — why a rule carries this on its own row
 
@@ -507,7 +521,7 @@ looked at because it assumed nobody would try.
 
 **Both rules gained coverage by being corrected.** They were the last two of T-005's 31 written-off
 rules that were written off for a reason other than *this needs a reading of the content*, and
-closing them took the gate to 79 of 111.
+closing them took the gate to 78 of 111.
 
 ---
 

@@ -69,7 +69,7 @@ confirms geometry you suspect; it cannot find a defect you never thought to meas
 - In: the **non-native-reader constraint on idiom**, which DS-097 covers only for jargon.
 - In: rules for defects 1, 2 and 4; defect 3 recorded as unreproduced.
 - In: the owner's ruling on the type floor — **16 design units is acceptable** — which settles
-  [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md)'s F-01.
+  [T-025](T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md)'s F-01.
 - In: extending `tools/deck/` to check rendered colour rather than intended colour.
 - In: repairing the two defects in the shipped reference deck that make it a poor example (1 and 4).
   The owner did not ask for this; a published example failing the project's own hard rules is not

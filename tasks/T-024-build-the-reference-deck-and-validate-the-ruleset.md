@@ -165,7 +165,7 @@ recommendation's cost in the deck's own voice before anyone asks for it.
 
 **These are the point of the task, not evidence it went badly.** Routed per plan step 6 on close.
 
-> **All thirteen are closed** by [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md)
+> **All thirteen are closed** by [T-025](T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md)
 > — nine rules amended, four added, none rejected. The table below is the record of what the build
 > found; the resolutions are in [`DESIGN-RATIONALE.md`](../docs/DESIGN-RATIONALE.md) §2.1.
 
@@ -310,7 +310,7 @@ as specified (F-08). That density — roughly one per ten rules — is the argum
 system has to be built against before it can be trusted.
 
 **Child fix tasks raised**
-- [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md) — reconcile F-01 to
+- [T-025](T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md) — reconcile F-01 to
   F-13 into `DESIGN-SYSTEM.md`, `DESIGN-RATIONALE.md` and `EVALUATION.md`. Kept out of this task on
   purpose: **a test that edits the thing it is testing is not a test**, so the findings are recorded
   here and applied there.
@@ -319,7 +319,7 @@ system has to be built against before it can be trusted.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-06 | → done | All nine acceptance criteria met, one with a stated tolerance (DS-063 cannot be met exactly — F-08). The deck was opened offline in real Chrome with DNS black-holed and **every slide looked at**; 23 defects were fixed across two measurement rounds. **Thirteen findings against the ruleset**, four of them conflicts between two `hard` rules. The rubric scored all ten seeded defects at 0 or 1, and the split — five mechanical, five judgement-only — is the sharpest result in the task. Findings handed to [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md) rather than applied here. |
+| 2026-08-06 | → done | All nine acceptance criteria met, one with a stated tolerance (DS-063 cannot be met exactly — F-08). The deck was opened offline in real Chrome with DNS black-holed and **every slide looked at**; 23 defects were fixed across two measurement rounds. **Thirteen findings against the ruleset**, four of them conflicts between two `hard` rules. The rubric scored all ten seeded defects at 0 or 1, and the split — five mechanical, five judgement-only — is the sharpest result in the task. Findings handed to [T-025](T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md) rather than applied here. |
 | 2026-08-06 | → review | Deck and seeded variant built and measured. |
 | 2026-08-06 | → specified | Both open questions closed. Owner settled the topic: a mid-size city choosing between a bike-share network and higher bus frequency — neutral, two-sided, and diagram-hungry rather than diagram-decorated. The seeded variant derives from the good deck, so the rubric's response stays attributable. |
 | 2026-08-06 | → planned | §2 was already written at creation; the spine in §3.1 is plan step 1's output and was written before any HTML, which is the ruleset's own DS-090/D1 discipline turned on itself. |

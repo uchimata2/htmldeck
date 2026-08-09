@@ -35,6 +35,16 @@ failure into a score is how a deck ships with a wrong number on the title slide 
 > them by hand** — the previous set was wrong by six, having been written before the rules T-027 and
 > T-025 added, and a hand-adjusted count is indistinguishable from a correct one.
 >
+> **`python tools/deck/ruleset.py --counts` now derives every figure below**, added 2026-08-09 by
+> [T-043](../tasks/T-043-make-the-gates-coverage-account-provable.md) — because this instruction was
+> written twice and could not be followed: nothing computed the numbers, so *re-deriving* meant
+> reading the table and counting. **Paste from that command, never from another document.**
+>
+> **Why `BRIEF.md` says 160 and this says 161, since they are read together.** The table has 160
+> rows. **DS-000**, the override clause, is stated as prose in §0 rather than as a row, so it is
+> invisible to a row count and is the whole of the difference — it moves `guidance` from 5 to 6 and
+> nothing else. `--counts` prints both sets side by side for exactly this reason.
+>
 > **It went stale again, exactly as predicted, and by more than the rules that caused the re-count.**
 > The 2026-08-06 set read 154 / 108 / 40 / 6 and 65 `auto`, 39 `render`. Re-derived on 2026-08-09 by
 > [T-038](../tasks/T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md), which added
@@ -64,7 +74,7 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]
 ```
 
-It decides **79** of the 111 owned rules and **names the other 32 with a reason each**, derived from
+It decides **78** of the 111 owned rules and **names the other 33 with a reason each**, derived from
 the ruleset when it runs rather than from any list. **A rule in neither state fails the run**, so a
 rule added here with nothing behind it is a red run rather than a discovery two months later — which
 is what happened twice (**L-36**). `--sources` adds the figure ledger and its three reconciliations;
@@ -374,7 +384,7 @@ number rather than at the deck.
 ### 8.3 Is the cap 2 or 3 — 3
 
 **Ruling: the cap stays at 3, counting measurement rounds.** Closed 2026-08-06 by
-[T-025](../tasks/T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md), **against a
+[T-025](../tasks/T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md), **against a
 real 12-slide deck rather than in the abstract** — this one was settled by measurement, not by the
 owner.
 

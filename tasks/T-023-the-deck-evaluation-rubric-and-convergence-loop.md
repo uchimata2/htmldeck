@@ -95,7 +95,7 @@ means**, which means today the loop terminates when the agent feels finished.
   measurement rounds with fixes batched inside each**, it reached PASS. So **the cap governs
   measurement rounds, not fixes**, and 2 rounds sufficed for a first draft. The one-at-a-time rule
   should be scoped to fixes that interact — the case it was written for. Applying this to
-  `EVALUATION.md` is [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md).
+  `EVALUATION.md` is [T-025](T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md).
 
 ## 2. Plan
 
@@ -167,6 +167,6 @@ and it is a constraint on [T-020](T-020-model-the-authoring-pipeline-not-just-th
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-06 | → done | Last criterion closed by [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md): ten seeded defects, **all scored 0 or 1, no anchor corrected**. The cap question is answered too, and the answer reframes it — the cap governs measurement rounds, not fixes (F-13). Two owner decisions move to [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md); the EVALUATION edits F-13 implies move to [T-025](T-025-reconcile-the-twelve-ruleset-findings-from-the-reference-deck.md). |
+| 2026-08-06 | → done | Last criterion closed by [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md): ten seeded defects, **all scored 0 or 1, no anchor corrected**. The cap question is answered too, and the answer reframes it — the cap governs measurement rounds, not fixes (F-13). Two owner decisions move to [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md); the EVALUATION edits F-13 implies move to [T-025](T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md). |
 | 2026-08-06 | → review | `docs/EVALUATION.md` written. Unblocked early: T-022 landed the `DS-nnn` IDs and the `Check` column the same day, and the `Check` column turned out to be what makes the pipeline routable — 59 `auto` before 32 `render` before 36 `judge` is the cost ordering, derived rather than asserted. **Held at `review`, not closed: the rubric has never been run against a deck with seeded defects**, and an unvalidated rubric passes everything. |
 | 2026-08-06 | → proposed | Raised by the owner: *a design system without an effective and efficient pipeline is just decoration.* The gap is precise — the brief has a pass/fail check and a prose critique, and **neither produces a score, so neither can drive a loop.** Pass/fail cannot show progress and prose cannot show convergence, so nothing in the repository states what "good enough" means. Blocked on [T-022](T-022-split-the-design-system-from-its-rationale.md) because a rubric cannot cite rules that have no IDs. |
