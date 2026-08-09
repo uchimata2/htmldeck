@@ -192,23 +192,40 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
 def account(rows):
     """The coverage declaration, derived from the ruleset at run time.
 
-    Every owned rule lands in exactly one bucket. `silent` and `stale` are both failures: a rule
-    nothing decided is L-36, and an excusal for a rule that IS checked is the same defect with the
-    sign flipped - a hand-written note that stopped being true and nothing noticed.
+    **Every owned rule lands in exactly one bucket, and `partitionError` is that claim reported
+    rather than assumed.** It used to be asserted only in a docstring, and it was false by one:
+    DS-072 was counted `checked` *and* excused by the ruleset, so 79 + 4 + 29 came to 112 against
+    111 owned rules and every published figure inherited the error (T-042, F-2).
+
+    `silent` and `stale` are both failures: a rule nothing decided is L-36, and an excusal for a
+    rule that IS checked is the same defect with the sign flipped - a hand-written note that
+    stopped being true and nothing noticed. `partitionError` is a third, and it is the one that
+    catches the other two lying about their size.
+
+    **A rule the ruleset excuses is never `checked`, whatever a stage happens to measure.** That is
+    the general rule DS-072 forced (2026-08-09): `off-gate` means *decidable in principle, not by
+    this instrument*, so a verdict taken against a double is not the rule being decided, and
+    counting it claims a reach the ruleset denies. The measurement is not discarded - it is
+    reported under `measuredThoughExcused`, and **it still fails the run when it comes out false**,
+    because the account is a claim about coverage and a failure is a fact about the deck.
     """
     own = ruleset.owned()
-    cited = {r for r, _w, _ok in rows if r in own}
+    measured = {r for r, _w, _ok in rows if r in own}
     failed = {r for r, _w, ok in rows if r in own and not ok}
     by_ruleset = {k for k, v in own.items() if v.excused}
+    cited = measured - by_ruleset
     deferred = {k for k in DEFERRED if k in own}
     silent = set(own) - cited - by_ruleset - deferred
     stale = deferred & (cited | by_ruleset)
     unknown = set(DEFERRED) - set(own)
+    buckets = len(cited) + len(by_ruleset) + len(deferred) + len(silent)
     return {
         "owned": sorted(own), "checked": sorted(cited), "failing": sorted(failed),
         "excusedByRuleset": sorted(by_ruleset), "deferred": sorted(deferred),
         "silent": sorted(silent), "staleExcusals": sorted(stale),
         "excusalsForRulesNotOwned": sorted(unknown),
+        "measuredThoughExcused": sorted(measured & by_ruleset),
+        "bucketSum": buckets, "partitionError": buckets - len(own),
     }
 
 
@@ -226,6 +243,10 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
     failures = [(r, w) for r, w, ok in rows if not ok]
     coverage_faults = (acct["silent"] + acct["staleExcusals"]
                        + acct["excusalsForRulesNotOwned"])
+    if acct["partitionError"]:
+        coverage_faults = coverage_faults + [
+            "PARTITION %+d (buckets %d, owned %d)"
+            % (acct["partitionError"], acct["bucketSum"], len(acct["owned"]))]
     return {
         "deck": os.path.relpath(deck, ROOT).replace("\\", "/"),
         "rows": [{"rule": r, "what": w, "ok": ok} for r, w, ok in rows],
@@ -243,21 +264,51 @@ def self_test():
     """The gate must be able to tell a covered rule from an uncovered one (**L-04**).
 
     Both directions are tested, because only one of them has ever been the bug: a missing check
-    is loud, and an excusal that quietly outlived its rule is not.
+    is loud, and an excusal that quietly outlived its rule is not. **The partition is tested by
+    breaking it**, because an arithmetic check that cannot be made to fail is decoration - which
+    is what stood here until T-043 replaced `if ...: pass` under a comment claiming the sum was
+    asserted somewhere else. It was not asserted anywhere.
     """
     own = ruleset.owned()
-    fake = [(r, "", True) for r in list(own)[:3]]
-    a = account(fake)
-    if len(a["silent"]) != len(own) - 3 - len([k for k, v in own.items() if v.excused]) \
-            - len([k for k in DEFERRED if k in own and k not in list(own)[:3]]):
-        pass          # the arithmetic is asserted below in the form that matters
-    if set(a["checked"]) != set(list(own)[:3]):
+    plain = [k for k in sorted(own) if k not in DEFERRED and not own[k].excused]
+    if len(plain) < 3:
+        sys.exit("SELF-TEST FAILED: fewer than three plainly-checkable rules to test with")
+
+    a = account([(r, "", True) for r in plain[:3]])
+    if a["partitionError"]:
+        sys.exit("SELF-TEST FAILED: buckets sum to %d against %d owned rules (%+d)"
+                 % (a["bucketSum"], len(a["owned"]), a["partitionError"]))
+    if set(a["checked"]) != set(plain[:3]):
         sys.exit("SELF-TEST FAILED: the account did not recognise three checked rules")
     if not a["silent"]:
         sys.exit("SELF-TEST FAILED: a run checking three rules reported nothing silent")
-    stale = account([(k, "", True) for k in list(DEFERRED)[:1]])["staleExcusals"]
-    if not stale:
+
+    # Break the partition on purpose. A rule excused HERE that a stage also checks is counted in
+    # two buckets, so the sum runs one over - and that is exactly the shape the DS-072 defect had,
+    # one bucket along. If this stops failing, the assertion above has stopped meaning anything.
+    broken = account([(k, "", True) for k in list(DEFERRED)[:1]])
+    if broken["partitionError"] != 1:
+        sys.exit("SELF-TEST FAILED: a rule both excused here and checked did not break the "
+                 "partition - the arithmetic is not being checked")
+    if not broken["staleExcusals"]:
         sys.exit("SELF-TEST FAILED: an excusal for a rule that IS checked was not reported")
+
+    # The ruleset's excusal outranks a stage's measurement, and the measurement survives as a note.
+    # Without this, DS-072 walks back into `checked` the next time a stage grows a verdict for it.
+    excused = sorted(k for k, v in own.items() if v.excused)
+    if not excused:
+        sys.exit("SELF-TEST FAILED: no rule is excused by the ruleset, so the precedence rule "
+                 "between a ruleset excusal and a stage's measurement is untested")
+    e = account([(excused[0], "", True)])
+    if excused[0] in e["checked"]:
+        sys.exit("SELF-TEST FAILED: %s is excused by the ruleset and was counted as checked"
+                 % excused[0])
+    if e["measuredThoughExcused"] != [excused[0]]:
+        sys.exit("SELF-TEST FAILED: the measurement of an excused rule was dropped, not noted")
+    if e["partitionError"]:
+        sys.exit("SELF-TEST FAILED: measuring an excused rule broke the partition (%+d)"
+                 % e["partitionError"])
+
     for rid, why in DEFERRED.items():
         if len(why) < 40:
             sys.exit("SELF-TEST FAILED: %s is excused in a phrase, not in writing" % rid)
@@ -282,6 +333,17 @@ def report(res, verbose=True):
                                                " ".join(a["excusedByRuleset"])))
     print("  excused here         %3d" % len(a["deferred"]))
     print("  SILENT               %3d   %s" % (len(a["silent"]), " ".join(a["silent"])))
+    print("  ------------------------")
+    print("  buckets sum to       %3d   %s"
+          % (a["bucketSum"],
+             "= owned, so the account is a partition" if not a["partitionError"]
+             else "PARTITION ERROR %+d - a rule is in two buckets or none" % a["partitionError"]))
+    if a["measuredThoughExcused"]:
+        print("  measured, not claimed    %s"
+              % " ".join(a["measuredThoughExcused"]))
+        print("      A stage measured these and the ruleset says no check of its kind reaches "
+              "them, so they are\n      excused rather than checked - the measurement is a note "
+              "under the excusal, and it still\n      fails the run if it comes out false.")
     if a["staleExcusals"]:
         print("  STALE EXCUSAL        %3d   %s" % (len(a["staleExcusals"]),
                                                    " ".join(a["staleExcusals"])))

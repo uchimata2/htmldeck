@@ -13,12 +13,19 @@ dash makes every `judge` row parse as empty, which is how the column's contract 
 the first time (DESIGN-SYSTEM.md, *How to read a `Reach` cell*).
 
     python tools/deck/ruleset.py            # the table, and the counts that size a gate
+    python tools/deck/ruleset.py --counts   # every figure the documents quote, derived
+
+**`--counts` exists because the documents kept getting these wrong.** `EVALUATION.md` §1 records
+the set going stale twice in three days and instructs *"re-derive them, never adjust them by
+hand"* - and until T-043 nothing derived them, so re-deriving meant reading the table and
+counting. Paste from this command; do not copy a figure out of another document.
 
 Pure standard library (**L-07**).
 """
 
 import io
 import os
+import re
 import sys
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -97,6 +104,87 @@ def owned(rules=None):
     return {k: v for k, v in rules.items() if v.owned}
 
 
+def off_table(path=SPEC, rules=None):
+    """`(id, label)` for every rule ID the document uses that is not a row, in document order.
+
+    **This is why two totals are in circulation, and the label is the half nobody wrote down.**
+    DS-000 is the override clause, stated as prose in §0 as `(DS-000, guidance)` rather than as a
+    row - so the table holds 160 with 5 `guidance` rules, and the document declares 161 with 6.
+    Both published sets are right and neither says which rule moves between them.
+
+    Derived rather than hard-coded, so a second prose rule shows up here instead of quietly
+    widening the gap, and a citation of a rule ID that no longer exists shows up with no label.
+    """
+    rules = rules if rules is not None else load()
+    seen, out = set(), []
+    for line in io.open(path, encoding="utf-8"):
+        for rid in re.findall(r"DS-\d{3}", line):
+            if rid in rules or rid in seen:
+                continue
+            seen.add(rid)
+            m = re.search(r"\(%s,\s*(\w+)\)" % rid, line)
+            out.append((rid, m.group(1) if m and m.group(1) in LABELS else ""))
+    return out
+
+
+def counts(path=SPEC):
+    """Every figure `BRIEF.md` and `EVALUATION.md` quote about the ruleset, derived in one pass.
+
+    The one figure NOT here is the gate's own `checked` split, because that is a fact about a run
+    against a deck rather than about the ruleset - `check.py` prints it, and deriving it here
+    would mean rendering a deck to answer a question about a table.
+    """
+    rules = load(path)
+    own = owned(rules)
+    extra = off_table(path, rules)
+
+    def tally(attr, values):
+        return [(v, len([r for r in rules.values() if getattr(r, attr) == v])) for v in values]
+
+    return {
+        "rows": len(rules), "offTable": extra, "declared": len(rules) + len(extra),
+        "byLabel": tally("label", LABELS),
+        "byLabelDeclared": [(v, n + len([1 for _r, lab in extra if lab == v]))
+                            for v, n in tally("label", LABELS)],
+        "byCheck": tally("check", CHECKS),
+        "byReach": tally("reach", REACHES),
+        "owned": len(own),
+        "ownedByCheck": [(v, len([r for r in own.values() if r.check == v])) for v in OWNED],
+        "ownedAndHard": len([r for r in own.values() if r.label == "hard"]),
+        "hardNotOwned": sorted(k for k, v in rules.items() if v.label == "hard" and not v.owned),
+        "excusedByRuleset": sorted(k for k, v in own.items() if v.excused),
+    }
+
+
+def print_counts(path=SPEC):
+    c = counts(path)
+    row = lambda pairs: "   ".join("%s %d" % (v, n) for v, n in pairs)   # noqa: E731
+    print("%s\n" % os.path.relpath(path, ROOT))
+    print("  rule rows in the table            %3d" % c["rows"])
+    print("  + declared in prose, not a row    %3d   %s"
+          % (len(c["offTable"]), " ".join("%s (%s)" % (r, lab or "no label")
+                                          for r, lab in c["offTable"])))
+    print("  = rule IDs the document declares  %3d   <- the figure that counts DS-000"
+          % c["declared"])
+    print("\n  by Label, rows only      %s   = %d" % (row(c["byLabel"]), c["rows"]))
+    print("  by Label, declared       %s   = %d"
+          % (row(c["byLabelDeclared"]), c["declared"]))
+    print("      Both published sets are right. The rule that moves between them is DS-000, and")
+    print("      it moves the `guidance` figure and nothing else.")
+    print("\n  by Check   %s" % row(c["byCheck"]))
+    print("  by Reach   %s" % row(c["byReach"]))
+    print("      Reach and Check are counted over the ROWS, so `Reach —` is every `judge` rule")
+    print("      PLUS the rules whose Check is `—`. It is not 'every judge rule'.")
+    print("\n  owned by a gate                   %3d   %s" % (c["owned"], row(c["ownedByCheck"])))
+    print("  owned and hard                    %3d" % c["ownedAndHard"])
+    print("  hard but NOT owned                %3d   (judge, or Check `—`)" % len(c["hardNotOwned"]))
+    print("  excused by the ruleset            %3d   %s"
+          % (len(c["excusedByRuleset"]), " ".join(c["excusedByRuleset"])))
+    print("\n  The gate's own checked/excused split is a fact about a RUN, not about this table:")
+    print("      python tools/deck/check.py examples/reference-deck.html")
+    return 0
+
+
 def self_test():
     """Refuse to run if the parser has stopped agreeing with the document (**L-04**).
 
@@ -142,11 +230,29 @@ def self_test():
         if r.check == "judge" and r.reach != "—":
             sys.exit("RULESET: %s is judge with Reach %r - judge rules are outside the gate's "
                      "jurisdiction and read `—`" % (r.id, r.reach))
+
+    # Every published figure has to partition, or `--counts` is a prettier way to be wrong. The
+    # vocabularies are closed (LABELS, CHECKS, REACHES) and every row is validated against them
+    # above, so a tally that does not sum to the row count means a value went missing between the
+    # two - which is how the `render` figure drifted by six before anyone re-derived it.
+    c = counts()
+    for name in ("byLabel", "byCheck", "byReach"):
+        total = sum(n for _v, n in c[name])
+        if total != c["rows"]:
+            sys.exit("SELF-TEST FAILED: %s sums to %d against %d rule rows"
+                     % (name, total, c["rows"]))
+    if sum(n for _v, n in c["ownedByCheck"]) != c["owned"]:
+        sys.exit("SELF-TEST FAILED: the owned rules do not split cleanly by Check")
+    if c["declared"] <= c["rows"]:
+        sys.exit("SELF-TEST FAILED: no rule is declared outside the table, so the 160/161 "
+                 "discrepancy has no derived explanation - DS-000 was expected")
     return True
 
 
-def main():
+def main(argv=()):
     self_test()
+    if "--counts" in argv:
+        return print_counts()
     rules = load()
     own = owned(rules)
     print("%s\n%d rules, %d owned by a gate (%d auto, %d render)"
@@ -165,4 +271,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))
