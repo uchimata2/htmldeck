@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: [T-002, T-004, T-005, T-056]
 related: [T-050]
-work_package: final
+work_package: v0.1
 owner: maintainer
 created: 2026-08-04
 updated: 2026-08-07

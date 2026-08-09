@@ -70,9 +70,9 @@ python tools/deck/ruleset.py --counts
 ```
 
 ```
-  rule rows in the table            160
+  rule rows in the table            161
   + declared in prose, not a row      1   DS-000 (guidance)
-  = rule IDs the document declares  161   <- the figure that counts DS-000
+  = rule IDs the document declares  162   <- the figure that counts DS-000
 ```
 
 **Which gate owns each `hard` rule.**
@@ -97,8 +97,8 @@ python tools/tasks/task.py check
 ```
 
 ```
-OK - 56 tasks, vocabulary valid, task references resolve, 857 document pointer(s) checked, 0 broken
-     459 section reference(s) resolved, 0 dead; 1021 not bound to a document and skipped.
+OK - 57 tasks, vocabulary valid, task references resolve, 904 document pointer(s) checked, 0 broken
+     469 section reference(s) resolved, 0 dead; 1031 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose, and every `<named document> §n`
@@ -155,6 +155,10 @@ Stated here rather than left to be inferred, because a README describing the pla
   point of having a second half.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log.
+It is split into two releases: **v0.1** is what a first working plugin needs — build mode, critique
+mode, and publishing — and **v0.2** is everything else already known, including 3D visuals, a
+frame-rate figure, and the seven glitch-free conditions the gate names and does not yet check.
+[`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
 ---
 

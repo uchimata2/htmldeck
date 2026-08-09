@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: [T-002]
 related: [T-005, T-017]
-work_package: WP3
+work_package: v0.2
 owner: maintainer
 created: 2026-08-06
 updated: 2026-08-07

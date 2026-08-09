@@ -7,7 +7,7 @@ phase: specify
 parent: T-053
 blocked_by: []
 related: [T-037, T-043, T-051, T-005]
-work_package: none
+work_package: v0.2
 owner: the project owner
 created: 2026-08-09
 updated: 2026-08-09

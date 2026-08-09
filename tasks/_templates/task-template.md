@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: []
 related: []
-work_package: WP<n> | final | none
+work_package: v0.1 | v0.2   # the release phase — see docs/BRIEF.md, Release phases
 owner: the project owner
 created: YYYY-MM-DD
 updated: YYYY-MM-DD

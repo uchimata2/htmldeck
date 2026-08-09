@@ -7,7 +7,7 @@ phase: specify
 parent: T-034
 blocked_by: []
 related: [T-034, T-005]
-work_package: WP2
+work_package: v0.2
 owner: maintainer
 created: 2026-08-08
 updated: 2026-08-08

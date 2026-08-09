@@ -71,7 +71,7 @@ Every field below appears in every task file. Order is conventional, not enforce
 | `blocked_by` | `[T-NNN, T-NNN]` or `[]` | See §4. |
 | `related` | `[T-NNN]` or `[]` | See §4. |
 | `decisions` | `[D-NNN]` or omitted | Optional. See §4. |
-| `work_package` | `WP1` … `WPn` · `final` · `none` | Groups the index. |
+| `work_package` | Free text; the value is a **grouping key**, not a vocabulary — `check` does not police it. **Open tasks use the release phase** — `v0.1` · `v0.2` — since 2026-08-09. **Closed tasks keep `WP1`–`WP3` · `final` · `none`**, the packages they were worked under. | Groups the index, one `###` section per value, sorted. A new value creates a section by being written. |
 | `owner` | A role, e.g. `maintainer` | Who decides, not who types. |
 | `created`, `updated` | `YYYY-MM-DD` | `updated` is the date shown in the closed table. |
 | `deliverables` | `[path, path]`, a block list, or `[]` | Repo-relative paths. `task.py deliverables` reports which of them exist yet. **This field is the only place an unproduced output is written as a path** — front-matter is not pointer-scanned, prose is. In §2 and §3, name a not-yet-existing output rather than pointing at it (`` `R7-printable-mode.md`, under `docs/research/` ``), or `check` reports it as a dead pointer, correctly. |

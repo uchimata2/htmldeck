@@ -7,7 +7,7 @@ phase: implement
 parent: null
 blocked_by: [T-014]
 related: [T-002, T-005, T-007, T-017, T-021]
-work_package: WP3
+work_package: v0.1
 owner: maintainer
 created: 2026-08-06
 updated: 2026-08-09
@@ -97,14 +97,21 @@ the 2026-08-07 log row named and one the measurement adds: **the contract**, **t
       literal scan grew easing so that *no curve is written outside the region*. The second half
       was the gap — the scan had covered lengths and durations since T-007 and never easing
 - [ ] Every technique used is verified working from `file://` in the target browser, glitch-free
-- [ ] Frame rate held on a real 12-slide deck with the heaviest slide on screen; number stated,
-      and the machine it was measured on stated with it
-- [ ] `prefers-reduced-motion` honoured with a genuinely usable fallback, not a dead deck —
+- [ ] ~~Frame rate held on a real 12-slide deck with the heaviest slide on screen; number stated,
+      and the machine it was measured on stated with it~~ **Moved 2026-08-09 to
+      [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md)**, which owns
+      it in v0.2. Struck through rather than deleted: a criterion that disappears is one nobody can
+      check went anywhere
+- [x] `prefers-reduced-motion` honoured with a genuinely usable fallback, not a dead deck —
       **rendered under it and measured**, which closes DS-143's excusal in `check.py`. It is
-      honoured today and has never been rendered that way, and those are different claims
-- [ ] **A functional 3D visual demonstrated** — one that encodes something a 2D rendering would
+      honoured today and has never been rendered that way, and those are different claims. **Met
+      2026-08-09** by step 1: three rows from a second render, DS-143 checked rather than excused,
+      and two seeded variants caught
+- [ ] ~~**A functional 3D visual demonstrated** — one that encodes something a 2D rendering would
       lose — with a **chosen static projection** as its reduced-motion and print fallback, not a
-      frozen mid-wobble frame, and with DS-218's stop control reaching it
+      frozen mid-wobble frame, and with DS-218's stop control reaching it~~ **Moved 2026-08-09 to
+      [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md)**, with the
+      DS-140 question it forces. v0.2
 - [ ] The editorial split rule written, and applied in the demonstration deck
 - [ ] Demonstrated on a real 12-slide deck, opened and looked at, in both modes: presented, and
       read cold by someone who was not in the room
@@ -146,6 +153,13 @@ the 2026-08-07 log row named and one the measurement adds: **the contract**, **t
 
 ## 2. Plan
 
+**Rescoped 2026-08-09 to four steps, when the project split into v0.1 and v0.2.** Steps 5–8 were
+capabilities the layer does not reach — no deck here has any 3D, and none has ever had its frame
+rate measured — rather than defects in what it does, so they moved to
+[T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) whole, with the order
+inside them intact. **This task closes after step 4**, the editorial split rule, which build mode
+needs and the other three do not gate.
+
 **Replanned 2026-08-09 against the measurement above.** The original five steps were written when
 this task looked like building the layer. Four of the five are already standing in
 [`examples/reference-deck.html`](../examples/reference-deck.html), and step 3 belongs to
@@ -159,10 +173,7 @@ and the order is that, because the 3D class is the only step that can change the
 | 2 | **Extract the markup contract** from the ten disclosure sets and the ruler that already work, the way T-007 extracted the token contract from a region that already existed. Names, required attributes, the ARIA each carries, and which tokens each reads | `COMPONENT-CONTRACT.md`, under `docs/` |
 | 3 | **Gate it**: every component instance matches the contract, and **no component hard-codes a duration or an easing** — the criterion T-007's tokens make checkable and nothing checks | rows in `audit.py`, fixtures in [`tools/deck/static_variants.py`](../tools/deck/static_variants.py) |
 | 4 | **Write the editorial split rule** — what belongs on the face of the slide and what belongs behind the interaction. §5.3 has the mechanics and no editorial test | a section of the component contract, and a `DESIGN-SYSTEM.md` amendment if it turns out to be a rule |
-| 5 | **The frame-rate instrument**, and a number with the machine beside it. There is no such measurement anywhere in this repository | a measurement stage, and the figure recorded in §4 |
-| 6 | **The 3D class.** A functional 3D visual whose motion *is* the depth encoding, its chosen static projection for reduced motion, print and the reading view, and DS-218's stop control reaching it | a figure in a deck, and the fallback |
-| 7 | **Raise the DS-140 question the wobble forces**, on the T-033 precedent — a fifth motion, or an exemption clause with a stated reason. T-007 banded DS-140's durations and **left it a closed vocabulary of four**, so the collision is unchanged and still owed | a `DESIGN-SYSTEM.md` amendment with a named side |
-| 8 | Demonstrate on the 12-slide deck in both modes, opened and looked at offline; record what generalises | the deck, and [`docs/LESSONS.md`](../docs/LESSONS.md) |
+| 5–8 | ~~The frame-rate instrument · the 3D class · the DS-140 amendment the wobble forces · the demonstration of all three~~ **Moved 2026-08-09 to [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md)**, and the order inside them travels with them | — |
 
 **Approach decisions**
 
@@ -298,6 +309,7 @@ fixtures are.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | (no change) | **Rescoped to four steps: 5–8 move to [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md), and this task closes after the editorial split rule.** The owner set a two-phase plan — a working v0.1 that ships, then v0.2 — and asked which of the backlog is genuinely between here and a release. Three of these four steps are not: the deck has **no 3D at all** and no deck in this repository has ever had its **frame rate** measured, and both of those are capabilities the interaction layer does not reach rather than defects in what it does. The DS-140 amendment travels with the 3D because it is the same decision. **Step 4 stays** — [T-002](T-002-build-mode-the-self-contained-deck-generator.md) has to decide what goes behind a disclosure and §5.3 gives it mechanics with no editorial test, so the rule is a build-mode input and not a polish item. The three criteria that left are **struck through and pointed at their new home** rather than deleted, on the same reasoning the tokens criterion was: a criterion that disappears is one nobody can check went anywhere. |
 | 2026-08-09 | (no change) | **Motion easing is a theme dial on every named motion, and DS-141 is amended.** Raised by the owner, who read the new curve check as a ban on bespoke easing and wanted the flexibility back: *there could be subtle effects adding emphasis where another type of animation fits better.* They were right, and the fault was in the rule rather than in the check. DS-141 said *max 500 ms, **ease-in-out***, which is one theme's curve stated as the ruleset's — the third instance of that shape after DS-034's line height and DS-140's durations, and the first on a value that is a **word**, which is why it hid longer: nobody audits a keyword for being a sample (**L-45**). What the cap and its rationale argue is that a transition is short and eased; nothing argues which easing. So DS-141 now reads *eased rather than linear*, five easing tokens join `--rise-ease`, and the five motions plus the ruler ring read them. **`themes/lattice.css` moves three** — Turn overshoots so a card reveal reads as a flick, Scale and the slide transition ease out so the outgoing scene does not brake — which makes the axis demonstrated rather than declared, on T-007's own lesson that only a second artefact finds a pin. `linear` survives exactly where the mechanism needs it: a looping dash stutters at the seam under anything else, and a zero-duration `visibility` step has nothing to ease. **The variant suite caught its own staleness** — two seeds anchored on text this change rewrote, and the self-test refused to run rather than reporting 18 of 20; both were repointed, and the easing seed now adds a new transition rather than rewriting a tokenised one, so it breaks DS-010 alone. Rendered and looked at offline in both themes: everything at rest and visible, which is the failure a missing token would have produced. |
 | 2026-08-09 | (no change) | **Steps 2 and 3 of 8 done: the markup is a contract, and DS-229 is the rule that holds a deck to it.** [`docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) names 59 authored parts, 11 motion rules and the state every one of them changes; `component.py` parses it rather than restating it, the way `theme.py` reads the token contract. The gate reads **80 checked of 112 owned**, up from 79 of 111. **Two decisions are the substance.** *DS-229 was added rather than citing DS-136*: DS-136 is on the hard-judge checklist at `Reach: —`, so a mechanical check citing it claims a reach the ruleset denies, and reclassifying it would move a real judgement out of the evaluator's hands — so the general rule stays judgement and the one instance a check can decide is written down, on DS-228's precedent under DS-137. *The completeness half runs from the CSS back to the document* — every class the shared style block styles must have a row — because **a component is added by writing a rule, which is exactly when nobody remembers the contract exists** (**L-46**). **What the extraction found that reading had not:** *no component hard-codes a duration or an easing* was half a claim. `theme.py`'s scan has covered lengths and durations since T-007 and an easing is neither, so a `cubic-bezier` written in a component was unreachable by every check in the repository. §5 of the theme contract now draws the line where the rules already draw it — **a keyword quotes DS-141, a curve chooses a feel** — and the deck's eight keywords pass while its one curve is `--rise-ease`, inside the region. **Five classes are styled and used nowhere**, and rather than delete them they are marked `vocabulary` and checked backwards: an instance appearing fails the run. The reference deck needed no edit to pass, and the five new fixtures are what makes that a result rather than a hope. |
 | 2026-08-09 | → in_progress | **Step 1 of 8 done: the reduced-motion pass, and DS-143 is now checked rather than excused.** The gate reads **79 checked / 28 excused**, up from 78 / 29, and the excusal closed on the condition it had written for itself. Three rows from a second render with `--force-prefers-reduced-motion`: nothing still animating, no risen element still hidden, and the flow's dasharray surviving at 7px 6px. **The variant is the part worth carrying**: the deck disables motion by two redundant paths — the `@media` block at parse time and `:root[data-motion="off"]` set from `matchMedia` on load — and a seed that broke only the first changed nothing the probe could see. **A variant that breaks one of two redundant paths is evidence about the other one**, not about the check. Both are seeded now and the row fails at 5 of 5 hidden. |

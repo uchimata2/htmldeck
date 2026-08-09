@@ -445,7 +445,7 @@ def cmd_index(args):
     tasks = load()
     ordered = sorted(tasks.values(), key=lambda t: t.id)
 
-    active, closed = [], []
+    active, closed = {}, []
     for t in ordered:
         link = "[%s](%s)" % (t.id, t.name)
         if t.is_open:
@@ -456,9 +456,9 @@ def cmd_index(args):
             blockers = ", ".join(b for b in t.blocked_by
                                  if b in tasks and tasks[b].is_open) or "-"
             downstream = ", ".join(b for b in t.blocks if tasks[b].is_open) or "-"
-            active.append("| %s | %s | %s | `%s` | %s | %s | %s |"
-                          % (link, t.title, t.wp, t.status, t.phase,
-                             blockers, downstream))
+            active.setdefault(t.wp, []).append(
+                "| %s | %s | `%s` | %s | %s | %s |"
+                % (link, t.title, t.status, t.phase, blockers, downstream))
         else:
             closed.append("| %s | %s | `%s` | %s |"
                           % (link, t.title, t.status,
@@ -470,12 +470,21 @@ def cmd_index(args):
     block.append("## Active")
     block.append("")
     if active:
-        block.append("| ID | Title | WP | Status | Phase | Blocked by | Blocks |")
-        block.append("| :--- | :--- | :---: | :--- | :--- | :--- | :--- |")
-        block.extend(active)
+        # **One section per work package, not one table with a WP column.** The board is read to
+        # CHOOSE what to work on (TASK-WORKFLOW.md §6), and since the backlog became two release
+        # phases the first question a reader has is *which of these is between here and a
+        # release* - a question a column answers only after they have sorted it in their head.
+        # The heading also gives each phase somewhere to be linked to.
+        for wp in sorted(active):
+            block.append("### %s" % wp)
+            block.append("")
+            block.append("| ID | Title | Status | Phase | Blocked by | Blocks |")
+            block.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
+            block.extend(active[wp])
+            block.append("")
     else:
         block.append("_None._")
-    block.append("")
+        block.append("")
     block.append("## Closed")
     block.append("")
     block.append("| ID | Title | Status | Updated |")
@@ -497,8 +506,8 @@ def cmd_index(args):
     else:
         text = text.rstrip() + "\n\n" + generated + "\n"
     write(INDEX, text)
-    print("Regenerated %s - %d active, %d closed, next T-%03d"
-          % (INDEX, len(active), len(closed), nxt))
+    print("Regenerated %s - %d active in %d work package(s), %d closed, next T-%03d"
+          % (INDEX, sum(len(v) for v in active.values()), len(active), len(closed), nxt))
     return 0
 
 

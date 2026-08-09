@@ -19,11 +19,16 @@ Read by the `handoff` skill. Plain Markdown, read by the agent — no parser.
 
 ## Notes for whoever resumes
 
-**WP1 — the research phase — is complete as of 2026-08-07**, and the plugin exists:
-`.claude-plugin/` and `skills/htmldeck/`, standing up the seven-stage pipeline. The work from here
-is building, against research already written up in `docs/research/R1`–`R7`. Read `CLAUDE.md`
-first — its rules were rewritten 2026-08-06 and supersede anything older. Then `docs/BRIEF.md`,
-whose **"Decisions taken"** section overrides the older material above it in the same file.
+**The research is complete as of 2026-08-07**, and the plugin exists: `.claude-plugin/` and
+`skills/htmldeck/`, standing up the seven-stage pipeline. The work from here is building, against
+research already written up in `docs/research/R1`–`R7`. Read `CLAUDE.md` first — its rules were
+rewritten 2026-08-06 and supersede anything older. Then `docs/BRIEF.md`, whose **"Decisions taken"**
+section overrides the older material above it in the same file.
+
+**The backlog is two release phases as of 2026-08-09 — `v0.1` and `v0.2`** — and `tasks/README.md`
+is grouped by them. **Resume from v0.1 unless told otherwise**; `docs/BRIEF.md` *Release phases* says
+what is in each and why. Task front-matter carries the phase in `work_package`; closed tasks keep the
+`WP1`–`WP3` packages they were worked under, which are history rather than the current plan.
 
 `skills/htmldeck/SKILL.md` is the always-loaded body and is kept under a byte budget on purpose;
 substance goes in `references/` or in `docs/`, never in it. `tools/plugin/check_scaffold.py`

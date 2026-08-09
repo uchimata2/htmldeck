@@ -388,6 +388,53 @@ replaces enforced variety, with the template generator satisfying it later.
 
 ---
 
+## Release phases — set 2026-08-09
+
+**Two, and the line between them is one question: *is this between here and a plugin someone can
+install and use?*** Set by the owner, who asked for a working v0.1 that ships and a v0.2 carrying
+everything already known. The board is [`../tasks/README.md`](../tasks/README.md), grouped by these
+names; this section is the decision, that page is its current state.
+
+**What made the split necessary.** The backlog had reached ten open tasks with no ordering except
+dependency edges, and dependency order does not distinguish *needed* from *wanted*. Three of the
+four steps left in [T-016](../tasks/T-016-the-interaction-and-motion-layer.md) were capabilities the
+interaction layer does not reach — 3D, a frame-rate figure, the ruleset amendment the first forces —
+and every one of them was between the project and a release for no reader's benefit.
+
+### v0.1 — a working plugin, published
+
+**The whole of it is: a deck gets written, a deck gets critiqued, and a stranger can install it.**
+Everything below is load-bearing for that sentence and nothing else is in.
+
+| | Why it is in v0.1 |
+| :--- | :--- |
+| [T-016](../tasks/T-016-the-interaction-and-motion-layer.md) — the editorial split rule, its last step | §5.3 gives build mode the mechanics of progressive disclosure and no editorial test, so without it the generator has to guess what belongs behind a click. |
+| [T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md) — build mode | **Nothing writes a deck.** The gate, the ruleset, both contracts and the reference deck all exist to serve a generator that does not. This is the release. |
+| [T-004](../tasks/T-004-critique-mode-blunt-section-by-section-review.md) — critique mode | CLAUDE.md makes it first-class, and the reason is that it is *the part users cannot do for their own work*. Five of the ten rubric dimensions are invisible to every mechanical check, so a build-only release ships the half a machine can already do. |
+| [T-056](../tasks/T-056-humanize-the-human-facing-documents-before-publishing.md) — humanize the front door | A standing publishing constraint in CLAUDE.md, not a task's preference. It binds every release. |
+| [T-008](../tasks/T-008-package-document-and-publish.md) — package and publish | The deploy. |
+
+### v0.2 — everything already known, and deliberately not held for
+
+**None of these is a defect.** Each is a capability the system does not yet reach, or a sharpening
+of one it does, and each is written up well enough to be picked up cold.
+
+| | What it adds |
+| :--- | :--- |
+| [T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, a frame-rate figure with its machine, and DS-140's fifth motion. Split out of T-016. |
+| [T-019](../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md) | The capability preflight a deck ships with. Portability is already gated at build time; this is what the deck does on a machine that surprises it. |
+| [T-041](../tasks/T-041-implement-the-nine-glitch-free-conditions.md) | The seven of R6's nine glitch-free conditions nothing adopted. The gate names the gap today rather than hiding it. |
+| [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md) | A second printed contents sheet. Measured to bite past 24 slides; the target case is 12. |
+| [T-054](../tasks/T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Coverage recorded per *clause* rather than per rule — a sharper account, not a missing one. |
+| [T-055](../tasks/T-055-a-variant-that-leaves-malformed-markup.md) | One seeded variant that tests parser repair instead of the tag it means to test. |
+
+**What v0.1 will ship without, stated rather than discovered.** No 3D. No frame-rate figure on any
+machine. Seven of R6's nine glitch-free conditions unimplemented, and a console error that does not
+stop a deck still invisible to the gate. Printed contents pages that do not continue past 24 slides.
+Those belong in the release notes, not in a list of things to fix first.
+
+---
+
 ## Open questions
 
 1. ~~**Fonts.** Embedded subsets (large files, licensing questions) or a curated system stack?~~

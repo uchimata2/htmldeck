@@ -9,12 +9,19 @@ plus the prompt structure that briefs them and the critique pass that fixes them
 
 Grounded in a corpus of real decks, prompts and written style guides from a training programme.
 `docs/BRIEF.md` records what that evidence shows and what to build; `reference/` holds the source
-prompt. **Status: WP1 research is complete; the plugin scaffold exists and
-runs its own pipeline** (`.claude-plugin/`, `skills/htmldeck/`), **and as of 2026-08-09 the build
-check is built** — `python tools/deck/check.py <deck>` decides 79 of the 111 rules a gate owns and
-names the other 32 with a reason each. **What does not exist yet is build mode**: nothing writes a
-deck, so the reference deck is still the only one there is. Read the brief first — its
-"Decisions taken" section overrides anything older in it.
+prompt. **Status: the research is complete; the plugin scaffold exists and runs its own pipeline**
+(`.claude-plugin/`, `skills/htmldeck/`), **and as of 2026-08-09 the build check, the theme contract
+and the component contract are built** — `python tools/deck/check.py <deck>` decides 80 of the 112
+rules a gate owns and names the other 32 with a reason each. **What does not exist yet is build
+mode**: nothing writes a deck, so the reference deck is still the only one there is. Read the brief
+first — its "Decisions taken" section overrides anything older in it.
+
+**The backlog is two release phases, set 2026-08-09 by the owner: `v0.1` and `v0.2`.** v0.1 is a
+working plugin someone can install — build mode, critique mode, the humanizer pass, publish — and
+nothing else; v0.2 carries everything already known and deliberately not held for. `docs/BRIEF.md`
+*Release phases* is the decision and says what each contains; `tasks/README.md` is the current
+state, grouped by the same two names. **A new task belongs to one of them**, and putting work in
+v0.1 that a first release does not need is the failure this split exists to prevent.
 
 **The objectives are still being shaped.** Research is expected to be able to overturn scope, not
 just fill it in. Findings that contradict the brief are surfaced as candidate changes of
