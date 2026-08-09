@@ -83,10 +83,89 @@ SCALAR = re.compile(r"^(\w+):[ \t]*(.*?)[ \t]*$", re.M)
 # a glob such as docs/research/R1-*.md cannot match, which is deliberate.
 POINTER = re.compile(r"(?<![\w./-])((?:\w|\.\.?)[\w.-]*(?:/[\w.-]+)+\.md)\b")
 
+# ---------------------------------------------------------------- section references (§6.1)
+# The rule is in TASK-WORKFLOW.md §6.1 and this implements it. Both halves exist so the number a
+# reference cites is PRINTED in the document it points at.
+DOC_STEMS = "DESIGN-SYSTEM|DESIGN-RATIONALE|EVALUATION|BRIEF|TASK-WORKFLOW|LESSONS"
+
+# **Adjacency is the whole of the binding.** A document named earlier in the paragraph is not the
+# target: tried against the corpus, "nearest document mentioned" picked the wrong file for a third
+# of the misses it reported - `R4-prior-art.md` for a §2.1 that meant the citing document's own.
+# So the name and the mark may be separated only by markdown punctuation and at most one space.
+SECTION_REF = re.compile(
+    r"(?P<doc>[A-Za-z0-9_./-]+\.md|\bR[1-9]\b|\bT-\d{3}\b|\b(?:%s)\b)"
+    r"[`*\]\)_,]{0,4}[ ]?[`*\]\)_]{0,3}[ ]?§(?P<sec>\d+(?:\.\d+)*)" % DOC_STEMS)
+SECTION_ANY = re.compile(r"§\d+(?:\.\d+)*")
+
+# A numbered heading: `## 3.` or `### 2.1 ` - the trailing dot is optional because both forms are
+# in use.
+NUM_HEADING = re.compile(r"^#{1,6}\s+(\d+(?:\.\d+)*)\.?\s", re.M)
+ANY_HEADING = re.compile(r"^#{1,6}\s", re.M)
+ORDINAL = re.compile(r"^\s{0,3}(\d+)\.\s", re.M)
+
+# Code is literal text, not a pointer. This is what lets a document quote a reference that is
+# WRONG - the audit that found this family wrote `DESIGN-SYSTEM.md §11` a dozen times to say it
+# never existed, and under any other rule the record of a dead pointer is itself one.
+FENCE = re.compile(r"^```.*?^```", re.M | re.S)
+CODE_SPAN = re.compile(r"`[^`\n]*`")
+
+
+def strip_code(text):
+    """Blank out fenced blocks and code spans, preserving offsets and line structure."""
+    blank = lambda m: re.sub(r"[^\n]", " ", m.group(0))     # noqa: E731
+    return CODE_SPAN.sub(blank, FENCE.sub(blank, text))
+
 
 def read(path):
     with open(path, encoding="utf-8") as fh:
         return fh.read()
+
+
+def doc_aliases(paths):
+    """Every name a document can be cited by -> its path.
+
+    `DESIGN-SYSTEM.md`, `DESIGN-SYSTEM`, `R7`, `T-042`. Derived from the filenames present, so a
+    renamed document changes what resolves without anything here being edited (**L-08**).
+    """
+    alias = {}
+    for p in paths:
+        if not p.endswith(".md"):
+            continue
+        base = os.path.basename(p)
+        alias.setdefault(base.upper(), p)
+        alias.setdefault(base[:-3].upper(), p)
+        for pat in (r"^(R[1-9])-", r"^(T-\d{3})-"):
+            m = re.match(pat, base[:-3])
+            if m:
+                alias.setdefault(m.group(1).upper(), p)
+    return alias
+
+
+def section_index(path):
+    """(numbered headings, {heading: ordinals printed in a numbered list under it})."""
+    return section_index_of(read(path))
+
+
+def section_index_of(text):
+    heads, ordinals = set(), {}
+    starts = [m.start() for m in ANY_HEADING.finditer(text)]
+    for m in NUM_HEADING.finditer(text):
+        heads.add(m.group(1))
+        nxt = next((s for s in starts if s > m.start()), len(text))
+        found = {o.group(1) for o in ORDINAL.finditer(text[m.start():nxt])}
+        ordinals.setdefault(m.group(1), set()).update(found)
+    return heads, ordinals
+
+
+def section_resolves(index, ref):
+    """TASK-WORKFLOW.md §6.1: a heading, or a heading plus an ordinal printed under it."""
+    heads, ordinals = index
+    if ref in heads:
+        return True
+    if "." in ref:
+        n, m = ref.rsplit(".", 1)
+        return n in heads and m in ordinals.get(n, set())
+    return False
 
 
 def write(path, text):
@@ -474,7 +553,16 @@ def cmd_check(args):
 
     # glob's ** skips dot-directories, which hid .handoff/ and .claude/ - and .handoff/HANDOFF.md
     # is the live resume pointer, the one file where a broken link costs the most. Walk instead.
+    # `.gitignore` governs here too, and it did not until T-045 tripped over the difference: an
+    # archived, machine-local handoff was link-checked as though a fresh clone contained it, which
+    # is the opposite of the question the prose scan below says both scans are answering. The live
+    # `.handoff/HANDOFF.md` is the reason this walk reaches dot-directories at all, and it is
+    # excluded by the same rule - so the check that matters most is the one this drops. That is
+    # correct: it is not in the clone either, and `handoff` owns it.
+    link_ignore = gitignore_patterns()
     for md in sorted(markdown_files()):
+        if is_ignored(os.path.relpath(md, "."), link_ignore):
+            continue
         base = os.path.dirname(md)
         for m in LINK.finditer(read(md)):
             target = m.group(1)
@@ -522,11 +610,60 @@ def cmd_check(args):
             if not resolves(target, base):
                 problems.append("DEAD POINTER %s -> %s does not exist" % (src, target))
 
-    leftovers = os.listdir(WORKING) if os.path.isdir(WORKING) else []
-    if leftovers:
-        msg = "%s not empty: %s" % (WORKING, ", ".join(sorted(leftovers)))
+    # ---- section references (TASK-WORKFLOW.md §6.1)
+    scanned = [s for s in sorted(project_files((".md", ".py")))
+               if not is_ignored(os.path.relpath(s, "."), ignore)]
+    alias = doc_aliases(scanned)
+    sec_index, sections, sec_skipped, seen_sections = {}, 0, 0, set()
+    for src in scanned:
+        text = strip_code(strip_front_matter(read(src)))
+        bound = set()
+        for m in SECTION_REF.finditer(text):
+            bound.add(m.start("sec"))
+            tok, ref = m.group("doc"), m.group("sec")
+            target = None
+            if "/" in tok:
+                cand = os.path.normpath(os.path.join(os.path.dirname(src), tok))
+                target = cand if os.path.exists(cand) else None
+            target = target or alias.get(os.path.basename(tok).upper())
+            if not target:
+                sec_skipped += 1              # a name this repository does not carry
+                continue
+            sections += 1
+            if target not in sec_index:
+                sec_index[target] = section_index(target)
+            if section_resolves(sec_index[target], ref):
+                continue
+            key = (src, target, ref)
+            if key in seen_sections:
+                continue                      # one report per document per target section
+            seen_sections.add(key)
+            problems.append("DEAD SECTION %s -> %s has no §%s"
+                            % (src, os.path.relpath(target, "."), ref))
+        # Every mark the citation form does not bind to a document. Counted, never dropped: a
+        # scan that silently ignores what it cannot bind is the report this tool exists not to be.
+        sec_skipped += len([m for m in SECTION_ANY.finditer(text)
+                            if m.start() + 1 not in bound])
+
+    # git carries no empty directory, so `os.path.isdir` false meant "nothing left over" in every
+    # fresh clone and `--closing` reported the stricter run having done one test fewer than it
+    # claimed (**L-05**). Absent is now its own answer.
+    if not os.path.isdir(WORKING):
+        msg = "%s does not exist, so the leftover-file check had nothing to run against" % WORKING
         (problems if closing else warnings).append(
-            ("NOT EMPTY    " if closing else "note: ") + msg)
+            ("NO WORKING DIR " if closing else "note: ") + msg)
+    else:
+        leftovers = os.listdir(WORKING)
+        if leftovers:
+            msg = "%s not empty: %s" % (WORKING, ", ".join(sorted(leftovers)))
+            (problems if closing else warnings).append(
+                ("NOT EMPTY    " if closing else "note: ") + msg)
+
+    # ---- what an open task owes the report (TASK-WORKFLOW.md §6.2)
+    for t in sorted(tasks.values(), key=lambda x: x.id):
+        if t.is_open and t.status != "proposed" and not t.outputs:
+            problems.append("NO DELIVERABLE %s is %r and declares none - `deliverables:` is the "
+                            "only place an unproduced output is written as a path" % (t.id, t.status))
 
     for w in warnings:
         print(w)
@@ -539,6 +676,8 @@ def cmd_check(args):
     # while two documents the tool itself points at were missing (L-05).
     print("OK - %d tasks, vocabulary valid, task references resolve, "
           "%d document pointer(s) checked, 0 broken" % (len(tasks), pointers))
+    print("     %d section reference(s) resolved, 0 dead; %d not bound to a document and skipped."
+          % (sections, sec_skipped))
     # And say what was *not* checked. A count that silently shrinks is the failure T-029 was
     # raised for: declaring one existing file as a deliverable dropped six pointers out of this
     # number, and the line above still read "0 broken".
@@ -578,20 +717,89 @@ def cmd_deliverables(args):
     """What every task declares it produces, and whether it exists yet. Derived - there is
     no deliverable list to maintain."""
     tasks = load()
-    rows, missing = [], 0
+    open_rows, closed_rows, silent = [], [], []
     for t in sorted(tasks.values(), key=lambda x: (x.wp, x.id)):
+        if t.is_open and not t.outputs:
+            silent.append((t.id, t.status))
         for path in t.outputs:
-            there = os.path.exists(path)
-            missing += 0 if there else 1
-            rows.append((t.wp, t.id, t.status, "x" if there else " ", path))
-    if not rows:
+            row = (t.wp, t.id, t.status, "x" if os.path.exists(path) else " ", path)
+            (open_rows if t.is_open else closed_rows).append(row)
+    if not open_rows and not closed_rows:
         print("No task declares any deliverables.")
         return 0
-    print("%-5s %-6s %-11s %s  %s" % ("WP", "TASK", "STATUS", "?", "PATH"))
-    for wp, tid, status, mark, path in rows:
-        print("%-5s %-6s %-11s [%s] %s" % (wp, tid, status, mark, path))
-    print("\n%d declared output(s); %d not on disk yet." % (len(rows), missing))
+
+    def table(title, rows):
+        print("\n%s" % title)
+        if not rows:
+            print("  (none)")
+            return
+        print("  %-5s %-6s %-11s %s  %s" % ("WP", "TASK", "STATUS", "?", "PATH"))
+        for wp, tid, status, mark, path in rows:
+            print("  %-5s %-6s %-11s [%s] %s" % (wp, tid, status, mark, path))
+
+    # **Open and closed are reported apart on purpose** (TASK-WORKFLOW.md §6.2). Together, one
+    # outstanding output hid among seventy delivered ones and the summary read "0 not on disk
+    # yet" - structurally true, because every open task declared none (**L-05**).
+    table("OUTSTANDING - declared by an open task", open_rows)
+    table("DELIVERED - declared by a closed task", closed_rows)
+    out_missing = len([r for r in open_rows if r[3] != "x"])
+    print("\n%d output(s) declared by open tasks, %d of them not on disk yet."
+          % (len(open_rows), out_missing))
+    print("%d declared by closed tasks; %d of those absent, which would be a defect."
+          % (len(closed_rows), len([r for r in closed_rows if r[3] != "x"])))
+    if silent:
+        print("\n%d open task(s) declare no deliverable at all:" % len(silent))
+        for tid, status in silent:
+            print("  %-6s %-11s %s" % (tid, status,
+                                       "correct - a proposal need not know yet"
+                                       if status == "proposed" else "**a `check` failure**"))
     return 0
+
+
+def self_test():
+    """Refuse to run if the checks cannot tell a good reference from a bad one (**L-04**).
+
+    This tool had no self-test until T-046, which is why three of its reports could not fail:
+    a section resolver that did not exist, a deliverables column that was structurally zero, and
+    a `--closing` test that no-opped in every fresh clone. Each assertion below **constructs the
+    failure** and requires it to be reported - an assertion that only ever sees the passing case
+    is the same defect one level up.
+    """
+    # A miniature of the two documents that decide the rule: a §0 whose numbered list runs to 8,
+    # a §5 with three items and a real §5.1 subsection, and a §9 with no list under it.
+    idx = section_index_of(
+        "# T\n\n## 0. Preamble\n\n" + "".join("%d. item\n" % i for i in range(9)) +
+        "\n## 5. Five\n\n1. first\n2. second\n3. third\n\n### 5.1 Sub\n\n## 9. Nine\n\nprose\n")
+
+    # The four cases that decide the rule (TASK-WORKFLOW.md §6.1), plus the two shapes each side.
+    # Two must pass and two must fail; a resolver that says yes to everything satisfies only the
+    # first pair, which is why the second is here.
+    for ref in ("5", "5.1", "5.3", "0.8"):
+        if not section_resolves(idx, ref):
+            sys.exit("SELF-TEST FAILED: §%s should resolve - a heading, or an ordinal under one"
+                     % ref)
+    for ref in ("9.4", "0.9", "11"):
+        if section_resolves(idx, ref):
+            sys.exit("SELF-TEST FAILED: §%s does not exist and was reported as resolving" % ref)
+
+    # Adjacency binds a reference to a document; proximity does not. Both halves are asserted,
+    # because the loose version passed the first and produced wrong targets on the second.
+    # The fixtures name documents this repository does not carry, so the scan over this file does
+    # not read its own test data as live pointers - which it did, and reported two.
+    if not SECTION_REF.search("see [EXAMPLE.md](EXAMPLE.md) §2 for the rest"):
+        sys.exit("SELF-TEST FAILED: a linked document followed by a section mark did not bind")
+    if not SECTION_REF.search("EXAMPLE.md §5.3 covers it"):
+        sys.exit("SELF-TEST FAILED: a bare document name beside a section mark did not bind")
+    if SECTION_REF.search("EXAMPLE.md is the source, and the reasoning is in §2.1"):
+        sys.exit("SELF-TEST FAILED: a document named earlier in the sentence was bound to a "
+                 "later section mark - that is the heuristic T-046 rejected")
+
+    # Code is literal text. Without this a document cannot record that a pointer is dead.
+    if "§11" in strip_code("the note cites `DESIGN-SYSTEM.md §11`, which never existed"):
+        sys.exit("SELF-TEST FAILED: a section mark inside a code span was not treated as literal")
+    if "§9" not in strip_code("cites DESIGN-SYSTEM.md §9 in prose"):
+        sys.exit("SELF-TEST FAILED: stripping code removed a mark that was not in code")
+    return True
 
 
 COMMANDS = {"context": cmd_context, "index": cmd_index, "check": cmd_check,
@@ -605,6 +813,7 @@ def main():
         print("commands: " + ", ".join(sorted(COMMANDS)))
         return 1
     os.chdir(ROOT)
+    self_test()
     return COMMANDS[argv[0]](argv[1:])
 
 

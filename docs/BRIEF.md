@@ -240,7 +240,7 @@ moment. T-020 §3.3 has the mapping and R1 §14's own findings as the evidence.
 
 Plus a **check** the build must pass: no external references, no banned terminology, every
 `<section>` has a heading — **now semantic: the heading must be a *claim*, not a topic label
-([`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) §9.4), which grows build mode as well as the check** —
+(DS-090, [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) §3.3), which grows build mode as well as the check** —
 contrast meets WCAG AA, and it renders glitch-free from `file://` in
 the target browser. *(Printing was on this list; it is now an opt-in mode, not a gate — see
 "Decisions taken".)* **"Glitch-free" is now defined as nine testable conditions** in

@@ -1,10 +1,17 @@
 # htmldeck — evaluation and the convergence loop
 
+## 0. What the score is, and what it is not
+
 **How a deck is scored against [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md), and when it is good enough to
 stop.**
 
 Loaded by the build and critique modes. Rules are cited by their `DS-nnn`, `A-nn` and `X-nn` IDs; it
 does not restate them.
+
+*This preamble was unnumbered until 2026-08-09 and was cited as `§0` from five places — `BRIEF.md`,
+this document, T-023, T-024 and T-026. Numbering it was cheaper and more honest than rewriting five
+citations, and `DESIGN-SYSTEM.md` already numbers its own preamble §0
+([T-046](../tasks/T-046-extend-task-py-to-what-it-cannot-see.md)).*
 
 > **The score is a stopping rule, not a quality claim.** It answers *"is there a known defect left
 > that this loop can fix?"* — never *"is this deck good?"* A deck at threshold has run out of

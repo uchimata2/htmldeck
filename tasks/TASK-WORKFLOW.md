@@ -174,7 +174,49 @@ other, which is how it survived being read repeatedly (**T-031**, **L-08**).
   deliverable is a promise about the future. It was hiding **110 of 357 pointers**, because most
   declared outputs are long-existing documents that everything else cites. Declaring one existing
   file added six more to that total and `check` still reported `0 broken` (**L-05**).
-- With `--closing`, `deliverables/_working/` is empty.
+- **Every `<named document> §n` reference resolves** — §6.1.
+- **A task at `specified` or later declares at least one deliverable** — §6.2.
+- With `--closing`, `deliverables/_working/` exists and is empty. **Absent is a failure, not a
+  pass**: git carries no empty directory, so in a fresh clone this test used to find nothing and
+  report the stricter run having done one check fewer than it claimed (**L-05**).
+
+### 6.1 Section references
+
+A `§` is a pointer like any other, and until T-046 nothing resolved one — **1394 of them, against
+614 links and paths that were all checked** (**L-39**). The rule has two halves, and both exist so
+that the number a reference cites is **printed in the document it points at**, where a reader can
+verify it.
+
+**When a reference is checked.** Only when the document is named **adjacent** to the mark —
+`` `DESIGN-SYSTEM.md` §3.3 ``, a markdown link to a task followed by `§2`, or `R7 §5.3`. A bare
+`§4` and a document named earlier
+in the paragraph are *not* a reference to that document: the citation form does not bind them, and
+guessing produced wrong targets in every case tried. Unbound marks are counted and reported as
+skipped, never silently dropped.
+
+**When a reference resolves.** `§n` resolves when `n` is a heading. `§n.m` resolves when `n.m` is a
+heading, **or** when `n` is a heading and `m` is an ordinal printed in a numbered list under it.
+That admits both conventions already in use — `R7 §5.3` is item 3 of section 5, `DESIGN-SYSTEM §0.8`
+is item 8 of section 0 — and needs no exception list, because it rejects `DESIGN-SYSTEM §9.4` and
+`EVALUATION §0` exactly as it should. **A number that exists only as the reader's own count of an
+unnumbered list is not an address and may not be cited.**
+
+**Mentioning a section is not citing it.** A `§` inside a code span or a fenced block is literal
+text and is not resolved — which is how a document quotes a reference that is *wrong*. The audit
+that found this family had to write `` `DESIGN-SYSTEM.md §11` `` a dozen times to say it never
+existed; under any other rule the record of a dead pointer is itself a dead pointer.
+
+### 6.2 What an open task owes the deliverables report
+
+`deliverables:` is the only place an unproduced output is written as a path (§3), so a task that
+knows what it produces and declares nothing is withholding the one fact the field exists for. The
+symptom was a report that could only ever measure finished work: every open task declared `[]`, so
+*"0 not on disk yet"* was structurally true and told nobody anything (**L-05**).
+
+**A task at `specified` or later declares at least one deliverable.** `proposed` may be empty,
+because a proposal need not yet know what it produces — which puts the rule on the transition, where
+the information becomes available, rather than on the file. `deliverables` reports open and closed
+separately, so an outstanding output cannot hide among 70 delivered ones.
 
 **What it does not.** `check` validates structure and references. It cannot tell you a
 specification is wrong, a plan is thin, or a deliverable is bad — and it says so in its own
