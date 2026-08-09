@@ -2,8 +2,8 @@
 id: T-067
 title: The published upgrade instructions do not upgrade anything
 type: fix
-status: review
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-056, T-061]
@@ -136,7 +136,37 @@ Checking for updates for plugin "htmldeck" at user scope…
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The README gives a working upgrade path, distinct from first install | **met** | A separate *Upgrade it* section, which also says why refreshing the marketplace does nothing and gives the second route through the `/plugin` panel |
+| Both published release notes are corrected in place | **met** | `gh release edit` on v0.1.1 and v0.1.2, each by a pattern that had to match exactly once, both re-read from GitHub afterwards |
+| The `@marketplace` suffix is shown, since the bare name fails | **met** | Shown in the README, in both corrected notes and in the v0.1.3 notes, with the failure message quoted from a run |
+| **Verified by actually upgrading on this machine** | **met** | See below |
+| The corrected text has been through the humanizer | **met** | `humanizer@humanizer` 2.9.1 in file mode, under `PUBLISHING.md` §5's exception. It cut one em dash by splitting the sentence, varied the first paragraph's cadence, and replaced *"To have it happen without asking"*. The v0.1.3 notes were written to the same rule and scanned for em and en dashes: zero |
+
+**The upgrade, run on this machine against the published release:**
+
+```
+=== before ===
+0.1.2
+=== claude plugin update htmldeck@htmldeck ===
+Checking for updates for plugin "htmldeck@htmldeck" at user scope…
+✔ Plugin "htmldeck" updated from 0.1.2 to 0.1.3 for scope user. Restart to apply changes.
+=== after ===
+0.1.3
+C:\...\.claude\plugins\cache\htmldeck\htmldeck\0.1.3
+```
+
+**And it needed no marketplace refresh first**, which the specify did not anticipate: `claude plugin
+update` found `0.1.3` on its own, so the corrected instruction is genuinely one command rather than
+two. The installed copy carries both fixes and its own fixture passes from the install path:
+`installed copy self-test: True`, `OK - manifest valid`.
+
+**A note for whoever holds T-060.** The README's `refcheck.py` figures were re-derived twice during
+this task and were stale again by the closing commit, because the count includes the task records
+this task was writing. **A figure that counts the repository cannot be correct in the commit that
+changes the repository**, so the rule cannot be "the pasted figure equals the current run" — it has
+to be a tolerance, a re-derivation at release time only, or a figure that does not count its own
+source. That is a real design question for the gate T-060 proposes, and it is recorded here rather
+than discovered there.
 
 **Child fix tasks raised**
 - none
@@ -145,4 +175,5 @@ Checking for updates for plugin "htmldeck" at user scope…
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | → done | **The mechanism turned out to be worth more than the command.** `marketplace update` does upgrade installed plugins, but only where auto-update is enabled for that marketplace, and third-party marketplaces have it **off by default** — which explains the whole report at once: the catalog moved to 0.1.2, the install record stayed at 0.1.1, and `/plugin install` then correctly said the plugin was already installed. Without that sentence the correction reads as an arbitrary second command. It also yields a second route, so the README gives both. **There is no per-plugin `/plugin update` in session**, checked against the published command list rather than assumed, so the README stops implying the two forms mirror each other. Both released notes were edited in place by a pattern required to match exactly once. Verified by upgrading this machine from 0.1.2 to 0.1.3 against the real release, which needed no marketplace refresh first. Two README figures had drifted again and one prose claim had gone false: `PUBLISHING.md` §6 caught the figures, nothing caught the claim, and that gap is written into the review for T-060. |
 | 2026-08-10 | → proposed | Reported by the project running htmldeck while upgrading to v0.1.2. **The instruction is published in two release notes and both were written to help someone off a broken version**, which is what makes an `xs` documentation fix `high` value rather than trivial. Also the first defect found in text that had already passed the humanizer: that pass judges how prose reads and cannot tell whether a command works, which is worth remembering before treating it as a quality gate for instructions. |
