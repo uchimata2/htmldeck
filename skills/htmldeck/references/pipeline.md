@@ -133,6 +133,9 @@ file says what was never settled.
 **In:** the reviewed slide-by-slide specification. **Not a brief.**
 **Out:** the deck.
 
+**Load `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/build.md`** — how the deck is assembled,
+what this stage may decide for itself, and the loop below stated in commands.
+
 Build a few slides, run the cheap loop on them, then continue. Batching is not about scoring — it
 is that interaction patterns are built once and reused, so **a component defect found in batch one
 is fixed once instead of in twelve places**.
@@ -182,6 +185,6 @@ lands. Stated so a run is not mistaken for a finished plugin:
 | Stage | Owned by | Until then |
 | :--- | :--- | :--- |
 | 5 · spec review, 7 · build review | Critique mode | The rubric in `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` is complete and can be applied by hand; the report formats are not yet fixed. |
-| 6 · build | Build mode | Build to `${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md` directly, using `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` as the structural reference. |
+| 6 · build | ~~Build mode~~ — **built 2026-08-09.** `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/build.md` is the stage, and `${CLAUDE_PLUGIN_ROOT}/shell/` plus `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py` are what a deck is assembled from. | — |
 | 6 · per-batch automatic checks | ~~The build check~~ — **built 2026-08-09.** `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]` gates 81 of the 113 rules the ruleset puts in its jurisdiction and **names every one of the other 32, with a reason**. | — |
-| 6 · tokens, components, motion | The theme and interaction layers | `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` carries a working first instance of both. |
+| 6 · tokens, components, motion | The theme and interaction layers | `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` carries a working first instance of both, and `${CLAUDE_PLUGIN_ROOT}/shell/` is that instance with the content cut out. |

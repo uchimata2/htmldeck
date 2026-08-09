@@ -50,6 +50,7 @@ resolve against the user's project, which may well have a documentation folder o
 | :--- | :--- |
 | `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/pipeline.md` | First, on every build run |
 | `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/artifacts.md` | At stage 3, before writing either specification file |
+| `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/build.md` | At stage 6, before any HTML |
 | `${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md` | Before the outline (§3.2 archetypes, §3.4 the deliverable) and before any HTML (all of it) |
 | `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` | At either review stage |
 | `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` | When writing HTML — the structural reference, not a template to fill |
