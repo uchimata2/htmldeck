@@ -1,13 +1,18 @@
 # examples
 
-Two decks, produced by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md).
-Both are single self-contained `.html` files with **zero external references**; open either by
-double-clicking it, with the network off.
+Three decks. All are single self-contained `.html` files with **zero external references**; open any
+of them by double-clicking, with the network off.
 
 | File | What it is |
 | :--- | :--- |
-| [`reference-deck.html`](reference-deck.html) | The reference deck. 12 slides, built by hand against [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md). |
+| [`reference-deck.html`](reference-deck.html) | The reference deck. 12 slides, built **by hand** against [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md). |
 | [`reference-deck-seeded-defects.html`](reference-deck-seeded-defects.html) | The same deck with **one deliberate defect per evaluation dimension**. A test fixture, not an example to copy. |
+| [`sort-window/`](sort-window) | *Move the window, not the fleet* — 12 slides, built **through build mode** by [T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md), with its two specification files and its sources beside it. |
+
+**The difference between the first and the third is the whole point of T-002.** One was authored;
+the other was assembled from [`shell/`](../shell) and then authored into, three slides at a time,
+with the gate run per batch. They share a runtime because the shell *is* the first deck with its
+content cut out.
 
 **Riverbend is an illustrative city. It does not exist.** Every figure in either deck is an output
 of the assumptions stated on the slide that uses it. Nothing is attributed to a real agency, study
@@ -284,3 +289,35 @@ python tools/examples/seed_defects.py --check
 
 Regenerates into a temporary file and compares it with the committed fixture, so a reference deck
 edited without regenerating is a red run rather than a discovery two audits later.
+
+---
+
+## The generated deck
+
+[`sort-window/`](sort-window) holds all four artifacts a build run leaves behind — the deck, the
+foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
+reconciled against. It is **216 KB in one file**, 12 slides, five hand-written SVG figures, ten
+disclosure panels, zero external references.
+
+```bash
+python tools/deck/check.py examples/sort-window/sort-window.html --sources examples/sort-window/sources
+```
+
+That runs the content half as well as the presentation half, which is the point of keeping the
+sources: `0 failure(s)`, `81 checked`, and the figure ledger reconciled against three model
+documents. Two more checks belong to this deck and not to the hand-built one:
+
+```bash
+python tools/deck/shell.py check examples/sort-window/sort-window.html
+```
+
+The half nobody rewrites is still the shipped shell — the check that notices when a batch edit
+strayed out of the slides. And the print mode counts **13 pages, 12 slides plus a contents sheet**,
+under `--print-pages`.
+
+**What the batch loop caught that a final pass would not have.** The specification failed DS-091 on
+nine of twelve headlines and DS-092 on four bottom lines, and both were found and rewritten *before
+any HTML existed*. After that, three defects came out of looking at rendered slides rather than out
+of any check: a figure label set in paper on a `--data-quiet` fill at 2.6:1, exit text clipped by the
+stage edge, and a delta arrow drawn across the time axis instead of along it. **The gate saw the
+first one. Nothing but a person saw the other two.**

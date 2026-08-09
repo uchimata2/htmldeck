@@ -97,8 +97,8 @@ python tools/tasks/task.py check
 ```
 
 ```
-OK - 57 tasks, vocabulary valid, task references resolve, 904 document pointer(s) checked, 0 broken
-     469 section reference(s) resolved, 0 dead; 1031 not bound to a document and skipped.
+OK - 59 tasks, vocabulary valid, task references resolve, 954 document pointer(s) checked, 0 broken
+     482 section reference(s) resolved, 0 dead; 1054 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose, and every `<named document> §n`
@@ -124,7 +124,7 @@ but Python.
 
 ## The reference deck
 
-[`examples/reference-deck.html`](examples/reference-deck.html) — 12 slides, **214 KB in one file,
+[`examples/reference-deck.html`](examples/reference-deck.html) — 12 slides, **221 KB in one file,
 zero external references**, three embedded typefaces, nine icons and seven hand-written SVG figures.
 Download it, disconnect, double-click it. Every measurement behind it, and how to reproduce each, is
 in [`examples/README.md`](examples/README.md).
@@ -138,13 +138,32 @@ it catches three of the ten dimensions; the other seven are what the judgement p
 
 ---
 
+## The deck nobody authored by hand
+
+[`examples/sort-window/`](examples/sort-window) — *Move the window, not the fleet*, 12 slides,
+**212 KB in one file, zero external references**, five hand-written SVG figures and ten disclosure
+panels. It was built through the pipeline rather than written: assembled from
+[`shell/`](shell), which is the reference deck with its content cut out, then authored into three
+slides at a time with the gate run per batch.
+
+The directory holds all four artifacts a run leaves behind — the deck, the foundation spec with its
+outline, the slide-by-slide specification, and the three source documents its figures were
+reconciled against. The specification files exist so that when a deck turns out wrong, there is
+something to open.
+
+```bash
+python tools/deck/check.py examples/sort-window/sort-window.html --sources examples/sort-window/sources
+```
+
+**Marnfield, the parcel network in it, does not exist**, and neither do the source documents outside
+this repository. Every figure is an output of the assumptions written down beside it.
+
+---
+
 ## What does not exist yet
 
 Stated here rather than left to be inferred, because a README describing the plan is not a README.
 
-- **Build mode does not exist.** Nothing in this repository writes a deck. The reference deck was
-  built by hand against the ruleset, which is how the ruleset was validated —
-  [T-002](tasks/T-002-build-mode-the-self-contained-deck-generator.md).
 - **Critique mode does not exist.** The rubric in `EVALUATION.md` is complete and can be applied by
   hand; nothing automates the report —
   [T-004](tasks/T-004-critique-mode-blunt-section-by-section-review.md).

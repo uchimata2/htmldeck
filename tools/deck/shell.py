@@ -142,13 +142,14 @@ def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_
     """A deck with the shell in place and no slides yet."""
     resolved = theme_mod.resolve(read(theme_css))
     stages = stages or ["Claim"]
-    # Lucide names, and the sprite concept takes the same name: a deck that wants `i-gate` backed
-    # by `flag` says so later, with `icons --set`, which is where that decision belongs.
-    stage_icons = stage_icons or ["info"] * len(stages)
+    # `[(concept, lucide)]`. The concept is the deck's word for the idea and the glyph is what
+    # draws it - DS-114 is about the first and DS-112 about the second, and conflating them is how
+    # a deck ends up with `i-circle-check` twice under two names.
+    stage_icons = stage_icons or [("info", "info")] * len(stages)
     script = fill(read(DECK_JS), {
         "DECK_NAME": title.replace("'", "\\'"),
         "STAGES": ",".join("'%s'" % s.replace("'", "\\'") for s in stages),
-        "STAGE_ICON": ",".join("'i-%s'" % s for s in stage_icons),
+        "STAGE_ICON": ",".join("'i-%s'" % concept for concept, _glyph in stage_icons),
     })
     parts = {
         "TITLE": escape(title),
@@ -167,7 +168,7 @@ def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_
         "SCRIPT": script,
     }
     # The sprite is never left to be remembered: whatever the stages reach for is wired now.
-    return apply_icons(fill(read(SHELL_HTML), parts), dict((n, n) for n in stage_icons))
+    return apply_icons(fill(read(SHELL_HTML), parts), dict(stage_icons))
 
 
 def escape(text):
@@ -391,9 +392,12 @@ def self_test():
     ok("an icon named only in the script still counts", "when" in deck_icons(scripted))
     ok("and a bare i-name inside a token is not a reference",
        "line" not in deck_icons(fresh.replace("<script>", "<script>\nvar x='--ui-line';", 1)))
+    staged = new("Untitled", "s", stages=["One", "Two"],
+                 stage_icons=[("first", "flag"), ("second", "target")])
     ok("the three per-deck declarations are the deck's, not the shell's",
-       "Untitled" in new("Untitled", "s", stages=["One", "Two"])
-       and "'One','Two'" in new("Untitled", "s", stages=["One", "Two"]))
+       "Untitled" in staged and "'One','Two'" in staged and "'i-first','i-second'" in staged)
+    ok("and a stage icon names a concept, not the glyph that draws it",
+       'id="i-first" data-icon="flag"' in staged and check(staged) == [])
 
     nameless = wired.replace(' data-icon="clock"', "")
     ok("a symbol with no provenance is caught (DS-112)",
@@ -457,7 +461,13 @@ def main(argv):
         title = option(rest, "--title") or "Untitled deck"
         subtitle = option(rest, "--subtitle") or ""
         theme_css = option(rest, "--theme") or DEFAULT_THEME
-        html = new(title, subtitle, theme_css=theme_css)
+        stages = [s.strip() for s in (option(rest, "--stages") or "").split("|") if s.strip()]
+        icons = pairs(option(rest, "--stage-icons"))
+        if stages and icons and len(stages) != len(icons):
+            sys.exit("--stages names %d stage(s) and --stage-icons %d icon(s); DS-134 marks each "
+                     "stage, so they have to agree" % (len(stages), len(icons)))
+        html = new(title, subtitle, theme_css=theme_css, stages=stages or None,
+                   stage_icons=icons or None)
         write(out, html)
         print("wrote %s - %d bytes, no slides yet." % (out, len(html)))
         print("Next: author slides against docs/COMPONENT-CONTRACT.md 3.2, then\n"
@@ -474,14 +484,7 @@ def main(argv):
         if not rest:
             sys.exit("usage: shell.py icons <deck> [--set c=lucide,...] [--check]")
         deck = rest[0]
-        sets = {}
-        raw = option(rest, "--set")
-        if raw:
-            for pair in raw.split(","):
-                if "=" not in pair:
-                    sys.exit("--set takes concept=lucide pairs, got %r" % pair)
-                key, value = pair.split("=", 1)
-                sets[key.strip()] = value.strip()
+        sets = dict(pairs(option(rest, "--set")))
         html = read(deck)
         try:
             wired = apply_icons(html, sets)
@@ -519,6 +522,19 @@ anything - that is tools/deck/check.py, and the five dimensions past it (L-05)."
         return 0
 
     sys.exit("unknown command %r - one of: new, icons, check, parts" % cmd)
+
+
+def pairs(raw):
+    """`concept=lucide,concept=lucide` -> `[(concept, lucide)]`, order kept."""
+    out = []
+    for pair in (raw or "").split(","):
+        if not pair.strip():
+            continue
+        if "=" not in pair:
+            sys.exit("expected concept=lucide pairs, got %r" % pair)
+        key, value = pair.split("=", 1)
+        out.append((key.strip(), value.strip()))
+    return out
 
 
 def option(argv, name):

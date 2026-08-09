@@ -2,8 +2,8 @@
 id: T-002
 title: Build mode — the self-contained deck generator
 type: deliverable
-status: planned
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: [T-001, T-007, T-014, T-015, T-016, T-020]
 related: [T-021, T-028]
@@ -16,8 +16,13 @@ deliverables:
   - shell/components.css
   - shell/deck.js
   - shell/icons.svg
+  - shell/README.md
   - tools/deck/shell.py
   - skills/htmldeck/references/build.md
+  - examples/sort-window/sort-window.html
+  - examples/sort-window/sort-window.foundation.md
+  - examples/sort-window/sort-window.slides.md
+  - examples/sort-window/sources
 ---
 
 # T-002 — Build mode — the self-contained deck generator
@@ -164,16 +169,70 @@ judgement — what goes on a slide.
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The shell was *cut* out of the reference deck, not written to describe it** — ten regions
+  replaced by `{{SLOT}}` markers, and filling them back reproduces the deck byte for byte. That
+  property is what makes `shell.py check` able to hold any deck to the shipped parts; a shell
+  written by hand would only ever be a second opinion about them. — 2026-08-09
+- **The script turned out not to be wholly shell.** `DECK`, `STAGES` and `STAGE_ICON` are per-deck
+  facts, and they were sitting in the middle of 560 invariant lines where nothing could see they
+  were content. The cut nests: three sub-slots inside `SCRIPT`. — 2026-08-09
+- **An icon reference is not always markup**, and the first sync proved it by deleting four icons
+  the reference deck needs. They are named in a script array and never in a `<use>`, which is the
+  `script` source `COMPONENT-CONTRACT.md` §2.1 already names. Both forms count now, and neither
+  pattern may be loosened to a bare `i-name`: that matches `--ui-line` five times. — 2026-08-09
+- **`shell/icons.svg` is 38 Lucide glyphs, rendered as a contact sheet and looked at.** DS-112
+  forbids hand-drawn icons and nothing here shipped an icon source, so every deck built in this
+  repository had depended on someone recalling path data. Nine of the 38 are the reference deck's
+  own, carried through unchanged — the diff after wiring provenance is `data-icon` and symbol order
+  and nothing else. — 2026-08-09
+- **The reference deck's symbols now record which glyph they are.** That is a change to a
+  hand-verified artifact and it was taken deliberately: it converts DS-112's *Lucide primary* from a
+  hope into something `check` settles against the shipped library. The seeded-defect fixture was
+  regenerated and `seed_defects.py --check` is clean. — 2026-08-09
+- **The build ran as four batches of three**, and the batch loop earned its place twice over — see
+  the deviations below. — 2026-08-09
+
+**Deviations from the specification, written back into the artifacts they contradict**
+
+The protocol §1's last open question sets. Each of these is recorded in
+`sort-window.slides.md` or `sort-window.foundation.md`, and each reached the user as a bullet.
+
+| # | What could not be built as specified | Resolved as | Written back to |
+| :-- | :--- | :--- | :--- |
+| 1 | Nine of twelve headlines ran past DS-091's six words | rewritten at the specification review, before any HTML | both spec files — DS-211 requires the outline to carry the sentence that ships |
+| 2 | Four bottom lines ran past DS-092's twenty | rewritten the same way | both spec files |
+| 3 | Slide 4 specified Current on the trajectory series | dropped: a dashed animated line reads as *projected*, and these are observed values. Current stays on slide 5's flow, where the path really is live | the slides spec |
+| 4 | Slide 5's exits were specified as *made the day — 84% of the volume* | 84% is the share of **misses**, not of volume. Relabelled | the slides spec |
+| 5 | Slides 8 and 12 both specified `circle-check` | DS-114 reads a repeated icon as a repeated idea; slide 8 became `trending-down` | the slides spec |
+| 6 | Slide 5 put a process label inside a `--data-quiet` bar | 2.6:1, which DS-215 and DS-219 both fail. Moved beside the bar | the deck; the rule is the contract's, not this deck's |
+| 7 | Slide 7's delta was drawn across the axis | the change is *when* the trunk lands, so the arrow runs along the axis and points left | the slides spec |
 
 **Outputs produced**
-- <path>
+- `shell/` — `shell.html` 3.5 KB, `components.css` 35 KB, `deck.js` 27 KB, `icons.svg` 38 glyphs,
+  and the directory's own `README.md`
+- `tools/deck/shell.py` — `new` · `icons` · `check` · `parts`, 18 self-test fixtures
+- `skills/htmldeck/references/build.md` — stage 6, loaded from `SKILL.md` and `pipeline.md`
+- `examples/sort-window/` — the deck, both specification files, and three source documents
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Writes the slide copy from source material | **met** | Every figure on a slide reconciles against `examples/sort-window/sources/`; `FIG-1` 0 of 51 unsourced, `FIG-2` 0 disagreeing, `FIG-3` 0 self-contradicting. Three figures were unsourced on the first run and two of them were real gaps in the model, now recorded there |
+| Output is one file that renders with the network disabled | **met** | 216,720 bytes, `DS-001` zero external references, rendered in real Chrome with every DNS lookup black-holed |
+| Renders glitch-free from `file://` in recent Chrome/Edge, no console errors | **met** | The render gate ran over all twelve slides; the console-error condition is still R6's unimplemented seventh and is [T-041](T-041-implement-the-nine-glitch-free-conditions.md)'s, which the release phases put in v0.2 |
+| Every theme value comes from the token layer | **met** | `theme.py check`: 38 literals outside the region, 38 exempt, 0 curves |
+| Composes the interaction and motion components rather than emitting bespoke markup | **met** | `component.py check`: 59 parts required, 0 misplaced, 11 motion rules reading their tokens, 69 styled classes and 0 uncontracted |
+| Departs from the specification when compliance requires it | **met** | Seven times, §3's table. Four were caught before any HTML existed |
+| Every deviation written back into the specification file it contradicts | **met** | Both spec files carry the rewritten sentences and say why; the outline carries the shipped bottom lines, which DS-211 requires |
+| Deviations reach the user at delivery as brief bullet points | **met** | Reported as bullets when the deck was handed over |
+| Tested on a real 12-slide deck with diagrams | **met** | Twelve slides, five hand-written SVG figures, one ledger, ten disclosure panels — not a three-slide toy |
+| Rendered deck opened and looked at | **met** | All twelve slides shot in real Chrome offline and examined; the reading view shot at 760 px, where DS-071 hands over on its own; three defects came out of looking that no check reported |
+| The shell has exactly one home, and a check fails drift | **met** | `shell.py check` compares the deck's ten regions against `shell/`, and the self-test breaks each region on purpose. The cut round-trips on the reference deck byte for byte |
+| The produced deck passes the whole gate | **met** | `check.py --sources` 0 failures / 81 checked with the content half run; `component.py` 5 of 5; `theme.py` 0 offending; and the batch loop ran them four times, not once |
+| The plugin loads this mode at stage 6 | **met** | `SKILL.md` load table and `pipeline.md` stage 6; `check_scaffold.py` 10 of 10 with the body at 5,062 of 8,192 bytes |
+| All three artifacts land beside the deck | **met** | `sort-window.html`, `.foundation.md`, `.slides.md` in one directory, each written when its stage produced it |
+| *Opt-in:* a printable variant can be forced | **met** | `--print-pages`: 13 declared, 13 counted, wanted 13 — twelve slides plus the contents sheet |
 
 **Child fix tasks raised**
 - none
@@ -182,6 +241,7 @@ judgement — what goes on a slide.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | → done | **Build mode exists, and a deck that was not authored by hand exists to prove it.** Every criterion is met; the seven deviations and where each was written back are in §3. **Three things are worth carrying past this task.** The first is that the cut found content hiding in the shell: `DECK`, `STAGES` and `STAGE_ICON` had been sitting in 560 lines of invariant script, and nothing could see they were per-deck until the file was split on a boundary somebody had to defend. The second is that **the batch loop paid for itself in the cheapest possible place** — nine headlines and four bottom lines failed `hard` rules while the deck was still a Markdown file, and rewriting them there cost sentences rather than HTML. The third is the one the gate cannot claim: **three defects came out of looking at rendered slides**, and only one of them — a 2.6:1 label on a data mark — was something a check reported. The other two were a clipped exit label and a delta arrow drawn across the axis it should have run along. |
 | 2026-08-09 | → planned | **Nine steps, and one thing the plan found that §1 did not: DS-112 forbids hand-drawn icons, names Lucide, and nothing in this repository ships an icon source.** So every deck built here has depended on an agent recalling path data correctly, the reference deck's nine included — which is a `hard` rule satisfied by luck. `shell/icons.svg` is step 2 and it converts that into one curated set that gets rendered and looked at. The other decision worth reading is that **the tool writes a skeleton and the agent then edits the deck in place**, rather than composing it from fragments: the build is batched, and a compose design makes every batch a whole-file rebuild. The produced deck's paths join `deliverables:` at step 7, when its slug is fixed. |
 | 2026-08-09 | → specified | **§1 completed: scope, inputs and four more criteria.** The scope decision worth reading is the first one in, and it was forced by arithmetic rather than preference: a deck is 225 KB of which 97 KB is base64 faces and roughly 580 lines is a shared component block, so **the invariant half cannot be authored per run** — and the other route is already closed, because [`SKILL.md`](../skills/htmldeck/SKILL.md) calls the reference deck *"the structural reference, not a template to fill"*. So build mode instantiates a **shell** and authors only what differs per deck: the sections, the `<style id="slides">` composition, the figures and the icons. That is also what makes the criterion *every theme value comes from the token layer* mechanically true rather than a thing to remember — the theme region already has one home in `themes/`, and the shell keeps it. **The new criteria are the shell's single home, the whole gate on the produced deck with `--sources` so the content half runs, the plugin actually loading this mode at stage 6, and all three artifacts landing beside the deck.** |
 | 2026-08-09 | (no change) | **The last blocker closed, and this task is now the only thing between the repository and a v0.1 that ships.** All six of `blocked_by` are `done`. What [T-016](T-016-the-interaction-and-motion-layer.md) hands over is the answer to *what does the generator emit*, in three documents rather than one: [`COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) — 59 authored parts, their element, place, count and attributes, and the eleven rules that must read a motion token — is what the criterion *composes the components rather than emitting bespoke markup* now means, and `component.py check` decides it; [`THEME-CONTRACT.md`](../docs/THEME-CONTRACT.md) is the other criterion's, and `theme.py check` fails a length, duration or easing curve written outside the region. **The third is new and is the one that changes what this mode has to decide: DS-230.** §5.3 gave build mode eleven mechanical rules about disclosure and no editorial test, so a generator satisfying every one of them could still put an appendix behind the click. Tier two is now one of four kinds — `derivation` · `scope` · `condition` · `instances` — the list is closed, and **every `.disc` declares which in `data-disc`**, so the split is a decision this mode makes explicitly rather than by accident. **DS-231** is the mechanical half: a bottom line citing a figure that lives only behind the click fails the gate. |

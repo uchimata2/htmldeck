@@ -1022,6 +1022,48 @@ cannot.
 
 ---
 
+### L-49 — Cut the shared part out of a working artefact; do not write a description of it
+
+`shell/` is the reference deck with ten regions replaced by `{{SLOT}}` markers, and **filling them
+back reproduces that deck byte for byte.** The round trip is the whole point. A shell written by
+hand to describe the deck would be a second opinion about it, and the two would diverge the first
+time either changed, silently, because nothing compares an opinion to its subject. A shell that is
+*literally the artefact minus its content* can be compared, so `shell.py check` holds any deck to it
+and reports the first differing line.
+
+**The cut also finds content the artefact was hiding.** Splitting on a boundary somebody has to
+defend forces the question *is this per-deck or not?* on every line. Three of the reference deck's
+per-deck facts — its name, the stages of its argument, the icon marking each — had been sitting in
+the middle of 560 lines of invariant script for four tasks, and no reading had noticed. The split
+noticed immediately, because they would not go on either side.
+
+**How to apply.** When something must exist once and be instantiated many times, derive it from a
+working instance by subtraction and keep the subtraction reversible. Assert the round trip in the
+self-test: it is one line, and it is the only evidence that the shared copy is the thing rather than
+a report about it.
+
+---
+
+### L-50 — A reference can be created by code, so a scan that reads only markup deletes it
+
+DS-113 wants a sprite holding only the icons a deck uses, which is a fact about the file and so a
+good thing to derive rather than maintain. The first derivation read `<use href="#i-x">` out of the
+markup and rewrote the sprite to match — and **deleted four of the reference deck's nine icons**,
+which are named in a script array and put into the DOM at runtime. `COMPONENT-CONTRACT.md` §2.1
+already names that source; the tool simply did not honour it. The deck's own gate had been reading
+the *rendered* DOM for the same rule all along, which is why nothing had ever disagreed before.
+
+The over-correction is as bad. A loosened pattern matching a bare `i-name` finds `--ui-line` five
+times in the same file, so the fix is two exact patterns — the attribute form and the quoted form —
+and not one permissive one.
+
+**How to apply.** Before deriving *what is used* from a source scan, ask what else creates a
+reference: a script, a template, a print-only rule. Where a contract already labels those sources,
+the scan has to cover every label or it is not deciding the rule. And prefer several exact patterns
+to one loose one, because the loose one fails in the direction that deletes things.
+
+---
+
 ## Tooling
 
 ### L-26 — Measure the content, not the box; and pin motion before capturing

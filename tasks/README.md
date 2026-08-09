@@ -28,16 +28,15 @@ happened.
 
 | ID | Title | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | `planned` | implement | - | T-008, T-019 |
 | [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | `proposed` | specify | - | T-008 |
-| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `proposed` | specify | T-002, T-004, T-056 | - |
+| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `proposed` | specify | T-004, T-056 | - |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `proposed` | specify | - | T-008 |
 
 ### v0.2
 
 | ID | Title | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `proposed` | specify | T-002 | - |
+| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `proposed` | specify | - | - |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `proposed` | specify | - | - |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `proposed` | specify | - | - |
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `proposed` | specify | - | - |
@@ -51,6 +50,7 @@ happened.
 | ID | Title | Status | Updated |
 | :--- | :--- | :--- | :--- |
 | [T-001](T-001-decide-the-font-strategy-embedded-subsets-or-a-syste.md) | Decide the font strategy: embedded subsets or a system stack | `done` | 2026-08-06 |
+| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | `done` | 2026-08-09 |
 | [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) | Brief mode — elicit the six-section prompt | `cancelled` | 2026-08-07 |
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | `done` | 2026-08-09 |
 | [T-006](T-006-decide-the-chart-strategy.md) | Decide the chart strategy | `done` | 2026-08-06 |
