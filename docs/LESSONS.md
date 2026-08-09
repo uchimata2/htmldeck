@@ -1136,6 +1136,52 @@ step here: every fenced block names the command that produces it, and the obliga
 rather than to read the diff. **The diff cannot see this class of defect at all** — the bytes did
 not change, the world did.
 
+### L-54 — A fixture only watches the direction it was asked about, and its model of the subject is part of it
+
+**L-44** ended with *fix it once, with a forcing function, not per row*. The forcing function was
+built, it worked, and **the same defect was found twice more afterwards** — the fifth and sixth
+instances of one fault. This is what the forcing function did not cover, and neither gap is specific
+to gates.
+
+**The fixture asked one direction of a two-directional question.** It required every row that
+*passed* on an absent subject to be declared in writing. Nothing asked which rows *failed* on one.
+So [T-051](../tasks/T-051-a-check-with-no-subject-must-not-report-a-pass.md) converted three rows and
+left four beside them in the same list;
+[T-065](../tasks/T-065-four-rules-still-fail-a-deck-for-not-having-their-subject.md) converted those
+four and left three; and the deck that had reported the original defect was still being failed by
+DS-160 after the fix shipped. **The rows the fixture watched were correct the whole time.** A check
+that answers *did anything pass wrongly?* is silent on *did anything fail wrongly?*, and silence
+reads exactly like a clean run.
+
+**The fixture's model of what it measures is itself unexamined.** The nothing-was-found measurement
+was a hand-kept tuple of eight key names, against a probe emitting more than forty. A row reading
+anything outside it got a `.get()` default instead — and **a default that fires is indistinguishable
+from a measurement**. DS-217 spent the whole period on the failing list for that reason alone,
+against a probe that would have measured zero and passed. The instrument was wrong about the
+instrument, and every run agreed with it.
+
+**The two compound.** Because the model was wrong, the first honest attempt to classify the failing
+rows would have written DS-217's false failure into a declared table, *with a reason*, and called it
+a decision. A bad model does not merely hide defects; it manufactures ones to explain.
+
+**How to apply.**
+
+1. **When you build a forcing function, write down the question it answers — then write the
+   negation and check that too.** "Which rows pass on an absent subject" and "which rows fail on
+   one" are one question in a person's head and two in code. The cost of the second is one more
+   table; the cost of skipping it was three releases.
+2. **Derive the fixture's inputs from the thing being modelled, or make the fixture report when it
+   cannot.** Here that is recording what each row *reads* and failing on a key the model has never
+   heard of. A hand-kept list of what the world contains is a copy of a fact, and it goes stale in
+   the direction that produces false confidence (**L-13**, **L-52**).
+3. **Enumerate the things under test from the code, never from a list.** An entire verdict producer
+   sat outside this fixture from the day it was written, because the fixture named its inputs and
+   **a name nobody adds is a name nobody misses**.
+4. **A hand-run sweep is not a gate**, and reporting one as a completed criterion is how a false
+   claim ships. The sweep that closed T-065's criterion cut each row at the first `),`, read
+   truncated expressions, and found one candidate where there were five. Nothing recorded that,
+   because a script that ran once leaves nothing behind to disagree with.
+
 ---
 
 ## Tooling

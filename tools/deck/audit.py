@@ -971,11 +971,6 @@ PROBE = r"""
       var afterArrow = at();
       document.body.dispatchEvent(new KeyboardEvent('keydown', {key:'d', bubbles:true}));
       out.toggleDoesNotAdvance = at() === afterArrow;
-      // DS-135 - the page title and the nav-bar name for that page must match. Read AFTER a
-      // navigation, because on slide one the deck's own title collapses to the deck name and the
-      // check would be true of any title at all.
-      out.titleCarriesSlide = document.title.indexOf(slides[at()].dataset.name) >= 0;
-      out.titleSample = [document.title, slides[at()].dataset.name];
       // Dispatched on BODY, never on `document`. The deck's handler opens with
       // `e.target.matches('input,textarea')`, and `document` has no `matches` - so an event
       // dispatched on the document throws inside the deck's own listener and the key does
@@ -990,6 +985,25 @@ PROBE = r"""
       goTo(playedAt > 0 ? playedAt - 1 : playedAt + 1);
       goTo(playedAt);
       out.playedSurvivesReturn = wasPlayed && slides[playedAt].hasAttribute('data-played');
+    }
+
+    // DS-135 - the page title and the nav-bar name for that page must match. Read AFTER a
+    // navigation, because on slide one the deck's own title collapses to the deck name and the
+    // check would be true of any title at all.
+    //
+    // **Hoisted out of `if (btns.length)` by T-066, and that placement was the whole defect.** It
+    // sat in the disclosure block only because the navigation it needs happened to be there, so a
+    // deck with no disclosure control never had the key measured and DS-135 reported `False` - for
+    // want of a subject every deck has. The navigation is made here instead. What remains
+    // conditional is real and much narrower: a deck of one slide has nowhere to navigate to, so
+    // there is no second title to compare and the rule is undecided rather than failed.
+    if (slides.length > 1){
+      goTo(1);
+      var cur135 = document.querySelector('.slide[data-current]');
+      if (cur135){
+        out.titleCarriesSlide = document.title.indexOf(cur135.dataset.name) >= 0;
+        out.titleSample = [document.title, cur135.dataset.name];
+      }
     }
 
     // DS-070..076 - the reflow view
@@ -1241,9 +1255,13 @@ def reduced_verdicts(data):
                 "" if not data.get("stillAnimating") else " (%s)"
                 % ", ".join(data["stillAnimating"])),
              data.get("stillAnimatingCount", 0) == 0),
+            # `risen > 0` required the current slide to CARRY a risen element. A deck that animates
+            # nothing in hides nothing, and the rule is about what becomes of what rises - so with
+            # no risen element there is no subject. Invisible until T-066 because the fixture
+            # evaluated `render_verdicts` and `split_verdicts` and never this function.
             ("DS-143", "risen elements hidden under reduced motion: %d of %d on the current slide"
              % (data.get("risenHidden", 0), data.get("risen", 0)),
-             data.get("risen", 0) > 0 and data.get("risenHidden", 0) == 0)]
+             None if not data.get("risen") else data.get("risenHidden", 0) == 0)]
     # The dash is a `conditional`: a deck with no flow diagram owes nothing here. Declared rather
     # than left to the expression, per ABSENCE_IS_A_PASS.
     rows.append(("DS-143", "the flow stays dashed with motion off: %s"
@@ -1288,6 +1306,14 @@ ABSENCE_IS_A_PASS = {
     "DS-092": ("prohibition", "no sentence over 20 words, no paragraph over 4 sentences"),
     "DS-132": ("prohibition", "nothing tabbable on an off-screen slide"),
     "DS-142": ("prohibition", "no looping motion on static content"),
+    # The first rule to reach this table by two routes at once, and the reason the shape field
+    # accepts a `+`. DS-143 emits three rows from `reduced_verdicts` - a family that was outside
+    # this fixture until T-066, which is why none of them had ever been declared.
+    "DS-143": ("prohibition + conditional", "nothing left animating once the preference is set, "
+                                            "which a deck animating nothing satisfies; and a flow "
+                                            "that is not there owes no dash. The third row - risen "
+                                            "elements hidden - has a subject that CAN be absent, "
+                                            "and reports None rather than sitting here"),
     "DS-202": ("guarded by DS-081", "a filter over the slides; the first row IS the presence "
                                     "check, and the second is guarded by the first"),
     "DS-203": ("guarded by DS-202/DS-081", "prose outranking a bottom line that exists"),
@@ -1309,11 +1335,156 @@ ABSENCE_IS_A_PASS = {
                               "quotes a figure, has hidden nothing"),
 }
 
-# The keys the probe emits unconditionally, so a measurement without them is malformed rather than
-# empty. `self_test` builds its nothing-was-found measurement from exactly these; if a verdict grows
-# a `data[...]` access to something outside the set, the self-test says so by name.
-ALWAYS_MEASURED = ("slideCount", "underFloor", "longHeadlines", "tabbablesOffscreen",
-                   "smallTargets", "panelsOpenInitially", "motionControl", "infinite")
+# ---------------------------------------------------------------- failing on an absent subject
+# **The mirror, and the reason the fault above kept coming back.** Everything in `ABSENCE_IS_A_PASS`
+# asks which rows PASS when nothing was found. Nothing asked which rows FAIL on one, so a row that
+# failed a deck for not containing the thing it judges was checked by nobody - and that asymmetry,
+# not the difficulty of any single fix, is why the same defect was found four times: T-038 fixed
+# DS-130 in place, T-051 converted three rows and left four beside them, T-065 converted four and
+# left three, and v0.1.2 shipped claiming a sweep that had truncated every multi-line row unread.
+#
+# A failure on an absent subject is legitimate in exactly two shapes, and both are testable:
+#
+#   requirement   the rule requires the subject to EXIST, so its absence is the defect the row
+#                 reports. A deck with no slides really does fail DS-081.
+#   entailed by R the absence is a defect, and R is the row that says so. This row failing beside it
+#                 is redundant rather than false - and the claim is verified, exactly as
+#                 `guarded by` is: R must actually be failing on the same measurement.
+#
+# Anything else failing here is the defect. It is not declared, it is CONVERTED - the row returns
+# `None`, the account calls it undecided, and the deck stops being failed for what it does not have.
+ABSENCE_IS_A_FAIL = {
+    "DS-081": ("requirement", "at least six slides. A deck with no slides is not a deck that "
+                              "happens to lack a subject; it is the failure this row reports"),
+    "DS-070": ("requirement", "the reflow view engages. DS-070 is what makes the reflow view "
+                              "compulsory, so a deck without one is failing the rule and not "
+                              "escaping it"),
+    "DS-075": ("entailed by DS-070", "the reflow view's width at 320 CSS px, measured inside "
+                                     "`if (doc)`. With no reflow view there is nothing to measure "
+                                     "and DS-070 already reports why"),
+    "DS-076": ("entailed by DS-070", "position preserved across the reflow view, measured inside "
+                                     "`if (doc)`. Same absence, same owner"),
+}
+
+# --------------------------------------------------------------- what the probe actually emits
+# **The nothing-was-found measurement has to model the probe, or the fixture judges rows against
+# values no deck can produce.** This was a tuple of eight names until T-066, and DS-217's height row
+# was failing the fixture for that reason alone: `chromeHeightDu` was outside the set, so
+# `data.get("chromeHeightDu", 999)` fell back to a sentinel the probe never emits - it writes
+# `chromeRect ? … : 0`, and a deck with no chrome measures zero and passes. Nothing was wrong with
+# the rule; the instrument was wrong about the instrument.
+#
+# So the key carries its **nothing-was-found value**, not merely its name: an empty list, a zero, a
+# null where the probe emits one. `self_test` builds the measurement from exactly this, and
+# `Measurement` below reports any key a row reads that is in neither this table nor
+# `CONDITIONALLY_MEASURED`.
+ALWAYS_MEASURED = {
+    # ---- the deck, its text and its slides
+    "slideCount": 0,
+    "underFloor": [],
+    "longHeadlines": [],
+    "headlineCounts": [],
+    "longSentences": [],
+    "longParagraphs": [],
+    "notSections": [],
+    "nestedTextBoxes": [],
+    "noBottomLine": [],
+    "multiSentence": [],
+    "bottomLineHidden": [],
+    "outranked": [],
+    # ---- motion
+    "infinite": [],
+    "ambient": [],
+    "motionControl": False,          # `!!getElementById('motion')`
+    # ---- chrome, targets and position
+    "chromeLabelled": 0,
+    "chromeHeightDu": 0,             # `chromeRect ? … : 0` - no chrome measures zero, not 999
+    "scaleVerdict": None,
+    "positionEncodings": [],
+    "tabbablesOffscreen": 0,
+    "smallTargets": 0,
+    "smallestTarget": None,          # null when nothing tabbable was measured
+    # ---- disclosure, counted rather than driven
+    "panelsOpenInitially": 0,
+    "panelCount": 0,
+    "thirdTier": 0,
+    "discControls": 0,
+    "unlabelledDiscControls": [],
+    # ---- graphics, colour and icons
+    "symbolCount": 0,
+    "unusedSymbols": [],
+    "deadFillAttributes": [],
+    "renderedLowContrast": [],
+    "textOnDataMark": [],
+    "markPairsFailing": [],
+    # ---- the second render, with the motion preference forced. `mediaMatches` is True because the
+    # nothing-was-found case is a render that SUCCEEDED and found nothing; a render where the
+    # preference never took is a different failure and `reduced_verdicts` reports it as one.
+    "mediaMatches": True,
+    "hasFlow": False,
+    "flowDash": "",
+    "risen": 0,
+    "risenHidden": 0,
+    "stillAnimating": [],
+    "stillAnimatingCount": 0,
+}
+
+# The other half of the same fact: keys the probe emits **only inside a guard**, with the guard
+# named. Absence here is expected rather than malformed, so a row reading one of these has to say
+# what it does when the key is missing - which is the absent-subject rule, and is why the guard is
+# written down rather than implied.
+#
+# **Naming the guard is what distinguishes the two defects that look identical from the outside.**
+# `titleCarriesSlide` was conditional on `if (btns.length)` until T-066 - not because DS-135's
+# subject can be absent, but because the reading had been parked in the disclosure block for the
+# navigation it needed. A bare list of key names would have recorded that as legitimate. Written
+# out, "measured inside the disclosure block" is visibly not a statement about page titles.
+CONDITIONALLY_MEASURED = {
+    "currentDiscReachable": "if (btns.length) and the current slide carries a control",
+    "panelsOpenAfterTwo": "if (btns.length) - two controls have been clicked",
+    "panelBelowControl": "if (btns.length) and a panel is open on the current slide",
+    "arrowAdvancesClosed": "if (btns.length) - the keyboard walk needs a control to close first",
+    "toggleDoesNotAdvance": "if (btns.length)",
+    "playedSurvivesReturn": "if (btns.length) - the round trip is made inside that block",
+    "currentDasharray": "a `.current` flow element exists to compute a dasharray from",
+    "titleCarriesSlide": "slides.length > 1 - a one-slide deck has nowhere to navigate to, so "
+                         "there is no second title to compare",
+    "titleSample": "slides.length > 1, with titleCarriesSlide",
+    "docOn": "if (doc) - the reflow view exists",
+    "docPanelsOpen": "if (doc)",
+    "docPanelsTotal": "if (doc)",
+    "docShorterThanSlide": "if (doc)",
+    "at320ScrollWidth": "if (doc)",
+    "at320Overflowing": "if (doc)",
+    "leftFrom": "if (doc)",
+    "backOnSlide": "if (doc)",
+}
+
+
+class Measurement(dict):
+    """A measurement that records what was asked of it, so the fixture can check its own model.
+
+    **The gap this closes is the one that put DS-217 on the failing list.** `ALWAYS_MEASURED` is a
+    hand-kept table, and a row reading a key nobody added to it was judged against a `.get()`
+    default instead - silently, because a default that fires looks exactly like a measurement. Three
+    previous fixes in this family (T-038, T-051, T-065) each corrected the instances in front of them
+    and left the next one just as invisible; extending the table by hand would have been the fourth.
+
+    Recording the reads instead makes an unmodelled key a **named self-test failure** at the moment
+    a row starts reading it, which is the difference between a discipline and a habit.
+    """
+
+    def __init__(self, *args, **kw):
+        dict.__init__(self, *args, **kw)
+        self.read = set()
+
+    def __getitem__(self, key):
+        self.read.add(key)
+        return dict.__getitem__(self, key)
+
+    def get(self, key, default=None):
+        self.read.add(key)
+        return dict.get(self, key, default)
 
 
 def render_verdicts(data):
@@ -1438,12 +1609,20 @@ def render_verdicts(data):
         ("DS-092", "sentences over 20 words: %d, paragraphs over 4 sentences: %d"
          % (len(data.get("longSentences", [])), len(data.get("longParagraphs", []))),
          not data.get("longSentences") and not data.get("longParagraphs")),
+        # `symbolCount > 0` required the deck to CONTAIN icons, which DESIGN-SYSTEM.md nowhere
+        # states: DS-113 is a prohibition over the sprite's symbols, and DS-112 governs where icons
+        # come from IF a deck has any. The identical clause to DS-164's, and it takes DS-164's
+        # answer - with no sprite the rule has no subject, with one it looks for dead symbols
+        # (T-066).
         ("DS-113", "sprite icons never used: %d of %d"
          % (len(data.get("unusedSymbols", [])), data.get("symbolCount", 0)),
-         not data.get("unusedSymbols") and data.get("symbolCount", 0) > 0),
+         None if not data.get("symbolCount") else not data.get("unusedSymbols")),
+        # Measured outside the disclosure block since T-066 - see the probe. The null that survives
+        # is a one-slide deck, which has no second title to compare and is DS-081's failure anyway.
         ("DS-135", "the page title carries the slide's name: %s (%r)"
          % (data.get("titleCarriesSlide"), data.get("titleSample")),
-         data.get("titleCarriesSlide") is True),
+         None if data.get("titleCarriesSlide") is None
+         else data["titleCarriesSlide"] is True),
         # `discControls > 0` was a requirement that the deck CONTAIN a disclosure control, which
         # DESIGN-SYSTEM.md nowhere states - the gate enforcing a rule the ruleset does not have.
         # With no controls the rule has no subject; with controls it checks their labels (T-065).
@@ -1466,9 +1645,13 @@ def render_verdicts(data):
         # class-based check reports as missing. Excused in `check.py`, with the argument.
         ("DS-043", "boxes nested in a box that has its own text: %d"
          % len(data.get("nestedTextBoxes", [])), not data.get("nestedTextBoxes")),
+        # `panelCount > 0` is DS-164's clause again, word for word in effect: it required a
+        # conforming deck to CONTAIN a disclosure panel. DS-160 is "two tiers, never three", which a
+        # deck with no panels cannot violate. **This is the row the adopting project was still
+        # failing after v0.1.2 shipped a fix that claimed to have swept for it** (T-066).
         ("DS-160", "third-tier disclosure inside a panel: %d, over %d panel(s)"
          % (data.get("thirdTier", 0), data.get("panelCount", 0)),
-         not data.get("thirdTier") and data.get("panelCount", 0) > 0),
+         None if not data.get("panelCount") else not data.get("thirdTier")),
         ("DS-219", "labels on a data mark failing 3:1 to ground or 4.5:1 to text: %d of %d"
          % (len(data.get("markPairsFailing", [])), len(data.get("textOnDataMark", []))),
          not data.get("markPairsFailing")),
@@ -1483,27 +1666,69 @@ def self_test():
     third time by a fixture built to be missing things - and after each one the gate went back to
     having no way to notice a fourth. Reading forty predicates by eye is what produced that record.
 
-    `render_verdicts` is pure, so the fourth instance costs one dictionary and no browser: build the
-    measurement a probe returns when it finds nothing, run every row against it, and require each
-    row that still passes to be declared in `ABSENCE_IS_A_PASS` with its shape and its subject. A
-    row added tomorrow with a `.get()` default that passes has to be argued for in writing before
-    the gate will run at all.
+    The verdict producers are pure, so the fourth instance costs two dictionaries and no browser:
+    build the measurement a probe returns when it finds nothing, run **every** row against it, and
+    require each row that still passes to be declared in `ABSENCE_IS_A_PASS`, each row that fails to
+    be declared in `ABSENCE_IS_A_FAIL`, and neither table to claim a rule the other does.
+
+    **Three things were wrong with the version this replaces, and each shipped a false claim.**
+
+      1. It asked only which rows PASS. A row failing a deck for not containing the thing it judges
+         was checked by nobody - the asymmetry T-051 and T-065 both fell through (T-066).
+      2. It evaluated `render_verdicts` and `split_verdicts` and never `reduced_verdicts`, so DS-143
+         was outside the discipline entirely. The producers are enumerated from the module now, and
+         one the fixture does not exercise fails the run.
+      3. Its measurement was eight hand-kept names, so a row reading anything else got a `.get()`
+         default instead - a value no deck can produce, indistinguishable from a measurement.
+         `Measurement` records the reads and reports a key the fixture has no model of.
     """
-    empty = dict.fromkeys(ALWAYS_MEASURED, 0)
-    empty.update({"underFloor": [], "longHeadlines": [], "infinite": [], "motionControl": None})
+    empty = Measurement(ALWAYS_MEASURED)
+    reduced = Measurement(ALWAYS_MEASURED)
     try:
-        rows = render_verdicts(empty)
+        # The static split row is held to the same bar against the same absent subject: a document
+        # with no slides. The reduced-motion rows are held to it against a render that SUCCEEDED and
+        # found nothing, which is a different thing from a render where the preference never took -
+        # `reduced_verdicts` reports that one as its own failure and it is not an absent subject.
+        rows = render_verdicts(empty) + split_verdicts("") + reduced_verdicts(reduced)
     except KeyError as exc:
         sys.exit("SELF-TEST FAILED: a verdict reads data[%s] unconditionally, so it is not in "
                  "ALWAYS_MEASURED and the nothing-was-found measurement cannot be built. Add the "
                  "key there if the probe always emits it, or read it with .get()" % exc)
 
-    # The static split row is held to the same bar, against the same absent subject: a document
-    # with no slides. Leaving it out would have let the one row this discipline was extended for
-    # skip it - the table covers rows, not stages.
-    rows = rows + split_verdicts("")
+    # **Derived from the module, never listed by hand.** `reduced_verdicts` sat outside this fixture
+    # from the day it was written, and nothing said so: the fixture named its producers, and a name
+    # nobody adds is a name nobody misses.
+    exercised = ("render_verdicts", "split_verdicts", "reduced_verdicts")
+    producers = sorted(n for n in globals() if n.endswith("_verdicts"))
+    if producers != sorted(exercised):
+        sys.exit("SELF-TEST FAILED: the module defines %s and this fixture exercises %s. A verdict "
+                 "producer outside the fixture is a family of rows nobody is holding to the "
+                 "absent-subject rule, which is how DS-143 stayed invisible through two fixes "
+                 "(T-066)." % (", ".join(producers), ", ".join(sorted(exercised))))
 
-    passing = sorted({r for r, _w, ok in rows if ok is True})
+    # **What did the rows actually ask for?** A key in neither table is one the fixture has no model
+    # of, so whatever a row reads it with is fiction. This is DS-217's whole story: `chromeHeightDu`
+    # was unmodelled, `data.get("chromeHeightDu", 999)` supplied a sentinel against a probe that
+    # writes `chromeRect ? … : 0`, and a rule with nothing wrong with it sat on the failing list.
+    modelled = set(ALWAYS_MEASURED) | set(CONDITIONALLY_MEASURED)
+    unmodelled = sorted((empty.read | reduced.read) - modelled)
+    if unmodelled:
+        sys.exit("SELF-TEST FAILED: rows read %s, which is in neither ALWAYS_MEASURED nor "
+                 "CONDITIONALLY_MEASURED.\n  The fixture has no model of that key, so any .get() "
+                 "default on it is a value no deck produces. Add it to ALWAYS_MEASURED with the "
+                 "value the probe emits when it finds nothing, or to CONDITIONALLY_MEASURED naming "
+                 "the guard it sits behind." % ", ".join(unmodelled))
+    unread = sorted(modelled - (empty.read | reduced.read))
+    if unread:
+        sys.exit("SELF-TEST FAILED: %s are modelled and no row reads them - the declaration "
+                 "outlived the row it was written for" % ", ".join(unread))
+
+    states = {}
+    for rid, _what, ok in rows:
+        states.setdefault(rid, []).append(ok)
+    passing = sorted(r for r, oks in states.items() if True in oks)
+    failing = sorted(r for r, oks in states.items() if False in oks)
+
     undeclared = [r for r in passing if r not in ABSENCE_IS_A_PASS]
     if undeclared:
         sys.exit("SELF-TEST FAILED: %s pass against a measurement in which nothing was found and "
@@ -1516,43 +1741,67 @@ def self_test():
         sys.exit("SELF-TEST FAILED: %s are declared to pass on an absent subject and do not - the "
                  "declaration outlived the row it excuses" % ", ".join(sorted(stale)))
 
-    # **The same bar in the other direction (T-065).** Everything above asks which rows PASS on an
-    # absent subject. Nothing asked which rows FAIL on one, and four did: a deck specified with no
-    # disclosures was failed by DS-130, DS-164, DS-166 and DS-146 for not having the thing they
-    # judge. T-051 built the undecided state and converted three rows; these four were left, in the
-    # same list, and the asymmetry of this fixture is why nobody noticed.
-    #
-    # These seven read keys the probe emits **only inside `if (btns.length)`**, so on this
-    # measurement the key is absent rather than zero, and absent is undecided. Rows reading a key in
-    # ALWAYS_MEASURED are not in scope: a real measurement of zero is a real verdict, which is why
-    # DS-070 and DS-135 correctly stay False here.
-    verdicts = {r: ok for r, _w, ok in rows}
-    for rid in ("DS-130", "DS-164", "DS-166", "DS-146", "DS-168", "DS-228", "DS-138"):
-        if rid not in verdicts:
+    # **The same bar in the other direction, and it is the point of T-066.** A row that fails on a
+    # measurement where nothing was found is either reporting a real requirement or failing a deck
+    # for what it does not have, and until this ran nothing made anyone choose.
+    undeclared_fail = [r for r in failing if r not in ABSENCE_IS_A_FAIL]
+    if undeclared_fail:
+        sys.exit("SELF-TEST FAILED: %s FAIL against a measurement in which nothing was found and "
+                 "are not declared in ABSENCE_IS_A_FAIL.\n  Either the rule requires its subject to "
+                 "exist - say so there, in writing - or the row is failing a deck for not "
+                 "containing the thing it judges, and it must report None instead (T-066)."
+                 % ", ".join(undeclared_fail))
+    stale_fail = [r for r in ABSENCE_IS_A_FAIL if r not in failing]
+    if stale_fail:
+        sys.exit("SELF-TEST FAILED: %s are declared to fail on an absent subject and do not - the "
+                 "declaration outlived the row it explains" % ", ".join(sorted(stale_fail)))
+    both = sorted(set(ABSENCE_IS_A_PASS) & set(ABSENCE_IS_A_FAIL))
+    if both:
+        sys.exit("SELF-TEST FAILED: %s are declared in BOTH tables. One rule cannot both pass and "
+                 "fail on a measurement where nothing was found and have written down a good reason "
+                 "for each - the overlap is the defect, not a special case. Measured before T-066, "
+                 "the two rules in it were DS-143 and DS-217, and both were faults."
+                 % ", ".join(both))
+
+    # The rows that were converted rather than declared, asserted by name. Six of the seven from
+    # T-065 read keys the probe emits only inside `if (btns.length)`; the four added by T-066 are
+    # DS-113 and DS-160 (a clause requiring the deck to CONTAIN the subject), DS-143 (the same, in
+    # the producer this fixture could not see) and DS-135 (whose measurement moved - see the probe).
+    for rid in ("DS-130", "DS-164", "DS-166", "DS-146", "DS-168", "DS-228", "DS-138",
+                "DS-113", "DS-160", "DS-143", "DS-135"):
+        if rid not in states:
             sys.exit("SELF-TEST FAILED: %s is no longer emitted as a verdict row, so the "
                      "absent-subject assertion below is checking nothing" % rid)
-        if verdicts[rid] is not None:
-            sys.exit("SELF-TEST FAILED: %s returned %r against a measurement with no disclosure "
-                     "control. Its subject is absent, so it is undecided and must report None - "
-                     "reporting False fails a deck for not containing the thing the rule judges "
-                     "(T-065)." % (rid, verdicts[rid]))
+        if None not in states[rid]:
+            sys.exit("SELF-TEST FAILED: %s reported %s and no undecided row against a measurement "
+                     "in which nothing was found. Its subject is absent, so it is undecided and "
+                     "must report None - anything else decides a rule on a deck that contains "
+                     "nothing for it to judge (T-065, T-066)."
+                     % (rid, ", ".join(repr(o) for o in states[rid])))
 
-    # A `guarded by` claim is a testable statement about another row, so it is tested. Without this
-    # the table would be a set of comments, and a comment is what three previous fixes left behind.
-    failing = {r for r, _w, ok in rows if ok is False}
-    for rid, (shape, why) in sorted(ABSENCE_IS_A_PASS.items()):
-        if not shape.startswith("guarded by"):
-            if shape not in ("prohibition", "conditional"):
-                sys.exit("SELF-TEST FAILED: %s declares shape %r, which is not one of "
-                         "prohibition, conditional, guarded by <rule>" % (rid, shape))
-            continue
-        guards = [g.strip() for g in shape[len("guarded by"):].split("/")]
-        if not any(g in failing for g in guards):
-            sys.exit("SELF-TEST FAILED: %s claims to be guarded by %s, and none of them fails on a "
-                     "measurement in which nothing was found. The guard has stopped guarding"
-                     % (rid, " or ".join(guards)))
-        if len(why) < 20:
-            sys.exit("SELF-TEST FAILED: %s names its subject in a phrase, not in writing" % rid)
+    # A `guarded by` or `entailed by` claim is a testable statement about another row, so it is
+    # tested. Without this the tables would be a set of comments, and a comment is what every
+    # previous fix in this family left behind.
+    for table, name, backing in ((ABSENCE_IS_A_PASS, "ABSENCE_IS_A_PASS", "guarded by"),
+                                 (ABSENCE_IS_A_FAIL, "ABSENCE_IS_A_FAIL", "entailed by")):
+        allowed = ("prohibition", "conditional") if backing == "guarded by" else ("requirement",)
+        for rid, (shape, why) in sorted(table.items()):
+            if len(why) < 20:
+                sys.exit("SELF-TEST FAILED: %s names its subject in a phrase, not in writing" % rid)
+            # A rule reaching the measurement by more than one route declares each, joined by `+`.
+            # DS-143 is the case: one row is a prohibition, another a conditional, a third undecided.
+            for part in [s.strip() for s in shape.split("+")]:
+                if not part.startswith(backing):
+                    if part not in allowed:
+                        sys.exit("SELF-TEST FAILED: %s declares shape %r in %s, which is not one of "
+                                 "%s, %s <rule>"
+                                 % (rid, part, name, ", ".join(allowed), backing))
+                    continue
+                named = [g.strip() for g in part[len(backing):].split("/")]
+                if not any(g in failing for g in named):
+                    sys.exit("SELF-TEST FAILED: %s claims to be %s %s, and none of them fails on a "
+                             "measurement in which nothing was found. The guard has stopped guarding"
+                             % (rid, backing, " or ".join(named)))
 
     # All three states exercised on one row, because a `None` that is never contrasted with a real
     # pass and a real failure proves only that the row returns something. DS-140 is the row the task
