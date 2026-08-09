@@ -238,10 +238,64 @@ def build_ledger(deck, sources):
                 contradictions.append((a["slide"], a["value"], b["slide"], b["value"],
                                        " ".join(sorted(set(a["label"]) & set(b["label"])))))
     return {"rows": rows, "unsourced": unsourced, "disagreeing": disagreeing,
-            "contradictions": contradictions, "sourceCount": len(files),
+            "contradictions": contradictions, "sourceConflicts": source_conflicts(src),
+            "sourceCount": len(files),
             "sourceFiles": [os.path.basename(f) for f in files],
             "skipped": [os.path.basename(s) for s in skipped],
             "deckFigures": len(figs), "sourceFigureCount": len(src)}
+
+
+# How many significant words two source labels must share before the pair is worth reading. Three
+# is what FIG-2 uses to find a rival; four is what this needs, and **the second corpus is why the
+# number is not trusted further than that** (**L-45**).
+#
+# Measured at four, over both source sets in this repository and one deliberately contradicted copy:
+#
+#   examples/sort-window/sources   0 candidates   (clean, and it reports clean)
+#   examples/sources               10 candidates  (clean, and all ten are false)
+#   the contradicted copy          1 candidate    (the planted one, and only it)
+#
+# Ten false candidates on a clean corpus is the honest result, not a tuning failure: the reference
+# deck's cost model writes denser prose, so more pairs share four words. No threshold removed them
+# without also losing the true case, because what separates the two is semantics. That is the
+# measurement behind this being a reading list rather than a verdict.
+SUBJECT_WORDS = 4
+
+
+def source_conflicts(src):
+    """Two sources answering one question with two numbers - **before any deck exists.**
+
+    The other three rows all need a deck: FIG-1 and FIG-2 compare a slide with its sources, FIG-3
+    compares a slide with another slide. Nothing compared **two sources with each other**, and a
+    deck inherits its material's disagreements whether or not it quotes both sides. The corpus case
+    is not two files disagreeing but *a summary contradicting the table above it*, so a conflict
+    inside one document counts and the pair need not span files.
+
+    **These are candidates for a person, not a gate row, and that is a finding rather than a
+    convenience.** Three thresholds were tried against two real pairs - a restatement that IS a
+    contradiction (*busiest single day* at 31,900 in a table, 30,400 in a summary) and a pair that
+    is NOT (*mean round utilisation, off-peak* at 71% against *peak* at 88%). Set equality of the
+    labels misses the first, because a restatement rephrases. Jaccard at 0.6 misses it too, at 0.5.
+    Every threshold loose enough to catch the true pair also catches the false one, because what
+    separates them is that *peak* and *off-peak* are contrastive - which is semantics, not counting.
+
+    So the deterministic half stops here: **same unit, three significant words in common, different
+    values.** Whether the two phrasings are one question is the reading pass's call, and that is the
+    2026-08-07 ruling applied rather than worked around - counting gates, judgement explains. Over-
+    reporting is the safe direction when a person is the consumer (**L-48**); it would be the wrong
+    direction for a row that blocks a build, which is exactly why this is not one.
+    """
+    out = []
+    for i, a in enumerate(src):
+        for b in src[i + 1:]:
+            if a["norm"] == b["norm"] or a["context"] == b["context"]:
+                continue
+            if kind(a["norm"]) != kind(b["norm"]):
+                continue
+            if overlap(a["label"], b["label"]) >= SUBJECT_WORDS:
+                out.append((a["origin"], a["value"], b["origin"], b["value"],
+                            " ".join(sorted(set(a["label"]) & set(b["label"])))))
+    return out
 
 
 def audit(deck, sources):
@@ -256,6 +310,9 @@ def audit(deck, sources):
         ("FIG-3", "figures appearing twice in the deck with different values: %d"
          % len(L["contradictions"]), not L["contradictions"]),
     ]
+    # FIG-4 is deliberately absent from this list. `source_conflicts` explains why: no threshold
+    # separates a restatement that contradicts from a qualified pair that does not, so the pairs
+    # are candidates a reviewer confirms and never a verdict that blocks a build.
     if L["skipped"]:
         rows.append(("FIG-0", "source files this reader cannot open: %d (%s)"
                      % (len(L["skipped"]), ", ".join(L["skipped"])), False))
@@ -282,6 +339,28 @@ def self_test():
     if overlap(label_of("the grant is $5.6M in total", "$5.6M"),
                label_of("a grant of $5.6M", "$5.6M")) < 1:
         sys.exit("SELF-TEST FAILED: two labels about one subject shared no significant word")
+
+    # FIG-4, both directions. The quoted figure is the case it exists for; the qualified pair is
+    # the false positive that set its strictness, and it is a real row out of a real source file.
+    def src_fig(origin, context, value):
+        return {"origin": origin, "context": context, "value": value,
+                "norm": normalise(value), "label": label_of(context, value)}
+
+    restated = [src_fig("model.md", "busiest single day, 5 December, observed maximum", "31,900"),
+                src_fig("pack.md", "the busiest single day, 5 December, reached 30,400 parcels",
+                        "30,400")]
+    if len(source_conflicts(restated)) != 1:
+        sys.exit("SELF-TEST FAILED: FIG-4 missed a figure restated with a different value")
+
+    units = [src_fig("model.md", "the notice window runs 8 weeks", "8 weeks"),
+             src_fig("model.md", "the notice window runs 8 miles", "8 miles")]
+    if source_conflicts(units):
+        sys.exit("SELF-TEST FAILED: FIG-4 compared two different units")
+
+    apart = [src_fig("model.md", "capital for nine vans", "$522k"),
+             src_fig("model.md", "annual crew cost", "$170k")]
+    if source_conflicts(apart):
+        sys.exit("SELF-TEST FAILED: FIG-4 paired two figures about different subjects")
     return True
 
 
@@ -304,6 +383,11 @@ def main(deck, sources):
         print("      disagrees  %-34s %s vs %s in %s" % (slide[:34], value, was, origin))
     for sa, va, sb, vb, shared in L["contradictions"][:12]:
         print("      two values %s=%s / %s=%s  (%s)" % (sa[:20], va, sb[:20], vb, shared))
+    if L["sourceConflicts"]:
+        print("\n  FIG-4  source pairs to read - candidates, not verdicts: %d"
+              % len(L["sourceConflicts"]))
+        for oa, va, ob, vb, shared in L["sourceConflicts"][:12]:
+            print("      %s=%s / %s=%s  (%s)" % (oa[:24], va, ob[:24], vb, shared))
     return 0 if all(ok for _r, _w, ok in rows) else 1
 
 

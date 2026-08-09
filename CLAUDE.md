@@ -13,10 +13,11 @@ prompt. **Status: the research is complete; the plugin scaffold exists and runs 
 (`.claude-plugin/`, `skills/htmldeck/`), **and as of 2026-08-09 the build check, the theme contract,
 the component contract, the editorial split rule and build mode are all built** — `python
 tools/deck/check.py <deck>` decides 81 of the 113 rules a gate owns and names the other 32 with a
-reason each, and `skills/htmldeck/references/build.md` plus `shell/` are what turn a reviewed
-specification into a deck. **`examples/sort-window/` is the first deck nobody authored by hand.**
-What v0.1 still needs is critique mode, the humanizer pass and publication. Read the brief first —
-its "Decisions taken" section overrides anything older in it.
+reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed specification into a
+deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
+**`examples/sort-window/` is the first deck nobody authored by hand.** What v0.1 still needs is the
+humanizer pass and publication. Read the brief first — its "Decisions taken" section overrides
+anything older in it.
 
 **The backlog is two release phases, set 2026-08-09 by the owner: `v0.1` and `v0.2`.** v0.1 is a
 working plugin someone can install — build mode, critique mode, the humanizer pass, publish — and

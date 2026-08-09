@@ -28,8 +28,7 @@ happened.
 
 | ID | Title | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | `proposed` | specify | - | T-008 |
-| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `proposed` | specify | T-004, T-056 | - |
+| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `proposed` | specify | T-056 | - |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `proposed` | specify | - | T-008 |
 
 ### v0.2
@@ -52,6 +51,7 @@ happened.
 | [T-001](T-001-decide-the-font-strategy-embedded-subsets-or-a-syste.md) | Decide the font strategy: embedded subsets or a system stack | `done` | 2026-08-06 |
 | [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | `done` | 2026-08-09 |
 | [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) | Brief mode — elicit the six-section prompt | `cancelled` | 2026-08-07 |
+| [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | `done` | 2026-08-09 |
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | `done` | 2026-08-09 |
 | [T-006](T-006-decide-the-chart-strategy.md) | Decide the chart strategy | `done` | 2026-08-06 |
 | [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | `done` | 2026-08-09 |

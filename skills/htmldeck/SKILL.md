@@ -51,6 +51,7 @@ resolve against the user's project, which may well have a documentation folder o
 | `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/pipeline.md` | First, on every build run |
 | `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/artifacts.md` | At stage 3, before writing either specification file |
 | `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/build.md` | At stage 6, before any HTML |
+| `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/critique.md` | At either review stage, and for a review with no build |
 | `${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md` | Before the outline (§3.2 archetypes, §3.4 the deliverable) and before any HTML (all of it) |
 | `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` | At either review stage |
 | `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` | When writing HTML — the structural reference, not a template to fill |
@@ -77,9 +78,9 @@ is looked up:
 
 When the user wants an existing deck reviewed rather than a new one built, the two questions do not
 apply — there is nothing to size and nothing to align. Load
-`${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` and run the design audit: headline verdict first, then
-the coverage table, then findings naming the principle each one violates, then an explicit
-keep-versus-rebuild split.
+`${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/critique.md` and run the design audit: headline
+verdict first, then the coverage table, then findings naming the principle each one violates, then
+an explicit keep-versus-rebuild split.
 
 **The critique voice is blunt — bottom line up front, no diplomatic padding.** A review that opens
 with three compliments is one nobody acts on. **The deck's own voice is the opposite**: respectful,

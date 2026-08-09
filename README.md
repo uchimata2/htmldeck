@@ -97,8 +97,8 @@ python tools/tasks/task.py check
 ```
 
 ```
-OK - 59 tasks, vocabulary valid, task references resolve, 954 document pointer(s) checked, 0 broken
-     482 section reference(s) resolved, 0 dead; 1054 not bound to a document and skipped.
+OK - 59 tasks, vocabulary valid, task references resolve, 968 document pointer(s) checked, 0 broken
+     486 section reference(s) resolved, 0 dead; 1089 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose, and every `<named document> §n`
@@ -160,24 +160,54 @@ this repository. Every figure is an output of the assumptions written down besid
 
 ---
 
+## Reviewing a deck
+
+```bash
+python tools/deck/critique.py <deck> [--sources <dir>]
+```
+
+The review has a half a program can do and a half it cannot, and this prints the first so a reader
+spends their attention on the second. It says which passes ran, what the gate already decided, the
+figure ledger, and the five dimensions — Claim, Evidence, Density, Spine, Consistency — that no
+check in this repository reaches.
+
+The judgement half is 25 `hard` rules that need a person. The worksheet is generated, not recalled,
+and **a rule left unanswered fails the run**:
+
+```bash
+python tools/deck/critique.py <deck> --worksheet > sheet.txt
+python tools/deck/critique.py --answers sheet.txt
+```
+
+Run over the seeded-defect deck, the mode found **all ten** of its deliberate defects; run over the
+parent, none. Two of the ten needed something the worksheet alone does not give: the reordered
+argument was found by reading the stage order, and the contradicted figure only surfaced once
+sources were supplied — which is why the report always says which half it checked.
+
+---
+
 ## What does not exist yet
 
 Stated here rather than left to be inferred, because a README describing the plan is not a README.
 
-- **Critique mode does not exist.** The rubric in `EVALUATION.md` is complete and can be applied by
-  hand; nothing automates the report —
-  [T-004](tasks/T-004-critique-mode-blunt-section-by-section-review.md).
-- **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the
-  judgement half's first run and were settled the same day —
-  [T-052](tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md), one by amending the rule
-  and one by editing the deck. The mechanical gate was green throughout, which is exactly the
-  point of having a second half.
+- **The human-facing text has not been through the humanizer.** That is a standing publishing
+  constraint, and it gates the first release —
+  [T-056](tasks/T-056-humanize-the-human-facing-documents-before-publishing.md). This page is one of
+  the documents it covers.
+- **Nothing is published yet.** [T-008](tasks/T-008-package-document-and-publish.md) is the deploy,
+  and this repository has no remote.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log.
 It is split into two releases: **v0.1** is what a first working plugin needs — build mode, critique
 mode, and publishing — and **v0.2** is everything else already known, including 3D visuals, a
 frame-rate figure, and the seven glitch-free conditions the gate names and does not yet check.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
+
+**Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
+half's first run and were settled the same day —
+[T-052](tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md), one by amending the rule and
+one by editing the deck. The mechanical gate was green throughout, which is exactly the point of
+having a second half.
 
 ---
 

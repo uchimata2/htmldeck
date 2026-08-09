@@ -107,7 +107,8 @@ quietly breaks.
 **Out:** findings as `ID · Severity · Slide · Finding · Fix`, with Major/Minor/Note, then
 **"Open — needs a decision"**, then counts.
 
-**This is critique mode's first format**, not a mode of its own. It scores what a specification can
+**This is critique mode's first format**, not a mode of its own — load
+`${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/critique.md`. It scores what a specification can
 carry: **S1 Claim · S2 Evidence · D1 Spine · D2 Pacing · D3 Close · D4 source-reconciliation.**
 It does not score S3 Encoding, S4 Density, S5 Craft, S6 Motion or D4's visual half — those need a
 rendered artifact and are the build review's.
@@ -184,7 +185,7 @@ lands. Stated so a run is not mistaken for a finished plugin:
 
 | Stage | Owned by | Until then |
 | :--- | :--- | :--- |
-| 5 · spec review, 7 · build review | Critique mode | The rubric in `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` is complete and can be applied by hand; the report formats are not yet fixed. |
+| 5 · spec review, 7 · build review | ~~Critique mode~~ — **built 2026-08-09.** `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/critique.md` fixes both report formats, and `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/critique.py <deck>` assembles the half a program can. | — |
 | 6 · build | ~~Build mode~~ — **built 2026-08-09.** `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/build.md` is the stage, and `${CLAUDE_PLUGIN_ROOT}/shell/` plus `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py` are what a deck is assembled from. | — |
 | 6 · per-batch automatic checks | ~~The build check~~ — **built 2026-08-09.** `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]` gates 81 of the 113 rules the ruleset puts in its jurisdiction and **names every one of the other 32, with a reason**. | — |
 | 6 · tokens, components, motion | The theme and interaction layers | `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` carries a working first instance of both, and `${CLAUDE_PLUGIN_ROOT}/shell/` is that instance with the content cut out. |
