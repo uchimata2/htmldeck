@@ -254,7 +254,7 @@ python tools/examples/seed_defects.py
 ```
 
 `audit.py` runs the auto gate, the contrast audit, the render gate and the resolution contract —
-**82 verdict rows against 77 distinct `DS-nnn` rules**, some rules carrying more than one row.
+**83 verdict rows against 77 distinct `DS-nnn` rules**, some rules carrying more than one row.
 `contract.py` is that last stage on its own: it sweeps four
 viewports and two resolutions, because §2.4 and §2.5 are claims about what happens *between*
 viewports and no single render can decide them. **`contract_variants.py` and

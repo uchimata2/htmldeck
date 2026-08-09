@@ -98,6 +98,12 @@ RENDER_VARIANTS = [
         ("</nav>\n",
          "</nav>\n<style>svg.fig rect.accent{fill:#EBE7F5}\n"
          "svg.fig text.t-paper{fill:#23211D}</style>\n")]),
+    ("slide-with-no-headline", "DS-091", [
+        # The class is what carries the rule's subject, so dropping it is how one slide loses its
+        # headline without losing its text - which is the shape that used to pass. Until T-053 the
+        # word-count check ran over an empty set and reported 0 headlines over six words.
+        ('<h2 class="headline rise" style="--i:1">The window shuts in March</h2>',
+         '<h2 class="was-headline rise" style="--i:1">The window shuts in March</h2>')]),
     ("chevron-with-no-label", "DS-164", [
         ('<button class="disc-btn" aria-expanded="false" aria-controls="p2">',
          '<button class="disc-btn" aria-expanded="false" aria-controls="p2"><i></i></button>'

@@ -213,11 +213,14 @@ function** rather than another correct row.
   and `SILENT` stays 0. `CLAUDE.md`, `README.md`, `BRIEF.md`, `DESIGN-RATIONALE.md`,
   `examples/README.md` and `pipeline.md` all state *78 of 111* and all remain correct — which was
   not a given, and was as much of the argument against a fourth bucket as the L-36 reasoning.
-- **A gap in the ruleset, not in the gate.** DS-091 bounds a headline at six words and **no rule
-  requires a slide to carry a headline at all**, so a deck whose slides have none passes DS-091 and
-  nothing else objects. It is declared a prohibition in `ABSENCE_IS_A_PASS` because that is what the
-  rule as written is. Closing it is a ruleset amendment and the owner's; it is the only unowned
-  subject the sweep turned up.
+- **A deck whose slides carry no headline passed DS-091**, the only unowned subject the sweep turned
+  up. ~~A gap in the ruleset, not in the gate: no rule requires a slide to carry a headline at
+  all.~~ **That diagnosis was wrong** — corrected 2026-08-09 by
+  [T-053](T-053-enforce-the-headline-ds-091-requires.md), which read the rule: *"Per slide: **one**
+  headline ≤ 6 words plus ≤ 3 supporting fragments"* requires the headline in its own first clause.
+  The gap was in the check, and wider than one clause — DS-091 has three and the gate decided one.
+  T-053 closed the first, excused the fragment count in writing, and DS-091's entry in
+  `ABSENCE_IS_A_PASS` is now `guarded by DS-081` rather than a prohibition.
 
 **Child fix tasks raised**
 - none. Class B was fixed here rather than deferred — it is four expressions, and leaving the shape

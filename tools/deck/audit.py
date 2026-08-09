@@ -528,10 +528,15 @@ PROBE = r"""
     }
     out.motionControl = !!document.getElementById('motion');
 
-    // DS-091 - headline of six words or fewer. DS-085 - the last slide is a close.
-    out.longHeadlines = [];
+    // DS-091 - **one** headline of six words or fewer. DS-085 - the last slide is a close.
+    // The count is measured as well as the length, because the rule's first clause is that the
+    // headline EXISTS: a slide carrying none passed the word bound on an empty set, which is L-36
+    // in the shape T-051 swept the file for and T-053 closed here.
+    out.longHeadlines = []; out.headlineCounts = [];
     for (var s=0;s<slides.length;s++){
-      var h = slides[s].querySelector('.headline');
+      var hs = slides[s].querySelectorAll('.headline');
+      if (hs.length !== 1) out.headlineCounts.push([slides[s].dataset.name, hs.length]);
+      var h = hs[0];
       if (h && h.textContent.trim().split(/\s+/).length > 6)
         out.longHeadlines.push([slides[s].dataset.name, h.textContent.trim().split(/\s+/).length]);
     }
@@ -1085,10 +1090,12 @@ ABSENCE_IS_A_PASS = {
     "DS-073": ("guarded by DS-070", "the reflow view's sections; DS-070 fails when it never "
                                     "engaged, so there is no run in which this is the only silence"),
     "DS-080": ("guarded by DS-081", "a filter over the slides"),
-    "DS-091": ("prohibition", "no headline over six words. **A deck whose slides carry no headline "
-                              "at all passes this and nothing else objects** - no rule in the "
-                              "ruleset requires a headline, so the gap is the ruleset's, not this "
-                              "row's, and it is recorded in T-051 §4 rather than invented here"),
+    "DS-091": ("guarded by DS-081", "one headline per slide, of six words or fewer - a filter over "
+                                    "the slides. **It was a prohibition until T-053**, and wrongly: "
+                                    "the rule's first clause requires the headline to exist, so a "
+                                    "deck whose slides carried none passed the word bound over an "
+                                    "empty set. Now only a deck with no slides at all reaches this "
+                                    "vacuously, and DS-081 fails that"),
     "DS-092": ("prohibition", "no sentence over 20 words, no paragraph over 4 sentences"),
     "DS-132": ("prohibition", "nothing tabbable on an off-screen slide"),
     "DS-142": ("prohibition", "no looping motion on static content"),
@@ -1136,6 +1143,25 @@ def render_verdicts(data):
         ("DS-081", "slides: %d" % data["slideCount"], 6 <= data["slideCount"]),
         ("DS-035", "text below 16 design units: %d" % len(data["underFloor"]),
          not data["underFloor"]),
+        # DS-091 has three clauses and the gate reaches two. **The first is that the headline
+        # exists** - checked here since T-053, because until then a slide carrying none satisfied
+        # the word bound over an empty set and nothing else objected.
+        #
+        # **The third, `<= 3 supporting fragments`, is excused and this is the argument.** Nothing
+        # in the DOM marks a run as a supporting fragment, and counting tier-one runs instead puts
+        # three slides of the conforming deck over budget at 4, 5 and 9 - on the eyebrow
+        # (`03 · The problem`), a stat figure and its label (`11` / `minutes, average wait`, which
+        # is one thing and not two), the assumption marker and the provenance mark. Those are
+        # required by DS-104 and DS-105, so the count would set three rules against each other, and
+        # any threshold that spared them would be a number chosen to fit this deck (**L-38**).
+        # CLOSES WHEN: a supporting fragment is structurally identifiable - a class, a container, a
+        # list - which is a rule amendment and the owner's. Adopting markup to make a check work is
+        # backwards, which is the DS-026 precedent.
+        ("DS-091", "slides without exactly one headline: %d%s"
+         % (len(data.get("headlineCounts", [])),
+            "" if not data.get("headlineCounts")
+            else "  %s" % ", ".join("%s has %d" % (n, c) for n, c in data["headlineCounts"][:3])),
+         not data.get("headlineCounts")),
         ("DS-091", "headlines over six words: %d" % len(data["longHeadlines"]),
          not data["longHeadlines"]),
         ("DS-202", "slides with no bottom line: %d" % len(data.get("noBottomLine", [])),
