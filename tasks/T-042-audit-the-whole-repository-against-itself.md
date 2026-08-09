@@ -2,8 +2,8 @@
 id: T-042
 title: Audit the repository against itself — stale claims, unreachable rules, and unchecked references
 type: audit
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-004, T-005, T-008, T-036, T-037, T-039, T-041]
@@ -50,6 +50,10 @@ python tools/deck/audit.py <deck>            0 mechanical failure(s)
 python tools/deck/chrome_row.py              12 tick(s) drawn, dense mode off
 python -m compileall tools                   all compile; no non-stdlib import (L-07 holds)
 ```
+
+*These are the audit's own readings, 2026-08-09, and they are left as taken. The `79 checked` figure
+is the defect F-2 reports, not a stale copy of it — the run really did print 79, and correcting the
+line would delete the evidence. §3 records what the same commands print now.*
 
 **Every gate in this repository is green.** All twenty-one findings below sit in the space those
 gates do not reach, which is the result worth stating first: the tooling is sound and the *record
@@ -309,15 +313,47 @@ concerns already gives, and each names the alternative it rejects.
    deck so the repository's two front doors state the same numbers.
 
 **Accepted without action**
-- <F-n — reason — date>
+- none. All twenty-one were resolved by a `done` child.
 
 **Deviation from the template.** An **Effort** column was added to the findings table, because the
 audit was asked to rank by effort as well as severity and a severity alone does not say which
 findings are worth batching.
 
+---
+
+### What the same commands print now
+
+Every figure below is from a **clean clone** of the closing state, not from the working tree.
+
+```
+python tools/tasks/task.py check   OK - 52 tasks, 759 document pointer(s) checked, 0 broken
+                                        428 section reference(s) resolved, 0 dead; 971 skipped
+python tools/deck/check.py <deck>  0 failure(s); checked 78, excused 4 + 29, SILENT 0
+                                        buckets sum to 111 = owned, so the account is a partition
+python tools/deck/ruleset.py --counts   160 rows + DS-000 in prose = 161 declared
+python tools/deck/ruleset.py --gates    114 hard = 85 mechanical + 25 judgement + 4 binding
+python tools/plugin/check_scaffold.py   OK - 10 of 10 fixtures behaved as specified
+python tools/examples/seed_defects.py --check   OK - the fixture is what regenerating produces
+```
+
+**Three of those lines did not exist when this audit ran**, and they are the audit's real output:
+the section-reference count, the partition line, and the hard-rule gate split are each an assertion
+that a finding here could not have been made without.
+
+### The two things this run added to the backlog
+
+Both were found **by doing the work**, not by the audit, and neither was reachable by any check that
+existed on the morning of 2026-08-09:
+
+| | |
+| :--- | :--- |
+| [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | DS-140 passes on a deck with no dashed flow, because `None != "none"`. Found by [T-044](T-044-restore-the-seeded-defect-fixture-and-its-claims.md) running the gate over a deck **built to be missing things** — the only kind that can expose it. The third instance of one pattern |
+| [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | DS-036 and DS-208 fail the reference deck on the judgement half of the gate, found by [T-048](T-048-gate-the-hard-rules-only-judgement-can-reach.md)'s first run of the checklist it had just built |
+
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | → done | **All twenty-one findings resolved by a `done` child; none accepted without action.** The frame this was opened in held all the way through: **every gate was green when the audit ran and every gate is green now**, and not one of the twenty-one was found by any of them. What the run added is that three of those gates **can now fail in ways they could not before** — the coverage account asserts a partition, `task.py check` resolves 428 section references, and `ruleset.py --gates` partitions all 114 `hard` rules across their owners. Each is an assertion whose absence was a finding here, which is the difference between fixing twenty-one facts and fixing what let them accumulate. **Two things the audit could not have found were found by doing the work**, both by instruments built during the run and pointed at artifacts built to be wrong: DS-140 passes on a deck with no dashed flow ([T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md), the third instance of one pattern), and the reference deck fails two `hard` rules on the judgement half of the gate ([T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md)) — a deck green through every mechanical check since [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md). **The grouping decision paid for itself.** Children were grouped by the file each edits rather than by theme, and the two risks it was chosen against both materialised and were both contained: T-045 and T-047 each edited `DESIGN-RATIONALE.md` in separate sessions without contending, and the coverage figure turned out to be in **five** documents rather than the three the finding named — hunted, as every criterion required, not assumed. **Three lessons came out of it**, one per structural finding: **L-43** on partial completeness devices, plus the two rules now written into `TASK-WORKFLOW.md` §6.1 and §6.2. |
 | 2026-08-09 | (no change) | **All twenty-one findings approved by the owner; eight children raised, [T-043](T-043-make-the-gates-coverage-account-provable.md) to [T-050](T-050-write-the-repository-readme.md).** Grouped by the file each edits rather than by theme, because the two largest risks in a fix run of this shape are two tasks contending for one document and a figure corrected in one copy of five. One `blocked_by` edge only — T-045 on T-043 — and a sequencing note where T-045 and T-047 both touch `DESIGN-RATIONALE.md`. **The three open questions are answered rather than handed back**, each from the reason the rule it concerns already gives: the 25 `hard` `judge` rules keep gate status and gain a pass/fail checklist inside the existing fresh-context pass, because §1's ban on scoring them is about **dilution by arithmetic** and not about leaving them unobserved — the alternative demotes the deliverable contract from defect to a point off a score. A `§n.m` reference resolves when `n.m` is a heading **or** `n` is a heading and `m` is an ordinal printed in a numbered list under it — which passes `R7 §5.3` and `DESIGN-SYSTEM §0.8` and fails `DESIGN-SYSTEM §9.4` and `EVALUATION §0`, exactly the live/dead split, so it needs no exception list. And the README is its own task, because T-008's blockers are two *modes* and a README depends on neither. |
 | 2026-08-09 | → proposed | **Created. Twenty-one findings, and every gate in the repository is green** — which is the frame the list should be read in: `task.py check --closing`, `check.py`, `ruleset.py`, `check_scaffold.py`, `contract.py` and `audit.py` all pass, and nothing here was found by any of them. **Three findings are about a green run overstating itself.** F-2: the coverage account sums to 112 against 111 owned rules because DS-072 is both `checked` and excused by the ruleset, and the assertion that would have caught it is `if …: pass` with a comment claiming the arithmetic is asserted elsewhere, which it is not. F-3: 25 `hard` rules are declared gates and are `judge`, so nothing emits a verdict for them, and 11 of the 25 — including four of the nine deliverable-contract rules — are named nowhere in `EVALUATION.md`; that is **L-41** at the judgement layer, where T-005's *silent rule fails the run* device has no counterpart. F-1: the seeded-defect deck is four reference-deck revisions stale, so the fixture the rubric was validated against differs from its parent in 601 lines and fails two rules its ledger does not claim — the exact confound `examples/README.md` says it exists to remove. **F-5 is L-39 unswept:** T-037 chased the `§11` references and the `§9.1`–`§9.5` family survived, two of them in `BRIEF.md`'s live prose, and `EVALUATION.md §0` is cited five times and does not exist. 1141 section references, none validated by anything. No fix applied — the working tree is unchanged, and the fixture regenerated during measurement was reverted. |

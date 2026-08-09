@@ -26,7 +26,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | WP2 | `proposed` | specify | - | - |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | WP3 | `proposed` | specify | - | - |
-| [T-042](T-042-audit-the-whole-repository-against-itself.md) | Audit the repository against itself — stale claims, unreachable rules, and unchecked references | none | `proposed` | specify | - | - |
 | [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | none | `proposed` | specify | - | - |
 | [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | Settle the two hard-judge failures the checklist's first run found in the reference deck | none | `proposed` | specify | - | - |
 
@@ -67,6 +66,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) | Stop the gate reporting judge rules, and one verdict under the wrong rule ID | `done` | 2026-08-09 |
 | [T-039](T-039-finish-the-record-t-037-left-in-the-wrong-places.md) | Finish the record T-037 left in the wrong places | `done` | 2026-08-09 |
 | [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md) | Fix the three reference-deck defects the completed gate found | `done` | 2026-08-09 |
+| [T-042](T-042-audit-the-whole-repository-against-itself.md) | Audit the repository against itself — stale claims, unreachable rules, and unchecked references | `done` | 2026-08-09 |
 | [T-043](T-043-make-the-gates-coverage-account-provable.md) | Make the gate's coverage account provable, and derive the counts the documents state | `done` | 2026-08-09 |
 | [T-044](T-044-restore-the-seeded-defect-fixture-and-its-claims.md) | Restore the seeded-defect fixture, and re-measure everything examples/README claims | `done` | 2026-08-09 |
 | [T-045](T-045-sweep-the-stale-claims-across-the-live-documents.md) | Sweep the nine stale claims the audit found across the live documents | `done` | 2026-08-09 |
