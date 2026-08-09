@@ -472,10 +472,15 @@ remain are both about the build and critique modes, not about the deck.***
   `python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]` decides **78 of the
   111 rules** the ruleset puts in a gate's jurisdiction and **names the other 33 with a reason and a
   closing condition**; a rule in neither state fails the run, so silent coverage is now impossible
-  rather than merely discouraged. **34 seeded defects across four suites, all caught** — and the
-  exercise has now caught **seven checks that passed decks violating them**, two of them found the
-  day they were written (**L-42**). What is *not* met and is named: a console error that does not
-  stop the deck is still invisible to it.
+  rather than merely discouraged. **35 seeded defects across four suites, all caught** — and the
+  exercise keeps catching checks that were passing decks they should have failed: two on the day
+  they were written (**L-42**), and **six in one sweep** when
+  [T-051](../tasks/T-051-a-check-with-no-subject-must-not-report-a-pass.md) asked what every verdict
+  does when its subject is absent, plus DS-091 when
+  [T-053](../tasks/T-053-enforce-the-headline-ds-091-requires.md) read the rule that sweep had
+  misdiagnosed (**L-44**). *The running total this sentence used to carry was recorded nowhere and
+  could not be checked; the attributions can be.* What is *not* met and is named: a console error
+  that does not stop the deck is still invisible to it.
 - The critique mode run against a deck with known defects, and found them. *Open —
   [T-004](../tasks/T-004-critique-mode-blunt-section-by-section-review.md). The seeded-defect deck it
   needs now exists.*
