@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Check the plugin package against the packaging contract in `docs/research/R5-assets-and-licences.md` §6.
 
-Six checks, all mechanical:
+Seven checks, all mechanical:
 
+  0. Every field the manifest schema types holds that type, and `author` carries the `name` the
+     schema requires of it. **Optional is not untyped** - v0.1.0 shipped a string `author`, the
+     installer refused the plugin, and this tool called the manifest valid (T-061).
   1. `.claude-plugin/plugin.json` exists, parses, and its `name` is kebab-case.
   2. Component directories sit at the plugin **root**, never inside `.claude-plugin/`.
   3. Every skill has a `SKILL.md` with a `name` and a `description` in its front matter.
@@ -15,8 +18,9 @@ Six checks, all mechanical:
     python tools/plugin/check_scaffold.py --self-test
 
 **The self-test is not optional decoration.** A scan that looks like a tool gets believed; this one
-runs first against six fixtures whose answers are known - three that must pass and three that must
-fail, one per failure mode it claims to catch (**L-04**).
+runs first against fourteen fixtures whose answers are known, one per failure mode it claims to
+catch and one per case it must not flag (**L-04**). It got believed anyway: the count was ten and
+none of them typed a field, so the manifest that shipped v0.1.0 passed (T-061).
 
 Pure standard library (**L-07**).
 """
@@ -32,6 +36,22 @@ if hasattr(sys.stdout, "reconfigure"):
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$")
+
+# The manifest schema's field types, encoded rather than fetched, from
+# json.schemastore.org/claude-code-plugin-manifest.json read 2026-08-09. Standard library only
+# (CLAUDE.md), and the schema is small enough that a dict is the whole of it.
+#
+# Only `name` is required. Every field here is optional, and OPTIONAL IS NOT UNTYPED - that
+# conflation is T-061: v0.1.0 shipped `"author": "the htmldeck maintainers"`, the installer
+# refused the plugin, and this tool printed `OK - manifest valid` because it asked whether the
+# field was present and never what it held.
+MANIFEST_TYPES = {
+    "$schema": str, "name": str, "version": str, "description": str,
+    "homepage": str, "repository": str, "license": str,
+    "author": dict, "settings": dict, "userConfig": dict,
+    "keywords": list, "dependencies": list, "channels": list,
+}
+TYPE_NAMES = {str: "string", dict: "object", list: "array"}
 ROOT_VAR = "${CLAUDE_PLUGIN_ROOT}"
 
 # The body is read on every invocation, so its cost is paid whether or not a deck is built.
@@ -80,9 +100,22 @@ def check(root):
         problems.append("BAD JSON      plugin.json does not parse: %s" % exc)
         return problems, notes
 
+    for field, want in MANIFEST_TYPES.items():
+        if field in data and not isinstance(data[field], want):
+            got = TYPE_NAMES.get(type(data[field]), type(data[field]).__name__)
+            problems.append("BAD TYPE      `%s` is a %s, the schema says %s"
+                            % (field, got, TYPE_NAMES[want]))
+
+    author = data.get("author")
+    if isinstance(author, dict) and not author.get("name"):
+        problems.append("BAD AUTHOR    `author` is an object without `name`, which the schema "
+                        "requires of it")
+
     name = data.get("name")
     if not name:
         problems.append("NO NAME       plugin.json has no `name`, which is the one required field")
+    elif not isinstance(name, str):
+        pass          # already reported as BAD TYPE; kebab-case is not a question you can ask of it
     elif not NAME_RE.match(name):
         problems.append("BAD NAME      `%s` is not kebab-case" % name)
     else:
@@ -209,6 +242,25 @@ FIXTURES = [
         MANIFEST: '{"name": "Example_Plugin"}',
         SKILL: HEAD + "Body.\n",
     }, "BAD NAME"),
+    # The four below are T-061. `author` as a string is what shipped in v0.1.0 and what the
+    # installer rejected while this tool printed `OK - manifest valid`; the rest are the same
+    # blind spot in the fields either side of it, which presence-testing could never have seen.
+    ("an author that is a string, which is what v0.1.0 shipped", {
+        MANIFEST: '{"name": "example", "author": "a person"}',
+        SKILL: HEAD + "Body.\n",
+    }, "BAD TYPE"),
+    ("an author object with no name, which the schema requires", {
+        MANIFEST: '{"name": "example", "author": {"url": "https://example.com"}}',
+        SKILL: HEAD + "Body.\n",
+    }, "BAD AUTHOR"),
+    ("a well-formed author object", {
+        MANIFEST: '{"name": "example", "author": {"name": "a person"}}',
+        SKILL: HEAD + "Body.\n",
+    }, None),
+    ("keywords as a string where the schema says array", {
+        MANIFEST: '{"name": "example", "keywords": "deck"}',
+        SKILL: HEAD + "Body.\n",
+    }, "BAD TYPE"),
     ("a skill pointing at an absolute path", {
         MANIFEST: '{"name": "example"}',
         SKILL: HEAD + "Load /home/user/%s.\n" % DOC,

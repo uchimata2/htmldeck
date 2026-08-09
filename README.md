@@ -125,8 +125,8 @@ python tools/tasks/task.py check
 ```
 
 ```
-OK - 60 tasks, vocabulary valid, task references resolve, 1002 document pointer(s) checked, 0 broken
-     497 section reference(s) resolved, 0 dead; 1147 not bound to a document and skipped.
+OK - 61 tasks, vocabulary valid, task references resolve, 1005 document pointer(s) checked, 0 broken
+     497 section reference(s) resolved, 0 dead; 1149 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose, and every `<named document> §n`
@@ -139,7 +139,7 @@ python tools/plugin/check_scaffold.py
 ```
 
 ```
-10 of 10 fixtures behaved as specified.
+14 of 14 fixtures behaved as specified.
 OK - manifest valid, components at the root, every ${CLAUDE_PLUGIN_ROOT} pointer resolves,
 ```
 

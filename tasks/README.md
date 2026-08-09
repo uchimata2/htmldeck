@@ -93,9 +93,10 @@ happened.
 | [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | Settle the two hard-judge failures the checklist's first run found in the reference deck | `done` | 2026-08-09 |
 | [T-053](T-053-enforce-the-headline-ds-091-requires.md) | Enforce the headline DS-091 requires, and excuse the fragment count no check can reach | `done` | 2026-08-09 |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `done` | 2026-08-09 |
+| [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md) | The scaffold check passed a manifest the installer rejects | `done` | 2026-08-09 |
 
 ## Next ID
 
-`T-061`
+`T-062`
 
 <!-- end generated -->
