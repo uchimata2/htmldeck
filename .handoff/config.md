@@ -14,7 +14,7 @@ Read by the `handoff` skill. Plain Markdown, read by the agent — no parser.
 
 - `tracker_dir`: tasks/
 - `tracker_id_prefix`: T-
-- `tracker_template`: tasks/_templates/task-template.md
+- `tracker_template`: tasks/_task-template.md
 - `tracker_closed_dir`: (not set — done tasks stay in `tasks/` so links keep resolving)
 
 ## Notes for whoever resumes

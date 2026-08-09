@@ -25,7 +25,7 @@ already closed.
 
 **Why this one**
 `cmd_index` filters the two directions of the same edge inconsistently
-([`tools/tasks/task.py`](../tools/tasks/task.py), `cmd_index`):
+(`tools/tasks/task.py`, `cmd_index`):
 
 ```python
 blockers   = ", ".join(b for b in t.blocked_by
@@ -56,7 +56,7 @@ order.
   is a dated judgement, not a derivation — see T-030 §3.
 
 **Inputs**
-- [`tools/tasks/task.py`](../tools/tasks/task.py) — `cmd_index`, `cmd_context`, `cmd_decisions`.
+- `tools/tasks/task.py` — `cmd_index`, `cmd_context`, `cmd_decisions`.
 - [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §4 — `blocked_by` is the only edge that gates, and a
   closed task is not gated.
 - [`docs/LESSONS.md`](../docs/LESSONS.md) — L-05, L-08, L-09.
@@ -84,7 +84,7 @@ order.
 | # | Step | Output |
 | :-- | :--- | :--- |
 | 1 | Survey every place a derived edge list is printed and record which of them already filter, so the fix is to the inconsistency rather than to one line. | The three sites named in §3 |
-| 2 | `cmd_index`: filter the *Blocks* column to open tasks, matching the *Blocked by* side, and state the rule in a comment at the point both comprehensions are read. | [`tools/tasks/task.py`](../tools/tasks/task.py) |
+| 2 | `cmd_index`: filter the *Blocks* column to open tasks, matching the *Blocked by* side, and state the rule in a comment at the point both comprehensions are read. | `tools/tasks/task.py` |
 | 3 | `cmd_context`: keep closed downstream tasks and mark them, mirroring how `BLOCKED BY` flags the ones still open — the section header claims they are waiting, and for a closed one that is false. | same |
 | 4 | Write the rule into [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6, so the next reader of either comprehension has something to check them against. | [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) |
 | 5 | Verify against a constructed open→closed edge, because the instance that raised this closed in the meantime (see §3) and the live board no longer shows it. | Recorded in §4 |
@@ -131,6 +131,7 @@ order.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | (no change) | **Three dead links demoted to plain text** by [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md), which retired `tools/tasks/task.py`. The rule this task wrote now lives in `TASK-WORKFLOW.md` §6 and is implemented by taskmd's own index rather than by `cmd_index`. Nothing else in this record changed: a link is a promise a reader can follow and had to go, but the prose is the account of what was done and is left as written. |
 | 2026-08-08 | → done | Worked through `plan`, `implement` and `review` in one pass. **The board did not move**: T-015 — the row that raised this — closed on 2026-08-07, and no other open task currently has a closed downstream task, so `index` regenerated `README.md` byte-identical and the fix is preventive rather than corrective. Verified against a constructed open→closed edge instead, then removed it. Of the three sites §1 named, only one was wrong; the two already-correct ones gained a comment citing the rule, because the reason this survived repeated reading was that nothing was written down for either comprehension. **The `TASK-WORKFLOW.md` §6 half is the durable part** — the code now cites a rule instead of implying one. |
 | 2026-08-07 | (no change) | **Answered by the owner: the proposal stands as written** — board drops, `context` keeps with status, and the rule goes into [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6. §1 now has no open question, and the task is a three-part edit with a stated rule behind it rather than a one-line filter. **The `TASK-WORKFLOW.md` half is the part that stops this recurring**: the defect was two comprehensions disagreeing with nothing written down for either, which is how it survived being read repeatedly. |
 | 2026-08-07 | → proposed | Raised from a finding carried in the session handoff rather than in any durable home — the reason it is a task now. Found while reading the board to start [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md): its *Blocks* column names `T-003`, which is `cancelled`. The cause is one unfiltered comprehension in `cmd_index`, and the same asymmetry may exist in `cmd_context`. Cosmetic in effect, structural in kind — the board is what a session reads to choose work, and the *Blocks* column is criterion (a) of T-030's tie-break rule. |

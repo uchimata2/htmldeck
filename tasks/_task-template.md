@@ -7,17 +7,22 @@ phase: specify
 parent: null
 blocked_by: []
 related: []
-work_package: v0.1 | v0.2   # the release phase — see docs/BRIEF.md, Release phases
+work_package: WP<n> | final | none
 owner: the project owner
+business_value: critical | high | medium | low
+effort: xs | s | m | l | xl
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 deliverables: []
 ---
 
 <!--
-Schema, statuses, and which edge to use: tasks/TASK-WORKFLOW.md §3-§4. Do not add `children:`
-or `blocks:` — both are derived. After filling this in, run:
-    python tools/tasks/task.py index
+The lifecycle, which edge to use, and where each fact lives: the taskmd skill's METHOD.md, served
+by the installed plugin. The field names and allowed values are this project's own schema:
+`.taskmd/config.md`. Do not add `children:` or `blocks:` — both are derived. After filling this in,
+run:
+    taskmd index
+    taskmd check
 -->
 
 # T-NNN — <title>

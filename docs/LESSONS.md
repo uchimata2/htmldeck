@@ -4,8 +4,8 @@ Things this project has already paid for once. Each is **generic** — it surviv
 produced it and applies to the next one — and each is stated so it can be *acted on*, not
 admired.
 
-Cite them by ID. `L-07` and `L-11` are cited from `tools/tasks/task.py`, so **IDs are stable**:
-add at the end of a section, never renumber.
+Cite them by ID. `L-07` and `L-11` are cited from `tools/assets/build_probe_deck.py`, so **IDs are
+stable**: add at the end of a section, never renumber.
 
 Seeded from the "Carried lessons" table in [`BRIEF.md`](BRIEF.md), which keeps the corpus
 evidence behind several of them, and from `docs/research/R4-prior-art.md` §1. Project-specific
@@ -1252,9 +1252,11 @@ out, every comparison is noise and every regeneration is a diff.
 Running the check and then doing the thing anyway is worse than not running it, because the output
 scrolls past and everyone downstream believes it passed.
 
-`python tools/tasks/task.py index; python tools/tasks/task.py check; git add -A; git commit` chained
-with semicolons. `check` reported **three dead pointers** and the commit ran regardless, so a broken
-state landed with a message claiming the gate was green. The gate worked perfectly; nothing was
+The retired `task.py`'s `index; check; git add -A; git commit`, chained with semicolons. `check`
+reported **three dead pointers** and the commit ran regardless, so a broken state landed with a
+message claiming the gate was green. *The tool has since been replaced by `taskmd` and
+`tools/docs/refcheck.py` (T-062); the incident is left as it happened, because the lesson is about
+the semicolon and not about the tool.* The gate worked perfectly; nothing was
 listening. The same shape appears wherever a verdict and an action sit in one sequence — a test run
 before a deploy, a validator before a publish.
 

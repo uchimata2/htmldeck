@@ -11,7 +11,7 @@ work_package: none
 owner: maintainer
 created: 2026-08-06
 updated: 2026-08-07
-deliverables: [tools/tasks/task.py, tasks/TASK-WORKFLOW.md]
+deliverables: [tools/docs/refcheck.py, tasks/TASK-WORKFLOW.md]
 ---
 
 # T-029 — Stop the deliverable exemption silently dropping pointers from the check
@@ -171,5 +171,6 @@ fixed size, so prefer one keyed on a *site* — which is exactly the trade this 
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | (no change) | **Declared output relocated, not withdrawn.** `tools/tasks/task.py` was retired by [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) when taskmd replaced the task half of it. What this task built survives verbatim in `tools/docs/refcheck.py`: the deleted `declared` exemption and `strip_front_matter`, which is why the deliverable is repointed rather than dropped. The prose below still names the old path, because that is where the work was done. |
 | 2026-08-07 | → done | **Owner ruled: delete the exemption rather than fix it.** Deletion could not be total — `deliverables:` is itself pointer-shaped, so removing the exemption outright would make declaring an unproduced output impossible. One narrow rule replaces it: front-matter is not scanned. That keys on the *site* rather than the *target*, so unlike its predecessor it cannot widen beyond the one field that declares it. **The exemption had been hiding 110 of 357 pointers**, not the six the task was raised over — six was one new declaration's marginal cost, not the standing one. §1 had put "changing what counts as a pointer" out of scope; the ruling forced it, and §3 records that rather than smoothing it over. |
 | 2026-08-06 | → proposed | Raised from [T-026](T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md) §4, where declaring an existing file as a deliverable dropped six pointers out of validation while `check` still printed `0 broken`. Two defects, not one: the exemption ignores whether the file exists, and it matches only the repo-relative written form. **The output change is the part that matters** — the first defect cost coverage, but printing `0 broken` over a silently narrowed set is what stopped anyone noticing (**L-05**). |

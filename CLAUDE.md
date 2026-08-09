@@ -72,7 +72,9 @@ enforce it at build time rather than hoping.
 
 ## Working method
 
-1. **No work without a task file** in `tasks/`, from `tasks/_templates/task-template.md`.
+1. **No work without a task file** in `tasks/`, from `tasks/_task-template.md`. Tasks are tracked
+   with the **taskmd** plugin: `taskmd check` validates the record, `taskmd index` regenerates it,
+   and `python tools/docs/refcheck.py` validates every reference in every document.
 2. Lifecycle: `specify → plan → implement → review`.
 3. A task is `done` only when its deliverables exist, its log is current, and any deck it
    produced has been **opened and looked at** — offline.

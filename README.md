@@ -118,19 +118,27 @@ python tools/deck/ruleset.py --gates
   117 = hard, so every hard rule has an owner
 ```
 
-**The task record, its links and its section references.**
+**Every reference in every document.**
 
 ```bash
-python tools/tasks/task.py check
+python tools/docs/refcheck.py
 ```
 
 ```
-OK - 61 tasks, vocabulary valid, task references resolve, 1005 document pointer(s) checked, 0 broken
-     497 section reference(s) resolved, 0 dead; 1149 not bound to a document and skipped.
+OK - 1016 document pointer(s) checked, 0 broken
+     492 section reference(s) resolved, 0 dead; 1176 not bound to a document and skipped.
 ```
 
-Every markdown link, every repo-relative path written in prose, and every `<named document> §n`
-reference in the repository, **including the ones on this page**.
+Every markdown link, every repo-relative path written in prose or printed by a tool, and every
+`<named document> §n` reference in the repository, **including the ones on this page**. The third
+one matters because a section number is a pointer whose target is printed in the document it points
+at, so renumbering a heading silently falsifies every citation of it.
+
+The task record is checked separately, by the `taskmd` plugin this project tracks its work with:
+
+```bash
+taskmd check
+```
 
 **The plugin package.**
 

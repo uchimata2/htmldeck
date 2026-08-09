@@ -127,8 +127,9 @@ So after any pass over the README, prove it rather than trusting the diff:
 ```bash
 python tools/deck/ruleset.py --counts
 python tools/deck/ruleset.py --gates
-python tools/tasks/task.py check
+python tools/docs/refcheck.py
 python tools/plugin/check_scaffold.py
+taskmd check
 ```
 
 Every fenced block in the README is the output of one of those, or of `tools/deck/check.py`. Diff each

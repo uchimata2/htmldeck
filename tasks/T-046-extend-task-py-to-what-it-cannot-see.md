@@ -12,7 +12,7 @@ owner: the project owner
 created: 2026-08-09
 updated: 2026-08-09
 deliverables:
-  - tools/tasks/task.py
+  - tools/docs/refcheck.py
   - tasks/TASK-WORKFLOW.md
   - docs/EVALUATION.md
 ---
@@ -78,7 +78,7 @@ the stricter pass having run one fewer test than it claims.
   pointers is the correct state to hand over.
 
 **Inputs**
-- [`tools/tasks/task.py`](../tools/tasks/task.py) — `check`, `deliverables`, `WORKING`
+- `tools/tasks/task.py` — `check`, `deliverables`, `WORKING`
 - [`tasks/TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6 — *What `check` enforces*, which this extends
 - [`docs/LESSONS.md`](../docs/LESSONS.md) — **L-05**, **L-09**, **L-39**
 - [T-042](T-042-audit-the-whole-repository-against-itself.md) §2, F-5, F-7 and F-18
@@ -156,7 +156,7 @@ the stricter pass having run one fewer test than it claims.
   adjacency — the negative case is the heuristic this task rejected, kept as a regression. — 2026-08-09
 
 **Outputs produced**
-- [`tools/tasks/task.py`](../tools/tasks/task.py) — the section resolver, `doc_aliases`,
+- `tools/tasks/task.py` — the section resolver, `doc_aliases`,
   `section_index`, `strip_code`, the split `deliverables` report, the `--closing` fix, the
   `.gitignore` fix in the link scan, and `self_test()`
 - [`tasks/TASK-WORKFLOW.md`](TASK-WORKFLOW.md) — §6.1 and §6.2, plus three lines in *What `check`
@@ -193,6 +193,7 @@ after    713 document pointer(s) checked, 0 broken         426 resolved, 0 dead;
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | (no change) | **Declared output relocated, and one part of it did not survive.** `tools/tasks/task.py` was retired by [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md). The section resolver, `doc_aliases` and the adjacency rule are in `tools/docs/refcheck.py` verbatim, so the deliverable points there. **The `--closing` leftover-file check did not move** — it was task-side and taskmd has no equivalent, so that third of this task's output is gone rather than relocated, which is worth knowing before anyone cites this record as evidence the check still runs. |
 | 2026-08-09 | → done | **The binding rule was measured before it was written, and the first one was wrong.** *The nearest document named before the mark* is the obvious reading of "`<named doc> §n`", and against the whole corpus it reported **202 dead references** of which a large share were its own fault — binding `R4-prior-art.md` to a `§2.1` that meant the citing document's own section. Requiring the name to be **adjacent** to the mark took it to 28. **Then the rule that mattered most:** a `§` inside a code span or fence is literal text, which took 28 to **5** — and all five were genuine live miscitations. That rule is not noise suppression; without it a repository cannot record that a pointer is dead, and this one had to write `` `DESIGN-SYSTEM.md §11` `` a dozen times to say so. **A deviation, and it was the alternative to a permanently red gate.** §1 puts fixing the dead references out of scope and assigns them to [T-045](T-045-sweep-the-stale-claims-across-the-live-documents.md), which had already closed without them — so leaving them meant shipping a gate that is always red, and a gate nobody can act on is one nobody reads. Four live miscitations were corrected and the phantom-family mentions became code spans. **`task.py` had no `self_test()` at all**, which is the common root of all three findings: a section resolver that did not exist, a deliverables column that was structurally zero, and a `--closing` test that no-opped in every fresh clone are three reports that could not fail, in a tool with nothing asserting that any of them could. Each new check is now demonstrated failing on a seeded break, and the negative cases are kept as regressions — including the binding heuristic this task rejected. |
 | 2026-08-09 | → planned | §1 accepted with both open questions already answered in it, so `specify` was accept-not-compose. Ten steps, and two orderings were deliberate: the rules go into `TASK-WORKFLOW.md` **before** the tool, because criterion 7 asks for it and because a tool that defines its own rule cannot disagree with the spec; and the resolver was prototyped and measured against the corpus outside the repository before being wired in, which is what caught the binding rule being wrong. |
 | 2026-08-09 | → proposed | Raised by [T-042](T-042-audit-the-whole-repository-against-itself.md), findings F-5, F-7 and F-18. Three gaps in one file, all of them **L-05**: a pointer check that validates 614 references and cannot see 1141 more, a deliverables report whose outstanding column is structurally always zero, and a `--closing` test that is a no-op in every fresh clone. **F-5 is L-39 unswept** — T-037 chased `§11` and the `§9.1`–`§9.5` family survived, two of them in `BRIEF.md`'s live prose. The resolution rule is settled in §1 against the four cases that decide it, so `plan` starts from a testable definition rather than from the ambiguity. |
