@@ -15,7 +15,7 @@ exist yet*.
 
 | | |
 | :--- | :--- |
-| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset** — 160 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
+| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset** — 161 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
 | [`docs/DESIGN-RATIONALE.md`](docs/DESIGN-RATIONALE.md) | Why each rule is what it is: what was measured, what was inherited, what was overruled, and the conflicts resolved by name |
 | [`docs/EVALUATION.md`](docs/EVALUATION.md) | How a deck is scored, and **when it is good enough to stop** |
 | [`tools/deck/check.py`](tools/deck/check.py) | The build check — a pass/fail per rule ID, **and an account of every rule it did not check, with a reason each** |
@@ -39,19 +39,19 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 ```
-  owned by a gate      111
-  checked               79
+  owned by a gate      112
+  checked               80
   failing                0
   excused in the rules   4   DS-042 DS-072 DS-210 DS-211
   excused here          28
   SILENT                 0
   ------------------------
-  buckets sum to       111   = owned, so the account is a partition
+  buckets sum to       112   = owned, so the account is a partition
 
 0 failure(s): none
 ```
 
-**The account is the point.** A gate that checks 79 of 111 rules and says nothing about the other 32
+**The account is the point.** A gate that checks 80 of 112 rules and says nothing about the other 32
 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each run **checked**,
 **excused in writing** — with what would close the excusal — or **failing**, and a rule in none of
 those three states *fails the run*. So a rule added to the ruleset with nothing behind it is a red
@@ -82,12 +82,12 @@ python tools/deck/ruleset.py --gates
 ```
 
 ```
-  hard rules                        114
-  gated mechanically (auto|render)   85   tools/deck/check.py
+  hard rules                        115
+  gated mechanically (auto|render)   86   tools/deck/check.py
   gated by judgement (judge)         24   EVALUATION.md 1.1, the hard-judge checklist
   bind the checker, not the deck      5   DS-107 DS-190 DS-191 DS-220 DS-221
   ------------------------
-  114 = hard, so every hard rule has an owner
+  115 = hard, so every hard rule has an owner
 ```
 
 **The task record, its links and its section references.**
@@ -97,8 +97,8 @@ python tools/tasks/task.py check
 ```
 
 ```
-OK - 52 tasks, vocabulary valid, task references resolve, 776 document pointer(s) checked, 0 broken
-     430 section reference(s) resolved, 0 dead; 990 not bound to a document and skipped.
+OK - 56 tasks, vocabulary valid, task references resolve, 857 document pointer(s) checked, 0 broken
+     459 section reference(s) resolved, 0 dead; 1021 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose, and every `<named document> §n`

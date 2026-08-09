@@ -38,6 +38,7 @@ import contract                                                     # noqa: E402
 import content                                                      # noqa: E402
 import printpages                                                   # noqa: E402
 import theme                                                        # noqa: E402
+import component                                                    # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -164,6 +165,10 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     # the roles, this holds the whole token set to `docs/THEME-CONTRACT.md`; DS-010 catches a
     # colour literal, this catches every other value a theme cannot reach.
     rows += theme.verdicts(html)
+    # The markup contract, added by T-016. `theme` holds the deck to the values a second theme
+    # would change; this holds it to the elements a generator has to emit - the other half of the
+    # same claim, and the one T-002 cannot start without.
+    rows += component.verdicts(html)
 
     data, err = audit.render_data(deck)
     if not data:
@@ -258,6 +263,7 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
     contrast.self_test()
     contract.self_test()
     content.self_test()
+    component.self_test()
     audit.self_test()
     self_test()
 

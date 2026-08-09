@@ -233,6 +233,18 @@ is data, not prose** — `theme.py check` reads these four rows and prints how m
 covers, so an exemption that silently starts covering half the deck shows up as a number that moved
 (**L-36**).
 
+**Easing is on the same test and needs no table, because it has no exceptions.** A component may
+write an easing **keyword** and may never write an easing **curve**. The keywords are the rules'
+own words: DS-141 fixes entry and transition at *max 500 ms, ease-in-out*, so a component writing
+`ease-in-out` is quoting the rule rather than choosing a feel, and `linear` is the only easing that
+leaves a looping dash and a zero-duration step undistorted — which is the whole of what `.current`
+and the slide's `visibility` transition need it for. **A `cubic-bezier()` or a `steps()` is a
+choice about how a motion feels.** It belongs to the theme, this deck has exactly one — `--rise-ease`
+— and one written outside the region is a component that a theme cannot reach. *Added 2026-08-09 by
+[T-016](../tasks/T-016-the-interaction-and-motion-layer.md): the scan below has covered lengths and
+durations since T-007 and easing was never in its subject, so `no component hard-codes a duration or
+an easing` was half true and read as settled.*
+
 **The line the middle rows draw is the one that matters: composition versus look, inside two named
 scopes and nowhere else.** A slide may compose its own geometry — a ledger's three tracks, a note's
 measure, a tick's height — because those exist to fit *this deck's content*, and a generated deck

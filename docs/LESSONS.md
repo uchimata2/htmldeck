@@ -827,7 +827,7 @@ across an audit and four reviews ([T-042](../tasks/T-042-audit-the-whole-reposit
 F-3).
 
 **The mechanism is the reassurance, not the omission.** Before the device, *"is every rule covered?"*
-was an open question a reader might ask. After it, the run answers *"111 owned, 0 silent"* — true,
+was an open question a reader might ask. After it, the run answers *"112 owned, 0 silent"* — true,
 complete about its own jurisdiction, and read as an answer about the ruleset. The green run is what
 stops the question being asked again. **A partial guarantee is more dangerous than none**, because
 none leaves the doubt intact.
@@ -927,6 +927,39 @@ carefully the number was measured, the more convincing the wrong one is.
 3. **Build the second artefact earlier than feels necessary.** It is the only instrument that finds
    this class, and it found one here that four passes of reading did not — cheaply, in an afternoon,
    because everything else was already gated.
+
+### L-46 — A contract is kept true by the check that runs from the artefact back to it
+
+**Two directions, and only one of them stops the document decaying.** A contract check normally
+asks *does the artefact satisfy the document* — every part the contract names is where it says.
+That direction catches a broken deck and cannot catch a stale contract, because a part nobody
+wrote a row for is a part the check never looks for. Six months on, the document describes the
+artefact as it was the day it was written and every check built on it still passes.
+
+The other direction asks *does the document cover the artefact*, and the trick is to run it from
+whatever creates the need for a row:
+
+| Contract | Runs from | The row it forces |
+| :--- | :--- | :--- |
+| [`THEME-CONTRACT.md`](THEME-CONTRACT.md) | every `--token` the deck declares | *declared and the contract does not name it* |
+| [`COMPONENT-CONTRACT.md`](COMPONENT-CONTRACT.md) | every class the shared style block styles | *styled and the contract does not name it* |
+
+Both work because the thing they scan is **what a person edits when they add one**. A component is
+added by writing a CSS rule, which is exactly the moment nobody remembers a contract document
+exists — so the scan fires on the same keystroke that created the gap.
+
+**The corollary, and it is the sharper half: *declared and unused* has to be checked backwards or
+it is not a claim at all.** Five classes in the reference deck are styled and used nowhere. Marking
+them *unused* in prose asserts nothing — nothing fails if it stops being true. Marking them
+`vocabulary` and **failing the run when one acquires an instance** makes it a claim, and the count
+of them a number a reader can watch. This deck already paid for the other way: a
+`.ribbon button::before` rule survived the component it styled by a whole task, because **a rule
+that matches nothing looks exactly like a rule that passed.**
+
+**How to apply.** For any document that enumerates parts of an artefact — a contract, an inventory,
+a registry, a rule index — write the check that walks the artefact and reports what has no entry,
+before writing the one that walks the entries. And where an entry claims something is absent, make
+its presence the failure.
 
 ---
 

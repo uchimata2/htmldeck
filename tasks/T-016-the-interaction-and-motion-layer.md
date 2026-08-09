@@ -16,6 +16,7 @@ deliverables:
   - examples/reference-deck.html
   - tools/deck/render.py
   - tools/deck/audit.py
+  - tools/deck/component.py
 ---
 
 # T-016 — The interaction and motion layer
@@ -81,14 +82,20 @@ the 2026-08-07 log row named and one the measurement adds: **the contract**, **t
   it does with an absent subject), **L-45**, **L-26**.
 
 **Acceptance criteria**
-- [ ] Component set defined with a stable markup contract the generator can emit
+- [x] Component set defined with a stable markup contract the generator can emit — **met
+      2026-08-09**: [`docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md), 59 authored
+      parts over 8 sections, parsed by `tools/deck/component.py` and gated as **DS-229**
 - [x] ~~Motion vocabulary defined as **tokens** — durations, easings, distances, depth — so it swaps
       with the theme (T-007) rather than being hard-coded per component~~ **met 2026-08-09 by
       [T-007](T-007-define-the-parametric-theme-layer.md)**: 14 motion tokens, banded, and
       `themes/lattice.css` moves every one of them. Kept struck through rather than deleted,
       because a criterion that disappears is one nobody can check was satisfied
-- [ ] **Every component reads its motion from those tokens** — the half T-007 could not deliver,
-      since it owns the contract and this task owns the components that must honour it
+- [x] **Every component reads its motion from those tokens** — the half T-007 could not deliver,
+      since it owns the contract and this task owns the components that must honour it. **Met
+      2026-08-09** in two halves that needed different instruments: eleven rules named in
+      `COMPONENT-CONTRACT.md` §3.8 must *read* the tokens the contract lists, and `theme.py`'s
+      literal scan grew easing so that *no curve is written outside the region*. The second half
+      was the gap — the scan had covered lengths and durations since T-007 and never easing
 - [ ] Every technique used is verified working from `file://` in the target browser, glitch-free
 - [ ] Frame rate held on a real 12-slide deck with the heaviest slide on screen; number stated,
       and the machine it was measured on stated with it
@@ -172,9 +179,50 @@ and the order is that, because the 3D class is the only step that can change the
 
 ## 3. Implement
 
-**Step 1 of 8 is done. Steps 2–8 are not started.**
+**Steps 1–3 of 8 are done. Steps 4–8 are not started.**
 
 **Decisions & assumptions**
+
+- **The contract covers every shared component, not only the two the plan named as its source** —
+  2026-08-09. Step 2 says *extract from the ten disclosure sets and the ruler*; those are the
+  exemplars the measurement in §1 counted, and a generator emitting only those two cannot emit a
+  deck. The acceptance criterion is *the generator can emit*, so the subject is every component,
+  with disclosure and the ruler as the worked cases because they are the ones carrying ARIA and
+  state.
+- **The boundary is the style block, not a list of components** — 2026-08-09. A deck has three
+  regions and they already have three owners: `<style id="theme">` holds what a second theme
+  changes, `#slides` holds one deck's composition, and the unnamed block holds everything more
+  than one slide can use. So **a component is a class the shared block styles**, and the
+  completeness check runs that sentence backwards. A hand-kept list of components drifts the first
+  time someone adds one; this cannot, because adding a component *is* adding a rule to the block
+  the check scans (**L-46**).
+- **`vocabulary` is checked backwards, and that is what makes it a claim.** Five classes are
+  styled and used nowhere — the figure's three role classes, `.t-ink` and `.mono`. Deleting them
+  was considered and rejected: the role classes are DS-026's vocabulary spent in the ledger rather
+  than in a figure, which is a fact about this deck and not about the class. Marking them *unused*
+  in prose asserts nothing, so the row is falsifiable instead: **an instance appearing fails the
+  run** and the row has to be reclassified.
+- **DS-229 was added rather than citing DS-136** — 2026-08-09, on DS-228's precedent. DS-136 sits
+  on the hard-judge checklist at `Reach: —`, so a mechanical check citing it would claim a reach
+  the ruleset denies, which is the defect T-038 removed. Reclassifying DS-136 as `auto` was the
+  other option and it moves a genuine judgement out of the evaluator's hands to make a check fit.
+  So the general rule stays judgement and **the one instance a check can decide is written down**,
+  exactly as DS-228 is written under DS-137. Owned rules 111 → 112, checked 79 → 80.
+- **The easing half belongs to the theme contract, not this one** — 2026-08-09. *No component
+  hard-codes a duration or an easing* has two homes and only one was built: `theme.py`'s literal
+  scan has covered lengths and durations since T-007, and an easing is neither, so
+  **`cubic-bezier` was unreachable by every check in the repository.** Extending that scan keeps
+  one home for *what may not be written outside the region* (**L-08**). The line it draws is a
+  rule's number against a look: **a keyword is quoting DS-141, a curve is choosing a feel.** The
+  deck writes eight easing keywords and one curve, and the curve is `--rise-ease`, in the region.
+- **The rows live in a module of their own, not in `audit.py`** — a deviation from step 3's stated
+  output, taken for the reason `theme.py` is not in `audit.py` either: a contract that is *parsed*
+  needs the parser beside it, and `audit.py` holds the checks that read a deck directly. The
+  verdicts still reach the gate through `check.py`'s row list, which is what the plan meant.
+- **Turn, Scale and Pulse have no easing token and this is left as a question, not taken.** DS-140
+  records one easing — Rise's — and T-007 banded the durations without adding easings. Whether the
+  other three motions want their own dial is that contract's amendment to make; nothing here
+  invents one (**L-38**).
 
 - **The reduced-motion pass is a second render, not a second reading of the file** — 2026-08-09.
   Chrome takes `--force-prefers-reduced-motion`, so the deck is rendered again with the preference
@@ -195,22 +243,39 @@ and the order is that, because the 3D class is the only step that can change the
 **Outputs produced**
 - [`tools/deck/audit.py`](../tools/deck/audit.py) — `REDUCED_PROBE`, `reduced_motion_data`,
   `reduced_verdicts`.
-- [`tools/deck/check.py`](../tools/deck/check.py) — the second render wired into `gather`, and
-  DS-143's `DEFERRED` entry closed on the condition it named for itself.
-- [`tools/deck/static_variants.py`](../tools/deck/static_variants.py) — `REDUCED_VARIANTS`, two
-  fixtures, both caught.
+- [`tools/deck/check.py`](../tools/deck/check.py) — the second render wired into `gather`,
+  DS-143's `DEFERRED` entry closed on the condition it named for itself, and the component stage
+  added beside the theme one.
+- [`docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) — 59 authored parts, 5
+  `vocabulary`, 3 `script`, 1 `print`, over 8 sections; 11 motion rules; a state table; and the
+  easing line, cross-referenced to `THEME-CONTRACT.md` §5 where it is enforced.
+- `component.py`, under `tools/deck/` — parses that document, does not restate it.
+- [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) §5.1 — **DS-229**, and
+  [`docs/DESIGN-RATIONALE.md`](../docs/DESIGN-RATIONALE.md) §5.9 for why it exists rather than a
+  row under DS-136.
+- [`docs/THEME-CONTRACT.md`](../docs/THEME-CONTRACT.md) §5 and
+  [`tools/deck/theme.py`](../tools/deck/theme.py) — `curves()`, and DS-010's row now scanning for
+  an easing curve outside the region.
+- [`tools/deck/static_variants.py`](../tools/deck/static_variants.py) — `REDUCED_VARIANTS`, plus
+  five new static fixtures, one per new claim.
+- [`docs/LESSONS.md`](../docs/LESSONS.md) — **L-46**.
 
 **Where it stands**
 
 ```
-python tools/deck/check.py examples/reference-deck.html    79 checked, 28 excused, 0 SILENT, 0 failing
-                                                           DS-143 still animating: 0
-                                                           DS-143 risen elements hidden: 0 of 5
-                                                           DS-143 the flow stays dashed: 7px, 6px
-python tools/deck/static_variants.py                       15 static · 7 rendered · 2 reduced-motion, all caught
+python tools/deck/check.py examples/reference-deck.html    80 checked, 28 excused, 0 SILENT, 0 failing
+                                                           DS-229 authored parts: 59 required, 0 problems
+                                                           DS-229 classes styled: 69, 0 uncontracted
+                                                           DS-229 motion rules: 11, 0 gaps
+                                                           DS-010 literals 38 exempt, curves 0
+python tools/deck/static_variants.py                       20 static · 7 rendered · 2 reduced-motion, all caught
+python tools/deck/component.py check <themed build>        5 of 5, so the contract survives a theme swap
 ```
 
-The gate was 78 checked / 29 excused before this step.
+The gate was 78 checked / 29 excused before step 1, and 79 / 28 of 111 before steps 2 and 3.
+**The reference deck needed no edit to pass its own markup contract**, which is what *extract, do
+not author* is supposed to produce and is not evidence that the contract is weak — the five
+fixtures are.
 
 ## 4. Review
 
@@ -225,6 +290,7 @@ The gate was 78 checked / 29 excused before this step.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | (no change) | **Steps 2 and 3 of 8 done: the markup is a contract, and DS-229 is the rule that holds a deck to it.** [`docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) names 59 authored parts, 11 motion rules and the state every one of them changes; `component.py` parses it rather than restating it, the way `theme.py` reads the token contract. The gate reads **80 checked of 112 owned**, up from 79 of 111. **Two decisions are the substance.** *DS-229 was added rather than citing DS-136*: DS-136 is on the hard-judge checklist at `Reach: —`, so a mechanical check citing it claims a reach the ruleset denies, and reclassifying it would move a real judgement out of the evaluator's hands — so the general rule stays judgement and the one instance a check can decide is written down, on DS-228's precedent under DS-137. *The completeness half runs from the CSS back to the document* — every class the shared style block styles must have a row — because **a component is added by writing a rule, which is exactly when nobody remembers the contract exists** (**L-46**). **What the extraction found that reading had not:** *no component hard-codes a duration or an easing* was half a claim. `theme.py`'s scan has covered lengths and durations since T-007 and an easing is neither, so a `cubic-bezier` written in a component was unreachable by every check in the repository. §5 of the theme contract now draws the line where the rules already draw it — **a keyword quotes DS-141, a curve chooses a feel** — and the deck's eight keywords pass while its one curve is `--rise-ease`, inside the region. **Five classes are styled and used nowhere**, and rather than delete them they are marked `vocabulary` and checked backwards: an instance appearing fails the run. The reference deck needed no edit to pass, and the five new fixtures are what makes that a result rather than a hope. |
 | 2026-08-09 | → in_progress | **Step 1 of 8 done: the reduced-motion pass, and DS-143 is now checked rather than excused.** The gate reads **79 checked / 28 excused**, up from 78 / 29, and the excusal closed on the condition it had written for itself. Three rows from a second render with `--force-prefers-reduced-motion`: nothing still animating, no risen element still hidden, and the flow's dasharray surviving at 7px 6px. **The variant is the part worth carrying**: the deck disables motion by two redundant paths — the `@media` block at parse time and `:root[data-motion="off"]` set from `matchMedia` on load — and a seed that broke only the first changed nothing the probe could see. **A variant that breaks one of two redundant paths is evidence about the other one**, not about the check. Both are seeded now and the row fails at 5 of 5 hidden. |
 | 2026-08-09 | → planned | **Specified and replanned against a measurement, and the measurement halves the task.** Four of the five original steps are already standing in the reference deck — **4 of 4 named motions implemented, 63 risen elements, 10 disclosure sets, 15 buttons, `prefers-reduced-motion` honoured in one block** — and step 3, the motion tokens, closed with [T-007](T-007-define-the-parametric-theme-layer.md): 14 of them, banded, and `themes/lattice.css` moves every one. That criterion is struck through as met rather than deleted, and a new one takes the half T-007 could not deliver — **every component reads its motion from the contract**, which is now checkable and unchecked. What the measurement adds to the known gaps: **frame rate has never been measured on any deck on any machine**, and `prefers-reduced-motion` is *honoured* but has **never been rendered under**, which is why DS-143 sits excused in `check.py` — two different claims that read the same in a task file. Eight steps now, ordered so the cheap excusal-closing render comes first and the 3D class comes last, because **steps 6 and 7 are one decision**: T-007 banded DS-140's durations and deliberately left it a closed vocabulary of four, so the wobble-is-a-fifth-motion collision is untouched and still owed. |
 | 2026-08-07 | (no change) | **The 3D question is answered and §1 now has none open: 3D is wanted for functional visualisation, not only for emphasis.** A wobbling 3D diagram whose motion resolves depth, a mesh shown as itself, decorative emphasis kept. One acceptance criterion added for it. **Three consequences this task inherits, none of them optional.** (1) **A ruleset change to raise**: DS-140 is a closed vocabulary of exactly four motions, `hard` and `auto`-checked, and a continuous wobble is a fifth — it needs a rule or an exemption clause, on [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md)'s precedent that a rule a shipped deck contradicts is a ruleset defect rather than a deck defect. (2) **The fallback is a chosen projection, not a frozen frame** — a paused wobble is the ambiguous static rendering the motion existed to fix, and it is what `prefers-reduced-motion`, the reading view and print all get ([R7](../docs/research/R7-printable-mode.md) §5.2 already records that print loses 3D). (3) **A second never-quiescent animation now exists**, so **DS-221**'s pin-motion-off-before-capture applies to it too, and [T-005](T-005-build-check-the-gate-the-deck-must-pass.md)'s render gate has one more thing to hold still before it measures. Also reaches [T-007](T-007-define-the-parametric-theme-layer.md), whose tokens cannot reach inside a WebGL scene unless the scene is plumbed to read them, and [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md), which now has a real capability to preflight and a degraded state to design. |

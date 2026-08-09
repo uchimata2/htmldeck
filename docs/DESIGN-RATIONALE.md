@@ -521,7 +521,7 @@ looked at because it assumed nobody would try.
 
 **Both rules gained coverage by being corrected.** They were the last two of T-005's 31 written-off
 rules that were written off for a reason other than *this needs a reading of the content*, and
-closing them took the gate to 78 of 111.
+closing them took the gate to 78 of the 111 rules owned at the time.
 
 **DS-036 is the third, found the same way one layer up** —
 [T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md), 2026-08-09, from the
@@ -590,6 +590,44 @@ to show, and DS-208, whose *no cultural metaphor* clause catches a ribbon-cuttin
 is reachable by any check in this repository, and the deck had passed every gate in it since
 [T-040](../tasks/T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md).
 [T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md) settles both.
+
+---
+
+## 5.9 DS-229 — the one thing a check can decide about a component
+
+**Written the same way DS-228 was, and for the same reason.** DS-136 requires interaction patterns to
+be *built once as components and reused, so the UX is learnable* — a judgement, and it stays one.
+Whether two similar things ought to have been the same component is a design decision, and
+*learnable* is a property of a person, not of a DOM. But there is one question inside it a program
+can answer, and it is the one a generator gets wrong: **are the components a deck names the
+components it emits?** DS-229 is that question and nothing wider, exactly as DS-228 is the single
+instance of DS-137 a check can decide.
+
+**Why it needed a rule at all rather than a row under DS-136.** T-038's discriminator: *the thing
+measured is the thing cited, or the check does not ship and the rule is excused in writing instead.*
+DS-136 sits on the hard-judge checklist with `Reach: —`, so the ruleset already says no mechanical
+gate reaches it; a contract check citing DS-136 would be claiming a reach the ruleset denies, which
+is the defect T-038 spent a task removing. The alternative — reclassifying DS-136 as `auto` — would
+have moved a genuine judgement out of the evaluator's hands to make a check fit.
+
+**The completeness half is the half that keeps it true, and it is not symmetrical with the rest.**
+The other clauses ask whether the markup matches the document. That one asks whether the document
+matches the CSS: every class the shared style block styles has a row. It exists because **a component
+is added by writing a rule**, and that is precisely the moment nobody remembers a contract document
+exists. Without it the contract decays into a description of the deck as it was on the day it was
+written, and every check built on it keeps passing.
+
+**What `vocabulary` is for.** Five rows are styled, emittable and unused by this deck — the figure's
+three role classes, `.t-ink` and `.mono`. *Declared and unused* is otherwise an unfalsifiable label,
+so the check reads it backwards: a `vocabulary` row with an instance in the deck is a **failure**,
+and the row has to be reclassified. That makes the count of them a number a reader can watch, which
+is what the deck's own stale `.ribbon button::before` selector cost T-035 — **a rule that matches
+nothing looks exactly like a rule that passed.**
+
+**What this cost the coverage account.** One rule with `Reach: yes` and `Check: auto`, so the number
+[T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md) must account for moved from **111
+to 112** on 2026-08-09, and the checked count from 79 to 80 — derived from the ruleset, and
+re-derivable rather than to be trusted from this line.
 
 ---
 

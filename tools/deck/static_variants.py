@@ -29,6 +29,7 @@ import render                                                        # noqa: E40
 import audit                                                         # noqa: E402
 import contrast                                                      # noqa: E402
 import theme                                                         # noqa: E402
+import component                                                     # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -94,6 +95,42 @@ STATIC_VARIANTS = [
         (".disc-btn:hover{border-color:var(--accent);color:var(--ink)}",
          ".disc-btn:hover{border-color:var(--accent);color:var(--ink)}\n"
          ".disc:hover .disc-panel{display:block}")]),
+    # ---- added by T-016, which made the markup a contract
+    ("control-with-no-aria-controls", "DS-229", [
+        # The defect a generator produces and a person does not: the tenth disclosure looks
+        # identical to the other nine and its panel is wired to nothing. Nothing in the render
+        # gate sees it either - the panel still opens, because the script pairs them by DOM
+        # position, and only a reader on a screen reader loses the association.
+        ('<button class="disc-btn" aria-expanded="false" aria-controls="p11">',
+         '<button class="disc-btn" aria-expanded="false">')]),
+    ("panel-outside-its-disclosure", "DS-229", [
+        # The place half. The panel is still in the slide and still styled, so it renders where it
+        # always did; what it has stopped being is part of a component.
+        ('<div class="disc" data-disc>\n    <button class="disc-btn" aria-expanded="false" '
+         'aria-controls="p10">',
+         '<div class="disc" data-disc></div>\n  <div>\n    <button class="disc-btn" '
+         'aria-expanded="false" aria-controls="p10">')]),
+    ("component-nobody-contracted", "DS-229", [
+        # A shared component added the way components are actually added - by writing a rule in
+        # the shared block. The contract cannot know about it, which is the whole point: the row
+        # is what makes it emittable, and the gate is what makes the row get written.
+        (".icon{width:var(--icon)", ".callout{color:var(--accent)}\n.icon{width:var(--icon)")]),
+    ("motion-that-stopped-reading-its-token", "DS-229", [
+        # **The half `theme.py`'s literal scan cannot state, and the seed has to avoid writing a
+        # literal or it proves the wrong thing.** Turn reads the slide transition's duration
+        # instead of its own: every token is still declared, still inside its band, and there is
+        # no literal anywhere for the scan to find. What has gone is the tokenisation itself -
+        # a theme moving Turn now moves everything except the disclosure mark.
+        (".disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);\n"
+         "  transition:transform var(--turn-dur) ease-in-out}",
+         ".disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);\n"
+         "  transition:transform var(--slide-dur) ease-in-out}")]),
+    ("easing-curve-in-a-component", "DS-010", [
+        # §5's line, and the one the scan could not see until T-016: a curve is a choice about how
+        # a motion FEELS, so a component writing one has taken a decision the theme owns. No
+        # length changes, so the literal scan stays clean and only the curve scan fires.
+        ("transition:transform var(--scale-dur) ease-in-out;",
+         "transition:transform var(--scale-dur) cubic-bezier(.34,1.56,.64,1);")]),
 ]
 
 # One render each. These are the rules where T-005 added the MEASUREMENT and not just a threshold,
@@ -180,7 +217,7 @@ def build(name, edits):
 def static_failures(path):
     html = open(path, "r", encoding="utf-8").read()
     rows = ([(r, w, bool(fn(html))) for r, w, fn in audit.STATIC]
-            + contrast.verdicts(html) + theme.verdicts(html))
+            + contrast.verdicts(html) + theme.verdicts(html) + component.verdicts(html))
     return {r for r, _w, ok in rows if not ok}, rows
 
 

@@ -332,6 +332,34 @@ LITERAL = re.compile(
 )
 
 
+# An easing CURVE outside the region, which §5 admits no exception to. The keywords are the rules'
+# own words - DS-141 says *ease-in-out*, and `linear` is the only easing a looping dash and a
+# zero-duration step survive - so they are not scanned; a curve is a choice about how a motion
+# feels and there is exactly one in this deck, `--rise-ease`, inside the region.
+CURVE = re.compile(r"\b(cubic-bezier|steps)\s*\(")
+
+
+def curves(html):
+    """`[(selector, declaration)]` for every easing curve written outside the region.
+
+    Restricted to `transition` and `animation` declarations on purpose: `cubic-bezier` is also the
+    argument form of `offset-rotate` and of an `@keyframes` timing function, and a scan of every
+    declaration would report the same defect from two directions."""
+    found = []
+    for scope, css_text in outside_region(html):
+        for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css_text):
+            sel = (scope + " " + " ".join(sel.split())).strip()
+            for decl in body.split(";"):
+                d = " ".join(decl.split())
+                if ":" not in d or d.startswith("--"):
+                    continue
+                if not d.split(":")[0].strip().startswith(("transition", "animation")):
+                    continue
+                if CURVE.search(d):
+                    found.append((sel, d))
+    return found
+
+
 def literals(html):
     """`[(selector, declaration, magnitude, exempt-reason or None)]` outside the region.
 
@@ -417,13 +445,15 @@ def verdicts(html):
         rows.append((rule, "the band it states holds in the theme: %s%s"
                      % (" ".join(held), "" if not broke else " - " + "; ".join(broke[:2])),
                      not broke))
+    curved = curves(html) if region else []
     rows.append(
-        ("DS-010", "no theme-varying length outside the region: %d literal(s) scanned, "
-         "%d exempt, %d offending%s"
-         % (len(lits), len(lits) - len(offending), len(offending),
-            "" if not offending else " - " + "; ".join(
-                "%s {%s}" % (s, d) for s, d, _m, _w in offending[:3])),
-         not offending))
+        ("DS-010", "no theme-varying length or easing curve outside the region: %d literal(s) "
+         "scanned, %d exempt, %d offending; %d curve(s)%s"
+         % (len(lits), len(lits) - len(offending), len(offending), len(curved),
+            "" if not (offending or curved) else " - " + "; ".join(
+                ["%s {%s}" % (s, d) for s, d, _m, _w in offending[:2]]
+                + ["%s {%s}" % (s, d) for s, d in curved[:2]])),
+         not offending and not curved))
     return rows
 
 
@@ -486,6 +516,16 @@ def self_test():
     got = {mag: why for _s, _d, mag, why in literals(fake)}
     if got.get(1920.0) is None or got.get(999.0) is not None:
         sys.exit("SELF-TEST FAILED: the exemption list does not separate 1920 from 999 - %r" % got)
+
+    # Easing: the keyword is the rule's word and the curve is the theme's choice, so the scan has
+    # to tell them apart in both directions or §5's line is one nobody is held to.
+    keyworded = '<style id="theme">:root{--du:1px}</style><style>.a{transition:all 1ms ease-in-out}</style>'
+    if curves(keyworded):
+        sys.exit("SELF-TEST FAILED: an easing keyword was reported as a curve")
+    if not curves(keyworded.replace("ease-in-out", "cubic-bezier(.4,0,.2,1)")):
+        sys.exit("SELF-TEST FAILED: a cubic-bezier outside the region was not reported")
+    if curves('<style id="theme">:root{--e:cubic-bezier(.22,1,.36,1)}</style>'):
+        sys.exit("SELF-TEST FAILED: the theme's own curve was scanned as a component's")
 
     # **Composition versus look is the whole of the two scoped rows**, and getting it backwards
     # exempts the type scale while policing a grid track - the opposite of what the contract says.

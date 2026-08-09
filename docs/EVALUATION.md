@@ -84,7 +84,7 @@ is a reason; *"hard to judge"* is not. A `hard` rule that genuinely cannot be ju
 finding to raise** — the label is wrong — and never a row quietly skipped.
 
 > **Every count in this document is derived from `DESIGN-SYSTEM.md` and goes stale when a rule is
-> added.** These are as of **2026-08-09: 161 rules**, counting DS-000. **Re-derive them, never adjust
+> added.** These are as of **2026-08-09: 162 rules**, counting DS-000. **Re-derive them, never adjust
 > them by hand** — the previous set was wrong by six, having been written before the rules T-027 and
 > T-025 added, and a hand-adjusted count is indistinguishable from a correct one.
 >
@@ -127,7 +127,7 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]
 ```
 
-It decides **79** of the 111 owned rules and **names the other 32 with a reason each**, derived from
+It decides **80** of the 112 owned rules and **names the other 32 with a reason each**, derived from
 the ruleset when it runs rather than from any list. **A rule in neither state fails the run**, so a
 rule added here with nothing behind it is a red run rather than a discovery two months later — which
 is what happened twice (**L-36**). `--sources` adds the figure ledger and its three reconciliations;
