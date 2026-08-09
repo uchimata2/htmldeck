@@ -2,8 +2,8 @@
 id: T-049
 title: Reconcile the session memory with what the research settled and the owner last said
 type: admin
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: T-042
 blocked_by: []
 related: [T-014, T-017]
@@ -85,28 +85,56 @@ twice on 2026-08-09. The other three rows are ordinary staleness and can wait.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | **First row, before the rest of the run.** Scope the ask-first advice in `research-before-building.md` and `research-may-reshape-the-project.md` to WP1's shaping window, and forward-link `[[decide-detailed-questions-yourself]]` from both | Two entries whose ask-first line names the date it was superseded and what replaced it |
+| 2 | Back-link the two from `decide-detailed-questions-yourself.md`, so the pair resolves from either end | The newest entry names what it supersedes |
+| 3 | Replace `portability-not-minimalism.md`'s "gotcha to design around" with R6's measured boundary — fetch-like versus element-like, `file://` is a secure context, no refused capability costs the deck anything — and retire the T-017-as-pending pointer | An entry that states the measurement instead of the fear |
+| 4 | Strip `research-may-reshape-the-project.md`'s WP1 scheduling advice (lightly-specified WP2/WP3, T-014's re-scoping proposal), keeping the durable half `CLAUDE.md` still holds | An entry with nothing pending in it |
+| 5 | Correct `one-parametric-theme.md`'s tension note: `CLAUDE.md` rule 3 is now *Use whatever renders best* and the parametric-theme rule is rule 4 | An entry that cites the rewritten rules |
+| 6 | Reconcile `MEMORY.md` — one line per file, no orphan either way, and a hook rewritten wherever step 1–5 changed what the entry is for | A current index |
+| 7 | Cold read: open each edited entry alone and ask what working method it leads to | Verdicts in §4 |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **Superseded claims are corrected in place with the supersession visible, not deleted** — the
+  criterion asks for it, and the reason is that a deleted position comes back. Every correction below
+  therefore reads *"X was right until DATE, and Y replaced it because Z"*, not just *"Y"*. — 2026-08-09
+- **`modified:` is updated on every entry this task edits.** F-8's own argument turns on which
+  instruction is newer, so leaving the timestamps stale would preserve the exact ambiguity the task
+  exists to remove. — 2026-08-09
+- **The two ask-first entries keep their research half untouched.** Only the closing ask-the-owner
+  sentence was superseded; `research-before-building`'s *find the existing source first* is current
+  and is the reason the entry exists. — 2026-08-09
 
 **Outputs produced**
-- <machine-local; recorded here rather than as a repository path>
+- Machine-local, in the agent memory directory; recorded here rather than as a repository path, per
+  §1. Six files edited: `research-before-building`, `research-may-reshape-the-project`,
+  `decide-detailed-questions-yourself`, `portability-not-minimalism`, `one-parametric-theme`, and
+  `MEMORY.md`.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| No two memories give contradictory instructions on when to ask the owner | **met** | Both ask-first entries now carry a *superseded* paragraph naming the date, the quote that replaced it, and the entry that holds it; the newest entry names both in return. The three resolve as one instruction from any starting point |
+| `portability-not-minimalism.md` states R6's measured boundary, and names what it retired | **met** | Fetch-like versus element-like, `file://` as a secure context, and *no refused capability costs the deck anything*, against the "gotcha to design around" paragraph it replaced. L-17's caution about the harness is kept, since that one is about the instrument and did not expire |
+| No memory refers to WP1 or T-014 as pending | **met** | `grep -ril 'T-014\|T-017\|WP1' memory/` returns only the two entries that name them as **closed**, in the superseded paragraphs |
+| Every superseded claim is corrected in place with its supersession visible, not deleted | **met** | Five entries, no deletions. Each spent claim is quoted, dated, and given the reason it changed — which is the part that stops it being re-derived |
+| `MEMORY.md` has one line per file and no orphan on either side | **met** | 19 index lines against 19 files; both directions checked mechanically. Two hooks rewritten where the entry's purpose moved |
+| Read cold afterwards: any single entry read alone leads to the same working method | **met** | All five read alone. Each reaches *decide it from the rule's own reason*; none leaves a reader believing WP1 is open or `file://` is a hazard |
 
 **Child fix tasks raised**
 - none
+
+**One thing found and deliberately not fixed.** `dont-synthesise-user-input.md` links
+`[[verify-in-the-delivery-environment]]`, which no entry provides. That is not a defect — an
+unresolved `[[link]]` marks something worth writing later, and writing new memories is out of scope
+by §1. Recorded so the next audit does not raise it as a broken pointer.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | → done | **Five entries corrected in place, none deleted, and the supersession is the payload.** The ask-versus-decide contradiction was worked first and separately from the other three rows, because it governs how the rest of [T-042](T-042-audit-the-whole-repository-against-itself.md)'s run is worked rather than being one stale fact among four. What made the contradiction dangerous was not that an entry was wrong but that **memory is not read in order** — so the fix is a link in both directions plus a dated supersession paragraph in each, rather than an edit to whichever one is wrong. The other three rows were ordinary staleness with one common cause: **each recorded a tension or a hazard that a later measurement or rewrite resolved, and none of them knew it.** `portability-not-minimalism` still named `file://` as the thing to design around after R6 measured 95 rows and found nothing it refuses costs the deck anything; `one-parametric-theme` recorded a tension with a `CLAUDE.md` rule that no longer exists, and its own decision is now rule 4. A memory whose reason expired reads exactly like one whose reason holds, which is why the corrections say what changed and when, not just what is true. `modified:` is stamped by the store on write, so the ordering F-8 reasons from is now real rather than asserted. |
+| 2026-08-09 | → planned | §1 accepted as written — the four rows, their evidence and the ordering note were all settled when [T-042](T-042-audit-the-whole-repository-against-itself.md) raised them, so `specify` was accept-not-compose. Plan is seven steps, one per entry plus the index and a cold read, with the ask-versus-decide row pulled to the front for the reason §1 gives. |
 | 2026-08-09 | → proposed | Raised by [T-042](T-042-audit-the-whole-repository-against-itself.md), finding F-8. **Four entries, and the contradiction is the one that matters**: two memories say *ask the owner*, the newest says *decide it yourself from the rule's own reason*, and memory is not read in order — so which instruction a session follows depends on which file it reads first. One memory also still carries the `file://` fears R6 retired, against a rationale that says in terms not to design around them. The deliverable is machine-local, which is why `deliverables:` is empty by intent; the review records what changed. |

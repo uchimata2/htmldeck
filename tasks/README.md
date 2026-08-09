@@ -33,7 +33,6 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-046](T-046-extend-task-py-to-what-it-cannot-see.md) | Extend task.py to the three things it cannot currently see | none | `proposed` | specify | - | - |
 | [T-047](T-047-give-the-rationale-conflicts-their-own-id-namespace.md) | Give the rationale's conflicts their own ID namespace, and fix the mis-citation it has already caused | none | `proposed` | specify | - | - |
 | [T-048](T-048-gate-the-hard-rules-only-judgement-can-reach.md) | Gate the twenty-five hard rules only a judgement pass can reach | WP2 | `proposed` | specify | - | - |
-| [T-049](T-049-reconcile-the-session-memory-with-the-research.md) | Reconcile the session memory with what the research settled and the owner last said | none | `proposed` | specify | - | - |
 | [T-050](T-050-write-the-repository-readme.md) | Write the repository README — what exists, what does not, and how to run it | final | `proposed` | specify | - | - |
 
 ## Closed
@@ -73,6 +72,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) | Stop the gate reporting judge rules, and one verdict under the wrong rule ID | `done` | 2026-08-09 |
 | [T-039](T-039-finish-the-record-t-037-left-in-the-wrong-places.md) | Finish the record T-037 left in the wrong places | `done` | 2026-08-09 |
 | [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md) | Fix the three reference-deck defects the completed gate found | `done` | 2026-08-09 |
+| [T-049](T-049-reconcile-the-session-memory-with-the-research.md) | Reconcile the session memory with what the research settled and the owner last said | `done` | 2026-08-09 |
 
 ## Next ID
 
