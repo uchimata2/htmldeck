@@ -28,7 +28,7 @@ happened.
 
 | ID | Title | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `proposed` | specify | - | - |
+| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `in_progress` | implement | - | - |
 
 ### v0.2
 

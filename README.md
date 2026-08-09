@@ -11,6 +11,33 @@ its own section, *What does not exist yet*.
 
 ---
 
+## Install it
+
+Both lines are typed inside Claude Code, not in a terminal:
+
+```
+/plugin marketplace add uchimata2/htmldeck
+/plugin install htmldeck@htmldeck
+```
+
+Copying [`skills/htmldeck/`](skills/htmldeck/) into a plugin of your own works as well. Every path
+the skill resolves goes through `${CLAUDE_PLUGIN_ROOT}`, which is what lets a copied directory find
+its own references.
+
+To check the package rather than assume it, clone the repository and run:
+
+```bash
+git clone https://github.com/uchimata2/htmldeck
+cd htmldeck
+python tools/plugin/check_scaffold.py
+```
+
+It self-tests against ten deliberately broken packages before it looks at this one, and *Run it*
+below shows what a good result prints. That command is also the fastest way to tell whether a copied
+skill directory is still wired up.
+
+---
+
 ## What is actually here
 
 | | |
@@ -99,7 +126,7 @@ python tools/tasks/task.py check
 
 ```
 OK - 60 tasks, vocabulary valid, task references resolve, 1002 document pointer(s) checked, 0 broken
-     494 section reference(s) resolved, 0 dead; 1138 not bound to a document and skipped.
+     496 section reference(s) resolved, 0 dead; 1146 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose, and every `<named document> §n`

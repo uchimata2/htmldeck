@@ -2,16 +2,18 @@
 id: T-008
 title: Package, document and publish
 type: deliverable
-status: proposed
-phase: specify
+status: in_progress
+phase: implement
 parent: null
 blocked_by: [T-002, T-004, T-005, T-056]
 related: [T-050]
 work_package: v0.1
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-07
-deliverables: []
+updated: 2026-08-09
+deliverables:
+  - .claude-plugin/marketplace.json
+  - README.md
 ---
 
 # T-008 — Package, document and publish
@@ -58,15 +60,68 @@ The example deck must be written new on a neutral topic — the corpus is real t
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
+| 1 | Settle what `master` becomes, by measuring rather than trusting the log below | The measurement, in §3 |
+| 2 | Scan the tracked tree for personal, client and machine data, and decide the author identity **before** the first push | The scan, and the owner's answer, in §3 |
+| 3 | Write the marketplace entry, without which the install route does not exist | `.claude-plugin/marketplace.json` |
+| 4 | Humanize the two listing descriptions, which `PUBLISHING.md` §2 covers and nothing had applied to them | The edited `plugin.json`, recorded in §3 |
+| 5 | Add install instructions ending in a command that proves the package | The new `README.md` section |
+| 6 | Re-derive the README figures the preceding steps moved | `task.py check` output, in §3 |
+| 7 | Create the repository, push `master`, set the description from [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) §3 | The remote |
+| 8 | Tag `v0.1.0` and cut the GitHub release | The tag and the release |
+| 9 | `task.py index`, `check --closing`, `check_scaffold.py`, and a clean-clone run | The output of each |
+
+**Decisions — shape**
+
+- **The description is copied from T-056 §3, never retyped.** It is human-facing text by
+  `PUBLISHING.md` §2's own test, so typing a fresh one at the console publishes an unhumanized
+  document and fails this task's criteria while looking like it passed.
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+
+- **`master` was never divergent, and the log below was wrong — 2026-08-09.** The 2026-08-09 row
+  says *"`master` is 96 commits divergent and sits at the line-endings scaffold"*. Measured:
+  `git rev-list --left-right --count` returns **0 119**, and the merge base **is** `master`'s HEAD.
+  Master had **zero** commits the work lacked, so it was a strict ancestor and the publish is a
+  plain `--ff-only` fast-forward. Nothing was discarded, no history was rewritten for this, and no
+  force was needed. **The feared decision did not exist**; it was a misreading of "96 commits
+  behind" recorded once and then cited as fact three times.
+
+- **119 of 121 commits carried the owner's personal email, and it was rewritten before the first
+  push — 2026-08-09.** The owner chose the GitHub noreply address. This is irreversible after
+  publication: GitHub caches commits that force-pushes remove, and a fork keeps them regardless.
+  Doing it while the repository was still local cost one command and no coordination. The two
+  `maintainer@localhost` commits were left alone, being generic rather than personal.
+
+- **The tracked tree is clean of personal, client and machine data — 2026-08-09.** Scanned for
+  absolute paths, home directories, usernames and email addresses. Every hit was a false positive:
+  the `Home`/`End` **keyboard keys** in DS-131 and the research notes, and one `/home/user/` string
+  inside `check_scaffold.py` that is a fixture asserting absolute paths are *rejected*. The corpus
+  knowledgebase, the live handoff and printed PDFs are all gitignored by construction.
+
+- **The marketplace entry did not exist, and without it the install route did not either —
+  2026-08-09.** `.claude-plugin/plugin.json` alone makes a plugin that can be copied, not one that
+  can be installed by name. The 2026-08-07 answer above promised *"the plugin and the marketplace
+  entry"* and only the first half had been built. `marketplace.json` now declares one plugin at
+  `source: "./"`, which is where the components already sit.
+
+- **`PUBLISHING.md` §2 caught its first real defect the day after it was written — 2026-08-09.** The
+  `plugin.json` description is *marketplace listing text*, which §2 names explicitly, and it
+  contained an em dash. It had never been through the humanizer because nothing had thought of a
+  JSON string as prose. **This is the covered-set test working as designed**: a list of filenames
+  would have said `README.md` and missed it, and the test asks where the reader is standing instead.
+  Both descriptions are now clean.
+
+- **The install section points at the existing output block rather than pasting a second copy —
+  2026-08-09.** *Run it* already prints what `check_scaffold.py` says. Pasting it again would create
+  two copies of one derived fact updated at different times, which is **L-13** and the mechanism
+  behind **L-52**, in a document that had just been cured of exactly that.
 
 **Outputs produced**
-- <path>
+- `.claude-plugin/marketplace.json`
+- `.claude-plugin/plugin.json` (description only)
+- `README.md` (the *Install it* section)
 
 ## 4. Review
 

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace-manifest.json",
+  "name": "htmldeck",
+  "owner": {
+    "name": "uchimata2",
+    "url": "https://github.com/uchimata2"
+  },
+  "description": "Single-file HTML presentations that don't look generated, installable as a Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "htmldeck",
+      "source": "./",
+      "description": "Single-file HTML presentations that don't look generated. One .html that renders offline with zero external references: real diagrams, progressive disclosure, considered typography. Asks two questions and nothing else.",
+      "license": "MIT",
+      "keywords": [
+        "presentation",
+        "slides",
+        "deck",
+        "html",
+        "offline",
+        "svg",
+        "critique"
+      ]
+    }
+  ]
+}
