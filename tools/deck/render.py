@@ -280,9 +280,10 @@ def report(results):
         print("        worst non-text disagreement %.2f du  (%s)  tolerance %.2f - %s"
               % (g["geom"][0], g["geom"][1], contract.GEOM_TOLERANCE_DU,
                  "within" if g["geom_ok"] else "OVER"))
-        print("        worst text-run disagreement %.2f du  (%s)  tolerance %.2f - %s"
-              % (g["text"][0], g["text"][1], contract.TEXT_TOLERANCE_DU,
-                 "within" if g["text_ok"] else "OVER"))
+        print("        worst text-run disagreement %.2f du = %.2f device px  (%s)  "
+              "tolerance %.1f px = %.2f du - %s"
+              % (g["text"][0], g["text_px"], g["text"][1], contract.TEXT_TOLERANCE_PX,
+                 g["text_tol_du"], "within" if g["text_ok"] else "OVER"))
         print("        k ratio %.4f" % g["k_ratio"])
 
     b = contract.body_floor(results)

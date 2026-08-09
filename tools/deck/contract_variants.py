@@ -77,11 +77,14 @@ VARIANTS = [
     ("reading-view-in-px", "DS-074", "sweep", [
         # Type that ignores the user's font size. WCAG 1.4.4 is the criterion; a reading view
         # that does this is not a conforming alternate version, it just looks like one.
-        (".doc-head .t{font-family:var(--font-display);font-size:2.4rem",
+        # The anchors read the deck's tokens since T-007 made the reading view derive from them;
+        # the seeded break is unchanged, and it is still the point - a `px` here is a `px`
+        # however it got there.
+        (".doc-head .t{font-family:var(--font-display);font-size:var(--doc-fs-title)",
          ".doc-head .t{font-family:var(--font-display);font-size:38px"),
-        (".doc .headline{font-size:1.9rem", ".doc .headline{font-size:30px"),
-        (".doc .standfirst{font-size:1.05rem", ".doc .standfirst{font-size:17px"),
-        (".doc-inner{max-width:46rem", ".doc-inner{max-width:736px")]),
+        (".doc .headline{font-size:var(--doc-fs-head)", ".doc .headline{font-size:30px"),
+        (".doc .standfirst{font-size:var(--doc-fs)", ".doc .standfirst{font-size:17px"),
+        (".doc-inner{max-width:var(--doc-measure)", ".doc-inner{max-width:736px")]),
 
     ("viewport-units-in-stage", "DS-063", "scale", [
         # A length that does not ride the transform. At 3840x2000 and 1280x634 `vw` resolves to
@@ -95,8 +98,10 @@ VARIANTS = [
         # monitor, gone in the stream - the failure the whole stage arithmetic exists to prevent.
         # Both roles the body probe can land on, so the variant does not depend on which slide
         # the sample happens to hit.
-        ("--fs-lead:calc(30*var(--du));", "--fs-lead:calc(20*var(--du));"),
-        ("--fs-body:calc(26*var(--du));", "--fs-body:calc(20*var(--du));")]),
+        # Since T-007 both roles derive from `--fs-base`, so **one** edit moves both and the
+        # variant no longer has to seed each. That is the token layer doing its job, and it is
+        # why the second anchor went rather than being repaired.
+        ("--fs-base:26;", "--fs-base:20;")]),
 ]
 
 

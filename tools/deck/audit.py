@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import render                                                       # noqa: E402
 import contrast                                                     # noqa: E402
 import contract                                                     # noqa: E402
+import theme                                                        # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -199,11 +200,20 @@ def ds024_light_by_default(h):
 
 
 def ds034_body_type(h):
-    """DS-034 - body 24-28 design units at line-height 1.55. Read off the tokens, which is where
-    DS-033 requires every size to come from, so this reads the one declaration that decides it."""
-    m = re.search(r"--fs-body\s*:\s*calc\(\s*([\d.]+)\s*\*\s*var\(--du\)", css(h))
-    lh = re.search(r"--lh-body\s*:\s*([\d.]+)", css(h))
-    return bool(m) and 24 <= float(m.group(1)) <= 28 and bool(lh) and abs(float(lh.group(1)) - 1.55) < 0.01
+    """DS-034 as amended by T-007 - body 24-28 design units at line-height 1.40-1.70.
+
+    **The value is resolved, not pattern-matched.** The old check read
+    `--fs-body:calc(N*var(--du))` with a regex and pinned the line height to 1.55 +/- 0.01, which
+    was fine while there was one hand-built theme and wrong the moment `--fs-body` derived from a
+    dial: a conforming deck failed because its body size was `calc(var(--fs-base)*var(--du))`.
+    A rule about a NUMBER has to read the number, whatever expression carries it.
+    """
+    c = css(h)
+    decls = theme.declarations(c)
+    size = theme.number(decls.get("--fs-body", ""), decls)
+    lh = theme.number(decls.get("--lh-body", ""), decls)
+    return (size is not None and 24 <= size <= 28
+            and lh is not None and 1.40 - 1e-9 <= lh <= 1.70 + 1e-9)
 
 
 def ds006_module_specifiers(h):
@@ -322,8 +332,16 @@ def ds119_canvas_dimensions(h):
     return True
 
 
-# DS-140's vocabulary is the only licence for a duration over DS-141's cap, by name.
-DS140_LONG = (1.2, 4.5)
+# DS-140's two long motions, **by the token that carries each**. Until T-007 this was a pair of
+# exact seconds, 1.2 and 4.5, and the check admitted any duration matching one of them. Banding
+# those numbers broke the check in a way the variant suite caught immediately: a 900 ms slide
+# transition falls inside Pulse-once's 0.8-1.6 s band and was waved through, because a scan over
+# durations cannot tell which motion a number belongs to.
+#
+# **DS-141's own words are the fix** - Pulse-once and Current are conformant *by name*. So a
+# duration over the cap is licensed when the declaration reads it out of one of these two tokens,
+# and the band each token must sit in is the contract's business (`theme.py`, DS-140).
+DS140_LONG_TOKENS = ("--pulse-dur", "--current-dur")
 
 
 def _custom_properties(c):
@@ -347,16 +365,18 @@ def _expand_vars(value, toks, depth=4):
 
 def ds141_durations(h):
     """DS-141 - entry and transition animations max 500 ms, with DS-140's named vocabulary as the
-    specific override. So: every duration over 500 ms is one of DS-140's two long motions.
+    specific override. So: every duration over 500 ms is read out of one of DS-140's two long
+    motions **by name**, which is the licence the rule's own sentence grants.
 
     **Only duration-bearing declarations are read.** `animation-delay:600ms` is not a duration and
     scanning the file for `\\d+s` counted one, alongside six fragments of an embedded typeface."""
     c = css(h)
     toks = _custom_properties(c)
     for value in re.findall(r"\b(?:animation|transition)(?:-duration)?\s*:\s*([^;{}]+)", c):
+        if any(t in value for t in DS140_LONG_TOKENS):
+            continue                     # named, so DS-140 governs it and DS-141 yields (F-04)
         for m in re.finditer(r"(\d+(?:\.\d+)?)(ms|s)\b", _expand_vars(value, toks)):
-            secs = float(m.group(1)) / (1000.0 if m.group(2) == "ms" else 1.0)
-            if secs > 0.5 and not any(abs(secs - n) < 0.01 for n in DS140_LONG):
+            if float(m.group(1)) / (1000.0 if m.group(2) == "ms" else 1.0) > 0.5:
                 return False
     return True
 
@@ -443,7 +463,7 @@ STATIC = [
     ("DS-023", "never pure white, never pure black", ds023_no_pure_black_or_white),
     ("DS-024", "light is the default, dark is the override", ds024_light_by_default),
     ("DS-028", "no gradient on the ground, the stage or a slide", ds028_no_full_page_gradient),
-    ("DS-034", "body 24-28 du at line-height 1.55", ds034_body_type),
+    ("DS-034", "body 24-28 du at line-height 1.40-1.70", ds034_body_type),
     ("DS-037", "text-wrap: balance on display headings", ds037_display_headings_balanced),
     ("DS-040", "grid and flexbox both used", ds040_grid_and_flex),
     ("DS-044", "every heading level in use is reset", ds044_headings_reset),

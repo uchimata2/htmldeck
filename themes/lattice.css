@@ -1,0 +1,177 @@
+/* lattice — the second theme, and the reason there is a contract at all.
+
+   It exists to answer one question with a rendering rather than an assertion: does swapping
+   this file alone produce a deck that looks like a different design and still holds together?
+   Built for T-007, and it moves four axes that a recolour cannot reach.
+
+   | Axis     | quarto                          | lattice                                  |
+   | type     | serif display over a grotesque  | grotesque display over a serif text face |
+   |          | base 26 du, ratio 1.155         | base 24 du, ratio 1.10 — a tighter scale |
+   | geometry | step 16 du, ratio 1.6           | step 12 du, ratio 1.5 — denser           |
+   | shape    | 14 du corners, soft deep shadow | square corners, a shallow flat shadow    |
+   | motion   | 340 ms rise, 60 ms stagger      | 200 ms rise, 35 ms stagger — quicker     |
+   | colour   | warm paper, violet accent       | cool grey, deep teal                     |
+
+   It re-pairs the three faces the repository already carries rather than adding a fourth, so
+   the demonstration does not depend on sourcing a font. Adding one is a file in themes/faces/.
+
+   The colours are chosen against WCAG, not by eye: every pair `contrast.py` measures clears
+   4.5:1 for text and 3:1 for marks and borders, in both themes. */
+
+/* htmldeck-faces: space-grotesk, instrument-serif, jetbrains-mono */
+
+:root{
+  --du:1px;
+
+  /* ---- colour: a cool near-neutral ground. Kept close to achromatic on purpose, so the one
+     chromatic family in the deck is the accent (DS-020). */
+  --paper:#F2F3F2;
+  --paper-sunk:#E5E6E5;
+  --ink:#1E201F;
+  --ink-soft:#4E5250;
+  --ink-faint:#575B59;
+  --line:#D2D4D3;
+  --line-firm:#B4B7B5;
+  --ui-line:#707573;
+  --data-quiet:#767B79;
+  --field:#D8DAD9;
+  --shadow:rgba(30,32,31,.16);
+  --shadow-soft:rgba(30,32,31,.08);
+
+  --accent:#0F5F63;
+  --accent-ink:#0C4D50;
+  --accent-wash:#DCEAEA;
+
+  --pos:#1F6B45;
+  --neg:#A3342C;
+  --caution:#7A570B;
+
+  /* ---- type: the pairing inverts. A grotesque at weight 700 carries the display role and the
+     serif drops into the text role, which is a different page before a single colour changes. */
+  --font-display:'Space Grotesk',sans-serif;
+  --font-text:'Instrument Serif',serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --fs-base:24;
+  --type-ratio:1.10;
+
+  --fs-small:calc(var(--fs-base)/var(--type-ratio)*var(--du));
+  --fs-body:calc(var(--fs-base)*var(--du));
+  --fs-lead:calc(var(--fs-base)*var(--type-ratio)*var(--du));
+  --fs-subhead:calc(var(--fs-base)*var(--type-ratio)*var(--type-ratio)*var(--du));
+  --fs-bottom:calc(var(--fs-base)*var(--type-ratio)*var(--type-ratio)*var(--type-ratio)*var(--du));
+
+  --fs-mono:calc(16*var(--du));
+  --fs-display:calc(58*var(--du));
+  --fs-display-lg:calc(72*var(--du));
+  --fs-title:calc(84*var(--du));
+  --fs-figure:calc(164*var(--du));
+
+  --lh-body:1.45;
+  --track-display:calc(-1.4*var(--du));
+  --track-mono:calc(1.1*var(--du));
+  --measure:58ch;
+
+  /* ---- geometry: a smaller step and a shallower ratio. Everything closes up together. */
+  --sp-unit:12;
+  --sp-ratio:1.5;
+  --sp-0:calc(var(--sp-unit)/var(--sp-ratio)/2*var(--du));
+  --sp-1:calc(var(--sp-unit)/2*var(--du));
+  --sp-2:calc(var(--sp-unit)*var(--du));
+  --sp-3:calc(var(--sp-unit)*var(--sp-ratio)*var(--du));
+  --sp-4:calc(var(--sp-unit)*var(--sp-ratio)*var(--sp-ratio)*var(--du));
+  --sp-5:calc(var(--sp-unit)*var(--sp-ratio)*var(--sp-ratio)*var(--sp-ratio)*var(--du));
+
+  --pad-x:calc(72*var(--du));
+  --pad-y:calc(56*var(--du));
+  --pad-bottom:calc(132*var(--du));
+  --chrome-inset:var(--sp-4);
+  --bottom-measure:calc(1320*var(--du));
+  --rule-len:calc(72*var(--du));
+  --tick-len:calc(20*var(--du));
+  --disc-panel-w:calc(820*var(--du));
+  --disc-key-w:calc(180*var(--du));
+
+  /* ---- shape: square. The corner radius goes to zero and the shadow flattens, which is the
+     single most visible non-colour change in the set. */
+  --radius:0px;
+  --radius-sm:0px;
+  --radius-xs:0px;
+  --hair:calc(1*var(--du));
+  --rule:calc(2*var(--du));
+  --focus-w:calc(3*var(--du));
+  --focus-offset:calc(2*var(--du));
+  --chev-stroke:calc(2*var(--du));
+  --shadow-y:calc(6*var(--du));
+  --shadow-blur:calc(18*var(--du));
+  --shadow-y-sm:calc(3*var(--du));
+  --shadow-blur-sm:calc(10*var(--du));
+
+  --icon:calc(32*var(--du));
+  --icon-sm:calc(22*var(--du));
+  --icon-ui:calc(18*var(--du));
+  --chev:calc(14*var(--du));
+  --swatch:calc(12*var(--du));
+
+  --disc-mark-size:calc(22*var(--du));
+  --disc-mark-bar:calc(10*var(--du));
+  --disc-mark-stroke:calc(2*var(--du));
+  --disc-hit:calc(48*var(--du));
+
+  /* ---- motion: quicker and shorter. Same four motions, same names, different theme. */
+  --rise-dur:200ms;
+  --rise-ease:cubic-bezier(.16,1,.3,1);
+  --rise-stagger:35ms;
+  --rise-dist:calc(10*var(--du));
+  --current-dash:4 8;
+  --current-dur:3.4s;
+  --open-dur:240ms;
+  --open-rise:calc(5*var(--du));
+  --open-squash:.98;
+  --turn-dur:260ms;
+  --scale-dur:180ms;
+  --pulse-dur:900ms;
+  --pulse-delay:420ms;
+  --slide-dur:400ms;
+
+  /* ---- the reading view, on the same ratios */
+  --doc-fs:1rem;
+  --doc-fs-mono:0.7rem;
+  --doc-fs-sm:calc(var(--doc-fs)/var(--type-ratio));
+  --doc-fs-lead:calc(var(--doc-fs)*var(--type-ratio));
+  --doc-fs-head:calc(var(--doc-fs)*var(--type-ratio)*var(--type-ratio)*var(--type-ratio)*var(--type-ratio));
+  --doc-fs-title:calc(var(--doc-fs-head)*var(--type-ratio)*var(--type-ratio));
+  --doc-fs-figure:3.2rem;
+  --doc-track-mono:0.07rem;
+  --doc-sp:1rem;
+  --doc-sp-2xs:calc(var(--doc-sp)/var(--sp-ratio)/var(--sp-ratio)/var(--sp-ratio)/var(--sp-ratio));
+  --doc-sp-xs:calc(var(--doc-sp)/var(--sp-ratio)/var(--sp-ratio));
+  --doc-sp-sm:calc(var(--doc-sp)/var(--sp-ratio));
+  --doc-sp-lg:calc(var(--doc-sp)*var(--sp-ratio));
+  --doc-pad-b:5rem;
+  --doc-measure:42rem;
+  --doc-hair:0.07rem;
+  --doc-radius:0rem;
+  --doc-tick:1.2rem;
+  --doc-hit:2.75rem;
+}
+
+:root[data-theme="dark"]{
+  --paper:#171918;
+  --paper-sunk:#1F2221;
+  --ink:#EBEDEC;
+  --ink-soft:#A7ADAB;
+  --ink-faint:#9AA09E;
+  --line:#333736;
+  --line-firm:#4C5150;
+  --ui-line:#7A807E;
+  --data-quiet:#7A807E;
+  --field:#0C0D0D;
+  --shadow:rgba(0,0,0,.60);
+  --shadow-soft:rgba(0,0,0,.32);
+  --accent:#5FC6CB;
+  --accent-ink:#7FD6DA;
+  --accent-wash:#12312F;
+  --pos:#6BC48A;
+  --neg:#E58F80;
+  --caution:#D2A63E;
+}

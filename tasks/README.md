@@ -18,9 +18,8 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 
 | ID | Title | WP | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :---: | :--- | :--- | :--- | :--- |
-| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | WP3 | `proposed` | specify | T-007, T-016 | T-008, T-019 |
+| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | WP3 | `proposed` | specify | T-016 | T-008, T-019 |
 | [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | WP3 | `proposed` | specify | - | T-008 |
-| [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | WP2 | `proposed` | specify | - | T-002 |
 | [T-008](T-008-package-document-and-publish.md) | Package, document and publish | final | `proposed` | specify | T-002, T-004, T-056 | - |
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | WP3 | `proposed` | specify | - | T-002 |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | WP3 | `proposed` | specify | T-002 | - |
@@ -38,6 +37,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) | Brief mode — elicit the six-section prompt | `cancelled` | 2026-08-07 |
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | `done` | 2026-08-09 |
 | [T-006](T-006-decide-the-chart-strategy.md) | Decide the chart strategy | `done` | 2026-08-06 |
+| [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | `done` | 2026-08-09 |
 | [T-009](T-009-analyse-the-corpus-extract-my-deck-conventions.md) | Analyse the corpus — extract the deck conventions already in use | `done` | 2026-08-06 |
 | [T-010](T-010-research-external-deck-design-and-ux-principles.md) | Research external deck-design and presentation UX principles | `done` | 2026-08-06 |
 | [T-011](T-011-research-exemplary-decks-and-why-they-work.md) | Research exemplary decks and what makes them work | `done` | 2026-08-06 |

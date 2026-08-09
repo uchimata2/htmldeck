@@ -890,6 +890,44 @@ to read them from. The guard counted pairs; the absent subject was a **theme**.
 3. **Ask what the subject is, then ask what would be true if there were none of it.** Not *is the
    predicate right* — it is.
 
+### L-45 — A threshold measured on one artefact encodes that artefact, and only a second one shows it
+
+**A number can be measured, documented, given headroom, and still be a fact about the sample.** It
+does not read as a guess — it reads as evidence, which is why it survives review.
+
+Four thresholds in this repository were fixed at the value one deck happened to have. Three were
+found by *reading*, once the question was asked; **the fourth needed a second artefact to exist.**
+
+| Rule | The number | How it was wrong |
+| :--- | :--- | :--- |
+| DS-034 | line height **1.55**, checked to ±0.01 | one theme's value stated as the rule |
+| DS-140 | motions at **340 / 380 / 420 / 300 ms, 1.2 s, 4.5 s** | the vocabulary's *names* are the rule; the milliseconds were one theme's |
+| DS-141 | a long duration admitted at **exactly 1.2 or 4.5 s** | the same pin, one layer down, in the check |
+| **DS-063** | a text run's rect within **2 design units** | **measured over 384 values, worst case 1.17, headroom to 2.0 — and still wrong** |
+
+DS-063 is the instructive one. The measurement was real and the headroom was honest. What nobody
+could see was the **shape**: a device-pixel rounding effect expressed in design units silently
+carries the scale factor of the deck it was measured on. A second theme with a tighter type scale
+fits more glyphs on a line, every one of them rounds, and a deck that breaks nothing reaches 2.23.
+Restated as **2 device pixels at the smaller rendering** the bound has a mechanism behind it — a
+whole-rect comparison folds two independent roundings, the edge and the extent — and it stops being
+about any deck at all.
+
+**The general shape: a check written against one instance cannot distinguish a property of the
+artefact from a property of the class.** Both look identical from inside the sample, and the more
+carefully the number was measured, the more convincing the wrong one is.
+
+**How to apply.**
+
+1. **Before fixing a number, ask what it is a number *of*.** If the effect is a rounding, a device
+   pixel or a viewport, say so in those units. A unit conversion is not cosmetic: it decides whether
+   the threshold travels.
+2. **Where a rule names a value the artefact chooses, band it and name the instance separately.**
+   *Line height 1.40–1.70, this theme's being 1.55* is a rule; *1.55* is a reading.
+3. **Build the second artefact earlier than feels necessary.** It is the only instrument that finds
+   this class, and it found one here that four passes of reading did not — cheaply, in an afternoon,
+   because everything else was already gated.
+
 ---
 
 ## Tooling

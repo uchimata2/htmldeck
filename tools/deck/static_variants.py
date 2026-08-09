@@ -28,6 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import render                                                        # noqa: E402
 import audit                                                         # noqa: E402
 import contrast                                                      # noqa: E402
+import theme                                                         # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -46,14 +47,35 @@ STATIC_VARIANTS = [
         ("var DECK = 'Buy frequency before bikes';",
          "var DECK = 'Buy frequency before bikes';\n  fetch('data.json');")]),
     ("colour-outside-the-tokens", "DS-010", [
-        (".legend i{width:calc(14*var(--du))",
-         ".legend i{background:#C43B2A;width:calc(14*var(--du))")]),
+        (".legend i{width:var(--swatch)",
+         ".legend i{background:#C43B2A;width:var(--swatch)")]),
+    # ---- added by T-007, which made the theme a region and the token set a contract
+    ("type-scale-outside-the-region", "DS-010", [
+        # A slide setting its own type size is the defect the composition/look line exists to
+        # catch: the geometry around it may be this deck's, the type scale never is.
+        (".close-h{font-size:var(--fs-display-lg)", ".close-h{font-size:calc(81*var(--du))")]),
+    ("derived-token-pinned-to-a-literal", "DS-013", [
+        # The whole point of `derived`: a theme may set the dial, never the step. Pinned, the
+        # family silently stops moving with `--type-ratio` and every individual value still
+        # looks like a token.
+        ("--fs-lead:calc(var(--fs-base)*var(--type-ratio)*var(--du));",
+         "--fs-lead:calc(30*var(--du));")]),
+    ("two-theme-regions", "DS-011", [
+        ('<style id="slides">',
+         '<style id="theme">:root{--accent:#1E7A4C}</style>\n<style id="slides">')]),
+    ("motion-outside-its-band", "DS-140", [
+        # 2.4 s is neither a reveal under DS-141's cap nor inside either long motion's band. It
+        # breaks **DS-140**, not DS-141: DS-141 yields to the vocabulary by name (F-04), so the
+        # rule that still has something to say is the one that states the band.
+        ("--pulse-dur:1.2s;", "--pulse-dur:2.4s;")]),
     ("a-second-accent", "DS-020", [
         ("--accent-wash:#EBE7F5;", "--accent-wash:#EBE7F5;\n  --accent-two:#1E7A4C;")]),
     ("pure-white-ground", "DS-023", [
         ("--paper:#F3F0E8;", "--paper:#FFFFFF;")]),
     ("body-type-off-the-band", "DS-034", [
-        ("--fs-body:calc(26*var(--du));", "--fs-body:calc(21*var(--du));")]),
+        # The dial, not the step. Since T-007 `--fs-body` derives from `--fs-base`, so seeding
+        # the derived token would break the contract as well as the band and prove neither.
+        ("--fs-base:26;", "--fs-base:21;")]),
     ("viewport-unit-decoration", "DS-065", [
         (".legend{display:flex", ".legend{margin-top:2vh;display:flex")]),
     ("hard-coded-svg-colour", "DS-118", [
@@ -65,7 +87,9 @@ STATIC_VARIANTS = [
         # The narrow reading, which is the rule as clarified 2026-08-09: a rule on the ELEMENT
         # reaches every `<b>` in the deck, so the deliverable's weight becomes a global default.
         # `.bottom-line b` is deliberately NOT this, and the deck keeps four such selectors.
-        ("</nav>\n", "</nav>\n<style>b{font-weight:800;letter-spacing:.02em}</style>\n")]),
+        # No length in the seeded rule: a `letter-spacing` literal here would break DS-010's
+        # region check as well, and a variant that breaks two rules proves nothing about either.
+        ("</nav>\n", "</nav>\n<style>b{font-weight:800}</style>\n")]),
     ("hover-only-reveal", "DS-163", [
         (".disc-btn:hover{border-color:var(--accent);color:var(--ink)}",
          ".disc-btn:hover{border-color:var(--accent);color:var(--ink)}\n"
@@ -126,7 +150,8 @@ def build(name, edits):
 
 def static_failures(path):
     html = open(path, "r", encoding="utf-8").read()
-    rows = [(r, w, bool(fn(html))) for r, w, fn in audit.STATIC] + contrast.verdicts(html)
+    rows = ([(r, w, bool(fn(html))) for r, w, fn in audit.STATIC]
+            + contrast.verdicts(html) + theme.verdicts(html))
     return {r for r, _w, ok in rows if not ok}, rows
 
 

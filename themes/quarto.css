@@ -1,0 +1,189 @@
+/* quarto — the htmldeck shipping theme.
+
+   The contract this file answers to is docs/THEME-CONTRACT.md. Swap it with
+   `python tools/deck/theme.py swap <deck> themes/<name>.css`; nothing in the deck
+   is edited by hand.
+
+   Warm paper ground, serif display over a grotesque text face, muted violet accent.
+   Editorial rather than corporate: the look the reference deck was built in.
+
+   PRIMITIVE tokens are the dials — set them and the rest follows. DERIVED tokens are
+   calc() over primitives and are copied into every theme unchanged; a theme that edits
+   one is departing from the scale on purpose, and `theme.py validate` says so. */
+
+/* htmldeck-faces: instrument-serif, space-grotesk, jetbrains-mono */
+
+:root{
+  /* ---- fixed. Not a dial: DS-060 fixes the stage at 1920x1080 design units, and a design
+     unit is one CSS pixel before the transform (DS-033/065). A theme that changes this is
+     changing the resolution contract, not the look. */
+  --du:1px;
+
+  /* ---- colour: ground and ink. Never pure white, never pure black (DS-023). */
+  --paper:#F3F0E8;
+  --paper-sunk:#EAE5D9;
+  --ink:#23211D;
+  --ink-soft:#5F594E;
+  --ink-faint:#6B6456;
+  --line:#D7D1C2;
+  --line-firm:#BDB5A2;
+  /* Decorative hairlines are exempt from 1.4.11; interactive borders and data marks are not,
+     so they get their own tokens rather than reusing --line-firm at 1.79:1. */
+  --ui-line:#857E6B;
+  --data-quiet:#8D8572;
+  --field:#DAD4C6;              /* the darker field the stage floats on (DS-050) */
+  --shadow:rgba(35,33,29,.22);
+  --shadow-soft:rgba(35,33,29,.10);
+
+  /* ---- colour: exactly one accent, and it means something wherever it appears
+     (DS-020/021/025). */
+  --accent:#5A4B8F;
+  --accent-ink:#4A3D78;
+  --accent-wash:#EBE7F5;
+
+  /* ---- colour: semantic roles, fixed deck-wide, legend on the slide that uses them
+     (DS-026). */
+  --pos:#2F6B3F;
+  --neg:#A33A2E;
+  --caution:#8A6410;
+
+  /* ---- type: the faces, and the two dials the text scale turns on (DS-030/031/032). */
+  --font-display:'Instrument Serif',serif;
+  --font-text:'Space Grotesk',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --fs-base:26;                 /* body size in design units. DS-034 fixes the band at 24-28. */
+  --type-ratio:1.155;           /* one step of the text scale */
+
+  /* the text scale, derived. Five steps around the base: small, body, lead, subhead, bottom. */
+  --fs-small:calc(var(--fs-base)/var(--type-ratio)*var(--du));
+  --fs-body:calc(var(--fs-base)*var(--du));
+  --fs-lead:calc(var(--fs-base)*var(--type-ratio)*var(--du));
+  --fs-subhead:calc(var(--fs-base)*var(--type-ratio)*var(--type-ratio)*var(--du));
+  /* DS-203 wants the bottom line second only to the headline. Three steps up from body puts
+     it above subhead and below display: large enough to win the slide after the headline,
+     small enough that a two-clause sentence still sets on one or two lines at 1920. */
+  --fs-bottom:calc(var(--fs-base)*var(--type-ratio)*var(--type-ratio)*var(--type-ratio)*var(--du));
+
+  /* the display sizes are composed, not stepped. Each is chosen against the stage rather than
+     derived from the body, which is why they are dials and the five above are not. */
+  --fs-mono:calc(18*var(--du));   /* DS-036 fixes the band at 16-18 */
+  --fs-display:calc(67*var(--du));
+  --fs-display-lg:calc(84*var(--du));
+  --fs-title:calc(96*var(--du));
+  --fs-figure:calc(190*var(--du));
+
+  --lh-body:1.55;
+  --track-display:calc(-0.6*var(--du));
+  --track-mono:calc(1.4*var(--du));
+  --measure:62ch;
+
+  /* ---- geometry: the rhythm, on one step and one ratio. */
+  --sp-unit:16;
+  --sp-ratio:1.6;
+  --sp-0:calc(var(--sp-unit)/var(--sp-ratio)/2*var(--du));
+  --sp-1:calc(var(--sp-unit)/2*var(--du));
+  --sp-2:calc(var(--sp-unit)*var(--du));
+  --sp-3:calc(var(--sp-unit)*var(--sp-ratio)*var(--du));
+  --sp-4:calc(var(--sp-unit)*var(--sp-ratio)*var(--sp-ratio)*var(--du));
+  --sp-5:calc(var(--sp-unit)*var(--sp-ratio)*var(--sp-ratio)*var(--sp-ratio)*var(--du));
+
+  /* ---- geometry: the slide, and the widths that decide how dense it reads. */
+  --pad-x:calc(96*var(--du));
+  --pad-y:calc(72*var(--du));
+  --pad-bottom:calc(150*var(--du));    /* clearance for the chrome row */
+  --chrome-inset:var(--sp-4);
+  --bottom-measure:calc(1500*var(--du));
+  --rule-len:calc(120*var(--du));      /* the accent rule over the bottom line */
+  --tick-len:calc(28*var(--du));       /* the eyebrow's tick */
+  --disc-panel-w:calc(940*var(--du));
+  --disc-key-w:calc(210*var(--du));
+
+  /* ---- shape: radius, stroke and depth. This is the axis a recolour cannot reach. */
+  --radius:calc(14*var(--du));
+  --radius-sm:calc(6*var(--du));
+  --radius-xs:calc(2*var(--du));   /* a mark's corner: at a 4-unit tick, any more is a circle */
+  --hair:calc(1.5*var(--du));
+  --rule:calc(3*var(--du));
+  --focus-w:calc(3*var(--du));
+  --focus-offset:calc(3*var(--du));
+  --chev-stroke:calc(2.5*var(--du));
+  --shadow-y:calc(18*var(--du));
+  --shadow-blur:calc(60*var(--du));
+  --shadow-y-sm:calc(8*var(--du));
+  --shadow-blur-sm:calc(24*var(--du));
+
+  /* ---- shape: the icon sizes. Four roles, so a denser theme shrinks them together. */
+  --icon:calc(40*var(--du));
+  --icon-sm:calc(26*var(--du));
+  --icon-ui:calc(20*var(--du));
+  --chev:calc(16*var(--du));
+  --swatch:calc(14*var(--du));
+
+  /* ---- shape: the disclosure mark is a theme element, not a per-slide invention (DS-165). */
+  --disc-mark-size:calc(26*var(--du));
+  --disc-mark-bar:calc(12*var(--du));
+  --disc-mark-stroke:calc(2*var(--du));
+  --disc-hit:calc(52*var(--du));   /* >=24 CSS px at the 0.5 scale floor — see README */
+
+  /* ---- motion: the four named motions, and nothing else (DS-140). Durations sit inside the
+     bands DS-140 states; the numbers here are this theme's, not the vocabulary's. */
+  --rise-dur:340ms;
+  --rise-ease:cubic-bezier(.22,1,.36,1);
+  --rise-stagger:60ms;
+  --rise-dist:calc(18*var(--du));
+  --current-dash:7 6;
+  --current-dur:4.5s;
+  --open-dur:380ms;
+  --open-rise:calc(8*var(--du));
+  --open-squash:.96;
+  --turn-dur:420ms;
+  --scale-dur:300ms;
+  --pulse-dur:1.2s;
+  --pulse-delay:600ms;
+  --slide-dur:420ms;
+
+  /* ---- the reading view (DS-074). A document rendering, so its lengths are in `rem` and
+     honour the reader's font size — but the ratios are the stage's, so a theme that changes
+     the scale changes BOTH renderings from one set of dials. */
+  --doc-fs:1.05rem;
+  --doc-fs-mono:0.72rem;
+  --doc-fs-sm:calc(var(--doc-fs)/var(--type-ratio));
+  --doc-fs-lead:calc(var(--doc-fs)*var(--type-ratio));
+  --doc-fs-head:calc(var(--doc-fs)*var(--type-ratio)*var(--type-ratio)*var(--type-ratio)*var(--type-ratio));
+  --doc-fs-title:calc(var(--doc-fs-head)*var(--type-ratio)*var(--type-ratio));
+  --doc-fs-figure:4rem;
+  --doc-track-mono:0.09rem;
+  --doc-sp:1.25rem;
+  --doc-sp-2xs:calc(var(--doc-sp)/var(--sp-ratio)/var(--sp-ratio)/var(--sp-ratio)/var(--sp-ratio));
+  --doc-sp-xs:calc(var(--doc-sp)/var(--sp-ratio)/var(--sp-ratio));
+  --doc-sp-sm:calc(var(--doc-sp)/var(--sp-ratio));
+  --doc-sp-lg:calc(var(--doc-sp)*var(--sp-ratio));
+  --doc-pad-b:6rem;
+  --doc-measure:46rem;
+  --doc-hair:0.09rem;
+  --doc-radius:0.5rem;
+  --doc-tick:1.5rem;
+  --doc-hit:2.75rem;               /* >=44 CSS px: the target-size floor in a rem rendering */
+}
+
+/* dark is one block of overrides, never a redesign (DS-012). Light is the default (DS-024). */
+:root[data-theme="dark"]{
+  --paper:#1C1B17;
+  --paper-sunk:#24231E;
+  --ink:#EFEBE1;
+  --ink-soft:#ADA69A;
+  --ink-faint:#999283;
+  --line:#3B382F;
+  --line-firm:#565144;
+  --ui-line:#757060;
+  --data-quiet:#757060;
+  --field:#0E0E0C;
+  --shadow:rgba(0,0,0,.55);
+  --shadow-soft:rgba(0,0,0,.30);
+  --accent:#AC9FE6;
+  --accent-ink:#C4BAF0;
+  --accent-wash:#2B2545;
+  --pos:#74C288;
+  --neg:#E58F80;
+  --caution:#D8A83C;
+}

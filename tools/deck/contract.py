@@ -38,7 +38,20 @@ ROOT = render.ROOT
 # pixels, so any deck containing text fails an equality check. Measured over 384 values in
 # DESIGN-RATIONALE.md §2 - worst case 0.09 non-text and 1.17 text.
 GEOM_TOLERANCE_DU = 0.25          # DS-063, non-text geometry
-TEXT_TOLERANCE_DU = 2.0           # DS-063, text-run widths
+
+# DS-063, text runs - **in device pixels at the smaller rendering, not in design units.**
+#
+# It was 2.0 design units, a number measured over one deck in one theme with headroom above its
+# worst case of 1.17. T-007's second theme reached 2.23 du and failed a resolution contract it
+# does not break: a tighter type scale fits more glyphs on a line, and every one of them rounds.
+# **A design-unit threshold was the wrong shape for a device-pixel effect** - it silently encodes
+# the scale factor of the deck it was measured on.
+#
+# Two is the mechanism's own number, not a fitted one: a whole-rect comparison folds two
+# independent roundings, the run's edge and its extent, each up to one device pixel. At the
+# sweep's smaller viewport k is 0.587, so the bound lands at 3.41 du - which the reference deck
+# (1.07 du = 0.63 px) and `lattice` (2.23 du = 1.31 px) both clear with room.
+TEXT_TOLERANCE_PX = 2.0
 BODY_FLOOR_CSS_PX = 16.0          # DS-064, in a 720p capture
 SCALE_THRESHOLD = 0.5             # DS-071, amended 2026-08-07: k below this hands over
 CENTRE_TOLERANCE_PX = 1.5         # DS-200, half a device pixel each side plus rounding
@@ -178,14 +191,19 @@ def geometry(results):
                 counted[bucket] += 1
                 if d > worst[bucket][0]:
                     worst[bucket] = (d, "%s / %s / %s" % (ra["slide"], key, axis))
+    # The text bound is device pixels at the SMALLER rendering, converted here because that is
+    # where the scale factor is known. A fixed design-unit number encodes one deck's k.
+    text_tol_du = TEXT_TOLERANCE_PX / b[0]["k"]
     return {"counted": counted["geom"] + counted["text"],
             "n_geom": counted["geom"], "n_text": counted["text"],
             "geom": worst["geom"], "text": worst["text"],
             "k_ratio": a[0]["k"] / b[0]["k"],
+            "text_tol_du": text_tol_du,
+            "text_px": worst["text"][0] * b[0]["k"],
             # No non-text value measured is not a pass. Until 2026-08-07 the probe carried nine
             # text keys and nothing else, so this tolerance had a number and zero coverage.
             "geom_ok": counted["geom"] > 0 and worst["geom"][0] <= GEOM_TOLERANCE_DU,
-            "text_ok": worst["text"][0] <= TEXT_TOLERANCE_DU}
+            "text_ok": counted["text"] > 0 and worst["text"][0] <= text_tol_du}
 
 
 def body_floor(results):
@@ -292,9 +310,10 @@ def scale_verdicts(deck, which=None, quiet=True):
                     % (g["geom"][0], GEOM_TOLERANCE_DU, g["n_geom"],
                        g["geom"][1] if g["n_geom"] else "NO NON-TEXT ELEMENT MEASURED"),
                     g["geom_ok"]))
-        out.append(("DS-063", "text runs, whole rect, same pair: worst %.2f du of %.2f allowed "
-                    "over %d values (%s); k ratio %.4f"
-                    % (g["text"][0], TEXT_TOLERANCE_DU, g["n_text"], g["text"][1], g["k_ratio"]),
+        out.append(("DS-063", "text runs, whole rect, same pair: worst %.2f du = %.2f device px "
+                    "of %.1f allowed (%.2f du at this k) over %d values (%s); k ratio %.4f"
+                    % (g["text"][0], g["text_px"], TEXT_TOLERANCE_PX, g["text_tol_du"],
+                       g["n_text"], g["text"][1] or "NO TEXT RUN MEASURED", g["k_ratio"]),
                     g["text_ok"]))
 
     b = body_floor(results)

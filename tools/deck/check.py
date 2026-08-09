@@ -37,6 +37,7 @@ import contrast                                                     # noqa: E402
 import contract                                                     # noqa: E402
 import content                                                      # noqa: E402
 import printpages                                                   # noqa: E402
+import theme                                                        # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -159,6 +160,11 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
 
     rows += [(rule, what, bool(fn(html))) for rule, what, fn in audit.STATIC]
     rows += contrast.verdicts(html)
+    # The theme region, added by T-007. Three partial checks of rules `audit` and `contrast`
+    # already reach from another side: DS-011 counts palettes, this counts regions; DS-013 names
+    # the roles, this holds the whole token set to `docs/THEME-CONTRACT.md`; DS-010 catches a
+    # colour literal, this catches every other value a theme cannot reach.
+    rows += theme.verdicts(html)
 
     data, err = audit.render_data(deck)
     if not data:

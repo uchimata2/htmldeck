@@ -20,9 +20,14 @@ or place — see *Provenance*, below.
 *Buy frequency before bikes* — a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-**214 KB in one file** — 219 083 bytes. Three embedded typefaces (97 KB of it as base64), nine
+**220 KB in one file** — 225 136 bytes. Three embedded typefaces (97 KB of it as base64), nine
 Lucide icons in one sprite, seven hand-written SVG figures, and the deck shell. No libraries, no
 build step, no network.
+
+The theme is a **region**, not a habit: one `<style id="theme">` holds every `@font-face` and every
+`:root` block, and [`themes/quarto.css`](../themes/quarto.css) is what it contains. Swapping it is
+one command and edits no other rule —
+[`docs/THEME-CONTRACT.md`](../docs/THEME-CONTRACT.md) is the contract a theme answers to.
 
 Every slide carries a **bottom line**: one factual sentence, at the foot of the slide, second in
 prominence only to the headline. It is what the slide delivers, and it is there so the deck reads
