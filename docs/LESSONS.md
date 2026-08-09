@@ -810,6 +810,35 @@ that is what turned both of these from green rows into found bugs — this is
 [L-36](#l-36--a-stated-tolerance-is-a-claim-about-the-instrument-not-only-about-the-artifact)
 arriving from a third direction, and it is why a check ships with a variant that breaks it.
 
+### L-43 — A completeness device built for one class makes the classes it does not cover harder to see
+
+**L-36** and **L-41** are about a single rule going unwatched. This is what happens *after* you fix
+that properly: build a device that guarantees coverage over one class of rule, and the guarantee
+starts covering for everything outside the class.
+
+The case. [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md) closed the mechanical
+half completely and correctly — every rule the ruleset puts in a gate's jurisdiction now ends each
+run **checked**, **excused in writing** or **failing**, and a rule in none of them fails the run the
+same afternoon. That device is sound. It is also scoped to `auto` and `render`, and
+`EVALUATION.md` §1 declares **114 `hard`** rules to be gates. **Twenty-five of them are `judge`**,
+so nothing produced a verdict for any of them, eleven were named nowhere in the document at all, and
+a `hard` `judge` rule could be added with nothing anywhere noticing it was unowned — for months,
+across an audit and four reviews ([T-042](../tasks/T-042-audit-the-whole-repository-against-itself.md),
+F-3).
+
+**The mechanism is the reassurance, not the omission.** Before the device, *"is every rule covered?"*
+was an open question a reader might ask. After it, the run answers *"111 owned, 0 silent"* — true,
+complete about its own jurisdiction, and read as an answer about the ruleset. The green run is what
+stops the question being asked again. **A partial guarantee is more dangerous than none**, because
+none leaves the doubt intact.
+
+**How to apply.** When a completeness device is built, **state its jurisdiction and the complement in
+the same breath**, and give the complement an owner before the device ships — even if the owner is
+*"nobody yet, and here is the task"*. Then make the arithmetic cover the whole population rather than
+the covered part: `ruleset.py --gates` partitions all 114 `hard` rules across their gates and fails
+when the parts do not sum, which is the assertion that would have caught this on day one. The test to
+apply to any coverage claim: **what is the denominator, and who chose it?**
+
 ---
 
 ## Tooling

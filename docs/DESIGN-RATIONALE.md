@@ -525,6 +525,45 @@ closing them took the gate to 78 of 111.
 
 ---
 
+## 5.8 The twenty-five `hard` `judge` rules — gated, not demoted
+
+`EVALUATION.md` §1 declares every `hard` rule a gate. Eighty-five are `auto` or `render` and the
+mechanical gate owns them; four have `Check: —` and bind whoever builds a check rather than the deck.
+**The remaining twenty-five are `judge`, and until 2026-08-09 nothing produced a verdict for any of
+them** — eleven were not named anywhere in `EVALUATION.md`, four of those being §3.4's deliverable
+contract, the section this document's §3 records as the one the owner named after reading the deck.
+
+**The choice was between gating them by judgement and dropping the word *gate*.** They are not the
+same size of change, and the smaller-looking one is the one that loses something.
+
+**Why not demote them into the dimensions.** The dimensions score 0–4, and §1 forbids scoring a
+`hard` rule. So letting S1 or S4 carry DS-201, DS-204, DS-207 and DS-208 converts each from a
+**defect** into *a point off a score* — a deck could bury its deliverable in a table cell, score 3 on
+Density, clear the threshold, and ship. Those four rules are the reason the publishing gate and
+[T-028](../tasks/T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) exist; demoting
+them to make the bookkeeping tidy inverts the priority the ruleset was built around.
+
+**Why §1's own reason does not license leaving them unobserved.** §1 justifies *`hard` rules are
+never scored* with one sentence: *averaging a hard failure into a score is how a deck ships with a
+wrong number on the title slide and an 84%.* That reason is about **dilution by arithmetic**. It says
+nothing about who observes the failure — so it forbids scoring them and does not permit ignoring
+them. The checklist emits rule IDs and no numbers, which is exactly what the reason asks for.
+
+**What made it affordable.** Twenty-five yes/no judgements inside a pass that already reads the whole
+deck end to end, so §8.1's cost of two passes per measurement round is unchanged. A separate pass was
+rejected for the reason §8.1 already gives against a pass per slide: the second read buys nothing the
+first cannot see.
+
+**The first run justified the machinery.** Applied to
+[`examples/reference-deck.html`](../examples/reference-deck.html), twenty-three passed and **two
+failed** — DS-036, whose mono role carries load-bearing labels and a legend DS-026 obliges the deck
+to show, and DS-208, whose *no cultural metaphor* clause catches a ribbon-cutting headline. Neither
+is reachable by any check in this repository, and the deck had passed every gate in it since
+[T-040](../tasks/T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md).
+[T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md) settles both.
+
+---
+
 ## 6. Drops and amendments worth knowing
 
 **DS-011 — one palette per deck was dropped.** The corpus rule (C7) is `dominant`; it describes what

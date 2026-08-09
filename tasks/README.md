@@ -27,9 +27,9 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | WP2 | `proposed` | specify | - | - |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | WP3 | `proposed` | specify | - | - |
 | [T-042](T-042-audit-the-whole-repository-against-itself.md) | Audit the repository against itself — stale claims, unreachable rules, and unchecked references | none | `proposed` | specify | - | - |
-| [T-048](T-048-gate-the-hard-rules-only-judgement-can-reach.md) | Gate the twenty-five hard rules only a judgement pass can reach | WP2 | `proposed` | specify | - | - |
 | [T-050](T-050-write-the-repository-readme.md) | Write the repository README — what exists, what does not, and how to run it | final | `proposed` | specify | - | - |
 | [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | none | `proposed` | specify | - | - |
+| [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | Settle the two hard-judge failures the checklist's first run found in the reference deck | none | `proposed` | specify | - | - |
 
 ## Closed
 
@@ -73,10 +73,11 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 | [T-045](T-045-sweep-the-stale-claims-across-the-live-documents.md) | Sweep the nine stale claims the audit found across the live documents | `done` | 2026-08-09 |
 | [T-046](T-046-extend-task-py-to-what-it-cannot-see.md) | Extend task.py to the three things it cannot currently see | `done` | 2026-08-09 |
 | [T-047](T-047-give-the-rationale-conflicts-their-own-id-namespace.md) | Give the rationale's conflicts their own ID namespace, and fix the mis-citation it has already caused | `done` | 2026-08-09 |
+| [T-048](T-048-gate-the-hard-rules-only-judgement-can-reach.md) | Gate the twenty-five hard rules only a judgement pass can reach | `done` | 2026-08-09 |
 | [T-049](T-049-reconcile-the-session-memory-with-the-research.md) | Reconcile the session memory with what the research settled and the owner last said | `done` | 2026-08-09 |
 
 ## Next ID
 
-`T-052`
+`T-053`
 
 <!-- end generated -->

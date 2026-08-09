@@ -37,6 +37,50 @@ failure into a score is how a deck ships with a wrong number on the title slide 
 | Result | pass / fail, per rule ID | 0–4 per dimension |
 | On failure | The deck is defective. Fix before scoring is meaningful. | A finding with a severity, entering the loop |
 
+**A `hard` rule cited in a dimension's rule list is context for the anchor, not a scoring input.**
+§3 and §4 cite `DS-nnn` IDs so a scorer knows what the anchor is talking about — S1's anchors cite
+DS-090 because *the headline is a claim* is what "claim" means there. The rule's own verdict comes
+from a gate, and no `hard` rule contributes to a 0–4. **The two sentences above were read as
+contradicting each other until 2026-08-09**; they do not, and this is which is which.
+
+### 1.1 The gate has two halves, and both are pass/fail
+
+`hard` rules divide by their `Check` value, and **the split is derived, never listed here**:
+
+```
+python tools/deck/ruleset.py --gates
+```
+
+| Which | Who emits the verdict |
+| :--- | :--- |
+| `auto` · `render` | **The mechanical gate** — `tools/deck/check.py`, §2 stages 1 and 2 |
+| `judge` | **The hard-judge checklist**, run inside the fresh-context pass (§8.1) |
+| `Check: —` | Nobody. These bind whoever builds a check, not the deck |
+
+**The checklist exists because twenty-five `hard` rules were declared gates and gated by nothing.**
+Stages 3 and 4 produce 0–4 dimension scores, and this section says `hard` rules are never scored —
+so those twenty-five were simultaneously declared gates and excluded from the only machinery that
+touched them. Eleven were named nowhere in this document at all, four of them §3.4's deliverable
+contract. **That is L-41 one layer up**: [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md)
+made a silent *mechanical* rule a red run the same afternoon, and the judgement half had no
+counterpart, so a `hard` `judge` rule could be added and nothing would notice it was unowned.
+
+**How it runs.** Inside the existing fresh-context pass, **before** it scores anything, over the
+whole deck in one read — the same argument §8.1 gives for scoring S1, S2 and S4 in one pass rather
+than twelve: these are judgements about the deck a reader actually meets. A rule whose subject is a
+slide names the slide in its verdict; a deck-wide rule names the deck. **No extra pass, so §8.1's
+cost of 2 passes per measurement round is unchanged** — which is what makes gating them affordable.
+
+**What it emits, and what fails the run.** One line per rule ID: `pass`, `fail`, or **excused in
+writing** with what would close the excusal. **A rule in none of those three states fails the run**,
+exactly as it does mechanically — a checklist that can quietly omit a rule is the defect this
+section was written to remove, not a smaller version of it. Verdicts carry rule IDs and never
+numbers; nothing here reaches a score.
+
+**Excusals are for the instrument, not the rule.** *"No deck in this repository has an appendix"*
+is a reason; *"hard to judge"* is not. A `hard` rule that genuinely cannot be judged is a **ruleset
+finding to raise** — the label is wrong — and never a row quietly skipped.
+
 > **Every count in this document is derived from `DESIGN-SYSTEM.md` and goes stale when a rule is
 > added.** These are as of **2026-08-09: 161 rules**, counting DS-000. **Re-derive them, never adjust
 > them by hand** — the previous set was wrong by six, having been written before the rules T-027 and
@@ -203,7 +247,9 @@ Four dimensions, **0–4 each, maximum 16.**
 
 **All three conditions must hold. They are not averaged.**
 
-1. **Zero `hard` violations.** The gate.
+1. **Zero `hard` violations, across both halves of the gate** (§1.1) — the mechanical run *and* the
+   hard-judge checklist. A deck clean mechanically and failing DS-204 is not at threshold; until
+   2026-08-09 this condition named only the half a program could see.
 2. **Every slide ≥ 18/24, and no slide dimension below 2.**
 3. **Deck ≥ 12/16, and no deck dimension below 2.**
 
@@ -344,6 +390,12 @@ slide, and D1 to D4** — reading the finished artifact without the build histor
 **Cost accepted: 2 passes per measurement round** — 4 for a deck like T-024's, which reached PASS in
 two rounds; 6 at the cap of 3. The alternatives were 0 passes (author scores everything) and roughly
 25 passes for T-024's deck at a fresh-context pass per slide.
+
+**The hard-judge checklist (§1.1) runs inside this pass and does not change that cost.** It is
+twenty-five yes/no judgements over a deck the pass already reads end to end, taken **before** any
+scoring so a `hard` failure is a defect rather than a number. Giving it a pass of its own was
+rejected for the same reason §8.1 rejects a pass per slide: the second read buys nothing the first
+cannot see.
 
 **How the five judgement-only dimensions are covered.** They are the whole point of the ruling.
 [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.2 found that five of

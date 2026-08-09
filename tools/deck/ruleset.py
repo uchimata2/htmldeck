@@ -14,6 +14,7 @@ the first time (DESIGN-SYSTEM.md, *How to read a `Reach` cell*).
 
     python tools/deck/ruleset.py            # the table, and the counts that size a gate
     python tools/deck/ruleset.py --counts   # every figure the documents quote, derived
+    python tools/deck/ruleset.py --gates    # every `hard` rule and which gate owns it
 
 **`--counts` exists because the documents kept getting these wrong.** `EVALUATION.md` §1 records
 the set going stale twice in three days and instructs *"re-derive them, never adjust them by
@@ -156,6 +157,47 @@ def counts(path=SPEC):
     }
 
 
+def gates(path=SPEC):
+    """Every `hard` rule, split by which gate owes a verdict for it.
+
+    **`EVALUATION.md` describes these gates and must never list their members.** A list in prose
+    is a stored copy of a derivable fact and drifts on the first amendment (**L-08**) - and this
+    one drifted silently into twenty-five `hard` rules that were declared gates with nothing
+    gating them, eleven of which the document never mentioned at all (T-042, F-3).
+    """
+    rules = load(path)
+    hard = {k: v for k, v in rules.items() if v.label == "hard"}
+    return {
+        "mechanical": sorted(k for k, v in hard.items() if v.check in OWNED),
+        "judgement": sorted(k for k, v in hard.items() if v.check == "judge"),
+        "bindTheChecker": sorted(k for k, v in hard.items() if v.check == "—"),
+        "hard": sorted(hard),
+    }
+
+
+def print_gates(path=SPEC):
+    g = gates(path)
+    rules = load(path)
+    print("%s\n" % os.path.relpath(path, ROOT))
+    print("  hard rules                        %3d" % len(g["hard"]))
+    print("  gated mechanically (auto|render)  %3d   tools/deck/check.py" % len(g["mechanical"]))
+    print("  gated by judgement (judge)        %3d   EVALUATION.md 1.1, the hard-judge checklist"
+          % len(g["judgement"]))
+    print("  bind the checker, not the deck    %3d   %s"
+          % (len(g["bindTheChecker"]), " ".join(g["bindTheChecker"])))
+    total = len(g["mechanical"]) + len(g["judgement"]) + len(g["bindTheChecker"])
+    print("  ------------------------")
+    print("  %3d %s" % (total, "= hard, so every hard rule has an owner"
+                        if total == len(g["hard"]) else
+                        "AGAINST %d hard - a hard rule is owned twice or not at all"
+                        % len(g["hard"])))
+    print("\n  THE HARD-JUDGE CHECKLIST - one pass/fail each, no scores")
+    print("  %-8s %s" % ("ID", "RULE"))
+    for k in g["judgement"]:
+        print("  %-8s %s" % (k, rules[k].text[:96]))
+    return 0
+
+
 def print_counts(path=SPEC):
     c = counts(path)
     row = lambda pairs: "   ".join("%s %d" % (v, n) for v, n in pairs)   # noqa: E731
@@ -246,6 +288,18 @@ def self_test():
     if c["declared"] <= c["rows"]:
         sys.exit("SELF-TEST FAILED: no rule is declared outside the table, so the 160/161 "
                  "discrepancy has no derived explanation - DS-000 was expected")
+
+    # **Every `hard` rule has exactly one gate.** This is the partition F-3 found broken: 25 were
+    # declared gates with nothing gating them, and nothing anywhere said so because no arithmetic
+    # covered `hard` at all. Same device as `check.py`'s coverage account, one layer up.
+    g = gates()
+    owned = len(g["mechanical"]) + len(g["judgement"]) + len(g["bindTheChecker"])
+    if owned != len(g["hard"]):
+        sys.exit("SELF-TEST FAILED: %d hard rules split into %d owners - a hard rule is owned "
+                 "twice or not at all" % (len(g["hard"]), owned))
+    if not g["judgement"]:
+        sys.exit("SELF-TEST FAILED: no hard rule is `judge`, so the checklist EVALUATION.md 1.1 "
+                 "describes has no jurisdiction - one of the two is wrong")
     return True
 
 
@@ -253,6 +307,8 @@ def main(argv=()):
     self_test()
     if "--counts" in argv:
         return print_counts()
+    if "--gates" in argv:
+        return print_gates()
     rules = load()
     own = owned(rules)
     print("%s\n%d rules, %d owned by a gate (%d auto, %d render)"
