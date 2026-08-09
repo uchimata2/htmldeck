@@ -26,6 +26,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
 import render                                                        # noqa: E402
 import content                                                       # noqa: E402
 
@@ -102,8 +103,8 @@ def self_test():
 def main():
     self_test()
     content.self_test()
-    print("source:  %s" % os.path.relpath(SRC, ROOT))
-    print("sources: %s\n" % os.path.relpath(SOURCES, ROOT))
+    print("source:  %s" % paths.display_path(SRC, ROOT))
+    print("sources: %s\n" % paths.display_path(SOURCES, ROOT))
     bad = []
     for name, rule, edits in VARIANTS:
         deck = build(name, edits)
@@ -124,7 +125,7 @@ def main():
             print("  %-30s %s not among %s" % (name, rule, sorted(caught)))
         return 1
     print("\nVariants are written to %s and are not committed - the suite regenerates them."
-          % os.path.relpath(OUT, ROOT))
+          % paths.display_path(OUT, ROOT))
     return 0
 
 

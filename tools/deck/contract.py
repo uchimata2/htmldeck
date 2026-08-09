@@ -27,6 +27,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
 import render                                                        # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -357,7 +358,7 @@ def main(deck, which=None):
     self_test()
     render.self_test()
     print("browser: %s" % render.CHROME)
-    print("deck:    %s\n" % os.path.relpath(deck, ROOT))
+    print("deck:    %s\n" % paths.display_path(deck, ROOT))
     print("=== viewport sweep")
     rows = audit(deck, which)
     failures = []

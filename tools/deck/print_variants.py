@@ -44,6 +44,9 @@ import sys
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DECK = os.path.join(ROOT, "examples", "reference-deck.html")
 OUT = os.path.join(ROOT, ".assets-cache", "print")
@@ -272,7 +275,7 @@ def self_test(source):
 
 def build():
     if not os.path.exists(DECK):
-        print("Deck not found: %s" % os.path.relpath(DECK, ROOT))
+        print("Deck not found: %s" % paths.display_path(DECK, ROOT))
         return 1
     with open(DECK, encoding="utf-8") as fh:
         source = fh.read()
@@ -290,7 +293,7 @@ def build():
         written.append((name, path, os.path.getsize(path), len(css.encode("utf-8"))))
 
     base = os.path.getsize(DECK)
-    print("\nPRINT VARIANTS BUILT - %s" % os.path.relpath(OUT, ROOT))
+    print("\nPRINT VARIANTS BUILT - %s" % paths.display_path(OUT, ROOT))
     print("-" * 72)
     print("  %-28s %9.1f KB   (deck as committed)" % ("reference-deck.html", base / 1024.0))
     for name, path, size, csslen in written:

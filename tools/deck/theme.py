@@ -26,6 +26,9 @@ import sys
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CONTRACT = os.path.join(ROOT, "docs", "THEME-CONTRACT.md")
 FACES = os.path.join(ROOT, "themes", "faces")
@@ -273,7 +276,7 @@ def resolve(source, faces_dir=FACES):
         path = os.path.join(faces_dir, slug + ".css")
         if not os.path.exists(path):
             sys.exit("theme names the face %r and %s does not exist"
-                     % (slug, os.path.relpath(path, ROOT)))
+                     % (slug, paths.display_path(path, ROOT)))
         parts.append(io.open(path, encoding="utf-8").read().rstrip("\n"))
     return FACE_DIRECTIVE.sub(lambda _m: "\n\n".join(parts), source, count=1)
 
@@ -551,7 +554,7 @@ def self_test():
 
 def print_tokens():
     tokens, exemptions = load()
-    print("%s\n" % os.path.relpath(CONTRACT, ROOT))
+    print("%s\n" % paths.display_path(CONTRACT, ROOT))
     for axis in AXES:
         rows = sorted((t for t in tokens.values() if t.axis == axis), key=lambda t: t.name)
         prim = len([t for t in rows if t.kind == "primitive"])
@@ -593,7 +596,7 @@ def main(argv):
     if cmd == "validate":
         src = io.open(argv[1], encoding="utf-8").read()
         bad = validate(src)
-        print("%s - %s" % (os.path.relpath(argv[1], ROOT),
+        print("%s - %s" % (paths.display_path(argv[1], ROOT),
                            "conforms" if not bad else "%d problem(s)" % len(bad)))
         for axis, msg in bad:
             print("  %-9s %s" % (axis or "-", msg))
@@ -606,11 +609,11 @@ def main(argv):
         bad = validate(src)
         if bad:
             sys.exit("%s does not satisfy the contract:\n  %s"
-                     % (os.path.relpath(theme, ROOT), "\n  ".join(bad)))
+                     % (paths.display_path(theme, ROOT), "\n  ".join(bad)))
         new = swap(html, resolve(src))
         io.open(out, "w", encoding="utf-8", newline="\n").write(new)
         print("%s + %s -> %s (%d bytes)"
-              % (os.path.basename(deck), os.path.basename(theme), os.path.relpath(out, ROOT),
+              % (os.path.basename(deck), os.path.basename(theme), paths.display_path(out, ROOT),
                  len(new.encode("utf-8"))))
         return 0
     if cmd == "check":

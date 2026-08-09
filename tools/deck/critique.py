@@ -38,6 +38,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import paths                                                        # noqa: E402
 import ruleset as ruleset_mod  # noqa: E402  - sibling tools, not a package
 
 ROOT = os.path.dirname(os.path.dirname(HERE))
@@ -323,7 +324,7 @@ def main(argv):
     if data is None:
         sys.exit("could not read the gate for %s: %s" % (deck, why))
 
-    print("deck:    %s" % os.path.relpath(deck, ROOT).replace("\\", "/"))
+    print("deck:    %s" % paths.display_path(deck, ROOT).replace("\\", "/"))
     print("")
     for line in spine(data, rules, bool(sources)) + ledger(data, deck, sources):
         print(line)

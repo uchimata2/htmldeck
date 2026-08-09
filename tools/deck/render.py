@@ -33,6 +33,9 @@ import tempfile
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 OUT = os.path.join(ROOT, ".assets-cache", "deck")
 
@@ -323,7 +326,7 @@ def slide_count(deck):
     n = len(re.findall(r'<section[^>]*\bclass="slide\b', html))
     if not n:
         sys.exit("no `<section class=\"slide\">` found in %s - refusing to guess a slide count"
-                 % os.path.relpath(deck, ROOT))
+                 % paths.display_path(deck, ROOT))
     return n
 
 
@@ -357,7 +360,7 @@ def main(argv):
     # being satisfied against an artifact two slides short (**L-05**).
     which = [int(x) for x in argv[2].split(",")] if len(argv) > 2 else list(range(slide_count(deck)))
     print("browser: %s" % CHROME)
-    print("deck:    %s\n" % os.path.relpath(deck, ROOT))
+    print("deck:    %s\n" % paths.display_path(deck, ROOT))
     if cmd == "measure":
         cmd_measure(deck, which)
     elif cmd == "shots":

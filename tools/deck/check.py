@@ -30,6 +30,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
 import render                                                       # noqa: E402
 import ruleset                                                      # noqa: E402
 import audit                                                        # noqa: E402
@@ -245,15 +246,27 @@ def account(rows):
     by_ruleset = {k for k, v in own.items() if v.excused}
     cited = decided - by_ruleset
     deferred = {k for k in DEFERRED if k in own}
-    silent = set(own) - cited - by_ruleset - deferred
+    # **`undecided` is its own bucket and is not a coverage fault (T-065).** A rule enters it only
+    # by its check RUNNING and returning None, so nothing can drain here by neglect: a rule with no
+    # check never produces a row and still falls to `silent`, which still fails the run. That
+    # structural difference is what makes this bucket safe where a general forgiving one would not
+    # be, and it is why L-36's argument does not reach it.
+    #
+    # The deeper reason: coverage is a claim about the GATE, not about one deck. A check that ran
+    # and found nothing has full coverage. Failing the run because this deck has no disclosures made
+    # the gate's coverage verdict depend on the deck's content, and made a deck specified without
+    # disclosures un-passable - which is a check forbidding a design choice (CLAUDE.md).
+    undecided = no_subject - by_ruleset - deferred
+    silent = set(own) - cited - by_ruleset - deferred - undecided
     stale = deferred & (cited | by_ruleset)
     unknown = set(DEFERRED) - set(own)
-    buckets = len(cited) + len(by_ruleset) + len(deferred) + len(silent)
+    buckets = len(cited) + len(by_ruleset) + len(deferred) + len(silent) + len(undecided)
     return {
         "owned": sorted(own), "checked": sorted(cited), "failing": sorted(failed),
         "excusedByRuleset": sorted(by_ruleset), "deferred": sorted(deferred),
         "silent": sorted(silent), "staleExcusals": sorted(stale),
-        "silentNoSubject": sorted(no_subject & silent),
+        "undecided": sorted(undecided),
+        "silentNoSubject": sorted(undecided),   # kept: the pipeline reads this key
         "excusalsForRulesNotOwned": sorted(unknown),
         "measuredThoughExcused": sorted((decided | no_subject) & by_ruleset),
         "bucketSum": buckets, "partitionError": buckets - len(own),
@@ -287,7 +300,7 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
             "PARTITION %+d (buckets %d, owned %d)"
             % (acct["partitionError"], acct["bucketSum"], len(acct["owned"]))]
     return {
-        "deck": os.path.relpath(deck, ROOT).replace("\\", "/"),
+        "deck": paths.display_path(deck, ROOT).replace("\\", "/"),
         "rows": [{"rule": r, "what": w, "ok": ok} for r, w, ok in rows],
         "account": acct,
         "ledger": ledger,
@@ -372,12 +385,13 @@ def report(res, verbose=True):
     print("  excused in the rules %3d   %s" % (len(a["excusedByRuleset"]),
                                                " ".join(a["excusedByRuleset"])))
     print("  excused here         %3d" % len(a["deferred"]))
+    print("  undecided, no subject%3d   %s" % (len(a["undecided"]), " ".join(a["undecided"])))
     print("  SILENT               %3d   %s" % (len(a["silent"]), " ".join(a["silent"])))
-    if a["silentNoSubject"]:
-        print("      of which NO SUBJECT  %s" % " ".join(a["silentNoSubject"]))
-        print("      The check ran and found nothing in this deck to judge. That is a different\n"
-              "      fault from a rule with no check behind it, and it is fixed in the deck or in\n"
-              "      the rule's jurisdiction rather than in the gate.")
+    if a["undecided"]:
+        print("      The check ran and found nothing in this deck to judge, so the rule is neither\n"
+              "      passed nor failed. This is NOT a coverage fault and does not fail the run: a\n"
+              "      rule reaches it only by its check executing, so nothing can drain here by\n"
+              "      neglect. A rule with no check at all is SILENT above, and still fails.")
     print("  ------------------------")
     print("  buckets sum to       %3d   %s"
           % (a["bucketSum"],

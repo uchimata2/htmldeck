@@ -30,6 +30,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
 import render  # noqa: E402  - the real-Chrome harness, deliberately shared
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -196,7 +197,7 @@ def main():
         print("No Chrome or Edge found - this measurement needs a real browser (L-15).")
         return 3
     if not os.path.exists(DECK):
-        print("Deck not found: %s" % os.path.relpath(DECK, ROOT))
+        print("Deck not found: %s" % paths.display_path(DECK, ROOT))
         return 1
 
     probe_src = PROBE.replace("COUNTS", json.dumps(COUNTS))

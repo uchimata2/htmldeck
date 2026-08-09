@@ -25,6 +25,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
 import render                                                        # noqa: E402
 import audit                                                         # noqa: E402
 import contrast                                                      # noqa: E402
@@ -305,7 +306,7 @@ def run(variants, failures_of, label):
 
 def main(argv):
     self_test()
-    print("source:  %s\n" % os.path.relpath(SRC, ROOT))
+    print("source:  %s\n" % paths.display_path(SRC, ROOT))
     print("=== static (no browser)")
     bad = run(STATIC_VARIANTS, static_failures, "static")
     if "--static-only" not in argv:
@@ -320,7 +321,7 @@ def main(argv):
             print("  %-28s %s not among %s" % (name, rule, sorted(caught or [])))
         return 1
     print("Variants are written to %s and are not committed - the suite regenerates them."
-          % os.path.relpath(OUT, ROOT))
+          % paths.display_path(OUT, ROOT))
     return 0
 
 

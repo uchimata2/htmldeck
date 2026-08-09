@@ -72,6 +72,7 @@ python tools/deck/check.py examples/reference-deck.html
   failing                0
   excused in the rules   4   DS-042 DS-072 DS-210 DS-211
   excused here          28
+  undecided, no subject  0
   SILENT                 0
   ------------------------
   buckets sum to       113   = owned, so the account is a partition
@@ -126,7 +127,7 @@ python tools/docs/refcheck.py
 
 ```
 OK - 1025 document pointer(s) checked, 0 broken
-     492 section reference(s) resolved, 0 dead; 1176 not bound to a document and skipped.
+     492 section reference(s) resolved, 0 dead; 1179 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every

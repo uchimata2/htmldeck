@@ -32,6 +32,9 @@ import sys
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SPEC = os.path.join(ROOT, "docs", "DESIGN-SYSTEM.md")
 
@@ -178,7 +181,7 @@ def gates(path=SPEC):
 def print_gates(path=SPEC):
     g = gates(path)
     rules = load(path)
-    print("%s\n" % os.path.relpath(path, ROOT))
+    print("%s\n" % paths.display_path(path, ROOT))
     print("  hard rules                        %3d" % len(g["hard"]))
     print("  gated mechanically (auto|render)  %3d   tools/deck/check.py" % len(g["mechanical"]))
     print("  gated by judgement (judge)        %3d   EVALUATION.md 1.1, the hard-judge checklist"
@@ -201,7 +204,7 @@ def print_gates(path=SPEC):
 def print_counts(path=SPEC):
     c = counts(path)
     row = lambda pairs: "   ".join("%s %d" % (v, n) for v, n in pairs)   # noqa: E731
-    print("%s\n" % os.path.relpath(path, ROOT))
+    print("%s\n" % paths.display_path(path, ROOT))
     print("  rule rows in the table            %3d" % c["rows"])
     print("  + declared in prose, not a row    %3d   %s"
           % (len(c["offTable"]), " ".join("%s (%s)" % (r, lab or "no label")
@@ -312,7 +315,7 @@ def main(argv=()):
     rules = load()
     own = owned(rules)
     print("%s\n%d rules, %d owned by a gate (%d auto, %d render)"
-          % (os.path.relpath(SPEC, ROOT), len(rules), len(own),
+          % (paths.display_path(SPEC, ROOT), len(rules), len(own),
              len([r for r in own.values() if r.check == "auto"]),
              len([r for r in own.values() if r.check == "render"])))
     print("  owned and hard        %3d" % len([r for r in own.values() if r.label == "hard"]))

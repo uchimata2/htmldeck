@@ -22,6 +22,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
 import render                                                       # noqa: E402
 import contrast                                                     # noqa: E402
 import contract                                                     # noqa: E402
@@ -1375,10 +1376,12 @@ def render_verdicts(data):
          data.get("chromeHeightDu", 999) <= 90),
         ("DS-132", "tabbables from off-screen slides: %d" % data["tabbablesOffscreen"],
          data["tabbablesOffscreen"] == 0),
-        # `is True`, not `is not False`: a null means the probe never found a control to measure,
-        # and a gate must fail on "nothing measured" rather than pass on it (L-36).
+        # A null means the probe found no control to measure. That is neither pass nor fail: it is
+        # the subject being absent, which T-051 gave a third state and which this row was left out
+        # of. Failing here made a deck specified without disclosures un-passable (T-065).
         ("DS-130", "disclosure control in the tab order: %s" % data.get("currentDiscReachable"),
-         data.get("currentDiscReachable") is True),
+         None if data.get("currentDiscReachable") is None
+         else data["currentDiscReachable"] is True),
         # `smallestTarget` is null when nothing tabbable was measured, and a count of 0 then means
         # no target rather than no small one. The minimum is the denominator (T-051).
         ("DS-168", "targets under 24 CSS px: %d (smallest %s)"
@@ -1441,14 +1444,23 @@ def render_verdicts(data):
         ("DS-135", "the page title carries the slide's name: %s (%r)"
          % (data.get("titleCarriesSlide"), data.get("titleSample")),
          data.get("titleCarriesSlide") is True),
+        # `discControls > 0` was a requirement that the deck CONTAIN a disclosure control, which
+        # DESIGN-SYSTEM.md nowhere states - the gate enforcing a rule the ruleset does not have.
+        # With no controls the rule has no subject; with controls it checks their labels (T-065).
         ("DS-164", "disclosure controls with no real label: %d of %d"
          % (len(data.get("unlabelledDiscControls", [])), data.get("discControls", 0)),
-         not data.get("unlabelledDiscControls") and data.get("discControls", 0) > 0),
+         None if not data.get("discControls")
+         else not data.get("unlabelledDiscControls")),
+        # Both keys exist only on a deck with a disclosure control, same as DS-228 (T-065).
         ("DS-166", "arrow advances with everything closed: %s; the toggle does not advance: %s"
          % (data.get("arrowAdvancesClosed"), data.get("toggleDoesNotAdvance")),
-         data.get("arrowAdvancesClosed") is True and data.get("toggleDoesNotAdvance") is True),
+         None if data.get("arrowAdvancesClosed") is None
+         else data["arrowAdvancesClosed"] is True and data["toggleDoesNotAdvance"] is True),
+        # Null where the deck has no played mark to survive anything (T-065).
         ("DS-146", "the played mark survives navigating away and back: %s"
-         % data.get("playedSurvivesReturn"), data.get("playedSurvivesReturn") is True),
+         % data.get("playedSurvivesReturn"),
+         None if data.get("playedSurvivesReturn") is None
+         else data["playedSurvivesReturn"] is True),
         # DS-026 is measured (`rolesWithoutLegend`) and NOT emitted as a verdict: the rule wants a
         # *visible* legend and the tripwire slide draws one as two unmarked SVG swatches, which a
         # class-based check reports as missing. Excused in `check.py`, with the argument.
@@ -1503,6 +1515,27 @@ def self_test():
     if stale:
         sys.exit("SELF-TEST FAILED: %s are declared to pass on an absent subject and do not - the "
                  "declaration outlived the row it excuses" % ", ".join(sorted(stale)))
+
+    # **The same bar in the other direction (T-065).** Everything above asks which rows PASS on an
+    # absent subject. Nothing asked which rows FAIL on one, and four did: a deck specified with no
+    # disclosures was failed by DS-130, DS-164, DS-166 and DS-146 for not having the thing they
+    # judge. T-051 built the undecided state and converted three rows; these four were left, in the
+    # same list, and the asymmetry of this fixture is why nobody noticed.
+    #
+    # These seven read keys the probe emits **only inside `if (btns.length)`**, so on this
+    # measurement the key is absent rather than zero, and absent is undecided. Rows reading a key in
+    # ALWAYS_MEASURED are not in scope: a real measurement of zero is a real verdict, which is why
+    # DS-070 and DS-135 correctly stay False here.
+    verdicts = {r: ok for r, _w, ok in rows}
+    for rid in ("DS-130", "DS-164", "DS-166", "DS-146", "DS-168", "DS-228", "DS-138"):
+        if rid not in verdicts:
+            sys.exit("SELF-TEST FAILED: %s is no longer emitted as a verdict row, so the "
+                     "absent-subject assertion below is checking nothing" % rid)
+        if verdicts[rid] is not None:
+            sys.exit("SELF-TEST FAILED: %s returned %r against a measurement with no disclosure "
+                     "control. Its subject is absent, so it is undecided and must report None - "
+                     "reporting False fails a deck for not containing the thing the rule judges "
+                     "(T-065)." % (rid, verdicts[rid]))
 
     # A `guarded by` claim is a testable statement about another row, so it is tested. Without this
     # the table would be a set of comments, and a comment is what three previous fixes left behind.
@@ -1565,7 +1598,7 @@ def main(deck, skip_contract=False):
     contract.self_test()
     html = open(deck, "r", encoding="utf-8").read()
     print("browser: %s" % render.CHROME)
-    print("deck:    %s" % os.path.relpath(deck, ROOT))
+    print("deck:    %s" % paths.display_path(deck, ROOT))
 
     print("\n=== stage 1  auto gate (static)")
     failures = []

@@ -26,6 +26,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
 import render                                                        # noqa: E402
 import contract                                                      # noqa: E402
 
@@ -152,7 +153,7 @@ def main():
     render.self_test()
     contract.self_test()
     print("browser: %s" % render.CHROME)
-    print("source:  %s\n" % os.path.relpath(SRC, ROOT))
+    print("source:  %s\n" % paths.display_path(SRC, ROOT))
     bad = []
     for name, rule, which_pass, edits in VARIANTS:
         deck = build(name, edits)
@@ -169,7 +170,7 @@ def main():
         print("  MISSED  %-26s expected %s, gate reported %s"
               % (name, rule, ", ".join(sorted(caught)) or "no failure at all"))
     print("\nVariants are written to %s and are not committed - the suite regenerates them."
-          % os.path.relpath(OUT, ROOT))
+          % paths.display_path(OUT, ROOT))
     return 1 if bad else 0
 
 

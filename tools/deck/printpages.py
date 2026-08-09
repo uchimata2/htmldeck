@@ -25,6 +25,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
 import render                                                       # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -103,7 +104,7 @@ def main(deck, slides):
     self_test()
     render.self_test()
     print("browser: %s" % render.CHROME)
-    print("deck:    %s" % os.path.relpath(deck, ROOT))
+    print("deck:    %s" % paths.display_path(deck, ROOT))
     rows = verdicts(deck, slides)
     for rule, what, ok in rows:
         print("  %-8s %-70s %s" % (rule, what, "pass" if ok else "FAIL"))

@@ -30,6 +30,9 @@ import sys
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # A figure is a quantity a reader would repeat: money, a count, a percentage, a duration. A bare
@@ -367,7 +370,7 @@ def self_test():
 def main(deck, sources):
     self_test()
     L, rows = audit(deck, sources)
-    print("deck:    %s" % os.path.relpath(deck, ROOT))
+    print("deck:    %s" % paths.display_path(deck, ROOT))
     print("sources: %d file(s) - %s" % (L["sourceCount"], ", ".join(L["sourceFiles"]) or "none"))
     print("\n| Figure | Value | Origin | Used on |")
     print("| :--- | :--- | :--- | :--- |")

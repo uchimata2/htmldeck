@@ -31,6 +31,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import paths                                                        # noqa: E402
 import theme as theme_mod  # noqa: E402  - a sibling tool, not a package
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -507,7 +508,7 @@ def main(argv):
         if not rest:
             sys.exit("usage: shell.py check <deck>")
         deck = rest[0]
-        rel = os.path.relpath(deck, ROOT).replace("\\", "/")
+        rel = paths.display_path(deck, ROOT).replace("\\", "/")
         problems = check(read(deck), rel)
         for problem in problems:
             print("  %s" % problem)

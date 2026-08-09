@@ -47,7 +47,7 @@ happened.
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | `WP3` | `done` | `review` | - | T-040 | - | T-008 | T-001, T-002, T-004, T-007, T-016, T-017, T-018, T-019, T-021, T-022, T-023, T-025, T-027, T-028, T-032, T-034, T-036, T-037, T-038, T-039, T-041, T-042, T-043, T-047, T-048, T-050, T-051, T-053, T-054, T-055, T-058 |
 | [T-006](T-006-decide-the-chart-strategy.md) | Decide the chart strategy | `WP2` | `done` | `review` | - | - | T-013 | - | T-002, T-013, T-016, T-017, T-024 |
 | [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | `WP2` | `done` | `review` | - | - | T-001, T-014 | T-002 | T-002, T-005, T-016, T-021, T-024, T-057, T-059 |
-| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `v0.1` | `done` | `review` | - | - | T-002, T-004, T-005, T-056 | - | T-030, T-042, T-050, T-061 |
+| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `v0.1` | `done` | `review` | - | - | T-002, T-004, T-005, T-056 | - | T-030, T-042, T-050, T-061, T-064 |
 | [T-009](T-009-analyse-the-corpus-extract-my-deck-conventions.md) | Analyse the corpus — extract the deck conventions already in use | `WP1` | `done` | `review` | - | - | - | T-014 | T-012, T-014 |
 | [T-010](T-010-research-external-deck-design-and-ux-principles.md) | Research external deck-design and presentation UX principles | `WP1` | `done` | `review` | - | - | - | T-014 | T-014 |
 | [T-011](T-011-research-exemplary-decks-and-why-they-work.md) | Research exemplary decks and what makes them work | `WP1` | `done` | `review` | - | - | - | T-014 | T-014 |
@@ -87,12 +87,14 @@ happened.
 | [T-048](T-048-gate-the-hard-rules-only-judgement-can-reach.md) | Gate the twenty-five hard rules only a judgement pass can reach | `WP2` | `done` | `review` | T-042 | T-052 | - | - | T-004, T-005, T-023, T-026, T-027, T-037 |
 | [T-049](T-049-reconcile-the-session-memory-with-the-research.md) | Reconcile the session memory with what the research settled and the owner last said | - | `done` | `review` | T-042 | - | - | - | T-014, T-017 |
 | [T-050](T-050-write-the-repository-readme.md) | Write the repository README — what exists, what does not, and how to run it | `final` | `done` | `review` | T-042 | - | - | - | T-005, T-008, T-015, T-024, T-056, T-060 |
-| [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | - | `done` | `review` | T-044 | - | - | - | T-005, T-038, T-043, T-053, T-054 |
+| [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | - | `done` | `review` | T-044 | - | - | - | T-005, T-038, T-043, T-053, T-054, T-065 |
 | [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | Settle the two hard-judge failures the checklist's first run found in the reference deck | - | `done` | `review` | T-048 | - | - | - | T-024, T-028, T-040, T-044, T-056 |
 | [T-053](T-053-enforce-the-headline-ds-091-requires.md) | Enforce the headline DS-091 requires, and excuse the fragment count no check can reach | - | `done` | `review` | - | T-054, T-055 | - | - | T-005, T-037, T-038, T-051 |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `v0.1` | `done` | `review` | - | - | - | T-008 | T-042, T-050, T-052, T-060 |
-| [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md) | The scaffold check passed a manifest the installer rejects | `v0.1` | `done` | `review` | - | - | - | - | T-008, T-015, T-062 |
+| [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md) | The scaffold check passed a manifest the installer rejects | `v0.1` | `done` | `review` | - | - | - | - | T-008, T-015, T-062, T-064 |
 | [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) | Retire the pre-split task tool and repoint what points at it | `v0.2` | `done` | `review` | - | - | - | - | T-046, T-061, T-063 |
 | [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `v0.2` | `done` | `review` | - | - | - | - | T-062 |
+| [T-064](T-064-the-tools-crash-when-the-deck-is-on-another-drive.md) | The tools crash when the deck is on a different drive from the plugin | `v0.1` | `done` | `review` | - | - | - | - | T-008, T-061, T-065 |
+| [T-065](T-065-four-rules-still-fail-a-deck-for-not-having-their-subject.md) | Four rules still fail a deck for not having their subject | `v0.1` | `done` | `review` | - | - | - | - | T-051, T-064 |
 
 <!-- taskmd:end -->
