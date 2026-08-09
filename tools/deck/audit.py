@@ -26,6 +26,7 @@ import render                                                       # noqa: E402
 import contrast                                                     # noqa: E402
 import contract                                                     # noqa: E402
 import theme                                                        # noqa: E402
+import content                                                      # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -477,6 +478,88 @@ STATIC = [
     ("DS-163", "no :hover rule revealing content", ds163_no_hover_only),
     ("DS-165", "the disclosure mark is not restyled per slide", ds165_one_disclosure_mark),
 ]
+
+
+# ------------------------------------------------------------------ stage 1b: the editorial split
+# **DS-230 is `judge` and this is not it.** What tier two is *for* needs someone to read the slide;
+# what a program can settle is the one thing DS-161 leaves decidable — whether the deliverable
+# quotes a number the closed slide does not show (DS-231).
+#
+# It sits here rather than in `STATIC` because the count has to travel in the row's text: *0
+# problems over 6 cited figures* and *0 problems over none* read identically otherwise (**L-36**),
+# and this deck's bottom lines carry six figures between them, one of which the panel repeats.
+#
+# The two sides are read with **different instruments on purpose**. A figure is `content.FIGURE` —
+# a quantity a reader repeats, so a bottom line citing one is making a claim — while support is any
+# number visible with the slide closed. Reading support strictly failed slide 3 of the reference
+# deck, where `11` and `minutes, average wait` are two elements and so never one figure: the deck
+# was right and the instrument was wrong, which is the direction a gate row cannot afford.
+
+SLIDE_BLOCK = re.compile(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>(.*?)</section>',
+                         re.S | re.I)
+DISC_PANEL = re.compile(r'<div class="disc-panel"[^>]*>.*?</div>\s*</div>', re.S)
+BOTTOM_LINE = re.compile(r'<p class="bottom-line[^"]*"[^>]*>.*?</p>', re.S)
+ANY_NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?\s?[MKB]?", re.I)
+
+
+def magnitude(value):
+    """A figure reduced to what makes it the same figure. `$5.6M` and `5.6 m` are one; `11 minutes`
+    and a bare `11` are one, because the unit is how the face happens to be written and not what
+    the bottom line is claiming. **The magnitude suffix is only taken when it stands alone** — `M`
+    in `5.6M` is millions, and the `m` in `11 minutes` is the start of a word."""
+    v = value.lower().replace(",", "").replace("$", "").strip()
+    m = re.match(r"^([\d.]+)\s*([mkb])(?![a-z])", v)
+    num, mag = (m.group(1), m.group(2)) if m else (re.match(r"^([\d.]*)", v).group(1), "")
+    num = num.rstrip(".")
+    if "." in num:
+        num = num.rstrip("0").rstrip(".")
+    return (num + mag) if num else v
+
+
+def _figures(fragment):
+    return {magnitude(f.group(1)) for run in content.runs(fragment)
+            for f in content.FIGURE.finditer(run)}
+
+
+def _numbers(fragment):
+    return {magnitude(n.group(0)) for run in content.runs(fragment)
+            for n in ANY_NUMBER.finditer(run)}
+
+
+def split_data(html):
+    """`(cited, unsupported)` — figures the deck's bottom lines cite, and those of them a reader
+    with every panel closed cannot see anywhere on the slide."""
+    cited, unsupported = 0, []
+    for m in SLIDE_BLOCK.finditer(html):
+        block, panels = m.group(1), DISC_PANEL.findall(m.group(1))
+        if not panels:
+            continue
+        bl = BOTTOM_LINE.search(block)
+        if not bl:
+            continue                      # DS-202's subject, and its row already fails on it
+        # **The bottom line is not its own support**, and leaving it in the face made the row
+        # vacuous: every figure it cites appears in it, so nothing could ever be unsupported. What
+        # the reader needs closed is the slide showing the number, not the sentence claiming it.
+        face = block.replace(bl.group(0), " ")
+        for p in panels:
+            face = face.replace(p, " ")
+        quoted = _figures(bl.group(0))
+        hidden = set().union(*[_figures(p) for p in panels])
+        cited += len(quoted)
+        name = re.search(r'data-name="([^"]*)"', m.group(0))
+        for fig in sorted((quoted & hidden) - _numbers(face)):
+            unsupported.append(((name.group(1) if name else "?"), fig))
+    return cited, unsupported
+
+
+def split_verdicts(html):
+    """DS-231's row. A prohibition over the deck's bottom lines — see `ABSENCE_IS_A_PASS`."""
+    cited, bad = split_data(html)
+    return [("DS-231", "figures a bottom line cites that live only behind the click: %d of %d%s"
+             % (len(bad), cited,
+                "" if not bad else " - " + "; ".join("%s: %s" % b for b in bad[:3])),
+             not bad)]
+
 
 # ---------------------------------------------------------------------------- stage 2: rendered
 PROBE = r"""
@@ -1219,6 +1302,10 @@ ABSENCE_IS_A_PASS = {
     "DS-219": ("conditional", "a label sitting on a data mark owes two ratios; no label on a mark, "
                               "no pair to measure. The row prints its own denominator, `0 of 0`"),
     "DS-227": ("prohibition", "no panel open at load"),
+    "DS-231": ("prohibition", "no figure a bottom line cites living only behind a disclosure. The "
+                              "subject is the deck's bottom lines, and the row prints its own "
+                              "denominator - a deck with no panels, or none whose bottom line "
+                              "quotes a figure, has hidden nothing"),
 }
 
 # The keys the probe emits unconditionally, so a measurement without them is malformed rather than
@@ -1399,6 +1486,11 @@ def self_test():
                  "ALWAYS_MEASURED and the nothing-was-found measurement cannot be built. Add the "
                  "key there if the probe always emits it, or read it with .get()" % exc)
 
+    # The static split row is held to the same bar, against the same absent subject: a document
+    # with no slides. Leaving it out would have let the one row this discipline was extended for
+    # skip it - the table covers rows, not stages.
+    rows = rows + split_verdicts("")
+
     passing = sorted({r for r, _w, ok in rows if ok is True})
     undeclared = [r for r in passing if r not in ABSENCE_IS_A_PASS]
     if undeclared:
@@ -1443,6 +1535,27 @@ def self_test():
             sys.exit("SELF-TEST FAILED: DS-140 does not report %s - it gave %r. The fault T-051 "
                      "exists for is back, or the row has stopped deciding anything"
                      % (state, ds140(**kw)))
+
+    # DS-231 has to be able to fail, and it has to fail for the stated reason rather than on any
+    # figure the panel happens to repeat. The two documents differ in one place: whether the face
+    # says the number the bottom line quotes.
+    def one(face):
+        return ('<section class="slide" data-name="x"><div class="body">%s</div>'
+                '<div class="disc" data-disc="derivation"><div class="disc-panel">'
+                '<div class="row"><span>the gate clears at 26%%</span></div></div></div>'
+                '<p class="bottom-line"><b>the gate clears at 26%% and the package completes</b>'
+                '</p></section>' % face)
+    if split_verdicts(one("<p>26% against an 18% threshold</p>"))[0][2] is not True:
+        sys.exit("SELF-TEST FAILED: DS-231 fired on a figure the face shows, which is a gate that "
+                 "fails a conforming deck")
+    if split_verdicts(one("<p>the committee reads it in public</p>"))[0][2] is not False:
+        sys.exit("SELF-TEST FAILED: DS-231 passed a bottom line whose only support is behind the "
+                 "click, which is the whole of the rule")
+    if magnitude("11 minutes") != magnitude("11"):
+        sys.exit("SELF-TEST FAILED: a unit word changed a figure's identity, so a bottom line "
+                 "citing `11 minutes` cannot be cleared by a face that shows `11`")
+    if magnitude("$5.6M") == magnitude("5.6 minutes"):
+        sys.exit("SELF-TEST FAILED: millions and minutes normalise to one figure")
     return True
 
 

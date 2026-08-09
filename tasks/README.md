@@ -28,10 +28,9 @@ happened.
 
 | ID | Title | Status | Phase | Blocked by | Blocks |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | `proposed` | specify | T-016 | T-008, T-019 |
+| [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | `proposed` | specify | - | T-008, T-019 |
 | [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | `proposed` | specify | - | T-008 |
 | [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `proposed` | specify | T-002, T-004, T-056 | - |
-| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | `in_progress` | implement | - | T-002 |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `proposed` | specify | - | T-008 |
 
 ### v0.2
@@ -44,6 +43,7 @@ happened.
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `proposed` | specify | - | - |
 | [T-055](T-055-a-variant-that-leaves-malformed-markup.md) | Close the slide-is-not-a-section variant's open tag, so it tests the tag and not parser repair | `proposed` | specify | - | - |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `proposed` | specify | - | - |
+| [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `proposed` | specify | - | - |
 
 ## Closed
 
@@ -61,6 +61,7 @@ happened.
 | [T-013](T-013-research-offline-safe-assets-and-licences.md) | Research offline-safe assets — icons, illustration, fonts, diagram tooling | `done` | 2026-08-06 |
 | [T-014](T-014-synthesise-research-into-the-design-system-reference.md) | Synthesise the research into the htmldeck design-system reference | `done` | 2026-08-06 |
 | [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | `done` | 2026-08-07 |
+| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | `done` | 2026-08-09 |
 | [T-017](T-017-define-the-portability-contract.md) | Define the portability contract — what "opens anywhere and works" actually permits | `done` | 2026-08-06 |
 | [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | `done` | 2026-08-07 |
 | [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | `done` | 2026-08-07 |
@@ -98,6 +99,6 @@ happened.
 
 ## Next ID
 
-`T-058`
+`T-059`
 
 <!-- end generated -->

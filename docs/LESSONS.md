@@ -970,6 +970,58 @@ its presence the failure.
 
 ---
 
+### L-47 — A judgement rule needs the artefact to carry the author's claim, or every review re-derives it
+
+**A rule nothing can check is not a rule nothing can record.** When a rule is `judge`, the temptation
+is to write it in the ruleset and stop, because there is no check to build. What that leaves is a
+reviewer opening the artefact and reconstructing, from scratch and for every instance, what the
+author was trying to do — which is the expensive half of reviewing and the half most likely to be
+skipped.
+
+The fix is to make the artefact say it. Two rules here do:
+
+| Rule | The claim, written down | What the gate can still verify |
+| :--- | :--- | :--- |
+| DS-217 | `data-scale` on the ruler — *this is a regular repeating scale* | the claim itself: uniform mark, uniform pitch, no per-item label at rest |
+| DS-230 | `data-disc` on a disclosure — *this panel is a `derivation`* | **closure only** — one of four, never the right one of four |
+
+**The two are not the same strength and the difference has to be stated rather than blurred.** A
+declared attribute that nothing verifies is self-reporting, and the answer is not to drop it — it is
+to say on the rule's own row how far the gate reaches, so nobody reads a green run as the claim
+having been checked. What the declaration buys even when unverifiable is the review question:
+*is this claim true* is a far sharper thing to ask than *is this any good*, and it is answerable by
+someone who was not there.
+
+**How to apply.** When a rule comes out `judge`, ask what the author decided and whether the
+artefact can record the decision — an attribute, a class, a named region. Then say explicitly which
+part of it the gate decides. A judgement with a written-down claim is reviewable; a judgement with
+nothing written down is re-derived every time, by everyone.
+
+---
+
+### L-48 — Read the claim strictly and its support generously, and which way to err depends on who reads the verdict
+
+**Over-reporting is the safe direction only when a person is the consumer.**
+[`content.py`](../tools/deck/content.py) says so in its own docstring, and it is right for the
+figure ledger: a source phrased differently from the slide reads as unsourced, someone looks, and
+nothing was lost. **A gate row is the opposite case.** It blocks a build, so a false positive is a
+conforming deck that cannot ship, and the person who meets it has no reason to think the instrument
+is wrong rather than the deck.
+
+DS-231 is where this was learned. The rule — *a bottom line never cites a figure that lives only
+behind the click* — has two sides, and the first instrument read both strictly. It failed slide 3
+of the reference deck, whose stat figure `11` and unit `minutes, average wait` are two separate
+elements, so `11 minutes` is never one figure on that face. The deck was right. The fix is
+asymmetry: **the citation is matched strictly, because a citation is the claim; the support is
+matched loosely, because support only has to be visible.**
+
+**How to apply.** Before writing a check that compares two halves of an artefact, decide which half
+carries the claim and which merely has to exist, and set the strictness per side rather than per
+check. Then ask who reads the verdict: a person reviewing can absorb a false positive, and a gate
+cannot.
+
+---
+
 ## Tooling
 
 ### L-26 — Measure the content, not the box; and pin motion before capturing

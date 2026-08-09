@@ -311,6 +311,20 @@ def structure(root, parts, styled):
             missing = [e for e in els if attr.lower() not in e.attrs]
             if missing:
                 bad.append(".%s: %d of %d carry no %s" % (name, len(missing), len(els), attr))
+            elif "/" in needs:
+                # A closed set. `data-disc` is the only one, and the check is closure alone: that
+                # the value is one of DS-230's four kinds, never that it is the RIGHT one - which
+                # is why DS-230 is `judge` and this row cites DS-229 with the rest of the markup.
+                allowed = needs.split("/")
+                wrong = sorted({(e.attrs.get(attr.lower()) or "").strip() or "(empty)"
+                                for e in els if (e.attrs.get(attr.lower()) or "").strip()
+                                not in allowed})
+                if wrong:
+                    bad.append(".%s: %s is a closed set (%s) and %d element(s) leave it: %s"
+                               % (name, attr, " ".join(allowed),
+                                  len([e for e in els
+                                       if (e.attrs.get(attr.lower()) or "").strip()
+                                       not in allowed]), " ".join(wrong)))
             elif needs:
                 empty = [e for e in els if needs not in (e.attrs.get(attr.lower()) or "")]
                 if empty:
@@ -431,7 +445,7 @@ def self_test():
 
     doc = ('<body><div class="viewport" id="v"><main class="stage" id="s" aria-label="x">'
            '<section class="slide" data-name="a" data-stage="0" aria-label="Slide 1">'
-           '<div class="disc" data-disc><button class="disc-btn" aria-expanded="false" '
+           '<div class="disc" data-disc="scope"><button class="disc-btn" aria-expanded="false" '
            'aria-controls="p"><span class="disc-mark" aria-hidden="true"></span>'
            '<span class="disc-label">L</span></button>'
            '<div class="disc-panel" id="p" hidden><div class="row"><span class="k">K</span>'
@@ -447,9 +461,15 @@ def self_test():
     broken = parse(doc.replace(' aria-controls="p"', ""))
     if not any("aria-controls" in m for m in structure(broken, tiny, {})):
         sys.exit("SELF-TEST FAILED: a control with no aria-controls was not reported")
-    moved = parse(doc.replace('<div class="disc" data-disc>', "<div>"))
+    moved = parse(doc.replace('<div class="disc" data-disc="scope">', "<div>"))
     if not any("sit outside" in m for m in structure(moved, tiny, {})):
         sys.exit("SELF-TEST FAILED: a panel outside its .disc was not reported")
+    # The closed set has to be closed, or `data-disc` is back to carrying nothing (DS-230).
+    outside = parse(doc.replace('data-disc="scope"', 'data-disc="appendix"'))
+    if not any("closed set" in m for m in structure(outside, tiny, {})):
+        sys.exit("SELF-TEST FAILED: a data-disc outside DS-230's four kinds was not reported")
+    if not any("closed set" in m for m in structure(parse(doc.replace('="scope"', '')), tiny, {})):
+        sys.exit("SELF-TEST FAILED: a valueless data-disc was not reported")
 
     # The completeness check has to notice a component nobody contracted, or it is decoration.
     if not missing_rows({}, {"invented": [".invented"]}):

@@ -39,19 +39,19 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 ```
-  owned by a gate      112
-  checked               80
+  owned by a gate      113
+  checked               81
   failing                0
   excused in the rules   4   DS-042 DS-072 DS-210 DS-211
   excused here          28
   SILENT                 0
   ------------------------
-  buckets sum to       112   = owned, so the account is a partition
+  buckets sum to       113   = owned, so the account is a partition
 
 0 failure(s): none
 ```
 
-**The account is the point.** A gate that checks 80 of 112 rules and says nothing about the other 32
+**The account is the point.** A gate that checks 81 of 113 rules and says nothing about the other 32
 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each run **checked**,
 **excused in writing** — with what would close the excusal — or **failing**, and a rule in none of
 those three states *fails the run*. So a rule added to the ruleset with nothing behind it is a red

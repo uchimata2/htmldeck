@@ -87,8 +87,8 @@ def build():
                'still adding trips in 2031.</b>',
                '<b>Bike-share stalls at 3,000 trips and frequency reaches 6,100, as the data '
                'shows.</b>')
-    html = re.sub(r'\s*<div class="disc disc--edge" data-disc>.*?</div>\s*</div>\s*(?=<p class="provenance")',
-                  "\n  ", html, count=1, flags=re.S)
+    html = re.sub(r'\s*<div class="disc disc--edge" data-disc(?:="[^"]*")?>.*?</div>\s*</div>\s*'
+                  r'(?=<p class="provenance")', "\n  ", html, count=1, flags=re.S)
     applied.append(("S2", "slide 7 assumption marker removed, so no figure is qualified"))
 
     # S3 Encoding - the before/after network becomes four boxes joined by arrow glyphs.

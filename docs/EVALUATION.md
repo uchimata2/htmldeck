@@ -33,7 +33,7 @@ failure into a score is how a deck ships with a wrong number on the title slide 
 
 | | Gate | Score |
 | :--- | :--- | :--- |
-| Which rules | 114 `hard` | 41 `default`, 6 `guidance`, and the dimensions in §3–§4 |
+| Which rules | 117 `hard` | 41 `default`, 6 `guidance`, and the dimensions in §3–§4 |
 | Result | pass / fail, per rule ID | 0–4 per dimension |
 | On failure | The deck is defective. Fix before scoring is meaningful. | A finding with a severity, entering the loop |
 
@@ -58,8 +58,8 @@ python tools/deck/ruleset.py --gates
 | `Check: —` | Nobody. These bind whoever builds a check, not the deck |
 
 **The checklist exists because twenty-five `hard` rules were declared gates and gated by nothing.**
-*Twenty-four now — DS-107 moved to `Check: —` on 2026-08-09, its subject being the checker rather than
-the deck ([T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md)).*
+*Twenty-five now — DS-107 moved to `Check: —` on 2026-08-09, its subject being the checker rather
+than the deck, and DS-230 arrived with T-016's editorial split rule ([T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md)).*
 Stages 3 and 4 produce 0–4 dimension scores, and this section says `hard` rules are never scored —
 so those were simultaneously declared gates and excluded from the only machinery that
 touched them. Eleven were named nowhere in this document at all, four of them §3.4's deliverable
@@ -84,7 +84,7 @@ is a reason; *"hard to judge"* is not. A `hard` rule that genuinely cannot be ju
 finding to raise** — the label is wrong — and never a row quietly skipped.
 
 > **Every count in this document is derived from `DESIGN-SYSTEM.md` and goes stale when a rule is
-> added.** These are as of **2026-08-09: 162 rules**, counting DS-000. **Re-derive them, never adjust
+> added.** These are as of **2026-08-09: 164 rules**, counting DS-000. **Re-derive them, never adjust
 > them by hand** — the previous set was wrong by six, having been written before the rules T-027 and
 > T-025 added, and a hand-adjusted count is indistinguishable from a correct one.
 >
@@ -93,7 +93,7 @@ finding to raise** — the label is wrong — and never a row quietly skipped.
 > written twice and could not be followed: nothing computed the numbers, so *re-deriving* meant
 > reading the table and counting. **Paste from that command, never from another document.**
 >
-> **Why `BRIEF.md` says 160 and this says 161, since they are read together.** The table has 160
+> **Why `BRIEF.md` says 163 and this says 164, since they are read together.** The table has 163
 > rows. **DS-000**, the override clause, is stated as prose in §0 rather than as a row, so it is
 > invisible to a row count and is the whole of the difference — it moves `guidance` from 5 to 6 and
 > nothing else. `--counts` prints both sets side by side for exactly this reason.
@@ -105,6 +105,11 @@ finding to raise** — the label is wrong — and never a row quietly skipped.
 > **six** before this task touched anything — the warning above was written and then not acted on
 > through several rule-adding tasks, so re-deriving is now part of adding a rule rather than a note
 > beside the numbers.
+>
+> **Re-derived again on 2026-08-09 by [T-016](../tasks/T-016-the-interaction-and-motion-layer.md)**,
+> which added DS-230 and DS-231: **163 / 117 / 41 / 6, and 68 `auto`, 45 `render`, 43 `judge`.**
+> Two of that drift were this task's; the `hard` and `auto` figures had each been stale by one
+> before it started, which is the warning above continuing to be right.
 
 ---
 
@@ -114,7 +119,7 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 
 | # | Stage | Covers | Cost |
 | :--- | :--- | :--- | :--- |
-| 1 | **Auto gate** | 66 `auto` rules — static analysis of the file | Near zero. Runs first, always. |
+| 1 | **Auto gate** | 68 `auto` rules — static analysis of the file | Near zero. Runs first, always. |
 | 2 | **Render gate** | 45 `render` rules — measurement and a look at the rendered deck, **with motion pinned off** (DS-221) | One render, several measurements |
 | 3 | **Per-slide score, by the author** | S3, S5, S6 (§3), per slide | Scales with slide count, but the author already holds the context |
 | 4 | **The judgement pass, in fresh context** | S1, S2, S4 across every slide, and D1–D4 (§4) | One pass over the finished artifact |
@@ -127,7 +132,7 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]
 ```
 
-It decides **80** of the 112 owned rules and **names the other 32 with a reason each**, derived from
+It decides **81** of the 113 owned rules and **names the other 32 with a reason each**, derived from
 the ruleset when it runs rather than from any list. **A rule in neither state fails the run**, so a
 rule added here with nothing behind it is a red run rather than a discovery two months later — which
 is what happened twice (**L-36**). `--sources` adds the figure ledger and its three reconciliations;
@@ -174,13 +179,13 @@ separately defined.**
 | **2** | Correct diagram type, but connectors unlabelled, or a weaker encoding than the data permits. |
 | **4** | The visual carries the claim by itself; the encoding is the strongest the data allows; every connector meets its target and says what it means. |
 
-### S4 — Density · *DS-091, DS-160, DS-161, DS-162, DS-167, X-06, X-08, X-09*
+### S4 — Density · *DS-091, DS-160, DS-161, DS-162, DS-167, DS-230, X-06, X-08, X-09*
 
 | | |
 | :--- | :--- |
 | **0** | The slide only resolves with narration, or only once something is opened. |
 | **2** | Closed, it makes its point — but tier two holds something a first-time reader needs. |
-| **4** | Closed, the argument is complete. Tier two is genuinely optional and earns its place. |
+| **4** | Closed, the argument is complete. Tier two is genuinely optional and earns its place — and **the kind each panel declares in `data-disc` is the kind its rows actually carry** (DS-230), which is the question to ask rather than *is this panel any good*. |
 
 ### S5 — Craft · *DS-034 to DS-037, DS-041 to DS-049, DS-101, X-12*
 

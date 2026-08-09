@@ -106,9 +106,9 @@ STATIC_VARIANTS = [
     ("panel-outside-its-disclosure", "DS-229", [
         # The place half. The panel is still in the slide and still styled, so it renders where it
         # always did; what it has stopped being is part of a component.
-        ('<div class="disc" data-disc>\n    <button class="disc-btn" aria-expanded="false" '
-         'aria-controls="p10">',
-         '<div class="disc" data-disc></div>\n  <div>\n    <button class="disc-btn" '
+        ('<div class="disc" data-disc="instances">\n    <button class="disc-btn" '
+         'aria-expanded="false" aria-controls="p10">',
+         '<div class="disc" data-disc="instances"></div>\n  <div>\n    <button class="disc-btn" '
          'aria-expanded="false" aria-controls="p10">')]),
     ("component-nobody-contracted", "DS-229", [
         # A shared component added the way components are actually added - by writing a rule in
@@ -137,6 +137,24 @@ STATIC_VARIANTS = [
         (".legend{display:flex;gap:var(--sp-3);align-items:center}",
          ".legend{display:flex;gap:var(--sp-3);align-items:center;"
          "transition:opacity var(--scale-dur) cubic-bezier(.34,1.56,.64,1)}")]),
+    # ---- added by T-016 step 4, which made the editorial split a rule
+    ("a-fifth-editorial-kind", "DS-229", [
+        # DS-230's vocabulary is closed, and `appendix` is the exact value the closure exists to
+        # refuse - the name a generator reaches for when the content did not fit anywhere else.
+        # The markup is otherwise untouched: the panel opens, reads and closes as it always did,
+        # which is why nothing but the contract can see this.
+        ('<div class="disc" data-disc="condition">\n    <button class="disc-btn" '
+         'aria-expanded="false" aria-controls="p8">',
+         '<div class="disc" data-disc="appendix">\n    <button class="disc-btn" '
+         'aria-expanded="false" aria-controls="p8">')]),
+    ("bottom-line-supported-only-behind-the-click", "DS-231", [
+        # **The failure a generator writes and a reader meets closed.** The deliverable is rewritten
+        # to quote the gate's 26%, which lives in the panel and nowhere on the slide - so the slide
+        # asserts a figure it does not show, and looks entirely fine until someone asks where the
+        # number came from. The face is untouched, so no other row moves.
+        ("<b>Nothing before month 18 is irreversible, and the\n"
+         "    $1.5M reserve buys 16 Old Quarter stations if the gate fails.</b>",
+         "<b>The gate clears at 26%, so nothing before month 18 is irreversible.</b>")]),
 ]
 
 # One render each. These are the rules where T-005 added the MEASUREMENT and not just a threshold,
@@ -223,6 +241,7 @@ def build(name, edits):
 def static_failures(path):
     html = open(path, "r", encoding="utf-8").read()
     rows = ([(r, w, bool(fn(html))) for r, w, fn in audit.STATIC]
+            + audit.split_verdicts(html)
             + contrast.verdicts(html) + theme.verdicts(html) + component.verdicts(html))
     return {r for r, _w, ok in rows if not ok}, rows
 

@@ -58,7 +58,7 @@ reflow it. Those rules belong to the reading view, and the classes they name sta
 | **Element** | The tag it must be, or `—` where the deck uses several and none is required. |
 | **Sits in** | The nearest **contracted** ancestor — not the immediate parent, which composition wrappers change. `on .x` instead means *a second class on the same element*: a modifier. `—` is a root. |
 | **Count** | How many, **per instance of what it sits in**. `1` · `0-1` · `1+` · `0+`. |
-| **Attributes** | Required on every instance. Absent ones fail; extra ones do not. `attr:text` additionally requires the value to contain `text`, which is how `style:--i` says *a `.rise` carries its stagger index* rather than merely *a style attribute*. |
+| **Attributes** | Required on every instance. Absent ones fail; extra ones do not. `attr:text` additionally requires the value to contain `text`, which is how `style:--i` says *a `.rise` carries its stagger index* rather than merely *a style attribute*. `attr:a/b/c` instead requires the value to be **one of** the listed alternatives — a closed set, which is how `data-disc` carries DS-230's four editorial kinds and no fifth. |
 | **Source** | Who writes it — §2.1. |
 
 ### 2.1 The four sources, and what each one is checked for
@@ -122,7 +122,7 @@ one silently: a panel wired to a button on another slide still opens.
 
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `.disc` | `div` | `.slide` | `0-1` | `data-disc` | author |
+| `.disc` | `div` | `.slide` | `0-1` | `data-disc:derivation/scope/condition/instances` | author |
 | `.disc--edge` | — | `on .disc` | `0+` | — | author |
 | `.disc-btn` | `button` | `.disc` | `1` | `aria-expanded` `aria-controls` | author |
 | `.disc-mark` | `span` | `.disc-btn` | `1` | `aria-hidden` | author |
@@ -137,6 +137,16 @@ one silently: a panel wired to a button on another slide still opens.
 it, which is `aria-hidden` because it says the same thing to the eye only. `.disc-lead` exists
 because the reading view renders every panel open with no control above it (DS-073), so the label
 that was on the button has to become a heading or the panel arrives unannounced.
+
+**`data-disc` carries the panel's editorial kind, and it was a valueless attribute until
+2026-08-09.** The four values are DS-230's — `derivation` · `scope` · `condition` · `instances` —
+and **that rule owns what they mean**; this table owns only that one of them is written and no
+fifth is invented, which is all a parser can decide. The set is closed here for the reason DS-140's
+is: an open list is a name for whatever went behind the click. The script selects on `[data-disc]`,
+presence and not value, so the kind reaches the gate and the critique pass without reaching the
+runtime. **Like `data-scale` on the ruler it is a claim rather than decoration** — the difference is
+that `data-scale`'s claim is verified by the render gate and this one is verified by a person,
+which is why DS-230 is `judge` and says so.
 
 ### 3.4 The chrome
 

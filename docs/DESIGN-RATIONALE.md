@@ -648,6 +648,64 @@ ease.
 
 ---
 
+## 5.10 DS-230 and DS-231 — the rule that says what tier two is *for*
+
+**§5.3 had eleven rules and every one of them was a test to reject.** DS-162 says what must be tier
+one, DS-161 says the slide must stand closed, DS-170 says long text goes behind rather than on,
+DS-227 says a panel starts shut. Run them all and a deck can still put an appendix behind the click,
+because **nothing said what should be there** — and a generator with a rule set that only rejects
+will produce the thing no rule happened to name. That is the gap DS-230 closes, and it is the reason
+[T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md) needed it before it could
+emit a panel: §5.3 gave it mechanics and no editorial test.
+
+**Extracted, not authored, and the reference deck's ten panels are what it was read off.** Every one
+of them answers a question its own slide provokes, and the questions fall into four shapes with no
+remainder:
+
+| Kind | What it answers | The deck's |
+| :--- | :--- | :--- |
+| `derivation` | How a figure on the face was produced | 3 — *How eleven minutes is computed* · *Why the wait is half the headway* · *Assumptions behind this curve* |
+| `scope` | What a term or figure on the face includes and excludes | 3 — *What the grant will and will not fund* · *What each figure excludes* · *How the corridors are defined* |
+| `condition` | What the claim needs to hold, and where it fails | 3 — *What the timed connection requires* · *What the gate measures* · *How each tripwire is measured* |
+| `instances` | The named members of a total the face states as a count | 1 — *The three corridors that wait* |
+
+**Two candidate rules were measured against those panels and thrown away**, which is what makes the
+third one a finding rather than a preference. *The panel's label shares a word with the face* fails
+on slide 5 — "What each figure excludes" names the ledger without naming anything in it — so
+anchoring cannot be checked by vocabulary. *Every row key names something the face shows* fails on
+three panels: the keys are roles in the panel's own argument (`Input` · `Step` · `Result`), not
+labels borrowed from the slide. The pattern that survived is about the **question**, and a question
+is a judgement, which is why DS-230 is `judge`.
+
+**The kind is written into `data-disc` because a judgement with no trace has to be re-derived by
+whoever judges it.** The attribute was required and valueless until this rule; filling it turns the
+evaluator's question from *is this panel any good* into *is this claim true*, which is the same
+trade the ruler's `data-scale` makes under DS-217. The gate verifies **closure only** — one of four,
+never the right one of four — and DS-230 says so on its own row rather than leaving the reach to be
+assumed.
+
+**DS-231 is the one clause of DS-161 a program can settle**, on the DS-228 and DS-229 precedent. A
+bottom line quoting a figure that exists only inside a panel is a slide asserting a number its
+reader cannot see, and *closed, the slide still makes its point* is exactly the rule it breaks.
+**The instrument had to be built asymmetrically and the reference deck is what proved it:** a
+citation is read strictly, as `content.py`'s figure pattern, while support is any number visible
+with the slide closed. Read strictly on both sides, slide 3 failed — the stat figure `11` and the
+unit `minutes, average wait` are two elements, so "11 minutes" is never one figure on that face —
+and the deck was right. **A gate row that over-reports blocks a conforming build**, which is the
+opposite trade from the figure ledger's, where over-reporting is safe because a person reads the
+output.
+
+**What it is worth on this deck: 0 of 6.** Six figures are cited by a bottom line, and one of them —
+slide 3's `11` — is also inside its panel and cleared by the face, so the subtraction is exercised
+rather than merely defined. **Three of the ten panels hold no figure at all**, so the row is thin by
+construction and says its own denominator for that reason.
+
+**What the two cost the coverage account.** Owned rules **112 → 113**, checked **80 → 81**, and the
+hard-judge checklist gains one — derived from the ruleset on every run, and re-derivable rather than
+trusted from this line.
+
+---
+
 ## 6. Drops and amendments worth knowing
 
 **DS-011 — one palette per deck was dropped.** The corpus rule (C7) is `dominant`; it describes what

@@ -159,6 +159,10 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     rows, notes = [], []
 
     rows += [(rule, what, bool(fn(html))) for rule, what, fn in audit.STATIC]
+    # The editorial split, added by T-016. DS-230 names what tier two is for and stays `judge`;
+    # this is the one clause of DS-161 a program can settle, and it needs a count in its text,
+    # which `STATIC`'s boolean shape cannot carry.
+    rows += audit.split_verdicts(html)
     rows += contrast.verdicts(html)
     # The theme region, added by T-007. Three partial checks of rules `audit` and `contrast`
     # already reach from another side: DS-011 counts palettes, this counts regions; DS-013 names
