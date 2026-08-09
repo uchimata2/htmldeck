@@ -26,9 +26,16 @@ rewritten 2026-08-06 and supersede anything older. Then `docs/BRIEF.md`, whose *
 section overrides the older material above it in the same file.
 
 **The backlog is two release phases as of 2026-08-09 — `v0.1` and `v0.2`** — and `tasks/README.md`
-is grouped by them. **Resume from v0.1 unless told otherwise**; `docs/BRIEF.md` *Release phases* says
-what is in each and why. Task front-matter carries the phase in `work_package`; closed tasks keep the
+is grouped by them. **v0.1 shipped 2026-08-09**: the repository is public at
+`github.com/uchimata2/htmldeck`, released as `v0.1.0`, `master` is the published branch and `origin`
+now exists. **Resume from v0.2 unless told otherwise**; `docs/BRIEF.md` *Release phases* says what is
+in each and why. Task front-matter carries the phase in `work_package`; closed tasks keep the
 `WP1`–`WP3` packages they were worked under, which are history rather than the current plan.
+
+**Every release from here runs the humanizing rule again** — `docs/PUBLISHING.md`, which owns the
+covered-set test and outlives the task that wrote it. Commits are authored as
+`uchimata2 <112070643+uchimata2@users.noreply.github.com>`, set in the repository's local git config;
+the personal address was scrubbed from the history before the first push and must not come back.
 
 `skills/htmldeck/SKILL.md` is the always-loaded body and is kept under a byte budget on purpose;
 substance goes in `references/` or in `docs/`, never in it. `tools/plugin/check_scaffold.py`

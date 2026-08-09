@@ -24,12 +24,6 @@ happened.
 
 ## Active
 
-### v0.1
-
-| ID | Title | Status | Phase | Blocked by | Blocks |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `in_progress` | implement | - | - |
-
 ### v0.2
 
 | ID | Title | Status | Phase | Blocked by | Blocks |
@@ -55,6 +49,7 @@ happened.
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | `done` | 2026-08-09 |
 | [T-006](T-006-decide-the-chart-strategy.md) | Decide the chart strategy | `done` | 2026-08-06 |
 | [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | `done` | 2026-08-09 |
+| [T-008](T-008-package-document-and-publish.md) | Package, document and publish | `done` | 2026-08-09 |
 | [T-009](T-009-analyse-the-corpus-extract-my-deck-conventions.md) | Analyse the corpus — extract the deck conventions already in use | `done` | 2026-08-06 |
 | [T-010](T-010-research-external-deck-design-and-ux-principles.md) | Research external deck-design and presentation UX principles | `done` | 2026-08-06 |
 | [T-011](T-011-research-exemplary-decks-and-why-they-work.md) | Research exemplary decks and what makes them work | `done` | 2026-08-06 |

@@ -126,7 +126,7 @@ python tools/tasks/task.py check
 
 ```
 OK - 60 tasks, vocabulary valid, task references resolve, 1002 document pointer(s) checked, 0 broken
-     496 section reference(s) resolved, 0 dead; 1146 not bound to a document and skipped.
+     497 section reference(s) resolved, 0 dead; 1147 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose, and every `<named document> §n`
@@ -218,14 +218,15 @@ sources were supplied. That is why the report always says which half it checked.
 Listed here rather than left to be inferred, so nobody has to work out which parts of this page
 describe a plan.
 
-- **Nothing is published yet.** [T-008](tasks/T-008-package-document-and-publish.md) is the deploy,
-  and this repository has no remote.
+- **Nobody has installed this except its author.** v0.1.0 is published and the install route is
+  checked from a clean clone, but it has not yet met a machine that is not this one.
+- **The gate names seven glitch-free conditions it does not check**, and there is no frame-rate
+  figure. Both are v0.2, not oversights.
 
-The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log.
-It is split into two releases. **v0.1** is what a first working plugin needs, and it is now down to
-publishing. **v0.2** is everything else already known, including 3D visuals, a frame-rate figure, and
-the seven glitch-free conditions the gate names and does not yet check.
-[`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
+The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
+is split into two releases. **v0.1** is what a first working plugin needs, and it shipped as v0.1.0.
+**v0.2** is everything else already known, including 3D visuals, the frame-rate figure and those
+seven conditions. [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
 **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
 half's first run and were settled the same day in

@@ -2,8 +2,8 @@
 id: T-008
 title: Package, document and publish
 type: deliverable
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: [T-002, T-004, T-005, T-056]
 related: [T-050]
@@ -125,17 +125,42 @@ The example deck must be written new on a neutral topic — the corpus is real t
 
 ## 4. Review
 
+Verified against a clone of the **published** repository rather than the working tree, because
+"installs from a clean clone" is a claim about what GitHub serves, not about what is on this machine.
+
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Install instructions end with a command that proves it runs | **met** | `README.md` *Install it*, ending in `check_scaffold.py`. Run from a fresh clone of the public repo: 10 of 10 fixtures, manifest valid, every `${CLAUDE_PLUGIN_ROOT}` pointer resolves |
+| Example deck written fresh, on a neutral topic | **met** | Two of them. Riverbend and Marnfield are both illustrative and both say so on the deck; no corpus content was copied |
+| Renders offline | **met** | `check.py` drives real Chrome headless with a throwaway profile and **every DNS lookup black-holed**, which is the offline test rather than a proxy for it. Both decks: `0 failure(s)`. Human inspection of the rendered decks was done under [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) and [T-002](T-002-build-mode-the-self-contained-deck-generator.md); **this task changed no deck**, so it inherits that rather than re-claiming it |
+| No personal, client or machine data anywhere | **met, and it was not free** | The tracked tree scanned clean. The **history was not**: 119 of 121 commits carried the owner's personal email, and were rewritten to the GitHub noreply address before the first push. Confirmed on the published tip through the API, and in a clone from GitHub: the only two addresses in the published history are the noreply one and `maintainer@localhost` |
+| Installs from a clean clone | **met** | Cloned from `https://github.com/uchimata2/htmldeck.git`; `check_scaffold.py` and `task.py check` both pass with no path editing |
+| Human-facing text humanized, nothing agent-facing | **met** | `README.md` under [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md); the two listing descriptions and the release notes under this task, all three at zero em dashes. `SKILL.md` is untouched at 5 206 bytes |
+| The description is the drafted text, not retyped | **met** | Passed to `gh repo create --description` as the exact string from [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) §3 |
+
+**What is published**
+
+| | |
+| :--- | :--- |
+| Repository | `https://github.com/uchimata2/htmldeck`, public, default branch `master` |
+| Release | `v0.1.0`, not a draft, not a prerelease |
+| Install | `/plugin marketplace add uchimata2/htmldeck` then `/plugin install htmldeck@htmldeck` |
+
+**One thing the tag does not contain.** `v0.1.0` was cut before this section was written, so the
+released tree carries T-008 at `in_progress`. That is the honest ordering: several criteria above are
+claims about the published artifact and could not be verified until it existed. The tag marks the
+released code, and the task record catches up behind it rather than being back-dated into it.
 
 **Child fix tasks raised**
-- none
+- none. [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md) already
+  covers the one standing risk, which is that the README's pasted figures drift again.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-09 | → done | **Published: `https://github.com/uchimata2/htmldeck`, public, `master` as default, released as `v0.1.0`.** Three things were not what the record said. **`master` was never divergent** — the row below says 96 commits divergent at the line-endings scaffold and it was cited three times as a decision to be taken; measured, `rev-list --left-right` returns `0 119` and the merge base is `master`'s own HEAD, so it was a strict ancestor and publishing was a fast-forward that discarded nothing. **The marketplace entry did not exist**, so the install route promised on 2026-08-07 was half-built: `plugin.json` alone makes a plugin that can be copied, not one installable by name. **And 119 of 121 commits carried the owner's personal email**, which was rewritten to the GitHub noreply address before the first push, on the owner's decision — irreversible afterwards, because GitHub caches commits that force-pushes remove and forks keep them regardless. `PUBLISHING.md` §2 also caught its first live defect: the `plugin.json` description is marketplace listing text, it carried an em dash, and a covered set written as a list of filenames would have missed it. Every criterion verified against a clone of the published repository rather than the working tree. |
+| 2026-08-09 | → in_progress | Unblocked: all four blockers closed. Planned in nine steps, opening with two measurements rather than two assumptions — what `master` actually is, and what the tracked tree and the history actually contain — because both were about to become irreversible. |
 | 2026-08-09 | (no change) | **The fourth blocker is cleared and it left this task an artifact.** [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) closed, so **publishing now waits on nothing** — all four blockers are done and the only open v0.1 task is this one. Two things landed here rather than being described. The **repository description is drafted, humanized and recorded** in T-056 §3, which closes the gap the row below identified: an output this task needs at publication that nothing here produced. It is now a criterion, worded so that retyping it at the console is a visible failure rather than a quiet one, because a description typed fresh into the GitHub field is an unhumanized human-facing text by the rule's own test. And the humanizing criterion now points at [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) rather than at T-056: the rule outlives the task, and a criterion pointing at a closed task is the spent-edge failure one level up. |
 | 2026-08-09 | (no change) | **Gained a fourth blocker, [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md)** — the humanizing rule for the documents a stranger reads before installing anything, adapted from the taskmd project at the owner's request. A blocker rather than a follow-up, on the source task's reasoning: after publishing, the first impression has been made. It also lands one output *inside* this task's step list — T-056 step 4 drafts the repository description, which is text this task needs at publication and which nothing here currently produces. |
 | 2026-08-09 | (no change) | **Publishing is deliberately held until there is a first publishable version** — the owner's decision, 2026-08-09, taken when [T-050](T-050-write-the-repository-readme.md) made the repository presentable and the question *push it now?* became live. It changes no edge: this task's two remaining blockers are already **T-002** and **T-004**, the two modes the README names as unbuilt, and *mature enough to publish* is that same line seen from the other side. **Three facts about the repository state that whoever publishes will need, none of them obvious from the task record.** There is **no git remote configured at all** — every commit of this project is local, so publishing is a create-and-push, not a push. The work lives entirely on `build/wp2-design-system-and-reference-deck`; **`master` is 96 commits divergent and sits at the line-endings scaffold**, so publishing without deciding what `master` becomes lands a visitor on a repository with no README and none of the ruleset. And the deck's own *Example deck written fresh, on a neutral topic* criterion is **already met** by [`examples/reference-deck.html`](../examples/reference-deck.html) — Riverbend is illustrative and the README says so — which is worth noticing before it is re-planned as outstanding work. |
