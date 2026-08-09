@@ -2,8 +2,8 @@
 id: T-063
 title: Improvements to propose upstream to taskmd
 type: analysis
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-062]
@@ -12,7 +12,7 @@ owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-10
 deliverables: []
 ---
 
@@ -159,7 +159,8 @@ still read `0 broken`.
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| A list of proposals, each with the evidence that produced it | **met** | Five items. Each carries the run, the source line or the measurement behind it rather than an assertion |
+| At a size someone can paste into taskmd's backlog without rewriting | **met** | Confirmed by use: the owner copied it on 2026-08-09 and is processing it upstream |
 
 **Child fix tasks raised**
 - none
@@ -168,4 +169,5 @@ still read `0 broken`.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | → done | **Copied upstream by the owner and now being processed there, which is this task's exit criterion rather than a status change made on its behalf.** Nothing was implemented in htmldeck and nothing should be: the proposals are about taskmd's own code. The one item with a working implementation behind it is the section-reference rule, and that implementation is public at `tools/docs/refcheck.py` under MIT, so taskmd can take it without re-deriving the adjacency decision. Closed rather than cancelled: the deliverable was the document, it exists, and it has been used for the thing it was written for. |
 | 2026-08-09 | → proposed | Raised at the owner's request while [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) migrated this project onto taskmd. Findings are from a real migration of a 61-task project off a mature bespoke tool, which is why items 1 and 2 are framed as adoption hazards rather than missing features: both are things a project silently loses when it retires its own checker on the strength of the two command lists matching. |

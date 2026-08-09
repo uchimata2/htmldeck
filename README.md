@@ -32,7 +32,7 @@ cd htmldeck
 python tools/plugin/check_scaffold.py
 ```
 
-It self-tests against ten deliberately broken packages before it looks at this one, and *Run it*
+It self-tests against fourteen deliberately broken packages before it looks at this one, and *Run it*
 below shows what a good result prints. That command is also the fastest way to tell whether a copied
 skill directory is still wired up.
 
@@ -125,7 +125,7 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1016 document pointer(s) checked, 0 broken
+OK - 1025 document pointer(s) checked, 0 broken
      492 section reference(s) resolved, 0 dead; 1176 not bound to a document and skipped.
 ```
 

@@ -35,7 +35,6 @@ happened.
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `v0.2` | `proposed` | `specify` | - | - | - | - | T-005, T-016 |
 | [T-059](T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md) | Theme swap overwrites its input when -o is omitted | `v0.2` | `proposed` | `specify` | - | - | - | - | T-007 |
 | [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md) | Check that the README's pasted figures still match the commands that produced them | `v0.2` | `proposed` | `specify` | - | - | - | - | T-050, T-056 |
-| [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `v0.2` | `proposed` | `specify` | - | - | - | - | T-062 |
 
 ## Closed
 
@@ -94,5 +93,6 @@ happened.
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `v0.1` | `done` | `review` | - | - | - | T-008 | T-042, T-050, T-052, T-060 |
 | [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md) | The scaffold check passed a manifest the installer rejects | `v0.1` | `done` | `review` | - | - | - | - | T-008, T-015, T-062 |
 | [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) | Retire the pre-split task tool and repoint what points at it | `v0.2` | `done` | `review` | - | - | - | - | T-046, T-061, T-063 |
+| [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `v0.2` | `done` | `review` | - | - | - | - | T-062 |
 
 <!-- taskmd:end -->

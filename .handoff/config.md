@@ -17,6 +17,19 @@ Read by the `handoff` skill. Plain Markdown, read by the agent — no parser.
 - `tracker_template`: tasks/_task-template.md
 - `tracker_closed_dir`: (not set — done tasks stay in `tasks/` so links keep resolving)
 
+**The tracker is the `taskmd` plugin as of 2026-08-09**, and the schema is `.taskmd/config.md`,
+which is authoritative over anything about fields written here or in `tasks/TASK-WORKFLOW.md`.
+`tasks/TASK-WORKFLOW.md` keeps only what taskmd's METHOD.md has no home for. The bare `taskmd`
+command does not resolve in agent shells; from the project root:
+
+```
+P=$(ls -d ~/.claude/plugins/cache/taskmd/taskmd/*/skills/taskmd | tail -1); PYTHONPATH="$P" python -m taskmd check
+```
+
+**`taskmd check` is not the whole gate.** It validates the task record and markdown links only.
+`python tools/docs/refcheck.py` is the other half and checks what taskmd cannot see: repo-relative
+paths written in prose or printed by a tool, and every `<named document> §n` reference. Run both.
+
 ## Notes for whoever resumes
 
 **The research is complete as of 2026-08-07**, and the plugin exists: `.claude-plugin/` and
