@@ -126,8 +126,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1025 document pointer(s) checked, 0 broken
-     492 section reference(s) resolved, 0 dead; 1179 not bound to a document and skipped.
+OK - 1031 document pointer(s) checked, 0 broken
+     493 section reference(s) resolved, 0 dead; 1184 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -227,13 +227,15 @@ sources were supplied. That is why the report always says which half it checked.
 Listed here rather than left to be inferred, so nobody has to work out which parts of this page
 describe a plan.
 
-- **Nobody has installed this except its author.** v0.1.0 is published and the install route is
-  checked from a clean clone, but it has not yet met a machine that is not this one.
+- **It has been installed and used by one project other than this one**, which found three defects
+  in two days: a manifest the installer rejected, a crash on any deck outside the plugin's own
+  drive, and a gate failing decks for not containing what its rules judge. All three are fixed. The
+  sample is one.
 - **The gate names seven glitch-free conditions it does not check**, and there is no frame-rate
   figure. Both are v0.2, not oversights.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
-is split into two releases. **v0.1** is what a first working plugin needs, and it shipped as v0.1.0.
+is split into two releases. **v0.1** is what a first working plugin needs. It shipped, and is at v0.1.2 after two patches.
 **v0.2** is everything else already known, including 3D visuals, the frame-rate figure and those
 seven conditions. [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 

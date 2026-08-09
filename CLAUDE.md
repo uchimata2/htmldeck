@@ -17,8 +17,9 @@ reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
 2026-08-09 as `docs/PUBLISHING.md`, and **v0.1 shipped the same day**: the repository is public at
-`github.com/uchimata2/htmldeck`, released as `v0.1.0`, and `master` is the published branch. **Work
-from here is v0.2.** Read the brief first — its "Decisions taken" section overrides anything older
+`github.com/uchimata2/htmldeck`, released and **now at `v0.1.2`** after two patch releases, with
+`master` as the published branch. **v0.2 is the main line, but v0.1 has reopened twice**: a defect an
+adopter hits in the published plugin is a `v0.1` patch, not a v0.2 improvement. Read the brief first — its "Decisions taken" section overrides anything older
 in it.
 
 **The backlog is two release phases, set 2026-08-09 by the owner: `v0.1` and `v0.2`.** v0.1 is a
