@@ -135,6 +135,35 @@ RENDER_VARIANTS = [
 ]
 
 
+# One render each, with `prefers-reduced-motion` forced. Separate from RENDER_VARIANTS because the
+# measurement is a different render, not a different threshold - and because a check nobody has
+# watched fail is a claim about the instrument (**L-36**), which is exactly what DS-143 was while
+# it sat excused.
+REDUCED_VARIANTS = [
+    ("reduced-motion-leaves-the-slide-blank", "DS-143", [
+        # **The failure the second clause exists to see.** Stopping the animation is not enough:
+        # `.rise` holds opacity 0 until it plays, so a deck that only sets `animation:none` shows
+        # the reader an empty slide and reports motion dutifully disabled. Same shape as DS-224
+        # on paper.
+        #
+        # **Both paths have to be seeded, and finding that out is what this variant was for.**
+        # The deck disables motion twice over: an `@media (prefers-reduced-motion:reduce)` block
+        # that applies at parse time, and `:root[data-motion="off"]`, which the script sets from
+        # `matchMedia` on load. Seeding only the media query changed nothing measurable - the
+        # attribute rules carry higher specificity and put the opacity back. A variant that
+        # breaks one of two redundant paths proves the check cannot see the OTHER path.
+        (":root[data-motion=\"off\"] .opening{animation:none;opacity:1;transform:none}",
+         ":root[data-motion=\"off\"] .opening{animation:none}"),
+        (".rise,.pulse,.opening{animation:none;opacity:1;transform:none}",
+         ".rise,.pulse,.opening{animation:none}")]),
+    ("reduced-motion-solidifies-the-flow", "DS-143", [
+        # The semantics half. The arrows stop moving AND stop being dashed, so the diagram no
+        # longer says *flow* - motion removed, and meaning with it.
+        (".current{animation:none}",
+         ".current{animation:none;stroke-dasharray:none}")]),
+]
+
+
 def build(name, edits):
     html = open(SRC, "r", encoding="utf-8").read()
     for old, new in edits:
@@ -167,13 +196,22 @@ def render_failures(path):
     return {r for r, _w, ok in rows if ok is False}, rows
 
 
+def reduced_failures(path):
+    """The same shape as `render_failures`, from the reduced-motion render."""
+    data, err = audit.reduced_motion_data(path)
+    if not data:
+        return None, [("PROBE", (err or "")[:120], False)]
+    rows = audit.reduced_verdicts(data)
+    return {r for r, _w, ok in rows if ok is False}, rows
+
+
 def self_test():
     """The suite must be able to tell a broken deck from a good one (**L-04**), and the baseline
     must be green or a caught variant proves nothing."""
     if not os.path.exists(SRC):
         sys.exit("SELF-TEST FAILED: no reference deck at %s" % SRC)
     src = open(SRC, "r", encoding="utf-8").read()
-    for name, _rule, edits in STATIC_VARIANTS + RENDER_VARIANTS:
+    for name, _rule, edits in STATIC_VARIANTS + RENDER_VARIANTS + REDUCED_VARIANTS:
         for old, _new in edits:
             if src.count(old) < 1:
                 sys.exit("SELF-TEST FAILED: variant %r no longer matches the deck.\n"
@@ -212,6 +250,8 @@ def main(argv):
         render.self_test()
         print("=== rendered (one real Chrome render each)")
         bad += run(RENDER_VARIANTS, render_failures, "rendered")
+        print("=== rendered with prefers-reduced-motion forced")
+        bad += run(REDUCED_VARIANTS, reduced_failures, "reduced-motion")
     if bad:
         print("MISSED - the gate does not check what it says it checks:")
         for name, rule, caught in bad:

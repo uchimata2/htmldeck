@@ -1084,6 +1084,91 @@ def render_data(deck):
     return render.read_result(render.file_url(probe), 1622, 1054)
 
 
+# --------------------------------------------------------------- stage 2b: reduced motion
+# **DS-143 has two clauses and the second is the one that costs something.** *Honoured* is a media
+# query anyone can read out of the file; *the semantics survive it* is a claim about what the deck
+# still says once the motion is off - the dashed arrows stay dashed, and a slide the reader never
+# advanced to is not a blank rectangle.
+#
+# It was excused in `check.py` until T-016, on the accurate ground that the one render this gate
+# takes is in the default state. So this is a SECOND render with the preference forced, and it is
+# the whole of the fix: the deck already honoured the query, and nothing had ever looked.
+REDUCED_PROBE = r"""
+<script>
+(function(){
+  function run(){
+    var out = {};
+    var flow = document.querySelector('.current');
+    out.hasFlow = !!flow;
+    /* The dasharray is DS-143's own example of a semantic that must survive: a dashed arrow
+       encodes *this is a flow*, and a reduced-motion pass that solidifies it has removed
+       meaning rather than movement. Read the COMPUTED value - the attribute is not the truth. */
+    out.flowDash = flow ? (getComputedStyle(flow).strokeDasharray || '') : '';
+
+    /* Every risen element must be at rest AND visible. `.rise` holds opacity 0 until it plays,
+       so a deck that merely stops the animation prints the slide blank - which is DS-224 on a
+       different medium and the exact failure this row exists to see. */
+    var risen = document.querySelectorAll('.slide[data-current] .rise');
+    out.risen = risen.length;
+    out.risenHidden = 0;
+    Array.prototype.forEach.call(risen, function(el){
+      var cs = getComputedStyle(el);
+      if (parseFloat(cs.opacity) < 0.99) out.risenHidden++;
+    });
+
+    /* Anything still animating after the preference is set. `animation-name: none` is the
+       resting value; a running name here is motion the reader asked not to see. */
+    var moving = [];
+    Array.prototype.forEach.call(document.querySelectorAll('.stage *'), function(el){
+      var n = getComputedStyle(el).animationName;
+      if (n && n !== 'none') moving.push(n);
+    });
+    out.stillAnimating = moving.slice(0, 8);
+    out.stillAnimatingCount = moving.length;
+    out.mediaMatches = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.title = 'RESULT' + JSON.stringify(out) + 'ENDRESULT';
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(run,200); });
+  else window.addEventListener('load', run);
+})();
+</script>
+"""
+
+
+def reduced_motion_data(deck):
+    """Run the deck once more with `prefers-reduced-motion: reduce` forced in Chrome."""
+    probe = render.make_probe(deck, name="reduced.html", extra=REDUCED_PROBE)
+    return render.read_result(render.file_url(probe), 1622, 1054,
+                              ["--force-prefers-reduced-motion"])
+
+
+def reduced_verdicts(data):
+    """DS-143's rows. Counts travel in the text, because a pass over nothing reads identically to
+    a pass over everything (**L-36**)."""
+    if not data:
+        return [("DS-143", "the reduced-motion render produced no result", False)]
+    if not data.get("mediaMatches"):
+        # Not a pass. The flag did not take, so nothing below was measured under the preference -
+        # and every row would report the default state while claiming to report the reduced one.
+        return [("DS-143", "the reduced-motion render did not enter reduced motion: "
+                 "prefers-reduced-motion did not match", False)]
+    rows = [("DS-143", "still animating under reduced motion: %d%s"
+             % (data.get("stillAnimatingCount", 0),
+                "" if not data.get("stillAnimating") else " (%s)"
+                % ", ".join(data["stillAnimating"])),
+             data.get("stillAnimatingCount", 0) == 0),
+            ("DS-143", "risen elements hidden under reduced motion: %d of %d on the current slide"
+             % (data.get("risenHidden", 0), data.get("risen", 0)),
+             data.get("risen", 0) > 0 and data.get("risenHidden", 0) == 0)]
+    # The dash is a `conditional`: a deck with no flow diagram owes nothing here. Declared rather
+    # than left to the expression, per ABSENCE_IS_A_PASS.
+    rows.append(("DS-143", "the flow stays dashed with motion off: %s"
+                 % (data.get("flowDash") or "NO FLOW DIAGRAM IN THIS DECK"),
+                 (not data.get("hasFlow")) or bool((data.get("flowDash") or "").strip()
+                                                   not in ("", "none"))))
+    return rows
+
+
 # --------------------------------------------------------------- passing on an absent subject
 # **A row that cannot tell *nothing wrong* from *nothing there* is not a check.** Three shapes are
 # legitimate and one is the defect, and the difference is the rule's own quantifier:

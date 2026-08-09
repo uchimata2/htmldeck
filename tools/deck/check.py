@@ -88,11 +88,10 @@ DEFERRED = {
               "overlap the gate can be pointed at.",
 
     # ---- built elsewhere, or waiting on a task that owns the subject
-    "DS-143": "Needs a second render under `prefers-reduced-motion`, which this stage does not "
-              "take - the one render here is in the default state, so the dasharray it measures "
-              "belongs to DS-140 and is reported there. T-038 removed the verdict that cited "
-              "DS-143 for it. CLOSES WHEN: a reduced-motion pass is added, which is cheap and is "
-              "the first thing to build after this task.",
+    # DS-143's excusal was CLOSED by T-016 (2026-08-09): `audit.reduced_motion_data` takes the
+    # second render this entry called for, and `reduced_verdicts` reports three rows from it.
+    # Kept as a comment rather than deleted, because the entry named its own closing condition and
+    # a reader should be able to see that the condition is what happened.
     "DS-222": "The owner ruled the print row automates the PAGE COUNT and nothing else "
               "(2026-08-08). DS-222 to DS-226 are asserted by a person printing and looking, "
               "which CLAUDE.md rule 6 requires regardless; `print_variants.py` builds the "
@@ -174,6 +173,13 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
         notes.append("render gate: NO RESULT - every rendered rule is unmeasured, not passing")
     else:
         rows += audit.render_verdicts(data)
+
+    # A second render, with `prefers-reduced-motion` forced. Added by T-016: the deck honoured the
+    # query from the start and nothing had ever rendered under it, which is why DS-143 sat excused.
+    rdata, rerr = audit.reduced_motion_data(deck)
+    if not rdata:
+        notes.append("reduced-motion pass: NO RESULT - DS-143 is unmeasured, not passing")
+    rows += audit.reduced_verdicts(rdata)
 
     if not skip_contract:
         rows += list(contract.audit(deck, quiet=True))
