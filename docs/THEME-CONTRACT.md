@@ -192,7 +192,10 @@ fit one deck is worse than no threshold (**L-38**).
 ### 3.6 Motion
 
 Durations are bounded by DS-141's 500 ms cap, with DS-140's two long motions banded rather than
-pinned — see §4.
+pinned — see §4. **Every named motion carries a duration and an easing**, because a curve is as much
+a choice about how a deck feels as a colour is, and a motion whose curve is written into a component
+is one no theme can reach. Only `Current` has no easing dial: a looping dash stutters at the seam
+under anything but `linear`, which makes it the mechanism's number rather than a choice.
 
 | Token | Axis | Kind | Governs | Legal |
 | :--- | :--- | :--- | :--- | :--- |
@@ -203,13 +206,18 @@ pinned — see §4.
 | `--current-dash` | motion | primitive | Current: the flow dash pattern (DS-140). | — |
 | `--current-dur` | motion | primitive | Current's period. It loops, so DS-218's stop control is required — and the band is DS-140's. | ms 3000-6000 |
 | `--open-dur` | motion | primitive | Open: a disclosure reveal (DS-140), inside the cap (DS-141). | ms 0-500 |
+| `--open-ease` | motion | primitive | Open's easing. | — |
 | `--open-rise` | motion | primitive | How far an opening panel travels. | — |
 | `--open-squash` | motion | primitive | The scale an opening panel starts at. | — |
 | `--turn-dur` | motion | primitive | Turn: a card reveal (DS-140), inside the cap (DS-141). | ms 0-500 |
+| `--turn-ease` | motion | primitive | Turn's easing. | — |
 | `--scale-dur` | motion | primitive | Scale: a reveal (DS-140), inside the cap (DS-141). | ms 0-500 |
+| `--scale-ease` | motion | primitive | Scale's easing, and the ruler ring's, which borrows the pair. | — |
 | `--pulse-dur` | motion | primitive | Pulse-once. Never loops (DS-140). | ms 800-1600 |
+| `--pulse-ease` | motion | primitive | Pulse-once's easing. | — |
 | `--pulse-delay` | motion | primitive | How long Pulse-once waits for the slide to settle. | — |
 | `--slide-dur` | motion | primitive | The inter-slide transition, which DS-141 puts at 400–500 ms. | ms 400-500 |
+| `--slide-ease` | motion | primitive | The inter-slide transition's easing. | — |
 
 ---
 
@@ -233,17 +241,24 @@ is data, not prose** — `theme.py check` reads these four rows and prints how m
 covers, so an exemption that silently starts covering half the deck shows up as a number that moved
 (**L-36**).
 
-**Easing is on the same test and needs no table, because it has no exceptions.** A component may
-write an easing **keyword** and may never write an easing **curve**. The keywords are the rules'
-own words: DS-141 fixes entry and transition at *max 500 ms, ease-in-out*, so a component writing
-`ease-in-out` is quoting the rule rather than choosing a feel, and `linear` is the only easing that
-leaves a looping dash and a zero-duration step undistorted — which is the whole of what `.current`
-and the slide's `visibility` transition need it for. **A `cubic-bezier()` or a `steps()` is a
-choice about how a motion feels.** It belongs to the theme, this deck has exactly one — `--rise-ease`
-— and one written outside the region is a component that a theme cannot reach. *Added 2026-08-09 by
-[T-016](../tasks/T-016-the-interaction-and-motion-layer.md): the scan below has covered lengths and
-durations since T-007 and easing was never in its subject, so `no component hard-codes a duration or
-an easing` was half true and read as settled.*
+**Easing is on the same test and needs no table, because it has exactly two exceptions and both are
+mechanical.** A curve is a choice about how a motion feels — as much a part of a look as a colour —
+so it belongs in the region, and **every named motion has a dial for one** (§3.6). A `cubic-bezier()`
+or a `steps()` written outside the region is therefore not a forbidden effect; it is an effect in the
+wrong place, and the fix is a token rather than a deletion. `themes/lattice.css` is the demonstration:
+it overshoots Turn and eases Scale and the slide transition out, changing how the deck feels without
+touching a rule.
+
+The two exceptions are `linear`, and it is the mechanism's word rather than anyone's choice: a
+looping dash stutters at the seam under any easing, and a zero-duration `visibility` step has nothing
+to ease. Both are in the deck and both are correct.
+
+*Added 2026-08-09 by [T-016](../tasks/T-016-the-interaction-and-motion-layer.md), in two passes on
+one day. The scan below had covered lengths and durations since T-007 and easing was never in its
+subject, so `no component hard-codes a duration or an easing` was half true and read as settled. The
+first pass closed the gap and left four motions with `ease-in-out` written into their components,
+which made the rule read as a ban on bespoke easing; the second gave every named motion a dial, which
+is what the rule was always supposed to mean.*
 
 **The line the middle rows draw is the one that matters: composition versus look, inside two named
 scopes and nowhere else.** A slide may compose its own geometry — a ledger's three tracks, a note's

@@ -245,23 +245,23 @@ remembered to tokenise.
 
 | Rule | Motion | Reads |
 | :--- | :--- | :--- |
-| `.slide` | the inter-slide transition (DS-141) | `--slide-dur` |
+| `.slide` | the inter-slide transition (DS-141) | `--slide-dur` `--slide-ease` |
 | `.rise` | Rise's rest state (DS-140) | `--rise-dist` |
 | `.slide[data-played] .rise` | Rise | `--rise-dur` `--rise-ease` `--rise-stagger` |
 | `@keyframes rise` | Rise | `--rise-dist` |
 | `.current` | Current (DS-140) | `--current-dash` `--current-dur` |
-| `.pulse` | Pulse-once (DS-140) | `--pulse-dur` `--pulse-delay` |
-| `.opening` | Open (DS-140) | `--open-dur` `--rise-ease` |
+| `.pulse` | Pulse-once (DS-140) | `--pulse-dur` `--pulse-ease` `--pulse-delay` |
+| `.opening` | Open (DS-140) | `--open-dur` `--open-ease` |
 | `@keyframes open` | Open | `--open-rise` `--open-squash` |
-| `.disc-mark::after` | Turn (DS-140) | `--turn-dur` |
-| `.ruler-ticks button::before` | Scale (DS-140) | `--scale-dur` |
-| `.ruler[data-ticks="dot"] .ruler-ring` | a transition (DS-141) | `--scale-dur` |
+| `.disc-mark::after` | Turn (DS-140) | `--turn-dur` `--turn-ease` |
+| `.ruler-ticks button::before` | Scale (DS-140) | `--scale-dur` `--scale-ease` |
+| `.ruler[data-ticks="dot"] .ruler-ring` | a transition (DS-141) | `--scale-dur` `--scale-ease` |
 
 **Durations are covered from the other side and are not re-checked here.**
-`theme.py check` scans every length and duration written outside the theme region and reports how
-many were exempt; a component inventing its own 300 ms is that scan's defect, under DS-010. This
-table is the positive claim the scan cannot make — *the token is read* rather than *no literal was
-written* — and the difference is a component that animates nothing at all.
+`theme.py check` scans every length, duration and easing curve written outside the theme region and
+reports how many were exempt; a component inventing its own 300 ms is that scan's defect, under
+DS-010. This table is the positive claim the scan cannot make — *the token is read* rather than *no
+literal was written* — and the difference is a component that animates nothing at all.
 
 ---
 
@@ -291,16 +291,16 @@ did.
 
 ## 5. What a component may still write for itself
 
-Two things, and both are a rule's number rather than a look — the same test
-[`THEME-CONTRACT.md`](THEME-CONTRACT.md) §5 applies to lengths.
+Two things, and neither is a look — the same test [`THEME-CONTRACT.md`](THEME-CONTRACT.md) §5
+applies to lengths.
 
-**An easing keyword, never an easing curve.** `ease-in-out` is DS-141's own word: the rule fixes
-entry and transition at *max 500 ms, ease-in-out*, so a component writing it is quoting the rule,
-not choosing a feel. `linear` is the only easing that leaves a looping dash and a zero-duration
-step undistorted, which is the whole of what `.current` and `.slide`'s `visibility` need it for.
-**A `cubic-bezier()` or a `steps()` is a choice about how a motion feels**, it belongs to the theme,
-and this deck has exactly one — `--rise-ease`, in the region. One written outside it is the defect
-this line names, and `theme.py check` fails on it under DS-010.
+**`linear`, where anything else would be wrong.** A looping dash stutters at the seam under any
+easing, and a zero-duration `visibility` step has nothing to ease. Those are the deck's only two,
+and they are the mechanism's word rather than a choice. **Every other easing is a dial** — each of
+DS-140's named motions has one, and so does the slide transition — so a component wanting an
+overshoot on a card reveal reaches for `--turn-ease` rather than writing a curve into itself. A
+`cubic-bezier()` outside the region is not a forbidden effect; it is an effect in the wrong place,
+and `theme.py check` says so under DS-010.
 
 **An inline `--i`.** Every `.rise` carries `style="--i:n"`, and the number is the element's place in
 the stagger — content, not style. It is what makes DS-140's Rise *staggered* rather than a group

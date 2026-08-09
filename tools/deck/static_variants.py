@@ -117,20 +117,26 @@ STATIC_VARIANTS = [
         (".icon{width:var(--icon)", ".callout{color:var(--accent)}\n.icon{width:var(--icon)")]),
     ("motion-that-stopped-reading-its-token", "DS-229", [
         # **The half `theme.py`'s literal scan cannot state, and the seed has to avoid writing a
-        # literal or it proves the wrong thing.** Turn reads the slide transition's duration
-        # instead of its own: every token is still declared, still inside its band, and there is
-        # no literal anywhere for the scan to find. What has gone is the tokenisation itself -
-        # a theme moving Turn now moves everything except the disclosure mark.
+        # literal or it proves the wrong thing.** Turn reads the slide transition's dials instead
+        # of its own: every token is still declared, still inside its band, and there is no literal
+        # anywhere for the scan to find. What has gone is the tokenisation itself - a theme moving
+        # Turn now moves everything except the disclosure mark.
         (".disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);\n"
-         "  transition:transform var(--turn-dur) ease-in-out}",
+         "  transition:transform var(--turn-dur) var(--turn-ease)}",
          ".disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);\n"
-         "  transition:transform var(--slide-dur) ease-in-out}")]),
+         "  transition:transform var(--slide-dur) var(--slide-ease)}")]),
     ("easing-curve-in-a-component", "DS-010", [
         # §5's line, and the one the scan could not see until T-016: a curve is a choice about how
-        # a motion FEELS, so a component writing one has taken a decision the theme owns. No
-        # length changes, so the literal scan stays clean and only the curve scan fires.
-        ("transition:transform var(--scale-dur) ease-in-out;",
-         "transition:transform var(--scale-dur) cubic-bezier(.34,1.56,.64,1);")]),
+        # a motion FEELS, so a component writing one has taken a decision the theme owns.
+        #
+        # **It seeds a NEW transition rather than rewriting a tokenised one**, and that is the
+        # point rather than convenience: rewriting an existing motion would also drop the token
+        # its contract row names, so DS-229 would fail as well and the variant would prove nothing
+        # about either rule. The duration is a token here for the same reason - a literal would be
+        # caught by the length half of the same scan.
+        (".legend{display:flex;gap:var(--sp-3);align-items:center}",
+         ".legend{display:flex;gap:var(--sp-3);align-items:center;"
+         "transition:opacity var(--scale-dur) cubic-bezier(.34,1.56,.64,1)}")]),
 ]
 
 # One render each. These are the rules where T-005 added the MEASUREMENT and not just a threshold,

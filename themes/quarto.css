@@ -126,7 +126,10 @@
   --disc-hit:calc(52*var(--du));   /* >=24 CSS px at the 0.5 scale floor — see README */
 
   /* ---- motion: the four named motions, and nothing else (DS-140). Durations sit inside the
-     bands DS-140 states; the numbers here are this theme's, not the vocabulary's. */
+     bands DS-140 states; the numbers here are this theme's, not the vocabulary's.
+     EVERY named motion carries its own easing dial, so a theme that wants an overshoot on a
+     reveal has somewhere to put one. This theme spends four of the five on `ease-in-out`, which
+     is a choice it is making rather than a keyword it is stuck with. */
   --rise-dur:340ms;
   --rise-ease:cubic-bezier(.22,1,.36,1);
   --rise-stagger:60ms;
@@ -134,13 +137,18 @@
   --current-dash:7 6;
   --current-dur:4.5s;
   --open-dur:380ms;
+  --open-ease:cubic-bezier(.22,1,.36,1);
   --open-rise:calc(8*var(--du));
   --open-squash:.96;
   --turn-dur:420ms;
+  --turn-ease:ease-in-out;
   --scale-dur:300ms;
+  --scale-ease:ease-in-out;
   --pulse-dur:1.2s;
+  --pulse-ease:ease-in-out;
   --pulse-delay:600ms;
   --slide-dur:420ms;
+  --slide-ease:ease-in-out;
 
   /* ---- the reading view (DS-074). A document rendering, so its lengths are in `rem` and
      honour the reader's font size — but the ratios are the stage's, so a theme that changes

@@ -188,7 +188,10 @@
   --disc-hit:calc(52*var(--du));   /* >=24 CSS px at the 0.5 scale floor — see README */
 
   /* ---- motion: the four named motions, and nothing else (DS-140). Durations sit inside the
-     bands DS-140 states; the numbers here are this theme's, not the vocabulary's. */
+     bands DS-140 states; the numbers here are this theme's, not the vocabulary's.
+     EVERY named motion carries its own easing dial, so a theme that wants an overshoot on a
+     reveal has somewhere to put one. This theme spends four of the five on `ease-in-out`, which
+     is a choice it is making rather than a keyword it is stuck with. */
   --rise-dur:340ms;
   --rise-ease:cubic-bezier(.22,1,.36,1);
   --rise-stagger:60ms;
@@ -196,13 +199,18 @@
   --current-dash:7 6;
   --current-dur:4.5s;
   --open-dur:380ms;
+  --open-ease:cubic-bezier(.22,1,.36,1);
   --open-rise:calc(8*var(--du));
   --open-squash:.96;
   --turn-dur:420ms;
+  --turn-ease:ease-in-out;
   --scale-dur:300ms;
+  --scale-ease:ease-in-out;
   --pulse-dur:1.2s;
+  --pulse-ease:ease-in-out;
   --pulse-delay:600ms;
   --slide-dur:420ms;
+  --slide-ease:ease-in-out;
 
   /* ---- the reading view (DS-074). A document rendering, so its lengths are in `rem` and
      honour the reader's font size — but the ratios are the stage's, so a theme that changes
@@ -289,7 +297,7 @@ svg{display:block}
   display:grid;grid-template-rows:auto auto 1fr auto;
   padding:var(--pad-y) var(--pad-x) var(--pad-bottom);
   opacity:0;visibility:hidden;
-  transition:opacity var(--slide-dur) ease-in-out,visibility 0s linear var(--slide-dur);
+  transition:opacity var(--slide-dur) var(--slide-ease),visibility 0s linear var(--slide-dur);
 }
 .slide[data-current]{opacity:1;visibility:visible;transition-delay:0s,0s}
 
@@ -377,7 +385,7 @@ svg{display:block}
 }
 .disc-mark::before{width:var(--disc-mark-bar);height:var(--disc-mark-stroke)}
 .disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);
-  transition:transform var(--turn-dur) ease-in-out}
+  transition:transform var(--turn-dur) var(--turn-ease)}
 .disc-btn[aria-expanded="true"] .disc-mark::after{transform:translate(-50%,-50%) rotate(90deg)}
 .disc-panel{                                     /* opens below the control (DS-138) */
   position:absolute;top:calc(100% + var(--sp-2));left:0;
@@ -392,7 +400,7 @@ svg{display:block}
 .disc-panel .k{font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
   text-transform:uppercase;color:var(--ink-faint);flex:none;width:var(--disc-key-w);
   padding-top:var(--sp-0)}
-.opening{animation:open var(--open-dur) var(--rise-ease) both}
+.opening{animation:open var(--open-dur) var(--open-ease) both}
 @keyframes open{from{opacity:0;transform:translateY(calc(-1 * var(--open-rise))) scaleY(var(--open-squash));
   transform-origin:top center}to{opacity:1;transform:none}}
 
@@ -440,7 +448,7 @@ svg{display:block}
 .ruler-ticks button::before{
   content:"";display:block;width:var(--rule);height:calc(14*var(--du));
   border-radius:var(--radius-xs);background:var(--ui-line);
-  transition:background var(--scale-dur) ease-in-out,height var(--scale-dur) ease-in-out;
+  transition:background var(--scale-dur) var(--scale-ease),height var(--scale-dur) var(--scale-ease);
 }
 /* the stage starts - the seven that stay targets past the bound */
 .ruler-ticks li[data-section] button::before{height:calc(26*var(--du));background:var(--line-firm)}
@@ -486,8 +494,8 @@ svg{display:block}
    the eye follows one object along the ruler instead of watching two dots swap state - which is
    the whole point of the alternative.
    DS-140 fixes the motion vocabulary at four and this adds none: a ring sliding on slide change is
-   a TRANSITION, so DS-141 governs it - under 500 ms, ease-in-out - and it reuses --scale-dur (300)
-   rather than inventing a duration. Position comes from measurement, not from pitch arithmetic, so
+   a TRANSITION, so DS-141 governs it - under 500 ms, eased rather than linear - and it reuses
+   Scale's pair of dials rather than inventing a duration or a curve of its own. Position comes from measurement, not from pitch arithmetic, so
    it stays correct in the degraded mode where the cells are no longer uniform. */
 .ruler-ring{display:none}
 .ruler[data-ticks="dot"] .ruler-ring{
@@ -495,7 +503,7 @@ svg{display:block}
   width:calc(30*var(--du));height:calc(30*var(--du));margin-top:calc(-15*var(--du));
   border:var(--rule) solid var(--accent);border-radius:50%;
   transform:translateX(calc(var(--rx,0px) - 15*var(--du)));
-  transition:transform var(--scale-dur) ease-in-out;
+  transition:transform var(--scale-dur) var(--scale-ease);
   pointer-events:none;
 }
 /* first paint must not fly in from the left */
@@ -591,7 +599,7 @@ svg{display:block}
 .current{stroke-dasharray:var(--current-dash);animation:current var(--current-dur) linear infinite}
 @keyframes current{to{stroke-dashoffset:-26}}
 
-.pulse{animation:pulse var(--pulse-dur) ease-in-out 1 both;animation-delay:var(--pulse-delay)}
+.pulse{animation:pulse var(--pulse-dur) var(--pulse-ease) 1 both;animation-delay:var(--pulse-delay)}
 @keyframes pulse{0%,100%{transform:scale(1)}45%{transform:scale(1.035)}}
 
 :root[data-motion="off"] .current{animation:none}

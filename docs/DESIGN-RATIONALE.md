@@ -629,6 +629,23 @@ nothing looks exactly like a rule that passed.**
 to 112** on 2026-08-09, and the checked count from 79 to 80 — derived from the ruleset, and
 re-derivable rather than to be trusted from this line.
 
+**The easing clause, and the correction it needed within the day.** The first pass closed a real
+gap — a `cubic-bezier` written inside a component was unreachable by every check here — and left
+four of DS-140's motions with `ease-in-out` written into them, because DS-141 named that keyword.
+The effect was a gate that read as *bespoke easing is forbidden*, which is not what any rule
+argues and is not a position this project holds: a deliberate overshoot on a card reveal is a
+design decision, and DS-000 exists precisely so the ruleset does not stand in the way of one.
+**The fault was in DS-141, not in the check.** *Max 500 ms, ease-in-out* is one theme's curve
+stated as the ruleset's — the third time that shape has been found here, after DS-034's line
+height and DS-140's durations (**L-45**), and the first time on a value that is a word rather than
+a number. What the cap and its rationale argue is that a transition is **short and eased**; nothing
+argues *which* easing. So the rule now says *eased rather than linear*, **every named motion
+carries an easing token**, and `themes/lattice.css` moves three of them — Turn overshoots, Scale
+and the slide transition ease out — which is the second artefact proving the axis is real rather
+than declared. `linear` survives in the two places the mechanism requires it: a looping dash
+stutters at the seam under anything else, and a zero-duration `visibility` step has nothing to
+ease.
+
 ---
 
 ## 6. Drops and amendments worth knowing

@@ -913,6 +913,13 @@ Restated as **2 device pixels at the smaller rendering** the bound has a mechani
 whole-rect comparison folds two independent roundings, the edge and the extent — and it stops being
 about any deck at all.
 
+**A fifth turned up the next day, and it was not a number.** DS-141 read *max 500 ms,
+**ease-in-out***, and the keyword is one theme's curve stated as the ruleset's — the same defect as
+the line height and the durations, on the easing axis. It hid longer than the others because a
+keyword does not look like a measurement: nobody audits a word for being a sample. **The class is
+wider than thresholds** — it is any value a rule states that the artefact was free to choose, and a
+check enforcing it will read as principled either way.
+
 **The general shape: a check written against one instance cannot distinguish a property of the
 artefact from a property of the class.** Both look identical from inside the sample, and the more
 carefully the number was measured, the more convincing the wrong one is.

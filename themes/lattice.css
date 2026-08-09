@@ -117,7 +117,11 @@
   --disc-mark-stroke:calc(2*var(--du));
   --disc-hit:calc(48*var(--du));
 
-  /* ---- motion: quicker and shorter. Same four motions, same names, different theme. */
+  /* ---- motion: quicker and shorter. Same four motions, same names, different theme.
+     It also moves the EASING axis, which is what the dials are for: Turn overshoots a little so
+     a card reveal reads as a flick rather than a fade, and the slide transition eases out so the
+     outgoing scene does not appear to brake. Neither is a new motion - the vocabulary is still
+     the four DS-140 names, spent differently. */
   --rise-dur:200ms;
   --rise-ease:cubic-bezier(.16,1,.3,1);
   --rise-stagger:35ms;
@@ -125,13 +129,18 @@
   --current-dash:4 8;
   --current-dur:3.4s;
   --open-dur:240ms;
+  --open-ease:cubic-bezier(.16,1,.3,1);
   --open-rise:calc(5*var(--du));
   --open-squash:.98;
   --turn-dur:260ms;
+  --turn-ease:cubic-bezier(.34,1.56,.64,1);
   --scale-dur:180ms;
+  --scale-ease:ease-out;
   --pulse-dur:900ms;
+  --pulse-ease:ease-in-out;
   --pulse-delay:420ms;
   --slide-dur:400ms;
+  --slide-ease:ease-out;
 
   /* ---- the reading view, on the same ratios */
   --doc-fs:1rem;
