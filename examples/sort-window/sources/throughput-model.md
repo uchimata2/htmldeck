@@ -54,15 +54,18 @@ November 9.8%, December 15.2%.
 
 By district, peak:
 
-| District | Missed | Position in the loading sequence | Depot to district centre |
-| :--- | ---: | :--- | ---: |
-| Ashgrove | 4.1% | first | 9 miles |
-| Cranleigh | 11.2% | second | 14 miles |
-| Dellow | 15.9% | third | 6 miles |
-| Beacon Hill | 18.7% | last | 11 miles |
+| District | Missed | Position in the loading sequence | Depot to district centre | Rounds | First away |
+| :--- | ---: | :--- | ---: | ---: | :--- |
+| Ashgrove | 4.1% | first | 9 miles | 6 | 04:10 |
+| Cranleigh | 11.2% | second | 14 miles | 5 | 04:35 |
+| Dellow | 15.9% | third | 6 miles | 4 | 05:05 |
+| Beacon Hill | 18.7% | last | 11 miles | 7 | 05:30 |
 
 Distance does not order this column and loading position does. The worst-served district is
 **11 miles** from the depot and the best-served is 9; the district 14 miles out sits third.
+
+The sequence is stable enough to argue from. Over the 31 peak nights sampled, Ashgrove was loaded
+first on every one, and Beacon Hill last on **27 of 31**.
 
 **Excluded from every figure above:** returns, same-day services, and the two weeks either side of
 the depot's August resurfacing, when volume was diverted.

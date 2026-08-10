@@ -52,41 +52,91 @@ plus `.md` inside that directory, so no row below repeats the path.
 
 | Slug | Source | What it carries |
 | :--- | :--- | :--- |
-| throughput-model | Throughput model | Volumes, miss rates, the sorter's rate, and the night the second trunk lands |
-| fleet-and-cost-model | Fleet and cost model | Both proposals costed, the vans, and the slot movement they are compared against |
-| service-calendar | Service calendar | Dates, notice periods and the contractual miss threshold |
+| throughput-model | Throughput model | Volumes, miss rates, the sorter's rate, both trunks' nights, and the districts with the order they are loaded in |
+| fleet-and-cost-model | Fleet and cost model | Both proposals costed, the vans, the twilight crew's shift, and the slot movement they are compared against |
+| service-calendar | Service calendar | Dates, notice and hire lead times, and the contractual service level |
+
+**What earns a row.** Every value the deck states as a fact, tier one and tier two alike, including
+the ones a reader only reaches by clicking. The single exclusion is arithmetic the deck performs on
+screen from figures that already have rows: slide 5's derivation panel shows 7,200 ÷ 3,100 = 2h 19m,
+and 2h 19m is the panel working rather than a figure the panel asserts. Its two operands have rows,
+its result — 01:59 — has a row, and the step between them does not.
+
+**The ledger is grouped by source and it is complete.** Grouping is not cosmetic: it is what makes
+the completeness claim checkable by a reader, who can hold one source document beside one block.
 
 | Figure | Value | Origin | Used on |
 | :--- | :--- | :--- | :--- |
-| Peak miss rate | 12.4% | throughput-model | 3, 4, 8, 9 |
-| Off-peak miss rate | 3.1% | throughput-model | 4 |
-| Misses never sorted | 84% | throughput-model | 5, 7 |
-| Misses sorted, not loaded | 16% | throughput-model | 5, 9 |
-| Second trunk arrival | 23:40 | throughput-model | 5, 7 |
-| Second trunk sort finishes | 01:59 | throughput-model | 5, 7 |
-| Outbound cut-off | 01:00 | throughput-model | 5, 7 |
-| Second trunk parcels | 7,200 | throughput-model | 5 |
-| Sort rate | 3,100 | throughput-model | 5, 10 |
 | Peak daily volume | 27,600 | throughput-model | 3 |
+| Peak window, volume basis | 18 November to 23 December | throughput-model | 3 |
+| Peak volume uplift | 50% | throughput-model | 4 |
+| Busiest single day | 31,900 | throughput-model | 10 |
+| Peak working days | 31 | throughput-model | 3, 11 |
+| Off-peak working days | 22 | throughput-model | 3 |
+| Peak miss rate | 12.4% | throughput-model | 3, 8 |
+| Off-peak miss rate | 3.1% | throughput-model | 3, 4 |
+| Monthly miss rate | 2.9 / 3.0 / 3.4 / 3.1 / 9.8 / 15.2% | throughput-model | 4 |
+| Misses never sorted | 84% | throughput-model | 5, 8, 9 |
+| Misses sorted, not loaded | 16% | throughput-model | 8, 9 |
+| Sort rate | 3,100 | throughput-model | 5, 10 |
+| Sort rate tolerance | 4% across a shift | throughput-model | 5 |
+| First trunk arrival | 19:40 | throughput-model | 5 |
+| First trunk parcels | 20,400 | throughput-model | 5 |
+| First trunk sort finishes | 00:14 | throughput-model | 5 |
+| Second trunk arrival | 23:40 | throughput-model | 5, 7 |
+| Second trunk parcels | 7,200 | throughput-model | 5 |
+| Second trunk sort finishes | 01:59 | throughput-model | 5, 7 |
+| Outbound cut-off | 01:00 | throughput-model | 5, 7, 8 |
+| Overrun past the cut-off | 59 minutes | throughput-model | 5, 7 |
 | District miss rates | 4.1 / 11.2 / 15.9 / 18.7% | throughput-model | 6 |
 | District distances | 9 / 14 / 6 / 11 miles | throughput-model | 6 |
-| Slot movement | 110 minutes | fleet-and-cost-model | 7 |
-| Sort finish after the move | 00:09 | fleet-and-cost-model | 7, 8 |
-| Monthly miss rate | 2.9 / 3.0 / 3.4 / 3.1 / 9.8 / 15.2% | throughput-model | 4 |
+| District loading order | first / second / third / last | throughput-model | 6 |
+| District rounds | 6 / 5 / 4 / 7 | throughput-model | 6 |
+| District first departure | 04:10 / 04:35 / 05:05 / 05:30 | throughput-model | 6 |
+| Nights Beacon Hill loaded last | 27 of 31 | throughput-model | 6 |
 | Vans in service | 34 | fleet-and-cost-model | 9 |
 | Peak round utilisation | 88% | fleet-and-cost-model | 9 |
+| Fleet option vans | 9 | fleet-and-cost-model | 9 |
 | Fleet option capital | $522k | fleet-and-cost-model | 9 |
 | Fleet option annual | $468k | fleet-and-cost-model | 9 |
+| Fleet option first benefit | 5 months | fleet-and-cost-model | 9 |
+| Slot premium | $140k | fleet-and-cost-model | 9 |
+| Twilight crew cost | $170k | fleet-and-cost-model | 9, 10 |
+| Twilight crew | 6 people | fleet-and-cost-model | 9, 10 |
+| Crew shift | 22:00 to 02:30 | fleet-and-cost-model | 10 |
+| Crew nights a week | 5 | fleet-and-cost-model | 10 |
 | Window option annual | $310k | fleet-and-cost-model | 9, 11, 12 |
-| Projected peak miss rate | 2.4% | fleet-and-cost-model | 8, 11, 12 |
-| Carrier reliability floor | 95% | fleet-and-cost-model | 7, 10 |
-| Proposed trunk arrival | 21:50 | fleet-and-cost-model | 7, 12 |
+| Window option first benefit | 6 weeks | fleet-and-cost-model | 9 |
+| Slot movement | 110 minutes | fleet-and-cost-model | 7 |
+| Proposed trunk arrival | 21:50 | fleet-and-cost-model | 7, 10, 12 |
+| Sort finish after the move | 00:09 | fleet-and-cost-model | 7, 8 |
+| Margin inside the cut-off | 51 minutes | fleet-and-cost-model | 7 |
 | Proposed second cut-off | 02:30 | fleet-and-cost-model | 7, 10, 12 |
-| Held to the January review | $120k | fleet-and-cost-model | 11 |
-| Contractual miss threshold | 4% | service-calendar | 11 |
-| Decision date | 19 September | service-calendar | 2, 12 |
-| Contract review | 14 November | service-calendar | 2 |
+| Carrier reliability floor | 95% | fleet-and-cost-model | 7, 8, 9, 10 |
+| Nights the slot is missed | 5% | fleet-and-cost-model | 7, 10 |
+| Projected peak miss rate | 2.4% | fleet-and-cost-model | 8 |
+| Held to the January review | $120k | fleet-and-cost-model | 11, 12 |
+| Board meeting | 4 September | service-calendar | 2 |
+| Decision date | 19 September | service-calendar | 2, 11, 12 |
+| Contract review | 14 November | service-calendar | 2, 11 |
+| Peak opens | 18 November | service-calendar | 2, 11 |
 | Slot notice | 8 weeks | service-calendar | 2 |
+| Crew hire lead | 6 weeks | service-calendar | 2 |
+| Contractual service level | 96% | service-calendar | 11 |
+| Contractual miss threshold | 4% | service-calendar | 4, 11 |
+| January review | first working week of January | service-calendar | 11 |
+
+**Two slides had to be corrected rather than the ledger**, which is SPEC-4's rule running in the
+direction it names. Slide 4 draws the 4% contractual threshold across its chart and declared only
+the throughput model; slide 11 reads its gate over the 31 peak working days and declared only the
+fleet and calendar. Both now name the source the figure came from, and the deck's provenance marks
+say the same. Neither was visible before, because a figure with no row is a figure SPEC-4 has
+nothing to compare.
+
+**Slide 1 carries no row, and that is a judgement rather than an omission.** Its eyebrow prints the
+occasion and its standfirst introduces the term — *a nightly window that closes at 01:00* — and
+neither presents a measurement. The slide declares `Sources: none` and the deck gives it no
+provenance mark, which is the same judgement written twice.
 
 ## Outline
 

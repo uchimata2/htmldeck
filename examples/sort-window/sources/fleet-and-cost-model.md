@@ -32,6 +32,7 @@ cannot carry a parcel the sorter has not released.
 | :--- | ---: |
 | Linehaul slot premium, annual | $140k |
 | Twilight loading crew, six people, annual | $170k |
+| Crew shift, five nights a week through peak | 22:00 to 02:30 |
 | Total, annual | $310k |
 | Capital | none |
 | First benefit | 6 weeks — a schedule change and a shift pattern |

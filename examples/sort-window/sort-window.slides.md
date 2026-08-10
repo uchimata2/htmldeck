@@ -75,7 +75,7 @@ bottom line in the outline to be the one that ships.
   the frame and labels.
 - **Interactive elements.** Disclosure, `data-disc="scope"` — *What this line includes*: working
   days only, the excluded fortnight, and why January is not on it yet.
-- **Sources.** throughput-model
+- **Sources.** throughput-model, service-calendar
 
 ## Slide 5 — Sorting ends an hour late
 
@@ -205,7 +205,7 @@ bottom line in the outline to be the one that ships.
 - **Animations.** Rise on the timeline. Pulse-once on the gate.
 - **Interactive elements.** Disclosure, `data-disc="condition"` — *What the gate measures*: peak
   miss rate over the 31 peak working days, on slide 3's definition, read at the January board.
-- **Sources.** fleet-and-cost-model, service-calendar
+- **Sources.** fleet-and-cost-model, service-calendar, throughput-model
 
 ## Slide 12 — Approve the slot by 19 September
 

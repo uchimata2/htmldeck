@@ -10,7 +10,9 @@
 | Network contract review | 14 November |
 | Linehaul slot request notice | 8 weeks before the slot changes |
 | Latest decision date | 19 September |
+| Operations board | 4 September |
 | January review | the first working week of January |
+| Twilight crew hire lead | 6 weeks |
 
 The 19 September date is 8 weeks before the contract review and is not a preference: a slot
 requested later than that cannot be in place for the first week of peak, which is the week the miss
