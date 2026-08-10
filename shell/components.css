@@ -93,12 +93,42 @@ svg{display:block}
 .slide > .disc{grid-row:2}
 .body{grid-row:3;margin-top:var(--sp-3);min-height:0}
 
-/* provenance, upper right, plain text because the source is the model itself (DS-105) */
+/* provenance, upper right; plain text where one source carries the slide (DS-105) */
 .provenance{
   position:absolute;top:var(--pad-y);right:var(--pad-x);
   font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
   text-transform:uppercase;color:var(--ink-faint);text-align:right;
 }
+
+/* ------------------------------------------- more than one source per slide (DS-105) */
+/* Its own component and deliberately not a .disc: provenance is what the argument rests on, not a
+   question the face provokes, so it stays outside DS-230's four kinds and outside the panel census
+   they exist to keep meaningful. It shares the interaction rules, which are about the reader rather
+   than about the content. Spans throughout - a <div> inside a <p> is closed by the parser, and the
+   box would leave the mark in the DOM while looking right in the file. */
+.sources{position:relative;display:inline-block}
+.sources-btn{
+  display:inline-flex;align-items:center;gap:var(--sp-1);
+  min-height:var(--disc-hit);min-width:var(--disc-hit);padding:0 var(--sp-1);
+  border:0;background:none;color:var(--ink-faint);
+  font:inherit;letter-spacing:inherit;text-transform:inherit;
+}
+.sources-btn:hover{color:var(--accent)}
+.sources-mark{flex:none;width:var(--fs-mono);height:var(--fs-mono);color:var(--accent)}
+.sources-box{                                    /* opens below the mark (DS-138) */
+  position:absolute;top:calc(100% + var(--sp-1));right:0;z-index:30;
+  min-width:var(--sources-box-w);
+  padding:var(--sp-2) var(--sp-3);
+  border:var(--hair) solid var(--line);border-radius:var(--radius);
+  background:var(--paper-sunk);box-shadow:0 var(--shadow-y-sm) var(--shadow-blur-sm) var(--shadow-soft);
+  /* the mark is mono, uppercase and right-set; a list of titles is none of those */
+  font-family:var(--font-text);font-size:var(--fs-small);letter-spacing:normal;
+  text-transform:none;text-align:left;color:var(--ink-soft);
+}
+.sources-box[hidden]{display:none}
+.sources-item{display:block;white-space:nowrap}
+.sources-item + .sources-item{margin-top:var(--sp-1);padding-top:var(--sp-1);
+  border-top:var(--hair) solid var(--line)}
 
 /* ---------------------------------------------------------------- disclosure (DS-160..170) */
 /* The control sits under the header, not at the foot of the slide. DS-138 requires the panel to
@@ -377,6 +407,17 @@ svg{display:block}
 .doc .provenance{position:static;text-align:left;font-size:var(--doc-fs-mono);margin-top:var(--doc-sp-lg);letter-spacing:var(--doc-track-mono)}
 .doc .disc{position:static;margin-top:var(--doc-sp-lg)}
 .doc .disc-btn{display:none}
+/* The source list gets the disclosure's treatment for the disclosure's reason: the reading view is
+   a document, not a scaled stage (DS-074), so the box has to leave its absolute placement and its
+   design-unit width, and the control that opens it has nothing left to do once DS-073 opens it. */
+.doc .sources{position:static;display:block}
+.doc .sources-btn{display:none}
+/* `display:block` is load-bearing, not tidying. On the stage the box is absolutely positioned, so
+   it computes to a block whatever its element is; static, a <span> falls back to inline and paints
+   its padding and background in fragments across the line boxes - which reads as debris beside the
+   list rather than as a box, and is what looking at the reading view showed. */
+.doc .sources-box{position:static;display:block;min-width:0;margin-top:var(--doc-sp-xs);
+  box-shadow:none;font-size:var(--doc-fs-sm);white-space:normal}
 /* The stage panel is absolutely positioned at a fixed design-unit width. The reading view is a
    document, not a scaled stage (DS-074), so both have to be undone or it cannot reflow. */
 .doc .disc-panel{position:static;width:auto;max-width:none;font-size:var(--doc-fs-sm);margin-top:0;
@@ -472,6 +513,18 @@ svg{display:block}
      slides only, with the loss stated: the reading view carries all of tier two on screen, so it
      is not lost, only not on paper (T-032). */
   .slide .disc{display:none!important}
+
+  /* The source list answers the same objection the other way, and the reason is the size of what
+     is behind the control. A "3 sources" button on paper advertises something the reader cannot
+     reach - so the button goes; but three titles fit under the mark, where a ten-row panel did
+     not, and paper is where provenance matters most. Static placement also settles DS-223 for this
+     component: nothing absolutely positioned means nothing to scatter across a break. */
+  .slide .sources-btn{display:none!important}
+  .slide .sources-box{display:block!important;position:static;min-width:0;
+    padding:0;border:0;background:none;box-shadow:none;
+    font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+    text-transform:uppercase;text-align:right;color:var(--ink-faint)}
+  .slide .sources-item + .sources-item{margin-top:0;padding-top:0;border:0}
 
   /* ---------------------------------------------------------------- the contents page (T-034)
      Twelve pages of slides arrive with no map: the ruler carries the structure on screen

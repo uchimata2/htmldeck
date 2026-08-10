@@ -97,6 +97,7 @@
   --tick-len:calc(28*var(--du));       /* the eyebrow's tick */
   --disc-panel-w:calc(940*var(--du));
   --disc-key-w:calc(210*var(--du));
+  --sources-box-w:calc(380*var(--du));
 
   /* ---- shape: radius, stroke and depth. This is the axis a recolour cannot reach. */
   --radius:calc(14*var(--du));

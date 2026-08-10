@@ -108,6 +108,27 @@ that omits one goes missing from the navigation rather than looking wrong.
 | `.bottom-line` | `p` | `.slide` | `1` | — | author |
 | `.bottom-line--center` | — | `on .bottom-line` | `0+` | — | author |
 | `.provenance` | `p` | `.slide` | `1` | — | author |
+| `.sources` | `span` | `.provenance` | `0-1` | — | author |
+| `.sources-btn` | `button` | `.sources` | `1` | `aria-expanded` `aria-controls` | author |
+| `.sources-mark` | `svg` | `.sources-btn` | `1` | `aria-hidden` | author |
+| `.sources-label` | `span` | `.sources-btn` | `1` | — | author |
+| `.sources-box` | `span` | `.sources` | `1` | `id` | author |
+| `.sources-item` | `span` | `.sources-box` | `1+` | — | author |
+
+**The multi-source mark is `<span>`s inside the `<p>`, and that is a parser constraint rather than a
+preference.** A `<div>` inside a `<p>` is closed by the HTML parser, so a box built that way would
+sit **outside** the mark in the DOM while looking correct in the file — the deck would lose DS-223's
+print placement without anything appearing wrong. Keeping the box inside `.provenance` is also what
+keeps that row at `1`: a slide has one provenance mark, and what changed is what the mark may
+contain.
+
+**`.sources-item` is `1+` and DS-105 says two.** The contract can only say a box has items; *a box
+is for more than one source* is an editorial claim about the slide, which is DS-105's to make and
+the critique pass's to judge. A one-item box is conformant markup and a pointless design.
+
+**`.sources` is not a `.disc` and must not be counted as one** — see DS-105 and DS-230. It shares the
+disclosure interaction rules and none of its vocabulary, which is why it is contracted here beside
+the mark it belongs to rather than in §3.3.
 
 **`.headline` sits in the slide, not in its header, and that is measured rather than tidied.**
 Eleven of the twelve put it in `<header>`; the closing slide puts it inside `.body` so the ask can

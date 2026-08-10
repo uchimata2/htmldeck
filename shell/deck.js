@@ -223,9 +223,39 @@
     var panel = d.querySelector('.disc-panel');
     var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(d);
+    closeAllSources(null);
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     panel.hidden = !open;
     if (open) panel.classList.add('opening');
+  }
+
+  /* ------------------------------------------------ sources (DS-105, one open at a time) */
+  /* Its own component and not a .disc - provenance is what the argument rests on rather than tier
+     two (DS-230) - which is why it has its own list and its own toggle. It shares the precedence
+     rule with the disclosure because a reader has one attention whatever the content is (DS-137). */
+  var srcs = Array.prototype.slice.call(stage.querySelectorAll('.sources'));
+  srcs.forEach(function(s){
+    var box = s.querySelector('.sources-box');
+    s.querySelector('.sources-btn').addEventListener('click', function(){ toggleSources(s, null); });
+    box.addEventListener('animationend', function(){ box.classList.remove('opening'); });
+  });
+
+  function closeAllSources(except){
+    srcs.forEach(function(s){
+      if (s === except) return;
+      s.querySelector('.sources-btn').setAttribute('aria-expanded','false');
+      s.querySelector('.sources-box').hidden = true;
+    });
+  }
+  function toggleSources(s, force){
+    var btn = s.querySelector('.sources-btn');
+    var box = s.querySelector('.sources-box');
+    var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
+    closeAllDiscs(null);
+    closeAllSources(s);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    box.hidden = !open;
+    if (open) box.classList.add('opening');
   }
 
   /* ---------------------------------------------------------- navigation */
@@ -233,6 +263,7 @@
     i = Math.max(0, Math.min(slides.length - 1, i));
     idx = i;
     closeAllDiscs(null);
+    closeAllSources(null);
     slides.forEach(function(s, n){
       var cur = n === i;
       if (cur) { s.setAttribute('data-current',''); } else { s.removeAttribute('data-current'); }
@@ -289,7 +320,7 @@
       var d = slides[idx].querySelector('[data-disc]');
       if (d) { toggleDisc(d, null); e.preventDefault(); }
     }
-    else if (k === 'Escape')                                      { closeAllDiscs(null); }
+    else if (k === 'Escape')                        { closeAllDiscs(null); closeAllSources(null); }
     else if (k === 'r' || k === 'R')                              { setView(true); e.preventDefault(); }
     else if (k === 'm' || k === 'M')                              { setMotion(root.dataset.motion === 'off'); }
     else if (k === 't' || k === 'T')                              { setTheme(root.dataset.theme === 'light' ? 'dark' : 'light'); }
@@ -344,6 +375,10 @@
         var src = s.querySelector('.disc-label');
         lead.textContent = src ? src.textContent : 'Detail';
         p.parentNode.insertBefore(lead, p);
+      });
+      /* the source list travels opened too - same rule, same reason (DS-073) */
+      Array.prototype.forEach.call(c.querySelectorAll('.sources-box'), function(b){
+        b.hidden = false;
       });
       Array.prototype.forEach.call(c.querySelectorAll('[id]'), function(n){ n.id = 'doc-' + n.id; });
       Array.prototype.forEach.call(c.querySelectorAll('[aria-controls]'), function(n){
