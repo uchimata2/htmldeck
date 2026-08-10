@@ -177,7 +177,15 @@ STATIC_VARIANTS = [
 RENDER_VARIANTS = [
     ("slide-is-not-a-section", "DS-080", [
         ('<section class="slide" data-name="Waiting is the trip"',
-         '<div class="slide" data-name="Waiting is the trip"')]),
+         '<div class="slide" data-name="Waiting is the trip"'),
+        # **The closing tag, which this variant left behind until T-055.** Without it the document
+        # is malformed, Chrome repairs it, and what the run measures is the repair rather than the
+        # rule - the same variant failed DS-091, DS-130 and DS-075 as collateral, reporting a slide
+        # with no headline whose headline the parser had lifted out of it. The anchor is the
+        # slide's own bottom line: `</section>` is not unique and neither is the provenance mark
+        # above it.
+        ('is half the headway.</b></p>\n  <p class="provenance">Ridership model</p>\n</section>',
+         'is half the headway.</b></p>\n  <p class="provenance">Ridership model</p>\n</div>')]),
     ("sentence-over-twenty-words", "DS-092", [
         ("<b>Spend the $5.6M grant on bus frequency, and hold",
          "<b>Spend the whole of the $5.6M state corridor grant on bus frequency across the six "
