@@ -2,8 +2,8 @@
 id: T-077
 title: Report a figure exclusion that outlived the numeral it was written for
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-060, T-073]
@@ -67,10 +67,10 @@ the exclusion tables.
 - [ ] The live README passes with no stale entry reported
 
 **Open questions**
-- **Fail the run, or report it?** Recommended: **fail**. A stale exclusion is a claim the page
-  contradicts, which is the same kind of thing as a stale figure, and `audit.py` exits on its
-  equivalent. The rival is reporting it like a volatile block, which would keep the run green while a
-  false statement sits in the tool — the state this task exists because of.
+- ~~**Fail the run, or report it?**~~ **Settled 2026-08-10: fail, as recommended.** The rival —
+  report it the way a volatile block is reported — loses on the same ground the recommendation
+  states, and the four dead entries found within a minute of the check existing are the argument: a
+  green run with four false statements in it is what had been happening.
 
 ## 2. Plan
 
@@ -83,22 +83,59 @@ the exclusion tables.
 ## 3. Implement
 
 **Decisions & assumptions**
-- <pending>
+- **Fail the run** — 2026-08-10, as recommended, with reporting-only as the rival. Both the decision
+  and its reason sit next to the arithmetic in `report()`, not only here.
+- **Seed the fixture by taking the numeral off the page, not by adding a fabricated table entry** —
+  2026-08-10. An invented entry tests the loop; what has to be tested is a *live* declaration going
+  stale when the page moves underneath it, which is what happened. The fixture removes the first
+  declared numeral from a copy of the README and requires the message to name it, and it fails loudly
+  if the live README already carries a stale entry, because a green run underneath one would mean
+  nothing (**L-55**).
+- **The four dead entries were deleted, not rephrased** — 2026-08-10. `1.1`, `0.1`, `0.2` and `106`
+  were all declared in `EXCLUDED_PROSE` and none is on the page. An exclusion is re-earned by its
+  numeral coming back, and the way it asks is a red run; a rewritten reason for an absent subject is
+  the same defect with better prose. **One of five entries survived.**
+
+**What the check found the minute it existed**
+
+| Declared | Reason it carried | On the page? |
+| :--- | :--- | :---: |
+| `31` | *113 − 82, the remainder in the same sentence* | yes |
+| `1.1` | *a section number in `EVALUATION.md 1.1`* | no |
+| `0.1` | *a release name* | no |
+| `0.2` | *a release name* | no |
+| `106` | *a rule ID (DS-106) without its prefix* | no |
+
+All six `EXCLUDED_FENCES` entries are live, so the rot is on the prose side, where the page is edited
+by hand and the table is not.
+
+**And it caught a figure this session had just broken.** The run went red on `212` — the README's
+size for `examples/sort-window/sort-window.html`, which
+[T-071](T-071-the-intermediate-specifications-carry-their-references.md) had changed to 220 KB two
+commits earlier without re-running this tool. That is the tool doing exactly its job, on a defect
+introduced by the same session that was extending it, and it is the reason the README's commands are
+the durable list rather than any prose about them.
 
 **Outputs produced**
-- <pending>
+- [`tools/docs/figures.py`](../tools/docs/figures.py) — `stale_exclusions`, a `STALE` row and count
+  in the report, the failure arithmetic, fixture 6, and `EXCLUDED_PROSE` reduced to its one live entry.
+- [`README.md`](../README.md) — 212 KB → 220 KB, and the drifted `refcheck.py` block repasted.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| An exclusion whose numeral or fence is not on the page is named in the run's output | met | `STALE  EXCLUDED_PROSE declares '0.1' and the page no longer carries it - a release name`, plus a `STALE` line in the exclusions account so a clean run states the number it checked. |
+| Seeding one shows the message, not merely the exit status | met | Fixture 6 removes a live numeral from a copy and requires the key back from `stale_exclusions`; a second assertion fails the self-test if the live README is already stale. |
+| The live README passes with no stale entry reported | met | `0 stale figure(s)`, `STALE 0`, `declared 7`. |
 
 **Child fix tasks raised**
-- <pending>
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | → done | The check found **four** dead entries on the live README, not the one it was raised for — four of five prose exclusions, every one a written reason for a numeral that had left the page. Deleted rather than rephrased. It also went red on `212`, a figure T-071 had invalidated two commits earlier in this same session without re-running the tool; corrected, and worth leaving in the record as the clearest possible statement of why this direction of the check was missing. |
+| 2026-08-10 | → in_progress | Written as a standalone `stale_exclusions` rather than a fourth element of `audit`'s tuple, because three call sites unpack that tuple by name and a fourth would have made this change touch them all for nothing. |
 | 2026-08-10 | → proposed | Raised on the owner's decision after `figures.py` was found red on `master` for a stale exclusion, not for a stale figure. The tool watches one direction — *is every numeral on the page accounted for?* — and not the other, *is every account still about a numeral on the page?*. That asymmetry is **L-54**'s, arriving in a second file. |

@@ -69,14 +69,13 @@ EXCLUDED_FENCES = {
     "python tools/deck/critique.py": "shows the calling form with placeholder arguments, not a run",
 }
 
-# Prose numerals that no command prints, each with what would close the exclusion.
+# Prose numerals that no command prints, each with what would close the exclusion. An entry whose
+# numeral has left the page is reported STALE and fails the run - see `stale_exclusions`. Four sat
+# here when that check was written (`1.1`, `0.1`, `0.2`, `106`) and were deleted rather than
+# rephrased: an excusal is re-earned by the numeral coming back, and a red run is how it asks.
 EXCLUDED_PROSE = {
     "31": "113 - 82, stated as the remainder in the same sentence; it would be closed by the gate "
           "printing the unchecked count as a row of its own",
-    "1.1": "a section number in `EVALUATION.md 1.1`, not a measurement",
-    "0.1": "a release name",
-    "0.2": "a release name",
-    "106": "a rule ID (DS-106) written without its prefix in prose",
 }
 
 
@@ -261,6 +260,30 @@ def audit(text):
     return rows, prose_rows, seen
 
 
+def stale_exclusions(text):
+    """`[(table, key, why)]` - every exclusion whose subject is no longer on the page.
+
+    **The other direction of the same question.** `audit` asks *is every figure on the page
+    accounted for?* and nothing asked *is every account still about a figure on the page?* - so an
+    excusal outlives its subject silently, and its stated reason goes false with it. That is how this
+    tool came to be red on `master`: the coverage split moved from 81/32 to 82/31, `EXCLUDED_PROSE`
+    still declared `32` with the reason *"113 - 81"*, and the run failed on the new numeral while
+    the dead excusal for the old one sat there saying nothing (T-077). `audit.py` has reported this
+    shape since T-066 and calls it `stale`; this is the same discipline in the second file that
+    needed it (**L-54**).
+    """
+    fenced = [" ".join(l.strip() for l in body if l.strip()) for _s, _l, body in fences(text)]
+    numerals = set(m.group(1) for m in PROSE_NUMERAL.finditer(prose(text)))
+    out = []
+    for prefix, why in EXCLUDED_FENCES.items():
+        if not any(cmd.startswith(prefix) for cmd in fenced):
+            out.append(("EXCLUDED_FENCES", prefix, why))
+    for n, why in EXCLUDED_PROSE.items():
+        if n not in numerals:
+            out.append(("EXCLUDED_PROSE", n, why))
+    return out
+
+
 def self_test():
     """Four staled copies, one per failure mode. **A check only ever seen passing is not a check**
     (**L-36**), and reading the assertion is not enough - each fixture is judged by the *message*
@@ -338,6 +361,28 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a prose numeral matched only by a rule ID (DS-107) was "
                  "reported as compared. A check that compares a coincidence is worse than one "
                  "that says nothing")
+
+    # 6. **An exclusion whose subject has left the page.** Seeded by removing the numeral rather
+    # than by adding a table entry: a fabricated entry would test the loop, and what has to be
+    # tested is that a live declaration goes stale when the page moves underneath it - which is
+    # what actually happened.
+    if not EXCLUDED_PROSE:
+        sys.exit("SELF-TEST FAILED: EXCLUDED_PROSE is empty, so nothing here exercises the stale "
+                 "case")
+    victim = sorted(EXCLUDED_PROSE)[0]
+    emptied = re.sub(r"(?<![\w.-])%s(?![\w.%%-])" % re.escape(victim), "one", base)
+    if emptied == base:
+        sys.exit("SELF-TEST FAILED: %r is declared excluded and is not on the page, so the fixture "
+                 "cannot remove it - the live README already carries the defect" % victim)
+    got = [k for _t, k, _w in stale_exclusions(emptied)]
+    if victim not in got:
+        sys.exit("SELF-TEST FAILED: %r was taken off the page and its exclusion was not reported "
+                 "stale. An excusal for a figure nobody prints is a false statement sitting in the "
+                 "tool, which is the state T-077 was raised from" % victim)
+    if stale_exclusions(base):
+        sys.exit("SELF-TEST FAILED: the live README already carries a stale exclusion (%s), so a "
+                 "green run below would mean nothing"
+                 % ", ".join("%s %s" % (t, k) for t, k, _w in stale_exclusions(base)))
     return True
 
 
@@ -361,6 +406,10 @@ def report(values):
         pc[kind] = pc.get(kind, 0) + 1
         if kind == "UNDECLARED":
             print("  %-10s prose numeral %s - %s" % (kind, n, why))
+    dead = stale_exclusions(text)
+    for table, key, why in dead:
+        print("  %-10s %s declares %r and the page no longer carries it - %s"
+              % ("STALE", table, key, why))
 
     print("\n  fenced blocks")
     for k in ("command", "compared", "volatile", "excluded", "UNDECLARED", "FAILING"):
@@ -372,6 +421,9 @@ def report(values):
         if pc.get(k):
             print("    %-12s %3d" % (k, pc[k]))
     print("    %-12s %3d" % ("total", len(prose_rows)))
+    print("\n  exclusions")
+    print("    %-12s %3d" % ("declared", len(EXCLUDED_FENCES) + len(EXCLUDED_PROSE)))
+    print("    %-12s %3d   = an excusal whose subject has left the page" % ("STALE", len(dead)))
 
     drift = [r for r in rows if r[0] == "volatile" and r[3]]
     if values and drift:
@@ -380,7 +432,12 @@ def report(values):
             for _was, now in extra:
                 print("    %s" % now)
 
-    fails = counts.get("FAILING", 0) + counts.get("UNDECLARED", 0) + pc.get("UNDECLARED", 0)
+    # **A stale exclusion fails the run**, decided 2026-08-10 with reporting-only as the rival: it is
+    # a written claim the page contradicts, which is the same kind of thing as a stale figure, and
+    # `audit.py` exits on its equivalent. Reporting it would keep the run green while a false
+    # statement sits in the tool - the state this check was written from (T-077).
+    fails = (counts.get("FAILING", 0) + counts.get("UNDECLARED", 0)
+             + pc.get("UNDECLARED", 0) + len(dead))
     print("\n%s" % ("%d figure(s) to fix" % fails if fails else
                     "0 stale figure(s)%s" % (" - %d volatile block(s) drifted, which is reported "
                                              "rather than failed (see --values)" % len(drift)

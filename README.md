@@ -148,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1123 document pointer(s) checked, 0 broken
-     506 section reference(s) resolved, 0 dead; 1217 not bound to a document and skipped.
+OK - 1156 document pointer(s) checked, 0 broken
+     517 section reference(s) resolved, 0 dead; 1262 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -200,7 +200,7 @@ names every one it misses.
 ## The deck nobody authored by hand
 
 [`examples/sort-window/`](examples/sort-window) holds *Move the window, not the fleet*: 12 slides,
-**212 KB in one file, zero external references**, five hand-written SVG figures and ten disclosure
+**220 KB in one file, zero external references**, five hand-written SVG figures and ten disclosure
 panels. It was built through the pipeline rather than written, assembled from
 [`shell/`](shell), which is the reference deck with its content cut out, then authored three slides
 at a time with the gate run per batch.
