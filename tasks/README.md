@@ -37,11 +37,12 @@ happened.
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060 |
 | [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | T-069 | - | T-019, T-069, T-071 |
 | [T-071](T-071-the-intermediate-specifications-carry-their-references.md) | The intermediate specifications carry the sources they rest on | `v0.2` | `proposed` | `specify` | - | - | T-069 | - | T-070 |
-| [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `proposed` | `specify` | - | - | - | - | T-062, T-063, T-074, T-077, T-079 |
+| [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `proposed` | `specify` | - | - | - | - | T-062, T-063, T-074, T-077, T-079, T-080 |
 | [T-076](T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | A verdict producer that exits the process instead of reporting a row | `v0.2` | `proposed` | `specify` | - | - | - | - | T-075 |
 | [T-077](T-077-report-a-figure-exclusion-that-outlived-its-numeral.md) | Report a figure exclusion that outlived the numeral it was written for | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060, T-073 |
 | [T-078](T-078-write-down-the-release-sequence.md) | Write down the release sequence, which lives only in four task logs | `v0.2` | `proposed` | `specify` | - | - | - | - | T-008, T-056 |
-| [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns list closed tasks, so open rows read as blocked | `v0.2` | `proposed` | `specify` | - | - | - | - | T-031, T-062, T-063, T-073 |
+| [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns list closed tasks, so open rows read as blocked | `v0.2` | `in_progress` | `implement` | - | - | - | - | T-031, T-062, T-063, T-073, T-080 |
+| [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `proposed` | `specify` | - | - | - | - | T-063, T-073, T-079 |
 
 ## Closed
 
@@ -102,7 +103,7 @@ happened.
 | [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md) | Check that the README's pasted figures still match the commands that produced them | `v0.2` | `done` | `review` | - | - | - | - | T-050, T-056, T-067, T-068, T-077 |
 | [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md) | The scaffold check passed a manifest the installer rejects | `v0.1` | `done` | `review` | - | - | - | - | T-008, T-015, T-062, T-064, T-067 |
 | [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) | Retire the pre-split task tool and repoint what points at it | `v0.2` | `done` | `review` | - | - | - | - | T-046, T-061, T-063, T-073, T-079 |
-| [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `v0.2` | `done` | `review` | - | - | - | - | T-062, T-073, T-079 |
+| [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `v0.2` | `done` | `review` | - | - | - | - | T-062, T-073, T-079, T-080 |
 | [T-064](T-064-the-tools-crash-when-the-deck-is-on-another-drive.md) | The tools crash when the deck is on a different drive from the plugin | `v0.1` | `done` | `review` | - | - | - | - | T-008, T-061, T-065 |
 | [T-065](T-065-four-rules-still-fail-a-deck-for-not-having-their-subject.md) | Four rules still fail a deck for not having their subject | `v0.1` | `done` | `review` | - | - | - | - | T-051, T-064, T-066, T-075 |
 | [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | - | - | T-051, T-065, T-075 |

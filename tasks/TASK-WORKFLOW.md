@@ -159,12 +159,19 @@ comparison is in [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-p
 `README.md` survive it. `check` reports a stale index and does not fix it, so run `index` after any
 task edit.
 
-**Generated views count only open tasks as gated.** Both directions of an edge are filtered the same
-way: a closed task neither gates anything nor waits on anything, so it is absent from a *Blocked by*
-column, a *Blocks* column, and from the board. `context` keeps them, with their status, because they
-are the trail explaining why the task exists. Stated here because it was previously implied by two
-comprehensions that disagreed with each other, which is how it survived being read repeatedly
-(**T-031**, **L-08**).
+**Generated views count only open tasks as gated** — the rule, and it is currently observed by
+`list` and `context` and **not** by `index`. Both directions of an edge should be filtered the same
+way: a closed task neither gates anything nor waits on anything, so it belongs in neither a *Blocked
+by* nor a *Blocks* column. `context` keeps them, with their status, because they are the trail
+explaining why the task exists. Stated here because it was previously implied by two comprehensions
+that disagreed with each other, which is how it survived being read repeatedly (**T-031**, **L-08**).
+
+**And it stopped being true here on the day the tool changed.** This paragraph described `task.py`,
+which filtered both columns; taskmd's `index` does not, so three rows on today's board name a closed
+blocker while `taskmd list --open` correctly ranks them free. The fix is upstream and is
+[T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md); until it lands, **read a *Blocked
+by* cell against the named task's status, not on its own.** Recorded rather than quietly softened,
+because a rule that survived a tool swap unnoticed is worth leaving visible.
 
 **What the two checks enforce**
 
