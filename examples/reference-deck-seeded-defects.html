@@ -914,10 +914,10 @@ svg{display:block}
  <defs>
   <g id="lucide" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
  </defs>
+ <symbol id="i-source" data-icon="file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
  <symbol id="i-wait" data-icon="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
  <symbol id="i-bike" data-icon="bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
  <symbol id="i-bus" data-icon="bus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></symbol>
- <symbol id="i-source" data-icon="file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
  <symbol id="i-cost" data-icon="triangle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
  <symbol id="i-window" data-icon="calendar-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 14v2.2l1.6 1"/><path d="M16 2v3"/><path d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338"/><path d="M3 9h5.859"/><path d="M8 2v3"/><circle cx="16" cy="16" r="6"/></symbol>
  <symbol id="i-gate" data-icon="flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/></symbol>
@@ -1377,7 +1377,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The 12 March budget vote is the only meeting
     that can commit the grant before 31 March 2027.</b></p>
-  <p class="provenance">Cost model</p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src2"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src2" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span></span></span></p>
 </section>
 
 <!-- ============================================================ 7 — trajectory (A-05) -->
@@ -1569,7 +1569,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise seeded-throb" style="--i:6"><b>Three corridors wait until month 18, and the general
     fund carries $6.8M every year after.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src10"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src10" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src10"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src10" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span><span class="sources-item">Ridership model</span></span></span></p>
 </section>
 
 <!-- ============================================================ 11 — risk retirement (A-02) -->
@@ -1684,14 +1684,14 @@ svg{display:block}
         <svg class="icon sm" x="0" y="-34" width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-source"/></svg>
         <text class="name" x="70" y="0">Ridership model</text>
         <text class="lab t-soft" x="70" y="42">Catchment, corridor and elasticity figures</text>
-        <text class="lab t-faint" x="1728" y="0" text-anchor="end">Slides 3, 4, 5, 6, 7, 8, 11</text>
+        <text class="lab t-faint" x="1728" y="0" text-anchor="end">Slides 3, 4, 5, 6, 7, 8, 10, 11</text>
       </g>
       <line class="grid" x1="0" y1="290" x2="1728" y2="290"/>
       <g transform="translate(0,380)">
         <svg class="icon sm" x="0" y="-34" width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-source"/></svg>
         <text class="name" x="70" y="0">Programme timetable</text>
         <text class="lab t-soft" x="70" y="42">Dates, durations, thresholds and the review gate</text>
-        <text class="lab t-faint" x="1728" y="0" text-anchor="end">Slides 5, 9, 10, 11</text>
+        <text class="lab t-faint" x="1728" y="0" text-anchor="end">Slides 2, 5, 9, 10, 11</text>
       </g>
     </svg>
   </div>

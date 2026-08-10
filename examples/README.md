@@ -92,6 +92,25 @@ arithmetic is the source and the deck says so**. Quoting real transit research f
 have been the actual violation — a misremembered elasticity is a fabricated metric wearing a
 citation.
 
+**The two decks discharge DS-102 differently, and the difference is a fact about them rather than a
+defect in either** ([T-087](../tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md)).
+`sort-window/` was built through build mode, so it carries a `.foundation.md` whose **figure ledger**
+binds each value to its source *and to the slides it appears on* — 58 rows, one per figure. This deck
+was built by hand before that format existed, and its record is **source-level**: the colophon names
+three model documents, says what each carries, and lists the slides that rest on it, with a
+per-slide provenance mark saying the same thing from the other end. Both are complete records; only
+the ledger is fine-grained enough for a program to check a figure against a slide, which is why
+`spec.py`'s `SPEC-5` runs on the worked example and not on this one.
+
+**Swept against its sources on 2026-08-10, and the source documents gained what it found.** The
+colophon's three slide lists match the twelve slides' provenance marks exactly, in both directions.
+The figures did not: the six-corridor comparison on slides 6 and 10 asserted twelve new-daily-trip
+values of which the ridership model carried one, and named three corridors the model called
+something else. The model now carries all twelve and the deck's names, and its statement that *the
+six trunk routes carry 36,000* is corrected to the three corridors that actually sum to it. **Four
+figure occurrences remain unsourced on purpose** and are listed in the task: the deck's own build
+date, and three axis scale marks.
+
 ### What was measured
 
 In real Chrome, from `file://`, with every DNS lookup black-holed:

@@ -1628,6 +1628,36 @@ four cases in front of it and got switched off on the fifth.
    over-claims and watching all four go red is what separates a rule that works from one that agrees
    with the corpus it was tuned on (**L-61**).
 
+### L-65 — A record that agrees with itself has told you nothing about whether it is true
+
+Found 2026-08-11 in
+[T-087](../tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md). The
+reference deck records its provenance twice, from opposite ends: a colophon listing three model
+documents and the slides that rest on each, and a mark on each slide naming the sources it uses. The
+first check run was those two against each other. **All three slide lists matched the twelve marks
+exactly, in both directions, with nothing to fix.**
+
+**That was a consistency check wearing a correctness check's clothes.** Both records are written by
+the same hand at the same time from the same belief, so they agree by construction and disagree only
+under a clerical slip. Checked against the thing they describe — the figures actually on the slides —
+**three slides cited sources they did not declare**, including the slide whose entire subject is the
+programme timetable and which declared only the cost model.
+
+**The direction that finds anything is record against artifact.** It is also the harder one, which
+is why the easy one gets run and believed: comparing two lists needs no instrument, while comparing a
+record to a deck needs something that can attribute a figure to a document.
+
+**How to apply.**
+
+1. **Name which pair a check compares before trusting a green run.** Two records of one belief, or a
+   record and the thing it describes. Only the second can find a wrong belief.
+2. **When two records agree perfectly on first run, treat that as a reason to check the artifact**,
+   not as evidence the artifact is fine. Perfect agreement between hand-written records is the
+   expected state, not a result.
+3. **Attribute, don't just search.** *Is this figure in any source* is a weaker question than *which
+   source carries it, and did the slide say so* — the second is what caught all three, and it is
+   `SPEC-4`'s question asked of a deck with no ledger to ask it from.
+
 ---
 
 ## Writing

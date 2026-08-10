@@ -33,18 +33,24 @@ planned cost and starts being invisible.
 
 ## Corridors
 
-Corridor demand, weekday trips, each corridor being the catchment **400m** either side of one axis:
+Corridor demand, weekday trips, each corridor being the catchment **400m** either side of one axis.
+New daily trips are year one under each proposal, modelled from the elasticity below and not
+observed — the two proposals are costed against the same six corridors so the comparison is like
+for like:
 
-| Corridor | Weekday trips |
-| :--- | ---: |
-| Old Quarter | **4,200** |
-| Riverside | **2,600** |
-| Mill Row | **5,400** |
-| North Line | **14,800** |
-| Market Cross | **16,300** |
-| Harbour Gate | **4,900** |
+| Corridor | Weekday trips | New daily trips, bike-share | New daily trips, frequency |
+| :--- | ---: | ---: | ---: |
+| Old Quarter | **4,200** | **540** | **190** |
+| Riverside Park | **2,600** | **380** | **160** |
+| University Spur | **5,400** | **430** | **260** |
+| North Line | **14,800** | **180** | **620** |
+| Market Cross | **16,300** | **200** | **690** |
+| Airport Road | **4,900** | **70** | **180** |
 
-The three corridors bike-share wins carry **12,200** weekday trips; the six trunk routes carry
+Old Quarter and Market Cross share **900 metres** of catchment; trips there are counted once, to
+Market Cross.
+
+The three corridors bike-share wins carry **12,200** weekday trips; the three frequency wins carry
 **36,000**. Bike-share wins **3 corridors**, about a quarter of trips, and it wins them on trip
 length rather than on volume.
 
@@ -53,10 +59,12 @@ length rather than on volume.
 Elasticity: each **10%** cut in wait adds **4%** ridership. Assumed for the whole modelled period
 and not re-estimated year by year.
 
-By 2031 the frequency package reaches **6,100** new daily trips and bike-share reaches **3,000**.
-Bike-share flattens when **85%** of docks fill at peak, which the model reaches in year three. If
-elasticity is half the assumed value, frequency reaches **4,000** by 2031 and still passes
-bike-share.
+The modelled period runs **2027** to **2031**, year one being the first full year after the grant is
+committed. By 2031 the frequency package reaches **6,100** new daily trips and bike-share reaches
+**3,000**. Bike-share flattens when **85%** of docks fill at peak, which the model reaches in year
+three — **2029** on that basis, and an estimate rather than a dated event. If elasticity is half the
+assumed value, frequency reaches **4,000** by 2031 and still passes bike-share, crossing in
+**2028**.
 
 ## Transfers
 
