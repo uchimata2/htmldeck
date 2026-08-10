@@ -318,14 +318,18 @@ def destination(deck, theme, out=None):
     has to be able to observe the refusal, and a function that ends the process can only be trusted,
     never asserted (**L-04**).
     """
+    # **Under the deck's project, not this tool's** (T-074). `OUT` is still that directory for a
+    # deck in this repository, which is every deck the suites here point at; for an adopter's deck
+    # it is theirs, and a themed copy of their work no longer lands in the package cache.
+    themed = os.path.join(paths.output_root(deck), ".assets-cache", "deck", "themed")
     if out is None:
         stem = lambda p: os.path.splitext(os.path.basename(p))[0]                      # noqa: E731
-        out = os.path.join(OUT, "%s-%s.html" % (stem(deck), stem(theme)))
+        out = os.path.join(themed, "%s-%s.html" % (stem(deck), stem(theme)))
     if os.path.realpath(out) == os.path.realpath(deck):
         raise ValueError("that would overwrite the deck it was given (%s). A swap reads one file "
                          "and writes another; pass -o with a different path, or omit -o and it "
                          "goes to %s" % (paths.display_path(deck, ROOT),
-                                         paths.display_path(OUT, ROOT)))
+                                         paths.display_path(themed, ROOT)))
     return out
 
 
@@ -476,9 +480,13 @@ def verdicts(html):
     for rule in sorted({t.rule for t in banded}):
         held = sorted(t.name for t in banded if t.rule == rule)
         broke = [m for r, m in bad if r == rule]
+        # **`not broke` with no theme region is a pass on nothing.** `validate` reports one
+        # region-level problem and no per-rule ones, so every band row read clean on a document
+        # that declares no theme at all - six rules reporting conformance about a subject that is
+        # not there (T-075). DS-013 above is what fails, and it is the only row that should.
         rows.append((rule, "the band it states holds in the theme: %s%s"
                      % (" ".join(held), "" if not broke else " - " + "; ".join(broke[:2])),
-                     not broke))
+                     (not broke) if region else None))
     curved = curves(html) if region else []
     rows.append(
         ("DS-010", "no theme-varying length or easing curve outside the region: %d literal(s) "
@@ -487,7 +495,10 @@ def verdicts(html):
             "" if not (offending or curved) else " - " + "; ".join(
                 ["%s {%s}" % (s, d) for s, d, _m, _w in offending[:2]]
                 + ["%s {%s}" % (s, d) for s, d in curved[:2]])),
-         not offending and not curved))
+         # `lits` and `curved` are `[]` when there is no region because the scan never ran, not
+         # because the deck is clean, and a prohibition satisfied by a scan that did not happen is
+         # the same false conformance the band rows above were reporting (T-075).
+         (not offending and not curved) if region else None))
     return rows
 
 

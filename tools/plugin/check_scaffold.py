@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the plugin package against the packaging contract in `docs/research/R5-assets-and-licences.md` §6.
 
-Seven checks, all mechanical:
+Eight checks, all mechanical:
 
   0. Every field the manifest schema types holds that type, and `author` carries the `name` the
      schema requires of it. **Optional is not untyped** - v0.1.0 shipped a string `author`, the
@@ -13,22 +13,29 @@ Seven checks, all mechanical:
      paths, no `~`, nothing working-directory-relative. This is L-09 as a packaging rule.
   5. Every `${CLAUDE_PLUGIN_ROOT}/...` path resolves in a fresh clone.
   6. The always-loaded skill body stays under the budget below (**L-12**).
+  7. Every command a skill documents names a tool that exists, and a subcommand and flags that
+     tool's source knows. **A documented invocation is a claim like any other** - `build.md` told
+     every build to run a `--out` flag `render.py` did not have, and the crash landed at the step
+     that closes the visual gate. An adopting project reported it; nothing here could (T-074).
 
     python tools/plugin/check_scaffold.py            # check this repository
     python tools/plugin/check_scaffold.py --self-test
 
 **The self-test is not optional decoration.** A scan that looks like a tool gets believed; this one
-runs first against fourteen fixtures whose answers are known, one per failure mode it claims to
+runs first against nineteen fixtures whose answers are known, one per failure mode it claims to
 catch and one per case it must not flag (**L-04**). It got believed anyway: the count was ten and
 none of them typed a field, so the manifest that shipped v0.1.0 passed (T-061).
 
 Pure standard library (**L-07**).
 """
 
+import ast
+import io
 import json
 import os
 import re
 import sys
+import tokenize
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -173,6 +180,7 @@ def check(root):
                 rel = os.path.relpath(path, root).replace("\\", "/")
                 text = read(path)
                 problems.extend(check_paths(root, rel, text))
+                problems.extend(check_commands(root, rel, text))
 
     return problems, notes
 
@@ -208,6 +216,90 @@ def strip_fences(text):
     return re.sub(r"```.*?```", "", text, flags=re.S)
 
 
+# A command line the skill tells a build to run. Only inside fences, which is exactly where checks
+# 4 and 5 do not look - so until T-074 the one part of a skill file that is meant to be executed
+# verbatim was the one part nothing read.
+COMMAND_RE = re.compile(r"^\s*python\s+" + re.escape(ROOT_VAR) + r"/(tools/[A-Za-z0-9_./-]+\.py)"
+                        r"(.*)$", re.M)
+
+
+def check_commands(root, rel, text):
+    """Check 7: every documented invocation names a tool that exists, and a subcommand and flags
+    that tool's source knows.
+
+    **A documented command is a claim, and it was the only kind this package made that nothing
+    checked.** `build.md` told every build to run `render.py shots <slug>.html --out <dir>`; there
+    was no `--out`, the third argument was parsed as a slide list, and the command crashed in
+    `int()` at the step that closes the visual gate. It was reported by an adopting project on
+    2026-08-10 (T-074), not by anything here, and the other twelve invocations in the skill were
+    correct by luck.
+
+    **What it decides, and what it does not.** It decides that the tool exists, and that every
+    subcommand and every flag written down appears in that tool's source. It does **not** decide
+    that the tool would accept the whole line: positional arity, flag order, and whether a flag is
+    valid for that particular subcommand are all beyond a static read, and executing the line for
+    real would launch Chrome. The defect it exists for is a flag or a subcommand the tool has never
+    heard of, which is the shape all four found so far have had.
+    """
+    problems = []
+    for block in re.findall(r"```(.*?)```", text, flags=re.S):
+        # A trailing backslash continues the command onto the next line, as in `shell.py new`.
+        for match in COMMAND_RE.finditer(re.sub(r"\\\n\s*", " ", block)):
+            tool, rest = match.group(1), match.group(2)
+            path = os.path.join(root, tool)
+            if not os.path.isfile(path):
+                problems.append("NO SUCH TOOL  %s: %s/%s is invoked and does not exist"
+                                % (rel, ROOT_VAR, tool))
+                continue
+            known = literals(read(path))
+            # `<...>` is a placeholder the caller fills in, `[...]` marks an optional group, and
+            # `>` is a shell redirect. None is a token the tool ever sees.
+            words = [w.strip("[],") for w in re.sub(r"<[^>]*>", " ", rest).split()
+                     if not w.startswith(">")]
+            for i, word in enumerate(words):
+                if word.startswith("-"):
+                    what, wanted = "FLAG", word.split("=")[0]
+                elif i == 0 and not re.search(r"[./]", word):
+                    what, wanted = "SUBCOMMAND", word
+                else:
+                    continue                      # a positional the caller supplies
+                if wanted not in known:
+                    problems.append(
+                        "UNKNOWN %-6s%s: `%s` is documented for %s, which has no such literal"
+                        % (what, rel, wanted, tool))
+    return problems
+
+
+def literals(src):
+    """Every string literal in a tool's source — **comments and docstrings excluded, and matched
+    whole**.
+
+    Both exclusions were bought with a false pass. The first version searched the raw file for the
+    flag between quotes, and the fixture went green against a `render.py` with `--out` deliberately
+    removed: the flag was still in the file, in a *comment* quoting the traceback it used to
+    produce. A check that reads a mention as an implementation is worse than none (**L-36**), and
+    matching whole literals is what makes the answer *the parser compares against this string*
+    rather than *this string occurs somewhere*.
+    """
+    found = set()
+    try:
+        for tok in tokenize.generate_tokens(io.StringIO(src).readline):
+            if tok[0] != tokenize.STRING:
+                continue                          # COMMENT is its own type, so comments are out
+            text = tok[1]
+            if re.match(r"[a-zA-Z]*('''|\"\"\")", text):
+                continue                          # a docstring, or an embedded blob of JS or CSS
+            try:
+                found.add(ast.literal_eval(text))
+            except (ValueError, SyntaxError):
+                continue
+    except (tokenize.TokenError, IndentationError):
+        # A tool that will not tokenise is a defect, but it is not this check's to report: the
+        # tools all self-test, and reporting every flag as unknown would bury that.
+        return found
+    return found
+
+
 # ------------------------------------------------------------------------ self-test (L-04)
 
 # Fixture paths are **assembled, not written**. A path literal here would be read as a pointer
@@ -221,6 +313,15 @@ STRAY_SKILL = "/".join((".claude-plugin", SKILL))
 DOC = "/".join(("docs", "THING" + ".md"))
 GONE = "/".join(("docs", "MISSING" + ".md"))
 HEAD = "---\nname: example\ndescription: d\n---\n"
+
+# Check 7's fixtures need a tool to invoke and a fenced invocation of it. The tool is a real,
+# tokenisable module, because the check reads its string literals rather than its text.
+TOOL = "/".join(("tools", "fixture" + ".py"))
+TOOL_SRC = ('"""A fixture tool."""\n'
+            'import sys\n'
+            'if sys.argv[1] == "shots":\n'
+            '    sources = "--sources" in sys.argv\n')
+FENCE = "\n```\npython " + ROOT_VAR + "/%s %s\n```\n"
 
 FIXTURES = [
     # (label, files, must_fail_with)
@@ -289,6 +390,34 @@ FIXTURES = [
         STRAY_SKILL: HEAD + "Body.\n",
         SKILL: HEAD + "Body.\n",
     }, "MISPLACED"),
+    # ---- check 7, and the defect it was built from: `--out` documented, never implemented.
+    ("a documented flag the tool does not have", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: HEAD + FENCE % (TOOL, "shots <slug>.html --out <dir>"),
+        TOOL: TOOL_SRC,
+    }, "UNKNOWN FLAG"),
+    ("a documented subcommand the tool does not have", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: HEAD + FENCE % (TOOL, "measure <slug>.html"),
+        TOOL: TOOL_SRC,
+    }, "UNKNOWN SUBCOMMAND"),
+    ("a documented command the tool implements", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: HEAD + FENCE % (TOOL, "shots <slug>.html [--sources <dir>]"),
+        TOOL: TOOL_SRC,
+    }, None),
+    # **The false pass that tightened the check.** `--out` here is only ever mentioned - in a
+    # comment, quoting the traceback the missing flag produces - and the first version of check 7
+    # read that as an implementation. This fixture is the reason `literals` tokenises.
+    ("a flag mentioned in a comment is not a flag the tool has", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: HEAD + FENCE % (TOOL, "shots <slug>.html --out <dir>"),
+        TOOL: TOOL_SRC + "\n# crashes on '--out', which it does not take\n",
+    }, "UNKNOWN FLAG"),
+    ("an invoked tool that is not there", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: HEAD + FENCE % (TOOL, "shots <slug>.html"),
+    }, "NO SUCH TOOL"),
 ]
 
 def self_test():

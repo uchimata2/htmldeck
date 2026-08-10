@@ -12,12 +12,12 @@ Grounded in a corpus of real decks, prompts and written style guides from a trai
 prompt. **Status: the research is complete; the plugin scaffold exists and runs its own pipeline**
 (`.claude-plugin/`, `skills/htmldeck/`), **and as of 2026-08-09 the build check, the theme contract,
 the component contract, the editorial split rule and build mode are all built** — `python
-tools/deck/check.py <deck>` decides 81 of the 113 rules a gate owns and names the other 32 with a
+tools/deck/check.py <deck>` decides 82 of the 113 rules a gate owns and names the other 31 with a
 reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed specification into a
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
 2026-08-09 as `docs/PUBLISHING.md`, and **v0.1 shipped the same day**: the repository is public at
-`github.com/uchimata2/htmldeck`, released and **now at `v0.1.3`** after three patch releases, with
+`github.com/uchimata2/htmldeck`, released and **now at `v0.1.4`** after four patch releases, with
 `master` as the published branch. **v0.2 is the main line, but v0.1 has reopened three times**: a defect an
 adopter hits in the published plugin is a `v0.1` patch, not a v0.2 improvement. Read the brief first — its "Decisions taken" section overrides anything older
 in it.

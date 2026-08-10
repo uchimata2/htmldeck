@@ -32,7 +32,7 @@ cd htmldeck
 python tools/plugin/check_scaffold.py
 ```
 
-It self-tests against fourteen deliberately broken packages before it looks at this one, and *Run it*
+It self-tests against nineteen deliberately broken packages before it looks at this one, and *Run it*
 below shows what a good result prints. That command is also the fastest way to tell whether a copied
 skill directory is still wired up.
 
@@ -148,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1035 document pointer(s) checked, 0 broken
-     493 section reference(s) resolved, 0 dead; 1191 not bound to a document and skipped.
+OK - 1123 document pointer(s) checked, 0 broken
+     506 section reference(s) resolved, 0 dead; 1217 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -170,7 +170,7 @@ python tools/plugin/check_scaffold.py
 ```
 
 ```
-14 of 14 fixtures behaved as specified.
+19 of 19 fixtures behaved as specified.
 OK - manifest valid, components at the root, every ${CLAUDE_PLUGIN_ROOT} pointer resolves,
 ```
 
@@ -250,17 +250,19 @@ sources were supplied. That is why the report always says which half it checked.
 Listed here rather than left to be inferred, so nobody has to work out which parts of this page
 describe a plan.
 
-- **It has been installed and used by one project other than this one**, which found four defects in
+- **It has been installed and used by one project other than this one**, which found six defects in
   two days: a manifest the installer rejected, a crash on any deck outside the plugin's own drive, a
-  gate failing decks for not containing what its rules judge, and upgrade instructions that upgraded
-  nothing. All four are fixed. The third took two goes, because the first fix looked for other
-  instances with a throwaway script that read only part of what it claimed to have read. The sample
-  is one.
+  gate failing decks for not containing what its rules judge, upgrade instructions that upgraded
+  nothing, a documented command with a flag the tool did not have, and a rule that looked for the
+  reference deck's own class names and failed any deck not using them. All six are fixed. The third
+  took three goes. The first fix searched for other instances with a throwaway script that read only
+  part of what it claimed to have read; the second replaced that script with a fixture, and the
+  fixture could see one file of the eight that needed it. The sample is one project.
 - **The gate names seven glitch-free conditions it does not check**, and there is no frame-rate
   figure. Both are v0.2, not oversights.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
-is split into two releases. **v0.1** is what a first working plugin needs. It shipped, and is at v0.1.3 after three patches.
+is split into two releases. **v0.1** is what a first working plugin needs. It shipped, and is at v0.1.4 after four patches.
 **v0.2** is everything else already known, including 3D visuals, the frame-rate figure and those
 seven conditions. [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 

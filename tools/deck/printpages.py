@@ -23,6 +23,7 @@ Pure standard library (**L-07**) - including the PDF reading, which is a page co
 import os
 import re
 import sys
+import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths                                                        # noqa: E402
@@ -38,8 +39,10 @@ def print_to_pdf(deck, dest=None):
     """Print the deck through real Chrome, offline, exactly as a reader would. Headers and footers
     off: Chrome's default prints the file's full local path across every page, which is someone
     else's directory layout on paper and is not reachable from CSS."""
-    dest = dest or os.path.join(render.OUT, "pagecount.pdf")
-    os.makedirs(render.OUT, exist_ok=True)
+    # The deck's project, not this tool's - see `paths.output_root` and T-074.
+    out = render.out_dir(deck)
+    dest = dest or os.path.join(out, "pagecount.pdf")
+    os.makedirs(os.path.dirname(os.path.abspath(dest)) or out, exist_ok=True)
     if os.path.exists(dest):
         os.remove(dest)
     render.chrome_run(render.file_url(deck), 1280, 800,
@@ -88,9 +91,11 @@ def self_test():
     fake = (b"%PDF-1.4\n1 0 obj<</Type /Pages /Count 2 /Kids[2 0 R 3 0 R]>>endobj\n"
             b"2 0 obj<</Type /Page /Parent 1 0 R>>endobj\n"
             b"3 0 obj<</Type /Page /Parent 1 0 R>>endobj\n")
-    tmp = os.path.join(render.OUT, "_selftest.pdf")
-    os.makedirs(render.OUT, exist_ok=True)
-    with open(tmp, "wb") as fh:
+    # A temporary file, in the place the platform keeps temporary files. It used to be written
+    # under the tool's own directory, which is the installed package once htmldeck is a plugin -
+    # and a self-test that writes into its own install fails on any read-only one (T-074).
+    fd, tmp = tempfile.mkstemp(prefix="htmldeck-pagecount-", suffix=".pdf")
+    with os.fdopen(fd, "wb") as fh:
         fh.write(fake)
     declared, objects = page_count(tmp)
     os.remove(tmp)

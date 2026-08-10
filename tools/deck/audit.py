@@ -28,6 +28,10 @@ import contrast                                                     # noqa: E402
 import contract                                                     # noqa: E402
 import theme                                                        # noqa: E402
 import content                                                      # noqa: E402
+# Imported for the absent-subject fixture, which holds every verdict producer in `tools/deck/` to
+# the same bar since T-075 - not for anything this module's own rows measure.
+import component                                                    # noqa: E402
+import printpages                                                   # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -1413,6 +1417,14 @@ ABSENCE_IS_A_PASS = {
                               "subject is the deck's bottom lines, and the row prints its own "
                               "denominator - a deck with no panels, or none whose bottom line "
                               "quotes a figure, has hidden nothing"),
+    # ---- `component.py`'s rows, inside the discipline since T-075. The first rule to be declared
+    # in both tables: three of its five rows are prohibitions over the deck's own markup and two
+    # are requirements the contract states, and an empty document splits them.
+    "DS-229": ("prohibition", "three prohibitions over what the deck contains - no contracted class "
+                              "outside the place the contract puts it, no class the shared block "
+                              "styles without a row, no `vocabulary` row in use. A document with no "
+                              "markup has put nothing anywhere and used nothing, and the rows print "
+                              "their own denominators"),
 }
 
 # ---------------------------------------------------------------- failing on an absent subject
@@ -1444,6 +1456,44 @@ ABSENCE_IS_A_FAIL = {
                                      "and DS-070 already reports why"),
     "DS-076": ("entailed by DS-070", "position preserved across the reflow view, measured inside "
                                      "`if (doc)`. Same absence, same owner"),
+    # ---- `contract.py`'s rows, inside the discipline since T-075
+    "DS-060": ("requirement", "the stage scales to min(vw/1920, vh/1080) and its design space "
+                              "stays 1920x1080. A deck whose stage never scales and never appears "
+                              "at any of four viewports has no design space to measure, and that "
+                              "is the defect rather than an absent subject - every deck has a "
+                              "stage by construction of the shell"),
+    "DS-062": ("entailed by DS-060", "the rendered aspect stays 16:9, measured only where a stage "
+                                     "is on screen. With none on screen at any viewport there is "
+                                     "no rendered aspect, and DS-060's row above already reports "
+                                     "why"),
+    "DS-071": ("requirement", "the reflow view engages exactly when k < 0.5. Two of the four "
+                              "viewports in the sweep require it to engage, so a deck with no "
+                              "reflow view fails this rule rather than lacking its subject - the "
+                              "same ruling T-066 recorded for DS-070, which is the static half of "
+                              "the same requirement"),
+    # ---- `theme.py`, `contrast.py`, `component.py` and `printpages.py`, inside the discipline
+    # since T-075. Every one of them is a rule the ruleset states as something a deck must HAVE.
+    "DS-011": ("requirement", "exactly one theme region. A document declaring none has not "
+                              "satisfied the rule vacuously; the rule is what makes the region "
+                              "compulsory, and the count it prints is zero"),
+    "DS-013": ("requirement", "every token THEME-CONTRACT.md names is declared, and the data and "
+                              "UI roles are distinct from --line. A document with no theme is "
+                              "missing all 115 of them, which is the defect this row reports"),
+    "DS-027": ("requirement", "both themes evaluated. The rule requires a light theme and a dark "
+                              "one to exist before either can be judged, and the row names which "
+                              "is missing"),
+    "1.4.3": ("entailed by DS-027", "text pairs at 4.5:1, over the pairs the theme yields. With no "
+                                    "theme there are no pairs, and DS-027 above is the row that "
+                                    "says so - the count was made a failure deliberately, because "
+                                    "`0 of 0` passing is how a missing theme reads as a clean one"),
+    "1.4.11": ("entailed by DS-027", "non-text pairs at 3:1. Same absence, same owner"),
+    "DS-229": ("requirement", "every authored part is the element, place and count the contract "
+                              "names, and every rule the contract lists reads the motion tokens it "
+                              "lists. Both require the parts to be there; a document with none is "
+                              "missing 65 of them"),
+    "PRINT-1": ("requirement", "the printed page count is n + 1. With no slide count from the "
+                               "render stage there is nothing to compare, and that is a failure of "
+                               "the gate's own pipeline rather than a deck lacking a subject"),
 }
 
 # --------------------------------------------------------------- what the probe actually emits
@@ -1539,6 +1589,39 @@ CONDITIONALLY_MEASURED = {
     "leftFrom": "if (doc)",
     "backOnSlide": "if (doc)",
 }
+
+
+# A producer the fixture cannot call directly, with what it delegates to **first in the reason**,
+# because the self-test parses that word and checks the delegation is real. Without this table the
+# split T-075 made would look like an escape hatch; with it, a producer can only sit outside the
+# fixture by naming a producer that is inside it and provably calling it.
+DELEGATING_PRODUCERS = {
+    "contract.scale_verdicts": "contract.scale_verdicts_from is what it delegates to, after a "
+                               "render. A producer that needs a browser cannot be run against a "
+                               "measurement in which nothing was found, so splitting the render "
+                               "off is what makes its rows reachable by any fixture at all.",
+}
+
+
+def verdict_producers():
+    """Every module-level verdict producer under `tools/deck/`, as {"<module>.<name>": source}.
+
+    **Read from the source, not from `globals()` and not from imports.** T-066 derived this from the
+    module's own namespace, which cannot see a producer in another file - and `contract.py` had two,
+    consumed by `check.py`, outside the absent-subject discipline for as long as it existed. Reading
+    the directory finds a producer in a module nothing imports as well.
+    """
+    here = os.path.dirname(os.path.abspath(__file__))
+    found = {}
+    for fn in sorted(os.listdir(here)):
+        if not fn.endswith(".py"):
+            continue
+        src = open(os.path.join(here, fn), encoding="utf-8").read()
+        tops = [m.start() for m in re.finditer(r"^\S", src, re.M)] + [len(src)]
+        for m in re.finditer(r"^def (\w*verdicts\w*)\(", src, re.M):
+            end = min(t for t in tops if t > m.start())
+            found["%s.%s" % (fn[:-3], m.group(1))] = src[m.start():end]
+    return found
 
 
 class Measurement(dict):
@@ -1776,16 +1859,65 @@ def self_test():
                  "ALWAYS_MEASURED and the nothing-was-found measurement cannot be built. Add the "
                  "key there if the probe always emits it, or read it with .get()" % exc)
 
-    # **Derived from the module, never listed by hand.** `reduced_verdicts` sat outside this fixture
-    # from the day it was written, and nothing said so: the fixture named its producers, and a name
-    # nobody adds is a name nobody misses.
-    exercised = ("render_verdicts", "split_verdicts", "provenance_verdicts", "reduced_verdicts")
-    producers = sorted(n for n in globals() if n.endswith("_verdicts"))
-    if producers != sorted(exercised):
-        sys.exit("SELF-TEST FAILED: the module defines %s and this fixture exercises %s. A verdict "
-                 "producer outside the fixture is a family of rows nobody is holding to the "
-                 "absent-subject rule, which is how DS-143 stayed invisible through two fixes "
-                 "(T-066)." % (", ".join(producers), ", ".join(sorted(exercised))))
+    # **The resolution contract's rows, which were outside this fixture entirely until T-075.**
+    # `contract.py` produces verdict rows that `check.py` consumes, and the derivation below used
+    # to read `globals()` - one module. So the guarantee this file believes it makes held over
+    # `audit.py` and said nothing about the file next door, where DS-064 was failing a conforming
+    # deck for not containing the thing it judges and DS-200 was passing on an empty set. An
+    # outside project found the first; nothing here could have found either.
+    #
+    # **It was six producers outside the fixture, not two.** The directory scan below was written
+    # for `contract.py` and immediately named `contrast`, `theme`, `component` and `printpages` as
+    # well - every one of them consumed by `check.py`, none of them ever run against a measurement
+    # in which nothing was found. Three take the deck's markup, so their absent subject is the
+    # empty document `split_verdicts` and `provenance_verdicts` already use; `printpages` takes the
+    # slide count the render stage produced, and none is a count of zero.
+    sweep_rows = [Measurement(r) for r in contract.nothing_found_rows()]
+    rows += contract.verdicts(sweep_rows)
+    rows += contract.scale_verdicts_from(contract.nothing_found_results())
+    # `contrast.verdicts` refuses a document with no `:root` colour tokens outright - it exits the
+    # process rather than returning a row - so the empty document is not its absent subject. A
+    # theme with nothing to measure against it is.
+    rows += contrast.verdicts(":root{--ink:#111111;--paper:#ffffff}")
+    rows += theme.verdicts("") + component.verdicts("")
+    rows += printpages.verdicts("", 0)
+    modelled_sweep = set(contract.PROBE_FOUND_NOTHING) | {"vw", "vh", "want"}
+    unmodelled_sweep = sorted(set().union(*[r.read for r in sweep_rows]) - modelled_sweep)
+    if unmodelled_sweep:
+        sys.exit("SELF-TEST FAILED: contract's rows read %s, which contract.PROBE_FOUND_NOTHING "
+                 "has no model of. Add the key there with the value the probe emits when it finds "
+                 "nothing - a .get() default on an unmodelled key is a value no deck produces, "
+                 "which is what put DS-217 on the failing list (T-066)."
+                 % ", ".join(unmodelled_sweep))
+
+    # **Derived from the source of every module, never listed by hand.** `reduced_verdicts` sat
+    # outside this fixture from the day it was written, and nothing said so: the fixture named its
+    # producers, and a name nobody adds is a name nobody misses. T-066 fixed that by reading
+    # `globals()`, which is the same mistake one scope out - a producer in another module is
+    # equally invisible. The source is read rather than imported so a module nothing imports is
+    # still found.
+    exercised = {"audit.render_verdicts", "audit.split_verdicts", "audit.provenance_verdicts",
+                 "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
+                 "contrast.verdicts", "theme.verdicts", "component.verdicts",
+                 "printpages.verdicts"}
+    producers = verdict_producers()
+    undeclared_producers = sorted(set(producers) - exercised - set(DELEGATING_PRODUCERS))
+    if undeclared_producers:
+        sys.exit("SELF-TEST FAILED: %s produce verdict rows and this fixture does not exercise "
+                 "them. A verdict producer outside the fixture is a family of rows nobody is "
+                 "holding to the absent-subject rule, which is how DS-143 stayed invisible through "
+                 "two fixes (T-066) and DS-064 through three (T-075)."
+                 % ", ".join(undeclared_producers))
+    gone = sorted((exercised | set(DELEGATING_PRODUCERS)) - set(producers))
+    if gone:
+        sys.exit("SELF-TEST FAILED: %s are named here and no module defines them - the fixture is "
+                 "claiming to exercise a producer that does not exist" % ", ".join(gone))
+    for name, why in sorted(DELEGATING_PRODUCERS.items()):
+        target = why.split()[0]
+        if target not in exercised or target.split(".")[-1] not in producers[name]:
+            sys.exit("SELF-TEST FAILED: %s is declared to delegate to %s, and either that is not "
+                     "an exercised producer or its source does not call it. A delegation nobody "
+                     "checks is how a producer parks itself outside the fixture." % (name, target))
 
     # **What did the rows actually ask for?** A key in neither table is one the fixture has no model
     # of, so whatever a row reads it with is fiction. This is DS-217's whole story: `chromeHeightDu`
@@ -1836,20 +1968,31 @@ def self_test():
     if stale_fail:
         sys.exit("SELF-TEST FAILED: %s are declared to fail on an absent subject and do not - the "
                  "declaration outlived the row it explains" % ", ".join(sorted(stale_fail)))
-    both = sorted(set(ABSENCE_IS_A_PASS) & set(ABSENCE_IS_A_FAIL))
-    if both:
-        sys.exit("SELF-TEST FAILED: %s are declared in BOTH tables. One rule cannot both pass and "
-                 "fail on a measurement where nothing was found and have written down a good reason "
-                 "for each - the overlap is the defect, not a special case. Measured before T-066, "
-                 "the two rules in it were DS-143 and DS-217, and both were faults."
-                 % ", ".join(both))
+    # **A rule MAY reach both tables, and T-075 is the first time one did.** This forbade the
+    # overlap outright, on the ground that no rule could honestly be excused in both directions -
+    # which T-066 had already recorded as refuted and shipped the check anyway, because nothing had
+    # yet had both states. DS-229 does: `component.verdicts` emits five rows under it, three
+    # prohibitions that pass on an empty document and two requirements that fail on it, and all
+    # five are correct. What the check was protecting against is a declaration in a table the rule
+    # never reaches, and `stale` / `stale_fail` above already report exactly that - so the bar here
+    # is that an overlap must be earned by rows in both directions rather than asserted.
+    for rid in sorted(set(ABSENCE_IS_A_PASS) & set(ABSENCE_IS_A_FAIL)):
+        if rid not in passing or rid not in failing:
+            sys.exit("SELF-TEST FAILED: %s is declared in BOTH tables and only %s on a measurement "
+                     "in which nothing was found. An overlap is legitimate only for a rule whose "
+                     "rows genuinely split - one declaration is describing a row that does not "
+                     "exist" % (rid, "passes" if rid in passing else "fails"))
 
     # The rows that were converted rather than declared, asserted by name. Six of the seven from
     # T-065 read keys the probe emits only inside `if (btns.length)`; the four added by T-066 are
     # DS-113 and DS-160 (a clause requiring the deck to CONTAIN the subject), DS-143 (the same, in
     # the producer this fixture could not see) and DS-135 (whose measurement moved - see the probe).
+    # DS-064, DS-063, DS-200, DS-072 and DS-074 are T-075's, from `contract.py`. DS-064 is the row
+    # an outside project's deck failed on; DS-200 is the same defect in the pass direction, found
+    # only because this fixture finally reached that module.
     for rid in ("DS-130", "DS-164", "DS-166", "DS-146", "DS-168", "DS-228", "DS-138",
-                "DS-113", "DS-160", "DS-143", "DS-135"):
+                "DS-113", "DS-160", "DS-143", "DS-135",
+                "DS-064", "DS-063", "DS-200", "DS-072", "DS-074"):
         if rid not in states:
             sys.exit("SELF-TEST FAILED: %s is no longer emitted as a verdict row, so the "
                      "absent-subject assertion below is checking nothing" % rid)

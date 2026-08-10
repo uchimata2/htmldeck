@@ -56,11 +56,15 @@ VARIANTS = [
         # One figure, two slides, two values. Restated rather than moved, because restating is how
         # it happens: a number is repeated on the closing slide from memory instead of from the
         # model, and the two slides are never read side by side again.
-        ('<p class="provenance">Illustrative model</p>\n</section>\n\n'
-         '<!-- ==================================================',
+        # **The anchor was stale before T-075 touched anything**, and had been since the deck's
+        # first slide gained a second source: it read `Illustrative model</p>` and the mark now
+        # says `Illustrative model<br>Cost model</p>`. Nothing reported it, because the suite's
+        # own self-test is the only thing that reads this and the gate set does not run it. The
+        # separator comment is out of the anchor now - its `=` run is decoration and pinning a
+        # variant to it buys nothing.
+        ('<p class="provenance">Illustrative model<br>Cost model</p>\n</section>',
          '<p class="cost-p">The general fund carries $7.2M a year.</p>\n'
-         '  <p class="provenance">Illustrative model</p>\n</section>\n\n'
-         '<!-- ==================================================')]),
+         '  <p class="provenance">Illustrative model<br>Cost model</p>\n</section>')]),
 ]
 
 

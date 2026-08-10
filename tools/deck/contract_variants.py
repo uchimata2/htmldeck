@@ -103,15 +103,49 @@ VARIANTS = [
         # variant no longer has to seed each. That is the token layer doing its job, and it is
         # why the second anchor went rather than being repaired.
         ("--fs-base:26;", "--fs-base:20;")]),
+
+    ("body-prose-under-a-foreign-class", "DS-064", "scale", [
+        # **The deck an outside project built, in the one respect that mattered** (T-075). Its
+        # supporting prose was conformant and classed with names of its own, and DS-064's probe
+        # looked for `.standfirst, .cost-p, .title-note` - two of which are this deck's composition
+        # and appear in no contract. So the rule reported `no body run measured` and FAILED a deck
+        # measuring 17.3 px against a 16 px floor, with no remedy but to adopt a class name no
+        # document states.
+        #
+        # Nothing here is illegal: `.body` still holds the prose, the prose is still a paragraph,
+        # and it is still set at `--fs-body`. The only change is the name. **This is the one
+        # variant that must make its rule PASS** - a seeded defect would be caught by the broken
+        # probe as readily as by the fixed one, and would prove nothing.
+        ('class="standfirst rise"', 'class="lede rise"', 11),
+        (".standfirst{", ".lede{", 2),
+        ('class="title-note"', 'class="note-run"', 1),
+        (".title-note{max-width:calc(1100*var(--du));color:var(--ink-soft);font-size:var(--fs-small)",
+         ".note-run{max-width:calc(1100*var(--du));color:var(--ink-soft);font-size:var(--fs-body)",
+         1)]),
 ]
+
+# Variants whose rule must PASS rather than fail, with the reason. Named here rather than as a
+# fifth tuple field so that the default stays explicit: everything not in this set is a seeded
+# defect the gate has to catch, which is what the suite is for.
+MUST_PASS = {
+    "body-prose-under-a-foreign-class":
+        "a conforming deck under class names no contract states. Before T-075 the probe found no "
+        "body run and DS-064 failed it; a variant that expected a failure would have passed "
+        "against the defect it exists to catch",
+}
 
 
 def build(name, edits):
     html = open(SRC, "r", encoding="utf-8").read()
-    for old, new in edits:
+    for edit in edits:
+        # A third element declares how many occurrences the edit expects. **Declared, never
+        # defaulted to "all"**: a rename that silently hit a different number of elements than the
+        # variant's author believed would make the variant test something nobody wrote down.
+        old, new, want = edit if len(edit) == 3 else (edit[0], edit[1], 1)
         n = html.count(old)
-        if n != 1:
-            sys.exit("VARIANT %s: expected 1 occurrence, found %d\n  %.140s" % (name, n, old))
+        if n != want:
+            sys.exit("VARIANT %s: expected %d occurrence(s), found %d\n  %.140s"
+                     % (name, want, n, old))
         html = html.replace(old, new)
     os.makedirs(OUT, exist_ok=True)
     dest = os.path.join(OUT, name + ".html")
@@ -128,7 +162,10 @@ def failed_rules(deck, which_pass):
         # because the slide it happened to pick carries no figure - the probe measured nothing
         # and reported a pass (**L-36**, again, inside the suite written to prevent it).
         rows = contract.scale_verdicts(deck)
-    return {rule for rule, _what, good in rows if not good}, rows
+    # `good is False`, not `not good`: an undecided row is `None` and reporting it as caught would
+    # let a variant claim a gate found a defect the gate declined to judge (T-065's third state,
+    # reaching this suite in T-075).
+    return {rule for rule, _what, good in rows if good is False}, rows
 
 
 def self_test():
@@ -137,14 +174,21 @@ def self_test():
         sys.exit("SELF-TEST FAILED: no reference deck at %s" % SRC)
     src = open(SRC, "r", encoding="utf-8").read()
     for name, _rule, _p, edits in VARIANTS:
-        for old, _new in edits:
-            if src.count(old) != 1:
+        for edit in edits:
+            old, want = edit[0], (edit[2] if len(edit) == 3 else 1)
+            if src.count(old) != want:
                 sys.exit("SELF-TEST FAILED: variant %r no longer matches the deck.\n"
                          "  The deck changed under the suite; fix the variant, do not delete it.\n"
-                         "  %.140s" % (name, old))
+                         "  wanted %d occurrence(s), found %d\n  %.140s"
+                         % (name, want, src.count(old), old))
     covered = {v[1] for v in VARIANTS}
     if "DS-071" not in covered:
         sys.exit("SELF-TEST FAILED: DS-071 is the rule this suite exists to keep honest")
+    names = {v[0] for v in VARIANTS}
+    orphan = sorted(MUST_PASS) if not (set(MUST_PASS) <= names) else []
+    if orphan:
+        sys.exit("SELF-TEST FAILED: MUST_PASS names %s and no variant is called that - the "
+                 "expectation outlived the variant it was written for" % ", ".join(orphan))
     return True
 
 
@@ -158,17 +202,26 @@ def main():
     for name, rule, which_pass, edits in VARIANTS:
         deck = build(name, edits)
         caught, rows = failed_rules(deck, which_pass)
-        good = rule in caught
+        must_pass = name in MUST_PASS
+        # A must-pass variant is not satisfied by the rule merely staying off the failure list: an
+        # undecided row is off it too, and `no body run measured` is exactly what this is testing
+        # for. The row has to have been decided, and decided in the deck's favour.
+        decided = [ok for r, _w, ok in rows if r == rule and ok is not None]
+        good = (bool(decided) and all(decided)) if must_pass else rule in caught
         if not good:
             bad.append((name, rule, caught))
-        print("  %-26s breaks %-7s -> %s" % (name, rule, "CAUGHT" if good else "MISSED"))
+        print("  %-34s %s %-7s -> %s"
+              % (name, "keeps  " if must_pass else "breaks ", rule,
+                 ("PASSED" if good else "WRONGLY REPORTED") if must_pass
+                 else ("CAUGHT" if good else "MISSED")))
         for r, what, ok_ in rows:
-            if not ok_:
-                print("      %-8s %s" % (r, what))
-    print("\n%d of %d variants caught." % (len(VARIANTS) - len(bad), len(VARIANTS)))
+            if ok_ is not True:
+                print("      %-8s %-6s %s" % (r, "FAIL" if ok_ is False else "undec", what))
+    print("\n%d of %d variants behaved as specified." % (len(VARIANTS) - len(bad), len(VARIANTS)))
     for name, rule, caught in bad:
-        print("  MISSED  %-26s expected %s, gate reported %s"
-              % (name, rule, ", ".join(sorted(caught)) or "no failure at all"))
+        print("  WRONG   %-34s expected %s %s, gate reported %s"
+              % (name, rule, "to pass" if name in MUST_PASS else "to fail",
+                 ", ".join(sorted(caught)) or "no failure at all"))
     print("\nVariants are written to %s and are not committed - the suite regenerates them."
           % paths.display_path(OUT, ROOT))
     return 1 if bad else 0

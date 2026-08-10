@@ -39,6 +39,32 @@ def display_path(path, start):
     return shown.replace("\\", "/")
 
 
+def output_root(target):
+    """The project **`target` belongs to** — not the project the tool belongs to.
+
+    Every tool here anchored its working output at `ROOT`, derived from its own `__file__`. Run
+    from a clone that is right; run as an installed plugin, `${CLAUDE_PLUGIN_ROOT}/tools/...`, it
+    means an adopter's screenshots, PDFs, themed decks **and a full copy of their deck** are
+    written into the package cache — a directory that is not theirs, is not in their repository,
+    and a reinstall erases (T-074, reported from a real project on 2026-08-10).
+
+    The rule: walk up from the target to the nearest ancestor holding a `.git`, and fall back to
+    the target's own directory. A deck inside this repository resolves to this repository, so
+    nothing that worked before moves; a deck in someone else's project resolves to theirs.
+    """
+    here = os.path.dirname(os.path.abspath(target)) if target else os.path.abspath(os.getcwd())
+    probe = here
+    while True:
+        if os.path.isdir(os.path.join(probe, ".git")):
+            return probe
+        parent = os.path.dirname(probe)
+        if parent == probe:
+            # No repository above it. The target's own directory is the honest answer: it is
+            # where the person is working, and it is somewhere they can find.
+            return here
+        probe = parent
+
+
 def self_test():
     """A scan that has not been shown to fail is not evidence (**L-04**).
 
@@ -63,6 +89,23 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a same-drive path is no longer shown relative: %r" % same)
     if "\\" in display_path(os.path.join("a", "b", "deck.html"), "a"):
         sys.exit("SELF-TEST FAILED: a backslash survived into a displayed path (L-11)")
+
+    # **The output root must follow the deck, not this file.** A deck in this repository has to
+    # resolve to this repository - that is what keeps every existing path unmoved - and the fixture
+    # asserts it against the tool's own location rather than against a literal, so it still means
+    # something in a clone somewhere else.
+    repo = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    got = output_root(os.path.join(repo, "examples", "reference-deck.html"))
+    if os.path.normcase(got) != os.path.normcase(repo):
+        sys.exit("SELF-TEST FAILED: a deck in this repository resolved its output root to %r, "
+                 "not to the repository %r" % (got, repo))
+    # A deck with no repository above it falls back to its own directory, never to the tool's.
+    orphan = os.path.join(os.path.abspath(os.sep), "no-such-place-%d" % os.getpid())
+    fell_back = output_root(os.path.join(orphan, "deck.html"))
+    if os.path.normcase(fell_back) != os.path.normcase(orphan):
+        sys.exit("SELF-TEST FAILED: a deck outside any repository resolved to %r rather than to "
+                 "its own directory - an adopter's output would land somewhere they did not "
+                 "choose" % fell_back)
     return True
 
 

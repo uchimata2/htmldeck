@@ -18,8 +18,12 @@ Two things here are not obvious and both cost time to discover (**L-26**):
     python tools/deck/render.py measure examples/reference-deck.html
     python tools/deck/render.py shots   examples/reference-deck.html
     python tools/deck/render.py shots   examples/reference-deck.html 0,4,6
+    python tools/deck/render.py shots   examples/reference-deck.html --out shots/
 
-Output goes to `.assets-cache/deck/` (gitignored). Pure standard library (**L-07**).
+Output goes to `<the deck's project>/.assets-cache/deck/`, or to `--out`. **The deck's project, not
+this tool's** - installed as a plugin those are different directories, and writing to the second put
+an adopter's screenshots and a copy of their deck inside the package cache (T-074).
+Pure standard library (**L-07**).
 """
 
 import json
@@ -37,7 +41,18 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths                                                        # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# This repository's own working directory, and the default for the development suites, which only
+# ever run from a clone. **It is not where a deck's output goes** - `out_dir` decides that from the
+# deck, because `ROOT` is the *plugin's* directory once the plugin is installed (T-074).
 OUT = os.path.join(ROOT, ".assets-cache", "deck")
+
+
+def out_dir(deck, override=None):
+    """Where this deck's shots, probes and measurements belong. `override` is `--out`, verbatim."""
+    if override:
+        return os.path.abspath(override)
+    return os.path.join(paths.output_root(deck), ".assets-cache", "deck")
 
 BROWSERS = [
     r"%ProgramFiles%\Google\Chrome\Application\chrome.exe",
@@ -120,7 +135,15 @@ PROBE = r"""
         /* the deliverable, on every slide since T-028. Probed by name because DS-203 is a claim
            about RANK - it has to be comparable against the headline and the body, not just present. */
         bottomLine:cur.querySelector('.bottom-line b'),
-        body:      cur.querySelector('.standfirst, .cost-p, .title-note'),
+        /* **By contract, not by the reference deck's composition.** This read
+           `.standfirst, .cost-p, .title-note` until T-075, and two of those three are class names
+           belonging to one deck - `COMPONENT-CONTRACT.md` names neither. A conforming deck whose
+           prose is classed anything else reported `no body run measured` and FAILED DS-064 for a
+           rule it satisfies, with no remedy but to adopt a class name no document states. That
+           inverts the contract: the selector becomes the specification. `.standfirst` is
+           contracted at 0-1 per slide and `.body` at 1, so the run is the standfirst where the
+           slide has one and the first paragraph of the body where it does not. */
+        body:      cur.querySelector('.standfirst') || cur.querySelector('.body p'),
         eyebrow:   cur.querySelector('.eyebrow'),
         discLabel: cur.querySelector('.disc-label'),
         monoLab:   cur.querySelector('.mono, .lab, .col-c'),
@@ -176,13 +199,16 @@ PROBE = r"""
 """
 
 
-def make_probe(deck, name="probe.html", extra=""):
+def make_probe(deck, name="probe.html", extra="", out=None):
     html = open(deck, "r", encoding="utf-8").read()
     if "</body>" not in html:
         sys.exit("%s has no </body> - not a deck" % deck)
     html = html.replace("</body>", (PROBE if not extra else extra) + "\n</body>")
-    os.makedirs(OUT, exist_ok=True)
-    dest = os.path.join(OUT, name)
+    # The probe is a **whole copy of the deck**. Writing it under the tool put an adopter's
+    # content inside the installed package; it goes with the deck now (T-074).
+    out = out or out_dir(deck)
+    os.makedirs(out, exist_ok=True)
+    dest = os.path.join(out, name)
     with open(dest, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(html)
     return dest
@@ -235,10 +261,11 @@ def calibrate(probe, w, h):
 
 # ---------------------------------------------------------------------------- commands
 
-def measure(deck, which, quiet=False):
+def measure(deck, which, quiet=False, out=None):
     """Collect the per-slide geometry at every resolution. `quiet` suppresses the per-row log so
     a gate can call this without burying its own verdicts."""
-    probe = make_probe(deck)
+    out = out or out_dir(deck)
+    probe = make_probe(deck, out=out)
     results = {}
     for (w, h, label) in RESOLUTIONS:
         cw, ch = calibrate(probe, w, h)
@@ -257,13 +284,13 @@ def measure(deck, which, quiet=False):
                          data.get("discHitCssPx"), data["fonts"]))
             for o in data["overflow"]:
                 print("     OVERFLOW: %s" % o)
-    with open(os.path.join(OUT, "measurements.json"), "w", encoding="utf-8") as fh:
+    with open(os.path.join(out, "measurements.json"), "w", encoding="utf-8") as fh:
         json.dump(results, fh, indent=1)
     return results
 
 
-def cmd_measure(deck, which):
-    results = measure(deck, which)
+def cmd_measure(deck, which, out=None):
+    results = measure(deck, which, out=out)
     report(results)
     return results
 
@@ -303,17 +330,18 @@ def report(results):
         print("  %-10s %-34s %s" % (lbl, slide[:34], o))
 
 
-def cmd_shots(deck, which, w=1920, h=1234):
+def cmd_shots(deck, which, out=None, w=1920, h=1234):
     """Uncalibrated on purpose: --screenshot captures the WINDOW, so asking for a window a little
     larger than the stage puts the whole stage inside the PNG instead of clipping its edge."""
-    probe = make_probe(deck)
+    out = out or out_dir(deck)
+    probe = make_probe(deck, out=out)
     for s in which:
-        dest = os.path.join(OUT, "slide-%02d.png" % (s + 1))
+        dest = os.path.join(out, "slide-%02d.png" % (s + 1))
         chrome_run(file_url(probe) + "?s=%d&quiet=1" % s, w, h, ["--screenshot=" + dest])
         ok = os.path.exists(dest)
         print("  %s  %s" % (os.path.basename(dest),
                             "%.0f KB" % (os.path.getsize(dest) / 1024) if ok else "FAILED"))
-    print("\n%s" % OUT)
+    print("\n%s" % out)
 
 
 def slide_count(deck):
@@ -354,17 +382,35 @@ def main(argv):
     cmd, deck = argv[0], os.path.abspath(argv[1])
     if not os.path.exists(deck):
         sys.exit("no such deck: %s" % deck)
+
+    # **`--out` is pulled out before the slide list is read, and that is the whole of T-074's first
+    # half.** `build.md` documented this flag from the day the per-batch loop was written; nothing
+    # implemented it, and the third argument was parsed as a comma-separated slide list, so a build
+    # following the documented command hit `ValueError: invalid literal for int() with base 10:
+    # '--out'` at exactly the step that closes the *visual* gate. Reported from a real project on
+    # 2026-08-10, which found seven geometry defects by working around it.
+    rest, out = list(argv[2:]), None
+    if "--out" in rest:
+        i = rest.index("--out")
+        if i + 1 >= len(rest):
+            sys.exit("--out needs a directory")
+        out = rest[i + 1]
+        del rest[i:i + 2]
+    for a in rest:
+        if a.startswith("-"):
+            sys.exit("unknown option %r - this command takes [<slides>] [--out <dir>]" % a)
+
     # **Derived from the deck, never assumed.** This read `range(12)` until T-044, which is the
     # reference deck's length and not any deck's: the 14-slide seeded fixture rendered 12 shots and
     # said nothing about the two it dropped, so "look at the rendered deck" (CLAUDE.md rule 6) was
     # being satisfied against an artifact two slides short (**L-05**).
-    which = [int(x) for x in argv[2].split(",")] if len(argv) > 2 else list(range(slide_count(deck)))
+    which = [int(x) for x in rest[0].split(",")] if rest else list(range(slide_count(deck)))
     print("browser: %s" % CHROME)
     print("deck:    %s\n" % paths.display_path(deck, ROOT))
     if cmd == "measure":
-        cmd_measure(deck, which)
+        cmd_measure(deck, which, out=out)
     elif cmd == "shots":
-        cmd_shots(deck, which)
+        cmd_shots(deck, which, out=out)
     else:
         sys.exit("unknown command %r - use measure or shots" % cmd)
     return 0

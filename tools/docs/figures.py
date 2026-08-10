@@ -71,7 +71,7 @@ EXCLUDED_FENCES = {
 
 # Prose numerals that no command prints, each with what would close the exclusion.
 EXCLUDED_PROSE = {
-    "32": "113 - 81, stated as the remainder in the same sentence; it would be closed by the gate "
+    "31": "113 - 82, stated as the remainder in the same sentence; it would be closed by the gate "
           "printing the unchecked count as a row of its own",
     "1.1": "a section number in `EVALUATION.md 1.1`, not a measurement",
     "0.1": "a release name",

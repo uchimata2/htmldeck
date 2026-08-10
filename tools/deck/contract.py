@@ -99,6 +99,10 @@ PROBE = r"""
       transform: cs.transform,
       /* DS-071: did the deck hand over to the reflow view by itself? */
       docOn: !!(doc && doc.hasAttribute('data-on')),
+      /* Whether the deck HAS a reflow view, which is a different question from whether it is
+         showing one. DS-072 and DS-074 both judge that view, and with no view at all their
+         measurements are vacuous rather than damning - see `verdicts` (T-075). */
+      hasDoc: !!doc,
       stageHidden: !!(viewport && viewport.hasAttribute('hidden')),
       /* DS-074: does the reading view honour the user's font size? Double the root and the
          document rendering must double with it; a stage-like layout will not. WCAG 1.4.4.
@@ -153,7 +157,8 @@ PROBE = r"""
 
 def sweep(deck, quiet=False):
     """Render the deck at each viewport in VIEWPORTS and read the geometry back."""
-    probe = render.make_probe(deck, name="contract.html", extra=PROBE)
+    probe = render.make_probe(deck, name="contract.html", extra=PROBE,
+                              out=render.out_dir(deck))
     rows = []
     for (w, h, k_expected, engage) in VIEWPORTS:
         cw, ch = render.calibrate(probe, w, h)
@@ -260,10 +265,14 @@ def verdicts(rows):
         dy = abs(top - (r["vh"] - h) / 2)
         if dx > CENTRE_TOLERANCE_PX or dy > CENTRE_TOLERANCE_PX:
             off.append((r, dx, dy))
-    out.append(("DS-200", "scaled stage centred at every viewport%s"
-                % ("" if not off else "; off by %.1f,%.1f px at %dx%d"
+    # **`not off` over an empty list is a pass on nothing** - the L-44 shape, still live in this
+    # module after three fixes to the one next door, because nothing had ever run this file's rows
+    # against a measurement in which nothing was found (T-075). *Every viewport centres the stage*
+    # with no viewport showing a stage is undecided.
+    out.append(("DS-200", "scaled stage centred at %d viewport(s) showing a stage%s"
+                % (len(on_stage), "" if not off else "; off by %.1f,%.1f px at %dx%d"
                    % (off[0][1], off[0][2], off[0][0]["vw"], off[0][0]["vh"])),
-                not off))
+                None if not on_stage else not off))
 
     # DS-071 - the amended rule. Reported with k, because a bare pass/fail here is unreadable.
     wrong = [r for r in rows if r["docOn"] != r["want"]["engage"]]
@@ -275,19 +284,28 @@ def verdicts(rows):
                          wrong[0]["docOn"], wrong[0]["want"]["engage"]))),
                 not wrong))
 
+    # The guard is a claim about the auto-engage path, so a deck with no reflow view has no path
+    # to guard: the probe fakes a small viewport and a fullscreen, the deck cannot hand over
+    # because there is nowhere to hand over to, and `heldStill` comes back True on nothing.
+    has_doc = any(r.get("hasDoc") for r in rows)
     guards = [r["fullscreenGuard"] for r in rows]
     out.append(("DS-072", "auto-engage consults fullscreenElement (tested against a double, "
-                "not a real fullscreen): %s" % guards[0],
-                all(g is True for g in guards)))
+                "not a real fullscreen): %s" % (guards[0] if has_doc else "no reflow view"),
+                all(g is True for g in guards) if has_doc else None))
 
     # Every role, not the first one that answers. A role pinned to px is exactly what a reading
     # view must not have, and it hides behind any sibling that still scales.
+    #
+    # **With no reflow view there is no reading type to pin.** `bool(roles)` read that as a
+    # failure, which is this file's copy of the defect T-051, T-065 and T-066 each removed from
+    # `audit.py` - a rule failing a deck for not containing its subject. The absence itself is not
+    # unreported: DS-071 fails, because two of the four viewports require the view to engage.
     roles = rows[0].get("remScaling") or []
     pinned = [r for r in roles if r[2] <= r[1] * 1.5]
     out.append(("DS-074", "reflow type follows the root font size: %d of %d role(s) scale%s"
                 % (len(roles) - len(pinned), len(roles),
                    "" if not pinned else "; %s stays at %.1f px" % (pinned[0][0], pinned[0][2])),
-                bool(roles) and not pinned))
+                None if not has_doc else (bool(roles) and not pinned)))
     return out
 
 
@@ -299,32 +317,91 @@ SAMPLE = [0, 4, 7, 11]
 
 def scale_verdicts(deck, which=None, quiet=True):
     """DS-063 and DS-064 - measured by `render.py` since T-024, gated here for the first time."""
-    results = render.measure(deck, which or SAMPLE, quiet=quiet)
+    return scale_verdicts_from(render.measure(deck, which or SAMPLE, quiet=quiet))
+
+
+def scale_verdicts_from(results):
+    """The verdicts alone, given a measurement. **Split out of `scale_verdicts` by T-075** so the
+    absent-subject fixture can run these rows against a measurement in which nothing was found;
+    while the render was inside the function, no fixture could reach them without a browser and
+    this file's rows sat outside the discipline `audit.py` has enforced since T-066."""
     out = []
 
     g = geometry(results)
     if not g:
         out.append(("DS-063", "the two-resolution comparison produced no result", False))
     else:
+        # `counted == 0` is the comparison finding nothing to compare, not the two renderings
+        # disagreeing. It read as a failure until T-075: the same rule, judged against an empty
+        # set. The loud message stays - *no non-text value measured is not a pass* is still true,
+        # and undecided is not a pass.
         out.append(("DS-063", "non-text geometry across 3840x2000 and 1280x634: worst %.2f du of "
                     "%.2f allowed over %d values (%s)"
                     % (g["geom"][0], GEOM_TOLERANCE_DU, g["n_geom"],
                        g["geom"][1] if g["n_geom"] else "NO NON-TEXT ELEMENT MEASURED"),
-                    g["geom_ok"]))
+                    g["geom_ok"] if g["n_geom"] else None))
         out.append(("DS-063", "text runs, whole rect, same pair: worst %.2f du = %.2f device px "
                     "of %.1f allowed (%.2f du at this k) over %d values (%s); k ratio %.4f"
                     % (g["text"][0], g["text_px"], TEXT_TOLERANCE_PX, g["text_tol_du"],
                        g["n_text"], g["text"][1] or "NO TEXT RUN MEASURED", g["k_ratio"]),
-                    g["text_ok"]))
+                    g["text_ok"] if g["n_text"] else None))
 
     b = body_floor(results)
     if not b:
-        out.append(("DS-064", "no body run measured at 720p", False))
+        # **The row an outside project's deck failed on, reported 2026-08-10 (T-075).** A deck
+        # whose body prose the probe cannot locate has not been evaluated against the 16 px floor,
+        # and saying so is more useful than a verdict. The probe reached this state for two decks
+        # in a row by looking for class names belonging to the reference deck; that half is fixed
+        # in `render.py`, and this half is what stops the next probe gap being a failed release.
+        out.append(("DS-064", "no body run measured at 720p - undecided, not failed", None))
     else:
         out.append(("DS-064", "smallest body run in a 720p capture: %.1f px (%.0f du) on %r, "
                     "floor %.0f, %d slide(s) sampled"
                     % (b["css"], b["du"], b["slide"][:28], BODY_FLOOR_CSS_PX, b["n"]), b["ok"]))
     return out
+
+
+# **What this file's probes emit when they find nothing**, so the absent-subject fixture can run
+# every row here against it without a browser. Written next to the probe it models on purpose:
+# T-066's third defect was a fixture whose model of the probe was wrong, which made a rule with
+# nothing wrong with it sit on the failing list and would have enshrined that in a declaration.
+#
+# The stage is present and unstyled rather than missing, because `PROBE` reads `#stage` before
+# anything else and a deck without one returns no row at all - that is a render failure, and it is
+# not what "found nothing" means.
+PROBE_FOUND_NOTHING = {
+    "k": 0.0,                       # `--k` unset, so `parseFloat(...) || 0`
+    "layout": [0, 0],               # a stage with no size
+    "rect": [0.0, 0.0, 0.0, 0.0],
+    "transform": "none",
+    "docOn": False,
+    "hasDoc": False,                # no reflow view
+    "stageHidden": False,           # `!!(viewport && ...)` with no #viewport
+    "remScaling": [],               # filled only `if (doc)`
+    "fullscreenGuard": True,        # `heldStill` is trivially true with nowhere to hand over to
+    "fullscreenGuardTested": [False, 0, 300],
+}
+
+
+def nothing_found_rows():
+    """The sweep `verdicts` sees when every probe found nothing - one row per viewport, since the
+    rows are per-viewport and `want` is attached by `sweep` rather than by the probe."""
+    rows = []
+    for (w, h, k_expected, engage) in VIEWPORTS:
+        row = dict(PROBE_FOUND_NOTHING, vw=w, vh=h)
+        row["want"] = {"w": w, "h": h, "k": k_expected, "engage": engage}
+        rows.append(row)
+    return rows
+
+
+def nothing_found_results():
+    """The measurement `scale_verdicts_from` sees when both renderings SUCCEEDED and measured
+    nothing - which is a different thing from a render that produced no result, and the reason
+    `geometry`'s `produced no result` row is a real failure rather than an absent subject."""
+    def at(k):
+        return [{"slide": "a slide with nothing to measure", "k": k, "geom": {}, "type": {},
+                 "vw": 0, "vh": 0, "overflow": []}]
+    return {"3840x2000": at(2.0), "1280x634": at(0.5871), "720p": at(0.6667)}
 
 
 def self_test():
@@ -349,7 +426,10 @@ def audit(deck, which=None, quiet=False):
     """Every §2.4 / §2.5 row this module can decide, as (rule, measurement, pass) - the shape
     `audit.py` prints. Two Chrome sweeps: four viewports, then three resolutions."""
     rows = sweep(deck, quiet=quiet)
-    with open(os.path.join(render.OUT, "contract.json"), "w", encoding="utf-8") as fh:
+    # The deck's project, not this tool's (T-074).
+    out = render.out_dir(deck)
+    os.makedirs(out, exist_ok=True)
+    with open(os.path.join(out, "contract.json"), "w", encoding="utf-8") as fh:
         json.dump(rows, fh, indent=1)
     return verdicts(rows) + scale_verdicts(deck, which)
 
@@ -361,13 +441,19 @@ def main(deck, which=None):
     print("deck:    %s\n" % paths.display_path(deck, ROOT))
     print("=== viewport sweep")
     rows = audit(deck, which)
-    failures = []
+    failures, undecided = [], []
     print("\n=== §2.4 / §2.5 verdicts")
     for rule, what, good in rows:
-        if not good:
+        # `None` is undecided, not failing (T-065's third state, reaching this file in T-075).
+        if good is False:
             failures.append(rule)
-        print("  %-8s %-78s %s" % (rule, what, "pass" if good else "FAIL"))
+        elif good is None:
+            undecided.append(rule)
+        print("  %-8s %-78s %s"
+              % (rule, what, "pass" if good else ("FAIL" if good is False else "undecided")))
     print("\n%d failure(s): %s" % (len(failures), ", ".join(failures) or "none"))
+    if undecided:
+        print("%d undecided, no subject: %s" % (len(undecided), ", ".join(sorted(set(undecided)))))
     if UNCHECKED:
         print(UNCHECKED)
     print("\nWhat this stage does NOT check is not listed here any more - "

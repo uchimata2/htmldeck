@@ -1244,6 +1244,70 @@ along — a screenshot is a poor instrument for a two-pixel judgement).
 3. **This does not apply to defects of substance** — a missing row, a wrong number, an absent
    attribute. It applies where the claim rests on punctuation a tool might have escaped.
 
+### L-57 — A derivation is bounded by what it reads, and from inside it that boundary is invisible
+
+Found on 2026-08-10 during [T-075](../tasks/T-075-ds-064-probes-for-the-reference-decks-own-class-names.md),
+and it is the seventh instance of the fault **L-44** and **L-54** already generalised — which is the
+point. [T-066](../tasks/T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) replaced a
+hand-kept list of the things a fixture had to check with one **derived from the code**, on the correct
+reasoning that a name nobody adds is a name nobody misses. The derivation read `globals()`.
+
+`globals()` is one module. **Six of the eight verdict producers in the package were in other files**,
+every one of them consumed by the same gate, none of them ever run against a measurement in which
+nothing was found. The fixture was complete over its scope and reported so on every run, and a
+derivation that is complete over its scope reads *exactly* like one that is complete. An outside
+project found the first row this let through; nothing here could have found any of them.
+
+The seventh instance also cost the least to find. Moving the boundary from `globals()` to the
+directory took one function, and the first run named four modules nobody had been looking at — with
+nine more rows reporting conformance about subjects that were not there.
+
+**How to apply.**
+
+1. **When you replace a list with a derivation, write down what the derivation can see.** The
+   question is not *is this complete?* but *complete over what?* — scope is the part that does not
+   announce itself.
+2. **Prefer the widest cheap source.** Reading the directory finds a producer in a module nothing
+   imports; reading `globals()` cannot, and reading the import graph would have missed the same
+   four.
+3. **A fix that "cannot be forgotten" can still be forgotten one scope out.** Each instance of this
+   family was fixed correctly and the next one stayed invisible, because the fix and the blind spot
+   were the same size.
+
+### L-58 — A command a document tells someone to run is a claim, and it was the only kind nothing checked
+
+Found on 2026-08-10 during [T-074](../tasks/T-074-the-documented-render-command-does-not-exist.md),
+reported by an adopting project. This repository checks a great deal about its documents: that every
+path resolves, that every `§n` reference exists, that every pasted figure still matches the command
+that produced it. **The one thing it never checked was the commands themselves** — and those are the
+only lines in a document meant to be executed verbatim.
+
+`build.md` told every build to run `render.py shots <slug>.html --out <dir>`. There was no `--out`;
+the third argument was parsed as a slide list, so the flag reached `int()` and the command died. The
+step it died at is the one that closes the *visual* gate, so a build following the documentation hit
+a traceback at the moment it was supposed to start looking, and the cheap wrong response — skip the
+render, trust the checks that passed — is the one most likely to be taken. Twelve other documented
+invocations were correct, by luck rather than by construction.
+
+**The instrument-shaped trap, found while building the check.** The first version searched the
+tool's source for the flag between quotes. Its own fixture went green against a `render.py` with
+`--out` deliberately removed — because the flag was still in the file, in a *comment* quoting the
+traceback. A mention is not an implementation, and matching whole string literals with `tokenize`,
+comments and docstrings excluded, is what makes the answer *the parser compares against this string*
+rather than *this string occurs somewhere*. That is **L-36** arriving in a new file, as it does
+about once a month here.
+
+**How to apply.**
+
+1. **Every command in a document a tool can parse is a claim the gate should decide.** Not the whole
+   line — a tool exists, a subcommand exists, a flag exists is most of the value and costs a static
+   read.
+2. **Say what the check does not decide.** Positional arity, flag order, and whether a flag is valid
+   for a particular subcommand are beyond a static read, and executing for real would launch a
+   browser. Naming the limit is what keeps the green run honest.
+3. **Documentation and tool disagree silently in both directions.** `render.py`'s own docstring had
+   the working form the whole time, one file away from the prose that did not.
+
 ### L-26 — Measure the content, not the box; and pin motion before capturing
 
 Two measurement traps, both hit while validating one deck, both of which return a confident clean

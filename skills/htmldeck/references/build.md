@@ -75,6 +75,10 @@ python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py <slug>.html [--sources <dir>]
 python ${CLAUDE_PLUGIN_ROOT}/tools/deck/render.py shots <slug>.html --out <dir>
 ```
 
+`--out` is optional and the default is right: shots, probes and measurements go to
+`.assets-cache/deck/` **under the deck's own project**, never under the plugin. Add
+`<slides>` before it — `0,4,6`, zero-based — to render a subset.
+
 Then score **S3 Encoding · S5 Craft · S6 Motion** on the batch's slides, per
 `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md`. **And look at the shots.** A deck that passes every
 check can still be a deck nobody can read; that is why the render step is in the loop and not at the

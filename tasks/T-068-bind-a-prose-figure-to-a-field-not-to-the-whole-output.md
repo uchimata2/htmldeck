@@ -43,6 +43,14 @@ repository treats hardest** (**L-36**, **L-44**).
   to a figure.
 - In: whatever the README has to say for that binding to be possible. If a sentence cannot name
   which figure it quotes, that is a finding about the sentence.
+- In: **a figure stated in a document `figures.py` does not read** — added 2026-08-10 by the owner,
+  rather than raised as a task of its own, because it is the same binding question one scope out.
+  The coverage split lived in four documents beside the README (`CLAUDE.md`, `docs/BRIEF.md`,
+  `docs/EVALUATION.md`, `skills/htmldeck/references/pipeline.md`) and drifted to three different
+  values — 80, 81 and 82 — while the README's own figure stayed bound and correct.
+  [T-045](T-045-sweep-the-stale-claims-across-the-live-documents.md) corrected the identical figure
+  in the identical five places once already, by hand, which is the argument for binding it rather
+  than sweeping again.
 - Out: the fenced-block pass, which is bound by adjacency and is not affected.
 - Out: the `volatile` split, settled in T-060 and not reopened here.
 - Out: spelled-out numbers, excluded as a class in T-060 with the closing condition stated there.
