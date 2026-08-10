@@ -2,8 +2,8 @@
 id: T-080
 title: taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted
 type: fix
-status: proposed
-phase: specify
+status: in_progress
+phase: implement
 parent: null
 blocked_by: []
 related: [T-063, T-073, T-079]
@@ -84,17 +84,28 @@ follow it and it cannot be broken. A bare path in a fence is a different thing a
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Reproduce against the current source, and check whether inline spans behave the same | this file §3 |
-| 2 | Write the proposal | this file §3 |
-| 3 | Deliver it as a task in taskmd's tracker | this file §3 |
+| 1 | Reproduce against the current source, and check whether inline spans behave the same | this file §1, **done 2026-08-10** |
+| 2 | Write the proposal | taskmd's own **T-112**, **done 2026-08-10** |
+| 3 | Deliver it as a task in taskmd's tracker | **done 2026-08-10** |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **Argue it from taskmd's own T-092, not from this project's practice** — 2026-08-10. T-092 decided
+  that a bare path in prose is not a reference, separating a pointer from *a path merely being
+  discussed*, and its acceptance criteria demanded that a false-positive boundary be **proven rather
+  than asserted**. Link syntax inside a fence is that same boundary one syntax over, so the ask is
+  consistency with a decision they have already taken rather than a new rule from an adopter. The
+  mechanism confirms it was never decided: `LINK.finditer` runs over the whole file text with no
+  notion of a fence.
+- **Do not ask for blanket fence-skipping** — 2026-08-10, as scoped. Bare paths inside fences stay
+  checked upstream and here: `refcheck.py` reads them deliberately and has caught real defects, so
+  the two tools disagree about paths on purpose and only agree about link syntax.
 
 **Outputs produced**
-- <none yet>
+- The proposal, delivered as **T-112**, *Stop check resolving a link that is displayed rather than
+  navigable*, in taskmd's own tracker — same channel as T-079's, left for the maintainer to index.
+  Named by id and title rather than by path, since the file is in another repository.
 
 ## 4. Review
 
@@ -109,4 +120,5 @@ follow it and it cannot be broken. A bare path in a fence is a different thing a
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | → in_progress | **Delivered as taskmd's T-112**, the same channel as T-079. Reading their source first moved the argument onto their own T-092, which had already separated a pointer from a path being discussed and had asked for false-positive boundaries to be proven — so this is a gap in enforcement of a settled rule, not a request for a new one. Their repository is green on this today only because no task there quotes an index row; the defect belongs to whoever pastes the tool's own output, which is this project's method. One consequence found while writing: `links += 1` runs on every match, so the count their T-095 added to the summary is inflated by strings nobody can follow. Open on their side; nothing outstanding here. |
 | 2026-08-10 | → proposed | Raised on the owner's word after the defect turned a run red while T-079's own proposal was being drafted. `medium` because this project pastes tool output as a matter of method and `index` output carries a link per row, so it recurs rather than being one bad afternoon; `xs` because the change is upstream's and the ask is narrow. Kept out of T-079 deliberately: that task is scoped to `index`, and one task carrying two unrelated upstream defects is harder to close than two carrying one each. |

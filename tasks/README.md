@@ -42,7 +42,7 @@ happened.
 | [T-077](T-077-report-a-figure-exclusion-that-outlived-its-numeral.md) | Report a figure exclusion that outlived the numeral it was written for | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060, T-073 |
 | [T-078](T-078-write-down-the-release-sequence.md) | Write down the release sequence, which lives only in four task logs | `v0.2` | `proposed` | `specify` | - | - | - | - | T-008, T-056 |
 | [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns list closed tasks, so open rows read as blocked | `v0.2` | `in_progress` | `implement` | - | - | - | - | T-031, T-062, T-063, T-073, T-080 |
-| [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `proposed` | `specify` | - | - | - | - | T-063, T-073, T-079 |
+| [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | - | - | T-063, T-073, T-079 |
 
 ## Closed
 
