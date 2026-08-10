@@ -74,6 +74,27 @@ existing gate rerun.
 - Whether a deck that is a *shell and theme reference* rather than an argued case owes a figure
   ledger at all. Decide at `specify`, after reading what figures it actually carries.
 
+**What reconnaissance on 2026-08-10 already established**, so it is not rediscovered:
+
+- **It ships no specification pair.** `examples/` holds `reference-deck.html` and
+  `examples/sources/` — three source documents and a README — and no `.foundation.md` or
+  `.slides.md`. It was built by hand before those two formats existed. So there is no ledger to
+  sweep, and AC 5 is the live branch rather than AC 1's: the finding is what it relies on instead,
+  which is `examples/sources/` plus the colophon [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) added.
+- **The open question leans yes, and not on principle.** 13 sections carry `class="slide"`, all 13
+  declare `aria-label="Slide N"`, and a wide sweep found **102 distinct figure-shaped values** across
+  them. A deck asserting that many figures is not discharging DS-102 by being a theme sample.
+- **`spec.py` is usable here the moment a foundation exists.** `SPEC-5` shipped with
+  [T-086](T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md), and
+  `spec.slide_text`, `spec.canonical` and `spec.shows` are importable — the slide-number reader and
+  the value matcher no longer have to be rebuilt, only the *figure extractor* does.
+- **The first wide pattern over-captured and must not be reused as written.** Allowing a trailing
+  word after the numeral produced keys like `12,200 weekday`, `18 is` and `2029, and`, which then
+  fail to match a source that phrases the same figure differently — 48 of 102 reported as unsourced,
+  most of them artefacts. Separate the numeric core from its context: match the core, show the
+  surrounding words to the reader, and judge on the core. **L-62** still holds — wider than the gate,
+  and thrown away afterwards — but wider means *more numerals*, not *longer strings*.
+
 ## 2. Plan
 
 | # | Step | Output |
@@ -99,4 +120,5 @@ existing gate rerun.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (no change) | Reconnaissance only, recorded in §1 rather than acted on: no specification pair exists, 102 figure-shaped values sit across 13 slides, `SPEC-5`'s matcher is now reusable, and the first wide pattern over-captured in a way the next attempt must avoid. Left at `proposed` deliberately — the sweep and the per-value disposition are the task, and starting them with no room to finish is what T-068 cost a session by. |
 | 2026-08-10 | → proposed | Raised by [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) §1's own condition, which put the reference deck out of scope unless the sweep found a pattern. It found one three times the expected size, including eleven values traceable to no source. `m` rather than `s` because the throwaway extractor has to be rebuilt — L-62 rules out sweeping with the gate that missed them. `v0.2`, under the `l` line. |
