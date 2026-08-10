@@ -26,7 +26,7 @@ happened.
 
 | ID | Title | Work Package | Status | Phase | Parent | Children | Blocked By | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `v0.2` | `proposed` | `specify` | - | - | T-002 | - | T-005, T-017, T-041, T-057 |
+| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `v0.2` | `proposed` | `specify` | - | - | T-002 | - | T-005, T-017, T-041, T-057, T-070 |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `v0.2` | `proposed` | `specify` | T-034 | - | - | - | T-005, T-034, T-042 |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.2` | `proposed` | `specify` | - | - | - | - | T-005, T-016, T-019, T-042 |
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `v0.2` | `proposed` | `specify` | T-053 | - | - | - | T-005, T-037, T-043, T-051 |
@@ -34,6 +34,8 @@ happened.
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.2` | `proposed` | `specify` | T-016 | - | - | - | T-007, T-016, T-019, T-033 |
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `v0.2` | `proposed` | `specify` | - | - | - | - | T-005, T-016 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060 |
+| [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `proposed` | `specify` | - | - | - | T-070 | T-016, T-070 |
+| [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.2` | `proposed` | `specify` | - | - | T-069 | - | T-019, T-069 |
 
 ## Closed
 
@@ -54,7 +56,7 @@ happened.
 | [T-013](T-013-research-offline-safe-assets-and-licences.md) | Research offline-safe assets — icons, illustration, fonts, diagram tooling | `WP1` | `done` | `review` | - | - | - | T-001, T-006, T-014 | T-001, T-006, T-014, T-017 |
 | [T-014](T-014-synthesise-research-into-the-design-system-reference.md) | Synthesise the research into the htmldeck design-system reference | `WP1` | `done` | `review` | - | T-022 | T-009, T-010, T-011, T-012, T-013, T-017 | T-002, T-004, T-007, T-015, T-016 | T-009, T-010, T-011, T-012, T-013, T-020, T-021, T-023, T-024, T-025, T-037, T-038, T-039, T-047, T-049 |
 | [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | `WP2` | `done` | `review` | - | - | T-014, T-020 | T-002, T-003 | T-002, T-003, T-012, T-020, T-027, T-050, T-061 |
-| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | `v0.1` | `done` | `review` | - | T-057 | T-014 | T-002 | T-002, T-005, T-006, T-007, T-017, T-021, T-024, T-032, T-035, T-041, T-057, T-058 |
+| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | `v0.1` | `done` | `review` | - | T-057 | T-014 | T-002 | T-002, T-005, T-006, T-007, T-017, T-021, T-024, T-032, T-035, T-041, T-057, T-058, T-069 |
 | [T-017](T-017-define-the-portability-contract.md) | Define the portability contract — what "opens anywhere and works" actually permits | `WP1` | `done` | `review` | - | - | - | T-014 | T-002, T-005, T-006, T-013, T-016, T-018, T-019, T-049 |
 | [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | `WP1` | `done` | `review` | - | - | - | - | T-002, T-005, T-017, T-021, T-029, T-032, T-034 |
 | [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | `WP1` | `done` | `review` | - | - | - | T-002, T-004, T-015 | T-002, T-003, T-004, T-014, T-015, T-022, T-023, T-026, T-027, T-030 |
