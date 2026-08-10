@@ -9,7 +9,9 @@ plus the prompt structure that briefs them and the critique pass that fixes them
 
 Grounded in a corpus of real decks, prompts and written style guides from a training programme.
 `docs/BRIEF.md` records what that evidence shows and what to build; `reference/` holds the source
-prompt. **Status: the research is complete; the plugin scaffold exists and runs its own pipeline**
+prompt — **one 1.2 KB file, and it is a prompt rather than a codebase**: nothing in it is code to
+copy or behaviour to verify. It was described as working prior art until 2026-08-09, which it never
+was. **Status: the research is complete; the plugin scaffold exists and runs its own pipeline**
 (`.claude-plugin/`, `skills/htmldeck/`), **and as of 2026-08-09 the build check, the theme contract,
 the component contract, the editorial split rule and build mode are all built** — `python
 tools/deck/check.py <deck>` decides 82 of the 113 rules a gate owns and names the other 31 with a
@@ -76,6 +78,8 @@ enforce it at build time rather than hoping.
 1. **No work without a task file** in `tasks/`, from `tasks/_task-template.md`. Tasks are tracked
    with the **taskmd** plugin: `taskmd check` validates the record, `taskmd index` regenerates it,
    and `python tools/docs/refcheck.py` validates every reference in every document.
+   `tasks/TASK-WORKFLOW.md` owns this project's own task conventions and how to invoke all three;
+   `.taskmd/config.md` is the schema and outranks any prose about the fields.
 2. Lifecycle: `specify → plan → implement → review`.
 3. A task is `done` only when its deliverables exist, its log is current, and any deck it
    produced has been **opened and looked at** — offline.
@@ -87,6 +91,10 @@ This repository goes to GitHub. Everything written here must be:
 - **Free of personal, client and machine data.** The source corpus is training work for real
   named scenarios; **do not copy deck content into this repository.** Patterns, structure and
   measurements only. Any example deck shipped here must be written fresh on a neutral topic.
+- **Committed under the publishing identity**, `uchimata2 <112070643+uchimata2@users.noreply.github.com>`,
+  set in this repository's local git config. The personal address was rewritten out of all 121
+  commits before the first push and **must not come back** — history is public now, so a single
+  commit carrying it cannot be undone the way the first rewrite could.
 - **Out-of-the-box.** Clone and run, no path editing.
 - **Font-licence aware.** If fonts are embedded, only ones whose licence permits redistribution.
   Record the licence next to each.

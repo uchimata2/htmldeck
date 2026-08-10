@@ -136,6 +136,13 @@ taskmd check                     # validate the task record
 python tools/docs/refcheck.py    # validate every reference in every document
 ```
 
+**The bare `taskmd` command does not resolve in an agent shell**, which is a property of how the
+plugin is put on `PATH` rather than of the plugin. Run the module instead, from the project root:
+
+```
+P=$(ls -d ~/.claude/plugins/cache/taskmd/taskmd/*/skills/taskmd | tail -1); PYTHONPATH="$P" python -m taskmd check
+```
+
 `taskmd` owns tasks. `refcheck.py` owns **documents**, and exists because taskmd's check sees
 markdown-link syntax only: a path written as prose, a path printed by a tool into a fenced block, and
 every `§n` reference are all invisible to it. Measured against seeded defects, not assumed — the
