@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """The specification pair check — what `<slug>.foundation.md` and `<slug>.slides.md` can only get
-wrong together.
+wrong together, plus the one thing the built deck settles about the ledger.
 
-    python tools/deck/spec.py <slug>.foundation.md <slug>.slides.md
+    python tools/deck/spec.py <slug>.foundation.md <slug>.slides.md [<slug>.html]
 
-Four verdicts, all mechanical, none of them about whether the deck is any good:
+Five verdicts, all mechanical, none of them about whether the deck is any good:
 
   SPEC-1  every slide answers `Sources`, and `none` is an answer.
   SPEC-2  every slug a slide names has a row in the foundation's source list.
@@ -12,12 +12,27 @@ Four verdicts, all mechanical, none of them about whether the deck is any good:
           citation or a stale file, and both are findings.
   SPEC-4  the ledger wins. Where a figure's `Origin` is used on a slide whose `Sources` omits it,
           the slide is wrong, not the ledger.
+  SPEC-5  and here the ledger loses. Where a row's `Used on` names a slide, that slide has to
+          show the value. Needs the built deck, so it is undecided without one.
 
 **Why SPEC-4 is a comparison and not a derivation.** The slide field is wider than the ledger on
 purpose: a slide rests on a source it quotes no number from - a date, a definition, a threshold, a
 diagram redrawn from it - and none of those is a ledger row. So the field cannot be generated from
 the ledger, and the ledger cannot be generated from the field. Two records of overlapping facts,
 one authoritative where they overlap, and the overlap checked rather than trusted (T-071).
+
+**Why SPEC-5 exists, and why it is the only half of the ledger question that is checkable.** SPEC-4
+trusts `Used on` to decide whether a slide's `Sources` is right, so a cell naming a slide the figure
+never reached mis-calibrates the rule built on it - T-082's hand sweep found four such cells and this
+found a fifth. The mirror question, whether the ledger is *complete*, needs something that can
+enumerate every figure on a slide, and nothing here can: `content.py`'s figure pattern cannot see
+`6 rounds`, `04:10` or `27 of 31`, and widening it to any digit makes every axis tick a figure. So
+completeness stays DS-102's `judge` (T-082 §3, **L-62**), and this rule searches for a known string
+on a known slide instead of deciding what a figure is.
+
+**The deck argument is optional on purpose.** This tool is meant to run before a slide is written,
+let alone built; a required deck would break its own instructions. With no deck SPEC-5 reports no
+subject, exactly as the other four do when theirs is absent.
 
 Run it before writing any slide, and again after a deviation is written back. Pure standard
 library (**L-07**).
@@ -29,11 +44,23 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths                                                        # noqa: E402
+import content                                                      # noqa: E402  - for `runs`
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 SLIDE_HEAD = re.compile(r"^##\s+Slide\s+(\d+)\b", re.M)
 SOURCES_FIELD = re.compile(r"^-\s+\*\*Sources\.\*\*\s*(.*)$", re.M)
+
+# The deck already declares its own slide numbers, and `Used on` is written in them. Reading the
+# number rather than counting sections means a deck that ships a colophon or any other section
+# outside the run cannot silently shift every row by one.
+SLIDE_SECTION = re.compile(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>(.*?)</section>',
+                           re.S | re.I)
+SLIDE_NUMBER = re.compile(r'aria-label="Slide\s+(\d+)"', re.I)
+
+WORD_NUMBERS = "one two three four five six seven eight nine ten eleven twelve".split()
+MONTHS = ("january february march april may june july august september october "
+          "november december").split()
 
 
 def rows(text, first_column):
@@ -85,7 +112,83 @@ def used_on(cell):
     return [int(n) for n in re.findall(r"\d+", cell)]
 
 
-def verdicts(foundation_text, slides_text):
+def canonical(text):
+    """One spelling for the two ways a deck legitimately writes the same figure.
+
+    Both were measured on `sort-window` rather than anticipated, and between them they account for
+    ten of the nineteen pairs a literal search could not decide:
+
+    - **a small number spelled as a word.** The ledger says `6 people`; the slide says *Six people*
+      in its headline and *six-person crew* in its body. One to twelve, which is where English
+      stops spelling by default and where the corpus stops too.
+    - **a month abbreviated.** The ledger says `4 September`; the timeline chip says *4 Sep*.
+
+    Hyphens fold to spaces for the same reason - *six-person* has to reach `6 person`. Nothing here
+    guesses at a figure's meaning; it normalises how the same string is written.
+    """
+    t = text.lower().replace("\u2019", "'")
+    t = re.sub(r"[\u2010-\u2015\u2212]", "-", t).replace("-", " ")
+    # nbsp, figure, thin, narrow-nbsp, en and em spaces - a deck sets figures with them.
+    t = t.translate(dict.fromkeys(
+        map(ord, "\u00a0\u2007\u2009\u202f\u2002\u2003"), " "))
+    for month in MONTHS:
+        t = re.sub(r"\b%s\.?\b" % month[:3], month, t)
+    for i, word in enumerate(WORD_NUMBERS, 1):
+        t = re.sub(r"\b%s\b" % word, str(i), t)
+    return re.sub(r"\s+", " ", t)
+
+
+def slide_text(deck_html):
+    """`{slide number: canonical text}` for every slide the deck declares a number for.
+
+    `content.runs` does the splitting, because reading a slide as one string merges an axis label
+    into the figure beside it - the mistake it carries its own comment about.
+    """
+    out = {}
+    for m in SLIDE_SECTION.finditer(deck_html):
+        number = SLIDE_NUMBER.search(m.group(0))
+        if number:
+            out[int(number.group(1))] = canonical(" ".join(content.runs(m.group(1))))
+    return out
+
+
+def shows(text, value):
+    """Whether `text` carries `value` as a value rather than as part of a longer one.
+
+    The two guards are the whole of it. `27` may not match inside `27,600`, and `9` may not match
+    inside `95%` - but a value that ends in a symbol needs no closing guard at all, which is what
+    lets `5%` match where the run splitter has left it flush against the next word.
+    """
+    v = canonical(value).strip()
+    if not v:
+        return False
+    tail = r"(?!\w|,\d|\.\d)" if re.search(r"\w$", v) else ""
+    return re.search(r"(?<![\w.,$])" + re.escape(v) + tail, text) is not None
+
+
+def reaches(text, value):
+    """Whether a ledger row's value reaches one slide, in any of the three forms it may take.
+
+    1. **As written.** 80 of the 89 pairs on the worked example, and the only form a reader of the
+       ledger would predict.
+    2. **As one mark of a series.** `4.1 / 11.2 / 15.9 / 18.7%` is one row and four marks, and one
+       mark is the bar this rule may ask for: the chart on slide 4 labels its maximum and prints
+       *3.4% or under* for the four months below it, so demanding every mark would fail a deck that
+       is right. The row still binds the series to the slide, which is what `Used on` claims.
+    3. **As its leading quantity.** `6 people` reaches a slide that says *Six people*; the unit noun
+       is the ledger's description of the figure, not the figure.
+    """
+    for part in ([p.strip() for p in value.split(" / ")] if " / " in value else [value]):
+        if shows(text, part):
+            return True
+        quantity = re.search(r"\S*\d\S*", canonical(part))
+        if quantity and quantity.group(0) != canonical(part).strip() \
+                and shows(text, quantity.group(0)):
+            return True
+    return False
+
+
+def verdicts(foundation_text, slides_text, deck_html=""):
     listed = [r[0].strip("`") for r in rows(foundation_text, "Slug") if r and r[0]]
     ledger = [r for r in rows(foundation_text, "Figure") if len(r) >= 4]
     spec = slides(slides_text)
@@ -108,6 +211,21 @@ def verdicts(foundation_text, slides_text):
     # `audit.py`'s absent-subject fixture holds every verdict producer in this directory to, and the
     # shape DS-064 and DS-200 were both wrong about before T-075. A presentation-only pair reaches
     # all four of these legitimately: no source list, no slug named, no ledger.
+    # SPEC-5's subject is a pair - a ledger row that names a slide, and a deck that has slides to
+    # name. A `Used on` naming a slide the deck does not have is a FAIL and not an absent subject:
+    # the cell is a claim about a deck, and a claim about a slide that does not exist is the
+    # strongest form of the error this rule is for.
+    on_deck = slide_text(deck_html) if deck_html else {}
+    unbuilt, unshown, claimed = [], [], 0
+    if on_deck:
+        for row in ledger:
+            for n in used_on(row[3]):
+                claimed += 1
+                if n not in on_deck:
+                    unbuilt.append("slide %d does not exist (%s)" % (n, row[0]))
+                elif not reaches(on_deck[n], row[1]):
+                    unshown.append("slide %d does not show %s (%s)" % (n, row[0], row[1]))
+
     any_named = any(ss for ss in named.values())
     scored = [r for row in ledger for r in used_on(row[3]) if r in named]
     return [
@@ -125,6 +243,9 @@ def verdicts(foundation_text, slides_text):
             "" if not contradicted else " - %s" % ", ".join(
                 "slide %d omits %s" % (n, s) for n, s in contradicted)),
          None if not scored else not contradicted),
+        ("SPEC-5", "every ledger row reaches the slides it names%s" % (
+            "" if not (unbuilt + unshown) else " - %s" % "; ".join(unbuilt + unshown)),
+         None if not claimed else not (unbuilt or unshown)),
     ]
 
 
@@ -146,12 +267,22 @@ def self_test():
                   "| Capital | $1 | cost-model | 2 |\n")
     good = ("## Slide 1 - a\n\n- **Sources.** none\n\n"
             "## Slide 2 - b\n\n- **Sources.** cost-model, calendar\n")
-    by_rule = dict((r, ok) for r, _w, ok in verdicts(foundation, good))
+    deck = ('<section class="slide" aria-label="Slide 1"><h2>a</h2></section>'
+            '<section class="slide" aria-label="Slide 2"><p>The grant is <b>$1</b>.</p></section>')
+    by_rule = dict((r, ok) for r, _w, ok in verdicts(foundation, good, deck))
     if not all(ok is True for ok in by_rule.values()):
         sys.exit("SELF-TEST FAILED: the consistent pair did not pass - %r" % by_rule)
     empty = dict((r, ok) for r, _w, ok in verdicts("", ""))
     if any(ok is not None for ok in empty.values()):
         sys.exit("SELF-TEST FAILED: a row decided something against an empty pair - %r" % empty)
+    # **The two-argument run has to be exactly what it was**, because that is what makes the deck
+    # optional rather than a breaking change: this tool's own instructions say to run it before a
+    # slide is written, and a deck cannot exist then. Asserted rather than assumed - it is the whole
+    # of the decision in T-086 §3 to put this rule here instead of in a file of its own.
+    without = dict((r, ok) for r, _w, ok in verdicts(foundation, good))
+    if [r for r, ok in without.items() if ok is not (None if r == "SPEC-5" else True)]:
+        sys.exit("SELF-TEST FAILED: the run with no deck did not leave SPEC-1..4 alone and "
+                 "SPEC-5 undecided - %r" % without)
 
     seeded = {
         "SPEC-1": ("## Slide 1 - a\n\n- **Archetype.** A-01\n\n"
@@ -164,24 +295,42 @@ def self_test():
                    "## Slide 2 - b\n\n- **Sources.** calendar\n"),
     }
     for rule, text in seeded.items():
-        got = dict((r, ok) for r, _w, ok in verdicts(foundation, text))
+        got = dict((r, ok) for r, _w, ok in verdicts(foundation, text, deck))
         if got[rule] is not False:
             sys.exit("SELF-TEST FAILED: %s reported %r on a document seeded to break it"
                      % (rule, got[rule]))
     # SPEC-3's seed drops `calendar` from the only slide that used it, which must also trip
     # SPEC-4 - the two overlap, and a seed that trips only one of them would be the weaker test.
+
+    # SPEC-5 is seeded in the deck rather than in the slides, because the deck is its subject. Two
+    # seeds, because the row has two ways to fail and the second was reachable by no other test:
+    # a slide that shows a different value, and a `Used on` naming a slide nobody built.
+    for what, seed in (("a slide that shows another value",
+                        deck.replace("$1", "$2")),
+                       ("a Used on naming a slide the deck does not have",
+                        deck.replace('aria-label="Slide 2"', 'aria-label="Slide 3"'))):
+        got = dict((r, ok) for r, _w, ok in verdicts(foundation, good, seed))
+        if got["SPEC-5"] is not False:
+            sys.exit("SELF-TEST FAILED: SPEC-5 reported %r against %s"
+                     % (got["SPEC-5"], what))
     return True
 
 
-def main(foundation, slides_path):
+def main(foundation, slides_path, deck_path=None):
     self_test()
     print("foundation: %s" % paths.display_path(foundation, ROOT))
     print("slides:     %s" % paths.display_path(slides_path, ROOT))
+    print("deck:       %s" % (paths.display_path(deck_path, ROOT) if deck_path
+                              else "not given - SPEC-5 has no subject"))
     with open(foundation, encoding="utf-8") as fh:
         foundation_text = fh.read()
     with open(slides_path, encoding="utf-8") as fh:
         slides_text = fh.read()
-    rows_out = verdicts(foundation_text, slides_text)
+    deck_html = ""
+    if deck_path:
+        with open(deck_path, encoding="utf-8") as fh:
+            deck_html = fh.read()
+    rows_out = verdicts(foundation_text, slides_text, deck_html)
     for rule, what, ok in rows_out:
         print("  %-8s %-90s %s"
               % (rule, what, "NO SUBJECT" if ok is None else "pass" if ok else "FAIL"))
@@ -191,6 +340,7 @@ def main(foundation, slides_path):
 
 if __name__ == "__main__":
     a = sys.argv[1:]
-    if len(a) != 2:
-        sys.exit("usage: spec.py <slug>.foundation.md <slug>.slides.md")
-    sys.exit(main(os.path.abspath(a[0]), os.path.abspath(a[1])))
+    if len(a) not in (2, 3):
+        sys.exit("usage: spec.py <slug>.foundation.md <slug>.slides.md [<slug>.html]")
+    sys.exit(main(os.path.abspath(a[0]), os.path.abspath(a[1]),
+                  os.path.abspath(a[2]) if len(a) == 3 else None))

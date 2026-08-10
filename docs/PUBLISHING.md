@@ -210,12 +210,20 @@ python tools/deck/shell.py check <deck>                        # the five below 
 python tools/deck/component.py check <deck>                    # this repository ships TWO:
 python tools/deck/theme.py check <deck>                        #   examples/reference-deck.html
 python tools/deck/check.py <deck> --sources <dir>              #   examples/sort-window/sort-window.html
-python tools/deck/spec.py <deck>.foundation.md <deck>.slides.md
+python tools/deck/spec.py <deck>.foundation.md <deck>.slides.md <deck>.html
 ```
 
 **The per-deck five are where every defect this list was written from was hiding**, and the reason is
 structural: the README prints repository-wide commands, so the set anyone runs by habit never reaches
 a deck. Run them against **both** examples, not the one being worked on.
+
+**The last of the five is the exception, and it is one deck rather than two.** `spec.py` reads a
+specification pair, and `examples/reference-deck.html` ships without one — it was built by hand
+before the two documents existed, so there is no `.foundation.md` to hand it. Whether a deck this
+project ships as its reference owes that record at all is
+[T-087](../tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md)'s
+question. Until it answers, the line above runs on `sort-window` alone, and that is stated here so
+nobody reads a command that cannot run as one that passed.
 
 **It has already failed, which is why it is declared rather than trusted.** The README prints five
 commands and that set was treated as the list. Writing this section meant running everything in it,

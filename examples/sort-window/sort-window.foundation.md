@@ -74,7 +74,7 @@ the completeness claim checkable by a reader, who can hold one source document b
 | Peak working days | 31 | throughput-model | 3, 11 |
 | Off-peak working days | 22 | throughput-model | 3 |
 | Peak miss rate | 12.4% | throughput-model | 3, 8 |
-| Off-peak miss rate | 3.1% | throughput-model | 3, 4 |
+| Off-peak miss rate | 3.1% | throughput-model | 3 |
 | Monthly miss rate | 2.9 / 3.0 / 3.4 / 3.1 / 9.8 / 15.2% | throughput-model | 4 |
 | Misses never sorted | 84% | throughput-model | 5, 8, 9 |
 | Misses sorted, not loaded | 16% | throughput-model | 8, 9 |
@@ -132,6 +132,12 @@ the throughput model; slide 11 reads its gate over the 31 peak working days and 
 fleet and calendar. Both now name the source the figure came from, and the deck's provenance marks
 say the same. Neither was visible before, because a figure with no row is a figure SPEC-4 has
 nothing to compare.
+
+**One row had to be corrected rather than a slide**, and it took a gate to find it. `Off-peak miss
+rate` — 3.1% — claimed slides 3 and 4. Slide 4's chart labels its maximum and prints *3.4% or under*
+for the four months beneath it, so 3.1% appears nowhere on it; the cell now reads 3 alone. It is the
+fifth over-claim of this kind in this ledger and the first that no hand sweep caught, which is the
+argument for `SPEC-5` existing (T-086).
 
 **Slide 1 carries no row, and that is a judgement rather than an omission.** Its eyebrow prints the
 occasion and its standfirst introduces the term — *a nightly window that closes at 01:00* — and

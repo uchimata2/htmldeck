@@ -47,6 +47,10 @@ foundation does not list, a listed source no slide uses, a slide with no `Source
 and a slide whose sources contradict the figure ledger. **A source nothing uses is either a missing
 citation or a stale file**, and both are findings. Run it again after §4 writes a deviation back.
 
+**A fifth verdict needs the built deck and waits for §5.** Given the `.html` as a third argument,
+`SPEC-5` checks the ledger in the other direction: every slide a row's `Used on` names has to show
+the row's value. Here it reports no subject, which is correct — there is no deck yet.
+
 ## 2. Write the slides, in batches of three
 
 Three slides, then the loop in §3, then the next three. **Batching is not about scoring** — it is
@@ -127,7 +131,18 @@ two rules genuinely in tension — stops and names them. Deviation authority is 
 ## 5. Delivery
 
 Stop when `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §5 says the deck is done, not when it feels
-finished. Then hand over:
+finished. **Then run the specification pair once more, this time with the deck**, which is the only
+point at which every slide it names exists:
+
+```
+python ${CLAUDE_PLUGIN_ROOT}/tools/deck/spec.py <slug>.foundation.md <slug>.slides.md <slug>.html
+```
+
+`SPEC-5` fails a `Used on` cell that names a slide not showing the value. It is not a per-batch
+check: mid-build, half the slides it names have not been written, and every one of those would
+report as missing.
+
+Then hand over:
 
 - **The deck and both specification files**, in the delivery directory, per
   `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/artifacts.md`.

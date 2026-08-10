@@ -441,6 +441,19 @@ patch by the rule in [`../CLAUDE.md`](../CLAUDE.md). They are the cheap half of 
 known: defects in the project's own tooling, items that sharpen its record, and the two moderate
 gaps in capability it already ships. Each is written up well enough to be picked up cold.
 
+**v0.2 ships on the two tasks this project can close, and the other two stay open behind it — the
+owner's decision, 2026-08-10.** Of the four open when the phase was last counted,
+[T-086](../tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
+[T-087](../tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) are
+closable here. [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md) is parked on
+purpose — it bites past 24 slides and the target case is 12 — and
+[T-080](../tasks/T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) waits on a proposal
+this project does not get to schedule, upstream's own item being `proposed` as of that date. **Both
+keep the `v0.2` label rather than moving to v0.3**, because the line between the two phases is drawn
+on effort and both are `m`: a task reassigned for being inconvenient would cost the one half of the
+rule that can be checked. So the release states what it ships without, as v0.1's did, and the phase
+stays open behind the release that carries most of it.
+
 **One open task now blocks another, and until 2026-08-10 none did.** Every `blocked_by` edge in the
 backlog used to point at closed work — T-019's on T-002, T-070's and T-071's on T-069 — so *add all
 dependencies* selected nothing beyond what size already did. That stopped being true when
@@ -458,7 +471,7 @@ edited away, because a rule that was vacuous and then was not is worth knowing a
 | ~~[T-060](../tasks/T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)~~ **done 2026-08-10** | `tools/docs/figures.py` runs each command the README prints and partitions all 17 fences and 9 prose numerals. A figure is `compared` and fails on drift, or `volatile` — declared, reported, not enforced — because a count of the repository is stale in the commit that corrects it. |
 | ~~[T-081](../tasks/T-081-the-installed-taskmd-is-two-minor-versions-behind.md)~~ **done 2026-08-10** | Updated 0.1.1 to 0.3.0. The new release's template checks found three defects here in one run, including an umbrella template `create` would never have offered. It also settled T-079 by measurement and left T-080 open by the same means. |
 | ~~[T-082](../tasks/T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md)~~ **done 2026-08-10** | Three expected, 26 found, and the ledger goes 29 rows to 58. The stated pattern — figures leak behind a disclosure — was half right: five additions are tier one, including the hinge slide's own diagram labels. **Eleven values were in no source at all**, so the sources gained them; the owner ratified that direction over cutting them from the deck. Two slides declared fewer sources than they cite and were corrected in SPEC-4's direction. Completeness does not become a gate, because FIG-1 read `0 unsourced of 69` throughout (**L-62**). |
-| [T-086](../tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) | The checkable half of the ledger question: every `Used on` slide must show the row's value. Exact, not heuristic — the owner settled it as exact-only, so completeness stays DS-102's `judge`. |
+| ~~[T-086](../tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md)~~ **done 2026-08-10** | `SPEC-5`, and `spec.py` now takes the built deck as an optional third argument — optional because the tool's own instructions say to run it before a slide exists. The specification pointed at `content.py`, which does already read a deck per slide; it lost anyway, on **which ledger each tool holds**, since `content.py` builds its own precisely so as not to trust the authored one. It was red on the deck it was calibrated against: a **fifth** `Used on` over-claim, after the four T-082 found by hand, and the first no sweep caught. A literal search left 19 of 89 pairs undecided and exactly one was the defect — **L-64**. |
 | [T-087](../tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) | The reference deck, on T-082's terms. T-082 left it out of scope with a condition attached, and the condition triggered. |
 | ~~[T-084](../tasks/T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md)~~ **done 2026-08-10** | The fixture counted twelve contents boxes for a deck that builds thirteen — twelve slides and T-069's colophon — so the tool refused to start rather than measure. Re-baselined and left hard-coded on purpose: an assertion that exists to trip when the deck moves would agree with everything if it were derived. The bound came back **16 / 24**, unchanged, so T-036's specification stands and its edge is released. |
 | ~~[T-068](../tasks/T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md)~~ **done 2026-08-10** | A prose figure is bound to the label its command prints beside it, which closed two live false passes — `12 slides`, covered twice by `8-12` inside a `DS-082` note. The owner's clause, the same figure in documents `figures.py` does not read, is bound by the claim's own construction — *part of whole*, plus the remainder — after binding by vocabulary produced 30 false alarms against 5 true ones (**L-63**). Five documents, the drift caught in each. |
