@@ -213,17 +213,30 @@ python tools/deck/check.py <deck> --sources <dir>              #   examples/sort
 python tools/deck/spec.py <deck>.foundation.md <deck>.slides.md <deck>.html
 ```
 
+**`--sources` is the one argument that cannot be guessed from the deck's path**, and guessing wrong
+does not error — it reports `FIG-0 … source files this reader cannot open` and fails the run, which
+reads exactly like a defect in the deck. The two directories are not siblings of their decks in the
+same way, so they are written out rather than left to `<dir>`:
+
+```
+examples/reference-deck.html              --sources examples/sources
+examples/sort-window/sort-window.html     --sources examples/sort-window/sources
+```
+
 **The per-deck five are where every defect this list was written from was hiding**, and the reason is
 structural: the README prints repository-wide commands, so the set anyone runs by habit never reaches
 a deck. Run them against **both** examples, not the one being worked on.
 
-**The last of the five is the exception, and it is one deck rather than two.** `spec.py` reads a
-specification pair, and `examples/reference-deck.html` ships without one — it was built by hand
-before the two documents existed, so there is no `.foundation.md` to hand it. Whether a deck this
-project ships as its reference owes that record at all is
-[T-087](../tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md)'s
-question. Until it answers, the line above runs on `sort-window` alone, and that is stated here so
-nobody reads a command that cannot run as one that passed.
+**The last of the five is the exception, and it is one deck rather than two — permanently.**
+`spec.py` reads a specification pair, and `examples/reference-deck.html` ships without one: it was
+built by hand before the two documents existed, so there is no `.foundation.md` to hand it.
+[T-087](../tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md)
+settled on 2026-08-11 that it owes a provenance record but **not that one**, and **rejected
+retrofitting a `.foundation.md`** — it would make a hand-built deck claim to be a build-mode output,
+buying a checkable `SPEC-5` at the cost of the only example showing what hand-built provenance looks
+like. That deck's record is source-level instead (`examples/sources/` plus the colophon), so the line
+above runs on `sort-window` alone and always will. Stated here so nobody reads a command that cannot
+run as one that passed, or reopens a question that has an answer.
 
 **It has already failed, which is why it is declared rather than trusted.** The README prints five
 commands and that set was treated as the list. Writing this section meant running everything in it,

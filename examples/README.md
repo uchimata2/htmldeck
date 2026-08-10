@@ -315,7 +315,7 @@ edited without regenerating is a red run rather than a discovery two audits late
 
 [`sort-window/`](sort-window) holds all four artifacts a build run leaves behind — the deck, the
 foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
-reconciled against. It is **212 KB in one file** — 217 050 bytes — 12 slides, five hand-written SVG figures, ten
+reconciled against. It is **220 KB in one file** — 225 639 bytes — 12 slides, six hand-written SVG figures, ten
 disclosure panels, zero external references.
 
 ```bash

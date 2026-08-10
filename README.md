@@ -148,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1188 document pointer(s) checked, 0 broken
-     529 section reference(s) resolved, 0 dead; 1316 not bound to a document and skipped.
+OK - 1235 document pointer(s) checked, 0 broken
+     539 section reference(s) resolved, 0 dead; 1344 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -175,8 +175,11 @@ OK - manifest valid, components at the root, every ${CLAUDE_PLUGIN_ROOT} pointer
 ```
 
 `check.py` drives **real Chrome or Edge**, headless, with a throwaway profile and every DNS lookup
-black-holed. A preview pane is not a faithful `file://` environment, and it has given this project a
-confident wrong answer four times. The other three commands read files and need nothing but Python.
+black-holed. A preview pane is not a faithful `file://` environment, and it has given this project
+confident wrong answers: it allowed a local `fetch()` that a real restricted origin denies, which is
+the failure that puts the defect in the recipient's copy rather than the console, and it drew a
+diagram as broken whose DOM geometry was correct to the pixel. The other three commands read files
+and need nothing but Python.
 
 ---
 
@@ -261,10 +264,12 @@ describe a plan.
   figure. Both are v0.3, not oversights.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
-is split into three releases. **v0.1** is what a first working plugin needs. It shipped, and is at
-v0.1.5 after five patches. **v0.2** is the minor and moderate fixes already known. **v0.3** is the
-larger work, including 3D visuals, the frame-rate figure and those seven conditions.
-[`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
+is split into three releases. **v0.1** is what a first working plugin needs; it shipped, and took
+five patches. **v0.2** is the minor and moderate fixes already known. It shipped as v0.2.0 with two
+of its tasks still open behind it: a second printed contents sheet, which only bites on decks far
+longer than the target case, and one fix that waits on a decision upstream. **v0.3** is the larger work, including 3D
+visuals, the frame-rate figure and those seven conditions. [`docs/BRIEF.md`](docs/BRIEF.md) says what
+is in each and why.
 
 **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
 half's first run and were settled the same day in

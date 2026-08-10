@@ -128,6 +128,7 @@ other two candidates lost.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-11 | (no change) | Shipped in **`v0.2.0`**, the release this task and [T-087](T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) close. |
 | 2026-08-10 | → done | `SPEC-5` shipped, five acceptance criteria met and one **not met on purpose**: the rule was red on the deck it was calibrated against, because a fifth `Used on` over-claim was there to find. The ledger was corrected rather than the rule relaxed. Calibrated by re-seeding T-082's four hand-found over-claims — all four go red and each names its row and slide. Every gate in `PUBLISHING.md` §8 green, both decks. Carried out as **L-64**: a literal comparison between two documents written by different hands left 19 of 89 pairs undecided, and exactly one of them was the defect. |
 | 2026-08-10 | → planned | §2 written, and the open question closed with it: `spec.py`, optional third argument, `SPEC-5`. The specification pointed at `content.py` — *decide from which one already reads the deck per slide* — and that is the candidate the reasoning rejected, on which ledger each tool holds rather than on which one can read a slide. §3 carries all three. |
 | 2026-08-10 | → specified | §1 was complete when the task was raised and the owner ratified its one contested question the same day, so the status was the only thing missing. `deliverables:` declared at the same time, per `TASK-WORKFLOW.md` §6.2. |

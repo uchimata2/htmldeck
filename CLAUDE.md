@@ -19,10 +19,14 @@ reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
 2026-08-09 as `docs/PUBLISHING.md`, and **v0.1 shipped the same day**: the repository is public at
-`github.com/uchimata2/htmldeck`, released and **now at `v0.1.5`** after five patch releases, with
-`master` as the published branch. **v0.2 is the main line, but v0.1 has reopened five times**: a defect an
-adopter hits in the published plugin is a `v0.1` patch, not a v0.2 improvement. **The fifth is the
-first nobody reported**: `v0.1.5` carries
+`github.com/uchimata2/htmldeck`, released and **now at `v0.2.0`** after five v0.1 patches, with
+`master` as the published branch. **v0.2 shipped 2026-08-11** carrying
+[T-086](tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
+[T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
+**the phase stays open behind it**: T-036 and T-080 keep the `v0.2` label by the owner's decision, so
+a shipped release and an open phase are not a contradiction here. **v0.3 is the main line now, but
+v0.1 has reopened five times**: a defect an adopter hits in the published plugin is a `v0.1` patch,
+not a later improvement. **The fifth was the first nobody reported** — `v0.1.5` carried
 [T-083](tasks/T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) and
 [T-085](tasks/T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md), both found by running
 [`docs/PUBLISHING.md`](docs/PUBLISHING.md) §8's gate list rather than by an adopter — which is the
