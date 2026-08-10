@@ -433,13 +433,18 @@ of one it does, and each is written up well enough to be picked up cold.
 | [T-054](../tasks/T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Coverage recorded per *clause* rather than per rule — a sharper account, not a missing one. |
 | [T-055](../tasks/T-055-a-variant-that-leaves-malformed-markup.md) | One seeded variant that tests parser repair instead of the tag it means to test. |
 | [T-058](../tasks/T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched. |
-| [T-059](../tasks/T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md) | `theme.py swap` overwrites its input when `-o` is omitted. |
-| [T-060](../tasks/T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md) | A check that the README's pasted figures still match the commands that produced them. Raised by T-056, which found six already stale. |
+| ~~[T-059](../tasks/T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md)~~ **done 2026-08-10** | `swap` defaults to `.assets-cache/deck/themed/` and refuses its own input by resolved path. Requiring `-o` was the rival and lost: four shipped copy sites print the bare command, so the flag would have made all four document a command that errors. |
+| ~~[T-060](../tasks/T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)~~ **done 2026-08-10** | `tools/docs/figures.py` runs each command the README prints and partitions all 17 fences and 9 prose numerals. A figure is `compared` and fails on drift, or `volatile` — declared, reported, not enforced — because a count of the repository is stale in the commit that corrects it. |
+| [T-068](../tasks/T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it. T-060 binds a numeral to the whole corpus, so a correct number in the wrong sentence still passes. |
+| [T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md) | Multiple sources per slide, and a colophon slide for deck-wide ones. DS-105 already owns the single-source case; this is the delta, and it amends DS-085 by a named exemption. |
+| [T-070](../tasks/T-070-the-quick-view-for-a-source-document.md) | A source rendered inside the deck, as an overlay. Markdown and plain text only. Blocked by T-069. |
 | ~~[T-062](../tasks/T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md)~~ **done 2026-08-09** | Retired the pre-split task tool for taskmd, keeping the two reference checks taskmd does not have as `tools/docs/refcheck.py`. |
 | ~~[T-063](../tasks/T-063-improvements-to-propose-upstream-to-taskmd.md)~~ **done 2026-08-10** | Five proposals sent upstream to taskmd, from what the migration measured. |
 
 *The first six rows predate the release split; T-058 through T-063 were added on 2026-08-09 and
-2026-08-10, when this table was found to have stopped listing everything in the phase it names.*
+2026-08-10, when this table was found to have stopped listing everything in the phase it names.
+T-068 through T-070 were added on 2026-08-10 — **the same drift, caught by the same sweep**, which
+is the argument for the sweep rather than for remembering.*
 
 **What v0.1 will ship without, stated rather than discovered.** No 3D. No frame-rate figure on any
 machine. Seven of R6's nine glitch-free conditions unimplemented, and a console error that does not
