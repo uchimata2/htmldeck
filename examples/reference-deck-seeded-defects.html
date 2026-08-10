@@ -159,6 +159,7 @@
   --tick-len:calc(28*var(--du));       /* the eyebrow's tick */
   --disc-panel-w:calc(940*var(--du));
   --disc-key-w:calc(210*var(--du));
+  --sources-box-w:calc(380*var(--du));
 
   /* ---- shape: radius, stroke and depth. This is the axis a recolour cannot reach. */
   --radius:calc(14*var(--du));
@@ -360,6 +361,36 @@ svg{display:block}
   font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
   text-transform:uppercase;color:var(--ink-faint);text-align:right;
 }
+
+/* ------------------------------------------- more than one source per slide (DS-105) */
+/* Its own component and deliberately not a .disc: provenance is what the argument rests on, not a
+   question the face provokes, so it stays outside DS-230's four kinds and outside the panel census
+   they exist to keep meaningful. It shares the interaction rules, which are about the reader rather
+   than about the content. Spans throughout - a <div> inside a <p> is closed by the parser, and the
+   box would leave the mark in the DOM while looking right in the file. */
+.sources{position:relative;display:inline-block}
+.sources-btn{
+  display:inline-flex;align-items:center;gap:var(--sp-1);
+  min-height:var(--disc-hit);min-width:var(--disc-hit);padding:0 var(--sp-1);
+  border:0;background:none;color:var(--ink-faint);
+  font:inherit;letter-spacing:inherit;text-transform:inherit;
+}
+.sources-btn:hover{color:var(--accent)}
+.sources-mark{flex:none;width:var(--fs-mono);height:var(--fs-mono);color:var(--accent)}
+.sources-box{                                    /* opens below the mark (DS-138) */
+  position:absolute;top:calc(100% + var(--sp-1));right:0;z-index:30;
+  min-width:var(--sources-box-w);
+  padding:var(--sp-2) var(--sp-3);
+  border:var(--hair) solid var(--line);border-radius:var(--radius);
+  background:var(--paper-sunk);box-shadow:0 var(--shadow-y-sm) var(--shadow-blur-sm) var(--shadow-soft);
+  /* the mark is mono, uppercase and right-set; a list of titles is none of those */
+  font-family:var(--font-text);font-size:var(--fs-small);letter-spacing:normal;
+  text-transform:none;text-align:left;color:var(--ink-soft);
+}
+.sources-box[hidden]{display:none}
+.sources-item{display:block;white-space:nowrap}
+.sources-item + .sources-item{margin-top:var(--sp-1);padding-top:var(--sp-1);
+  border-top:var(--hair) solid var(--line)}
 
 /* ---------------------------------------------------------------- disclosure (DS-160..170) */
 /* The control sits under the header, not at the foot of the slide. DS-138 requires the panel to
@@ -638,6 +669,17 @@ svg{display:block}
 .doc .provenance{position:static;text-align:left;font-size:var(--doc-fs-mono);margin-top:var(--doc-sp-lg);letter-spacing:var(--doc-track-mono)}
 .doc .disc{position:static;margin-top:var(--doc-sp-lg)}
 .doc .disc-btn{display:none}
+/* The source list gets the disclosure's treatment for the disclosure's reason: the reading view is
+   a document, not a scaled stage (DS-074), so the box has to leave its absolute placement and its
+   design-unit width, and the control that opens it has nothing left to do once DS-073 opens it. */
+.doc .sources{position:static;display:block}
+.doc .sources-btn{display:none}
+/* `display:block` is load-bearing, not tidying. On the stage the box is absolutely positioned, so
+   it computes to a block whatever its element is; static, a <span> falls back to inline and paints
+   its padding and background in fragments across the line boxes - which reads as debris beside the
+   list rather than as a box, and is what looking at the reading view showed. */
+.doc .sources-box{position:static;display:block;min-width:0;margin-top:var(--doc-sp-xs);
+  box-shadow:none;font-size:var(--doc-fs-sm);white-space:normal}
 /* The stage panel is absolutely positioned at a fixed design-unit width. The reading view is a
    document, not a scaled stage (DS-074), so both have to be undone or it cannot reflow. */
 .doc .disc-panel{position:static;width:auto;max-width:none;font-size:var(--doc-fs-sm);margin-top:0;
@@ -733,6 +775,18 @@ svg{display:block}
      slides only, with the loss stated: the reading view carries all of tier two on screen, so it
      is not lost, only not on paper (T-032). */
   .slide .disc{display:none!important}
+
+  /* The source list answers the same objection the other way, and the reason is the size of what
+     is behind the control. A "3 sources" button on paper advertises something the reader cannot
+     reach - so the button goes; but three titles fit under the mark, where a ten-row panel did
+     not, and paper is where provenance matters most. Static placement also settles DS-223 for this
+     component: nothing absolutely positioned means nothing to scatter across a break. */
+  .slide .sources-btn{display:none!important}
+  .slide .sources-box{display:block!important;position:static;min-width:0;
+    padding:0;border:0;background:none;box-shadow:none;
+    font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+    text-transform:uppercase;text-align:right;color:var(--ink-faint)}
+  .slide .sources-item + .sources-item{margin-top:0;padding-top:0;border:0}
 
   /* ---------------------------------------------------------------- the contents page (T-034)
      Twelve pages of slides arrive with no map: the ruler carries the structure on screen
@@ -860,6 +914,7 @@ svg{display:block}
  <defs>
   <g id="lucide" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
  </defs>
+ <symbol id="i-source" data-icon="file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
  <symbol id="i-wait" data-icon="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
  <symbol id="i-bike" data-icon="bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
  <symbol id="i-bus" data-icon="bus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></symbol>
@@ -890,7 +945,10 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Spend the $5.6M grant on bus frequency, and hold
     $1.5M for bike-share until month 18.</b></p>
-  <p class="provenance">Illustrative model<br>Assumptions on every slide</p>
+  <!-- The title slide's mark carries the deck-wide statement DS-102 requires as well as its own
+       source: a reader who never reaches the colophon still learns the subject is illustrative,
+       and slide 1 is the one slide everybody sees. -->
+  <p class="provenance">Illustrative model<br>Cost model</p>
 </section>
 
 <!-- ============================================================ 5 — two-column ledger (A-04) -->
@@ -946,7 +1004,7 @@ svg{display:block}
     </div>
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Two options, six rows.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src5"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src5" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span><span class="sources-item">Ridership model</span></span></span></p>
 </section>
 
 <!-- ============================================================ 6 — small multiple (A-06) -->
@@ -1020,7 +1078,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The three corridors bike-share wins carry 12,200
     weekday trips; the three frequency wins carry 36,000.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance">Ridership model</p>
 </section>
 
 <!-- ============================================================ 6 — small multiple (A-06) -->
@@ -1094,7 +1152,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The three corridors bike-share wins carry 12,200
     weekday trips; the three frequency wins carry 36,000.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance">Ridership model</p>
 </section>
 
 <!-- ============================================================ 6 — small multiple (A-06) -->
@@ -1168,7 +1226,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The three corridors bike-share wins carry 12,200
     weekday trips; the three frequency wins carry 36,000.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance">Ridership model</p>
 </section>
 
 <!-- ============================================================ 3 — single number (A-03) -->
@@ -1201,7 +1259,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>A Riverbend rider waits 11 minutes on average, and
     both proposals are ways of spending money on that number.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance">Ridership model</p>
 </section>
 
 <!-- ============================================================ 4 — architecture view (A-10) -->
@@ -1261,7 +1319,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Eleven of the 34 minutes are the wait, and the wait
     is half the headway.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance">Ridership model</p>
 </section>
 
 <!-- ============================================================ 2 — why now (A-01) -->
@@ -1319,7 +1377,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The 12 March budget vote is the only meeting
     that can commit the grant before 31 March 2027.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance">Cost model</p>
 </section>
 
 <!-- ============================================================ 7 — trajectory (A-05) -->
@@ -1384,7 +1442,7 @@ svg{display:block}
     </div>
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Bike-share stalls at 3,000 trips and frequency reaches 6,100, as the data shows.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance">Ridership model</p>
 </section>
 
 <!-- ============================================================ 8 — before / after (A-07) -->
@@ -1419,7 +1477,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>A timed connection at Centre removes one change for
     North Line and Market Cross riders.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance">Ridership model</p>
 </section>
 
 <!-- ============================================================ 9 — timeline with a gate (A-09) -->
@@ -1480,7 +1538,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Nothing before month 18 is irreversible, and the
     $2.2M reserve buys 16 Old Quarter stations if the gate fails.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src9"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src9" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span></span></span></p>
 </section>
 
 <!-- ============================================================ 10 — uncomfortable truth (A-12) -->
@@ -1523,7 +1581,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise seeded-throb" style="--i:6"><b>Three corridors wait until month 18, and the general
     fund carries $6.8M every year after.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src10"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src10" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span></span></span></p>
 </section>
 
 <!-- ============================================================ 11 — risk retirement (A-02) -->
@@ -1593,7 +1651,7 @@ svg{display:block}
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Three thresholds are fixed before approval, and each
     is measured on a stated date by someone outside this team.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src11"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src11" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span><span class="sources-item">Ridership model</span></span></span></p>
 </section>
 
 <!-- ============================================================ 12 — close (A-14) -->
@@ -1609,7 +1667,49 @@ svg{display:block}
   <!-- the closing slide uses the same slot as the other eleven, centred rather than left-set:
        the ask is the deliverable, so it belongs where every other deliverable has been. -->
   <p class="bottom-line bottom-line--center rise" style="--i:2"><b>In summary: wait times are long, both options have merit, and frequency looks promising.</b></p>
-  <p class="provenance">Illustrative model</p>
+  <p class="provenance">Cost model</p>
+</section>
+
+<!-- The colophon: DS-085's one named exemption, and DS-082's recorded reason for a thirteenth
+     slide in one place. **Past twelve needs a reason and this is it**: the argument ends on slide
+     12, and a colophon is not part of the argument, so the ask stays the last thing the room is
+     asked to act on. It carries sources and NOTHING else - a second ask, a summary, a thank-you or
+     an appendix here repeals DS-085 by the back door and every deck grows one. It is a colophon
+     and not an appendix; naming it one would put it under DS-087, a different rule. -->
+<section class="slide" data-name="Sources" data-stage="7" aria-label="Slide 13">
+  <header>
+    <p class="eyebrow rise" style="--i:0"><span class="tick"></span>13 &middot; Colophon</p>
+    <h2 class="headline rise" style="--i:1">What this rests on</h2>
+    <p class="standfirst rise" style="--i:2">Three model documents, written for this deck. Nothing here is attributed to a real study, agency or place.</p>
+  </header>
+  <div class="body figwrap rise" style="--i:3">
+    <svg class="fig" viewBox="0 0 1728 420" role="img"
+         aria-label="Three source documents. The cost model carries capital and operating figures for both proposals and is used on slides 1, 2, 5, 9, 10, 11 and 12. The ridership model carries catchment, corridor and elasticity figures and is used on slides 3, 4, 5, 6, 7, 8 and 11. The programme timetable carries dates, durations, thresholds and the review gate and is used on slides 5, 9, 10 and 11.">
+      <g transform="translate(0,60)">
+        <svg class="icon sm" x="0" y="-34" width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-source"/></svg>
+        <text class="name" x="70" y="0">Cost model</text>
+        <text class="lab t-soft" x="70" y="42">Capital and operating figures for both proposals</text>
+        <text class="lab t-faint" x="1728" y="0" text-anchor="end">Slides 1, 2, 5, 9, 10, 11, 12</text>
+      </g>
+      <line class="grid" x1="0" y1="130" x2="1728" y2="130"/>
+      <g transform="translate(0,220)">
+        <svg class="icon sm" x="0" y="-34" width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-source"/></svg>
+        <text class="name" x="70" y="0">Ridership model</text>
+        <text class="lab t-soft" x="70" y="42">Catchment, corridor and elasticity figures</text>
+        <text class="lab t-faint" x="1728" y="0" text-anchor="end">Slides 3, 4, 5, 6, 7, 8, 11</text>
+      </g>
+      <line class="grid" x1="0" y1="290" x2="1728" y2="290"/>
+      <g transform="translate(0,380)">
+        <svg class="icon sm" x="0" y="-34" width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-source"/></svg>
+        <text class="name" x="70" y="0">Programme timetable</text>
+        <text class="lab t-soft" x="70" y="42">Dates, durations, thresholds and the review gate</text>
+        <text class="lab t-faint" x="1728" y="0" text-anchor="end">Slides 5, 9, 10, 11</text>
+      </g>
+    </svg>
+  </div>
+  <p class="bottom-line rise" style="--i:4"><b>Riverbend is illustrative: every figure above is an
+    output of one of these three models.</b></p>
+  <p class="provenance">Illustrative model<br>Assumptions marked on every slide</p>
 </section>
 
 <!-- ============================================================ chrome -->
@@ -1750,7 +1850,7 @@ svg{display:block}
   var DECK = 'Buy frequency before bikes';
 
   /* the deck's argument, lit stage by stage (DS-134) */
-  var STAGES = ['Claim','Why now','The problem','The choice','The evidence','The cost','The ask'];
+  var STAGES = ['Claim','Why now','The problem','The choice','The evidence','The cost','The ask','Colophon'];
   var idx = 0, played = {}, inDoc = false;
 
   /* ---------------------------------------------------------- stage scaling (DS-060/062) */
@@ -1955,9 +2055,39 @@ svg{display:block}
     var panel = d.querySelector('.disc-panel');
     var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(d);
+    closeAllSources(null);
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     panel.hidden = !open;
     if (open) panel.classList.add('opening');
+  }
+
+  /* ------------------------------------------------ sources (DS-105, one open at a time) */
+  /* Its own component and not a .disc - provenance is what the argument rests on rather than tier
+     two (DS-230) - which is why it has its own list and its own toggle. It shares the precedence
+     rule with the disclosure because a reader has one attention whatever the content is (DS-137). */
+  var srcs = Array.prototype.slice.call(stage.querySelectorAll('.sources'));
+  srcs.forEach(function(s){
+    var box = s.querySelector('.sources-box');
+    s.querySelector('.sources-btn').addEventListener('click', function(){ toggleSources(s, null); });
+    box.addEventListener('animationend', function(){ box.classList.remove('opening'); });
+  });
+
+  function closeAllSources(except){
+    srcs.forEach(function(s){
+      if (s === except) return;
+      s.querySelector('.sources-btn').setAttribute('aria-expanded','false');
+      s.querySelector('.sources-box').hidden = true;
+    });
+  }
+  function toggleSources(s, force){
+    var btn = s.querySelector('.sources-btn');
+    var box = s.querySelector('.sources-box');
+    var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
+    closeAllDiscs(null);
+    closeAllSources(s);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    box.hidden = !open;
+    if (open) box.classList.add('opening');
   }
 
   /* ---------------------------------------------------------- navigation */
@@ -1965,6 +2095,7 @@ svg{display:block}
     i = Math.max(0, Math.min(slides.length - 1, i));
     idx = i;
     closeAllDiscs(null);
+    closeAllSources(null);
     slides.forEach(function(s, n){
       var cur = n === i;
       if (cur) { s.setAttribute('data-current',''); } else { s.removeAttribute('data-current'); }
@@ -2021,7 +2152,7 @@ svg{display:block}
       var d = slides[idx].querySelector('[data-disc]');
       if (d) { toggleDisc(d, null); e.preventDefault(); }
     }
-    else if (k === 'Escape')                                      { closeAllDiscs(null); }
+    else if (k === 'Escape')                        { closeAllDiscs(null); closeAllSources(null); }
     else if (k === 'r' || k === 'R')                              { setView(true); e.preventDefault(); }
     else if (k === 'm' || k === 'M')                              { setMotion(root.dataset.motion === 'off'); }
     else if (k === 't' || k === 'T')                              { setTheme(root.dataset.theme === 'light' ? 'dark' : 'light'); }
@@ -2076,6 +2207,10 @@ svg{display:block}
         var src = s.querySelector('.disc-label');
         lead.textContent = src ? src.textContent : 'Detail';
         p.parentNode.insertBefore(lead, p);
+      });
+      /* the source list travels opened too - same rule, same reason (DS-073) */
+      Array.prototype.forEach.call(c.querySelectorAll('.sources-box'), function(b){
+        b.hidden = false;
       });
       Array.prototype.forEach.call(c.querySelectorAll('[id]'), function(n){ n.id = 'doc-' + n.id; });
       Array.prototype.forEach.call(c.querySelectorAll('[aria-controls]'), function(n){

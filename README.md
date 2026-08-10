@@ -90,10 +90,10 @@ python tools/deck/check.py examples/reference-deck.html
 
 ```
   owned by a gate      113
-  checked               81
+  checked               82
   failing                0
   excused in the rules   4   DS-042 DS-072 DS-210 DS-211
-  excused here          28
+  excused here          27
   undecided, no subject  0
   SILENT                 0
   ------------------------
@@ -102,8 +102,8 @@ python tools/deck/check.py examples/reference-deck.html
 0 failure(s): none
 ```
 
-**Read the account, not just the failure count.** A gate that checks 81 of 113 rules and says nothing
-about the other 32 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each
+**Read the account, not just the failure count.** A gate that checks 82 of 113 rules and says nothing
+about the other 31 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each
 run **checked**, **excused in writing** (with what would close the excusal), or **failing**, and a
 rule in none of those three states *fails the run*. So a rule added to the ruleset with nothing behind
 it is a red run the same afternoon, not a discovery two months later.
@@ -182,8 +182,9 @@ confident wrong answer four times. The other three commands read files and need 
 
 ## The reference deck
 
-[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides, **221 KB in one file,
-zero external references**, three embedded typefaces, nine icons and seven hand-written SVG figures.
+[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **231 KB
+in one file, zero external references**, three embedded typefaces, ten icons and eight hand-written
+SVG figures.
 Download it, disconnect, double-click it. Every measurement behind it, and how to reproduce each, is
 in [`examples/README.md`](examples/README.md).
 

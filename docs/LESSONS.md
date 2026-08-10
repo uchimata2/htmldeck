@@ -1217,6 +1217,33 @@ the missing check; it does not find the check that cannot run.
 
 ## Tooling
 
+### L-56 — A reading tool's rendering is not the file's bytes, and a one-character defect needs two readers
+
+Found on 2026-08-10 during [T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md).
+A search tool's context output showed a CSS comment opening `\*` instead of `/*` — which would be a
+real and nasty defect, because `\*` is a valid CSS escape, so the parser reads the comment text as a
+selector and **swallows the rule beneath it**, leaving a declaration that matches nothing. The
+mechanism was worked out, the consequence traced to a live rule, and a fix task raised.
+
+**The file was correct.** The backslash was the tool's own escaping in its context display, not a
+byte in the file. Reading the same line with a second tool — and with `git show HEAD:` — printed
+`/*` both times, and the task was deleted.
+
+The trap is specific and worth naming: a plausible mechanism makes a rendering artifact **more**
+convincing, not less. The reasoning about `\*` was correct CSS; it was just about a character that
+was not there. Nothing in the tool's output says *this is escaped*, and the defect it appeared to
+show was exactly the kind this project has found before (**L-15** is the same shape one instrument
+along — a screenshot is a poor instrument for a two-pixel judgement).
+
+**How to apply.**
+
+1. **Before writing down a defect whose evidence is one character, read it with a second tool.**
+   `Select-String`, `git show HEAD:<path>`, `Format-Hex` — anything with different escaping.
+2. **Prefer the version-control reader for "was this always wrong?"** `git show` answers the
+   provenance question and the byte question in one command.
+3. **This does not apply to defects of substance** — a missing row, a wrong number, an absent
+   attribute. It applies where the claim rests on punctuation a tool might have escaped.
+
 ### L-26 — Measure the content, not the box; and pin motion before capturing
 
 Two measurement traps, both hit while validating one deck, both of which return a confident clean
