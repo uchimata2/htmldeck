@@ -34,7 +34,6 @@ happened.
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.3` | `proposed` | `specify` | T-016 | - | - | - | T-007, T-016, T-019, T-033 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060 |
 | [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | T-069 | - | T-019, T-069, T-071 |
-| [T-076](T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | A verdict producer that exits the process instead of reporting a row | `v0.2` | `proposed` | `specify` | - | - | - | - | T-075 |
 | [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns list closed tasks, so open rows read as blocked | `v0.2` | `in_progress` | `implement` | - | - | - | - | T-031, T-062, T-063, T-073, T-080, T-081 |
 | [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | - | - | T-063, T-073, T-079, T-081 |
 | [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) | The installed taskmd is two minor versions behind, so the gates run rules that have been superseded | `v0.2` | `proposed` | `specify` | - | - | - | - | T-062, T-073, T-079, T-080 |
@@ -113,6 +112,7 @@ happened.
 | [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `done` | `review` | - | - | - | - | T-062, T-063, T-074, T-077, T-079, T-080, T-081 |
 | [T-074](T-074-the-documented-render-command-does-not-exist.md) | The documented render command does not exist, and the tools write into their own install | `v0.1` | `done` | `review` | - | - | - | - | T-073 |
 | [T-075](T-075-ds-064-probes-for-the-reference-decks-own-class-names.md) | DS-064 probes for the reference deck's own class names, and contract.py is outside the fixture | `v0.1` | `done` | `review` | - | - | - | - | T-051, T-065, T-066, T-076, T-083 |
+| [T-076](T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | A verdict producer that exits the process instead of reporting a row | `v0.2` | `done` | `review` | - | - | - | - | T-075 |
 | [T-077](T-077-report-a-figure-exclusion-that-outlived-its-numeral.md) | Report a figure exclusion that outlived the numeral it was written for | `v0.2` | `done` | `review` | - | - | - | - | T-060, T-073 |
 | [T-078](T-078-write-down-the-release-sequence.md) | Write down the release sequence, which lives only in four task logs | `v0.2` | `done` | `review` | - | - | - | - | T-008, T-056, T-084 |
 

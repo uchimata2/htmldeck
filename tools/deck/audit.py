@@ -1876,10 +1876,12 @@ def self_test():
     sweep_rows = [Measurement(r) for r in contract.nothing_found_rows()]
     rows += contract.verdicts(sweep_rows)
     rows += contract.scale_verdicts_from(contract.nothing_found_results())
-    # `contrast.verdicts` refuses a document with no `:root` colour tokens outright - it exits the
-    # process rather than returning a row - so the empty document is not its absent subject. A
-    # theme with nothing to measure against it is.
-    rows += contrast.verdicts(":root{--ink:#111111;--paper:#ffffff}")
+    # `contrast.verdicts` used to refuse a document with no `:root` colour tokens outright - it
+    # exited the process rather than returning a row - so it was handed a theme with nothing to
+    # measure instead of the empty document every other producer is held to. T-076 moved the refusal
+    # into `contrast.main`, where a tool declining to run belongs, and it now takes the same subject
+    # as the rest. Its four rows fail on it, exactly as they did on the hand-built theme.
+    rows += contrast.verdicts("")
     rows += theme.verdicts("") + component.verdicts("")
     rows += printpages.verdicts("", 0)
     # `spec.verdicts` reads the two specification documents rather than the deck, so its absent

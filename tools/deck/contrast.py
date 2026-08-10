@@ -98,8 +98,14 @@ def read_tokens(html):
         dark = dict(light)
         dark.update({m.group(1): m.group(2) for m in TOKEN.finditer(dk.group(1))})
 
-    if not light:
-        sys.exit("no :root colour tokens found - is this a deck?")
+    # **A document with no tokens is reported, not refused** (T-076). This used to
+    # `sys.exit("no :root colour tokens found - is this a deck?")`, which took the whole gate with
+    # it: `contrast.verdicts` is called by `check.py` alongside every other stage, so a deck with a
+    # broken theme got no account at all - no failing row, no partition, none of the excusals - just
+    # a sentence and a non-zero status. That is the opposite of what the coverage account exists to
+    # guarantee, and it was invisible on every deck anyone had run, because they all have a theme.
+    # The four rows below already fail correctly on nothing, and `ABSENCE_IS_A_FAIL` already says
+    # why in writing. A tool refusing to run belongs in `main`, and that is where it is now.
     return {"light": light, "dark": dark or dict(light), "darkDeclared": bool(dk)}
 
 
@@ -228,6 +234,12 @@ def main(path):
     self_test()
     html = open(path, "r", encoding="utf-8").read()
     print("contrast audit - %s" % os.path.basename(path))
+    # Refusing belongs here and not in `verdicts` (T-076): this command is a person pointing the
+    # tool at a file, and telling them the file is not a deck is the useful answer. `check.py` asks
+    # the same question of the same document and needs a row, not an exit.
+    if not read_tokens(html)["light"]:
+        sys.exit("no :root colour tokens found - is this a deck? "
+                 "(`check.py` reports this as DS-013 rather than stopping)")
     failures = audit(html)
     print("\n%d failure(s)" % len(failures))
     for theme, label, fg, bg, r, need in failures:
