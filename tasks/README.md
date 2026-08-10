@@ -35,7 +35,8 @@ happened.
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `proposed` | `specify` | - | - | - | T-060 |
 | [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | - | T-019, T-069, T-071 |
 | [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | - | T-063, T-073, T-079, T-081 |
-| [T-086](T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) | Check that every figure ledger row appears on the slides its Used on names | `v0.2` | `proposed` | `specify` | - | - | - | T-071, T-082 |
+| [T-086](T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) | Check that every figure ledger row appears on the slides its Used on names | `v0.2` | `proposed` | `specify` | - | - | - | T-071, T-082, T-087 |
+| [T-087](T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) | Sweep the reference deck's figure ledger for the pattern T-082 found | `v0.2` | `proposed` | `specify` | - | - | - | T-082, T-086 |
 
 ## Closed
 
@@ -113,7 +114,7 @@ happened.
 | [T-078](T-078-write-down-the-release-sequence.md) | Write down the release sequence, which lives only in four task logs | `v0.2` | `done` | `review` | - | - | - | T-008, T-056, T-084, T-085 |
 | [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns list closed tasks, so open rows read as blocked | `v0.2` | `done` | `review` | - | - | - | T-031, T-062, T-063, T-073, T-080, T-081 |
 | [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) | The installed taskmd is two minor versions behind, so the gates run rules that have been superseded | `v0.2` | `done` | `review` | - | - | - | T-062, T-073, T-079, T-080 |
-| [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) | The worked example's figure ledger omits figures that reach slides, so the ledger cannot be the authority it is treated as | `v0.2` | `done` | `review` | - | - | - | T-071, T-086 |
+| [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) | The worked example's figure ledger omits figures that reach slides, so the ledger cannot be the authority it is treated as | `v0.2` | `done` | `review` | - | - | - | T-071, T-086, T-087 |
 | [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) | The generated example deck fails a hard rule and nothing recorded it | `v0.1` | `done` | `review` | - | - | - | T-021, T-071, T-075, T-084, T-085 |
 | [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed | `v0.2` | `done` | `review` | - | - | - | T-036, T-069, T-078, T-083 |
 | [T-085](T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md) | The reference deck does not carry the shell it defines, and its sprite is out of sync | `v0.1` | `done` | `review` | - | - | - | T-069, T-071, T-078, T-083 |
