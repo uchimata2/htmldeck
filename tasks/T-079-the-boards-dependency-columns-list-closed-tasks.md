@@ -85,9 +85,10 @@ recoverable from the closed task's own row and from front-matter either way.
       — an unfixed defect with a reason is a different state from a forgotten one.
 
 **Open questions**
-- Drop the closed dependency from the cell, or keep it marked (struck through, or suffixed)? T-031
-  dropped it. Marking preserves the graph on the page at the cost of a busier column — the project
-  owner decides, and the proposal carries whichever.
+- ~~Drop the closed dependency from the cell, or keep it marked?~~ **Settled 2026-08-10 by the owner:
+  drop it, as T-031 did.** The proposal carries that and no alternative. Kept struck through rather
+  than deleted, because the rival is what makes the decision legible to whoever reads the proposal
+  upstream.
 
 ## 2. Plan
 
@@ -101,7 +102,13 @@ recoverable from the closed task's own row and from front-matter either way.
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **Drop the closed dependency from the cell rather than marking it** — the owner's, 2026-08-10, as
+  recommended. Three reasons, in the order they carry weight upstream: this project already decided
+  it once in [T-031](T-031-stop-the-index-blocks-column-listing-closed-tasks.md) and a precedent is
+  a stronger proposal than a preference; the graph is not lost, since the closed task's own row and
+  both front-matters still carry the edge; and a mark is a rendering rule taskmd would have to
+  maintain for a fact no reader of the board is asking for. **The cell is for what gates the task,
+  and nothing else does.**
 
 **Outputs produced**
 - <none yet>
@@ -119,4 +126,5 @@ recoverable from the closed task's own row and from front-matter either way.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (specify) | **The one open question closed by the owner, as recommended: drop, not mark.** Step 1 of the plan is done and the reason is in §3. What remains is the proposal itself and sending it — the change is upstream's to make, so this task cannot close on a green run here. |
 | 2026-08-10 | → proposed | Raised by the owner from a status review that found the board and `taskmd list --open` disagreeing about three rows. `medium` because it misleads exactly the reader the board exists for and the cost is one column, not because anything is broken downstream — the sort is already right; `s` because the decision is small, the precedent is written, and the change itself is upstream's. `v0.2` under the release split set the same day: a minor fix. |
