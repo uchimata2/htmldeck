@@ -1,9 +1,19 @@
-# Publishing — the humanizing rule
+# Publishing
 
-The detail behind [`../CLAUDE.md`](../CLAUDE.md) *Publishing constraints*, fourth bullet. That bullet
-is the rule; this document is what it means in practice — the covered-set test, the exclusions with
-their reasons, the owner's exception verbatim, and the boundary against
-[`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) §3.3.
+**Shipping a release: §8. The humanizing rule: §1 to §7.** Those two subjects are one document
+because a release is where the rule binds, and splitting them is how the rule came to be cited from
+three places.
+
+§1 to §7 are the detail behind [`../CLAUDE.md`](../CLAUDE.md) *Publishing constraints*, fourth
+bullet. That bullet is the rule; those sections are what it means in practice — the covered-set test,
+the exclusions with their reasons, the owner's exception verbatim, and the boundary against
+[`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) §3.3. §8 is the sequence around it, which lived only in task
+logs until 2026-08-10.
+
+*The section numbers were not renumbered when §8 was added, and will not be: `PUBLISHING.md §2`,
+`§3` and `§6` are cited from two task records, and renumbering silently falsifies every one of them
+(`TASK-WORKFLOW.md` §6.1). §8 goes at the end even though it is the part read first — the pointer
+above is how that is resolved.*
 
 **This document is agent-facing and is not covered by its own rule** — see §7.
 
@@ -153,3 +163,53 @@ Agent-facing, by §3, and therefore **not** covered by §2's test. It is a worki
 prepares a release, not by a stranger choosing whether to install. Its density, its bolded labels and
 its tables are deliberate, and a humanizer pass over it is a defect on exactly the same terms as one
 over `SKILL.md`.
+
+---
+
+## 8. The release sequence
+
+Seven steps, in order, each with what proves it was done. Written down on 2026-08-10 after `v0.1.4`
+shipped: four releases had each re-derived the same sequence from the last one's commits, which works
+until the person doing it is not the person who did it last.
+
+| # | Step | What proves it |
+| :-- | :--- | :--- |
+| 1 | **Every gate green** — the whole set, not the routine one | Each command's own verdict line. See *the gate list* below, which is the step that has already gone wrong |
+| 2 | **Bump the version** in `.claude-plugin/plugin.json`, `CLAUDE.md` and `README.md` | Three files carry it; a grep for the outgoing version returns nothing outside `docs/BRIEF.md`'s history |
+| 3 | **Humanize the human-facing set** (§2's test), then re-run `python tools/docs/figures.py` and re-paste the `volatile` block from `--values` | `0 stale figure(s)`. §6 is why: a rewrite that re-derives a number from memory is a defect, not a style improvement |
+| 4 | **Read the prose around the figures** | Nothing. **This is the step no gate covers** — `v0.1.4` found a spelled-out fixture count and a defect tally that had both gone false while every pasted figure was correct (**L-05**) |
+| 5 | **Commit, tag `vX.Y.Z`, push both** | `git push origin master --tags`, and the tag on the remote |
+| 6 | **`gh release create`**, with a note written to §2's test | The published release page. A release note is read before installing, so §2 covers it — it is not an exception to the rule, it is an instance of it |
+| 7 | **Record the shipping version** in each closed task's log and in [`BRIEF.md`](BRIEF.md) | The version appears in the record without anyone reconstructing it later, which is the failure this whole section exists for |
+
+**The gate list is an enumeration, and it is declared as one.**
+
+```
+python tools/tasks/lint.py                                     # index, check, refcheck
+python tools/docs/figures.py                                   # every figure the README pastes
+python tools/deck/ruleset.py --counts                          # the ruleset's own arithmetic
+python tools/plugin/check_scaffold.py                          # the plugin manifest
+python tools/deck/static_variants.py                           # the seeded-defect suite
+python tools/deck/contents_bound.py                            # the contents-page bound
+python tools/deck/shell.py check <deck>                        # per deck, both examples
+python tools/deck/component.py check <deck>
+python tools/deck/theme.py check <deck>
+python tools/deck/check.py <deck> --sources <dir>
+python tools/deck/spec.py <deck>.foundation.md <deck>.slides.md
+```
+
+**It has already failed, which is why it is declared rather than trusted.** The README prints five
+commands and that set was treated as the list. Writing this section meant running everything in it,
+and **three checks outside the printed five were red on 2026-08-10**: the shared shell was stale on
+`examples/sort-window/`, a `hard` rule was failing on the same deck
+([T-083](../tasks/T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md)),
+and `contents_bound.py` refused to start at all
+([T-084](../tasks/T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md)). None of
+the three would have been found by running the printed five, and each had been red since the day a
+task changed a deck without running the checks that read it.
+
+**What closes the excusal:** one command that runs every checker under `tools/` and reports which it
+ran and which it skipped **with a reason** — the partition [`figures.py`](../tools/docs/figures.py)
+already applies to fences and [`check.py`](../tools/deck/check.py) to rules. Until that exists, a list
+kept by hand is what there is, and a list kept by hand goes stale silently — which is §2's own
+argument about the covered set, one document over.

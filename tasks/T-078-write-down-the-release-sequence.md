@@ -2,8 +2,8 @@
 id: T-078
 title: Write down the release sequence, which lives only in four task logs
 type: admin
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-008, T-056]
@@ -67,10 +67,9 @@ The steps, as actually performed, so the task starts from a record rather than f
 - [ ] `CLAUDE.md` points at it, since that is where someone looks for the project's rules
 
 **Open questions**
-- **Retitle `PUBLISHING.md`, or add a file?** Recommended: retitle. A second document about
-  publishing is how the humanizing rule ended up cited from three places, and the existing one is
-  already the file everyone opens for this. The rival is a `RELEASING.md`, which keeps the rule
-  document short but splits one subject across two files.
+- ~~**Retitle `PUBLISHING.md`, or add a file?**~~ **Settled 2026-08-10: retitle, as recommended.**
+  The rival, a `RELEASING.md`, keeps the rule document short and splits one subject across two files,
+  which is the failure the recommendation names.
 
 ## 2. Plan
 
@@ -83,22 +82,53 @@ The steps, as actually performed, so the task starts from a record rather than f
 ## 3. Implement
 
 **Decisions & assumptions**
-- <pending>
+- **Retitle to `# Publishing`, and the sequence becomes §8** — 2026-08-10, as recommended. **§1–§7
+  keep their numbers**: `PUBLISHING.md §2`, `§3` and `§6` are cited from T-008 and T-060, and
+  renumbering falsifies all eight citations silently, which is `TASK-WORKFLOW.md` §6.1's own case.
+  So the part read first sits at the end, and the preamble carries a pointer to it — the cost of
+  citation stability, paid deliberately and written down as such.
+- **The gate list is declared, not derived** — 2026-08-10, taking the second half of criterion 2.
+  Deriving it needs a tool that runs every checker under `tools/` and reports what it skipped with a
+  reason, and building that is out of scope by §1. What is written instead is the list, the fact that
+  it has already failed, and the condition that closes the excusal — the same partition
+  `figures.py` applies to fences.
+
+**And writing it down was not a formality: three of the eleven were red.** The section was written by
+running every command it names, which is the only honest way to write a list of gates, and it found:
+
+| Command | State on 2026-08-10 | Since |
+| :--- | :--- | :--- |
+| `shell.py check examples/sort-window/…` | red — shared shell stale | T-069, the same day |
+| `check.py examples/sort-window/… --sources` | red — DS-064 at 15.0 px | before `d80e0c3` |
+| `contents_bound.py` | **refused to start** — fixture counts 12 boxes, the deck builds 13 | T-069's commit, measured by checking the deck out either side of it |
+
+The first was fixed in [T-071](T-071-the-intermediate-specifications-carry-their-references.md); the
+other two are [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md)
+and [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md). **Every one was
+outside the five commands the README prints**, which is precisely the enumeration this task was
+asked to justify or replace.
 
 **Outputs produced**
-- <pending>
+- [`docs/PUBLISHING.md`](../docs/PUBLISHING.md) — retitled, a pointer in the preamble, and §8: the
+  seven steps with what proves each, the declared gate list, and what closes its excusal.
+- [`CLAUDE.md`](../CLAUDE.md) — *Publishing constraints* opens by pointing at §8.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The sequence is in one document, in order, with each step naming what proves it | met | §8's table. Step 4 names *nothing* as its proof, deliberately — it is the step no gate covers, and saying so is the point of listing it. |
+| The gate list is derived, or its enumeration is declared with what would close the excusal | met, declared | Eleven commands, the three that were red, and the closing condition: one command that runs every checker under `tools/` and reports what it skipped with a reason. |
+| Nothing restates the humanizing rule; it points at §2 and §6 | met | Step 3 and step 6 both point; neither repeats the test or the exception. |
+| `CLAUDE.md` points at it | met | First line of *Publishing constraints*, before the four bullets, because the sequence is what someone arrives looking for. |
 
 **Child fix tasks raised**
-- <pending>
+- [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) — `contents_bound.py`
+  has refused to start since T-069 changed the reference deck.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | → done | The sequence is `PUBLISHING.md` §8 and the document is retitled. **The task justified itself while being done**: running the eleven commands it was about to write down found three red, all outside the five the README prints, and one of them refusing to start. A list of gates written without running them would have been a list of gates that had not been run — which is the same defect as the release sequence living in four task logs, one altitude up. §1–§7 keep their numbers so eight citations from T-008 and T-060 stay true, and the cost of that is a preamble pointer to the part read first. |
 | 2026-08-10 | → proposed | Raised while shipping `v0.1.4`, which was performed from precedent because nothing states the sequence. `v0.2` rather than `v0.1`: no adopter is affected and the releases have all shipped correctly, but each one has re-derived the same seven steps and the fourth of them is the one a gate cannot cover. |

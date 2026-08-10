@@ -89,6 +89,10 @@ enforce it at build time rather than hoping.
 
 ## Publishing constraints
 
+**The steps of a release, in order, are [`docs/PUBLISHING.md`](docs/PUBLISHING.md) §8** — including
+the gate list, which is an enumeration that has already missed two red checks. Do not re-derive the
+sequence from the last release's commits; that is what §8 was written to stop.
+
 This repository goes to GitHub. Everything written here must be:
 
 - **Free of personal, client and machine data.** The source corpus is training work for real
