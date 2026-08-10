@@ -28,7 +28,7 @@ happened.
 | ID | Title | Work Package | Status | Phase | Parent | Children | Blocked By | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `v0.3` | `proposed` | `specify` | - | - | T-002 | - | T-005, T-017, T-041, T-057, T-070 |
-| [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `v0.2` | `proposed` | `specify` | T-034 | - | - | - | T-005, T-034, T-042, T-084 |
+| [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `v0.2` | `proposed` | `specify` | T-034 | - | T-084 | - | T-005, T-034, T-042, T-084 |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.3` | `proposed` | `specify` | - | - | - | - | T-005, T-016, T-019, T-042 |
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `v0.3` | `proposed` | `specify` | T-053 | - | - | - | T-005, T-037, T-043, T-051 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.3` | `proposed` | `specify` | T-016 | - | - | - | T-007, T-016, T-019, T-033 |
@@ -39,7 +39,7 @@ happened.
 | [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) | The installed taskmd is two minor versions behind, so the gates run rules that have been superseded | `v0.2` | `proposed` | `specify` | - | - | - | - | T-062, T-073, T-079, T-080 |
 | [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) | The worked example's figure ledger omits figures that reach slides, so the ledger cannot be the authority it is treated as | `v0.2` | `proposed` | `specify` | - | - | - | - | T-071 |
 | [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) | The generated example deck fails a hard rule and nothing recorded it | `v0.2` | `proposed` | `specify` | - | - | - | - | T-021, T-071, T-075, T-084 |
-| [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed | `v0.2` | `proposed` | `specify` | - | - | - | - | T-036, T-069, T-078, T-083 |
+| [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed | `v0.2` | `proposed` | `specify` | - | - | - | T-036 | T-036, T-069, T-078, T-083 |
 
 ## Closed
 
