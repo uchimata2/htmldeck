@@ -32,6 +32,7 @@ import content                                                      # noqa: E402
 # the same bar since T-075 - not for anything this module's own rows measure.
 import component                                                    # noqa: E402
 import printpages                                                   # noqa: E402
+import spec                                                         # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -1881,6 +1882,12 @@ def self_test():
     rows += contrast.verdicts(":root{--ink:#111111;--paper:#ffffff}")
     rows += theme.verdicts("") + component.verdicts("")
     rows += printpages.verdicts("", 0)
+    # `spec.verdicts` reads the two specification documents rather than the deck, so its absent
+    # subject is a pair of empty ones - no source list, no slide, no ledger. It is the first
+    # producer here that `check.py` does not consume, and it is held to the same bar anyway: the
+    # discipline is about rows nobody makes choose between undecided and satisfied, not about which
+    # command happens to print them (T-071).
+    rows += spec.verdicts("", "")
     modelled_sweep = set(contract.PROBE_FOUND_NOTHING) | {"vw", "vh", "want"}
     unmodelled_sweep = sorted(set().union(*[r.read for r in sweep_rows]) - modelled_sweep)
     if unmodelled_sweep:
@@ -1899,7 +1906,7 @@ def self_test():
     exercised = {"audit.render_verdicts", "audit.split_verdicts", "audit.provenance_verdicts",
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
-                 "printpages.verdicts"}
+                 "printpages.verdicts", "spec.verdicts"}
     producers = verdict_producers()
     undeclared_producers = sorted(set(producers) - exercised - set(DELEGATING_PRODUCERS))
     if undeclared_producers:

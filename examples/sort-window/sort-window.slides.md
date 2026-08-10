@@ -1,6 +1,6 @@
 # Move the window, not the fleet — slide-by-slide specification
 
-Expanded from the outline in `sort-window.foundation.md`, page by page. Seven fields per slide.
+Expanded from the outline in `sort-window.foundation.md`, page by page. Nine fields per slide.
 
 Stages, in order: **Claim · Why now · The failure · The cause · The evidence · The cost · The ask.**
 
@@ -24,6 +24,7 @@ bottom line in the outline to be the one that ships.
 - **Visuals.** None. A manifesto line that shares the stage is not one.
 - **Animations.** Rise, five steps.
 - **Interactive elements.** None.
+- **Sources.** none
 
 ## Slide 2 — The slot closes on 19 September
 
@@ -41,6 +42,7 @@ bottom line in the outline to be the one that ships.
 - **Interactive elements.** Disclosure, `data-disc="scope"` — *What the eight weeks covers*: the
   slot request and the carrier's confirmation window, and what is not in it — the crew hire, which
   runs on a six-week lead and is not on the critical path.
+- **Sources.** service-calendar
 
 ## Slide 3 — One parcel in eight arrives late
 
@@ -55,6 +57,7 @@ bottom line in the outline to be the one that ships.
 - **Animations.** Rise, two steps. Pulse-once on the figure.
 - **Interactive elements.** Disclosure, `data-disc="derivation"` — *How the rate is measured*:
   numerator, denominator, the 31 working days, and the three exclusions.
+- **Sources.** throughput-model
 
 ## Slide 4 — The failure is seasonal, not structural
 
@@ -72,6 +75,7 @@ bottom line in the outline to be the one that ships.
   the frame and labels.
 - **Interactive elements.** Disclosure, `data-disc="scope"` — *What this line includes*: working
   days only, the excluded fortnight, and why January is not on it yet.
+- **Sources.** throughput-model
 
 ## Slide 5 — Sorting ends an hour late
 
@@ -91,6 +95,7 @@ bottom line in the outline to be the one that ships.
 - **Interactive elements.** Disclosure, `data-disc="derivation"` — *Where 01:59 comes from*: 7,200
   parcels at 3,100 an hour is 2h 19m, sorting cannot start before the trunk is unloaded, and 23:40
   plus 2h 19m is 01:59.
+- **Sources.** throughput-model
 
 ## Slide 6 — Loading order, not distance
 
@@ -107,6 +112,7 @@ bottom line in the outline to be the one that ships.
 - **Animations.** Rise, staggered left to right, which is the loading order the slide is about.
 - **Interactive elements.** Disclosure, `data-disc="instances"` — the four districts in full: round
   count, departure time, and the round that leaves last on 27 of 31 peak nights.
+- **Sources.** throughput-model
 
 ## Slide 7 — One edge moves: the arrival
 
@@ -126,6 +132,7 @@ bottom line in the outline to be the one that ships.
 - **Interactive elements.** Disclosure, `data-disc="condition"` — *What has to hold*: the carrier
   meets the earlier slot on 95% of nights, which is its own contractual floor, and the 02:30 second
   cut-off covers the other 5%.
+- **Sources.** throughput-model, fleet-and-cost-model
 
 ## Slide 8 — The same measure after: 2.4%
 
@@ -143,6 +150,7 @@ bottom line in the outline to be the one that ships.
 - **Interactive elements.** Disclosure, `data-disc="derivation"` — *How 2.4% is projected*: the sort
   finish moves to 00:09, the 84% band closes, the 16% loading band is unchanged, and volume, sort
   rate and district sequence are held constant.
+- **Sources.** throughput-model, fleet-and-cost-model
 
 ## Slide 9 — Nine vans reach one sixth
 
@@ -161,6 +169,7 @@ bottom line in the outline to be the one that ships.
 - **Interactive elements.** Disclosure, `data-disc="derivation"` — the cost build-up on both sides:
   nine vans at capital and running cost, and the $140k slot premium plus the $170k six-person crew
   that make $310k.
+- **Sources.** throughput-model, fleet-and-cost-model
 
 ## Slide 10 — Six people work at 02:30
 
@@ -179,6 +188,7 @@ bottom line in the outline to be the one that ships.
 - **Interactive elements.** Disclosure, `data-disc="condition"` — *When this goes wrong*: the slot
   is missed on more than 5% of nights, peak volume passes 31,900, or the sorter drops below 3,100 an
   hour.
+- **Sources.** throughput-model, fleet-and-cost-model
 
 ## Slide 11 — $120k waits for January
 
@@ -195,6 +205,7 @@ bottom line in the outline to be the one that ships.
 - **Animations.** Rise on the timeline. Pulse-once on the gate.
 - **Interactive elements.** Disclosure, `data-disc="condition"` — *What the gate measures*: peak
   miss rate over the 31 peak working days, on slide 3's definition, read at the January board.
+- **Sources.** fleet-and-cost-model, service-calendar
 
 ## Slide 12 — Approve the slot by 19 September
 
@@ -219,3 +230,5 @@ bottom line in the outline to be the one that ships.
 | :-- | :--- | :--- | :--- |
 | 1 | Slide 8 sets 12.4% struck through above 2.4%. | DS-045 forbids an unscoped rule on a bare element, so `<s>` or a bare `<del>` fails the gate; a class is composition and passes. | Draw it as a class in `<style id="slides">`. Taken at build time if unanswered. |
 | 2 | Slide 9's fleet column states its assumption in the board's own words. | A ledger with one straw-man column fails A-04 the way X-03 records, and the fix is editorial rather than structural. | Keep the wording. Revisit only if the build review scores D1 below 3. |
+- **Sources.** fleet-and-cost-model, service-calendar
+

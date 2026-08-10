@@ -47,7 +47,14 @@ reading `$310k` and nothing else is the row a board argues about for ten minutes
 
 ## Sources and the figure ledger
 
-Three source documents, in `sources/`. This is not a presentation-only run.
+Three source documents, in `sources/`. This is not a presentation-only run. Each file is its slug
+plus `.md` inside that directory, so no row below repeats the path.
+
+| Slug | Source | What it carries |
+| :--- | :--- | :--- |
+| throughput-model | Throughput model | Volumes, miss rates, the sorter's rate, and the night the second trunk lands |
+| fleet-and-cost-model | Fleet and cost model | Both proposals costed, the vans, and the slot movement they are compared against |
+| service-calendar | Service calendar | Dates, notice periods and the contractual miss threshold |
 
 | Figure | Value | Origin | Used on |
 | :--- | :--- | :--- | :--- |
@@ -59,7 +66,7 @@ Three source documents, in `sources/`. This is not a presentation-only run.
 | Second trunk sort finishes | 01:59 | throughput-model | 5, 7 |
 | Outbound cut-off | 01:00 | throughput-model | 5, 7 |
 | Second trunk parcels | 7,200 | throughput-model | 5 |
-| Sort rate | 3,100 | throughput-model | 5 |
+| Sort rate | 3,100 | throughput-model | 5, 10 |
 | Peak daily volume | 27,600 | throughput-model | 3 |
 | District miss rates | 4.1 / 11.2 / 15.9 / 18.7% | throughput-model | 6 |
 | District distances | 9 / 14 / 6 / 11 miles | throughput-model | 6 |
@@ -74,7 +81,7 @@ Three source documents, in `sources/`. This is not a presentation-only run.
 | Projected peak miss rate | 2.4% | fleet-and-cost-model | 8, 11, 12 |
 | Carrier reliability floor | 95% | fleet-and-cost-model | 7, 10 |
 | Proposed trunk arrival | 21:50 | fleet-and-cost-model | 7, 12 |
-| Proposed second cut-off | 02:30 | fleet-and-cost-model | 7, 12 |
+| Proposed second cut-off | 02:30 | fleet-and-cost-model | 7, 10, 12 |
 | Held to the January review | $120k | fleet-and-cost-model | 11 |
 | Contractual miss threshold | 4% | service-calendar | 11 |
 | Decision date | 19 September | service-calendar | 2, 12 |

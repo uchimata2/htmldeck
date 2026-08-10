@@ -56,8 +56,17 @@ everything below is a selection from a standing catalogue.>
 
 ## Sources and the figure ledger
 
-<Omit the table when no sources were supplied, and say so in one line — a presentation-only run
-is a legitimate state, and it has to be visible as one.>
+<Omit both tables when no sources were supplied, and say so in one line — a presentation-only run
+is a legitimate state, and it has to be visible as one. Otherwise name the directory they were
+read from, once, here: a file is `<slug>.md` inside it, so no row repeats the path.>
+
+| Slug | Source | What it carries |
+| :--- | :--- | :--- |
+
+<One row per source document. **`Slug` is the join**: it is what the ledger's `Origin` already
+uses and what each slide names. **`Source` is what the deck displays** in the provenance mark, so
+it is written the way it should be read — `Cost model`, not `cost-model`. A reader of the
+foundation alone can now say what the deck rests on without opening the directory.>
 
 | Figure | Value | Origin | Used on |
 | :--- | :--- | :--- | :--- |
@@ -78,7 +87,7 @@ on the slide, not a paraphrase of it (DS-211).>
 ```markdown
 # <Deck title> — slide-by-slide specification
 
-Expanded from the outline in `<slug>.foundation.md`, page by page. Seven fields per slide.
+Expanded from the outline in `<slug>.foundation.md`, page by page. Nine fields per slide.
 
 ## Slide <n> — <title>
 
@@ -92,6 +101,13 @@ Expanded from the outline in `<slug>.foundation.md`, page by page. Seven fields 
 - **Animations.** <What each one encodes. If the answer is "it looks good", remove it.>
 - **Interactive elements.** <What opens, and what it reveals. Tier one must read with everything
   closed.>
+- **Sources.** <The slugs from the foundation's source list that this slide rests on, comma
+  separated — **or `none`, which is an answer and not an omission.** A title slide or a close
+  usually rests on nothing external. This is what the build renders as the provenance mark
+  (DS-105), so a slide resting on two documents cannot say what a slide resting on one says.
+  A slide rests on a source it quotes no number from — a date, a definition, a threshold, a
+  redrawn diagram — so this field is wider than the figure ledger and is **checked against** it,
+  never derived from it: where the two disagree the ledger wins and the disagreement is reported.>
 
 ## Open — needs a decision
 

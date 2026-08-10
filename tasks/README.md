@@ -36,13 +36,14 @@ happened.
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `v0.2` | `proposed` | `specify` | - | - | - | - | T-005, T-016 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060 |
 | [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | T-069 | - | T-019, T-069, T-071 |
-| [T-071](T-071-the-intermediate-specifications-carry-their-references.md) | The intermediate specifications carry the sources they rest on | `v0.2` | `proposed` | `specify` | - | - | T-069 | - | T-070 |
 | [T-076](T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | A verdict producer that exits the process instead of reporting a row | `v0.2` | `proposed` | `specify` | - | - | - | - | T-075 |
 | [T-077](T-077-report-a-figure-exclusion-that-outlived-its-numeral.md) | Report a figure exclusion that outlived the numeral it was written for | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060, T-073 |
 | [T-078](T-078-write-down-the-release-sequence.md) | Write down the release sequence, which lives only in four task logs | `v0.2` | `proposed` | `specify` | - | - | - | - | T-008, T-056 |
 | [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns list closed tasks, so open rows read as blocked | `v0.2` | `in_progress` | `implement` | - | - | - | - | T-031, T-062, T-063, T-073, T-080, T-081 |
 | [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | - | - | T-063, T-073, T-079, T-081 |
 | [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) | The installed taskmd is two minor versions behind, so the gates run rules that have been superseded | `v0.2` | `proposed` | `specify` | - | - | - | - | T-062, T-073, T-079, T-080 |
+| [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) | The worked example's figure ledger omits figures that reach slides, so the ledger cannot be the authority it is treated as | `v0.2` | `proposed` | `specify` | - | - | - | - | T-071 |
+| [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) | The generated example deck fails a hard rule and nothing recorded it | `v0.2` | `proposed` | `specify` | - | - | - | - | T-021, T-071, T-075 |
 
 ## Closed
 
@@ -67,7 +68,7 @@ happened.
 | [T-017](T-017-define-the-portability-contract.md) | Define the portability contract — what "opens anywhere and works" actually permits | `WP1` | `done` | `review` | - | - | - | T-014 | T-002, T-005, T-006, T-013, T-016, T-018, T-019, T-049 |
 | [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | `WP1` | `done` | `review` | - | - | - | - | T-002, T-005, T-017, T-021, T-029, T-032, T-034 |
 | [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | `WP1` | `done` | `review` | - | - | - | T-002, T-004, T-015 | T-002, T-003, T-004, T-014, T-015, T-022, T-023, T-026, T-027, T-030 |
-| [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) | Build the reflow view and enforce the resolution contract | `WP2` | `done` | `review` | - | - | - | - | T-002, T-005, T-007, T-014, T-016, T-018, T-024, T-025, T-028, T-032, T-037, T-039 |
+| [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) | Build the reflow view and enforce the resolution contract | `WP2` | `done` | `review` | - | - | - | - | T-002, T-005, T-007, T-014, T-016, T-018, T-024, T-025, T-028, T-032, T-037, T-039, T-083 |
 | [T-022](T-022-split-the-design-system-from-its-rationale.md) | Split the operative ruleset from its rationale, and give every rule an ID | `WP1` | `done` | `review` | T-014 | - | - | - | T-004, T-005, T-020, T-023, T-025, T-037, T-039 |
 | [T-023](T-023-the-deck-evaluation-rubric-and-convergence-loop.md) | Define the deck evaluation rubric and the convergence loop that uses it | `WP1` | `done` | `review` | - | T-026 | - | - | T-002, T-004, T-005, T-014, T-020, T-022, T-024, T-025, T-044, T-048 |
 | [T-024](T-024-build-the-reference-deck-and-validate-the-ruleset.md) | Build the reference deck by hand and find out whether the ruleset works | `WP2` | `done` | `review` | - | T-025 | - | - | T-001, T-002, T-006, T-007, T-014, T-016, T-021, T-023, T-026, T-027, T-028, T-040, T-044, T-050, T-052 |
@@ -109,8 +110,9 @@ happened.
 | [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | - | - | T-051, T-065, T-075 |
 | [T-067](T-067-the-published-upgrade-instructions-do-not-upgrade.md) | The published upgrade instructions do not upgrade anything | `v0.1` | `done` | `review` | - | - | - | - | T-056, T-060, T-061 |
 | [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | - | T-070, T-071 | T-016, T-070 |
+| [T-071](T-071-the-intermediate-specifications-carry-their-references.md) | The intermediate specifications carry the sources they rest on | `v0.2` | `done` | `review` | - | - | T-069 | - | T-070, T-082, T-083 |
 | [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `done` | `review` | - | - | - | - | T-062, T-063, T-074, T-077, T-079, T-080, T-081 |
 | [T-074](T-074-the-documented-render-command-does-not-exist.md) | The documented render command does not exist, and the tools write into their own install | `v0.1` | `done` | `review` | - | - | - | - | T-073 |
-| [T-075](T-075-ds-064-probes-for-the-reference-decks-own-class-names.md) | DS-064 probes for the reference deck's own class names, and contract.py is outside the fixture | `v0.1` | `done` | `review` | - | - | - | - | T-051, T-065, T-066, T-076 |
+| [T-075](T-075-ds-064-probes-for-the-reference-decks-own-class-names.md) | DS-064 probes for the reference deck's own class names, and contract.py is outside the fixture | `v0.1` | `done` | `review` | - | - | - | - | T-051, T-065, T-066, T-076, T-083 |
 
 <!-- taskmd:end -->

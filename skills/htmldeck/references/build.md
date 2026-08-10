@@ -4,7 +4,7 @@ Load this at stage 6, once the slide-by-slide specification has been reviewed. I
 gets written**; what makes a deck good is `${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md`'s job and
 nothing here repeats it.
 
-**The input is a reviewed `<slug>.slides.md`, not a brief.** Seven fields per slide are already
+**The input is a reviewed `<slug>.slides.md`, not a brief.** Nine fields per slide are already
 decided. This stage composes them; it does not invent narrative.
 
 ---
@@ -36,6 +36,17 @@ python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py icons --sheet <somewhere>.svg
 **Never draw an icon** (DS-112). If the set has nothing for a concept, use the nearest one that is
 honest rather than invent path data.
 
+Then check the specification pair against itself, before any slide is written:
+
+```
+python ${CLAUDE_PLUGIN_ROOT}/tools/deck/spec.py <slug>.foundation.md <slug>.slides.md
+```
+
+It decides four things the two documents can only get wrong together — a slide citing a source the
+foundation does not list, a listed source no slide uses, a slide with no `Sources` answer at all,
+and a slide whose sources contradict the figure ledger. **A source nothing uses is either a missing
+citation or a stale file**, and both are findings. Run it again after §4 writes a deviation back.
+
 ## 2. Write the slides, in batches of three
 
 Three slides, then the loop in §3, then the next three. **Batching is not about scoring** — it is
@@ -56,6 +67,13 @@ will not tell you, because they are this stage's judgement:
   `derivation` · `scope` · `condition` · `instances`, and no fifth (DS-230). If what is behind the
   click is none of those four, it belongs on the slide or nowhere. A bottom line may never depend on
   a figure that lives only behind the click (DS-231).
+
+**The provenance mark is rendered from the slide's `Sources` field, never invented here** (DS-105).
+One named source is the source's own title as plain text; more than one is the `.sources` control,
+whose markup is `${CLAUDE_PLUGIN_ROOT}/docs/COMPONENT-CONTRACT.md` §3.2; `none` is no mark at all,
+unless the deck is illustrative and the slide carries that note instead. A mark that says the same
+thing on every slide of a deck resting on three documents is the defect this field exists to end —
+it was true of both example decks until 2026-08-10.
 
 Sync the sprite whenever a batch introduced an icon — it keeps DS-113 true by construction:
 
