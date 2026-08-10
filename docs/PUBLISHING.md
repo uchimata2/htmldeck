@@ -125,16 +125,25 @@ correct number quietly becoming a plausible one (**L-03**).
 So after any pass over the README, prove it rather than trusting the diff:
 
 ```bash
-python tools/deck/ruleset.py --counts
-python tools/deck/ruleset.py --gates
-python tools/docs/refcheck.py
-python tools/plugin/check_scaffold.py
-taskmd check
+python tools/docs/figures.py
 ```
 
-Every fenced block in the README is the output of one of those, or of `tools/deck/check.py`. Diff each
-against its command. **A figure stated in prose is checked the same way** — the deck sizes, the slide
-counts, the rule totals.
+It runs each command the README prints and compares the block underneath it, and it partitions
+**every** fence and every prose numeral on the page: compared, excluded with a reason, or a named
+gap that fails the run. `--values` prints what to paste when something has moved. This replaces
+diffing the five commands by eye, which is what this section said until 2026-08-10 — six figures had
+already gone stale under that instruction, because a rule with nothing behind it is a claim
+([T-060](../tasks/T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)).
+
+**Two figures the check does not treat alike.** A count of the *ruleset* is `compared` and a drift
+fails the run. A count of the *repository* — `refcheck.py`'s pointer totals — is declared `volatile`
+and is **reported rather than failed**, because it moves on every documentation commit including the
+one that corrects it, so it is stale the moment it is pasted. Re-paste those at release time from
+`--values`; do not chase them between releases.
+
+**What it still cannot see.** It checks that a pasted figure matches its command. It does not check
+that the sentence around the figure is true — the README's *"all three are fixed"* went false while
+every figure on the page was correct, and no gate here would have caught it (**L-05**).
 
 ---
 
