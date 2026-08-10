@@ -1,13 +1,13 @@
 ---
 id: T-NNN
 title: <imperative, one line — it appears in every generated view, so make it read out of context>
-type: analysis | deliverable | research | fix | admin
+type: analysis | decision | deliverable | research | fix | admin | audit
 status: proposed
 phase: specify
 parent: null
 blocked_by: []
 related: []
-work_package: WP<n> | final | none
+work_package: v0.1 | v0.2 | v0.3 | WP1 | WP2 | WP3 | final | none
 owner: the project owner
 business_value: critical | high | medium | low
 effort: xs | s | m | l | xl

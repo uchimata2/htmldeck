@@ -25,8 +25,10 @@ is a convenience; `id:` is the identity, and the tooling reads only the front-ma
 prints the next free number.
 
 An audit that will raise child fixes starts from
-[`_templates/audit-umbrella-template.md`](_templates/audit-umbrella-template.md); METHOD §5 is the
-rule it follows.
+[`_audit-umbrella-template.md`](_audit-umbrella-template.md); METHOD §5 is the rule it follows.
+*It lived in `_templates/` until 2026-08-10. taskmd 0.3.0's `check` reports it as unreachable there:
+`create` lists `_`-prefixed files directly in `tasks/`, so a template one directory down is one
+nothing offers. Moved rather than argued with — a template nobody is shown is not a template.*
 
 **The front-matter is the only place a fact about a task is stored.** Child lists, "blocks" lists and
 the index are computed from it. A stored copy of a derivable fact drifts; a derived one cannot
@@ -166,18 +168,24 @@ by* nor a *Blocks* column. `context` keeps them, with their status, because they
 explaining why the task exists. Stated here because it was previously implied by two comprehensions
 that disagreed with each other, which is how it survived being read repeatedly (**T-031**, **L-08**).
 
-**And it stopped being true here on the day the tool changed.** This paragraph described `task.py`,
-which filtered both columns; taskmd's `index` does not, so three rows on today's board name a closed
-blocker while `taskmd list --open` correctly ranks them free. The fix is upstream and is
-[T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md); until it lands, **read a *Blocked
-by* cell against the named task's status, not on its own.** Recorded rather than quietly softened,
-because a rule that survived a tool swap unnoticed is worth leaving visible.
+**It stopped being true on the day the tool changed, and was true again five weeks of releases
+later — on 2026-08-10, both within a day.** This paragraph described `task.py`, which filtered both
+columns; taskmd's `index` did not, so three rows named a closed blocker while `taskmd list --open`
+ranked them free. [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) sent that
+upstream as their **T-111**, they accepted it, and **taskmd 0.3.0 filters both columns**: T-019's
+*Blocked by* is empty where it read `T-002`, and T-084's *Blocks* names `T-036` and nothing closed.
+Measured on this board, not taken from a release note. The whole episode is left visible because a
+rule that survived a tool swap unnoticed is the thing to recognise faster next time (**L-59**).
 
 **What the two checks enforce**
 
 - `taskmd check` — the vocabularies in the config; every `parent`, `blocked_by` and `related`
   reference resolves; `blocked` implies a dependency; no dependency cycles; a declared deliverable
-  exists; the generated index is not stale; and markdown links resolve.
+  exists; the generated index is not stale; and markdown links resolve. **Since 0.3.0 it also holds
+  the templates to the schema** — a `_`-prefixed file offering a field value the config does not
+  allow, or sitting where `create` will not find it, is a failure. All three of this project's were,
+  on the day it was installed. It now reads **only the documents a clone would receive** and prints
+  how many it skipped, so a gitignored working file can no longer fail the run.
 - `refcheck.py` — every markdown link, **every repo-relative `.md` path written in prose or printed by
   a tool**, and **every `<named document> §n` reference** (§6.1). Two things are skipped and it prints
   how many: documents `.gitignore` excludes, which are machine-local by design and absent from a fresh

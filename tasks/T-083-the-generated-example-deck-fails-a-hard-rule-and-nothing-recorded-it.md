@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: []
 related: [T-021, T-071, T-075]
-work_package: v0.2
+work_package: v0.1
 owner: the project owner
 business_value: high
 effort: s
@@ -104,4 +104,5 @@ answers lead to different fixes.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (no change) | **Moved from `v0.2` to `v0.1` by the owner.** The deck is in the published repository and `README.md` points at it; an adopter who runs the documented gate on the shipped example gets a red run today, which is exactly CLAUDE.md's test for reopening v0.1 — *a defect an adopter hits in the published plugin is a `v0.1` patch, not a v0.2 improvement*. The rival, leaving it in `v0.2` because nobody has reported it, is an argument that applies to every latent defect and is the one the rule exists to overrule. **This reopens v0.1 for the fifth time.** |
 | 2026-08-10 | → proposed | Raised from [T-071](T-071-the-intermediate-specifications-carry-their-references.md), which ran the build check on this deck as part of its own review and found a failure that task had not caused — confirmed against the committed file before recording, so the attribution is measured rather than assumed. `high` because the deck is the repository's own evidence that the generator works and it is public; `s` because the row names its slide and its number and the whole question is which of two things produced it. `v0.2`: a fix, not a capability. |

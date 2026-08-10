@@ -2,8 +2,8 @@
 id: T-079
 title: The board's dependency columns list closed tasks, so open rows read as blocked
 type: fix
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-031, T-062, T-063, T-073]
@@ -177,9 +177,28 @@ generator and wrote the reason down as *the cell is for what gates the task, and
 
 ## 4. Review
 
+**Upstream accepted it and it has shipped.** taskmd's T-111 is `done`, and **taskmd 0.3.0** — installed
+here on 2026-08-10 by [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) — filters
+dependency-kind edges to open tasks in both columns. Verified on this board rather than read from a
+release note:
+
+| Row | Cell | Was | Now |
+| :--- | :--- | :--- | :--- |
+| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | *Blocked By* | `T-002`, closed 2026-08-09 | empty |
+| [T-070](T-070-the-quick-view-for-a-source-document.md) | *Blocked By* | `T-069`, closed 2026-08-10 | empty |
+| [T-071](T-071-the-intermediate-specifications-carry-their-references.md) | *Blocked By* | `T-069` | the row is closed; T-071 shipped the same day |
+| [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | *Blocks* | — | `T-036`, and nothing closed |
+
+The last row is the half that matters most: the `Blocks` side was the one this project fixed once in
+T-031 and lost in the migration, so seeing it carry an **open** dependency and no closed ones is the
+evidence that both directions landed, not just the one the symptom showed.
+
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The behaviour is decided and written down with its reason, including drop-or-mark | met | Drop, in §3, with the owner's three reasons in the order they carry weight upstream. |
+| The proposal is sent upstream, recorded here the way T-063 recorded its five | met | Delivered as taskmd's **T-111**, in their schema, argued from their own T-102. |
+| The three rows above are named as the instances, so a later reader can check | met | Named in §1 and checked in the table above. Two are empty and the third closed on its own. |
+| If upstream declines, this task records the decision to live with it | **not applicable** | They did not decline. Kept as written rather than reworded to fit the outcome — a criterion covering the other branch is not a criterion that failed. |
 
 **Child fix tasks raised**
 - none
@@ -188,6 +207,7 @@ generator and wrote the reason down as *the cell is for what gates the task, and
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | → done | **Accepted upstream and shipped.** Their T-111 is `done` and taskmd 0.3.0 filters both columns; installing it here is what made the answer visible, and the answer was checked against this board rather than a release note. Two of the three named rows now show an empty *Blocked by* and the third closed on its own; T-084's *Blocks* carries an open dependency and nothing closed, which is the `Blocks` half T-031 fixed once and the migration lost. Criterion 4 covered the branch where they declined, and is marked not applicable rather than reworded. |
 | 2026-08-10 | (implement) | **Received upstream**: the owner reports taskmd informed, reindexed and its project updated, so T-111 is in their tracker rather than sitting untracked in a working copy. **What they decided is not known here** and is deliberately not guessed — this task stays open on that, and the next thing it needs is their answer, not more argument from this side. |
 | 2026-08-10 | → in_progress | **Delivered upstream as a task in taskmd's own tracker, `T-111`**, on the owner's instruction — not an issue and not a patch, so the maintainer indexes it and owns it from there. Written in taskmd's schema, estimated to match **their** T-102, and explicit that the ids in its evidence belong to this project. Reading their backlog first found T-102 — *Show which rows list has already worked out are blocked*, `done`, the same defect on `list` and argued the same way — so the proposal leads with their precedent rather than ours. Nothing is outstanding on this side; the task stays open because criterion 4 is upstream's answer, and closing now would record a fix that has not happened. |
 | 2026-08-10 | (implement) | **Writing it up found a third instance, in this repository.** `TASK-WORKFLOW.md` §*Generated views* asserted that a closed task is absent from both columns — as **current behaviour**, not as an aim. That was true of `task.py` and false from the moment T-062 swapped the tool, and it survived because the sentence reads correctly and nothing checks a prose claim against a generated file. Amended to say which surfaces observe the rule and which does not. **This is the argument for T-079 twice over: the same swap broke a column and a paragraph, and neither had a watcher.** Generalised as **L-59**. |
