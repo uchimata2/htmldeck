@@ -1308,6 +1308,40 @@ about once a month here.
 3. **Documentation and tool disagree silently in both directions.** `render.py`'s own docstring had
    the working form the whole time, one file away from the prose that did not.
 
+### L-59 — A tool swap takes behaviour and the paragraph describing it, and neither leaves a mark
+
+Found 2026-08-10 by a status review nobody had scheduled, in
+[T-079](../tasks/T-079-the-boards-dependency-columns-list-closed-tasks.md).
+[T-062](../tasks/T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) retired
+`task.py` for taskmd on 2026-08-09. Two things left with it and nothing said so:
+
+- **A behaviour.** `task.py` filtered closed tasks out of both dependency columns — that was
+  [T-031](../tasks/T-031-stop-the-index-blocks-column-listing-closed-tasks.md)'s whole subject.
+  taskmd's `index` does not, so three open rows read as blocked while `taskmd list --open` correctly
+  ranked them free. The board and the tool disagreed in public for a day.
+- **A written rule.** `TASK-WORKFLOW.md` asserted the filtered behaviour **as current fact**, in the
+  present tense. It was true when written and false the moment the tool changed, and it still read
+  perfectly — which is why nobody caught it. A sentence does not look stale.
+
+**The migration was validated, and the validation could not have seen either.** T-062 compared what
+the two tools *did* — seeded defects, both tools run, coverage matched. Neither loss was a command
+that stopped existing; one was a difference in the shape of a generated file and the other was a
+paragraph. This is **L-57** at project scale: a comparison is bounded by what it reads.
+
+**How to apply.**
+
+1. **Diff the artifacts, not the command list.** When a tool is replaced, regenerate what it
+   generates and compare the files. A generated file is the contract; the command surface is how you
+   reach it.
+2. **Grep the docs for present-tense claims about the tool you just replaced.** Any sentence saying
+   the system *does* something is a claim with no owner unless something compares it to output. This
+   project checks paths, `§n` references, figures and now commands (**L-58**) — a prose assertion
+   about behaviour is the class none of those reach.
+3. **Expect the finder to be a review, not a gate.** Both halves were found by reading the project
+   end to end with no defect in hand. That is an argument for scheduling the sweep, not for
+   remembering harder — the same argument [`BRIEF.md`](BRIEF.md) *Release phases* makes twice about
+   its own tables.
+
 ### L-26 — Measure the content, not the box; and pin motion before capturing
 
 Two measurement traps, both hit while validating one deck, both of which return a confident clean

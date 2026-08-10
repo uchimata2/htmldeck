@@ -458,15 +458,16 @@ knowing about before someone re-derives it.
 | [T-076](../tasks/T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | `contrast.verdicts` ends the process on a document it will not report on, so a deck with no theme gets no account at all rather than a failing row. Found by T-075; `v0.2` because the shell makes the input hard to produce by accident. |
 | [T-077](../tasks/T-077-report-a-figure-exclusion-that-outlived-its-numeral.md) | `figures.py` reports an unaccounted numeral and never an account whose numeral has gone. A stale excusal turned the run red for the wrong reason on 2026-08-10 and said nothing about itself. |
 | [T-078](../tasks/T-078-write-down-the-release-sequence.md) | The release sequence, which lives only in four task logs and was re-derived to ship `v0.1.4`. `PUBLISHING.md` owns one of its seven steps and says so in its title. |
-| [T-079](../tasks/T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns name closed tasks, so three open rows read as blocked while `taskmd list --open` correctly ranks them free. T-031 decided this once for the tool taskmd replaced; the migration brought it back and nothing recorded it. |
+| [T-079](../tasks/T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns name closed tasks, so three open rows read as blocked while `taskmd list --open` correctly ranks them free. T-031 decided this once for the tool taskmd replaced; the migration brought it back and nothing recorded it. Proposal delivered upstream 2026-08-10. |
+| [T-080](../tasks/T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | `taskmd check` resolves link syntax inside a code fence, so a task cannot quote a board row — and `index` emits a link per row. It edited this project's pasted evidence rather than finding a defect in it. Proposal delivered upstream 2026-08-10, argued from taskmd's own T-092. |
 | ~~[T-062](../tasks/T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md)~~ **done 2026-08-09** | Retired the pre-split task tool for taskmd, keeping the two reference checks taskmd does not have as `tools/docs/refcheck.py`. |
 | ~~[T-063](../tasks/T-063-improvements-to-propose-upstream-to-taskmd.md)~~ **done 2026-08-10** | Five proposals sent upstream to taskmd, from what the migration measured. |
 
 *This table stopped listing everything in the phase it named twice, and both times a sweep found it
 rather than anyone remembering: T-058 through T-063 on 2026-08-09 and 2026-08-10, then T-068 through
 T-070 on 2026-08-10 — **the same drift, caught the same way**, which is the argument for the sweep.
-T-071 and T-073 followed later that day, and T-076 through T-079 on 2026-08-10 from work done rather
-than from planning. The five rows that left for v0.3 are below, not deleted: what a phase contained
+T-071 and T-073 followed later that day, and T-076 through T-080 on 2026-08-10 from work done rather
+than from planning — T-080 while writing T-079's proposal, which is the shortest that gap has ever been. The five rows that left for v0.3 are below, not deleted: what a phase contained
 is a fact about the decision.*
 
 ### v0.3 — the bigger tasks and the new capabilities
