@@ -11,8 +11,12 @@ anyone editing this file. The same reason `ruleset.py` reads `DESIGN-SYSTEM.md`.
 
     python tools/deck/theme.py tokens                       # the contract, as data
     python tools/deck/theme.py validate themes/quarto.css   # a theme against it
-    python tools/deck/theme.py swap <deck> themes/<name>.css -o <out.html>
+    python tools/deck/theme.py swap <deck> themes/<name>.css [-o out.html]
     python tools/deck/theme.py check <deck>                 # the rows the gate asks for
+
+Without `-o`, a swap writes to `.assets-cache/deck/themed/<deck>-<theme>.html` — where
+`docs/THEME-CONTRACT.md` §1 says a themed copy belongs. **It never writes to the deck it was
+given**, whatever `-o` says; that default cost a recovery once (**T-059**).
 
 Runs its own self-test first and refuses to report if it fails (**L-04**). Pure standard
 library (**L-07**).
@@ -32,6 +36,7 @@ import paths                                                        # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CONTRACT = os.path.join(ROOT, "docs", "THEME-CONTRACT.md")
 FACES = os.path.join(ROOT, "themes", "faces")
+OUT = os.path.join(ROOT, ".assets-cache", "deck", "themed")
 
 AXES = ("colour", "type", "geometry", "shape", "motion")
 KINDS = ("primitive", "derived", "fixed")
@@ -298,6 +303,32 @@ def swap(html, resolved):
                       html, count=1)
 
 
+def destination(deck, theme, out=None):
+    """Where a swap writes — and the one file it must never write.
+
+    `out` is `-o` when it was given. Without it the destination is derived under `OUT`, which is
+    where `THEME-CONTRACT.md` §1 says a themed copy belongs: *the demonstration deck is built, not
+    committed*. **The default used to be `deck` itself**, and on 2026-08-09 that replaced the
+    reference deck mid-task (T-059). It was noticed only because the byte count moved; a themed
+    build of the same size would have passed every check in the repository, because the gate reads
+    whatever deck it is pointed at and a themed reference deck is a valid deck.
+
+    Raises `ValueError` when the destination resolves to the input — including `-o` naming it, and
+    a second spelling of the same file. **Raising rather than exiting is deliberate**: the self-test
+    has to be able to observe the refusal, and a function that ends the process can only be trusted,
+    never asserted (**L-04**).
+    """
+    if out is None:
+        stem = lambda p: os.path.splitext(os.path.basename(p))[0]                      # noqa: E731
+        out = os.path.join(OUT, "%s-%s.html" % (stem(deck), stem(theme)))
+    if os.path.realpath(out) == os.path.realpath(deck):
+        raise ValueError("that would overwrite the deck it was given (%s). A swap reads one file "
+                         "and writes another; pass -o with a different path, or omit -o and it "
+                         "goes to %s" % (paths.display_path(deck, ROOT),
+                                         paths.display_path(OUT, ROOT)))
+    return out
+
+
 def styles(html):
     """`[(attrs, body)]` for every `<style>` in the deck."""
     return re.findall(r"<style([^>]*)>(.*?)</style>", html, re.S)
@@ -546,6 +577,36 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a shared component's size was exempted as composition. The "
                  "composition rows are scoped to #slides and .ruler; outside them a width is a "
                  "value a denser theme has to be able to shrink")
+
+    # **The destination is the one thing here that can destroy work**, so it is asserted rather
+    # than exercised (T-059). The deck used below need not exist: `destination` decides a path and
+    # reads nothing, which is what lets the input case be constructed on any machine.
+    deck = os.path.join(ROOT, "examples", "reference-deck.html")
+    # Caught rather than compared. Restoring the old `out = deck` default makes this call *raise*,
+    # so a comparison on the return value is a line that can never run - it read like an assertion
+    # and was dead code. The failure has to be diagnosed here or it surfaces as a traceback.
+    try:
+        default = destination(deck, os.path.join(ROOT, "themes", "lattice.css"))
+    except ValueError:
+        sys.exit("SELF-TEST FAILED: the default destination is the input deck. That is the defect "
+                 "T-059 exists for, and it cost a recovery the one time it fired")
+    if os.path.dirname(os.path.realpath(default)) != os.path.realpath(OUT):
+        sys.exit("SELF-TEST FAILED: the default destination is not under %s, where "
+                 "THEME-CONTRACT.md §1 says a themed copy belongs - %r"
+                 % (paths.display_path(OUT, ROOT), default))
+    # Both spellings of "the deck itself" have to be refused, or the guard only catches the
+    # spelling somebody happened to try (**L-36**: a refusal never seen refusing is not a refusal).
+    for named in (deck, os.path.join(ROOT, "examples", "..", "examples", "reference-deck.html")):
+        try:
+            destination(deck, "themes/lattice.css", named)
+            sys.exit("SELF-TEST FAILED: -o naming the input deck was accepted as %r" % named)
+        except ValueError:
+            pass
+    # ...and an ordinary -o must still go through, or the guard is refusing everything and the
+    # command is simply broken in a way that looks like safety.
+    elsewhere = os.path.join(OUT, "elsewhere.html")
+    if destination(deck, "themes/lattice.css", elsewhere) != elsewhere:
+        sys.exit("SELF-TEST FAILED: an -o that is not the input deck was not honoured")
     return True
 
 
@@ -603,7 +664,10 @@ def main(argv):
         return 1 if bad else 0
     if cmd == "swap":
         deck, theme = argv[1], argv[2]
-        out = argv[argv.index("-o") + 1] if "-o" in argv else deck
+        try:
+            out = destination(deck, theme, argv[argv.index("-o") + 1] if "-o" in argv else None)
+        except ValueError as exc:
+            sys.exit("refusing to swap: %s" % exc)
         html = io.open(deck, encoding="utf-8").read()
         src = io.open(theme, encoding="utf-8").read()
         bad = validate(src)
@@ -611,6 +675,8 @@ def main(argv):
             sys.exit("%s does not satisfy the contract:\n  %s"
                      % (paths.display_path(theme, ROOT), "\n  ".join(bad)))
         new = swap(html, resolve(src))
+        if os.path.dirname(out):
+            os.makedirs(os.path.dirname(out), exist_ok=True)
         io.open(out, "w", encoding="utf-8", newline="\n").write(new)
         print("%s + %s -> %s (%d bytes)"
               % (os.path.basename(deck), os.path.basename(theme), paths.display_path(out, ROOT),
@@ -619,7 +685,9 @@ def main(argv):
     if cmd == "check":
         return print_check(argv[1])
     sys.exit("usage: theme.py tokens | validate <theme.css> | swap <deck> <theme.css> [-o out] "
-             "| check <deck>")
+             "| check <deck>\n"
+             "       swap without -o writes to %s/<deck>-<theme>.html"
+             % paths.display_path(OUT, ROOT))
 
 
 if __name__ == "__main__":
