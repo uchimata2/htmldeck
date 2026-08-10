@@ -40,9 +40,10 @@ section overrides the older material above it in the same file.
 
 **The backlog is two release phases as of 2026-08-09 — `v0.1` and `v0.2`** — and `tasks/README.md`
 is grouped by them. **v0.1 shipped 2026-08-09**: the repository is public at
-`github.com/uchimata2/htmldeck`, released as `v0.1.0`, `master` is the published branch and `origin`
-now exists. **Resume from v0.2 unless told otherwise**; `docs/BRIEF.md` *Release phases* says what is
-in each and why. Task front-matter carries the phase in `work_package`; closed tasks keep the
+`github.com/uchimata2/htmldeck`, `master` is the published branch and `origin` now exists. It is at
+**`v0.1.3`** after three patch releases, every one of them a defect the adopting project hit in the
+published plugin. **Resume from v0.2 unless told otherwise**; `docs/BRIEF.md` *Release phases* says
+what is in each and why. Task front-matter carries the phase in `work_package`; closed tasks keep the
 `WP1`–`WP3` packages they were worked under, which are history rather than the current plan.
 
 **Every release from here runs the humanizing rule again** — `docs/PUBLISHING.md`, which owns the
