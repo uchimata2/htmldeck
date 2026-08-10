@@ -5,7 +5,7 @@ of them by double-clicking, with the network off.
 
 | File | What it is |
 | :--- | :--- |
-| [`reference-deck.html`](reference-deck.html) | The reference deck. 12 slides, built **by hand** against [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md). |
+| [`reference-deck.html`](reference-deck.html) | The reference deck. 12 slides and a colophon, built **by hand** against [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md); the colophon and the source citations are [T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md)'s. |
 | [`reference-deck-seeded-defects.html`](reference-deck-seeded-defects.html) | The same deck with **one deliberate defect per evaluation dimension**. A test fixture, not an example to copy. |
 | [`sort-window/`](sort-window) | *Move the window, not the fleet* — 12 slides, built **through build mode** by [T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md), with its two specification files and its sources beside it. |
 
@@ -25,8 +25,8 @@ or place — see *Provenance*, below.
 *Buy frequency before bikes* — a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-**221 KB in one file** — 225 922 bytes. Three embedded typefaces (97 KB of it as base64), nine
-Lucide icons in one sprite, seven hand-written SVG figures, and the deck shell. No libraries, no
+**231 KB in one file** — 236 572 bytes. Three embedded typefaces (97 KB of it as base64), ten
+Lucide icons in one sprite, eight hand-written SVG figures, and the deck shell. No libraries, no
 build step, no network.
 
 The theme is a **region**, not a habit: one `<style id="theme">` holds every `@font-face` and every
@@ -234,8 +234,8 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 It runs the auto gate, the contrast audit, the render gate and the resolution contract in one pass,
-then declares what it did **not** check: 81 of the 113 rules a gate owns are decided, and the other
-32 are named with a reason each. The four commands after it still exist because each is useful
+then declares what it did **not** check: 82 of the 113 rules a gate owns are decided, and the other
+31 are named with a reason each. The four commands after it still exist because each is useful
 alone — `audit.py` and `contract.py` when you want one stage's output without the account, and the
 two variant suites because they build decks rather than read one.
 
@@ -304,7 +304,7 @@ python tools/deck/check.py examples/sort-window/sort-window.html --sources examp
 ```
 
 That runs the content half as well as the presentation half, which is the point of keeping the
-sources: `0 failure(s)`, `81 checked`, and the figure ledger reconciled against three model
+sources: `0 failure(s)`, `82 checked`, and the figure ledger reconciled against three model
 documents. Two more checks belong to this deck and not to the hand-built one:
 
 ```bash

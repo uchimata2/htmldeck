@@ -436,15 +436,18 @@ of one it does, and each is written up well enough to be picked up cold.
 | ~~[T-059](../tasks/T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md)~~ **done 2026-08-10** | `swap` defaults to `.assets-cache/deck/themed/` and refuses its own input by resolved path. Requiring `-o` was the rival and lost: four shipped copy sites print the bare command, so the flag would have made all four document a command that errors. |
 | ~~[T-060](../tasks/T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)~~ **done 2026-08-10** | `tools/docs/figures.py` runs each command the README prints and partitions all 17 fences and 9 prose numerals. A figure is `compared` and fails on drift, or `volatile` — declared, reported, not enforced — because a count of the repository is stale in the commit that corrects it. |
 | [T-068](../tasks/T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it. T-060 binds a numeral to the whole corpus, so a correct number in the wrong sentence still passes. |
-| [T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md) | Multiple sources per slide, and a colophon slide for deck-wide ones. DS-105 already owns the single-source case; this is the delta, and it amends DS-085 by a named exemption. |
-| [T-070](../tasks/T-070-the-quick-view-for-a-source-document.md) | A source rendered inside the deck, as an overlay. Markdown and plain text only. Blocked by T-069. |
+| ~~[T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md)~~ **done 2026-08-10** | Multiple sources behind a mark that is its own component, and a colophon after the close under a named DS-085 exemption. The reference deck now cites the three source documents it always shipped and never named. Seeding the defect found that **DS-001's check**, not DS-001, was what had banned links — it swept every `href` while the rule enumerates subresources — so it is narrowed to anchors inside a provenance mark and DS-105 judges those. 82 of 113 rules checked. |
+| [T-070](../tasks/T-070-the-quick-view-for-a-source-document.md) | A source rendered inside the deck, as an overlay. Markdown and plain text only. **Unblocked 2026-08-10**: it owns the linked form T-069 deliberately left as plain text. |
+| [T-071](../tasks/T-071-the-intermediate-specifications-carry-their-references.md) | The foundation and slide-by-slide specifications name the sources a deck rests on. Raised by the owner 2026-08-10, and the gap T-069 exposed: the deck cites what a generated one still cannot express. |
+| [T-073](../tasks/T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Whether `tools/docs/refcheck.py` survives now that upstream measured and declined its first half. |
 | ~~[T-062](../tasks/T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md)~~ **done 2026-08-09** | Retired the pre-split task tool for taskmd, keeping the two reference checks taskmd does not have as `tools/docs/refcheck.py`. |
 | ~~[T-063](../tasks/T-063-improvements-to-propose-upstream-to-taskmd.md)~~ **done 2026-08-10** | Five proposals sent upstream to taskmd, from what the migration measured. |
 
 *The first six rows predate the release split; T-058 through T-063 were added on 2026-08-09 and
 2026-08-10, when this table was found to have stopped listing everything in the phase it names.
 T-068 through T-070 were added on 2026-08-10 — **the same drift, caught by the same sweep**, which
-is the argument for the sweep rather than for remembering.*
+is the argument for the sweep rather than for remembering. T-071 and T-073 were added later the same
+day, by the sweep and not by memory, which is the point being made twice.*
 
 **What v0.1 will ship without, stated rather than discovered.** No 3D. No frame-rate figure on any
 machine. Seven of R6's nine glitch-free conditions unimplemented, and a console error that does not
