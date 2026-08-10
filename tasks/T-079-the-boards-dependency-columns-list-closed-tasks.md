@@ -95,7 +95,7 @@ recoverable from the closed task's own row and from front-matter either way.
 | # | Step | Output |
 | :-- | :--- | :--- |
 | 1 | Settle drop-or-mark, and record the reason | this file §3 |
-| 2 | Write the proposal — symptom, the three instances, the T-031 precedent, the ordering counter-argument | this file §3 |
+| 2 | Write the proposal — symptom, the three instances, the T-031 precedent, the ordering counter-argument | this file §3, **done 2026-08-10** |
 | 3 | Send it upstream to taskmd | this file §3 |
 | 4 | Re-run `python tools/tasks/lint.py` and record what the board shows | this file §4 |
 
@@ -111,7 +111,64 @@ recoverable from the closed task's own row and from front-matter either way.
   and nothing else does.**
 
 **Outputs produced**
-- <none yet>
+- The proposal below, drafted 2026-08-10 and **not yet sent** — it goes upstream only on the owner's
+  word, the way T-063's five did.
+
+---
+
+#### Proposal to taskmd — `index` renders a satisfied dependency as a live one
+
+**The evidence.** taskmd 0.1.1. `taskmd index` writes this row for a task whose only blocker closed
+on 2026-08-09:
+
+```
+| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability
+preflight every deck ships with | `v0.3` | `proposed` | `specify` | - | - | T-002 | - |
+```
+
+(One row, wrapped here, with the trailing *Related* column cut.)
+
+`Blocked By: T-002`. `taskmd context T-019`, same tree, same minute:
+
+```
+BLOCKED BY
+  T-002        done        Build mode — the self-contained deck generator
+
+STATE  open, no blocker outstanding
+```
+
+And `taskmd list --open` ranks that task **third of fifteen**, ahead of everything genuinely held.
+
+**So this is not an imported preference — two of taskmd's three surfaces already implement the rule
+and the third does not.** `context` flags an edge `<-- still open` only when the far end is open, and
+prints `STATE open, no blocker outstanding` when none is; the sort's blocked-last key resolves each
+dependency edge against `tasks[target].is_open`. `index_block`'s `row` renders
+`", ".join(task.links(n))` for every link name alike, so in the one artifact a person reads to choose
+work, a satisfied dependency is indistinguishable from a live one. Three of fifteen open rows in this
+repository name a closed blocker today, and the `Blocks` side has the same shape.
+
+**Proposal.** Filter **dependency-kind** edges to open tasks in `index_block`'s `row`, leaving
+`parent`, `children` and every soft edge alone — a closed parent is still a parent; a closed blocker
+is not still a blocker. Both halves of the test already exist in `cli.py`:
+
+```python
+schema.edges[name].kind == "dependency"    # as context already tests
+tasks[target].is_open                      # as is_blocked already tests
+```
+
+**Apply the same view to the column-in-use test.** `names` comes from
+`any(t.links(n) for t in tasks.values())`, computed before any filtering, so a project whose
+dependency edges are all satisfied would keep a column of dashes — which is the defect
+`index_block`'s own docstring records as already fixed for `work_package`: *omitting an unused column
+is derived from the data rather than configured*. Filtering the cells without filtering the column
+selection reintroduces it one edge kind over.
+
+**What this loses, stated.** The board stops showing the historical edge. Nothing else stops: the
+front-matter keeps it, `context` prints it with the blocker's status beside it, and the closed task's
+own row is untouched. The project sending this made the same change to its own pre-taskmd index
+generator and wrote the reason down as *the cell is for what gates the task, and nothing else does*.
+
+---
 
 ## 4. Review
 
@@ -126,5 +183,6 @@ recoverable from the closed task's own row and from front-matter either way.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (implement) | **Proposal drafted, not sent.** Reading `cli.py` moved the argument off this project's precedent and onto taskmd's own inconsistency: `context` and the blocked-last sort both resolve a dependency edge against the far end's status, and `index` alone does not — `taskmd context T-019` prints *open, no blocker outstanding* for the row the board marks `Blocked By: T-002`. That is a stronger case than T-031, which is now the closing note rather than the argument. One thing the symptom did not show came out of the same read: `names` is computed before any filtering, so filtering only the cells would leave a column of dashes — the defect `index_block`'s docstring says was already fixed for `work_package`. |
 | 2026-08-10 | (specify) | **The one open question closed by the owner, as recommended: drop, not mark.** Step 1 of the plan is done and the reason is in §3. What remains is the proposal itself and sending it — the change is upstream's to make, so this task cannot close on a green run here. |
 | 2026-08-10 | → proposed | Raised by the owner from a status review that found the board and `taskmd list --open` disagreeing about three rows. `medium` because it misleads exactly the reader the board exists for and the cost is one column, not because anything is broken downstream — the sort is already right; `s` because the decision is small, the precedent is written, and the change itself is upstream's. `v0.2` under the release split set the same day: a minor fix. |
