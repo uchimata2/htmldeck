@@ -420,11 +420,30 @@ def ds165_one_disclosure_mark(h):
 # ---------------------------------------------------------------------------- stage 1: static
 # Each entry is (rule id, what it asserts, predicate). Only rules a file scan can actually
 # decide - anything needing a render lives in stage 2, anything needing judgement is not here.
+def ds001_no_external_references(h):
+    """DS-001's sweep, with the provenance mark cut out of it first.
+
+    **The rule enumerates what it means: every font, icon, script and style inlined.** Those are
+    subresources - things the renderer fetches to draw the page - and this predicate swept every
+    `href` in the file, so it also caught an `<a>`, which the renderer never fetches. That gap was
+    load-bearing until 2026-08-10: DS-105 permits a source link where the sources are reachable, and
+    the gate's own account excused the dead-link half on the ground that *DS-001 had banned links*.
+    It had not; this check had, and only by reading wider than the rule it implements (T-069).
+
+    **Cut narrowly, and the narrowness is the point.** Only anchors inside a provenance mark are
+    exempt, because that is the one place another rule takes over: DS-105 judges those, and
+    `provenance_verdicts` fails a dead one. An `<a href>` anywhere else in a deck still fails here,
+    so nothing has been let through - the exemption goes exactly as far as the rule that covers it.
+    """
+    swept = PROVENANCE_MARK.sub("", h)
+    return not [u for u in re.findall(
+        r'(?:src|href|xlink:href)\s*=\s*["\']([^"\']+)["\']', swept)
+        if not u.startswith(("data:", "#", "blob:"))]
+
+
 STATIC = [
-    ("DS-001", "zero external references",
-     lambda h: not [u for u in re.findall(
-         r'(?:src|href|xlink:href)\s*=\s*["\']([^"\']+)["\']', h)
-         if not u.startswith(("data:", "#", "blob:"))]),
+    ("DS-001", "zero external references, provenance links excepted (DS-105 judges those)",
+     ds001_no_external_references),
     ("DS-003", "meta charset present",
      lambda h: '<meta charset="utf-8">' in h.lower()),
     ("DS-008", "latin script only",
@@ -560,6 +579,64 @@ def split_verdicts(html):
              % (len(bad), cited,
                 "" if not bad else " - " + "; ".join("%s: %s" % b for b in bad[:3])),
              not bad)]
+
+
+# ------------------------------------------------------------- stage 1c: the provenance mark
+# **DS-105's *never a dead link* half**, checked from 2026-08-10 (T-069). It sat excused on the
+# stated ground that *there are no links to test, DS-001 having banned them* — which is a misreading
+# twice over. DS-001 governs what the file must **render** with the network down, and an anchor
+# renders offline; and what the excuse actually described was a repository in which no deck cited
+# anything, which is a fact about the decks and not about the rule.
+#
+# Its own row rather than a `STATIC` predicate for DS-231's reason: *0 dead of 4 examined* and *0
+# dead of none* read identically as a bare boolean (**L-36**), and a deck that cites nothing must
+# not come out of here looking checked.
+#
+# What a static read settles, and the one thing it cannot:
+#   - **empty, `#` alone, `file://`, or any relative target — dead.** The deck is one file the
+#     recipient double-clicks (CLAUDE.md rule 1); nothing sitting beside it on the author's disk
+#     travels with it, so a link into that folder is dead on arrival, exactly as DS-002 treats a
+#     CDN reference. This is the clause T-069 settled.
+#   - **`#frag` — decidable exactly.** The id is in this document or it is not.
+#   - **`http(s)://` — not decidable here, and named rather than excused.** Whether the far end
+#     answers needs the network, which is the one thing a portable deck is defined against. The row
+#     prints how many it did not follow, so the unchecked part is visible on every run.
+
+PROVENANCE_MARK = re.compile(
+    r'<p[^>]*class="[^"]*\bprovenance\b[^"]*"[^>]*>(.*?)</p>', re.S | re.I)
+# Anchors only. A bare `href=` sweep would count the `<use href="#i-source">` that draws the mark's
+# own glyph as a link and report `1 of 1 examined` on a deck with no links in it at all - the
+# denominator this row exists to make honest, made dishonest by the instrument.
+MARK_HREF = re.compile(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']*)["\']', re.I)
+
+
+def provenance_links(html):
+    """`(examined, dead, unfollowed)` — every href inside a provenance mark, judged."""
+    ids = set(re.findall(r'\bid\s*=\s*["\']([^"\']+)["\']', html))
+    examined, dead, unfollowed = 0, [], 0
+    for mark in PROVENANCE_MARK.findall(html):
+        for href in MARK_HREF.findall(mark):
+            examined += 1
+            u = href.strip()
+            if u.lower().startswith(("http://", "https://")):
+                unfollowed += 1
+            elif u.startswith("#"):
+                if u[1:] not in ids:
+                    dead.append(u)
+            else:
+                dead.append(u or "(empty)")
+    return examined, dead, unfollowed
+
+
+def provenance_verdicts(html):
+    """DS-105's link half. A prohibition over the deck's marks — see `ABSENCE_IS_A_PASS`."""
+    examined, dead, unfollowed = provenance_links(html)
+    what = "dead links in a provenance mark: %d of %d examined" % (len(dead), examined)
+    if unfollowed:
+        what += "; %d external URL(s) present and not followed" % unfollowed
+    if dead:
+        what += " - " + "; ".join(dead[:3])
+    return [("DS-105", what, not dead)]
 
 
 # ---------------------------------------------------------------------------- stage 2: rendered
@@ -1304,6 +1381,9 @@ ABSENCE_IS_A_PASS = {
                                     "empty set. Now only a deck with no slides at all reaches this "
                                     "vacuously, and DS-081 fails that"),
     "DS-092": ("prohibition", "no sentence over 20 words, no paragraph over 4 sentences"),
+    "DS-105": ("prohibition", "no dead link inside a provenance mark; the subject is the hrefs the "
+                              "marks carry, and the row prints its own denominator - a deck whose "
+                              "sources are named in plain text has no link to be dead (T-069)"),
     "DS-132": ("prohibition", "nothing tabbable on an off-screen slide"),
     "DS-142": ("prohibition", "no looping motion on static content"),
     # The first rule to reach this table by two routes at once, and the reason the shape field
@@ -1689,7 +1769,8 @@ def self_test():
         # with no slides. The reduced-motion rows are held to it against a render that SUCCEEDED and
         # found nothing, which is a different thing from a render where the preference never took -
         # `reduced_verdicts` reports that one as its own failure and it is not an absent subject.
-        rows = render_verdicts(empty) + split_verdicts("") + reduced_verdicts(reduced)
+        rows = (render_verdicts(empty) + split_verdicts("") + provenance_verdicts("")
+                + reduced_verdicts(reduced))
     except KeyError as exc:
         sys.exit("SELF-TEST FAILED: a verdict reads data[%s] unconditionally, so it is not in "
                  "ALWAYS_MEASURED and the nothing-was-found measurement cannot be built. Add the "
@@ -1698,7 +1779,7 @@ def self_test():
     # **Derived from the module, never listed by hand.** `reduced_verdicts` sat outside this fixture
     # from the day it was written, and nothing said so: the fixture named its producers, and a name
     # nobody adds is a name nobody misses.
-    exercised = ("render_verdicts", "split_verdicts", "reduced_verdicts")
+    exercised = ("render_verdicts", "split_verdicts", "provenance_verdicts", "reduced_verdicts")
     producers = sorted(n for n in globals() if n.endswith("_verdicts"))
     if producers != sorted(exercised):
         sys.exit("SELF-TEST FAILED: the module defines %s and this fixture exercises %s. A verdict "

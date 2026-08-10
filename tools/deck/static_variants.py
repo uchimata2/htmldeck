@@ -96,6 +96,20 @@ STATIC_VARIANTS = [
         (".disc-btn:hover{border-color:var(--accent);color:var(--ink)}",
          ".disc-btn:hover{border-color:var(--accent);color:var(--ink)}\n"
          ".disc:hover .disc-panel{display:block}")]),
+    # ---- added by T-069, which stopped excusing *never a dead link*
+    ("provenance-link-into-the-authors-disk", "DS-105", [
+        # The defect the rule has always named and nothing has ever caught: a link that resolves
+        # perfectly on the machine the deck was written on and is dead the moment it is emailed.
+        # `file://` is the honest form of it; a relative path is the same defect wearing a shorter
+        # string, and the check treats them alike for that reason.
+        ('<p class="provenance">Ridership model</p>',
+         '<p class="provenance"><a href="file:///C:/sources/ridership-model.md">Ridership '
+         'model</a></p>')]),
+    ("provenance-link-to-a-fragment-that-is-not-there", "DS-105", [
+        # The other half, and the one a person cannot see by reading: an in-document anchor whose
+        # target was renamed. It looks like a working link and behaves like a dead one.
+        ('<p class="provenance">Cost model</p>',
+         '<p class="provenance"><a href="#src-cost-model">Cost model</a></p>')]),
     # ---- added by T-016, which made the markup a contract
     ("control-with-no-aria-controls", "DS-229", [
         # The defect a generator produces and a person does not: the tenth disclosure looks
@@ -242,7 +256,7 @@ def build(name, edits):
 def static_failures(path):
     html = open(path, "r", encoding="utf-8").read()
     rows = ([(r, w, bool(fn(html))) for r, w, fn in audit.STATIC]
-            + audit.split_verdicts(html)
+            + audit.split_verdicts(html) + audit.provenance_verdicts(html)
             + contrast.verdicts(html) + theme.verdicts(html) + component.verdicts(html))
     return {r for r, _w, ok in rows if not ok}, rows
 

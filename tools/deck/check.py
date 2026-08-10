@@ -127,8 +127,6 @@ DEFERRED = {
               "have no subject to run against and would pass on nothing (**L-36**).",
     "DS-104": "Triage: `default`. Assumption markers are present and their *subtlety* is the "
               "rule's content.",
-    "DS-105": "Triage: `default`. The provenance mark is present on every slide; *never a dead "
-              "link* is decidable and there are no links to test, DS-001 having banned them.",
     "DS-131": "Triage: `default`. The navigation set is present; *named targets* is checked in "
               "substance by DS-217's scale verdict, which requires no per-item label at rest.",
     "DS-133": "Triage: `default`. The progress indicator's *encodes real position* clause is a "
@@ -164,6 +162,10 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     # this is the one clause of DS-161 a program can settle, and it needs a count in its text,
     # which `STATIC`'s boolean shape cannot carry.
     rows += audit.split_verdicts(html)
+    # DS-105's link half, added by T-069. Same shape and same reason as the row above: the count has
+    # to travel in the text, because a deck that cites nothing must not read as a deck whose links
+    # were checked. It replaces an excuse that rested on DS-001 banning links, which DS-001 does not.
+    rows += audit.provenance_verdicts(html)
     rows += contrast.verdicts(html)
     # The theme region, added by T-007. Three partial checks of rules `audit` and `contrast`
     # already reach from another side: DS-011 counts palettes, this counts regions; DS-013 names
