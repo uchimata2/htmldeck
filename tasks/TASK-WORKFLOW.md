@@ -137,11 +137,18 @@ python tools/docs/refcheck.py    # validate every reference in every document
 ```
 
 **The bare `taskmd` command does not resolve in an agent shell**, which is a property of how the
-plugin is put on `PATH` rather than of the plugin. Run the module instead, from the project root:
+plugin is put on `PATH` rather than of the plugin — so the four `taskmd` lines above are what to
+type at a terminal, and not what an agent can run. For the three that a task edit owes, there is one
+command that finds the installed skill itself:
 
 ```
-P=$(ls -d ~/.claude/plugins/cache/taskmd/taskmd/*/skills/taskmd | tail -1); PYTHONPATH="$P" python -m taskmd check
+python tools/tasks/lint.py
 ```
+
+It runs `index`, then `check`, then `refcheck.py`, stops at the first failure and exits with that
+failure's code. It is `tracker_lint` in [`../.handoff/config.md`](../.handoff/config.md), and it
+exists so that the incantation for locating the skill has one home rather than one per document
+(**L-13**).
 
 `taskmd` owns tasks. `refcheck.py` owns **documents**, and exists because taskmd's check sees
 markdown-link syntax only: a path written as prose, a path printed by a tool into a fenced block, and
@@ -243,5 +250,5 @@ that did not survive, and it is recorded in
 4. Findings worth keeping beyond this task are in [`../docs/LESSONS.md`](../docs/LESSONS.md), not only
    in the task file.
 5. `status: done`, `updated:` today, a final log row.
-6. `taskmd index && taskmd check && python tools/docs/refcheck.py` — chained with `&&`, never `;`
-   (**L-40**).
+6. `python tools/tasks/lint.py` — §6's three checks, chained with `&&` rather than `;` (**L-40**)
+   inside the one command, so a failure stops the chain instead of scrolling past.

@@ -21,11 +21,5 @@ had an owner.
 - `tracker_id_prefix`: T-
 - `tracker_template`: tasks/_task-template.md
 - `tracker_closed_dir`: (not set — done tasks stay in `tasks/` so links keep resolving)
-- `tracker_lint`: run from the project root, and `&&` rather than `;` so a failure stops the chain:
-
-```
-P=$(ls -d ~/.claude/plugins/cache/taskmd/taskmd/*/skills/taskmd | tail -1) \
-  && PYTHONPATH="$P" python -m taskmd index \
-  && PYTHONPATH="$P" python -m taskmd check \
-  && python tools/docs/refcheck.py
-```
+- `tracker_lint`: `python tools/tasks/lint.py` — the three checks a task edit owes, in order,
+  stopping at the first failure and exiting with its code. Runs from any working directory.
