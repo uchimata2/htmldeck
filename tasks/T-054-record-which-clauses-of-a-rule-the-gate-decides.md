@@ -7,10 +7,12 @@ phase: specify
 parent: T-053
 blocked_by: []
 related: [T-037, T-043, T-051, T-005]
-work_package: v0.2
+work_package: v0.3
 owner: the project owner
+business_value: medium
+effort: l
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-10
 deliverables: []
 ---
 
@@ -96,4 +98,5 @@ cell clause is not measured. DS-100 and DS-105 are candidates.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (specify) | **Estimated `medium`/`l`, and moved to `v0.3`.** `medium` because the account it corrects is sharper rather than missing — no rule is unreported today, only under-reported; `l` because a clause-level record changes the shape of `DEFERRED`, which is keyed by rule ID, and every producer that writes into it. `v0.3` under the release split set by the owner 2026-08-10, on size. |
 | 2026-08-09 | → proposed | Raised by [T-053](T-053-enforce-the-headline-ds-091-requires.md), which could close two of DS-091's three clauses and had nowhere to record the third except a comment. Deliberately not absorbed there: DS-091 is one instance and the question is general, which is the mistake the same file made three times before [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md). |

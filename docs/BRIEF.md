@@ -388,14 +388,25 @@ replaces enforced variety, with the template generator satisfying it later.
 
 ---
 
-## Release phases — set 2026-08-09
+## Release phases — set 2026-08-09, split into three 2026-08-10
 
-**Two, and the line between them is one question: *is this between here and a plugin someone can
-install and use?*** Set by the owner, who asked for a working v0.1 that ships and a v0.2 carrying
-everything already known. The board is [`../tasks/README.md`](../tasks/README.md), grouped by these
-names; this section is the decision, that page is its current state.
+**Three, drawn by two questions, both the owner's.** The first, on 2026-08-09: *is this between here
+and a plugin someone can install and use?* Everything it separated out shipped as **v0.1**. The
+second, on 2026-08-10, once v0.1 had closed and all fourteen remaining tasks sat under one label:
+*is this a dependency, or a minor-to-moderate fix — or is it a big piece of new capability?* The
+first is **v0.2**, the second **v0.3**. The board is [`../tasks/README.md`](../tasks/README.md),
+grouped by these names; this section is the decision, that page is its current state.
 
-**What made the split necessary.** The backlog had reached ten open tasks with no ordering except
+**What made the second split necessary, and where the line actually fell.** A phase every open task
+belongs to has stopped sorting anything. Worse, **seven of the fourteen carried no estimate at all**,
+so the board's own ranking — value, then effort — was ordering half a backlog and leaving the rest in
+id order. Estimating those seven first is what made the line drawable, and it fell in one place:
+**at `l`.** Every task estimated `l` or `xl` is v0.3; everything `m` or below is v0.2. Size and the
+fix-versus-feature reading named the same five tasks, and where they could have disagreed — T-036 and
+T-071, both `m` and both arguably new behaviour rather than repair — **size won, because it is the
+half of the rule that can be checked.**
+
+**What made the first split necessary.** The backlog had reached ten open tasks with no ordering except
 dependency edges, and dependency order does not distinguish *needed* from *wanted*. Three of the
 four steps left in [T-016](../tasks/T-016-the-interaction-and-motion-layer.md) were capabilities the
 interaction layer does not reach — 3D, a frame-rate figure, the ruleset amendment the first forces —
@@ -421,40 +432,64 @@ Everything below is load-bearing for that sentence and nothing else is in.
 | ~~[T-075](../tasks/T-075-ds-064-probes-for-the-reference-decks-own-class-names.md) — DS-064 probes for the reference deck's own classes~~ **done 2026-08-10** | Two of the three class names DS-064's probe looked for belonged to the reference deck and to no contract, so a conforming deck failed a rule it passes. The probe now finds the run by contracted component, and a deck it cannot find one on is undecided. **The seventh instance of the absent-subject defect, and the fixture built to end it could see two of the package's eight verdict producers** — `audit.self_test` derived them from `globals()`, one module. Moving that to the directory found four more modules and nine further rows passing on an absent subject, six of them in `theme.py`. Shipped in **`v0.1.4`**. Generalised as **L-54**'s successor, **L-57**. |
 | ~~[T-008](../tasks/T-008-package-document-and-publish.md) — package and publish~~ **done 2026-08-09** | The deploy, and v0.1 is closed by it: public at `github.com/uchimata2/htmldeck`, released as `v0.1.0`, `master` as the default branch. Three things were not as recorded. `master` was never divergent, so publishing was a fast-forward that discarded nothing. The marketplace entry did not exist, so the install route promised in 2026-08-07 was half-built. And 119 of 121 commits carried a personal email, rewritten to a noreply address before the first push, which is irreversible afterwards. |
 
-### v0.2 — everything already known, and deliberately not held for
+### v0.2 — the dependencies, and every minor and moderate fix
 
-**None of these is a defect.** Each is a capability the system does not yet reach, or a sharpening
-of one it does, and each is written up well enough to be picked up cold.
+**None of these is a shipping defect** — an adopter's deck cannot hit one, or it would be a v0.1
+patch by the rule in [`../CLAUDE.md`](../CLAUDE.md). They are the cheap half of what is already
+known: defects in the project's own tooling, items that sharpen its record, and the two moderate
+gaps in capability it already ships. Each is written up well enough to be picked up cold.
+
+**No open task blocks another open task.** Both `blocked_by` edges left in the backlog — T-019's on
+T-002, T-070's and T-071's on T-069 — point at closed work, so *add all dependencies* selected
+nothing beyond what size already did. Recorded because a rule that turns out to be vacuous is worth
+knowing about before someone re-derives it.
 
 | | What it adds |
 | :--- | :--- |
-| [T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, a frame-rate figure with its machine, and DS-140's fifth motion. Split out of T-016. |
-| [T-019](../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md) | The capability preflight a deck ships with. Portability is already gated at build time; this is what the deck does on a machine that surprises it. |
-| [T-041](../tasks/T-041-implement-the-nine-glitch-free-conditions.md) | The seven of R6's nine glitch-free conditions nothing adopted. The gate names the gap today rather than hiding it. |
 | [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md) | A second printed contents sheet. Measured to bite past 24 slides; the target case is 12. |
-| [T-054](../tasks/T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Coverage recorded per *clause* rather than per rule — a sharper account, not a missing one. |
 | [T-055](../tasks/T-055-a-variant-that-leaves-malformed-markup.md) | One seeded variant that tests parser repair instead of the tag it means to test. |
 | [T-058](../tasks/T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched. |
 | ~~[T-059](../tasks/T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md)~~ **done 2026-08-10** | `swap` defaults to `.assets-cache/deck/themed/` and refuses its own input by resolved path. Requiring `-o` was the rival and lost: four shipped copy sites print the bare command, so the flag would have made all four document a command that errors. |
 | ~~[T-060](../tasks/T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)~~ **done 2026-08-10** | `tools/docs/figures.py` runs each command the README prints and partitions all 17 fences and 9 prose numerals. A figure is `compared` and fails on drift, or `volatile` — declared, reported, not enforced — because a count of the repository is stale in the commit that corrects it. |
 | [T-068](../tasks/T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it. T-060 binds a numeral to the whole corpus, so a correct number in the wrong sentence still passes. |
 | ~~[T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md)~~ **done 2026-08-10** | Multiple sources behind a mark that is its own component, and a colophon after the close under a named DS-085 exemption. The reference deck now cites the three source documents it always shipped and never named. Seeding the defect found that **DS-001's check**, not DS-001, was what had banned links — it swept every `href` while the rule enumerates subresources — so it is narrowed to anchors inside a provenance mark and DS-105 judges those. 82 of 113 rules checked. |
-| [T-070](../tasks/T-070-the-quick-view-for-a-source-document.md) | A source rendered inside the deck, as an overlay. Markdown and plain text only. **Unblocked 2026-08-10**: it owns the linked form T-069 deliberately left as plain text. |
 | [T-071](../tasks/T-071-the-intermediate-specifications-carry-their-references.md) | The foundation and slide-by-slide specifications name the sources a deck rests on. Raised by the owner 2026-08-10, and the gap T-069 exposed: the deck cites what a generated one still cannot express. |
 | [T-073](../tasks/T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Whether `tools/docs/refcheck.py` survives now that upstream measured and declined its first half. |
 | [T-076](../tasks/T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | `contrast.verdicts` ends the process on a document it will not report on, so a deck with no theme gets no account at all rather than a failing row. Found by T-075; `v0.2` because the shell makes the input hard to produce by accident. |
 | [T-077](../tasks/T-077-report-a-figure-exclusion-that-outlived-its-numeral.md) | `figures.py` reports an unaccounted numeral and never an account whose numeral has gone. A stale excusal turned the run red for the wrong reason on 2026-08-10 and said nothing about itself. |
 | [T-078](../tasks/T-078-write-down-the-release-sequence.md) | The release sequence, which lives only in four task logs and was re-derived to ship `v0.1.4`. `PUBLISHING.md` owns one of its seven steps and says so in its title. |
+| [T-079](../tasks/T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns name closed tasks, so three open rows read as blocked while `taskmd list --open` correctly ranks them free. T-031 decided this once for the tool taskmd replaced; the migration brought it back and nothing recorded it. |
 | ~~[T-062](../tasks/T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md)~~ **done 2026-08-09** | Retired the pre-split task tool for taskmd, keeping the two reference checks taskmd does not have as `tools/docs/refcheck.py`. |
 | ~~[T-063](../tasks/T-063-improvements-to-propose-upstream-to-taskmd.md)~~ **done 2026-08-10** | Five proposals sent upstream to taskmd, from what the migration measured. |
 
-*The first six rows predate the release split; T-058 through T-063 were added on 2026-08-09 and
-2026-08-10, when this table was found to have stopped listing everything in the phase it names.
-T-068 through T-070 were added on 2026-08-10 — **the same drift, caught by the same sweep**, which
-is the argument for the sweep rather than for remembering. T-071 and T-073 were added later the same
-day, by the sweep and not by memory, which is the point being made twice.*
+*This table stopped listing everything in the phase it named twice, and both times a sweep found it
+rather than anyone remembering: T-058 through T-063 on 2026-08-09 and 2026-08-10, then T-068 through
+T-070 on 2026-08-10 — **the same drift, caught the same way**, which is the argument for the sweep.
+T-071 and T-073 followed later that day, and T-076 through T-079 on 2026-08-10 from work done rather
+than from planning. The five rows that left for v0.3 are below, not deleted: what a phase contained
+is a fact about the decision.*
 
-**What v0.1 will ship without, stated rather than discovered.** No 3D. No frame-rate figure on any
+### v0.3 — the bigger tasks and the new capabilities
+
+**Each is a capability the system does not reach, and each is `l` or `xl`.** They sat in v0.2 until
+2026-08-10 and moved on size, not on merit: batching ten cheap items behind the largest five would
+delay all ten for the benefit of none. **Two of the five — T-057 and T-041 — are things v0.1 was
+explicitly announced without**, which is the same judgement reached twice by different routes. The
+third item on that announcement, printed contents past 24 slides, stayed in v0.2: it is `m`, and the
+line is drawn on size rather than on which release last mentioned something.
+
+| | What it adds |
+| :--- | :--- |
+| [T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, a frame-rate figure with its machine, and DS-140's fifth motion. Split out of T-016, and `xl` because it is three deliverables wearing one title. |
+| [T-019](../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md) | The capability preflight a deck ships with. Portability is already gated at build time; this is what the deck does on a machine that surprises it. |
+| [T-041](../tasks/T-041-implement-the-nine-glitch-free-conditions.md) | The seven of R6's nine glitch-free conditions nothing adopted. The gate names the gap today rather than hiding it. |
+| [T-054](../tasks/T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Coverage recorded per *clause* rather than per rule — a sharper account, not a missing one. `l` because `DEFERRED` is keyed by rule ID and every producer writing into it moves with the key. |
+| [T-070](../tasks/T-070-the-quick-view-for-a-source-document.md) | A source rendered inside the deck, as an overlay. Markdown and plain text only. Unblocked 2026-08-10: it owns the linked form T-069 deliberately left as plain text. |
+
+*The largest thing on the board is T-070 and the least certain to be worth it is also T-070 — its own
+raising note says so. That pair is why the phase exists rather than an ordering within one.*
+
+**What v0.1 shipped without, stated rather than discovered.** No 3D. No frame-rate figure on any
 machine. Seven of R6's nine glitch-free conditions unimplemented, and a console error that does not
 stop a deck still invisible to the gate. Printed contents pages that do not continue past 24 slides.
 Those belong in the release notes, not in a list of things to fix first.

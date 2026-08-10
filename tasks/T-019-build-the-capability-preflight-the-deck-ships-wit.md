@@ -7,10 +7,12 @@ phase: specify
 parent: null
 blocked_by: [T-002]
 related: [T-005, T-017]
-work_package: v0.2
+work_package: v0.3
 owner: maintainer
+business_value: high
+effort: l
 created: 2026-08-06
-updated: 2026-08-07
+updated: 2026-08-10
 deliverables: []
 ---
 
@@ -118,5 +120,6 @@ one.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (specify) | **Estimated `high`/`l`, and moved to `v0.3`.** `high` because the preflight is what makes CLAUDE.md rule 2's *degrade gracefully* real for a recipient who cannot debug a blank page; `l` because emitting only the checks a deck actually uses requires the builder to know what it emitted, which is not a property the deck can read off itself. `v0.3` under the release split set by the owner 2026-08-10 — a new capability of this size is neither a dependency nor a moderate fix. |
 | 2026-08-07 | (no change) | **Both open questions answered by the owner; §1 has none left.** *One behaviour, always visible* — the file cannot know who opened it, and an author-silent build would ship a different artifact from the one that was tested. *`isSecureContext` becomes a build-check row* — it is true for `file://`, so at runtime it can only pass. **The second answer generalises into the design step this task starts with**: step 1 selects checks per deck feature, and the selection rule is now stated — a row earns its place only where a real opening route makes it fail. That is testable against [R6](../docs/research/R6-portability-contract.md) §2's load-bearing list, and it will remove more than one candidate. |
 | 2026-08-06 | → proposed | Created. R6 §7 defines the deck's version floor as a capability preflight rather than a number; that position is only real if something emits the preflight. Blocked on T-002 because the preflight is emitted **by** build mode and cannot be built before it — the design work in steps 1–2 could start earlier if the owner wants it pulled forward. |

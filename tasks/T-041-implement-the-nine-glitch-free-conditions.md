@@ -7,10 +7,12 @@ phase: specify
 parent: null
 blocked_by: []
 related: [T-005, T-016, T-019]
-work_package: v0.2
+work_package: v0.3
 owner: maintainer
+business_value: high
+effort: l
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-10
 deliverables: []
 ---
 
@@ -116,4 +118,5 @@ the two at close, not by either.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (specify) | **Estimated `high`/`l`, and moved to `v0.3`.** `high` because CLAUDE.md rule 2 is a testable statement only once decomposed, and seven of R6's nine conditions are still nobody's; `l` because each condition needs its own probe, or its own stated reason for not having one, in an account that already partitions 113 rules. `v0.3` under the release split set by the owner 2026-08-10, on size. |
 | 2026-08-09 | → proposed | **Raised at close, from a gap between two documents that each read correctly alone.** [R6 §8](../docs/research/R6-portability-contract.md) decomposed CLAUDE.md rule 2 into nine testable conditions *"for T-005 to implement"*; [`BRIEF.md`](../docs/BRIEF.md) relayed that; [T-005](T-005-build-check-the-gate-the-deck-must-pass.md)'s §1 wrote a narrower criterion scoped to the restricted-origin class, met it, and closed. **Nothing was recorded falsely and seven conditions were nobody's** — which is the shape worth remembering, because the usual failure is a claim that outran the work and this is the opposite: work that outran nothing, in a corner no one was looking at. Condition 2 is the one T-005 already names as unmet in its own review, so this task inherits a defect that was declared rather than found. |

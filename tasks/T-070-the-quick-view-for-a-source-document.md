@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: [T-069]
 related: [T-019]
-work_package: v0.2
+work_package: v0.3
 owner: the project owner
 business_value: medium
 effort: l
@@ -194,6 +194,7 @@ and produce a displayable rendering of it, and nothing in this repository does t
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (specify) | **Moved to `v0.3`** under the release split set by the owner 2026-08-10. Estimates unchanged: `l` and a new capability is the definition of the later phase, and this task's own raising note already called it *the largest thing on the v0.2 board and the least certain to be worth it*. |
 | 2026-08-10 | (specify) | **Both owner questions closed.** *Raster:* DS-110 is narrowed by **scope**, not by force — the build may never emit a raster, and that half is untouched; a source may be *quoted* as raster inside the quick view only; and where a source offers both forms the builder takes the vector one. The enforceable part is a structural container the gate can key on, which is why the amendment cannot land before the component and is kept in this task rather than split out. *Video:* **linked, never embedded** — which drops it from this task entirely, since a linked video is DS-105's external-URL case and not a quick view. That removes the one admitted type that could have put a deck beyond emailing. |
 | 2026-08-10 | (specify) | **Format set extended by the owner: HTML, video, PNG, SVG "and other compatible types".** Recorded as three **admission tests** rather than a list, because an open-ended clause is the shape DS-230 and DS-000 exist to prevent — embeds with zero external references, executes no script into the deck, stays inside the measured size bound. SVG passes outright. **PNG collides with DS-110 — *No raster images. Ever.*, `hard` and `auto` — so a deck carrying one fails `check.py` today**; recommended as a quick-view-scoped exception, and it is the owner's. Video is unlegislated and is entirely a size question. HTML is the one that can break its host and must be inert structurally. The superseded decision is kept verbatim in §1 rather than edited away. |
 | 2026-08-10 | (specify) | **Both open questions settled by the owner**, as recommended: Markdown and plain text only, and an overlay rather than a page. The cost of the format decision is recorded rather than smoothed over — for a while the quick view will not open the formats most real source material uses, so the mark falls back to plain text or a URL more often than not. Still blocked by T-069. |

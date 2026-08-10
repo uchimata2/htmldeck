@@ -9,8 +9,10 @@ blocked_by: []
 related: [T-038, T-005]
 work_package: v0.2
 owner: the project owner
+business_value: medium
+effort: xs
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-10
 deliverables: []
 ---
 
@@ -90,4 +92,5 @@ proves less than it appears to, and the appearance is the problem.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (specify) | **Estimated `medium`/`xs`.** `medium` because one of the suite's 24 variants proves nothing about the rule it names — it fails five and tests Chrome's parser repair — and a fixture that mis-attributes a catch is the shape of defect this project keeps finding; `xs` because the fix is one closing tag. **Stays in `v0.2`.** |
 | 2026-08-09 | → proposed | Found by [T-053](T-053-enforce-the-headline-ds-091-requires.md): the new DS-091 headline check fired on this variant, and the slide it names does have a headline. Chasing that showed the variant never closes its own tag. |

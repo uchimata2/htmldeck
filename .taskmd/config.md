@@ -172,7 +172,7 @@ independent projects reached for it and neither could validate (T-088).
 | type | analysis, decision, deliverable, research, fix, admin, audit |
 | business_value | critical, high, medium, low |
 | effort | xs, s, m, l, xl |
-| work_package | WP1, WP2, WP3, v0.1, v0.2, final, none |
+| work_package | WP1, WP2, WP3, v0.1, v0.2, v0.3, final, none |
 
 ## Ordering
 

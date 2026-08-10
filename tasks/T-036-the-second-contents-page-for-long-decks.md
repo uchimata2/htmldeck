@@ -9,8 +9,10 @@ blocked_by: []
 related: [T-034, T-005]
 work_package: v0.2
 owner: maintainer
+business_value: low
+effort: m
 created: 2026-08-08
-updated: 2026-08-08
+updated: 2026-08-10
 deliverables: []
 ---
 
@@ -103,4 +105,5 @@ only bites past 24 slides and the target is 12.*
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (specify) | **Estimated `low`/`m`.** `low` because the bound bites at 24 slides against a target deck of 12, so nothing this project produces reaches it — what the task buys is closing DS-226's known-unimplementable range, not serving a reader; `m` for print pagination that must carry every entry across a break. **Stays in `v0.2`** under the release split set by the owner 2026-08-10: moderate in size, and a conformance fix to a page that exists rather than a new capability. |
 | 2026-08-08 | → proposed | Raised by [T-034](T-034-a-contents-page-for-the-printed-deck.md) on the strength of its own measurement rather than on a hunch. T-034 specified the second page as the *presumptive* answer past its single-page bound and said the measurement would decide whether the question cost anything; it measured **16 as the bound and 24 as the hard limit against a target deck of 12**, which puts the work outside the target case — so it is raised, not built. What stops it being simply dropped is that **DS-226 states an invariant the implementation cannot honour past 24 slides**: a box then has 89 du of height for 96 du of number, title and padding, so an entry is necessarily clipped. A ruleset with a known unimplementable range needs either this task or an amendment, and that choice is better made deliberately than by silence. |

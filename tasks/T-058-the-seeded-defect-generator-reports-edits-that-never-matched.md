@@ -9,8 +9,10 @@ blocked_by: []
 related: [T-016, T-005]
 work_package: v0.2
 owner: the project owner
+business_value: medium
+effort: s
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-10
 deliverables: []
 ---
 
@@ -93,4 +95,5 @@ and the output did not change.**
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (specify) | **Estimated `medium`/`s`.** `medium` because the blindness fixture's entire claim is *a seeded defect on every dimension* and one seed has been counted without ever matching, so the claim is over-reported at its source; `s` because `static_variants.py`'s `build` already carries the assertion this needs. **Stays in `v0.2`.** |
 | 2026-08-09 | → proposed | Created by [T-016](T-016-the-interaction-and-motion-layer.md), which widened the S2 seed's pattern to admit the new `data-disc` value and found the regenerated fixture unchanged — because the seed had never matched in the first place. **v0.2**: the fixture's other nine dimensions are seeded and the gate's blindness claim rests on those; this is a fixture reporting one seed it did not apply, not a gate reporting a defect it cannot see. |

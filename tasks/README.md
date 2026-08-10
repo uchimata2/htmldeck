@@ -12,9 +12,10 @@ Working method: [`../CLAUDE.md`](../CLAUDE.md). Specification: [`../docs/BRIEF.m
 Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried lessons:
 [`../docs/LESSONS.md`](../docs/LESSONS.md).
 
-**The open backlog is two release phases, and the section headings below are them.** **v0.1** is
-what a first working release needs and nothing else; **v0.2** is everything already known and
-deliberately not held for. What is in each and why is in
+**The open backlog is three release phases, and the `Work Package` column below carries them.**
+**v0.1** is what a first working release needs and nothing else, and it has shipped; **v0.2** is the
+dependencies and every minor and moderate fix; **v0.3** is the bigger tasks and the new capabilities,
+everything estimated `l` or `xl`. What is in each and why is in
 [`../docs/BRIEF.md`](../docs/BRIEF.md) *Release phases* — that section is the decision, this page is
 the current state of it. **Closed tasks keep the `WP1`–`WP3` packages they were worked under**;
 those were phases of the research and design work and rewriting them would be rewriting what
@@ -26,20 +27,21 @@ happened.
 
 | ID | Title | Work Package | Status | Phase | Parent | Children | Blocked By | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `v0.2` | `proposed` | `specify` | - | - | T-002 | - | T-005, T-017, T-041, T-057, T-070 |
+| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `v0.3` | `proposed` | `specify` | - | - | T-002 | - | T-005, T-017, T-041, T-057, T-070 |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `v0.2` | `proposed` | `specify` | T-034 | - | - | - | T-005, T-034, T-042 |
-| [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.2` | `proposed` | `specify` | - | - | - | - | T-005, T-016, T-019, T-042 |
-| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `v0.2` | `proposed` | `specify` | T-053 | - | - | - | T-005, T-037, T-043, T-051 |
+| [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.3` | `proposed` | `specify` | - | - | - | - | T-005, T-016, T-019, T-042 |
+| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `v0.3` | `proposed` | `specify` | T-053 | - | - | - | T-005, T-037, T-043, T-051 |
 | [T-055](T-055-a-variant-that-leaves-malformed-markup.md) | Close the slide-is-not-a-section variant's open tag, so it tests the tag and not parser repair | `v0.2` | `proposed` | `specify` | T-053 | - | - | - | T-005, T-038 |
-| [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.2` | `proposed` | `specify` | T-016 | - | - | - | T-007, T-016, T-019, T-033 |
+| [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.3` | `proposed` | `specify` | T-016 | - | - | - | T-007, T-016, T-019, T-033 |
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `v0.2` | `proposed` | `specify` | - | - | - | - | T-005, T-016 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060 |
-| [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.2` | `proposed` | `specify` | - | - | T-069 | - | T-019, T-069, T-071 |
+| [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | T-069 | - | T-019, T-069, T-071 |
 | [T-071](T-071-the-intermediate-specifications-carry-their-references.md) | The intermediate specifications carry the sources they rest on | `v0.2` | `proposed` | `specify` | - | - | T-069 | - | T-070 |
-| [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `proposed` | `specify` | - | - | - | - | T-062, T-063, T-074, T-077 |
+| [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `proposed` | `specify` | - | - | - | - | T-062, T-063, T-074, T-077, T-079 |
 | [T-076](T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | A verdict producer that exits the process instead of reporting a row | `v0.2` | `proposed` | `specify` | - | - | - | - | T-075 |
 | [T-077](T-077-report-a-figure-exclusion-that-outlived-its-numeral.md) | Report a figure exclusion that outlived the numeral it was written for | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060, T-073 |
 | [T-078](T-078-write-down-the-release-sequence.md) | Write down the release sequence, which lives only in four task logs | `v0.2` | `proposed` | `specify` | - | - | - | - | T-008, T-056 |
+| [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns list closed tasks, so open rows read as blocked | `v0.2` | `proposed` | `specify` | - | - | - | - | T-031, T-062, T-063, T-073 |
 
 ## Closed
 
@@ -74,7 +76,7 @@ happened.
 | [T-028](T-028-rewrite-the-reference-deck-to-the-deliverable-contract.md) | Retrofit the reference deck to the deliverable contract and thin its chrome | `WP2` | `done` | `review` | T-027 | - | - | - | T-002, T-005, T-021, T-024, T-025, T-030, T-032, T-033, T-035, T-040, T-044, T-045, T-052 |
 | [T-029](T-029-stop-the-deliverable-exemption-silently-dropping-pointers.md) | Stop the deliverable exemption silently dropping pointers from the check | - | `done` | `review` | T-026 | - | - | - | T-018, T-031, T-046 |
 | [T-030](T-030-audit-the-backlog-edges-and-propose-a-build-order.md) | Audit the dependency edges across the open backlog and propose a build order | - | `done` | `review` | - | - | - | - | T-008, T-020, T-028, T-031 |
-| [T-031](T-031-stop-the-index-blocks-column-listing-closed-tasks.md) | Stop the index `Blocks` column listing closed downstream tasks | - | `done` | `review` | - | - | - | - | T-029, T-030, T-046 |
+| [T-031](T-031-stop-the-index-blocks-column-listing-closed-tasks.md) | Stop the index `Blocks` column listing closed downstream tasks | - | `done` | `review` | - | - | - | - | T-029, T-030, T-046, T-079 |
 | [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) | Adopt the paginated print mode in the reference deck, and decide whether print carries tier two | `WP2` | `done` | `review` | - | - | - | - | T-005, T-016, T-018, T-021, T-028, T-034, T-044 |
 | [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md) | Reconcile DS-131 with the chrome budget it now contradicts | `WP2` | `done` | `review` | - | - | - | - | T-025, T-027, T-028, T-035, T-037, T-057 |
 | [T-034](T-034-a-contents-page-for-the-printed-deck.md) | Add a contents page to the printed deck | `WP2` | `done` | `review` | - | T-036 | - | - | T-005, T-018, T-032, T-035, T-036, T-044 |
@@ -99,8 +101,8 @@ happened.
 | [T-059](T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md) | Theme swap overwrites its input when -o is omitted | `v0.2` | `done` | `review` | - | - | - | - | T-007 |
 | [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md) | Check that the README's pasted figures still match the commands that produced them | `v0.2` | `done` | `review` | - | - | - | - | T-050, T-056, T-067, T-068, T-077 |
 | [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md) | The scaffold check passed a manifest the installer rejects | `v0.1` | `done` | `review` | - | - | - | - | T-008, T-015, T-062, T-064, T-067 |
-| [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) | Retire the pre-split task tool and repoint what points at it | `v0.2` | `done` | `review` | - | - | - | - | T-046, T-061, T-063, T-073 |
-| [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `v0.2` | `done` | `review` | - | - | - | - | T-062, T-073 |
+| [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) | Retire the pre-split task tool and repoint what points at it | `v0.2` | `done` | `review` | - | - | - | - | T-046, T-061, T-063, T-073, T-079 |
+| [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `v0.2` | `done` | `review` | - | - | - | - | T-062, T-073, T-079 |
 | [T-064](T-064-the-tools-crash-when-the-deck-is-on-another-drive.md) | The tools crash when the deck is on a different drive from the plugin | `v0.1` | `done` | `review` | - | - | - | - | T-008, T-061, T-065 |
 | [T-065](T-065-four-rules-still-fail-a-deck-for-not-having-their-subject.md) | Four rules still fail a deck for not having their subject | `v0.1` | `done` | `review` | - | - | - | - | T-051, T-064, T-066, T-075 |
 | [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | - | - | T-051, T-065, T-075 |
