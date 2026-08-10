@@ -19,12 +19,14 @@ reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
 2026-08-09 as `docs/PUBLISHING.md`, and **v0.1 shipped the same day**: the repository is public at
-`github.com/uchimata2/htmldeck`, released and **now at `v0.1.4`** after four patch releases, with
+`github.com/uchimata2/htmldeck`, released and **now at `v0.1.5`** after five patch releases, with
 `master` as the published branch. **v0.2 is the main line, but v0.1 has reopened five times**: a defect an
-adopter hits in the published plugin is a `v0.1` patch, not a v0.2 improvement. The fifth is
-[T-083](tasks/T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) and it is
-the first nobody reported — the shipped example deck fails a `hard` rule, found by running the gate
-list rather than by an adopter. Read the brief first — its "Decisions taken" section overrides anything older
+adopter hits in the published plugin is a `v0.1` patch, not a v0.2 improvement. **The fifth is the
+first nobody reported**: `v0.1.5` carries
+[T-083](tasks/T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) and
+[T-085](tasks/T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md), both found by running
+[`docs/PUBLISHING.md`](docs/PUBLISHING.md) §8's gate list rather than by an adopter — which is the
+argument for having written that list down. Read the brief first — its "Decisions taken" section overrides anything older
 in it.
 
 **The backlog is three release phases, all set by the owner: `v0.1` and `v0.2` on 2026-08-09, and

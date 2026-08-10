@@ -192,12 +192,16 @@ python tools/plugin/check_scaffold.py                          # the plugin mani
 python tools/deck/static_variants.py                           # the seeded-defect suite
 python tools/examples/seed_defects.py --check                  # the blindness fixture, still derived
 python tools/deck/contents_bound.py                            # the contents-page bound
-python tools/deck/shell.py check <deck>                        # per deck, both examples
-python tools/deck/component.py check <deck>
-python tools/deck/theme.py check <deck>
-python tools/deck/check.py <deck> --sources <dir>
+python tools/deck/shell.py check <deck>                        # the five below run PER DECK, and
+python tools/deck/component.py check <deck>                    # this repository ships TWO:
+python tools/deck/theme.py check <deck>                        #   examples/reference-deck.html
+python tools/deck/check.py <deck> --sources <dir>              #   examples/sort-window/sort-window.html
 python tools/deck/spec.py <deck>.foundation.md <deck>.slides.md
 ```
+
+**The per-deck five are where every defect this list was written from was hiding**, and the reason is
+structural: the README prints repository-wide commands, so the set anyone runs by habit never reaches
+a deck. Run them against **both** examples, not the one being worked on.
 
 **It has already failed, which is why it is declared rather than trusted.** The README prints five
 commands and that set was treated as the list. Writing this section meant running everything in it,

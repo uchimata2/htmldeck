@@ -148,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1156 document pointer(s) checked, 0 broken
-     517 section reference(s) resolved, 0 dead; 1262 not bound to a document and skipped.
+OK - 1188 document pointer(s) checked, 0 broken
+     529 section reference(s) resolved, 0 dead; 1316 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -184,9 +184,8 @@ confident wrong answer four times. The other three commands read files and need 
 
 [`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **231 KB
 in one file, zero external references**, three embedded typefaces, ten icons and eight hand-written
-SVG figures.
-Download it, disconnect, double-click it. Every measurement behind it, and how to reproduce each, is
-in [`examples/README.md`](examples/README.md).
+SVG figures. Download it, disconnect, double-click it. Every measurement behind it, and how to
+reproduce each, is in [`examples/README.md`](examples/README.md).
 
 It also ships with [`examples/reference-deck-seeded-defects.html`](examples/reference-deck-seeded-defects.html),
 the same deck with **one deliberate defect per evaluation dimension**, generated from its parent so
@@ -200,7 +199,7 @@ names every one it misses.
 ## The deck nobody authored by hand
 
 [`examples/sort-window/`](examples/sort-window) holds *Move the window, not the fleet*: 12 slides,
-**220 KB in one file, zero external references**, five hand-written SVG figures and ten disclosure
+**220 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
 panels. It was built through the pipeline rather than written, assembled from
 [`shell/`](shell), which is the reference deck with its content cut out, then authored three slides
 at a time with the gate run per batch.
@@ -259,12 +258,13 @@ describe a plan.
   part of what it claimed to have read; the second replaced that script with a fixture, and the
   fixture could see one file of the eight that needed it. The sample is one project.
 - **The gate names seven glitch-free conditions it does not check**, and there is no frame-rate
-  figure. Both are v0.2, not oversights.
+  figure. Both are v0.3, not oversights.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
-is split into two releases. **v0.1** is what a first working plugin needs. It shipped, and is at v0.1.4 after four patches.
-**v0.2** is everything else already known, including 3D visuals, the frame-rate figure and those
-seven conditions. [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
+is split into three releases. **v0.1** is what a first working plugin needs. It shipped, and is at
+v0.1.5 after five patches. **v0.2** is the minor and moderate fixes already known. **v0.3** is the
+larger work, including 3D visuals, the frame-rate figure and those seven conditions.
+[`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
 **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
 half's first run and were settled the same day in

@@ -186,9 +186,22 @@ def self_test(data):
         failures.append("box taller than the 268 du cap at %s - the cap is not in force"
                         % ", ".join("%d slides (%.1f du)" % t for t in over))
     # The deck must be measured at the size it actually ships, or the reference case is unproven.
-    if data.get("authored") != 12:
-        failures.append("the deck built %r contents boxes, expected 12 - the reference deck "
-                        "changed and these numbers describe a different deck" % data.get("authored"))
+    #
+    # **13, not 12, and the difference is a section rather than a slide.** `examples/reference-deck.html`
+    # is a twelve-slide deck plus the colophon T-069 added after the close under a named DS-085
+    # exemption, and the contents page is derived from the manifest, so it builds a box per section -
+    # thirteen. The number was 12 and stopped being true on the day that colophon landed, which took
+    # this tool from measuring to refusing and left it that way until T-084 (2026-08-10).
+    #
+    # **Deliberately not derived.** This assertion exists to trip when the deck moves under the
+    # measurement, so a value read from the deck would agree with every deck and catch nothing. What
+    # a re-baseline owes instead is saying which deck the number describes, so the next trip is
+    # readable rather than mysterious - and that is what the paragraph above is.
+    AUTHORED = 13
+    if data.get("authored") != AUTHORED:
+        failures.append("the deck built %r contents boxes, expected %d (twelve slides and the "
+                        "colophon) - the reference deck changed and these numbers describe a "
+                        "different deck" % (data.get("authored"), AUTHORED))
     return failures
 
 

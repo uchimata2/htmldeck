@@ -2,8 +2,8 @@
 id: T-084
 title: The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-036, T-069, T-078, T-083]
@@ -13,7 +13,8 @@ business_value: high
 effort: s
 created: 2026-08-10
 updated: 2026-08-10
-deliverables: []
+deliverables:
+  - tools/deck/contents_bound.py
 ---
 
 # T-084 — The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed
@@ -77,27 +78,58 @@ this task is one of the instances that made the declaration necessary.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
+| 1 | Find out what the thirteenth box is, from the deck | this file §3 |
+| 2 | Re-baseline or fix the deck, whichever the answer says | [`contents_bound.py`](../tools/deck/contents_bound.py) |
+| 3 | Run it, and check the bound against the numbers T-036 was specified on | this file §4 |
 
 ## 3. Implement
 
+**What the thirteenth box is**
+`examples/reference-deck.html` carries **thirteen** `<section class="slide…">` elements: twelve
+slides and the **colophon** [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) added
+after the close under a named DS-085 exemption. The contents page is derived from the manifest rather
+than authored, so it builds one box per section — thirteen. Counted off the deck: the last two are
+`class="slide close"` and `class="slide"` named *Sources*, and the deck's `aria-label`s run to
+*Slide 13*.
+
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **13 is right; the fixture was wrong** — 2026-08-10. Nothing in the deck grew a box it should not
+  have. The number was true of the deck as it stood before T-069 and went false the moment the
+  colophon landed, which took this tool from *measuring* to *refusing* and left it there.
+- **Deliberately still a hard-coded number, not derived** — 2026-08-10. §1 asked which of the two was
+  wrong, not how to stop the question recurring, and the honest answer to the second is that this
+  assertion **exists to trip when the deck moves under the measurement**. A value read from the deck
+  would agree with every deck and catch nothing. What a re-baseline owes instead is saying which deck
+  its number describes, so the next trip is readable — and the comment now names the twelve slides
+  and the colophon, and the change that made it thirteen.
 
 **Outputs produced**
-- <path>
+- [`tools/deck/contents_bound.py`](../tools/deck/contents_bound.py) — `AUTHORED = 13`, the failure
+  message naming what the thirteenth is, and the paragraph explaining why the number is not derived.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The tool runs, and what it now measures is stated | met | Runs to completion and prints the sweep across seventeen deck sizes. |
+| Whether 13 is right is decided from the deck | met | Counted off the deck, not inferred from the fixture: twelve slides plus T-069's colophon. |
+| A re-baselined number says which deck it describes | met | The comment names both halves and the change that moved it, so the next trip reads as a fact rather than a mystery. |
+| The gate list in `PUBLISHING.md` §8 still names this command, and it is green there | met | Named, and green in the full run made for `v0.1.5`. |
+
+**The bound is unchanged, which is the result that matters downstream:**
+
+    THE BOUND      16 slides - the largest deck that still shows a description
+    THE HARD LIMIT 24 slides - the largest deck whose number and title render at all
+
+Those are the two numbers [T-036](T-036-the-second-contents-page-for-long-decks.md) was specified
+against, so its specification stands and its `blocked_by` edge is released.
 
 **Child fix tasks raised**
-- <T-NNN or "none">
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | → done | The fixture was wrong and the deck was not: thirteen is twelve slides plus T-069's colophon, counted off the deck. **Left hard-coded on purpose** — this assertion exists to trip when the deck moves, so deriving it would make it agree with everything; what it owed was saying which deck it describes, which is now in the comment. The bound came back **16 / 24**, the same pair T-036 was specified on, so that task's edge is released and its specification stands untouched. Shipped in **`v0.1.5`**. |
 | 2026-08-10 | → proposed | Raised from [T-078](T-078-write-down-the-release-sequence.md), which had to run each gate it was about to write down and found this one refusing to start. Attribution measured by checking the pre-T-069 deck out and back. `high` because a refusing self-test is a check nobody is getting an answer from, and T-036 is queued behind the measurement; `s` because the message names the deck and both numbers, so the work is one decision about which of them is wrong. `v0.2`: a fix. |

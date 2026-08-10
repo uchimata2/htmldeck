@@ -107,7 +107,7 @@ fit one deck is worse than no threshold (**L-38**).
 | `--font-mono` | type | primitive | The mono face, which carries the domain vocabulary (DS-038). | — |
 | `--fs-base` | type | primitive | Body size in design units — the dial the whole text scale turns on. DS-034 fixes the band. | n 24-28 |
 | `--type-ratio` | type | primitive | One step of the text scale, and of the reading view's. | — |
-| `--fs-small` | type | derived | One step below body: control labels and panel text. | — |
+| `--fs-small` | type | derived | One step below body: control labels and panel text. **Never a slide's `.standfirst`, and never the first `<p>` of its `.body`** — those two are what DS-064's probe reads, and `--fs-small` cannot clear its floor. `--fs-base/1.155` against a floor of 24 du at k=0.667 puts DS-034's whole 24–28 band at 13.9–16.2 CSS px, so the token passes only at the very top of it. Measured on `examples/sort-window/`, which shipped a close list at 15.0 px ([T-083](../tasks/T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md)). | — |
 | `--fs-body` | type | derived | Body text (DS-034). | — |
 | `--fs-lead` | type | derived | One step above body: a lead paragraph. | — |
 | `--fs-subhead` | type | derived | Two steps above body (DS-034). | — |

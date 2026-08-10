@@ -1542,7 +1542,11 @@ svg{display:block}
 .close-body{display:grid;place-content:center;justify-items:center;text-align:center;gap:var(--sp-4)}
 .close-h{font-size:var(--fs-display-lg);max-width:calc(1500*var(--du))}
 .close-list{display:grid;gap:var(--sp-2);justify-items:center}
-.close-item{color:var(--ink-soft);font-size:var(--fs-small)}
+/* Body size, not --fs-small. These three lines are what approval authorises, and they are the
+   first <p> of this slide's .body - so they are the run DS-064 measures. At --fs-small they came
+   to 15.0 CSS px in a 720p capture against a 16 px floor, because --fs-small is --fs-base/1.155
+   and the floor is 24 du at k=0.667 (T-083). */
+.close-item{color:var(--ink-soft);font-size:var(--fs-body)}
 
 /* the reading view reflows the composition; the components reflow themselves */
 .doc .stat{display:block}

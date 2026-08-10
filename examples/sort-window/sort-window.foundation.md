@@ -34,7 +34,7 @@ slide 5 of 12, which leaves seven slides to survive it.
 | Archetypes | A-11, A-01, A-03, A-05, A-08, A-06, A-07, A-03, A-04, A-12, A-09, A-14 | DESIGN-SYSTEM §3.2 |
 | Disclosure | Ten panels, slides 2–11. `derivation` on every figure the board will challenge; `scope` where a boundary is doing work; `condition` where the recommendation depends on something outside our control; `instances` once, for the four districts | DESIGN-SYSTEM §5.3 |
 | Motion | Rise for entrances; Current on the flow's live path; Pulse-once on the cut-off marker; Open and Turn on the disclosure. No fifth | DESIGN-SYSTEM §5.2 |
-| Visuals | Five hand-written SVG figures — a trajectory, a night-flow, a small multiple, a before/after, a gated timeline — plus one ledger built in the composition block. No charts library | DESIGN-SYSTEM §4 |
+| Visuals | Six hand-written SVG figures — a date rail, a trajectory, a night-flow, a small multiple, a before/after, a gated timeline — plus one ledger built in the composition block. No charts library | DESIGN-SYSTEM §4 |
 
 **A-03 is used twice and that is deliberate.** Slide 3 is 12.4% and slide 8 is 2.4%: the same
 measure, before and after, in the same form, so the comparison needs no chart. Repeating an
