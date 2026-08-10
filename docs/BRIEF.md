@@ -444,6 +444,7 @@ of one it does, and each is written up well enough to be picked up cold.
 | [T-073](../tasks/T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Whether `tools/docs/refcheck.py` survives now that upstream measured and declined its first half. |
 | [T-076](../tasks/T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | `contrast.verdicts` ends the process on a document it will not report on, so a deck with no theme gets no account at all rather than a failing row. Found by T-075; `v0.2` because the shell makes the input hard to produce by accident. |
 | [T-077](../tasks/T-077-report-a-figure-exclusion-that-outlived-its-numeral.md) | `figures.py` reports an unaccounted numeral and never an account whose numeral has gone. A stale excusal turned the run red for the wrong reason on 2026-08-10 and said nothing about itself. |
+| [T-078](../tasks/T-078-write-down-the-release-sequence.md) | The release sequence, which lives only in four task logs and was re-derived to ship `v0.1.4`. `PUBLISHING.md` owns one of its seven steps and says so in its title. |
 | ~~[T-062](../tasks/T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md)~~ **done 2026-08-09** | Retired the pre-split task tool for taskmd, keeping the two reference checks taskmd does not have as `tools/docs/refcheck.py`. |
 | ~~[T-063](../tasks/T-063-improvements-to-propose-upstream-to-taskmd.md)~~ **done 2026-08-10** | Five proposals sent upstream to taskmd, from what the migration measured. |
 
