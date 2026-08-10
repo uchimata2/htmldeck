@@ -32,7 +32,6 @@ happened.
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.3` | `proposed` | `specify` | - | - | - | - | T-005, T-016, T-019, T-042 |
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `v0.3` | `proposed` | `specify` | T-053 | - | - | - | T-005, T-037, T-043, T-051 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.3` | `proposed` | `specify` | T-016 | - | - | - | T-007, T-016, T-019, T-033 |
-| [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `v0.2` | `proposed` | `specify` | - | - | - | - | T-005, T-016 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `proposed` | `specify` | - | - | - | - | T-060 |
 | [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | T-069 | - | T-019, T-069, T-071 |
 | [T-076](T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | A verdict producer that exits the process instead of reporting a row | `v0.2` | `proposed` | `specify` | - | - | - | - | T-075 |
@@ -99,6 +98,7 @@ happened.
 | [T-053](T-053-enforce-the-headline-ds-091-requires.md) | Enforce the headline DS-091 requires, and excuse the fragment count no check can reach | - | `done` | `review` | - | T-054, T-055 | - | - | T-005, T-037, T-038, T-051 |
 | [T-055](T-055-a-variant-that-leaves-malformed-markup.md) | Close the slide-is-not-a-section variant's open tag, so it tests the tag and not parser repair | `v0.2` | `done` | `review` | T-053 | - | - | - | T-005, T-038 |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `v0.1` | `done` | `review` | - | - | - | T-008 | T-042, T-050, T-052, T-060, T-067, T-078 |
+| [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `v0.2` | `done` | `review` | - | - | - | - | T-005, T-016 |
 | [T-059](T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md) | Theme swap overwrites its input when -o is omitted | `v0.2` | `done` | `review` | - | - | - | - | T-007 |
 | [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md) | Check that the README's pasted figures still match the commands that produced them | `v0.2` | `done` | `review` | - | - | - | - | T-050, T-056, T-067, T-068, T-077 |
 | [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md) | The scaffold check passed a manifest the installer rejects | `v0.1` | `done` | `review` | - | - | - | - | T-008, T-015, T-062, T-064, T-067 |

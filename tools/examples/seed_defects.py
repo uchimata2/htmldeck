@@ -49,6 +49,23 @@ def sub(html, dim, why, old, new, count=1):
     return html.replace(old, new, count)
 
 
+def subre(html, dim, why, pattern, repl, count=1, flags=0):
+    """`sub` for a pattern rather than a literal, asserting the same thing.
+
+    **The three edits that were not going through `sub` were the three nobody could see.** A bare
+    `re.sub` returns the document unchanged when its pattern misses, and the `applied.append` on the
+    next line runs anyway - so the ledger claimed a seed the deck did not carry. The S2 disclosure
+    removal did exactly that from the day it was written: its lookahead expected `<p
+    class="provenance">` immediately after the block, and the bottom line sits between them, so it
+    never matched once (T-058).
+    """
+    out, n = re.subn(pattern, repl, html, count=count, flags=flags)
+    if n != count:
+        sys.exit("SEED %s: expected %d match(es), found %d\n  %.120s" % (dim, count, n, pattern))
+    applied.append((dim, why))
+    return out
+
+
 def split_slides(html):
     """Return (head, [slide blocks], tail) for the twelve stage sections."""
     start = html.index(MARKER + "1 ")
@@ -87,9 +104,12 @@ def build():
                'still adding trips in 2031.</b>',
                '<b>Bike-share stalls at 3,000 trips and frequency reaches 6,100, as the data '
                'shows.</b>')
-    html = re.sub(r'\s*<div class="disc disc--edge" data-disc(?:="[^"]*")?>.*?</div>\s*</div>\s*'
-                  r'(?=<p class="provenance")', "\n  ", html, count=1, flags=re.S)
-    applied.append(("S2", "slide 7 assumption marker removed, so no figure is qualified"))
+    # Repointed by T-058. The lookahead named `<p class="provenance">`, which stopped being what
+    # follows this block when the bottom line moved between them - so the seed missed silently for
+    # as long as it existed. It now names the bottom line, and `subre` will not let it miss again.
+    html = subre(html, "S2", "slide 7 assumption marker removed, so no figure is qualified",
+                 r'\s*<div class="disc disc--edge" data-disc(?:="[^"]*")?>.*?</div>\s*</div>\s*'
+                 r'(?=<p class="bottom-line)', "\n  ", flags=re.S)
 
     # S3 Encoding - the before/after network becomes four boxes joined by arrow glyphs.
     old_fig = html[html.index('<svg class="fig" viewBox="0 0 1728 500" role="img"'):
@@ -190,18 +210,31 @@ def build():
     # D1 - the comparison arrives before the problem it compares against, and the timing
     # rationale lands after the argument is over. The sequence stops retiring objections.
     order = [0, 4, 5, 2, 3, 1, 6, 7, 8, 9, 10, 11]
-    slides = [slides[i] for i in order]
+    reordered = [slides[i] for i in order]
+    if reordered == slides:
+        sys.exit("SEED D1: the permutation is the identity, so the deck's sequence is unchanged "
+                 "and the ledger would claim a defect nobody can see")
+    slides = reordered
     applied.append(("D1", "slides reordered so the ledger opens and Why-Now arrives ninth"))
 
     # D2 - the small multiple is split across three near-identical slides. Same archetype
     # three times running, and the length is set by dumping rather than by decision.
-    idx = next(i for i, s in enumerate(slides) if 'data-name="Bikes win three corridors"' in s)
+    name = "Bikes win three corridors"
+    hits = [i for i, s in enumerate(slides) if 'data-name="%s"' % name in s]
+    if len(hits) != 1:
+        sys.exit("SEED D2: expected exactly one slide named %r, found %d - the slide this seed "
+                 "duplicates has been renamed or removed" % (name, len(hits)))
+    idx = hits[0]
     base = slides[idx]
-    part2 = base.replace('data-name="Bikes win three corridors"', 'data-name="Corridors, continued"')
-    part2 = part2.replace("Bikes win three corridors", "Corridors, continued")
-    part3 = base.replace('data-name="Bikes win three corridors"', 'data-name="Corridors, concluded"')
-    part3 = part3.replace("Bikes win three corridors", "Corridors, concluded")
-    slides[idx + 1:idx + 1] = [part2, part3]
+    copies = []
+    for suffix in ("continued", "concluded"):
+        part = base.replace('data-name="%s"' % name, 'data-name="Corridors, %s"' % suffix)
+        part = part.replace(name, "Corridors, %s" % suffix)
+        if part == base or name in part:
+            sys.exit("SEED D2: the %r copy still reads %r, so the three slides are not "
+                     "near-identical-but-renamed and D2 is not seeded" % (suffix, name))
+        copies.append(part)
+    slides[idx + 1:idx + 1] = copies
     applied.append(("D2", "small multiple split into three near-identical slides (14 total)"))
 
     return head + "".join(slides) + tail

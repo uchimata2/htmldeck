@@ -190,6 +190,7 @@ python tools/docs/figures.py                                   # every figure th
 python tools/deck/ruleset.py --counts                          # the ruleset's own arithmetic
 python tools/plugin/check_scaffold.py                          # the plugin manifest
 python tools/deck/static_variants.py                           # the seeded-defect suite
+python tools/examples/seed_defects.py --check                  # the blindness fixture, still derived
 python tools/deck/contents_bound.py                            # the contents-page bound
 python tools/deck/shell.py check <deck>                        # per deck, both examples
 python tools/deck/component.py check <deck>
