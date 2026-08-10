@@ -7,7 +7,7 @@ of them by double-clicking, with the network off.
 | :--- | :--- |
 | [`reference-deck.html`](reference-deck.html) | The reference deck. 12 slides and a colophon, built **by hand** against [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md); the colophon and the source citations are [T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md)'s. |
 | [`reference-deck-seeded-defects.html`](reference-deck-seeded-defects.html) | The same deck with **one deliberate defect per evaluation dimension**. A test fixture, not an example to copy. |
-| [`sort-window/`](sort-window) | *Move the window, not the fleet* — 12 slides, built **through build mode** by [T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md), with its two specification files and its sources beside it. |
+| [`sort-window/`](sort-window) | *Move the window, not the fleet*, 12 slides, built **through build mode** by [T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md), with its two specification files and its sources beside it. |
 
 **The difference between the first and the third is the whole point of T-002.** One was authored;
 the other was assembled from [`shell/`](../shell) and then authored into, three slides at a time,
@@ -16,22 +16,22 @@ content cut out.
 
 **Riverbend is an illustrative city. It does not exist.** Every figure in either deck is an output
 of the assumptions stated on the slide that uses it. Nothing is attributed to a real agency, study
-or place — see *Provenance*, below.
+or place. See *Provenance*, below.
 
 ---
 
 ## The reference deck
 
-*Buy frequency before bikes* — a mid-size city choosing between building a bike-share network and
+*Buy frequency before bikes*, a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-**231 KB in one file** — 236 572 bytes. Three embedded typefaces (97 KB of it as base64), ten
+**231 KB in one file**, 236 988 bytes. Three embedded typefaces (97 KB of it as base64), ten
 Lucide icons in one sprite, eight hand-written SVG figures, and the deck shell. No libraries, no
 build step, no network.
 
 The theme is a **region**, not a habit: one `<style id="theme">` holds every `@font-face` and every
 `:root` block, and [`themes/quarto.css`](../themes/quarto.css) is what it contains. Swapping it is
-one command and edits no other rule —
+one command and edits no other rule.
 [`docs/THEME-CONTRACT.md`](../docs/THEME-CONTRACT.md) is the contract a theme answers to.
 
 Every slide carries a **bottom line**: one factual sentence, at the foot of the slide, second in
@@ -52,7 +52,7 @@ added it to all twelve; before that the deck had one on none of them, and passed
 | `Esc` | Close an open detail panel, or leave the reading view |
 
 The navigator is a **ruler**: one small tick per slide, a large tick at each stage start, every
-tick a named jump target — click one to go there, hover or focus one to see where it lands.
+tick a named jump target. Click one to go there, hover or focus one to see where it lands.
 Prev/next, swipe and the mouse wheel all work too. While a tick holds focus the ruler owns the
 arrow keys and `Home`/`End` for moving *between ticks*; everywhere else they move between slides.
 That precedence is stated in both handlers on purpose, because a rule that depends on which
@@ -61,21 +61,21 @@ arrows move, `d` toggles, and neither affects the other.
 
 The ruler replaced a stage-name ribbon in [T-035](../tasks/T-035-the-ruler-navigator.md), because
 seven text labels cost 856 design units inside a 1180-unit box and a longer deck or a longer stage
-name would have wrapped the row onto a second line — the exact failure DS-217 exists to prevent.
+name would have wrapped the row onto a second line, the exact failure DS-217 exists to prevent.
 There used to be a dot per slide as well; T-028 removed those under DS-216 and DS-217, since a
 navigator, twelve dots and a progress bar are three answers to *where am I*, all competing with the
-slide. What remains is two, and they answer different questions — the ruler says where in the
+slide. What remains is two, and they answer different questions: the ruler says where in the
 deck, the `05 / 12` counter says how far through.
 
 ### The reading view
 
-The **Read** control switches to a conforming alternate version — one column, normal flow, type in
-`rem`, every detail panel already open. It auto-engages when the stage scales below 0.5 — 960 CSS
-px of width on a 16:9-or-taller window, and sooner on a short one — and never in fullscreen.
+The **Read** control switches to a conforming alternate version: one column, normal flow, type in
+`rem`, every detail panel already open. It auto-engages when the stage scales below 0.5, which is 960 CSS
+px of width on a 16:9-or-taller window and sooner on a short one, and never in fullscreen.
 Position is preserved in both directions.
 
 **The conformance claim, stated in full:** *WCAG 2.2 Level AA, via a conforming alternate version
-reachable by a persistent control.* Not "this deck is AA" — the presentation view is a scaled
+reachable by a persistent control.* Not "this deck is AA". The presentation view is a scaled
 fixed stage and does not meet 1.4.4 Resize Text or 1.4.10 Reflow on its own. The reading view is
 what conforms, the **Read** control is the persistent route to it, and the claim is only true while
 both hold. [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) §7 owns the wording.
@@ -89,13 +89,13 @@ than derives carry an `[est.]` marker.
 This is a deliberate reading of DS-102 (*no fabricated metrics; every figure sourced*). An example
 deck about a place that does not exist cannot satisfy that rule by citing anyone, so **the
 arithmetic is the source and the deck says so**. Quoting real transit research from memory would
-have been the actual violation — a misremembered elasticity is a fabricated metric wearing a
+have been the actual violation: a misremembered elasticity is a fabricated metric wearing a
 citation.
 
 **The two decks discharge DS-102 differently, and the difference is a fact about them rather than a
 defect in either** ([T-087](../tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md)).
 `sort-window/` was built through build mode, so it carries a `.foundation.md` whose **figure ledger**
-binds each value to its source *and to the slides it appears on* — 58 rows, one per figure. This deck
+binds each value to its source *and to the slides it appears on*, 58 rows, one per figure. This deck
 was built by hand before that format existed, and its record is **source-level**: the colophon names
 three model documents, says what each carries, and lists the slides that rest on it, with a
 per-slide provenance mark saying the same thing from the other end. Both are complete records; only
@@ -134,14 +134,14 @@ and 12, chosen to span the archetypes. `contract.py` names the sample in its own
 a compromise, so a larger figure quoted elsewhere for the same rule is a different run over more
 slides rather than a contradiction.
 
-The layout is identical across a 3.15× scale ratio — every box lands on the same design-unit
+The layout is identical across a 3.15× scale ratio: every box lands on the same design-unit
 coordinate. The 1.07-unit disagreement is text, and it is glyph-advance rounding rather than
-layout: a run's width, position *and* height all shift as glyphs round to device pixels. A check
+layout, since a run's width, position *and* height all shift as glyphs round to device pixels. A check
 demanding exact equality would fail every deck that contains text.
 
 *The first two rows were measured for the first time on 2026-08-07.* Until then the probe carried
-nine keys and **all nine were text runs**, so the earlier line here — *384 values, positions agree
-to 0.09* — described text placement under a heading that said geometry, and DS-063's non-text
+nine keys and **all nine were text runs**, so the earlier line here, *384 values, positions agree
+to 0.09*, described text placement under a heading that said geometry, and DS-063's non-text
 tolerance had never had a value in it (**L-36**).
 
 ---
@@ -160,10 +160,10 @@ the rubric's response is attributable to the defect rather than to two decks dif
 ways. Every edit asserts that it matched; a seed that silently no-ops would produce a deck with
 fewer defects than this ledger claims.
 
-**That claim is only true while the file is regenerated**, and it has twice stopped being true —
+**That claim is only true while the file is regenerated**, and it has twice stopped being true:
 once before T-028 and once before [T-044](../tasks/T-044-restore-the-seeded-defect-fixture-and-its-claims.md),
 by which point the fixture was four reference-deck revisions behind and differed from its parent in
-601 lines. It is no longer left to habit: **`seed_defects.py --check` fails if the committed fixture
+601 lines. It is no longer left to habit. **`seed_defects.py --check` fails if the committed fixture
 is not what regenerating would produce**, and `check.py` is not the gate that notices, because the
 stale fixture passed every gate in the repository the whole time it was wrong.
 
@@ -198,10 +198,10 @@ reports **4**, across **3 of the 10 dimensions**:
 `judge` rules and `EVALUATION.md` predicts exactly that. **The other two are not, and they are the
 ones worth knowing about:**
 
-- **D2 — 14 slides passes.** DS-081 only forbids *fewer than six*. DS-082 is the rule that says
+- **D2, and 14 slides passes.** DS-081 only forbids *fewer than six*. DS-082 is the rule that says
   past 12 needs a recorded reason, and it is `default` and excused by the gate in writing, because
   *"past 12 needs a recorded reason"* is not a fact the HTML records.
-- **D3 — a close slide reading *Thank you* passes.** Nothing measures whether the last slide asks
+- **D3, and a close slide reading *Thank you* passes.** Nothing measures whether the last slide asks
   for anything. DS-203 and DS-205 check that a bottom line exists and is not behind a disclosure,
   and the seed leaves both true while replacing the ask with a recap.
 
@@ -215,12 +215,12 @@ traced to a single seed:
 
 They stay out of the ledger deliberately: the ledger is **one seeded defect per dimension**, and
 adding a row for a rule that fires as a side effect would break the property that gives the fixture
-its evidential value. DS-075 is worth noticing on its own account, though — it says the S3
+its evidential value. DS-075 is worth noticing on its own account, though. It says the S3
 anti-pattern is not only a worse encoding but an accessibility failure, found by a rule aimed at
 something else entirely.
 
 **One thing the S3 seed exposed, and the fixture is the only deck that could.** It replaces the
-deck's only dashed `Current` flow, so DS-140's subject stops existing — and until
+deck's only dashed `Current` flow, so DS-140's subject stops existing, and until
 [T-051](../tasks/T-051-a-check-with-no-subject-must-not-report-a-pass.md) the rule **passed on its
 own absence**, reporting *"no dashed flow in this deck"* beside the same `pass` the conforming deck
 earned. It now reports `NO SUBJECT`, the rule falls to `SILENT`, and the seeded deck's account reads
@@ -232,7 +232,7 @@ earned. It now reports `NO SUBJECT`, the rule falls to `SILENT`, and the seeded 
       of which NO SUBJECT  DS-140
 ```
 
-That is not one of the ten seeded defects and is not counted among the four failures — it is the
+That is not one of the ten seeded defects and is not counted among the four failures. It is the
 gate declining to make a claim, which is the point. **This is what a fixture built to be missing
 things is for**: no deck that has everything can show a check passing on nothing.
 
@@ -245,7 +245,7 @@ dumping, and which ends by thanking the room instead of asking it for anything.
 
 ## Reproducing the measurements
 
-The deck is built by hand. Everything asserted about it above is reproducible. **Start here** — the
+The deck is built by hand. Everything asserted about it above is reproducible. **Start here**, since the
 gate subsumes the first three commands below and adds the coverage account:
 
 ```bash
@@ -255,8 +255,8 @@ python tools/deck/check.py examples/reference-deck.html
 It runs the auto gate, the contrast audit, the render gate and the resolution contract in one pass,
 then declares what it did **not** check: 82 of the 113 rules a gate owns are decided, and the other
 31 are named with a reason each. The four commands after it still exist because each is useful
-alone — `audit.py` and `contract.py` when you want one stage's output without the account, and the
-two variant suites because they build decks rather than read one.
+alone. `audit.py` and `contract.py` are for when you want one stage's output without the account, and the
+two variant suites are separate because they build decks rather than read one.
 
 ```bash
 python tools/deck/audit.py examples/reference-deck.html
@@ -282,24 +282,25 @@ python tools/deck/deliverable_variants.py
 python tools/examples/seed_defects.py
 ```
 
-`audit.py` runs the auto gate, the contrast audit, the render gate and the resolution contract —
+`audit.py` runs the auto gate, the contrast audit, the render gate and the resolution contract:
 **83 verdict rows against 77 distinct `DS-nnn` rules**, some rules carrying more than one row.
-`contract.py` is that last stage on its own: it sweeps four
+`contract.py` is that last stage on its own. It sweeps four
 viewports and two resolutions, because §2.4 and §2.5 are claims about what happens *between*
 viewports and no single render can decide them. **`contract_variants.py` and
-`deliverable_variants.py` break each of those rules on purpose and require the gate to notice** —
-a check that has only ever passed is not evidence that it checks anything, and three of the
+`deliverable_variants.py` break each of those rules on purpose and require the gate to notice.**
+A check that has only ever passed is not evidence that it checks anything, and three of the
 resolution checks were caught measuring nothing the first time they ran. The second suite covers
 the deliverable and chrome rules (DS-202, DS-203, DS-205, DS-216, DS-217), which were written with
 `auto` and `render` labels and then went a whole task unenforced. `render.py measure` produces the
 720p and two-resolution numbers. `render.py shots`
 writes one PNG per slide so the deck can be *looked at*, which is the check none of the others
 replace. Both drive **real Chrome with a clean throwaway profile and every DNS lookup black-holed**,
-because a preview pane is not a faithful `file://` environment and has given this project a
-confident wrong answer four times (**L-06**, **L-15**).
+because a preview pane is not a faithful `file://` environment: it allowed a local `fetch()` that a
+real restricted origin denies, and it drew a diagram as broken whose DOM geometry was correct to the
+pixel (**L-06**, **L-15**).
 
 Running `check.py` over both decks is what produced the table above: the good deck reports **0
-failures**; the seeded deck reports **4**, spread across three dimensions — and the other seven
+failures**; the seeded deck reports **4**, spread across three dimensions, and the other seven
 seeded defects are invisible to it.
 
 ```bash
@@ -313,9 +314,9 @@ edited without regenerating is a red run rather than a discovery two audits late
 
 ## The generated deck
 
-[`sort-window/`](sort-window) holds all four artifacts a build run leaves behind — the deck, the
+[`sort-window/`](sort-window) holds all four artifacts a build run leaves behind: the deck, the
 foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
-reconciled against. It is **220 KB in one file** — 225 639 bytes — 12 slides, six hand-written SVG figures, ten
+reconciled against. It is **220 KB in one file**, 225 639 bytes, 12 slides, six hand-written SVG figures, ten
 disclosure panels, zero external references.
 
 ```bash
@@ -330,8 +331,8 @@ documents. Two more checks belong to this deck and not to the hand-built one:
 python tools/deck/shell.py check examples/sort-window/sort-window.html
 ```
 
-The half nobody rewrites is still the shipped shell — the check that notices when a batch edit
-strayed out of the slides. And the print mode counts **13 pages, 12 slides plus a contents sheet**,
+The half nobody rewrites is still the shipped shell, and this is the check that notices when a batch edit
+strayed out of the slides. The print mode counts **13 pages, 12 slides plus a contents sheet**,
 under `--print-pages`.
 
 **What the batch loop caught that a final pass would not have.** The specification failed DS-091 on

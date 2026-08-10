@@ -44,12 +44,17 @@ one. This document gates release two and everything after it.
 
 Anything that answers the question is covered. Anything that does not, is not.
 
-Today the test resolves to two things:
+Today the test resolves to three things:
 
 - [`../README.md`](../README.md) — the front door.
 - **The repository description and any marketplace listing text** — the one or two sentences shown
   beside the name, before a click. Drafted at [T-056](../tasks/T-056-humanize-the-human-facing-documents-before-publishing.md)
   §3 and used by T-008 at publication.
+- [`../examples/README.md`](../examples/README.md) — **added by the owner on 2026-08-11**, after
+  `v0.2.0` shipped. It is browsable on the forge without installing anything, and the front page
+  sends a reader there for every measurement it asserts, so a stranger deciding whether to install
+  can and does read it. It was outside the set for the first six releases; `v0.2.0` is therefore not
+  a release that missed a gate, and the set widened after it rather than during it.
 
 **The test is the rule; those two are only today's answer.** A list of filenames goes stale the first
 time a document is added, and it goes stale *silently* — nothing fails, the new document simply is
@@ -116,6 +121,14 @@ project carries its decisions in bolded labels and its rules in inline-header li
 them would flatten the structure that makes a document skimmable rather than remove a tell.
 
 **Pattern 14 applies: cut the em dashes.** The owner answered this directly on 2026-08-09.
+
+**Where 14 stops: inside a table cell, the exception wins.** *Preserve tables* and *cut the em
+dashes* meet in a measurement row, and the first one takes it. Settled 2026-08-11, on
+[`../examples/README.md`](../examples/README.md)'s first pass: 43 em dashes went to 8, and all 8
+survivors are in table cells, three of them in rows whose figures §6 requires to survive
+byte-identical. Rewriting a cell to drop its punctuation means restructuring the sentence around a
+protected number, which is the trade §6 already refuses. The prose is the jurisdiction; a cell is
+the table's.
 
 **The escape that is not being taken.** The skill's *Voice Calibration* section says a user-supplied
 writing sample outranks its style rules, §14 included — so this repository's existing prose could be

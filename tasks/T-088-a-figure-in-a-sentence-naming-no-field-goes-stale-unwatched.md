@@ -72,12 +72,25 @@ false-alarm rate is this task's question, and it is answered by measurement, not
 - [ ] If the rate is worse than T-068's threshold the rule is **rejected and the measurement kept** —
       a recorded rejection is a result, and this criterion is met either way
 - [ ] `unanchored` remains a declared bucket with a reason, not a silent remainder
+- [ ] **A manifest entry naming an artifact that is absent or has moved fails the run**, rather than
+      covering nothing in silence — the condition the owner's 2026-08-11 answer rests on
 
 **Open questions**
-- Whether *property of a named artifact* is decidable at all without a manifest of which artifacts
-  have computable properties. A manifest is a list kept by hand, which is the failure mode
-  [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §2 argues against — but a list of two decks is not
-  the same risk as a list of every document. The project owner answers.
+- ~~Whether *property of a named artifact* is decidable at all without a manifest of which artifacts
+  have computable properties.~~ **Answered by the owner 2026-08-11: allow a manifest.** So the rule
+  does not have to infer which nouns name a measurable artifact, which was the hard half and the
+  half most likely to reproduce T-068's false-alarm rate. It declares them.
+
+  **What the manifest owes, given it is a list kept by hand.**
+  [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §2 is the argument against enumerations, and it is
+  not withdrawn: a hand-kept list goes stale *silently*. What makes this one acceptable is that it
+  cannot. §8's per-deck five already run against both shipped decks every release, so a manifest of
+  those two is re-read on the same cadence as the decks themselves, and an entry naming a file that
+  has moved fails the run rather than quietly covering nothing. **That property is a requirement on
+  the implementation, not an observation about it** — a manifest entry whose artifact is absent must
+  fail, in the same shape as [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md)'s rule
+  that a check with no subject may not report a pass. An entry that can go stale without a red run
+  is this task's own defect, not a compromise it accepted.
 
 ## 2. Plan
 
@@ -107,4 +120,5 @@ false-alarm rate is this task's question, and it is answered by measurement, not
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-11 | (no change) | Owner answered the open question the day it was raised: **allow a manifest**. §1 records what that buys (the rule declares which artifacts have measurable properties instead of inferring it) and what it owes: an entry whose artifact is gone must fail, since a hand-kept list is only acceptable here because §8's cadence re-reads it. Added as a fifth acceptance criterion so the condition is checkable rather than remembered. |
 | 2026-08-11 | → proposed | Raised while running [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8's step 4 for the `v0.2.0` release, which is the step no gate covers and the third release running in which it has found something. `v0.3` rather than `v0.2`: the effort is `l` by the rule in [`../CLAUDE.md`](../CLAUDE.md), because the deliverable is a measurement over every document the gate reads and a rule that survives it, not a patch to one binding. Not `v0.1`: no adopter's deck can hit this, it is a defect in this project's own record. |
