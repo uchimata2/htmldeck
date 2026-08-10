@@ -35,6 +35,7 @@ happened.
 | [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | - | T-019, T-069, T-071 |
 | [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | - | T-063, T-073, T-079, T-081 |
 | [T-088](T-088-a-figure-in-a-sentence-naming-no-field-goes-stale-unwatched.md) | A figure in a sentence that names no field goes stale unwatched, and two just did | `v0.3` | `proposed` | `specify` | - | - | - | T-060, T-068, T-077, T-082 |
+| [T-089](T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md) | A task withdrawn on a false premise was deleted rather than cancelled, and no rule said which | `v0.3` | `proposed` | `specify` | - | - | - | T-003, T-069 |
 
 ## Closed
 
@@ -42,7 +43,7 @@ happened.
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-001](T-001-decide-the-font-strategy-embedded-subsets-or-a-syste.md) | Decide the font strategy: embedded subsets or a system stack | `WP2` | `done` | `review` | - | - | - | T-005, T-013, T-024 |
 | [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | `v0.1` | `done` | `review` | - | - | T-019 | T-003, T-004, T-005, T-006, T-007, T-015, T-016, T-017, T-018, T-020, T-021, T-023, T-024, T-026, T-027, T-028 |
-| [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) | Brief mode — elicit the six-section prompt | `WP3` | `cancelled` | `specify` | - | - | - | T-002, T-015, T-020, T-027 |
+| [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) | Brief mode — elicit the six-section prompt | `WP3` | `cancelled` | `specify` | - | - | - | T-002, T-015, T-020, T-027, T-089 |
 | [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | `v0.1` | `done` | `review` | - | - | - | T-002, T-005, T-020, T-022, T-023, T-026, T-042, T-047, T-048 |
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | `WP3` | `done` | `review` | - | T-040 | - | T-001, T-002, T-004, T-007, T-016, T-017, T-018, T-019, T-021, T-022, T-023, T-025, T-027, T-028, T-032, T-034, T-036, T-037, T-038, T-039, T-041, T-042, T-043, T-047, T-048, T-050, T-051, T-053, T-054, T-055, T-058 |
 | [T-006](T-006-decide-the-chart-strategy.md) | Decide the chart strategy | `WP2` | `done` | `review` | - | - | - | T-002, T-013, T-016, T-017, T-024 |
@@ -103,7 +104,7 @@ happened.
 | [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | - | T-051, T-065, T-075 |
 | [T-067](T-067-the-published-upgrade-instructions-do-not-upgrade.md) | The published upgrade instructions do not upgrade anything | `v0.1` | `done` | `review` | - | - | - | T-056, T-060, T-061 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `done` | `review` | - | - | - | T-060, T-088 |
-| [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | T-070 | T-016, T-070, T-084, T-085 |
+| [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | T-070 | T-016, T-070, T-084, T-085, T-089 |
 | [T-071](T-071-the-intermediate-specifications-carry-their-references.md) | The intermediate specifications carry the sources they rest on | `v0.2` | `done` | `review` | - | - | - | T-070, T-082, T-083, T-085, T-086 |
 | [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `done` | `review` | - | - | - | T-062, T-063, T-074, T-077, T-079, T-080, T-081 |
 | [T-074](T-074-the-documented-render-command-does-not-exist.md) | The documented render command does not exist, and the tools write into their own install | `v0.1` | `done` | `review` | - | - | - | T-073 |
