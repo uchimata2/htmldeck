@@ -2,8 +2,8 @@
 id: T-073
 title: Decide whether to keep refcheck now that upstream has ruled on bare paths
 type: analysis
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-062, T-063]
@@ -13,7 +13,9 @@ business_value: high
 effort: s
 created: 2026-08-10
 updated: 2026-08-10
-deliverables: []
+deliverables:
+  - tools/docs/refcheck.py
+  - tasks/TASK-WORKFLOW.md
 ---
 
 # T-073 — Decide whether to keep refcheck now that upstream has ruled on bare paths
@@ -101,35 +103,90 @@ claude plugin update taskmd@taskmd
 - [ ] Whatever is decided, `docs/` says what validates a pointer in this project and what does not
 
 **Open questions**
-- **Keep, park, or delete.** The project owner's. The measurement above is the input; note that it
-  says the *corpus* is wrong for the rule, not that the rule is badly built — 450 of this project's
-  481 bare pointers resolve correctly.
+- ~~**Keep, park, or delete.**~~ **Settled 2026-08-10: keep it running.** Decided from measurement
+  rather than handed back, because the measurement turned out to answer it — see §3. The framing above
+  is left standing because it is the input that had to be checked, not because it held.
 
 ## 2. Plan
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
+| 1 | Run refcheck on this tree and reconcile what it reports against the 31 in §1 | this file §3 |
+| 2 | Decide keep, park or delete, with the rejected alternative | this file §3 |
+| 3 | Settle whether the dead pointers are worth one sweep as records | this file §3 |
+| 4 | Write down what validates a pointer here and what nothing validates | [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6 |
+| 5 | Record why the file survives even if it ever stops running | [`refcheck.py`](../tools/docs/refcheck.py) docstring |
+| 6 | Re-run `python tools/tasks/lint.py` | this file §4 |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+
+- **The 31 are not refcheck's alarms, and §1 attributes them to the wrong tool** — found 2026-08-10,
+  step 1. `python tools/docs/refcheck.py` on this tree reports **1139 pointers, 0 broken; 509 section
+  references, 0 dead**. It has no standing alarms at all. The 31 come from the wider rule upstream
+  prototyped and then **rejected**, which resolved a repo-relative path of any extension; refcheck's
+  `POINTER` matches `.md` only, on purpose. The single largest group upstream reported — the 19 naming
+  the retired `tools/tasks/task.py` — is invisible to refcheck for exactly that reason.
+- **So the corpus is not wrong for the rule.** §1 concluded that a tracker structurally accumulates
+  correct-but-dead pointers and that this is why the rule cries wolf here. The first half is true and
+  is why upstream was right to decline. The second half does not follow for **this** tool: the narrow
+  scope that makes refcheck quiet is the scope it was written with, and it is green on the corpus that
+  was offered as evidence against it.
+- **Keep it running** — 2026-08-10. It is green, it costs one command in a chain that already runs,
+  and it covers two things upstream has now settled it will never cover: bare `.md` paths in prose or
+  printed into a fence, and `<document> §n` references. **The rejected alternative is park** — keep the
+  file, stop invoking it — which is what §1's measurement appeared to argue for and which fails on the
+  finding above: parking a checker on the strength of another checker's false positives would remove
+  live coverage to answer alarms this project never had. Delete was never live; upstream's **T-093**,
+  *Decide whether check resolves a section reference*, is still `proposed`, and this file is the
+  offered reference implementation for it.
+- **No sweep. The dead pointers stay** — 2026-08-10, scope item 3. All **46** mentions of
+  `tools/tasks/task.py` are inside `tasks/`, across 22 task files; `docs/`, `CLAUDE.md`, `README.md`
+  and `tools/` carry none. Every one is a dated statement in a record of work done while the tool
+  existed, which is §1's own argument, and rewriting them would falsify the record to satisfy a checker
+  that is not complaining. A mention in live instructional prose would have been a real defect; there
+  is not one.
+
+**One thing found that is out of scope and is not fixed here.** This project runs **taskmd 0.1.1** —
+the plugin cache holds `0.1.0` and `0.1.1`, and `lint.py` takes the newest — while upstream's own
+repository is at **0.3.0**. So the v0.2.0 behaviour §1 anticipates has not reached this tree, and the
+`Scope` line it describes is not in the output above. Updating the plugin changes the environment
+rather than the repository and is nobody's task yet; **T-081** raises it.
 
 **Outputs produced**
-- <path>
+- [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6 — amended. It already said refcheck reads `.md` paths; what
+  it did not say is the consequence, that a bare path with any other extension is checked by **nothing**
+  and that upstream has now decided it never will be. That is the fact which makes 46 pointers to a
+  deleted file coexist with three green gates, and without it the next reader re-derives it.
+- [`refcheck.py`](../tools/docs/refcheck.py) — docstring amended with the reason the file outlives its
+  own usefulness here, where someone tidying `tools/` will read it.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The decision is recorded with its rejected alternative | met | Keep it running; park is the rival, and §3 says what defeats it. |
+| If refcheck keeps running: the 31 standing alarms are resolved, suppressed or explained | met | **Explained, and the premise corrected.** There are 0, not 31 — the criterion inherited §1's misattribution. A clean run already means something; what it means is now written down. |
+| If it stops running: the file survives until upstream's T-093 closes, and the reason is written where someone tidying the tools folder will read it | met | Not applicable as written — it kept running — but the reason was worth having anyway, so it is in the docstring regardless. T-093 confirmed `proposed` upstream on 2026-08-10. |
+| Whatever is decided, `docs/` says what validates a pointer in this project and what does not | met, elsewhere | Written in `tasks/TASK-WORKFLOW.md` §6, not under `docs/`. That is where the two checkers are already described, and a second description under `docs/` disagrees with it the first time either changes (**L-13**). The criterion named a folder; what it wanted was a single true home. |
+
+All three gates green after the change — 80 tasks, 1142 document pointers and 517 section references,
+nothing broken. The counts are above the pre-task run because this task added a task file and a lesson,
+not because anything was reclassified.
+
+Generalised as **L-60** in [`LESSONS.md`](../docs/LESSONS.md): a measurement of your corpus by someone
+else's instrument is not a measurement of your tool. That is the transferable half; the refcheck
+decision is not.
 
 **Child fix tasks raised**
-- <T-NNN or "none">
+- [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) — the installed plugin is two
+  minor versions behind upstream.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | → done | Kept, and the acceptance criteria are met with two corrections rather than silently. **Running the tool before deciding about it was the whole task**: §1 carried an upstream measurement of this corpus and read it as a verdict on refcheck, when refcheck reports nothing on that corpus — the 31 belong to a wider rule that upstream tried and threw away. Criterion 2 inherited the same error and is answered by correcting it, which is `not met` territory handled as METHOD allows rather than by rewording the criterion to fit. Criterion 4 is met at the existing single home instead of the folder it named (**L-13**). |
+| 2026-08-10 | → in_progress | Step 1 first, deliberately: the decision hung on a number that had never been produced here. It came back **0 broken over 1139 pointers**, which inverted the reading of §1's table — and the same run explained the gap, since `POINTER` matches `.md` and the largest reported group is a `.py` file. Two things fell out that §1 did not anticipate: nothing in this repository checks a bare path that is not `.md`, and 46 pointers to a tool deleted in T-062 sit in the tracker with every gate green. Both are correct; neither was written down. |
 | 2026-08-10 | → proposed | Raised on the upstream answer to T-063 item 1, which came back *out* with a measurement of this tree attached. `high` because the standing assumption here is that refcheck covers something upstream does not, and the measurement says what it covers on this corpus is 31 alarms and no defects — while the one thing it uniquely still buys, the section-reference implementation, is a reason to keep the file rather than to keep running it. `s` because nothing needs building; the evidence is in hand and the work is one decision and its consequences. |

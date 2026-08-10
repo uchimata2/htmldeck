@@ -182,6 +182,16 @@ because a rule that survived a tool swap unnoticed is worth leaving visible.
   a tool**, and **every `<named document> §n` reference** (§6.1). Two things are skipped and it prints
   how many: documents `.gitignore` excludes, which are machine-local by design and absent from a fresh
   clone; and front-matter, which is a structured record rather than prose.
+- **A bare path that is not `.md` is checked by nothing, and now never will be.** `refcheck.py` matches
+  `.md` only; taskmd's `check` sees markdown links and, as of upstream's answer to
+  [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md), will not resolve a bare path at all.
+  So this repository names `tools/tasks/task.py` 46 times, in 22 task files, and the tool has not
+  existed since T-062 — with all three gates green. **That is intended.** A task record naming a tool
+  that was live when it was written is a correct dated statement, not a broken promise, and no path
+  checker can tell the two apart; the alarm would be wrong every time.
+  [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) §3 decided to leave
+  them. What would be a real defect is a mention in **live instructional prose** — something telling a
+  reader to run it — and there is none.
 - **There is no exemption for declared deliverables.** Until T-029 there was: any path a task named in
   `deliverables:` was skipped *everywhere in the repository*, on the reasoning that a deliverable is a
   promise about the future. It was hiding **110 of 357 pointers**, because most declared outputs are

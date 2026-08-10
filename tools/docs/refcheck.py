@@ -16,6 +16,17 @@ authority on tasks; it does not see checks 2 or 3, and reports `OK` on a reposit
 Measured, not assumed - the seeded-defect comparison is in T-062 §1. The rule behind check 3 is
 `tasks/TASK-WORKFLOW.md` §6.1, and this implements it.
 
+**Why it is still here after upstream ruled.** taskmd decided in 2026-08-10 that its `check` resolves
+Markdown link syntax and nothing else - no bare path, in prose or in a fence - and said so in its
+README so the next project retiring its own checker knows what it gives up. The measurement behind that
+decision included this repository's corpus and reported 31 dead bare pointers here, which reads as an
+argument for deleting this file. It is not: those 31 come from a rule that resolves a path of **any**
+extension, and check 2 above matches `.md` only. On this tree this file reports 0 broken. T-073 §3.
+
+Keep it even if it ever stops running: taskmd's T-093, whether `check` resolves a **section**
+reference, is still open, and this is the offered reference implementation - adjacency decision and
+all (check 3).
+
 Run it from the repository root. Task validation is `taskmd check`, not this.
 """
 

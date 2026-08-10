@@ -1467,6 +1467,35 @@ sequence rather than scrolling past it. When a command's whole purpose is to gat
 two belong in one expression — and if the output is long, grep the verdict rather than trusting a
 glance at the tail.
 
+### L-60 — Someone else's measurement of your corpus is not a measurement of your tool
+
+Found 2026-08-10 in
+[T-073](../tasks/T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md). Upstream
+evaluated a proposed feature by running a prototype over several repositories, this one included, and
+reported **31 dead bare pointers here, 0 of them real defects**. That number arrived as evidence about
+this project and was written into a task as a reason to retire `tools/docs/refcheck.py`.
+
+It was evidence about the prototype. Running the actual tool took one command and reported **0 broken
+over 1139 pointers** — because the prototype resolved a repo-relative path of any extension and
+`refcheck.py` matches `.md` only, so the largest group in the report, 19 pointers to a retired `.py`
+file, was never in its remit. The conclusion drawn from the borrowed number was the opposite of the
+one the local run supports.
+
+**What makes this hard to catch is that the number was correct.** Nothing was misreported. The corpus
+was this project's, the count was accurate, the reasoning above it was sound — and it still measured a
+different tool. A figure inherits the instrument that produced it, and the instrument does not travel
+with the figure.
+
+**How to apply.**
+
+1. **Run your own tool before deciding about your own tool.** It is usually one command, and it is the
+   only measurement whose instrument you can inspect.
+2. **When a borrowed figure disagrees with your expectation, diff the rules, not the numbers.** The gap
+   here was a single regex clause, and it explained the whole discrepancy in one reading.
+3. **Carry the instrument next to the figure.** A measurement quoted without what produced it will be
+   read as though produced by whatever the reader has in hand — which is exactly how this one entered
+   a task's specification as settled input.
+
 ---
 
 ---
