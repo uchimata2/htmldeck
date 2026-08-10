@@ -145,6 +145,18 @@ diffing the five commands by eye, which is what this section said until 2026-08-
 already gone stale under that instruction, because a rule with nothing behind it is a claim
 ([T-060](../tasks/T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)).
 
+**A figure is bound to the field that produced it, not to the run as a whole.** The gate prints
+`checked   82`, so a sentence saying `checks` names that field and one about the judgement half does
+not — a correct number moved into the wrong sentence fails, and the report names the field behind
+every figure it compared. **The same rule reaches five documents that paste no output at all**:
+wherever a page states a part of a whole the gate prints — *"82 of the 113 rules a gate owns … the
+other 31"* — the part must be a figure of that account and the remainder must be the subtraction.
+That figure lived in five places and drifted to three different values; correcting it by hand is
+[T-045](../tasks/T-045-sweep-the-stale-claims-across-the-live-documents.md)'s work, and this is why
+it does not need doing again
+([T-068](../tasks/T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md)). A row struck
+through and dated is a record of what was true then, and is skipped.
+
 **Two figures the check does not treat alike.** A count of the *ruleset* is `compared` and a drift
 fails the run. A count of the *repository* — `refcheck.py`'s pointer totals — is declared `volatile`
 and is **reported rather than failed**, because it moves on every documentation commit including the
@@ -186,7 +198,9 @@ until the person doing it is not the person who did it last.
 
 ```
 python tools/tasks/lint.py                                     # index, check, refcheck
-python tools/docs/figures.py                                   # every figure the README pastes
+python tools/docs/figures.py                                   # every figure the README pastes,
+                                                               # and the same figures in five
+                                                               # documents that paste none
 python tools/deck/ruleset.py --counts                          # the ruleset's own arithmetic
 python tools/plugin/check_scaffold.py                          # the plugin manifest
 python tools/deck/static_variants.py                           # the seeded-defect suite

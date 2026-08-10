@@ -10,6 +10,18 @@ writing and unchecked, and **six figures were already stale** when T-056 went lo
 had grown and nothing re-derived the page (**L-52**). This is that instruction, executed. It does
 not add a command to the release pass; it replaces the manual half of one.
 
+**A figure is bound to the field that produced it.** Occurring somewhere in a command's output was
+never a comparison: `12 slides` was covered twice by `8-12` inside a `DS-082` rule note, and a
+figure moved into a sentence about something else stayed green. Each output line is `<label>
+<value>`, so a prose numeral is `compared` only when its sentence names that label - and the report
+prints which field each one bound to, because a binding nobody can read is a claim (**L-63**).
+
+**Five documents beside the README are read the same way, by a different rule.** They paste no
+output and describe the account in their own words, where a gate's labels - `checked`, `owned`,
+`rules` - are ordinary English; binding those by vocabulary produced 30 false alarms against 5 true
+ones. What binds there is the claim's construction: *part* of *whole*, plus the remainder. That
+figure drifted to three different values across those five pages while the README's stayed correct.
+
 **Two kinds of number, and one rule cannot hold both.** A figure that describes a *decision* - 163
 rule rows, 117 hard rules, 25 that need a person - moves when somebody changes the ruleset, which is
 rare and deliberate. A figure that counts the *repository* moves on every documentation commit,
@@ -40,7 +52,55 @@ FENCE = re.compile(r"^```(\w*)\s*$")
 # 60 numbers in this page's prose, 50 are words like "one project" and "two days". **Every one of
 # T-056's stale prose figures was a numeral**, so this is where the defect class lives. The
 # spelled-out ones are excluded in writing rather than silently: see EXCLUDED_PROSE.
-PROSE_NUMERAL = re.compile(r"(?<![\w.$-])(\d[\d,]*)(?![\w.%-])")
+# A figure ends in a digit: `1,218` keeps its thousands separator and `the other 31, with a reason`
+# does not take the comma with it.
+PROSE_NUMERAL = re.compile(r"(?<![\w.$-])(\d[\d,]*\d|\d)(?![\w.%-])")
+
+# The same numeral rule applied to a command's output. `DS-082` is not the number 82 in either
+# direction, which is what the boundaries are for.
+CORPUS_NUMERAL = re.compile(r"(?<![\w.-])(\d[\d,]*\d|\d)(?![\w.%-])")
+
+# A label ends at the numeral it introduces and starts after the previous one - but also after a
+# sentence break, so a numeral buried in a gate's prose gets `*past` rather than the whole rule
+# note as its label. `.` counts as a break only before whitespace, or `reference-deck.html` would
+# label itself `html` and stop binding to the sentence that names the file.
+LABEL_CUT = re.compile(r"[.;:]\s|[.;:]$")
+
+# Prose splits on sentence ends, blank lines and table-cell walls - and **not** on `:` or `;`,
+# because "holds *Move the window, not the fleet*: 12 slides, **220 KB**" is one claim and cutting
+# it would separate the figure from the file it is about.
+SENTENCE_END = re.compile(r"(?<=[.!?])\s")
+
+# A backlog row whose task is struck through and dated is a **record of what was true then**, not a
+# claim the page is making now: `BRIEF.md` says "161 rows were 163" and "113 rules owned, 81
+# checked" in two such rows, both correct, both about numbers no command prints today. Skipping
+# them is a rule about the row's own shape - the same reasoning `TASK-WORKFLOW.md` §6 gives for
+# leaving a task record's mention of a retired tool alone.
+DONE_ROW = re.compile(r"~~.*~~\s*\*\*done \d{4}-\d{2}-\d{2}\*\*")
+
+# Words with no binding force. A label survives this filter or it binds nothing, which is what
+# disqualifies `-12 band is measured and reported by the DS-081 row's count; *past` from claiming
+# the README's slide count.
+STOPWORDS = set("""a an and are as at be been but by for from had has have here in into is it its
+not of on or over per that the their them then there these they this to under was were what when
+which with""".split())
+
+# Documents that state a figure some command here derives, each with why it is read. **They are not
+# accounts of command output**, so their numerals are not a partition: a sentence that speaks an
+# account's vocabulary is held to that account's numbers, and one that does not is skipped and
+# counted. The list is which documents, never which sentences - the binding stays derived.
+#
+# `docs/DESIGN-RATIONALE.md` is deliberately absent: it states the coverage account as history in
+# ordinary prose - "took the gate to 78 of the 111 rules owned at the time", "checked 80 -> 81" -
+# with no marker distinguishing it from a live claim. Every one of those is correct and every one
+# would be flagged, which is an alarm that is wrong every time.
+DECLARED_DOCS = {
+    "CLAUDE.md": "states the coverage split in its own summary of what the gate decides",
+    "docs/BRIEF.md": "the specification; states the split under *Decisions taken*",
+    "docs/EVALUATION.md": "states what the mechanical half decides before scoring the rest",
+    "skills/htmldeck/references/pipeline.md": "the shipped skill tells a build what the gate covers",
+    "examples/README.md": "states the split twice, for the reference deck and the built one",
+}
 
 # Commands this tool is willing to execute. **An allowlist, not a convenience.** The page also
 # prints `git clone`, `/plugin install` and `claude plugin update`, and a tool that ran whatever a
@@ -73,10 +133,21 @@ EXCLUDED_FENCES = {
 # numeral has left the page is reported STALE and fails the run - see `stale_exclusions`. Four sat
 # here when that check was written (`1.1`, `0.1`, `0.2`, `106`) and were deleted rather than
 # rephrased: an excusal is re-earned by the numeral coming back, and a red run is how it asks.
-EXCLUDED_PROSE = {
-    "31": "113 - 82, stated as the remainder in the same sentence; it would be closed by the gate "
-          "printing the unchecked count as a row of its own",
-}
+#
+# **It is empty, and that is the result rather than the starting state.** Its last entry was `31`,
+# excused as *"113 - 82, stated as the remainder in the same sentence"*, with the closing condition
+# *"the gate printing the unchecked count as a row of its own"*. `claimed()` closed it a better
+# way: the sentence states the subtraction, so the figure is derived and checked instead of
+# excused, and no row had to be added to the gate to do it.
+EXCLUDED_PROSE = {}
+
+# The shape of a claim about an account: a part, of a whole, and sometimes the remainder. **The
+# shape is the binding** - "82 of the 113 rules a gate owns ... the other 31" says which figure it
+# quotes in the only way a page of prose can, and five documents state exactly this one. Bold
+# markers are stepped over because `**82** of the 113` is the same sentence.
+CLAIM = re.compile(r"(?<![\w.$-])(\d[\d,]*\d|\d)\*{0,2}\s+of\s+(?:the\s+)?\*{0,2}"
+                   r"(\d[\d,]*\d|\d)(?![\w.%-])")
+REMAINDER = re.compile(r"other\s+\*{0,2}(\d[\d,]*\d|\d)(?![\w.%-])")
 
 
 # ---------------------------------------------------------------------------- the document
@@ -106,6 +177,130 @@ def prose(text):
             continue
         keep.append("" if inside else line)
     return "\n".join(keep)
+
+
+def stem(word):
+    """Crude suffix strip, so `checks` and `checked` reach the label `checked` from either side.
+
+    **The trailing `e` goes last and unconditionally**, because stripping the plural is what makes
+    it necessary: `rules` -> `rule` and `rule` -> `rule` look equal and are not once `gates` ->
+    `gate` has to meet `gated`. Taking both to `rul` and `gat` is ugly and it is symmetric, which is
+    the only property a stem needs here. `ss` is exempt or `class` and `classes` diverge.
+    """
+    for suffix in ("ing", "ed"):
+        if word.endswith(suffix) and len(word) - len(suffix) >= 3:
+            word = word[:-len(suffix)]
+            break
+    if word.endswith("s") and not word.endswith("ss") and len(word) > 3:
+        word = word[:-1]
+    if word.endswith("e") and len(word) > 3:
+        word = word[:-1]
+    return word
+
+
+def words(text):
+    """The stems of `text` worth binding on - four letters or more, and not a stopword.
+
+    Path separators split, so the label `examples/sort-window/sort-window.html` reaches a sentence
+    that names `examples/sort-window`. Four letters is where the noise starts: `KB`, `of` and `to`
+    bind everything to everything.
+    """
+    raw = re.findall(r"[A-Za-z]{4,}", re.sub(r"[/_.-]", " ", text))
+    return set(stem(w.lower()) for w in raw if w.lower() not in STOPWORDS)
+
+
+def sentences(text):
+    """`[(sentence, is_dated_record)]` over prose - the unit a figure is bound inside.
+
+    Table cells are their own sentences: a row states one claim per cell, and a wrapped markdown
+    paragraph states one across several lines, so newlines join and `|` splits.
+    """
+    out = []
+    for block in re.split(r"\n\s*\n", text):
+        dated = bool(DONE_ROW.search(block))
+        for cell in block.split("|"):
+            for s in SENTENCE_END.split(" ".join(cell.split("\n"))):
+                if s.strip():
+                    out.append((s, dated))
+    return out
+
+
+def fields(outputs):
+    """`[(value, label, command)]` - every figure a command printed, with the words beside it.
+
+    **This is the binding the tool did not have.** A pasted numeral used to be checked against the
+    union of every command's output, so `81` was covered by `checked 81` no matter what sentence it
+    sat in. A value's label is the text between it and the previous numeral on its line, which is
+    where a report puts the name of the thing it is counting.
+    """
+    out = []
+    for cmd, text in outputs.items():
+        for line in text.split("\n"):
+            at = 0
+            for m in CORPUS_NUMERAL.finditer(line):
+                label = line[at:m.start()]
+                at = m.end()
+                cuts = list(LABEL_CUT.finditer(label))
+                if cuts:
+                    label = label[cuts[-1].end():]
+                out.append((m.group(1), label.strip(), cmd))
+    return out
+
+
+def bound(numeral, said, table):
+    """`[(label, command)]` - every field carrying `numeral` whose label `said` names.
+
+    A field whose label keeps no distinctive word cannot bind anything, which is how `12` stops
+    being covered by the `DS-082` triage note that happens to contain it.
+    """
+    hits = []
+    for value, label, cmd in table:
+        if value != numeral:
+            continue
+        lw = words(label)
+        if lw and (lw & said):
+            hits.append((label, cmd))
+    return hits
+
+
+def claimed(sentence, table, outputs):
+    """`{numeral: (verdict, why)}` for the figures a sentence's own arithmetic accounts for.
+
+    **Why a shape and not a label.** Binding by label works on the README, where a figure sits
+    beside the word the command printed next to it. It does not survive paraphrase: `EVALUATION.md`
+    says *"decides 82"* where the gate prints `checked`, and the words a gate prints - `checked`,
+    `owned`, `rules`, `gate` - are ordinary English that five documents use in their ordinary
+    sense. Anchoring a whole sentence on one such word was tried and produced **30 false alarms
+    against 5 true ones**, on prose about external references, SVG counts and effect sizes. So the
+    claim is bound by its construction instead: *part* of *whole*, where the whole is a figure a
+    command prints under a label this sentence does name. Then the part must be a figure of that
+    same account, and any *"other N"* must be the subtraction. That is exact, it is derived from
+    the sentence and the command rather than from a list, and it is what drifted - the coverage
+    split reached three different values across five documents while the README's stayed correct.
+    """
+    out = {}
+    said = words(sentence)
+    for m in CLAIM.finditer(sentence):
+        part, whole = m.group(1), m.group(2)
+        hits = bound(whole, said, table)
+        if not hits:
+            continue
+        where = "; ".join(sorted(set(c for _l, c in hits)))
+        account = "\n".join(outputs[c] for _l, c in hits)
+        if re.search(r"(?<![\w.-])%s(?![\w.%%-])" % re.escape(part), account):
+            out[part] = ("compared", "%s of %s, both figures of %s" % (part, whole, where))
+        else:
+            out[part] = ("STALE", "claimed as %s of %s, and %s prints no %s"
+                                  % (part, whole, where, part))
+        rest = int(whole.replace(",", "")) - int(part.replace(",", ""))
+        for r in REMAINDER.finditer(sentence[m.end():]):
+            got = int(r.group(1).replace(",", ""))
+            out[r.group(1)] = (("compared", "the remainder, %s - %s, which this sentence states"
+                                            % (whole, part))
+                               if got == rest else
+                               ("STALE", "stated as the rest of %s after %s, which is %s"
+                                         % (whole, part, rest)))
+    return out
 
 
 def bind(blocks):
@@ -144,6 +339,10 @@ def bind(blocks):
 # ---------------------------------------------------------------------------- the commands
 
 
+# The decks are a source of figures like any command, and are named like one so a report can say
+# where a value came from.
+DECK_FACTS = "the deck files themselves"
+
 _RUNS = {}
 
 
@@ -165,12 +364,22 @@ def run(cmd):
 
 
 def deck_facts():
-    """Sizes the prose states directly, so `221 KB` is a figure rather than a recollection."""
+    """Sizes and slide counts the prose states, so each is a figure rather than a recollection.
+
+    **One fact per line, because the line is what carries the label.** `221 KB` and `12 slides` on
+    one line would leave the second labelled ` KB `, binding nothing. The slide count is here
+    because the page states it twice and no command printed it: both numerals were reported
+    `compared` against `8-12` inside a `DS-082` triage note - a coincidence, in the one place this
+    tool exists to refuse them. Counted from the markup; the reference deck's colophon carries
+    `slide close` and is not one of the twelve, which is why the page says "and a colophon".
+    """
     out = []
     for rel in ("examples/reference-deck.html", "examples/sort-window/sort-window.html"):
         path = os.path.join(ROOT, rel.replace("/", os.sep))
         if os.path.exists(path):
             out.append("%s %d KB" % (rel, int(round(os.path.getsize(path) / 1024.0))))
+            html = io.open(path, encoding="utf-8").read()
+            out.append("%s %d slides" % (rel, len(re.findall(r'class="slide"', html))))
     return "\n".join(out)
 
 
@@ -240,24 +449,69 @@ def audit(text):
         else:
             rows.append(("compared", start, what, None))
 
-    corpus.append(deck_facts())
+    outputs[DECK_FACTS] = deck_facts()
+    corpus.append(outputs[DECK_FACTS])
     seen = "\n".join(corpus)
+    table = fields(outputs)
+
+    # **Occurring in the corpus was never a comparison.** Tightening the word boundary stopped
+    # `163` being covered by `DS-163`, `113` by `DS-113` and `221` by `DS-221` - but only that
+    # coincidence, and a numeral still passed by turning up anywhere in the union of every
+    # command's output. So `12` was covered by `8-12` inside a `DS-082` triage note, twice, and a
+    # `25` moved onto a sentence about a different figure would have been covered by `checked 25`.
+    # A figure is now bound to **the field it claims to be**: the sentence has to name the label
+    # the command printed beside the value. A check that says `compared` when it compared a
+    # coincidence is worse than one that says nothing (**L-36**, **L-44**).
     prose_rows = []
-    for m in PROSE_NUMERAL.finditer(prose(text)):
-        n = m.group(1)
-        if n in EXCLUDED_PROSE:
-            prose_rows.append(("excluded", n, EXCLUDED_PROSE[n]))
-        # **The boundary has to reject a letter, not just a digit.** Without the `\w`, `163` in
-        # prose matched `DS-163` in a gate's output, `113` matched `DS-113` and `221` matched
-        # `DS-221` - three of eight prose figures reported as covered by a rule ID that has nothing
-        # to do with them. A check that says `compared` when it compared a coincidence is worse
-        # than one that says nothing (**L-36**, **L-44**).
-        elif re.search(r"(?<![\w.-])%s(?![\w.%%-])" % re.escape(n), seen):
-            prose_rows.append(("compared", n, "printed by a bound command"))
+    for sentence, _dated in sentences(prose(text)):
+        said = words(sentence)
+        claims = claimed(sentence, table, outputs)
+        for m in PROSE_NUMERAL.finditer(sentence):
+            n = m.group(1)
+            if n in EXCLUDED_PROSE:
+                prose_rows.append(("excluded", n, EXCLUDED_PROSE[n]))
+                continue
+            hits = bound(n, said, table)
+            if hits:
+                prose_rows.append(("compared", n, "%r, printed by %s" % (hits[0][0], hits[0][1])))
+            elif n in claims:
+                prose_rows.append((claims[n][0], n, claims[n][1]))
+            else:
+                prose_rows.append(("UNDECLARED", n, "no command prints it under a label this "
+                                                    "sentence names, and it is excused nowhere"))
+    return rows, prose_rows, seen, table, outputs
+
+
+def declared(table, outputs, docs=None):
+    """`(rows, skipped)` - the same figures, stated in documents that paste no command output.
+
+    **The other half of the binding question, one scope out.** The coverage split lives in five
+    documents beside the README and drifted to three different values while the README's own figure
+    stayed bound and correct; correcting it by hand in five places is what T-045 already did once.
+    These pages are not accounts of a run, so their numerals are not a partition and most are not
+    figures at all - **the great majority of a number written here is not a figure this tool could
+    ever check**, and saying which is which is the whole difficulty. `claimed()` carries that
+    judgement: a numeral is judged when the sentence states it as part of a whole the command
+    prints, and is skipped and counted otherwise. Nothing is guessed at, and a page is never held
+    to a partition it was not written as.
+    """
+    rows, skipped = [], 0
+    for rel in sorted(DECLARED_DOCS):
+        if docs and rel in docs:
+            text = docs[rel]
         else:
-            prose_rows.append(("UNDECLARED", n, "no bound command prints it and it is excused "
-                                                "nowhere"))
-    return rows, prose_rows, seen
+            text = io.open(os.path.join(ROOT, rel.replace("/", os.sep)), encoding="utf-8").read()
+        for sentence, dated in sentences(prose(text)):
+            nums = [m.group(1) for m in PROSE_NUMERAL.finditer(sentence)]
+            if not nums:
+                continue
+            claims = {} if dated else claimed(sentence, table, outputs)
+            for n in nums:
+                if n in claims:
+                    rows.append((claims[n][0], rel, n, claims[n][1]))
+                else:
+                    skipped += 1
+    return rows, skipped
 
 
 def stale_exclusions(text):
@@ -290,7 +544,7 @@ def self_test():
     it produces, because an assertion that cannot run still exits non-zero (**L-55**)."""
     base = io.open(README, encoding="utf-8").read()
 
-    rows, prose_rows, _seen = audit(base)
+    rows, prose_rows, _seen, table, outputs = audit(base)
     if [r for r in rows if r[0] in ("FAILING", "UNDECLARED")]:
         bad = [r for r in rows if r[0] in ("FAILING", "UNDECLARED")][0]
         sys.exit("SELF-TEST FAILED: the live README does not pass its own check - line %d, %s"
@@ -362,33 +616,96 @@ def self_test():
                  "reported as compared. A check that compares a coincidence is worse than one "
                  "that says nothing")
 
-    # 6. **An exclusion whose subject has left the page.** Seeded by removing the numeral rather
-    # than by adding a table entry: a fabricated entry would test the loop, and what has to be
-    # tested is that a live declaration goes stale when the page moves underneath it - which is
-    # what actually happened.
-    if not EXCLUDED_PROSE:
-        sys.exit("SELF-TEST FAILED: EXCLUDED_PROSE is empty, so nothing here exercises the stale "
-                 "case")
-    victim = sorted(EXCLUDED_PROSE)[0]
-    emptied = re.sub(r"(?<![\w.-])%s(?![\w.%%-])" % re.escape(victim), "one", base)
-    if emptied == base:
-        sys.exit("SELF-TEST FAILED: %r is declared excluded and is not on the page, so the fixture "
-                 "cannot remove it - the live README already carries the defect" % victim)
+    # 6. **An exclusion whose subject has left the page.** Seeded by taking the subject off the
+    # page rather than by adding a table entry: a fabricated entry would test the loop, and what
+    # has to be tested is that a live declaration goes stale when the page moves underneath it -
+    # which is what actually happened. It seeds a **fence** exclusion because `EXCLUDED_PROSE` is
+    # now empty, `claimed()` having derived its last entry instead of excusing it. Emptied by
+    # deriving, not by deleting: the same fixture on the other table is the check surviving that.
+    victim, emptied = None, base
+    for prefix in sorted(EXCLUDED_FENCES):
+        for start, _lang, body in fences(base):
+            cmd = " ".join(l.strip() for l in body if l.strip())
+            if cmd.startswith(prefix):
+                lines = base.split("\n")
+                victim = prefix
+                emptied = "\n".join(lines[:start - 1] + lines[start + len(body) + 1:])
+                break
+        if victim:
+            break
+    if victim is None or emptied == base:
+        sys.exit("SELF-TEST FAILED: no declared fence exclusion names a block the page carries, so "
+                 "the live README already carries the defect this fixture seeds")
     got = [k for _t, k, _w in stale_exclusions(emptied)]
     if victim not in got:
-        sys.exit("SELF-TEST FAILED: %r was taken off the page and its exclusion was not reported "
-                 "stale. An excusal for a figure nobody prints is a false statement sitting in the "
-                 "tool, which is the state T-077 was raised from" % victim)
+        sys.exit("SELF-TEST FAILED: the %r block was taken off the page and its exclusion was not "
+                 "reported stale. An excusal for a block nobody prints is a false statement "
+                 "sitting in the tool, which is the state T-077 was raised from" % victim)
     if stale_exclusions(base):
         sys.exit("SELF-TEST FAILED: the live README already carries a stale exclusion (%s), so a "
                  "green run below would mean nothing"
                  % ", ".join("%s %s" % (t, k) for t, k, _w in stale_exclusions(base)))
+
+    # 7. **A figure moved onto a sentence about a different field.** The case T-060's review named
+    # and this tool could not see: the numeral is real, the corpus prints it, and the sentence it
+    # now sits in is about something else. Derived rather than written down - a compared numeral is
+    # swapped for the value of a field whose label this sentence does not name, so the fixture
+    # cannot go stale when the figures move (**L-54**).
+    swapped = None
+    for kind, n, why in prose_rows:
+        if kind != "compared":
+            continue
+        mine = set(l for v, l, _c in table if v == n)
+        for value, label, _cmd in table:
+            if value != n and words(label) and label not in mine and value not in EXCLUDED_PROSE:
+                pat = re.compile(r"(?<![\w.$-])%s(?![\w.%%-])" % re.escape(n))
+                cand = pat.sub(value, base, count=1)
+                if cand != base and not [r for r in audit(cand)[1]
+                                         if r[0] == "compared" and r[1] == value]:
+                    swapped = (n, value, label)
+                    break
+        if swapped:
+            break
+    if swapped is None:
+        sys.exit("SELF-TEST FAILED: no compared prose figure could be swapped for another field's "
+                 "value, so nothing here tests the wrong-field case this check exists for")
+
+    # 8. **A declared document quoting a figure its own account does not print.** The drift the
+    # coverage split actually took, seeded the way it happened: one live sentence, one number.
+    live = [r for r in declared(table, outputs)[0] if r[0] == "compared"]
+    if not live:
+        sys.exit("SELF-TEST FAILED: no sentence in any declared document states a figure as part "
+                 "of a whole a command prints, so the half of this check that watches the other "
+                 "documents is inert")
+    staled = None
+    for _kind, rel, n, _why in live:
+        src = io.open(os.path.join(ROOT, rel.replace("/", os.sep)), encoding="utf-8").read()
+        pat = re.compile(r"(?<![\w.$-])%s(?![\w.%%-])" % re.escape(n))
+        for hit in range(len(pat.findall(src))):
+            seen_n = [0]
+
+            def once(m, k=hit):
+                seen_n[0] += 1
+                return str(int(m.group(0).replace(",", "")) + 7) if seen_n[0] == k + 1 \
+                    else m.group(0)
+
+            moved = pat.sub(once, src)
+            if [r for r in declared(table, outputs, {rel: moved})[0] if r[0] == "STALE"]:
+                staled = (rel, n)
+                break
+        if staled:
+            break
+    if staled is None:
+        sys.exit("SELF-TEST FAILED: every figure a declared document states as part of a whole was "
+                 "moved off its own account and the run stayed green. That is the 80/81/82 drift, "
+                 "undetected in the five documents it drifted in")
     return True
 
 
 def report(values):
     text = io.open(README, encoding="utf-8").read()
-    rows, prose_rows, _seen = audit(text)
+    rows, prose_rows, _seen, table, outputs = audit(text)
+    doc_rows, unanchored = declared(table, outputs)
     print("README figures - %s\n" % os.path.basename(README))
 
     counts = {}
@@ -404,12 +721,24 @@ def report(values):
     pc = {}
     for kind, n, why in prose_rows:
         pc[kind] = pc.get(kind, 0) + 1
-        if kind == "UNDECLARED":
+        if kind in ("UNDECLARED", "STALE"):
             print("  %-10s prose numeral %s - %s" % (kind, n, why))
     dead = stale_exclusions(text)
-    for table, key, why in dead:
+    for where, key, why in dead:
         print("  %-10s %s declares %r and the page no longer carries it - %s"
-              % ("STALE", table, key, why))
+              % ("STALE", where, key, why))
+    dc = {}
+    for kind, rel, n, why in doc_rows:
+        dc[kind] = dc.get(kind, 0) + 1
+        if kind == "STALE":
+            print("  %-10s %s states %s - %s" % (kind, rel, n, why))
+
+    # **What was compared, not just how many.** A binding nobody can read is a claim to be taken on
+    # trust, which is the thing this file was written to stop doing.
+    print("\n  prose figures, and the field each is bound to")
+    for kind, n, why in prose_rows:
+        if kind == "compared":
+            print("    %-6s %s" % (n, why))
 
     print("\n  fenced blocks")
     for k in ("command", "compared", "volatile", "excluded", "UNDECLARED", "FAILING"):
@@ -417,10 +746,16 @@ def report(values):
             print("    %-12s %3d" % (k, counts[k]))
     print("    %-12s %3d   = every fence, so the account is a partition" % ("total", len(rows)))
     print("\n  prose numerals")
-    for k in ("compared", "excluded", "UNDECLARED"):
+    for k in ("compared", "excluded", "UNDECLARED", "STALE"):
         if pc.get(k):
             print("    %-12s %3d" % (k, pc[k]))
     print("    %-12s %3d" % ("total", len(prose_rows)))
+    print("\n  the same figures in %d document(s) that paste no output" % len(DECLARED_DOCS))
+    for k in ("compared", "excluded", "STALE"):
+        if dc.get(k):
+            print("    %-12s %3d" % (k, dc[k]))
+    print("    %-12s %3d   = in a sentence that names no field, so not judged"
+          % ("unanchored", unanchored))
     print("\n  exclusions")
     print("    %-12s %3d" % ("declared", len(EXCLUDED_FENCES) + len(EXCLUDED_PROSE)))
     print("    %-12s %3d   = an excusal whose subject has left the page" % ("STALE", len(dead)))
@@ -437,7 +772,7 @@ def report(values):
     # `audit.py` exits on its equivalent. Reporting it would keep the run green while a false
     # statement sits in the tool - the state this check was written from (T-077).
     fails = (counts.get("FAILING", 0) + counts.get("UNDECLARED", 0)
-             + pc.get("UNDECLARED", 0) + len(dead))
+             + pc.get("UNDECLARED", 0) + pc.get("STALE", 0) + len(dead) + dc.get("STALE", 0))
     print("\n%s" % ("%d figure(s) to fix" % fails if fails else
                     "0 stale figure(s)%s" % (" - %d volatile block(s) drifted, which is reported "
                                              "rather than failed (see --values)" % len(drift)
