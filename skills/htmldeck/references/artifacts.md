@@ -71,6 +71,18 @@ foundation alone can now say what the deck rests on without opening the director
 | Figure | Value | Origin | Used on |
 | :--- | :--- | :--- | :--- |
 
+<**What earns a row: every value the deck states as a fact, tier one and tier two alike.** The one
+exclusion is arithmetic the deck performs on screen from figures that already have rows — a
+derivation panel showing `7,200 ÷ 3,100 = 2h 19m` is the panel working, not a figure it asserts, and
+both operands and the result carry rows of their own. Nothing else is exempt: **a figure behind a
+disclosure is a figure**, and so is a label on a diagram.
+
+**Write it from the built deck, not from the outline.** The ledger drafted alongside the outline
+records tier one, because that is what the outline holds; the figures that reach a slide through a
+click and through a diagram's labels arrive later and are the ones that go missing. Sweep for them
+with something wider than the build's own figure pattern, which matches on shape and cannot see
+`6 rounds`, `04:10` or `31 peak working days` (**L-62**).>
+
 ## Outline
 
 <One row per slide. This is what gate 1 shows. The bottom line here is the sentence that ships

@@ -95,4 +95,5 @@ sweep found missing.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (no change) | Owner settled the scope on the day it was raised: **exact direction only**. Widening `content.py`'s figure pattern to gate completeness as well was put and declined, so the `Out:` line above is a decision rather than a proposal and is not to be re-argued at `plan`. |
 | 2026-08-10 | → proposed | Raised from [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) §3, which decided the checkable half of the ledger question and left the implementation here rather than growing a fix to a worked example into a tool change. `m` and not `s`: no existing tool takes both a foundation and a deck, so this adds an input to a signature rather than a rule to a list. `v0.2`, being under the `l` line. |
