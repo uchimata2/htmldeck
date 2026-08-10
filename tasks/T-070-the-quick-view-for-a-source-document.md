@@ -65,14 +65,16 @@ and produce a displayable rendering of it, and nothing in this repository does t
   about to embed.
 - In: the three admission tests, and whichever types pass them — SVG, inert HTML, and Markdown or
   plain text at minimum.
+- In: the DS-110 amendment and the gate change that enforces its boundary. It cannot be a separate
+  task in practice — the boundary is a container this task's component defines, so the rule and the
+  thing it is scoped to have to land together.
 - Out: DS-105's text and the provenance component — [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md),
   which this is blocked by, because there is no point building a target for a mark whose form is
   undecided.
-- Out: `.docx` and `.pdf`, which need a parser this repository does not have and **L-07**
-  will not let it acquire. A separate task with a measured case behind it, not a widening
-  of this one.
-- Out (pending the owner): raster and video, each blocked on a decision recorded below —
-  raster by DS-110, video by the size bound.
+- Out: `.docx` and `.pdf`, which need a parser this repository does not have and **L-07** will not
+  let it acquire. A separate task with a measured case behind it, not a widening of this one.
+- Out: **video**. Settled as linked-never-embedded, which makes it DS-105's external-URL case
+  rather than a quick view, and it needs nothing from here.
 
 **Inputs**
 - [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) — the mark, its component, and
@@ -100,8 +102,11 @@ and produce a displayable rendering of it, and nothing in this repository does t
       test it failed
 - [ ] Embedded HTML cannot alter the deck around it: demonstrated with a source that tries
       to, not asserted
-- [ ] Whatever DS-110 becomes, the gate enforces the **boundary** — raster inside the quick
-      view and nowhere else — so the rule is narrowed rather than weakened
+- [ ] **The gate fails a raster the build produced and passes one the quick view quotes** —
+      demonstrated with a deck carrying both, so the boundary is shown rather than claimed.
+      This is the criterion that decides whether DS-110 was narrowed or lost
+- [ ] Where a source exists as both vector and raster, the builder takes the vector form,
+      and a deck carrying the raster of such a source is a defect the critique pass names
 
 **Open questions**
 - **Superseded 2026-08-10 by the owner — the format set is extended.** The original decision, kept
@@ -127,26 +132,35 @@ and produce a displayable rendering of it, and nothing in this repository does t
   passes only when it is inert — see below. **Video** passes 1 and 2 and is entirely a question of
   3. **Raster** fails a rule rather than a test — see below.
 
-**Open questions — for the owner**
-- **DS-110 says *"No raster images. Ever."* and it is `hard` / `auto`.** A deck embedding a PNG
-  **fails `check.py` today**; this is not a preference, it is a red run. *Recommended:* amend DS-110
-  with an exception **scoped to the quick-view surface**, on the reason that DS-110 governs what the
-  deck *makes* — a rasterised diagram cannot scale, theme or diff, which is why it is banned — and a
-  source quick view *quotes* rather than makes. A screenshot is frequently the only form a source
-  exists in, and refusing it means the feature cannot show the commonest evidence there is.
-  **The scope is the whole safeguard:** raster inside the quick view, nowhere else, and the gate
-  enforces the boundary rather than being relaxed. *Alternative:* leave DS-110 absolute and drop
-  raster, which keeps a hard rule hard at the cost of a quick view that cannot open a screenshot.
-- **Video has no rule at all, and its only real question is size.** *Recommended:* admissible by
-  test 3 and no sooner — embed only where the measurement supports it, and **default to linking
-  rather than embedding**, because a 12-slide deck is 221 KB today and one clip is two orders of
-  magnitude more. A deck that cannot be emailed has failed rule 2 whatever else it does.
-  *Alternative:* admit embedded video outright, which is simpler and makes the size bound the only
-  thing standing between this feature and a deck nobody can send.
+- **Settled 2026-08-10 by the owner — DS-110 is *narrowed by scope*, and its force is unchanged
+  everywhere it already applied.** The distinction is between what a deck **makes** and what it
+  **quotes**, and it is the whole of the amendment:
+  - **What the build produces stays vector, always.** No path through build mode may emit a raster.
+    DS-110's reason is intact — a rasterised diagram cannot scale, theme or diff — and this is not
+    relaxed, softened, or made conditional. **A deck that rasterises its own content is as much a
+    defect after this change as before it.**
+  - **A source may be quoted in the form it exists in**, raster included, and only inside the
+    quick-view surface. A screenshot is frequently the only form a source has, and refusing it means
+    the feature cannot show the commonest evidence there is.
+  - **Vector wins wherever the source offers a choice.** Where a source is available as SVG, HTML or
+    text *and* as a raster, the builder takes the vector form. Raster is the last resort, not a
+    parallel option — *"until raster graphics is the only option"* is the owner's wording and it is
+    a rule the builder obeys, not a preference it weighs.
+
+  **The scope marker is what makes this enforceable rather than aspirational.** DS-110 is `auto`, so
+  a check already scans for raster; after this it must tell *inside the quick view* from
+  *everywhere else*. That needs a structural container the ruleset names and the component contract
+  contracts — so the amendment cannot land before the component does, which is one more reason this
+  task sits behind [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md).
+- **Settled 2026-08-10 by the owner — video is linked, never embedded, and therefore is not a
+  quick-view type at all.** It fails admission test 1 by decision rather than by measurement: a
+  linked video is not carried in the file, so it is not a quick view — **it is the external-URL case
+  DS-105 already handles**, and it needs nothing from this task. This *removes* scope rather than
+  adding it, and it removes the one item that could have put a deck beyond emailing.
 - **HTML is the one that can break its host.** A source's markup carries its own CSS, its own ids
-  and possibly script, all of which land in the deck's document. *Recommended:* render it inert —
-  sandboxed and isolated — so test 2 is structural rather than a promise about the input. Deciding
-  *how* is `plan`'s; that it must be inert is `specify`'s.
+  and possibly script, all of which land in the deck's document. It must be rendered **inert**, so
+  test 2 is structural rather than a promise about the input. Deciding *how* is `plan`'s; that it
+  must be inert is `specify`'s.
 - **Settled 2026-08-10 by the owner — an overlay over the current slide, not a page.** Returning to
   the argument costs one dismissal, and the deck's slide count stops depending on how many sources
   it cites — which matters because slide count is a pacing decision and citation count is not.
@@ -180,6 +194,7 @@ and produce a displayable rendering of it, and nothing in this repository does t
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-10 | (specify) | **Both owner questions closed.** *Raster:* DS-110 is narrowed by **scope**, not by force — the build may never emit a raster, and that half is untouched; a source may be *quoted* as raster inside the quick view only; and where a source offers both forms the builder takes the vector one. The enforceable part is a structural container the gate can key on, which is why the amendment cannot land before the component and is kept in this task rather than split out. *Video:* **linked, never embedded** — which drops it from this task entirely, since a linked video is DS-105's external-URL case and not a quick view. That removes the one admitted type that could have put a deck beyond emailing. |
 | 2026-08-10 | (specify) | **Format set extended by the owner: HTML, video, PNG, SVG "and other compatible types".** Recorded as three **admission tests** rather than a list, because an open-ended clause is the shape DS-230 and DS-000 exist to prevent — embeds with zero external references, executes no script into the deck, stays inside the measured size bound. SVG passes outright. **PNG collides with DS-110 — *No raster images. Ever.*, `hard` and `auto` — so a deck carrying one fails `check.py` today**; recommended as a quick-view-scoped exception, and it is the owner's. Video is unlegislated and is entirely a size question. HTML is the one that can break its host and must be inert structurally. The superseded decision is kept verbatim in §1 rather than edited away. |
 | 2026-08-10 | (specify) | **Both open questions settled by the owner**, as recommended: Markdown and plain text only, and an overlay rather than a page. The cost of the format decision is recorded rather than smoothed over — for a while the quick view will not open the formats most real source material uses, so the mark falls back to plain text or a URL more often than not. Still blocked by T-069. |
 | 2026-08-10 | → proposed | Split from the owner's provenance request as the part that is a **capability rather than a rule**. Blocked by [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md): the mark's form decides what a quick view is a target *of*. Four hazards written down before any work — unmeasured size against a 221 KB shipping deck, fidelity as a DS-102-shaped claim, a second reading surface against DS-136, and **embedding a confidential source into a file that gets emailed**, which is the one outcome worse than not building this. `l` and `medium`: the largest thing on the v0.2 board and the least certain to be worth it, which is exactly the pair that should not be started before T-069 answers what it is for. |
