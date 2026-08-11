@@ -2,8 +2,8 @@
 id: T-089
 title: A task withdrawn on a false premise was deleted rather than cancelled, and no rule said which
 type: admin
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-003, T-069]
@@ -13,7 +13,9 @@ business_value: low
 effort: xs
 created: 2026-08-11
 updated: 2026-08-11
-deliverables: []
+deliverables:
+  - tasks/T-072-a-corrupted-comment-opener-in-shell-components-css.md
+  - tasks/TASK-WORKFLOW.md
 ---
 
 # T-089 — A task withdrawn on a false premise was deleted rather than cancelled, and no rule said which
@@ -68,13 +70,13 @@ and applies it to T-072. It does not reopen the question.
 - [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §5 *Statuses* — where `cancelled` is already enumerated.
 
 **Acceptance criteria**
-- [ ] `TASK-WORKFLOW.md` states the disposal, and states it as a rule rather than as an anecdote: a
+- [x] `TASK-WORKFLOW.md` states the disposal, and states it as a rule rather than as an anecdote: a
       task withdrawn because its premise was false is `cancelled`, not deleted.
-- [ ] The rule says why, in one clause — a deleted ID resolves to nothing, and the next reader has no
+- [x] The rule says why, in one clause — a deleted ID resolves to nothing, and the next reader has no
       way to know whether it was withdrawn or lost.
-- [ ] `tasks/T-072-*.md` exists, is `cancelled`, and cites T-069 and L-56.
-- [ ] The stub is marked as reconstructed and dated, so it is not mistaken for the original file.
-- [ ] `python tools/tasks/lint.py` is green, and the board shows no gap between T-071 and T-073.
+- [x] `tasks/T-072-*.md` exists, is `cancelled`, and cites T-069 and L-56.
+- [x] The stub is marked as reconstructed and dated, so it is not mistaken for the original file.
+- [x] `python tools/tasks/lint.py` is green, and the board shows no gap between T-071 and T-073.
 
 **Open questions**
 - none. The disposal and the work package were both settled by the owner on 2026-08-11.
@@ -91,16 +93,35 @@ and applies it to T-072. It does not reopen the question.
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The rule went into §3.1, not §5.** §1 named §5 *Statuses*; that section is *The log*, and the
+  status vocabulary is §3.1. Corrected in passing rather than handed back — the rule belongs beside
+  the sentence naming `done` and `cancelled` as the closed statuses, which is where a reader deciding
+  between them is standing.
+- **The stub carries no `work_package`, and says so.** The original's was never recorded anywhere
+  that survives. Several closed tasks already show `-` in that column, so the absence is a shape the
+  board holds; inventing `v0.2` from the date would have been the reconstruction claiming to know
+  something it does not, in the one file whose entire purpose is to be honest about what is left.
+- **No acceptance criteria, plan or implementation in the stub either.** It was withdrawn in
+  `specify` and never had them. Plausible ones would make it a forgery rather than a record.
+- **Its `→ cancelled` row is dated to the reconstruction, not the withdrawal.** That is when the file
+  came to exist. The withdrawal keeps its own row at 2026-08-10, so the two facts stay apart.
 
 **Outputs produced**
-- `tasks/...`
+- [T-072](T-072-a-corrupted-comment-opener-in-shell-components-css.md) — the stub, headed by a
+  blockquote saying it is a reconstruction, what it was built from, and that no original survives in
+  the tree or in history.
+- [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §3.1 — the disposal rule, its one-clause reason, and a note
+  naming both instances: the hole T-072 was, and T-003 as the precedent that was already right.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `TASK-WORKFLOW.md` states the disposal as a rule | met | §3.1, in the imperative and in its own paragraph — *a task withdrawn because its premise proved false is `cancelled`, and its file is kept. It is never deleted.* The instance sits below it in italics, so the rule reads without the anecdote. |
+| The rule says why, in one clause | met | *A deleted ID resolves to nothing, so the next reader cannot tell withdrawn from lost.* |
+| `tasks/T-072-*.md` exists, is `cancelled`, cites T-069 and L-56 | met | Both cited, and both as the *sources* of its content rather than as related reading — the point of the file is that it is second-hand. |
+| The stub is marked as reconstructed and dated | met | A blockquote before §1, carrying the date, the author task, the two sources, and the `git log --diff-filter=A` result that establishes nothing survives to reproduce. |
+| `lint.py` green, no gap between T-071 and T-073 | met | `OK - 92 task(s)` (91 before), refcheck `0 broken`, and the board's closed table runs T-071, T-072, T-073 with no gap. |
 
 **Child fix tasks raised**
 - none
@@ -109,4 +130,5 @@ and applies it to T-072. It does not reopen the question.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-11 | → done | All five criteria met. **The rule was the cheap half; the stub is what makes it true.** A disposal rule saying *retain* while its only instance stayed deleted would have left exactly the hole it was written to close, which is why section 1 scoped both together. Two things the reconstruction had to refuse: a work package and a set of acceptance criteria, both easy to infer and neither recorded anywhere that survives - a reconstructed file that fills its own gaps is worse than the deletion it repairs, because it reads as evidence. Section 1 also pointed the rule at section 5, which is *The log*; it went to section 3.1 beside the status vocabulary instead. |
 | 2026-08-11 | → proposed | Raised from the pre-v0.3 audit, which found the T-072 hole by counting index rows against filenames — 87 files against IDs running to T-088. The owner settled both questions the audit put: **`cancelled` and retained**, and **`v0.3`**. `v0.3` is against the size rule, which sends `xs` to v0.2 — recorded here rather than left to be re-derived, because v0.2 has shipped and reopening it is reserved for adopter defects, which this is not. `low` value: it costs nobody anything today, and the audit that found it was not a gate and does not repeat. |

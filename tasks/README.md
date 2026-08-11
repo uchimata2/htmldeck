@@ -35,7 +35,6 @@ happened.
 | [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | - | T-019, T-069, T-071, T-092 |
 | [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | - | T-063, T-073, T-079, T-081 |
 | [T-088](T-088-a-figure-in-a-sentence-naming-no-field-goes-stale-unwatched.md) | A figure in a sentence that names no field goes stale unwatched, and two just did | `v0.3` | `proposed` | `specify` | - | - | - | T-060, T-068, T-077, T-082, T-092 |
-| [T-089](T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md) | A task withdrawn on a false premise was deleted rather than cancelled, and no rule said which | `v0.3` | `proposed` | `specify` | - | - | - | T-003, T-069 |
 
 ## Closed
 
@@ -104,8 +103,9 @@ happened.
 | [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | - | T-051, T-065, T-075, T-090 |
 | [T-067](T-067-the-published-upgrade-instructions-do-not-upgrade.md) | The published upgrade instructions do not upgrade anything | `v0.1` | `done` | `review` | - | - | - | T-056, T-060, T-061 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `done` | `review` | - | - | - | T-060, T-088 |
-| [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | T-070 | T-016, T-070, T-084, T-085, T-089, T-092 |
+| [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | T-070 | T-016, T-070, T-072, T-084, T-085, T-089, T-092 |
 | [T-071](T-071-the-intermediate-specifications-carry-their-references.md) | The intermediate specifications carry the sources they rest on | `v0.2` | `done` | `review` | - | - | - | T-070, T-082, T-083, T-085, T-086 |
+| [T-072](T-072-a-corrupted-comment-opener-in-shell-components-css.md) | A corrupted comment opener in shell/components.css would swallow the rule beneath it | - | `cancelled` | `specify` | - | - | - | T-069, T-089 |
 | [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `done` | `review` | - | - | - | T-062, T-063, T-074, T-077, T-079, T-080, T-081 |
 | [T-074](T-074-the-documented-render-command-does-not-exist.md) | The documented render command does not exist, and the tools write into their own install | `v0.1` | `done` | `review` | - | - | - | T-073 |
 | [T-075](T-075-ds-064-probes-for-the-reference-decks-own-class-names.md) | DS-064 probes for the reference deck's own class names, and contract.py is outside the fixture | `v0.1` | `done` | `review` | - | - | - | T-051, T-065, T-066, T-076, T-083 |
@@ -120,6 +120,7 @@ happened.
 | [T-085](T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md) | The reference deck does not carry the shell it defines, and its sprite is out of sync | `v0.1` | `done` | `review` | - | - | - | T-069, T-071, T-078, T-083 |
 | [T-086](T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) | Check that every figure ledger row appears on the slides its Used on names | `v0.2` | `done` | `review` | - | - | - | T-071, T-082, T-087, T-090 |
 | [T-087](T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) | Sweep the reference deck's figure ledger for the pattern T-082 found | `v0.2` | `done` | `review` | - | - | - | T-082, T-086 |
+| [T-089](T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md) | A task withdrawn on a false premise was deleted rather than cancelled, and no rule said which | `v0.3` | `done` | `review` | - | - | - | T-003, T-069, T-072 |
 | [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md) | SPEC-5 reports NO SUBJECT on a fully built deck whose slides carry a descriptive aria-label | `v0.1` | `done` | `review` | - | - | - | T-051, T-065, T-066, T-086, T-091 |
 | [T-091](T-091-build-md-documents-icons-set-as-a-single-pair.md) | build.md documents shell.py icons --set as a single pair, and it takes one comma-separated argument | `v0.1` | `done` | `review` | - | - | - | T-090 |
 | [T-092](T-092-product-feedback-from-the-first-external-deck.md) | Product feedback from the first external deck — six needs, all against tasks that already exist | `v0.3` | `done` | `review` | - | - | - | T-004, T-016, T-069, T-070, T-082, T-088 |

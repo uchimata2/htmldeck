@@ -97,6 +97,18 @@ a blocker still gates its downstream tasks.
 `blocked` is the one value that asserts the work is held up, and `taskmd check` reports a task
 carrying it with no dependency recorded.
 
+**A task withdrawn because its premise proved false is `cancelled`, and its file is kept. It is never
+deleted.** The reason is one clause: a deleted ID resolves to nothing, so the next reader cannot tell
+withdrawn from lost, and the record gives them no way to find out. A `cancelled` file answers at its
+own ID in one read — what was raised, and why it does not stand.
+
+*Written down 2026-08-11 by [T-089](T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md),
+which found the hole this rule closes: `T-072` was deleted before it was ever committed, so it is
+absent from the working tree and from git history alike, and what survived was two sentences in
+another task's log. [T-072](T-072-a-corrupted-comment-opener-in-shell-components-css.md) is a stub
+reconstructed from those, and [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) is the
+precedent that was already right.*
+
 ---
 
 ## 4. Which edge to use
