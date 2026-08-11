@@ -114,6 +114,17 @@ that omits one goes missing from the navigation rather than looking wrong.
 | `.sources-label` | `span` | `.sources-btn` | `1` | — | author |
 | `.sources-box` | `span` | `.sources` | `1` | `id` | author |
 | `.sources-item` | `span` | `.sources-box` | `1+` | — | author |
+| `.sources-open` | `button` | `.sources-item` | `0-1` | `type` `data-qv` | author |
+| `.qv-src` | `template` | `.sources-item` | `0-1` | `data-qv` | author |
+| `.qv` | `div` | — | `1` | `id` `hidden` `role` `aria-modal` `aria-labelledby` | author |
+| `.qv-sheet` | `div` | `.qv` | `1` | — | author |
+| `.qv-head` | `header` | `.qv-sheet` | `1` | — | author |
+| `.qv-title` | `p` | `.qv-head` | `1` | `id` | author |
+| `.qv-note` | `p` | `.qv-head` | `1` | — | author |
+| `.qv-close` | `button` | `.qv-head` | `1` | `id` `aria-label` | author |
+| `.qv-body` | `div` | `.qv-sheet` | `1` | `id` | author |
+| `.qv-doc` | `article` | `.qv-body` | `0-1` | — | script |
+| `.qv-href` | `span` | `.qv-doc` | `0+` | — | author |
 
 **The multi-source mark is `<span>`s inside the `<p>`, and that is a parser constraint rather than a
 preference.** A `<div>` inside a `<p>` is closed by the HTML parser, so a box built that way would
@@ -125,6 +136,24 @@ contain.
 **`.sources-item` is `1+` and DS-105 says two.** The contract can only say a box has items; *a box
 is for more than one source* is an editorial claim about the slide, which is DS-105's to make and
 the critique pass's to judge. A one-item box is conformant markup and a pointless design.
+
+**The quick view is two components' worth of rows for one reason: the surface is the shell's and
+the content is the deck's.** `.qv` and everything under it ship empty in `shell/shell.html`, like the
+chrome and the reading view — a deck carrying no quick view still carries the surface. What varies
+per deck is `.sources-open` and `.qv-src`, and both sit inside the `.sources-item` for the source
+they belong to, because the provenance mark is where a reader asks the question. All of them are
+`author` in this table's vocabulary, which distinguishes **markup in the file** from markup a script
+creates — `tools/deck/quickview.py` writes two of them and that does not make them a third kind.
+
+**`.qv-src` is a `<template>` and the element is the rule, not a wrapper choice.** Its content is
+inert to the parser: nothing inside it loads, renders or executes until the script clones it. That
+is what makes T-070's second admission test — *a source executes no script into the deck* — a
+property of where the source sits rather than a promise about what a sanitiser caught. A `<div
+hidden>` would look equivalent and would load every image in it.
+
+**`.qv-doc` is `script` and not `build`**, because the article is created when a quick view is
+opened. What the build writes is the template's *contents*; the container the reader sees is the
+script's, like `.doc`'s sections.
 
 **`.sources` is not a `.disc` and must not be counted as one** — see DS-105 and DS-230. It shares the
 disclosure interaction rules and none of its vocabulary, which is why it is contracted here beside

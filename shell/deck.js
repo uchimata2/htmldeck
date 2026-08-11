@@ -258,10 +258,66 @@
     if (open) box.classList.add('opening');
   }
 
+  /* ------------------------------------------------ the quick view (DS-105, T-070) */
+  /* One surface for the whole deck; what it shows is cloned from the cited slide's own
+     <template class="qv-src">. The template is why nothing here has to be trusted: its content is
+     inert to the parser, so a source loads, renders and runs nothing until this clone - and a
+     <script> that arrived inside it does not execute when cloned either.
+
+     Precedence is the disclosure's rule (DS-137): opening a source closes the panels, and the
+     quick view closes both. Dismissal is Escape or the button, and advancing the deck closes it -
+     a reader who moves on has already dismissed it. */
+  var qv = document.getElementById('qv');
+  var qvBody = document.getElementById('qvBody');
+  var qvTitle = document.getElementById('qvTitle');
+  var qvOpener = null;
+
+  /* One document, however many slides cite it: the control is on every mark, the <template> is on
+     the first, and this map is what joins them. Six copies of one source would be the size cost
+     this feature has to justify, spent on nothing. */
+  var qvSrc = {};
+  Array.prototype.forEach.call(stage.querySelectorAll('template.qv-src'), function(tpl){
+    qvSrc[tpl.getAttribute('data-qv')] = tpl;
+  });
+  /* Delegated, and that is not a style preference: buildDoc() clones every slide into the reading
+     view, so the controls exist twice and the clones are made after this runs. Bound per element,
+     the reading view's copies would be buttons that do nothing - and the reading view is where the
+     deck is read alone, which is exactly the reader who wants the source. The map stays keyed off
+     the STAGE's templates, so the clones show the same one document rather than their own copy. */
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest && e.target.closest('.sources-open');
+    if (!btn) return;
+    var tpl = qvSrc[btn.getAttribute('data-qv')];
+    if (!tpl) return;
+    openQuick(btn, btn.textContent, tpl);
+  });
+  document.getElementById('qvClose').addEventListener('click', function(){ closeQuick(); });
+  /* The scrim dismisses; the sheet does not, or every scroll inside it would close the view. */
+  qv.addEventListener('click', function(e){ if (e.target === qv) closeQuick(); });
+
+  function openQuick(btn, title, tpl){
+    closeAllDiscs(null);
+    closeAllSources(null);
+    qvBody.textContent = '';
+    qvBody.appendChild(tpl.content.cloneNode(true));
+    qvTitle.textContent = title;
+    qv.hidden = false;
+    qvOpener = btn;
+    document.getElementById('qvClose').focus();
+  }
+  function closeQuick(){
+    if (qv.hidden) return;
+    qv.hidden = true;
+    qvBody.textContent = '';       /* the surface holds nothing between openings */
+    if (qvOpener) qvOpener.focus();
+    qvOpener = null;
+  }
+
   /* ---------------------------------------------------------- navigation */
   function go(i, opts){
     i = Math.max(0, Math.min(slides.length - 1, i));
     idx = i;
+    closeQuick();
     closeAllDiscs(null);
     closeAllSources(null);
     slides.forEach(function(s, n){
@@ -320,7 +376,7 @@
       var d = slides[idx].querySelector('[data-disc]');
       if (d) { toggleDisc(d, null); e.preventDefault(); }
     }
-    else if (k === 'Escape')                        { closeAllDiscs(null); closeAllSources(null); }
+    else if (k === 'Escape')     { closeQuick(); closeAllDiscs(null); closeAllSources(null); }
     else if (k === 'r' || k === 'R')                              { setView(true); e.preventDefault(); }
     else if (k === 'm' || k === 'M')                              { setMotion(root.dataset.motion === 'off'); }
     else if (k === 't' || k === 'T')                              { setTheme(root.dataset.theme === 'light' ? 'dark' : 'light'); }

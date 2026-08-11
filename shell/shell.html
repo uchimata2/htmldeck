@@ -80,6 +80,22 @@
 </article>
 <button class="viewswitch" id="toStage">Presentation</button>
 
+<!-- the quick view: one surface, filled from the cited slide's own <template class="qv-src">
+     (T-070). Empty in the shell because what it shows is per-deck; present in the shell because
+     the surface is not. A source rendered here is a rendering and says so - the note is part of
+     the component, not documentation about it. -->
+<div class="qv" id="qv" hidden role="dialog" aria-modal="true" aria-labelledby="qvTitle">
+  <div class="qv-sheet">
+    <header class="qv-head">
+      <p class="qv-title" id="qvTitle"></p>
+      <p class="qv-note">Quick view — rendered from the source and carried in this deck. Not the
+        original file.</p>
+      <button class="qv-close" id="qvClose" aria-label="Close the quick view">Close</button>
+    </header>
+    <div class="qv-body" id="qvBody"></div>
+  </div>
+</div>
+
 <style id="slides">{{COMPOSITION}}</style>
 
 <script>{{SCRIPT}}</script>

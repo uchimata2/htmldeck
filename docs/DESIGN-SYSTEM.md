@@ -269,7 +269,7 @@ What it must contain is a property of a good deck, so it is here.**
 
 | ID | Rule | Label | Check | Reach |
 | :--- | :--- | :--- | :--- | :--- |
-| DS-110 | **No raster images.** Ever. | hard | auto | yes |
+| DS-110 | **No raster image the deck produces.** Ever — a rasterised diagram cannot scale, theme or diff. **A source the deck *quotes* may be raster, and only inside a quick view** (`template.qv-src` or `.qv-body`): a screenshot is often the only form a source has. Where a source offers a vector form as well, the builder takes it. | hard | auto | yes |
 | DS-111 | Diagrams are inline SVG. `<canvas>` and WebGL where they render better; prefer SVG where it is as good. | hard | auto | yes |
 | DS-112 | **Never hand-draw icons.** Lucide primary, Font Awesome free fallback. | hard | judge | — |
 | DS-113 | Embed the icon set as an SVG symbol sprite containing **only the icons used**, referenced by `<use>`. | hard | auto | yes |

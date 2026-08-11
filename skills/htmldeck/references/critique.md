@@ -100,6 +100,11 @@ Two tests worth running by hand because nothing else does:
   wrong — that is X-09, and it is the failure progressive disclosure is most prone to.
 - **Read the bottom lines alone, in order.** They should be the argument. If they read as a list of
   topics, D1 Spine is the finding, whatever the slides look like.
+- **Open every quick view and ask what form the source was available in.** DS-110 lets a quick view
+  quote a raster because a screenshot is often the only form a source has — and it says the builder
+  takes the vector form wherever the source offers one. **No check can see that**: the gate reads the
+  deck and cannot know what sat beside the source on disk. A quick view showing a screenshot of a
+  document that exists as text is a DS-110 finding, and this is the only pass that can raise it.
 
 ## 5. The four outcomes are not interchangeable
 

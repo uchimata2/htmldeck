@@ -32,7 +32,6 @@ happened.
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.3` | `proposed` | `specify` | - | - | - | T-005, T-016, T-019, T-042 |
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `v0.3` | `proposed` | `specify` | T-053 | - | - | T-005, T-037, T-043, T-051 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.3` | `proposed` | `specify` | T-016 | - | - | T-007, T-016, T-019, T-033 |
-| [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | - | T-019, T-069, T-071, T-092 |
 | [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | - | T-063, T-073, T-079, T-081 |
 
 ## Closed
@@ -102,7 +101,8 @@ happened.
 | [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | - | T-051, T-065, T-075, T-090 |
 | [T-067](T-067-the-published-upgrade-instructions-do-not-upgrade.md) | The published upgrade instructions do not upgrade anything | `v0.1` | `done` | `review` | - | - | - | T-056, T-060, T-061 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `done` | `review` | - | - | - | T-060, T-088 |
-| [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | T-070 | T-016, T-070, T-072, T-084, T-085, T-089, T-092 |
+| [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | - | T-016, T-070, T-072, T-084, T-085, T-089, T-092 |
+| [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `done` | `review` | - | - | - | T-019, T-069, T-071, T-092 |
 | [T-071](T-071-the-intermediate-specifications-carry-their-references.md) | The intermediate specifications carry the sources they rest on | `v0.2` | `done` | `review` | - | - | - | T-070, T-082, T-083, T-085, T-086 |
 | [T-072](T-072-a-corrupted-comment-opener-in-shell-components-css.md) | A corrupted comment opener in shell/components.css would swallow the rule beneath it | - | `cancelled` | `specify` | - | - | - | T-069, T-089 |
 | [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `done` | `review` | - | - | - | T-062, T-063, T-074, T-077, T-079, T-080, T-081 |

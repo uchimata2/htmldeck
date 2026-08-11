@@ -37,6 +37,7 @@
   --field:#D8DAD9;
   --shadow:rgba(30,32,31,.16);
   --shadow-soft:rgba(30,32,31,.08);
+  --scrim:rgba(30,32,31,.45);      /* the quick view's wash over the slide (T-070) */
 
   --accent:#0F5F63;
   --accent-ink:#0C4D50;
@@ -178,6 +179,7 @@
   --field:#0C0D0D;
   --shadow:rgba(0,0,0,.60);
   --shadow-soft:rgba(0,0,0,.32);
+  --scrim:rgba(0,0,0,.62);
   --accent:#5FC6CB;
   --accent-ink:#7FD6DA;
   --accent-wash:#12312F;

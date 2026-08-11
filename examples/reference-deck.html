@@ -96,6 +96,10 @@
   --field:#DAD4C6;              /* the darker field the stage floats on (DS-050) */
   --shadow:rgba(35,33,29,.22);
   --shadow-soft:rgba(35,33,29,.10);
+  /* the wash the quick view lays over the slide it covers (T-070). Its own token because it is a
+     layer rather than a shade of one: it darkens paper AND field, and the dark theme needs it
+     lighter rather than darker. */
+  --scrim:rgba(35,33,29,.45);
 
   /* ---- colour: exactly one accent, and it means something wherever it appears
      (DS-020/021/025). */
@@ -251,6 +255,7 @@
   --field:#0E0E0C;
   --shadow:rgba(0,0,0,.55);
   --shadow-soft:rgba(0,0,0,.30);
+  --scrim:rgba(0,0,0,.62);
   --accent:#AC9FE6;
   --accent-ink:#C4BAF0;
   --accent-wash:#2B2545;
@@ -708,6 +713,87 @@ svg{display:block}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
+/* ------------------------------------------------- the quick view (DS-105, T-070) */
+/* A second reading surface with a different subject: `.doc` re-lays THIS deck as a page, and this
+   shows ANOTHER document over the current slide. Two components rather than one, and DS-136 is
+   satisfied by what they share rather than by merging them - the `--doc-*` type scale is the same
+   scale, and the precedence rule is the disclosure's (DS-137, one thing open at a time).
+
+   An overlay and not a page, settled by the owner 2026-08-10: returning to the argument costs one
+   dismissal, and the deck's slide count stops depending on how many sources it cites. */
+.qv{
+  /* fixed, not absolute: the overlay opens over the stage AND over the reading view, and the
+     reading view scrolls (T-070) */
+  position:fixed;inset:0;z-index:60;
+  display:flex;align-items:center;justify-content:center;
+  padding:var(--sp-4);
+  background:var(--scrim);
+}
+.qv[hidden]{display:none}
+.qv-sheet{
+  display:flex;flex-direction:column;
+  width:min(var(--doc-measure), 100%);max-height:100%;
+  border:var(--hair) solid var(--line);border-radius:var(--radius);
+  background:var(--paper);box-shadow:0 var(--shadow-y) var(--shadow-blur) var(--shadow-soft);
+}
+.qv-head{
+  flex:none;display:grid;grid-template-columns:1fr auto;gap:var(--sp-1) var(--sp-3);
+  align-items:baseline;
+  padding:var(--sp-3) var(--sp-4);border-bottom:var(--hair) solid var(--line);
+}
+.qv-title{font-family:var(--font-display);font-size:var(--fs-lead);line-height:1.2}
+/* The fidelity claim is on the surface, not in documentation - a reader who never opens a task
+   record still learns that this is a rendering. It spans both columns so it survives a long title. */
+.qv-note{
+  grid-column:1 / -1;
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  color:var(--ink-faint);
+}
+.qv-close{
+  grid-row:1;grid-column:2;
+  min-height:var(--disc-hit);padding:0 var(--sp-2);
+  border:var(--hair) solid var(--line);border-radius:var(--radius);
+  background:var(--paper-sunk);color:var(--ink-soft);
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  text-transform:uppercase;
+}
+.qv-close:hover{border-color:var(--accent);color:var(--ink)}
+.qv-body{
+  flex:1 1 auto;min-height:0;overflow:auto;
+  padding:var(--sp-4);
+  font-size:var(--fs-body);line-height:1.6;color:var(--ink);
+}
+/* The rendered source. Every element it may contain is styled here, because the source brought no
+   stylesheet of its own and must not be able to bring one (admission test 2). */
+.qv-doc > * + *{margin-top:var(--sp-2)}
+.qv-doc h1,.qv-doc h2,.qv-doc h3{font-family:var(--font-display);line-height:1.25}
+.qv-doc h1{font-size:var(--fs-lead)}
+.qv-doc h2{font-size:var(--fs-body)}
+.qv-doc h3{font-size:var(--fs-small)}
+.qv-doc ul,.qv-doc ol{padding-left:var(--sp-4)}
+.qv-doc li + li{margin-top:var(--sp-1)}
+.qv-doc pre,.qv-doc code{font-family:var(--font-mono);font-size:var(--fs-small)}
+.qv-doc pre{padding:var(--sp-2);border-radius:var(--radius);background:var(--paper-sunk);
+  overflow-x:auto;white-space:pre-wrap}
+.qv-doc table{border-collapse:collapse;width:100%;font-size:var(--fs-small)}
+.qv-doc th,.qv-doc td{padding:var(--sp-1) var(--sp-2);border:var(--hair) solid var(--line);
+  text-align:left}
+.qv-doc blockquote{padding-left:var(--sp-3);border-left:var(--hair) solid var(--line);
+  color:var(--ink-soft)}
+/* The one place a raster is legal, and the rule says so by naming this container (DS-110). */
+.qv-doc img,.qv-doc svg{display:block;max-width:100%;height:auto}
+/* A source's own <a> is rendered as text with its target beside it, so nothing here is a link that
+   could be dead (DS-105) or reach the network (DS-001). */
+.qv-doc .qv-href{font-family:var(--font-mono);font-size:var(--fs-mono);color:var(--ink-faint)}
+
+/* The control that opens one, inside the sources box it belongs to. */
+.sources-open{
+  display:block;width:100%;padding:0;border:0;background:none;
+  color:inherit;font:inherit;text-align:left;text-decoration:underline;
+  text-decoration-color:var(--line);
+}
+.sources-open:hover{color:var(--accent);text-decoration-color:var(--accent)}
+
 /* printing is a mode the user forces on, never a constraint on the design (CLAUDE.md rule 5)
 
    THE PAGINATED STAGE - one slide per printed page. R7 ruled this the printable mode against a
@@ -890,6 +976,12 @@ svg{display:block}
     margin-top:var(--sp-3);font-family:var(--font-mono);font-size:calc(21*var(--du));
     letter-spacing:var(--track-mono);color:var(--ink-soft);
   }
+
+  /* The quick view is a screen affordance, like the sources button beside it: paper cannot dismiss
+     an overlay, and a reader holding the sheet has the source list printed under the mark already
+     (T-070, and DS-223's reasoning for `.sources-btn`). Its <template> never rendered anywhere. */
+  .qv{display:none!important}
+  .sources-open{text-decoration:none}
 
   /* Backgrounds and rules are most of this design; without this they print as white. */
   *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
@@ -1635,6 +1727,22 @@ svg{display:block}
 </article>
 <button class="viewswitch" id="toStage">Presentation</button>
 
+<!-- the quick view: one surface, filled from the cited slide's own <template class="qv-src">
+     (T-070). Empty in the shell because what it shows is per-deck; present in the shell because
+     the surface is not. A source rendered here is a rendering and says so - the note is part of
+     the component, not documentation about it. -->
+<div class="qv" id="qv" hidden role="dialog" aria-modal="true" aria-labelledby="qvTitle">
+  <div class="qv-sheet">
+    <header class="qv-head">
+      <p class="qv-title" id="qvTitle"></p>
+      <p class="qv-note">Quick view — rendered from the source and carried in this deck. Not the
+        original file.</p>
+      <button class="qv-close" id="qvClose" aria-label="Close the quick view">Close</button>
+    </header>
+    <div class="qv-body" id="qvBody"></div>
+  </div>
+</div>
+
 <style id="slides">
 /* slide-specific layout, kept with the deck rather than in the token block */
 /* `height:100%` inside a 1fr track measures against the track and then adds its own box,
@@ -1976,10 +2084,66 @@ svg{display:block}
     if (open) box.classList.add('opening');
   }
 
+  /* ------------------------------------------------ the quick view (DS-105, T-070) */
+  /* One surface for the whole deck; what it shows is cloned from the cited slide's own
+     <template class="qv-src">. The template is why nothing here has to be trusted: its content is
+     inert to the parser, so a source loads, renders and runs nothing until this clone - and a
+     <script> that arrived inside it does not execute when cloned either.
+
+     Precedence is the disclosure's rule (DS-137): opening a source closes the panels, and the
+     quick view closes both. Dismissal is Escape or the button, and advancing the deck closes it -
+     a reader who moves on has already dismissed it. */
+  var qv = document.getElementById('qv');
+  var qvBody = document.getElementById('qvBody');
+  var qvTitle = document.getElementById('qvTitle');
+  var qvOpener = null;
+
+  /* One document, however many slides cite it: the control is on every mark, the <template> is on
+     the first, and this map is what joins them. Six copies of one source would be the size cost
+     this feature has to justify, spent on nothing. */
+  var qvSrc = {};
+  Array.prototype.forEach.call(stage.querySelectorAll('template.qv-src'), function(tpl){
+    qvSrc[tpl.getAttribute('data-qv')] = tpl;
+  });
+  /* Delegated, and that is not a style preference: buildDoc() clones every slide into the reading
+     view, so the controls exist twice and the clones are made after this runs. Bound per element,
+     the reading view's copies would be buttons that do nothing - and the reading view is where the
+     deck is read alone, which is exactly the reader who wants the source. The map stays keyed off
+     the STAGE's templates, so the clones show the same one document rather than their own copy. */
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest && e.target.closest('.sources-open');
+    if (!btn) return;
+    var tpl = qvSrc[btn.getAttribute('data-qv')];
+    if (!tpl) return;
+    openQuick(btn, btn.textContent, tpl);
+  });
+  document.getElementById('qvClose').addEventListener('click', function(){ closeQuick(); });
+  /* The scrim dismisses; the sheet does not, or every scroll inside it would close the view. */
+  qv.addEventListener('click', function(e){ if (e.target === qv) closeQuick(); });
+
+  function openQuick(btn, title, tpl){
+    closeAllDiscs(null);
+    closeAllSources(null);
+    qvBody.textContent = '';
+    qvBody.appendChild(tpl.content.cloneNode(true));
+    qvTitle.textContent = title;
+    qv.hidden = false;
+    qvOpener = btn;
+    document.getElementById('qvClose').focus();
+  }
+  function closeQuick(){
+    if (qv.hidden) return;
+    qv.hidden = true;
+    qvBody.textContent = '';       /* the surface holds nothing between openings */
+    if (qvOpener) qvOpener.focus();
+    qvOpener = null;
+  }
+
   /* ---------------------------------------------------------- navigation */
   function go(i, opts){
     i = Math.max(0, Math.min(slides.length - 1, i));
     idx = i;
+    closeQuick();
     closeAllDiscs(null);
     closeAllSources(null);
     slides.forEach(function(s, n){
@@ -2038,7 +2202,7 @@ svg{display:block}
       var d = slides[idx].querySelector('[data-disc]');
       if (d) { toggleDisc(d, null); e.preventDefault(); }
     }
-    else if (k === 'Escape')                        { closeAllDiscs(null); closeAllSources(null); }
+    else if (k === 'Escape')     { closeQuick(); closeAllDiscs(null); closeAllSources(null); }
     else if (k === 'r' || k === 'R')                              { setView(true); e.preventDefault(); }
     else if (k === 'm' || k === 'M')                              { setMotion(root.dataset.motion === 'off'); }
     else if (k === 't' || k === 'T')                              { setTheme(root.dataset.theme === 'light' ? 'dark' : 'light'); }

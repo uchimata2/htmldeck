@@ -907,14 +907,23 @@ def self_test():
     # it is about is named a sentence earlier, which is why nothing caught these two the first time.
     rel = "examples/README.md"
     src = io.open(os.path.join(ROOT, rel.replace("/", os.sep)), encoding="utf-8").read()
-    was = (src.replace("**220 KB in one file**, 225 639 bytes", "**212 KB in one file**, 217 050 bytes")
+    # **Derived from the live figures, not written out.** The wording survives a deck that grows;
+    # a hardcoded `220 KB` would seed nothing the day the deck changed, and a fixture that seeds
+    # nothing passes. The deck did grow - T-070 put quick views in it - and this is the version
+    # that noticed.
+    facts = artifact_facts()["examples/sort-window/sort-window.html"]
+    grouped = "{:,}".format(facts["bytes"]).replace(",", " ")
+    wrong_kb, wrong_bytes = str(facts["KB"] - 8), "{:,}".format(facts["bytes"] - 8569).replace(",", " ")
+    was = (src.replace("**%d KB in one file**, %s bytes" % (facts["KB"], grouped),
+                       "**%s KB in one file**, %s bytes" % (wrong_kb, wrong_bytes))
               .replace("six hand-written SVG figures", "five hand-written SVG figures"))
     if was == src:
-        sys.exit("SELF-TEST FAILED: %s no longer states the built deck's size and figure count in "
-                 "the wording this fixture seeds, so the two figures T-088 was raised for are "
-                 "unexercised. Re-seed it from the wording the page uses now" % rel)
+        sys.exit("SELF-TEST FAILED: %s no longer states the built deck's size as "
+                 "'**%d KB in one file**, %s bytes', so the two figures T-088 was raised for are "
+                 "unexercised. Re-seed from the wording the page uses now"
+                 % (rel, facts["KB"], grouped))
     seeded = [r for r in declared(table, outputs, {rel: was})[0] if r[0] == "STALE"]
-    for want, what in (("212", "the rounded size"), ("217 050", "the exact byte count"),
+    for want, what in ((wrong_kb, "the rounded size"), (wrong_bytes, "the exact byte count"),
                        ("five", "the figure count, which the page writes as a word")):
         if not [r for r in seeded if r[2] == want]:
             sys.exit("SELF-TEST FAILED: %s was re-seeded as %s and no row reported it. That is the "

@@ -34,6 +34,10 @@
   --field:#DAD4C6;              /* the darker field the stage floats on (DS-050) */
   --shadow:rgba(35,33,29,.22);
   --shadow-soft:rgba(35,33,29,.10);
+  /* the wash the quick view lays over the slide it covers (T-070). Its own token because it is a
+     layer rather than a shade of one: it darkens paper AND field, and the dark theme needs it
+     lighter rather than darker. */
+  --scrim:rgba(35,33,29,.45);
 
   /* ---- colour: exactly one accent, and it means something wherever it appears
      (DS-020/021/025). */
@@ -189,6 +193,7 @@
   --field:#0E0E0C;
   --shadow:rgba(0,0,0,.55);
   --shadow-soft:rgba(0,0,0,.30);
+  --scrim:rgba(0,0,0,.62);
   --accent:#AC9FE6;
   --accent-ink:#C4BAF0;
   --accent-wash:#2B2545;

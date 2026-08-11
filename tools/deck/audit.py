@@ -446,6 +446,24 @@ def ds001_no_external_references(h):
         if not u.startswith(("data:", "#", "blob:"))]
 
 
+# **The quick view is where a quoted source lives, and the only place DS-110 lets a raster be**
+# (T-070). The distinction the amendment draws is between what a deck MAKES and what it QUOTES, and
+# it is decidable by position rather than by intent: a raster inside `template.qv-src` or `.qv-body`
+# is a source, and a raster anywhere else is a rasterised diagram - as much a defect after the
+# amendment as before it. Cut narrowly and by container, in the shape DS-001's provenance exemption
+# was cut in T-069: the exemption goes exactly as far as the container that earns it.
+QUICK_VIEW = re.compile(r'<template class="qv-src"[^>]*>.*?</template>'
+                        r'|<div class="qv-body"[^>]*>.*?</div>', re.S | re.I)
+
+
+def ds110_no_produced_raster(h):
+    """DS-110 as narrowed by scope. A quick view's contents are removed, then nothing may remain."""
+    outside = QUICK_VIEW.sub("", h)
+    return (not re.search(r"<img\b", outside) and "data:image/png" not in outside
+            and "data:image/jpeg" not in outside and "data:image/gif" not in outside
+            and "data:image/webp" not in outside)
+
+
 STATIC = [
     ("DS-001", "zero external references, provenance links excepted (DS-105 judges those)",
      ds001_no_external_references),
@@ -465,9 +483,8 @@ STATIC = [
      lambda h: not re.search(r"@media[^{]*max-width", h)),
     ("DS-088", "no speaker notes in the shipped deck",
      lambda h: "speaker-note" not in h and 'class="notes' not in h),
-    ("DS-110", "no raster images",
-     lambda h: not re.search(r"<img\b", h) and "data:image/png" not in h
-     and "data:image/jpeg" not in h),
+    ("DS-110", "no raster the deck produces; a quoted source may be raster inside a quick view",
+     lambda h: ds110_no_produced_raster(h)),
     ("DS-122", "no chart library",
      lambda h: not any(x in h.lower() for x in
                        ("chart.js", "d3.min", "plotly", "highcharts", "echarts"))),
@@ -2084,6 +2101,25 @@ def self_test():
                  "citing `11 minutes` cannot be cleared by a face that shows `11`")
     if magnitude("$5.6M") == magnitude("5.6 minutes"):
         sys.exit("SELF-TEST FAILED: millions and minutes normalise to one figure")
+
+    # **DS-110's boundary, demonstrated on one document rather than asserted** (T-070). The same
+    # raster twice: once as a slide's own figure, once as the source a quick view quotes. A rule
+    # narrowed by scope is only narrowed if both halves are shown, and this is the assertion that
+    # decides whether the narrowing was a narrowing or a loss.
+    raster = '<img src="data:image/png;base64,iVBORw0KGgo=" alt="x">'
+    produced = '<section class="slide"><div class="body">%s</div></section>' % raster
+    quoted = ('<span class="sources-item"><template class="qv-src" data-qv="Survey">%s</template>'
+              '</span>' % raster)
+    if ds110_no_produced_raster(produced):
+        sys.exit("SELF-TEST FAILED: a raster the deck produced passed DS-110. The amendment narrows "
+                 "the rule by scope and does not relax it - a deck that rasterises its own content "
+                 "is as much a defect after T-070 as before it")
+    if not ds110_no_produced_raster(quoted):
+        sys.exit("SELF-TEST FAILED: a raster inside a quick view failed DS-110, so the amendment "
+                 "bought nothing: a screenshot is frequently the only form a source has")
+    if ds110_no_produced_raster(produced + quoted) or not ds110_no_produced_raster(quoted + quoted):
+        sys.exit("SELF-TEST FAILED: DS-110 cannot tell the two apart in one deck, which is the only "
+                 "case that matters - a deck carries both")
     return True
 
 

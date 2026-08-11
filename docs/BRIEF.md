@@ -615,7 +615,7 @@ Those belong in the release notes, not in a list of things to fix first.
 remain are both about the build and critique modes, not about the deck.***
 
 - ~~A deck renders correctly with the network disabled.~~ **Met.**
-  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 231 KB, zero
+  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 240 KB, zero
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
 - ~~The build check demonstrated failing on each class of problem it claims to catch.~~ **Met

@@ -91,6 +91,7 @@ fit one deck is worse than no threshold (**L-38**).
 | `--field` | colour | primitive | The darker field the stage floats on (DS-050). | colour |
 | `--shadow` | colour | primitive | The stage's shadow colour. | colour |
 | `--shadow-soft` | colour | primitive | A panel's shadow colour. | colour |
+| `--scrim` | colour | primitive | The wash the quick view lays over the slide it covers (T-070). A layer rather than a shade of one: it darkens `--paper` and `--field` alike, and a dark theme sets it *more* opaque rather than darker. | colour |
 | `--accent` | colour | primitive | The one accent (DS-020). It means something wherever it appears. | colour |
 | `--accent-ink` | colour | primitive | The accent as text on the ground. | colour |
 | `--accent-wash` | colour | primitive | The accent as a ground. | colour |

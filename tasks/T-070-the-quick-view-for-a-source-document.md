@@ -2,8 +2,8 @@
 id: T-070
 title: The quick view — a source document rendered inside the deck
 type: deliverable
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: [T-069]
 related: [T-019]
@@ -13,7 +13,12 @@ business_value: medium
 effort: l
 created: 2026-08-10
 updated: 2026-08-10
-deliverables: []
+deliverables:
+  - tools/deck/quickview.py
+  - shell/shell.html
+  - shell/components.css
+  - shell/deck.js
+  - docs/COMPONENT-CONTRACT.md
 ---
 
 # T-070 — The quick view: a source document rendered inside the deck
@@ -86,26 +91,26 @@ and produce a displayable rendering of it, and nothing in this repository does t
   pattern once, DS-001 on the one-file constraint the whole feature has to survive.
 
 **Acceptance criteria**
-- [ ] A deck carrying quick views for its sources **opens offline by double-click and renders
+- [x] A deck carrying quick views for its sources **opens offline by double-click and renders
       glitch-free** — the constraint the feature exists inside, checked rather than assumed
-- [ ] A measured size cost, on a real 12-slide deck with real source documents, stated as a number
+- [x] A measured size cost, on a real 12-slide deck with real source documents, stated as a number
       and a method someone else could re-run
-- [ ] The reader can tell a quick view from the source: what it promises about fidelity is on the
+- [x] The reader can tell a quick view from the source: what it promises about fidelity is on the
       surface, not in documentation
-- [ ] Embedding is **opt-in per source**, and an author is told what a deck will carry before it
+- [x] Embedding is **opt-in per source**, and an author is told what a deck will carry before it
       carries it — the confidentiality failure is the one that must not be reachable by default
-- [ ] The quick view and the deck's own reading view are one component or two, with the reason
+- [x] The quick view and the deck's own reading view are one component or two, with the reason
       recorded (**DS-136**)
-- [ ] Every class it styles has a `COMPONENT-CONTRACT.md` row (**DS-229**)
-- [ ] **Each admitted type is admitted by the three tests, not by a list** — a type nobody
+- [x] Every class it styles has a `COMPONENT-CONTRACT.md` row (**DS-229**)
+- [x] **Each admitted type is admitted by the three tests, not by a list** — a type nobody
       anticipated is decided by running the tests, and one that fails is refused with which
       test it failed
-- [ ] Embedded HTML cannot alter the deck around it: demonstrated with a source that tries
+- [x] Embedded HTML cannot alter the deck around it: demonstrated with a source that tries
       to, not asserted
-- [ ] **The gate fails a raster the build produced and passes one the quick view quotes** —
+- [x] **The gate fails a raster the build produced and passes one the quick view quotes** —
       demonstrated with a deck carrying both, so the boundary is shown rather than claimed.
       This is the criterion that decides whether DS-110 was narrowed or lost
-- [ ] Where a source exists as both vector and raster, the builder takes the vector form,
+- [x] Where a source exists as both vector and raster, the builder takes the vector form,
       and a deck carrying the raster of such a source is a defect the critique pass names
 
 **Open questions**
@@ -186,23 +191,130 @@ link at all.
 
 ## 2. Plan
 
+**Where the content lives decides everything else, and the shell's own structure decides that.**
+`shell.py` cuts the shell out of the reference deck in **ten named regions**; everything outside them
+is invariant and `shell.py check` compares it byte for byte. So a per-deck quick view cannot be a new
+region without changing that contract — but it does not need to be. The rendered source goes inside
+the **slide that cites it**, in a `<template class="qv-src">` beside its `.sources-item`, which is
+already per-deck content inside the `SLIDES` region. The **surface** — one empty overlay — is shell,
+like the reading view and the chrome.
+
+`<template>` is doing real work there and is not a wrapper: its content is inert by the parser's own
+rules. Nothing inside it loads, renders, or runs until it is cloned, so admission test 2 is a
+property of where the source sits rather than a promise about what the sanitiser caught.
+
+**It also gives DS-110 the container its amendment needs.** *Inside a quick view* becomes
+*inside `template.qv-src` or `.qv-body`*, which a check can decide by position rather than by
+intent — the thing §1 said the scope marker has to be.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
+| 1 | The surface in the shell: the overlay, its type, its dismissal, and its precedence with the disclosure and the sources box | `shell/shell.html`, `shell/components.css`, `shell/deck.js` |
+| 2 | The builder: read a source, run the three admission tests, render it inert, report what it will embed and what that costs **before** writing | `tools/deck/quickview.py` |
+| 3 | Round-trip both shipped decks through the new shell, so `shell.py check` stays green and the two files stay one fact | `examples/reference-deck.html`, `examples/sort-window/sort-window.html` |
+| 4 | Amend DS-110 by scope, and give every new class its contract row | `docs/DESIGN-SYSTEM.md`, `docs/COMPONENT-CONTRACT.md` |
+| 5 | Teach the gate the boundary, and demonstrate both sides of it on one deck | `tools/deck/audit.py` |
+| 6 | Measure: a real 12-slide deck with its real sources, before and after, stated as a method | The measurement, in §3 |
+| 7 | Open the built deck offline and look at it, with the network down | §4, per CLAUDE.md rule 6 |
+
+**Decided here rather than in `implement`, because a criterion asks for it: two components, one type
+block.** `.doc` re-lays *this deck's own* content as a page you read instead of the slides; the quick
+view is an overlay over the current slide showing *another document*. Different subject, different
+lifecycle, different dismissal. What DS-136 requires is that the *pattern* be built once, and it is:
+the overlay reuses the disclosure's precedence rule (**DS-137** — one thing open at a time), and the
+reading typography is the `--doc-*` tokens, not a second set. Two components that share a type scale
+is reuse; one component with a `data-kind` switch would be a component that is two things.
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- none yet
+- **The rendered source lives in a `<template>` inside the slide that cites it** — 2026-08-11. Not a
+  wrapper choice: template content is inert to the parser, so nothing in a source loads, renders or
+  executes until the script clones it, and a `<script>` that arrived inside one does not run when
+  cloned either. Admission test 2 becomes a property of *where the source sits*. It also keeps the
+  shell's ten regions intact — the surface is shell, the content is the `SLIDES` region — and gives
+  DS-110 a container a check can decide by position.
+- **One template per source, a control on every mark that cites it** — 2026-08-11. `Throughput
+  model` is cited by six slides. Six copies of one document would be the size cost this feature has
+  to justify, spent on nothing; the script keys the templates by `data-qv` and every control finds
+  the one copy.
+- **The control is delegated from `document`, not bound per element** — 2026-08-11, and this came
+  from looking rather than from design. `buildDoc()` clones every slide into the reading view *after*
+  the handlers are bound, so the reading view's fifteen controls were buttons that did nothing — in
+  the view where the deck is read alone, which is exactly the reader who wants the source. The
+  overlay went `position:fixed` with it, because the reading view scrolls.
+- **What the sanitiser removes is reported, not absorbed** — 2026-08-11. A quoted source that
+  quietly lost three elements is a rendering that misrepresents its original, which is DS-102's
+  problem wearing a quick view. `plan` prints one line per category removed.
+- **The vector-over-raster clause is named in `critique.md`, not carved into its own rule** —
+  2026-08-11. It is not decidable from the deck: the gate cannot know what sat beside the source on
+  disk. The rival was a new `hard` `judge` rule (`DS-232`), which would have put it on the critique
+  worksheet by construction — rejected on cost rather than on merit, because a new rule moves the
+  ruleset counts that six documents state and `figures.py` would then walk the whole set. Recorded
+  here so the choice is visible: if the clause needs an ID later, the work is the counts, not the
+  rule.
+- **`--scrim` is the one new token**, and `--qv-w` was not needed — the quick view's measure is
+  `--doc-measure`, which is the same decision the reading view already made about comfortable
+  reading width.
+
+**Two defects this found in itself, both by running it rather than reading it**
+- **The sanitiser stripped tags and left their bodies.** `<style>` vanished and its rules stayed
+  behind as text, followed by an orphan `</style>`. The pattern ended at `</\1>|/?>` and `.*?` took
+  the shorter branch — the opening tag's own `>`. Found by embedding a hostile source and reading the
+  template that landed in the deck (**L-01**). The fixture now asserts in the terms that failed: the
+  *body text*, not the tag.
+- **`stem()` again, one file over.** Not this task's, but the same shape: `figures.py`'s new artifact
+  rule went green having judged half its units. Noted here because it is the second instance in two
+  tasks, and the transferable half is in T-088.
+
+**The measurement — a real 12-slide deck with its real sources**
+
+| | bytes | |
+| :--- | ---: | :--- |
+| `examples/sort-window/` before | 233 143 | 12 slides, 3 sources cited 15 times |
+| after, carrying all three sources | 242 699 | +9 556, **+4.1%** |
+| the sources themselves | 7 167 | Markdown, rendered to inert HTML |
+| the controls and templates around them | 2 389 | 15 controls, 3 templates |
+| the bound | 2 097 152 | half of the smallest attachment limit still in wide use |
+
+**The method, so it can be re-run:** `quickview.py plan` prints the deck's size before, each
+source's rendered cost, and the total after, without writing anything;
+`quickview.py list <deck>` prints what a deck already carries. The deck stays inside a mail
+attachment by two orders of magnitude, which is the answer to §1's *"a measurement comes before a
+design here"* — for text sources. A raster source is the case that could still spend the bound, and
+the bound is enforced rather than advisory: past it, nothing is written.
 
 **Outputs produced**
-- none yet
+- [`../tools/deck/quickview.py`](../tools/deck/quickview.py) — the builder: the three admission
+  tests, the Markdown renderer, the sanitiser, the wiring, `plan` / `add` / `list`.
+- [`../shell/shell.html`](../shell/shell.html), [`../shell/components.css`](../shell/components.css),
+  [`../shell/deck.js`](../shell/deck.js) — the surface, its type, its dismissal, its print rule.
+- [`../themes/quarto.css`](../themes/quarto.css), [`../themes/lattice.css`](../themes/lattice.css),
+  [`../docs/THEME-CONTRACT.md`](../docs/THEME-CONTRACT.md) — `--scrim`.
+- [`../docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — DS-110 narrowed by scope.
+- [`../docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) — eleven rows and why the
+  `<template>` is the rule rather than a wrapper.
+- [`../tools/deck/audit.py`](../tools/deck/audit.py) — `ds110_no_produced_raster`, and the fixture
+  that shows both sides of the boundary.
+- [`../skills/htmldeck/references/critique.md`](../skills/htmldeck/references/critique.md) §4 — the
+  vector-over-raster finding no check can reach.
+- Both shipped decks, round-tripped through the new shell; `examples/sort-window/` carries its three
+  sources.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| A deck carrying quick views opens offline by double-click and renders glitch-free | met | `examples/sort-window/` opened from `file://` with the network irrelevant — the gate's DS-001 row is what makes that a property rather than a hope, and it passes. Opened, exercised and read: the overlay opens from a slide and from the reading view, Escape closes it, advancing closes it, the sheet fits the viewport (638 of 720 px) and the console is clean. |
+| A measured size cost on a real 12-slide deck with real sources, stated as a number and a method | met | The table in §3. **+9 556 bytes, +4.1%**, three real Markdown sources cited across fifteen marks; the method is `quickview.py plan`, which reports before/after without writing. |
+| The reader can tell a quick view from the source | met | `.qv-note` is part of the component and sits in the header of every quick view: *rendered from the source and carried in this deck. Not the original file.* It spans both grid columns so a long title cannot push it out of sight. |
+| Embedding is opt-in per source, and the author is told what a deck will carry before it carries it | met | `plan` is the default posture and writes nothing; `add` is the exception. Each source is named individually — there is no *embed everything* — and the run prints its rendered cost and every category the sanitiser removed before a byte is written. The failure this guards is a client's internal document reaching everyone who receives the deck, which is why the safe direction is the default one. |
+| The quick view and the reading view are one component or two, with the reason | met | **Two, sharing one type scale**, decided in §2 and recorded in `components.css` and the contract: `.doc` re-lays this deck as a page, `.qv` shows another document over the current slide. What DS-136 requires is that the pattern be built once, and it is — the precedence rule is the disclosure's (DS-137) and the typography is the `--doc-*` tokens. |
+| Every class it styles has a `COMPONENT-CONTRACT.md` row (DS-229) | met | Eleven rows, and DS-229 caught two mistakes on the way: `shell`/`build` are not sources in that document's vocabulary (`author` means *markup in the file*, whoever wrote it), and `.qv` is a root like `.viewport`, not a child of `.body`. `component.py check` is clean and `check.py` reports `0 failure(s)` on both decks. |
+| Each admitted type is admitted by the three tests, not by a list | met | `render()` dispatches on what a type *is*: text and Markdown render, SVG and HTML render after being made inert, raster embeds as a data URI, and anything failing a test is refused **naming the test** — `test 1 (zero external references, DS-001)`, `test 2 (executes no script)`, or the size bound, which refuses at the deck level and writes nothing. |
+| Embedded HTML cannot alter the deck around it: demonstrated, not asserted | met | A hostile source was written and embedded: a `<style>` hiding every slide, a `<script>` rewriting the stage, a `<div id="stage">` colliding with the deck's own id, and a `javascript:` link. The template that landed in the deck carries the two paragraphs and nothing else; the run reported all four neutralisations. **The first attempt failed this test** — the tags went and their bodies stayed — and that is what the demonstration was for. Verified at the file level and by fixture; the browser pane would not load a second local file to re-check it rendered, so the rendered check is the shipped deck's, not this one's. |
+| The gate fails a raster the build produced and passes one the quick view quotes | met | One raster, two decks, the real gate: in a slide's body → `DS-110 … FAIL`, `1 failure(s)`; the same bytes inside `template.qv-src` → `DS-110 … pass`, `0 failure(s)`. `audit.self_test` holds both halves plus the mixed case, so the narrowing cannot quietly become a loss. |
+| Vector wins where a source offers both, and a raster of such a source is a defect the critique pass names | met | The builder refuses a raster whose vector sibling exists, by name: *`x.svg` exists beside it, and where a source offers a vector form the builder takes it.* The half no check can reach — whether a vector form existed at all — is `critique.md` §4, stated as the reason it is there. |
 
 **Child fix tasks raised**
 - none
@@ -211,6 +323,7 @@ link at all.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-11 | → done | All ten criteria met. **The template is the design decision**: a rendered source sits in `<template class="qv-src">` inside the slide that cites it, which makes admission test 2 a property of where the source sits rather than a promise about the sanitiser, keeps the shell's ten regions intact, and gives DS-110's amendment a container a check decides by position. Measured **+4.1%** on the real 12-slide deck carrying three real sources - two orders of magnitude inside a mail attachment - and the bound refuses rather than warns. Two defects found by running it and not by reading it: the sanitiser stripped tags and left their bodies, and the reading view's fifteen controls were dead because `buildDoc()` clones the slides after the handlers bind. The vector-over-raster clause went to `critique.md` rather than becoming `DS-232`, on cost - a new rule moves the ruleset counts six documents state - and that trade is recorded rather than left to be re-derived. |
 | 2026-08-10 | (specify) | **Moved to `v0.3`** under the release split set by the owner 2026-08-10. Estimates unchanged: `l` and a new capability is the definition of the later phase, and this task's own raising note already called it *the largest thing on the v0.2 board and the least certain to be worth it*. |
 | 2026-08-10 | (specify) | **Both owner questions closed.** *Raster:* DS-110 is narrowed by **scope**, not by force — the build may never emit a raster, and that half is untouched; a source may be *quoted* as raster inside the quick view only; and where a source offers both forms the builder takes the vector one. The enforceable part is a structural container the gate can key on, which is why the amendment cannot land before the component and is kept in this task rather than split out. *Video:* **linked, never embedded** — which drops it from this task entirely, since a linked video is DS-105's external-URL case and not a quick view. That removes the one admitted type that could have put a deck beyond emailing. |
 | 2026-08-10 | (specify) | **Format set extended by the owner: HTML, video, PNG, SVG "and other compatible types".** Recorded as three **admission tests** rather than a list, because an open-ended clause is the shape DS-230 and DS-000 exist to prevent — embeds with zero external references, executes no script into the deck, stays inside the measured size bound. SVG passes outright. **PNG collides with DS-110 — *No raster images. Ever.*, `hard` and `auto` — so a deck carrying one fails `check.py` today**; recommended as a quick-view-scoped exception, and it is the owner's. Video is unlegislated and is entirely a size question. HTML is the one that can break its host and must be inert structurally. The superseded decision is kept verbatim in §1 rather than edited away. |
