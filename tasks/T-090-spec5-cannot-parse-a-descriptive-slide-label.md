@@ -141,13 +141,20 @@ happens to do.
 - **The bare form is not deprecated.** Both decks in this repository carry it and the fix widens what
   is accepted rather than moving it.
 
-**Noticed and not taken.** [`../shell/deck.js`](../shell/deck.js) rewrites every slide's `aria-label`
-at runtime to `<n>. <data-name>` — so the accessible name a reader actually hears carries no word
-*Slide* at all, and the static attribute this rule reads is the pre-script form. That does not affect
-this fix, which reads the file; it does mean the *contract's* answer to "what is a slide's accessible
-name" is stated in three places that do not agree. Recorded rather than repaired: it is a question
-about the contract, not about the regular expression, and it belongs to whoever takes O-1's larger
-half.
+**Looked at and withdrawn, which is the note worth keeping.** A grep put
+`sec.setAttribute('aria-label', (i+1) + '. ' + s.dataset.name)` in
+[`../shell/deck.js`](../shell/deck.js) next to this rule's pattern, and it reads like the shell
+overwriting the very attribute `SLIDE_NUMBER` matches — a second finding of the same shape, and it
+was a line away from being raised as one. It is not. That `sec` is a **new** `<section>` built for
+the reading view a few lines below; the slide keeps the accessible name its author wrote. The two
+views label differently and neither contradicts the other.
+
+Recorded because the near miss is the transferable part: this task's own §1 says the repair for this
+family is *measure what the contract says, not what the example does*, and a task raised off one grep
+line would have been the same error wearing the opposite clothes. Reading the six lines after the
+match cost nothing;
+[T-089](T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md) is the record of what a task
+withdrawn on a false premise costs instead.
 
 **Outputs produced**
 - [`../tools/deck/spec.py`](../tools/deck/spec.py) — the widened pattern with the reason beside it;
@@ -166,8 +173,8 @@ half.
 | A fixture in the T-066 family covers both, so a later widening cannot re-collapse them | met | Two, at both altitudes. `spec.self_test` fails if any of the three label forms stops deciding, or if the unparsed deck reports anything but `False` with a cause-naming text. `audit.self_test` asserts the pair directly — `None` with no deck, `False` with an unreadable one — in the file that holds every producer to what an absent subject means. |
 
 **Child fix tasks raised**
-- none. The `deck.js` observation in §3 is a question for the contract and is recorded there, not
-  filed as a defect.
+- none. The `deck.js` line §3 describes is not a defect - it labels the reading view's own section,
+  not the slide - and the check that established that was made before anything was raised.
 
 ## Log
 
