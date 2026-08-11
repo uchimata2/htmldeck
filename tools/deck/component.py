@@ -209,13 +209,30 @@ def shared_css(html):
 
     The theme region and `#slides` are both excluded by having an id: one owns the values a second
     theme changes, the other owns one deck's composition, and neither owns a component.
+
+    **The print block is cut out, not truncated at.** This split on `@media print {` and kept the
+    first half, so any rule written after the print block was invisible here - and the completeness
+    verdict below reported *0 uncontracted* while two new classes were styled. A check that stops
+    reading at a marker keeps reporting the coverage it had on the day that marker went last, and
+    says nothing about anything added past it (found by T-019, **L-36**).
     """
     for attrs, body in re.findall(r"<style([^>]*)>(.*?)</style>", html, re.S):
         if "id=" in attrs:
             continue
-        body = re.split(r"@media\s+print\s*\{", body)[0]
-        return re.sub(r"/\*.*?\*/", "", body, flags=re.S)
+        return re.sub(r"/\*.*?\*/", "", drop_at_rule(body, "print"), flags=re.S)
     return ""
+
+
+def drop_at_rule(css, media):
+    """`css` with `@media <media>{...}` removed, matched to its own closing brace."""
+    found = re.search(r"@media\s+%s\s*\{" % re.escape(media), css)
+    if not found:
+        return css
+    depth, i = 1, found.end()
+    while i < len(css) and depth:
+        depth += 1 if css[i] == "{" else -1 if css[i] == "}" else 0
+        i += 1
+    return css[:found.start()] + css[i:]
 
 
 def rules(css):
@@ -333,16 +350,22 @@ def structure(root, parts, styled):
     return bad
 
 
+# The scopes under which the shared block is undoing one deck's composition rather than declaring a
+# component of its own. `.doc .ledger` reflows a ledger for the reading view; `:root[data-preflight]
+# .figwrap` does the same thing for the degraded state (DS-009). Both are renderings reaching into
+# `#slides`' classes, and neither makes the class a component.
+ADAPTATIONS = (".doc ", ":root[data-preflight] ")
+
+
 def missing_rows(parts, styled):
     """Classes the shared block styles and the contract does not name.
 
-    A class every one of whose rules is `.doc`-scoped is the reading view undoing the stage's
-    composition - `.doc .ledger` reflows one deck's ledger - so it is `#slides`' class, reached
-    from another rendering, and not a component.
+    A class every one of whose rules sits under one of the ADAPTATIONS above is `#slides`' class
+    reached from another rendering, and not a component. A class with even one unscoped rule is.
     """
     out = []
     for c, sels in sorted(styled.items()):
-        if c in parts or all(s.startswith(".doc ") for s in sels):
+        if c in parts or all(s.startswith(ADAPTATIONS) for s in sels):
             continue
         out.append(c)
     return out
@@ -476,8 +499,25 @@ def self_test():
         sys.exit("SELF-TEST FAILED: an uncontracted class was not reported")
     if missing_rows({}, {"ledger": [".doc .ledger"]}):
         sys.exit("SELF-TEST FAILED: a reading-view adaptation was reported as a component")
+    if missing_rows({}, {"figwrap": [":root[data-preflight] .figwrap"]}):
+        sys.exit("SELF-TEST FAILED: a degraded-state adaptation was reported as a component")
+    # And the half that keeps the exemption narrow: one unscoped rule and it IS a component.
+    if not missing_rows({}, {"preflight": [".preflight", ":root[data-preflight] .preflight"]}):
+        sys.exit("SELF-TEST FAILED: a class with an unscoped rule was exempted as an adaptation")
     if not motion_gaps(".rise{opacity:0}", [(".rise", ["--rise-dist"])]):
         sys.exit("SELF-TEST FAILED: a rule that reads no motion token was not reported")
+
+    # The print block is cut out rather than truncated at, so a rule AFTER it is still read. Nested
+    # braces on purpose - `@page{}` and a media query both nest, and a naive first-`}` scan would
+    # stop inside one and take the rest of the print rules for components.
+    after = ("<style>.a{color:red}@media print{@page{margin:0}.b{color:blue}}"
+             ".c{color:green}</style>")
+    seen = styled_classes(shared_css(after))
+    if "c" not in seen:
+        sys.exit("SELF-TEST FAILED: a rule after @media print was not read - the block is being "
+                 "truncated at rather than cut out")
+    if "b" in seen:
+        sys.exit("SELF-TEST FAILED: a print-only rule was counted as a component")
     return True
 
 

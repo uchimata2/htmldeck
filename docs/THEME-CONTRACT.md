@@ -276,6 +276,7 @@ component's icon size is a value a denser theme has to be able to shrink.
 | `.sr` | any | `1px` `-1px` | The visually-hidden clip. A rendering idiom with no visible size. |
 | `#slides` | not `font-size` `letter-spacing` `line-height` `border-radius` `box-shadow` `animation` `transition` `outline` | any | The rules that exist because *this* deck has a ledger with three columns. Composition; a generated deck emits its own. |
 | `.ruler` | not `font-size` `letter-spacing` `line-height` `border-radius` `box-shadow` `animation` `transition` `outline` | any | Proportions internal to one component: a section tick is taller than a slide tick because it ranks above it, at every density. DS-217's 4-unit mark floor is a *rule's* number and sits here for the same reason. |
+| `:root[data-preflight]` | any | any | **The degraded state (DS-009), and the only scope in the deck where a literal is required rather than tolerated.** It is what renders when a capability is missing, and CSS custom properties are one of the capabilities it names — so a token written here resolves to nothing in the one case the block exists for. The colour half is exempted in the same words by `audit.ds010_colours_tokenised`. |
 | any | any | `0` | No unit to vary. |
 
 Anything not covered here is a token. That is the whole test, and it is why the list is short.

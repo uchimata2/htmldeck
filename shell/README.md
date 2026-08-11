@@ -7,6 +7,7 @@ here, and [`tools/deck/shell.py`](../tools/deck/shell.py) puts it back.
 
 ```
 python tools/deck/shell.py new <out.html> --title "..." --subtitle "..."
+python tools/deck/shell.py preflight <deck> [--check]
 python tools/deck/shell.py check <deck>
 python tools/deck/shell.py parts
 ```
@@ -38,16 +39,16 @@ because a component block with one extra rule breaks no rule.
 
 ## The slots
 
-Ten, and nowhere else may a deck differ:
+Eleven, and nowhere else may a deck differ:
 
-`TITLE` · `NOTE` · `THEME` · `COMPONENTS` · `ICONS` · `SLIDES` · `DOC_TITLE` · `DOC_SUB` ·
-`COMPOSITION` · `SCRIPT`
+`TITLE` · `NOTE` · `THEME` · `COMPONENTS` · `PREFLIGHT` · `ICONS` · `SLIDES` · `DOC_TITLE` ·
+`DOC_SUB` · `COMPOSITION` · `SCRIPT`
 
 **Three of them nest inside `SCRIPT`**, and finding them is what this cut was worth: `DECK_NAME`,
 `STAGES` and `STAGE_ICON` are per-deck facts that had been sitting in the middle of 560 invariant
 lines, where nothing could see they were content.
 
-## The sprite is derived, never declared
+## Two of them are derived, never declared
 
 DS-113 wants only the icons a deck uses, which is a fact about the file rather than a thing to
 remember, so `shell.py icons` reads the deck and rewrites the sprite to match. **Both kinds of
@@ -55,3 +56,15 @@ reference count** — `<use href="#i-x">` in the markup and `'i-x'` in the scrip
 reference deck names four of its nine icons only in a script array, and a markup-only scan deletes
 them. Each symbol records the glyph it is in `data-icon`, so DS-112's *Lucide primary* is a claim
 `check` can settle rather than a hope.
+
+**`PREFLIGHT` is the same sentence about a different region** (DS-009). Which capability checks a
+deck needs is a fact about its own bytes, so `shell.py preflight` reads the deck and emits the rows
+it finds a subject for — the reference deck emits two and `sort-window` three, the difference being
+the `<template>` row that its quick views need. [`tools/deck/preflight.py`](../tools/deck/preflight.py)
+owns the table and `preflight.py rows` says why each row is a row; `check` reports a stale block the
+way it reports a stale sprite.
+
+**The degraded state is the other half of it and lives in the shell proper**, not in a slot: the
+banner markup, `<html data-preflight>` authored on, the baseline-CSS block in `components.css`, and
+the line in `deck.js` that stands the script down while the marker survives. That is what a browser
+paints when the preflight names something missing, when no script runs, or when boot throws.

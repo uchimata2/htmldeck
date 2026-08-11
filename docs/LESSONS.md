@@ -138,6 +138,16 @@ here", it said "everything works".
 > against the trustworthy one either.** When you catch a tool lying, verify the test you caught it
 > with — on the real environment, before it becomes the thing everyone cites.
 
+> **A third instance, 2026-08-11, from [T-019](../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md),
+> and this one is a flag rather than a pane.** Chrome offers two ways to run a page with scripting
+> off, and they fail in opposite directions. `--blink-settings=scriptEnabled=false` genuinely
+> disables it and then produces neither a screenshot nor a `--dump-dom` payload — honest and
+> unusable. **`--disable-javascript` writes the screenshot and disables nothing**: the deck presented
+> normally under it, and the picture would have shipped as *what a recipient with no scripting sees*.
+> The suppression went into the file instead, where it can be read back. **A switch that is supposed
+> to take a capability away needs a positive test that it took it away** — here, that the degraded
+> banner is in the output — or it is another confident permissive answer.
+
 **How to apply.** For any constraint that only bites in the delivery environment, test *in* that
 environment — for a deck, a real double-click on a clean profile. When a tool cannot be trusted
 for a given question, record the prohibition in the task that will ask it, not only in the note
@@ -1684,6 +1694,64 @@ closed. The maintainer never sees the log.
 3. **Keep the two intakes apart.** Filed together, the interesting half gets triaged as bugs and
    closed by making code match documentation. T-092 was kept separate from `T-090` and `T-091` for
    exactly that reason, on the reporting owner's instruction.
+
+### L-67 — A scan for a construct must require the construct, not its name
+
+Found 2026-08-11 in [T-019](../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md),
+twice in one afternoon, in two tools written hours apart.
+
+**Once in the emitter.** `"<template" in html` decides whether a deck needs the `<template>` row of
+its capability preflight. Both `shell/components.css` and `shell/deck.js` explain the quick view in a
+comment that names the tag, and both ship inside every deck — so every deck emitted the row,
+including the ones with no quick view at all. **Once in the instrument that was supposed to prove the
+emitter right.** The suppression harness read `data-preflight` with a pattern that could match
+anywhere in the dumped DOM, and `shell/shell.html`'s own comment quotes the tag it explains; with the
+attribute correctly removed from the real element, the search ran on and found the comment. It
+reported the control — a working deck — as degraded.
+
+Both are the same shape, and the shape is worth more than either instance: **the file contains prose
+about the thing being scanned, and prose about a construct looks exactly like the construct.** It
+gets worse as the code gets better commented, which is the opposite of the direction a check should
+degrade in.
+
+**How to apply.**
+
+1. **Match structure, not vocabulary.** An element row wants an element: require the closing tag, or
+   the attribute in the tag the parser would build, not the characters that spell it. `<template ...>
+   ... </template>` is a construct; `<template>` in a sentence is a word.
+2. **Anchor a document-level read to the document.** The marker regex was fixed by matching the
+   *first* `<html ...>` in the dump and searching only inside that tag — the thing the parser would
+   call the document element.
+3. **Write the fixture that has the comment in it.** Both defects were caught by a self-test fixture
+   holding prose that names the construct, and neither would have been caught by a fixture holding
+   the construct. This is **L-04** applied to the scanner's own blind spot: a pattern that has only
+   ever been shown to match is not evidence about what else it matches.
+
+### L-68 — A check that truncates its input at a marker covers nothing past it
+
+Found 2026-08-11 in [T-019](../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md).
+The component contract's completeness verdict — *every class the shared block styles has a row* —
+read its input as `split("@media print {")[0]`. That is correct exactly as long as the print block is
+last in the file, which nothing enforced and nothing checked. A new block appended after it styled
+two classes the contract did not name, and the verdict reported **0 uncontracted** in the same run.
+
+**The failure is silent by construction and gets quieter over time.** A truncating read keeps
+reporting the coverage it had on the day the marker went last; every later addition past that point
+raises the count of what it is not looking at and lowers nothing it prints. It is **L-36** with the
+input truncated instead of the rule list — a claim about coverage made over a subset chosen by an
+accident of file order.
+
+**How to apply.**
+
+1. **Cut the exclusion out; do not stop at it.** `@media print{...}` is removed by matching its own
+   closing brace, so what follows is still read. Nesting is the trap in the naive version: `@page{}`
+   and a nested query both put a `}` before the real one.
+2. **Test the far side.** The fixture is a rule *after* the excluded block, asserted present, and a
+   rule *inside* it, asserted absent. Without the first, the fix is untested in the direction that
+   was broken.
+3. **Suspect the shape wherever a check reads "the CSS", "the script" or "the body".** Any read that
+   narrows its own input by a landmark inherits this, and the symptom is always a clean verdict
+   rather than an error.
 
 ---
 

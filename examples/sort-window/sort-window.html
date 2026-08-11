@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-preflight="pending">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -791,6 +791,76 @@ svg{display:block}
 }
 .sources-open:hover{color:var(--accent);text-decoration-color:var(--accent)}
 
+/* ---------------------------------------------------------------- the degraded state (DS-009) */
+/* What a browser paints when it cannot present the deck: the slides, flowed, in order, with tier
+   two and the source lists open. It is the reading view's argument (DS-070..076) built by CSS
+   alone, because the script is one of the things that may be missing.
+
+   THIS BLOCK MAY USE NO CUSTOM PROPERTY, NO GRID AND NO MODERN SELECTOR, and that is not
+   fastidiousness: the capability it is compensating for may be exactly one of those. Literal
+   values only. It is the one block in this file under that rule, and a `var()` added here fails
+   silently in the one case it was written for.
+
+   It does not depend on being last, either. `:root[data-preflight] .slide` outranks
+   `.slide[data-current]` on specificity, so the cascade settles this whatever order the file ends
+   up in - the position is for a reader, not for the browser.
+
+   Printing is unchanged by it. The print block above is `!important` throughout and paginates the
+   stage; a browser that failed the preflight prints what that block says. Printing is a mode the
+   user forces on and never a constraint on the design (CLAUDE.md rule 5), so it is not this
+   block's subject. */
+.preflight{display:none}
+:root[data-preflight] .preflight{
+  display:block;margin:0;padding:14px 20px;
+  border-bottom:1px solid #b9b2a4;background:#f6f1e4;color:#23211d;
+  font-family:monospace;font-size:14px;line-height:1.5;
+}
+:root[data-preflight],:root[data-preflight] body{height:auto;overflow:auto}
+:root[data-preflight] .viewport{position:static;overflow:visible;background:#fff}
+:root[data-preflight] .stage{
+  position:static;width:auto;height:auto;max-width:60em;margin:0 auto;
+  padding:0 20px 72px;transform:none;overflow:visible;
+  border:0;box-shadow:none;background:#fff;
+}
+:root[data-preflight] .slide{
+  position:static;display:block;opacity:1;visibility:visible;
+  padding:40px 0 8px;border-top:1px solid #ddd6c6;transition:none;
+}
+/* Every control that does something only a running script can do. A button a reader can press to
+   no effect is worse than no button - the same argument the print block makes for `.disc-btn`. */
+:root[data-preflight] .chrome,
+:root[data-preflight] .doc,
+:root[data-preflight] .viewswitch,
+:root[data-preflight] .qv,
+:root[data-preflight] .disc-btn,
+:root[data-preflight] .sources-btn,
+:root[data-preflight] .sources-open{display:none}
+/* An unsupported <template> is an unknown element, which defaults to `display:inline` - so the
+   source's own markup renders into the slide that cited it. This is the row's failure mode, and
+   this is the line that keeps it off the page. */
+:root[data-preflight] template{display:none}
+/* Tier two travels open, for DS-073's reason: there is nothing left to open it with. */
+:root[data-preflight] .disc-panel[hidden],
+:root[data-preflight] .sources-box[hidden]{display:block}
+:root[data-preflight] .disc,
+:root[data-preflight] .disc-panel,
+:root[data-preflight] .provenance,
+:root[data-preflight] .sources,
+:root[data-preflight] .sources-box{
+  position:static;display:block;width:auto;max-width:none;min-width:0;
+  margin-top:16px;box-shadow:none;text-align:left;white-space:normal;
+}
+:root[data-preflight] .disc-panel .row,
+:root[data-preflight] .disc-panel .k{display:block;width:auto}
+/* Entrance states hold at `opacity:0` until a script marks the slide played, so without this the
+   flowed document is a column of invisible paragraphs - the blank page one storey down. */
+:root[data-preflight] .rise,
+:root[data-preflight] .pulse,
+:root[data-preflight] .opening,
+:root[data-preflight] .current{opacity:1;transform:none;animation:none}
+:root[data-preflight] .figwrap,
+:root[data-preflight] .fig{width:100%;height:auto}
+
 /* printing is a mode the user forces on, never a constraint on the design (CLAUDE.md rule 5)
 
    THE PAGINATED STAGE - one slide per printed page. R7 ruled this the printable mode against a
@@ -986,6 +1056,35 @@ svg{display:block}
 </style>
 </head>
 <body>
+
+<!-- The degraded state (DS-009), and the one thing on this page that ships switched ON.
+     `<html data-preflight="pending">` is in the source, so an unsupported browser paints the
+     flowed document and never the blank stage; the block below is what takes the marker off.
+     A recipient who runs no script at all reads this sentence, which is why it is markup and not
+     something the script writes - the case it covers is the case where nothing writes anything. -->
+<div class="preflight">
+  <p class="preflight-say" id="preflightSay">This deck needs JavaScript to present itself. Every
+    slide's content is below instead, in order.</p>
+</div>
+<script id="preflight">
+/* Capability preflight (DS-009), emitted by tools/deck/preflight.py from what THIS deck
+   uses - R6 §7's floor, as a question the browser answers rather than a version number.
+   <html> ships carrying data-preflight, so the degraded state is what an unsupported
+   browser paints; this takes it off. Deliberately the most conservative script in the
+   file: it has to run on the browser it is judging. */
+(function(){
+var d=document.documentElement,m=[],
+    s=(window.CSS&&CSS.supports)?function(q){try{return CSS.supports(q)}catch(e){return false}}
+                               :function(){return false};
+if(!s('--a: 0'))m.push('CSS custom properties');
+if(!s('display: grid'))m.push('CSS grid');
+if(!('content' in document.createElement('template')))m.push('the <template> element');
+if(!m.length){d.removeAttribute('data-preflight');return;}
+d.setAttribute('data-preflight','fail');
+var p=document.getElementById('preflightSay');
+if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot present here, so every slide's content is below instead, in order.";
+})();
+</script>
 
 <!-- icon sprite: only the icons this deck uses, one per concept (DS-113/114) -->
 <svg class="sr" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
@@ -1688,6 +1787,28 @@ svg{display:block}
 (function(){
   "use strict";
   var root = document.documentElement;
+
+  /* ---------------------------------------------------------- the preflight's other half (DS-009) */
+  /* The preflight ran before this file was parsed. If its marker survived, this browser cannot
+     present the deck: the flowed document is already on screen and the chrome that would drive it
+     is hidden, so booting would rebuild a reading view nobody can reach and re-hide eleven slides
+     out of twelve. Stand down and leave the reader with the document. */
+  if (root.hasAttribute('data-preflight')) return;
+
+  /* And the net under it, for the capability nobody enumerated. A check set cannot be complete, so
+     a boot that throws puts the marker back and the recipient reads the deck rather than a blank
+     stage. Scoped to BOOT deliberately - `booted` is set on the last line of this function - because
+     a chart that throws on slide nine must not collapse a deck somebody is already reading. */
+  var booted = false;
+  window.addEventListener('error', function(e){
+    if (booted) return;
+    root.setAttribute('data-preflight','fail');
+    var say = document.getElementById('preflightSay');
+    if (say) say.textContent = 'This deck could not start in this browser'
+      + ((e && e.message) ? ' (' + e.message + ')' : '')
+      + ". Every slide's content is below instead, in order.";
+  });
+
   var stage = document.getElementById('stage');
   var viewport = document.getElementById('viewport');
   var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
@@ -2338,6 +2459,9 @@ svg{display:block}
   document.addEventListener('keyup', countIfSeen);
   document.getElementById('next').addEventListener('click', countIfSeen);
   document.getElementById('prev').addEventListener('click', countIfSeen);
+  /* Boot survived. From here an error is a defect in one slide, not a reason to take the deck
+     away from the reader (DS-009). */
+  booted = true;
 })();
 </script>
 </body>

@@ -2,6 +2,28 @@
 (function(){
   "use strict";
   var root = document.documentElement;
+
+  /* ---------------------------------------------------------- the preflight's other half (DS-009) */
+  /* The preflight ran before this file was parsed. If its marker survived, this browser cannot
+     present the deck: the flowed document is already on screen and the chrome that would drive it
+     is hidden, so booting would rebuild a reading view nobody can reach and re-hide eleven slides
+     out of twelve. Stand down and leave the reader with the document. */
+  if (root.hasAttribute('data-preflight')) return;
+
+  /* And the net under it, for the capability nobody enumerated. A check set cannot be complete, so
+     a boot that throws puts the marker back and the recipient reads the deck rather than a blank
+     stage. Scoped to BOOT deliberately - `booted` is set on the last line of this function - because
+     a chart that throws on slide nine must not collapse a deck somebody is already reading. */
+  var booted = false;
+  window.addEventListener('error', function(e){
+    if (booted) return;
+    root.setAttribute('data-preflight','fail');
+    var say = document.getElementById('preflightSay');
+    if (say) say.textContent = 'This deck could not start in this browser'
+      + ((e && e.message) ? ' (' + e.message + ')' : '')
+      + ". Every slide's content is below instead, in order.";
+  });
+
   var stage = document.getElementById('stage');
   var viewport = document.getElementById('viewport');
   var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
@@ -652,4 +674,7 @@
   document.addEventListener('keyup', countIfSeen);
   document.getElementById('next').addEventListener('click', countIfSeen);
   document.getElementById('prev').addEventListener('click', countIfSeen);
+  /* Boot survived. From here an error is a defect in one slide, not a reason to take the deck
+     away from the reader (DS-009). */
+  booted = true;
 })();

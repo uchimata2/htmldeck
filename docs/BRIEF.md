@@ -527,7 +527,7 @@ new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 | | What it adds |
 | :--- | :--- |
 | [T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, a frame-rate figure with its machine, and DS-140's fifth motion. Split out of T-016, and `xl` because it is three deliverables wearing one title. |
-| [T-019](../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md) | The capability preflight a deck ships with. Portability is already gated at build time; this is what the deck does on a machine that surprises it. |
+| ~~[T-019](../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md)~~ **done 2026-08-11** | The capability preflight a deck ships with, as DS-009. Portability was already gated at build time; this is what the deck does on a machine that surprises it. **R6 §7's proposed check list did not survive being measured** — four of its six rows have no subject in any deck this project can build, so a deck emits two rows, or three with quick views, and the floor it declines to name turns out to be roughly *engines that shipped CSS grid*. Two things R6 did not anticipate are in the shipped mechanism: the degraded state **ships switched on**, so a blank page cannot happen by a check running too late; and the same marker covers **a browser that runs no script at all**, which no preflight can catch and which was the deck's real worst case all along. |
 | [T-041](../tasks/T-041-implement-the-nine-glitch-free-conditions.md) | The seven of R6's nine glitch-free conditions nothing adopted. The gate names the gap today rather than hiding it. |
 | [T-054](../tasks/T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Coverage recorded per *clause* rather than per rule — a sharper account, not a missing one. `l` because `DEFERRED` is keyed by rule ID and every producer writing into it moves with the key. |
 | ~~[T-070](../tasks/T-070-the-quick-view-for-a-source-document.md)~~ **done 2026-08-11** | A source rendered inside the deck, as an overlay. **The format set is decided by three admission tests rather than enumerated** — embeds with no external reference, executes no script, stays inside the size bound — after the owner extended it past Markdown and plain text on 2026-08-10. Unblocked the same day: it owns the linked form T-069 deliberately left as plain text. |
@@ -621,7 +621,7 @@ Those belong in the release notes, not in a list of things to fix first.
 remain are both about the build and critique modes, not about the deck.***
 
 - ~~A deck renders correctly with the network disabled.~~ **Met.**
-  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 240 KB, zero
+  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 247 KB, zero
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
 - ~~The build check demonstrated failing on each class of problem it claims to catch.~~ **Met

@@ -105,7 +105,10 @@ def parse_exemption_row(line):
     if len(cells) != 4 or cells[0] in ("Where", ":---"):
         return None
     where = cells[0].strip("` ")
-    if where != "any" and not where.startswith((".", "#")):
+    # `:` joined `.` and `#` when DS-009 arrived: the degraded state is scoped by an attribute on
+    # the root, and a scope the table cannot express is a scope the exemption has to be written
+    # wider than to reach.
+    if where != "any" and not where.startswith((".", "#", ":")):
         return None                     # not an exemption row
 
     def spans(cell):

@@ -355,6 +355,25 @@ mode, since the preflight is emitted by it. Note the distinction that task turns
 the deck at **build** time on the author's machine, the preflight runs at **open** time on the
 recipient's. Neither replaces the other.
 
+> **Built by T-019, 2026-08-11 — and four of the six rows above turned out to have no subject.**
+> The position holds and the mechanism ships as DS-009. The list does not. Counted across the shell,
+> the theme and both example decks, container queries, `:has()`, the fonts API, `import()` and WebGL
+> are used **zero** times, and `isSecureContext` had already been ruled a build-check row in 2026-08-07.
+> Applied honestly, the selection rule of that same ruling — *a row earns its place only where a real
+> opening route makes it fail* — empties most of this block.
+>
+> What the shell actually rests on is older and duller: CSS custom properties, `display:grid`, and
+> `<template>` where a deck carries quick views. So a deck emits **two rows, or three with quick
+> views**, and the operational floor this note declined to name turns out to be low — roughly the
+> engines that shipped CSS grid. The rows for canvas, WebGL and `import()` are in the table and stay
+> unemitted until a deck reaches for them.
+>
+> Two things this note did not anticipate are in the shipped mechanism. The degraded state **ships
+> switched on** — `<html>` is authored with the marker and a passing preflight removes it — so a
+> blank page cannot happen by a check running too late; and that one marker also covers **a browser
+> that runs no script at all**, which no preflight can catch, because it was the deck's real
+> worst case all along.
+
 ---
 
 ## 8. "Glitch-free", defined so a check can test it

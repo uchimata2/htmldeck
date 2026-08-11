@@ -79,6 +79,17 @@ unless the deck is illustrative and the slide carries that note instead. A mark 
 thing on every slide of a deck resting on three documents is the defect this field exists to end —
 it was true of both example decks until 2026-08-10.
 
+**A batch that introduces a `<template>`, a `<canvas>` or a `getContext` changes what the deck's
+capability preflight has to test** (DS-009), so re-derive it — the block is only correct for the
+deck as it stood when it was written:
+
+```
+python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py preflight <slug>.html
+```
+
+`shell.py check` in §3 reports a stale block the way it reports a stale sprite, so a forgotten run
+is a red check rather than a deck that fails silently on a browser nobody has.
+
 Sync the sprite whenever a batch introduced an icon — it keeps DS-113 true by construction:
 
 ```

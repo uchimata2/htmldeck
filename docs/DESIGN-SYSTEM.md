@@ -74,6 +74,7 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | DS-006 | A multi-file library needs its internal specifiers rewritten at build time. A relative specifier cannot resolve from a `blob:` base. | hard | auto | yes |
 | DS-007 | The `file://` unique-security-origin console warning is benign. Do not chase it. | guidance | — | — |
 | DS-008 | **Latin scripts only.** A non-Latin deck is not a supported case; do not half-support it. | hard | auto | yes |
+| DS-009 | **The floor is a preflight, not a version number** (R6 §7). Every deck carries a capability preflight holding **only the rows that deck has a subject for**, and a degraded state that ships **switched on**: `<html>` is authored with `data-preflight`, a passing preflight removes it, and a deck that fails a row — or runs no script at all — shows its slides as a flowed document rather than a blank stage. | hard | auto | yes |
 
 ### 1.2 Theming and tokens
 

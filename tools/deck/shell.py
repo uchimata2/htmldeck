@@ -32,6 +32,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths                                                        # noqa: E402
+import preflight as preflight_mod  # noqa: E402  - a sibling tool, not a package
 import theme as theme_mod  # noqa: E402  - a sibling tool, not a package
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -42,7 +43,7 @@ DECK_JS = os.path.join(SHELL, "deck.js")
 ICONS = os.path.join(SHELL, "icons.svg")
 DEFAULT_THEME = os.path.join(ROOT, "themes", "quarto.css")
 
-# The ten regions a deck varies in. Everything else is the shell.
+# The eleven regions a deck varies in. Everything else is the shell.
 #
 # The delimiters are literals rather than patterns on purpose: they are compared, not merely
 # found, so a deck whose chrome comment has drifted has to fail rather than be re-anchored around.
@@ -52,6 +53,10 @@ SLOTS = (
     ("NOTE", "<!--\n", "\n\n  EMBEDDED FONT LICENCES", "the head comment above the licences"),
     ("THEME", '<style id="theme">', "</style>", "the theme region (THEME-CONTRACT.md)"),
     ("COMPONENTS", "\n<style>", "</style>", "the shared component block"),
+    # Eleventh, added by T-019. It is a region rather than shell for the same reason the sprite is:
+    # what it holds is derived from the deck's own content, so two decks legitimately differ here.
+    ("PREFLIGHT", '<script id="preflight">', "</script>",
+     "the capability preflight, only the rows used (DS-009)"),
     ("ICONS", " </defs>\n", "\n</svg>", "the sprite, only the icons used (DS-113)"),
     ("SLIDES", '<main class="stage" id="stage" aria-label="Presentation">\n',
      "\n<!-- ============================================================ chrome -->",
@@ -157,6 +162,9 @@ def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_
         "NOTE": note if note is not None else NOTE_DEFAULT,
         "THEME": "\n%s\n" % resolved.strip("\n"),
         "COMPONENTS": read(COMPONENTS),
+        # Empty here and derived below, once there is a deck to read it off. It cannot be decided
+        # before the components and the theme are in place: `var(--` is what puts the first row in.
+        "PREFLIGHT": "",
         "ICONS": "",
         # The marker is a comment rather than a stub slide: a placeholder headline is copy nobody
         # wrote, and DS-090 wants a claim there.
@@ -168,8 +176,9 @@ def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_
                        "the components are the shared block's. */\n",
         "SCRIPT": script,
     }
-    # The sprite is never left to be remembered: whatever the stages reach for is wired now.
-    return apply_icons(fill(read(SHELL_HTML), parts), dict(stage_icons))
+    # Neither derived region is left to be remembered: whatever the stages reach for is wired now,
+    # and the preflight is read off the result.
+    return apply_preflight(apply_icons(fill(read(SHELL_HTML), parts), dict(stage_icons)))
 
 
 def escape(text):
@@ -242,6 +251,21 @@ def apply_icons(html, sets=None, lib=None):
     return fill(skeleton, parts)
 
 
+# ------------------------------------------------------------------------------- preflight
+
+
+def apply_preflight(html):
+    """`html` with its preflight rewritten to hold exactly the rows this deck needs (DS-009).
+
+    The same sentence as `apply_icons`, one region along: what belongs in it is a fact about the
+    deck's own bytes, so it is read off the deck rather than declared. `preflight.block` strips any
+    block already present before it scans, or the probe source would be evidence about the deck.
+    """
+    skeleton, parts = cut(html)
+    parts["PREFLIGHT"] = preflight_mod.block(html)
+    return fill(skeleton, parts)
+
+
 def sheet(lib=None):
     """A contact sheet, so the set can be looked at rather than trusted (**L-01**)."""
     lib = lib if lib is not None else library()
@@ -293,6 +317,13 @@ def check(html, path="the deck"):
         if script_skeleton != read(DECK_JS):
             problems.append("SCRIPT        %s: differs from shell/deck.js%s"
                             % (path, first_difference(script_skeleton, read(DECK_JS))))
+
+    # DS-009: the preflight holds exactly the rows this deck has a subject for. Same shape as the
+    # sprite check below, and the same failure it prevents - a region that was right when it was
+    # written and stopped being right when the deck grew a feature.
+    if parts["PREFLIGHT"] != preflight_mod.block(html):
+        problems.append("PREFLIGHT     %s: the preflight is not the rows this deck needs - run "
+                        "`shell.py preflight` (DS-009)" % path)
 
     # DS-113 and DS-112 in one: the sprite holds exactly the icons used, and each says which
     # Lucide glyph it is - a claim `icons --check` can settle against the shipped library.
@@ -404,6 +435,29 @@ def self_test():
     ok("a symbol with no provenance is caught (DS-112)",
        any(p.startswith("NO PROVENANCE") for p in check(nameless)))
 
+    # 4b. The preflight, the other derived region (T-019). Three ways it goes wrong, and the one
+    # that matters is the middle one: a deck that GROWS a feature and keeps yesterday's block.
+    ok("a fresh deck emits the rows its own shell needs",
+       "CSS custom properties" in fresh and "CSS grid" in fresh)
+    ok("and not the rows nothing in it reaches for",
+       "WebGL" not in fresh and "dynamic import()" not in fresh)
+    quick = fresh.replace("<!-- slides go here",
+                          '<template class="qv-src" data-qv="s"><p>x</p></template>\n'
+                          "<!-- slides go here", 1)
+    ok("a deck that grows a <template> has a stale preflight",
+       any(p.startswith("PREFLIGHT") for p in check(quick)))
+    synced = apply_preflight(quick)
+    ok("and syncing settles it, naming the new row", check(synced) == []
+       and "<template> element" in synced, "; ".join(check(synced))[:70])
+    ok("the preflight is idempotent", apply_preflight(synced) == synced)
+    ok("a hand-edited preflight is caught",
+       any(p.startswith("PREFLIGHT")
+           for p in check(fresh.replace("var d=document.documentElement", "var d=0", 1))))
+    ok("the marker ships ON, so the degraded state is what an unsupported browser paints",
+       'data-preflight="pending"' in fresh and ":root[data-preflight] .slide" in fresh)
+    ok("and the script stands down while it survives",
+       "if (root.hasAttribute('data-preflight')) return;" in fresh)
+
     try:
         apply_icons(using, {"when": "not-a-lucide-icon"})
         ok("an unknown glyph is refused", False, "it was accepted")
@@ -444,7 +498,7 @@ def parts_report():
             ("themes/quarto.css", os.path.getsize(DEFAULT_THEME), "the theme, faces resolved in")]
     for name, size, what in rows:
         print("  %-22s %7d bytes   %s" % (name, size, what))
-    print("\nThe deck varies in ten regions, and nowhere else:\n")
+    print("\nThe deck varies in eleven regions, and nowhere else:\n")
     for slot, _o, _c, what in SLOTS:
         print("  %-12s %s" % ("{{%s}}" % slot, what))
 
@@ -517,6 +571,27 @@ def main(argv):
               % (deck, len(used), ", ".join("i-%s" % u for u in used) or "none"))
         return 0
 
+    if cmd == "preflight":
+        if not rest:
+            sys.exit("usage: shell.py preflight <deck> [--check]")
+        deck = rest[0]
+        html = read(deck)
+        wired = apply_preflight(html)
+        rows = preflight_mod.emitted(html)
+        if "--check" in rest:
+            if wired == html:
+                print("OK - the preflight holds exactly the %d row(s) this deck needs." % len(rows))
+                return 0
+            print("STALE - the preflight is not the rows this deck needs (DS-009). "
+                  "Run without --check.")
+            return 1
+        write(deck, wired)
+        print("%s - preflight now holds %d of %d row(s): %s"
+              % (deck, len(rows), len(preflight_mod.ROWS),
+                 ", ".join(r[0] for r in rows) or "none"))
+        print("Why each row is a row: python tools/deck/preflight.py rows")
+        return 0
+
     if cmd == "check":
         if not rest:
             sys.exit("usage: shell.py check <deck>")
@@ -535,7 +610,7 @@ This checks the **half nobody rewrites**, not the deck. It cannot tell you a sli
 anything - that is tools/deck/check.py, and the five dimensions past it (L-05).""")
         return 0
 
-    sys.exit("unknown command %r - one of: new, icons, check, parts" % cmd)
+    sys.exit("unknown command %r - one of: new, icons, preflight, check, parts" % cmd)
 
 
 def pairs(raw):

@@ -25,7 +25,7 @@ or place. See *Provenance*, below.
 *Buy frequency before bikes*, a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-**240 KB in one file**, 245 479 bytes. Three embedded typefaces (97 KB of it as base64), ten
+**247 KB in one file**, 252 439 bytes. Three embedded typefaces (97 KB of it as base64), ten
 Lucide icons in one sprite, eight hand-written SVG figures, and the deck shell. No libraries, no
 build step, no network.
 
@@ -316,7 +316,7 @@ edited without regenerating is a red run rather than a discovery two audits late
 
 [`sort-window/`](sort-window) holds all four artifacts a build run leaves behind: the deck, the
 foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
-reconciled against. It is **237 KB in one file**, 242 699 bytes, 12 slides, six hand-written SVG figures, ten
+reconciled against. It is **244 KB in one file**, 249 747 bytes, 12 slides, six hand-written SVG figures, ten
 disclosure panels, zero external references.
 
 ```bash

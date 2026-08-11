@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-preflight="pending">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,6 +32,17 @@
 <style>{{COMPONENTS}}</style>
 </head>
 <body>
+
+<!-- The degraded state (DS-009), and the one thing on this page that ships switched ON.
+     `<html data-preflight="pending">` is in the source, so an unsupported browser paints the
+     flowed document and never the blank stage; the block below is what takes the marker off.
+     A recipient who runs no script at all reads this sentence, which is why it is markup and not
+     something the script writes - the case it covers is the case where nothing writes anything. -->
+<div class="preflight">
+  <p class="preflight-say" id="preflightSay">This deck needs JavaScript to present itself. Every
+    slide's content is below instead, in order.</p>
+</div>
+<script id="preflight">{{PREFLIGHT}}</script>
 
 <!-- icon sprite: only the icons this deck uses, one per concept (DS-113/114) -->
 <svg class="sr" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">

@@ -81,11 +81,24 @@ def token_layer(h):
 def outside_token_layer(h):
     """Screen CSS with the token layer removed, so a colour literal found here is one DS-010
     forbids. Print is excluded with the rest of `@media print`: `background:#fff` on paper is not
-    a theme value that could differ between themes, it is the paper."""
-    c = screen_css(h)
+    a theme value that could differ between themes, it is the paper.
+
+    **The degraded state goes with it, for the same shape of reason one storey down.** DS-009's
+    block renders when a capability is missing and CSS custom properties are one of the
+    capabilities it names, so a token there resolves to nothing in the one case the block exists
+    for - `#f6f1e4` is not a theme value that could differ, it is the last legible thing a browser
+    that lost the theme can still paint. Written in the same words in `THEME-CONTRACT.md` §5,
+    which exempts the length half.
+    """
+    c = DEGRADED.sub("", screen_css(h))
     for body in blocks(c, r":root(?:\s*\[[^\]]*\])?"):
         c = c.replace(body, "")
     return re.sub(r"/\*.*?\*/", "", c, flags=re.S)
+
+
+# Every rule scoped to the degraded state, matched on the marker rather than on a comment: a
+# comment is stripped before this runs and would make the exemption depend on prose.
+DEGRADED = re.compile(r"[^{}]*\[data-preflight\][^{}]*\{[^{}]*\}")
 
 
 def ds010_colours_tokenised(h):
@@ -464,11 +477,49 @@ def ds110_no_produced_raster(h):
             and "data:image/webp" not in outside)
 
 
+# --------------------------------------------------------------------------- DS-009, the preflight
+# Three rows rather than one, because the rule has three separable halves and a single boolean
+# would report *something about the preflight is wrong* - which is the shape of verdict this gate
+# exists not to give. The third is the one that goes stale: a deck that grows a quick view needs a
+# row it did not need yesterday, and nothing about the file announces that.
+
+
+def ds009_preflight_present(h):
+    """The block exists, is not empty, and sits where it runs before any slide is parsed."""
+    found = re.search(r'<script id="preflight">(.*?)</script>', h, re.S)
+    if not found or not found.group(1).strip():
+        return False
+    body = h.find("<body")
+    stage = h.find('<main class="stage"')
+    return body >= 0 and stage > found.start() > body
+
+
+def ds009_degraded_ships_on(h):
+    """The marker is authored, the fallback is in the stylesheet, and the script stands down."""
+    tag = re.match(r"(?s).*?<html([^>]*)>", h)
+    return bool(tag and "data-preflight" in tag.group(1)
+                and ":root[data-preflight] .slide" in h
+                and "if (root.hasAttribute('data-preflight')) return;" in h)
+
+
+def ds009_rows_are_this_decks(h):
+    """Only the rows this deck has a subject for - the clause `shell.py preflight` maintains."""
+    import preflight                                                # noqa: E402 - a sibling tool
+    found = re.search(r'<script id="preflight">(.*?)</script>', h, re.S)
+    return bool(found) and found.group(1) == preflight.block(h)
+
+
 STATIC = [
     ("DS-001", "zero external references, provenance links excepted (DS-105 judges those)",
      ds001_no_external_references),
     ("DS-003", "meta charset present",
      lambda h: '<meta charset="utf-8">' in h.lower()),
+    ("DS-009", "a capability preflight, and it runs before the first slide is parsed",
+     ds009_preflight_present),
+    ("DS-009", "the degraded state ships on: authored marker, fallback block, script stands down",
+     ds009_degraded_ships_on),
+    ("DS-009", "the preflight holds only the rows this deck has a subject for",
+     ds009_rows_are_this_decks),
     ("DS-008", "latin script only",
      lambda h: not re.search(r"[Ͱ-ϿЀ-ӿ一-鿿぀-ヿ]", h)),
     ("DS-030", "three named type roles",

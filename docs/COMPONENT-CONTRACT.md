@@ -90,6 +90,13 @@ below are `vocabulary`, and the number is meant to be looked at rather than grow
 | `.stage` | `main` | `.viewport` | `1` | `id` `aria-label` | author |
 | `.sr` | — | — | `1+` | — | author |
 | `.contents` | `div` | — | `0+` | — | print |
+| `.preflight` | `div` | — | `1` | — | author |
+| `.preflight-say` | `p` | `.preflight` | `1` | `id` | author |
+
+**`.preflight` is the only part that ships visible and is hidden by script rather than the other way
+round** (DS-009). It carries what a recipient reads when the deck cannot present itself — no
+JavaScript, or a capability the preflight named — and the marker that reveals it is authored on
+`<html>`, so it is what an unsupported browser paints rather than what one is switched to.
 
 ### 3.2 The slide
 
