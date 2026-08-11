@@ -509,6 +509,56 @@ def ds009_rows_are_this_decks(h):
     return bool(found) and found.group(1) == preflight.block(h)
 
 
+# --------------------------------------------------------------------------- DS-005, fetch-like
+# **The rule is about the ARGUMENT, not about the function name** (T-093). The predicate this
+# replaced was `not re.search(r"\bfetch\s*\(|XMLHttpRequest|\bimport\s*\(", h)` - which forbids
+# `import(blob:)`, the one route R6 §6 measured as working for an ESM library, and which DS-006
+# exists for the sole purpose of making work. A check that forbids what two other rules assume is
+# reading wider than the rule it implements, which is the shape T-069 found on DS-001.
+#
+# Two narrowings, and both are the rule's own words. *Script* may not read a local file's bytes, so
+# only `<script>` bodies are scanned - a slide saying `import (see the appendix)` is prose, and
+# matching vocabulary rather than structure is **L-67**. And a *local file* is named by a path, so a
+# `data:` or `blob:` URL is not one: the bytes are already in the page.
+SCRIPTS = re.compile(r"<script\b[^>]*>(.*?)</script>", re.S)
+FETCH_LIKE = re.compile(r"\b(fetch|import)\s*\(")
+WITH_LITERAL = re.compile(r"\b(fetch|import)\s*\(\s*(['\"])([^'\"]*)\2")
+INLINE_URL = ("data:", "blob:")
+
+
+def fetch_verdicts(h):
+    """DS-005's two rows: XHR, and what every fetch-like call site names.
+
+    **The count travels in the text**, for DS-105's reason: *0 naming a path, of 0 sites* and *0 of
+    12* are the same boolean and are not the same fact, and a deck that fetches nothing must not
+    read as a deck whose fetches were checked (**L-36**).
+
+    A call site whose argument is not a string literal is reported and not failed. It cannot be
+    decided here - the working ESM route builds its blob URL into a variable first - and guessing
+    either way would be the check inventing a verdict. What catches a path arriving through a
+    variable is the deck being one file with no siblings to read.
+    """
+    js = "\n".join(SCRIPTS.findall(h))
+    sites, opaque, bad = 0, 0, []
+    for found in FETCH_LIKE.finditer(js):
+        sites += 1
+        literal = WITH_LITERAL.match(js, found.start())
+        if not literal:
+            opaque += 1
+            continue
+        url = literal.group(3)
+        if not url.startswith(INLINE_URL):
+            bad.append("%s(%r)" % (literal.group(1), url[:40]))
+    return [
+        ("DS-005", "no XMLHttpRequest: script reads bytes the page already carries, never a file",
+         "XMLHttpRequest" not in js),
+        ("DS-005", "every fetch-like call names an inline URL: %d site(s), %d not a literal, "
+         "%d naming a path%s"
+         % (sites, opaque, len(bad), "" if not bad else " - " + "; ".join(bad[:3])),
+         not bad),
+    ]
+
+
 STATIC = [
     ("DS-001", "zero external references, provenance links excepted (DS-105 judges those)",
      ds001_no_external_references),
@@ -547,8 +597,9 @@ STATIC = [
     # ---- added by T-005, closing rules that were labelled `auto` and checked by nothing (L-36)
     ("DS-002", "no CDN host referenced - `linked` is not a shipping mode",
      lambda h: not re.search(r"cdn\.|unpkg\.com|jsdelivr|cdnjs|googleapis\.com", h, re.I)),
-    ("DS-005", "no fetch, XHR or dynamic import - element access, not file reads",
-     lambda h: not re.search(r"\bfetch\s*\(|XMLHttpRequest|\bimport\s*\(", h)),
+    # DS-005 moved out of `STATIC` by T-093 and into `fetch_verdicts` below: it needs a count in its
+    # text, which a boolean cannot carry, and the boolean it replaced forbade the one ESM route R6
+    # measured as working.
     ("DS-006", "no relative module specifier in an inline module", ds006_module_specifiers),
     ("DS-010", "no colour literal outside the token layer", ds010_colours_tokenised),
     ("DS-011", "one resolved palette, not one per topic", ds011_one_palette),
@@ -1442,6 +1493,10 @@ def reduced_verdicts(data):
 # three times before T-051, each fixed in place. It was never that the fix was hard; it was that
 # nothing made the next one loud.
 ABSENCE_IS_A_PASS = {
+    "DS-005": ("prohibition", "no XHR, and no fetch-like call naming a path. A deck with no script "
+                              "at all satisfies both, and the second row prints its own denominator "
+                              "- *0 naming a path, of 0 sites* and *of 12* are the same boolean and "
+                              "not the same fact (T-093)"),
     "DS-035": ("prohibition", "no text run under 16 design units; the subject is the deck's text"),
     "DS-043": ("prohibition", "no box nested in a box that carries its own text"),
     "DS-073": ("guarded by DS-070", "the reflow view's sections; DS-070 fails when it never "
@@ -1922,7 +1977,7 @@ def self_test():
         # found nothing, which is a different thing from a render where the preference never took -
         # `reduced_verdicts` reports that one as its own failure and it is not an absent subject.
         rows = (render_verdicts(empty) + split_verdicts("") + provenance_verdicts("")
-                + reduced_verdicts(reduced))
+                + fetch_verdicts("") + reduced_verdicts(reduced))
     except KeyError as exc:
         sys.exit("SELF-TEST FAILED: a verdict reads data[%s] unconditionally, so it is not in "
                  "ALWAYS_MEASURED and the nothing-was-found measurement cannot be built. Add the "
@@ -1971,6 +2026,31 @@ def self_test():
         sys.exit("SELF-TEST FAILED: SPEC-5 reports %r with no deck and %r for a deck it could not "
                  "read. Those are different states and only one of them is benign (T-090)"
                  % (absent_deck["SPEC-5"], unread_deck["SPEC-5"]))
+    # **DS-005 reads the argument, and both directions are fixtures** (T-093, **L-04**). The
+    # predicate this replaced was a name match, so `import(blob:)` - the one route R6 §6 measured as
+    # working - could not be written in a conforming deck, and there was no fixture to say so
+    # because a check that only ever refuses looks exactly like a check that is right.
+    def ds005(js, markup=""):
+        rows_ = fetch_verdicts("<script>%s</script>%s" % (js, markup))
+        return [ok for _r, _w, ok in rows_]
+
+    for js, want, why in (
+            ("fetch('./sibling.txt')", [True, False], "a fetch of a sibling file"),
+            ("import('./x.mjs')", [True, False], "a relative dynamic import"),
+            ("var x = new XMLHttpRequest()", [False, True], "XHR"),
+            ("import('data:text/javascript,export default 1')", [True, True], "a data: import"),
+            ("import('blob:null/abc')", [True, True], "a blob: import"),
+            ("var u = make(); import(u)", [True, True], "an import whose argument is a variable"),
+            ("", [True, True], "a deck whose script does nothing of the kind")):
+        if ds005(js) != want:
+            sys.exit("SELF-TEST FAILED: DS-005 reports %s for %s, expected %s. The rule is about "
+                     "the ARGUMENT - a `data:` or `blob:` URL is bytes the page already carries, "
+                     "not a local file (T-093)" % (ds005(js), why, want))
+    # And the subject is *script*, because that is the rule's own word. A slide that discusses one
+    # of these is prose, and matching vocabulary rather than structure is L-67.
+    if ds005("", "<p>Then import ('the appendix') and fetch ('the minutes').</p>") != [True, True]:
+        sys.exit("SELF-TEST FAILED: DS-005 read slide prose as a call site")
+
     modelled_sweep = set(contract.PROBE_FOUND_NOTHING) | {"vw", "vh", "want"}
     unmodelled_sweep = sorted(set().union(*[r.read for r in sweep_rows]) - modelled_sweep)
     if unmodelled_sweep:
@@ -1987,6 +2067,7 @@ def self_test():
     # equally invisible. The source is read rather than imported so a module nothing imports is
     # still found.
     exercised = {"audit.render_verdicts", "audit.split_verdicts", "audit.provenance_verdicts",
+                 "audit.fetch_verdicts",
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
                  "printpages.verdicts", "spec.verdicts"}

@@ -263,8 +263,13 @@ def build(name, edits):
 
 def static_failures(path):
     html = open(path, "r", encoding="utf-8").read()
+    # `fetch_verdicts` joined the list when T-093 moved DS-005 out of `STATIC`, and this suite is
+    # what noticed: the variant that seeds a file read reported MISSED the moment the rule left the
+    # static list, because the producer it moved to was not being run here. A gate's static half is
+    # whatever `check.py` gathers without a browser, not whatever happens to be in one table.
     rows = ([(r, w, bool(fn(html))) for r, w, fn in audit.STATIC]
             + audit.split_verdicts(html) + audit.provenance_verdicts(html)
+            + audit.fetch_verdicts(html)
             + contrast.verdicts(html) + theme.verdicts(html) + component.verdicts(html))
     return {r for r, _w, ok in rows if not ok}, rows
 

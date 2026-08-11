@@ -109,8 +109,12 @@ ROWS = (
     ("webgl", "WebGL", "('WebGLRenderingContext' in window)", uses_webgl,
      "3D is opt-in and rare, and a missing context is the one failure that renders as a black "
      "rectangle rather than as nothing at all."),
+    # The probed URL is a `data:` one and not an empty string, which is T-093's doing and an
+    # improvement rather than a concession: the form R6 §6 measured as working is the form worth
+    # asking the browser about, and DS-005 reads the argument now.
     ("esm", "dynamic import()",
-     "(function(){try{new Function('import(\"\")');return true}catch(e){return false}})()",
+     "(function(){try{new Function('import(\"data:text/javascript,\")');return true}"
+     "catch(e){return false}})()",
      uses_esm,
      "R6 §6: a deck that inlines an ESM library reaches it through `import()` of a blob, and the "
      "call site is a **parse** error where the syntax is unsupported - so the script carrying it "
