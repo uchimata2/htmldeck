@@ -36,7 +36,10 @@ DUPLICATE INDEX  docs/BRIEF.md: a second table of 70 known task ids sits outside
 ids a document names outside taskmd's own markers, discounts the ids a *task file* is entitled to
 carry — its own and its edges' — and reports when `len(seen) * 2 > len(known)`. A majority of the
 known set, chosen upstream so the threshold scales instead of needing a number. `docs/BRIEF.md` is
-not a task file, so nothing is discounted: 70 of 97.
+not a task file, so nothing is discounted: **70 of 97 when this was raised**, and both numbers move
+with the backlog — the block above is what the command printed that morning, not a current reading.
+The count is deliberately absent from this task's row in `BRIEF.md`: it sits in a sentence naming no
+field, so `figures.py` cannot watch it, and it had already gone 70 to 72 within the day.
 
 **It is a true reading of a document that is not a duplicate index.** [`../docs/BRIEF.md`](../docs/BRIEF.md)
 *Release phases* is the decision record — three tables, one row per task, each carrying a *why it is
