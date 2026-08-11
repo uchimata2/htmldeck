@@ -148,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1235 document pointer(s) checked, 0 broken
-     539 section reference(s) resolved, 0 dead; 1344 not bound to a document and skipped.
+OK - 1346 document pointer(s) checked, 0 broken
+     594 section reference(s) resolved, 0 dead; 1422 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -267,7 +267,8 @@ The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task 
 is split into three releases. **v0.1** is what a first working plugin needs; it shipped, and took
 five patches. **v0.2** is the minor and moderate fixes already known. It shipped as v0.2.0 with two
 of its tasks still open behind it: a second printed contents sheet, which only bites on decks far
-longer than the target case, and one fix that waits on a decision upstream. **v0.3** is the larger work, including 3D
+longer than the target case, and one fix that waits on a decision upstream. The current release is
+v0.2.1, which carries three fixes to the published plugin. **v0.3** is the larger work, including 3D
 visuals, the frame-rate figure and those seven conditions. [`docs/BRIEF.md`](docs/BRIEF.md) says what
 is in each and why.
 

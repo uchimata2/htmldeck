@@ -338,8 +338,8 @@ under `--print-pages`.
 ### The sources open inside the deck
 
 Click a source in any provenance mark and the document opens over the slide. All three are in the
-file — Marnfield's service calendar, its throughput model, its fleet and cost model — so they open
-with the network off, on a machine that has never seen the folder they came from. Press `Escape`, or
+file: Marnfield's service calendar, its throughput model, its fleet and cost model. They open with
+the network off, on a machine that has never seen the folder they came from. Press `Escape`, or
 move to the next slide, and you are back in the argument. It works in the reading view too, which is
 where someone reads the deck alone.
 
@@ -351,10 +351,9 @@ python tools/deck/quickview.py list examples/sort-window/sort-window.html
 ```
 
 Nothing is embedded unless you ask for it by name. `quickview.py plan` prints what each source would
-add and what the deck would weigh, and writes nothing at all — the version that writes is `add`. The
-reason for that order is worth saying plainly: a deck built from a client's internal document would
-carry that document to everyone who receives the deck, and no amount of convenience is worth making
-that the default.
+add and what the deck would weigh, and writes nothing at all. The version that writes is `add`. A
+deck built from a client's internal document would carry that document to everyone who receives the
+deck, and no amount of convenience is worth making that the default.
 
 Each quick view says what it is in its own header: a rendering carried in the deck, not the original
 file. A source that arrives as HTML has its scripts, styles and ids taken out before it goes in, and

@@ -19,18 +19,26 @@ reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
 2026-08-09 as `docs/PUBLISHING.md`, and **v0.1 shipped the same day**: the repository is public at
-`github.com/uchimata2/htmldeck`, released and **now at `v0.2.0`** after five v0.1 patches, with
+`github.com/uchimata2/htmldeck`, released and **now at `v0.2.1`** after five v0.1 patches, with
 `master` as the published branch. **v0.2 shipped 2026-08-11** carrying
 [T-086](tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
 [T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
 **the phase stays open behind it**: T-036 and T-080 keep the `v0.2` label by the owner's decision, so
-a shipped release and an open phase are not a contradiction here. **v0.3 is the main line now, but
-v0.1 has reopened seven times**: a defect in the published plugin is a `v0.1` patch, not a later
-improvement. **`v0.1.6` is owed and carries three** —
+a shipped release and an open phase are not a contradiction here.
+
+**A phase name is not a version number, and conflating the two nearly shipped a release nobody could
+install.** The backlog calls a defect in the published plugin `v0.1` work, which is a *phase*; the
+record then wrote the next such release as `v0.1.6`, which as a *version* is lower than the published
+`0.2.0`. Plugin updates compare versions, so that tag would have reached no adopter at all. **Patches
+take the next patch number on the published line** — `0.2.1`, `0.2.2` — whatever phase the tasks in
+them belong to. Settled 2026-08-11, at the release it would have broken.
+
+**v0.3 is the main line now, but v0.1 has reopened seven times**: a defect in the published plugin is
+a `v0.1` **phase** task, not a later improvement. **`0.2.1` shipped three of them 2026-08-11** —
 [T-090](tasks/T-090-spec5-cannot-parse-a-descriptive-slide-label.md),
 [T-091](tasks/T-091-build-md-documents-icons-set-as-a-single-pair.md) and
-[T-094](tasks/T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) — all fixed, none
-shipped. The first two are the only ones ever **raised from outside this repository**, hit on the
+[T-094](tasks/T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md). The first two are the
+only ones ever **raised from outside this repository**, hit on the
 published `0.2.0` by the first adopting project and moved here from the `v0.3` they arrived labelled
 with; T-094 is the project's own, found while rendering a deck to look at it. **The fifth
 was the first nobody reported** — `v0.1.5` carried
