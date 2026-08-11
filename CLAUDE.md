@@ -14,7 +14,7 @@ copy or behaviour to verify. It was described as working prior art until 2026-08
 was. **Status: the research is complete; the plugin scaffold exists and runs its own pipeline**
 (`.claude-plugin/`, `skills/htmldeck/`), **and as of 2026-08-09 the build check, the theme contract,
 the component contract, the editorial split rule and build mode are all built** — `python
-tools/deck/check.py <deck>` decides 82 of the 113 rules a gate owns and names the other 31 with a
+tools/deck/check.py <deck>` decides 83 of the 114 rules a gate owns and names the other 31 with a
 reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed specification into a
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
@@ -25,11 +25,14 @@ deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py`
 [T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
 **the phase stays open behind it**: T-036 and T-080 keep the `v0.2` label by the owner's decision, so
 a shipped release and an open phase are not a contradiction here. **v0.3 is the main line now, but
-v0.1 has reopened six times**: a defect an adopter hits in the published plugin is a `v0.1` patch,
-not a later improvement. **The sixth is the first raised from outside this repository** —
-[T-090](tasks/T-090-spec5-cannot-parse-a-descriptive-slide-label.md) and
-[T-091](tasks/T-091-build-md-documents-icons-set-as-a-single-pair.md), hit on the published `0.2.0`
-by the first adopting project and moved here from the `v0.3` they arrived labelled with. **The fifth
+v0.1 has reopened seven times**: a defect in the published plugin is a `v0.1` patch, not a later
+improvement. **`v0.1.6` is owed and carries three** —
+[T-090](tasks/T-090-spec5-cannot-parse-a-descriptive-slide-label.md),
+[T-091](tasks/T-091-build-md-documents-icons-set-as-a-single-pair.md) and
+[T-094](tasks/T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) — all fixed, none
+shipped. The first two are the only ones ever **raised from outside this repository**, hit on the
+published `0.2.0` by the first adopting project and moved here from the `v0.3` they arrived labelled
+with; T-094 is the project's own, found while rendering a deck to look at it. **The fifth
 was the first nobody reported** — `v0.1.5` carried
 [T-083](tasks/T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) and
 [T-085](tasks/T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md), both found by running
@@ -46,8 +49,8 @@ phases* is the decision and says what each contains; `tasks/README.md` is the cu
 by the same three names. **A new task belongs to one of them**: v0.1 only when a defect in the
 published plugin reopens it, v0.3 for anything `l` or `xl` — **and, since v0.2 shipped, for
 everything else that is not such a defect**, because reopening a shipped phase is reserved for them.
-That last clause is why a small task can sit in the phase of the big ones; T-089 and T-092 are both
-there against their size. A phase that quietly takes work the size of the next one is the failure
+That last clause is why a small task can sit in the phase of the big ones; T-089, T-092 and T-093 are
+all there against their size. A phase that quietly takes work the size of the next one is the failure
 both splits exist to prevent.
 
 **The objectives are still being shaped.** Research is expected to be able to overturn scope, not
