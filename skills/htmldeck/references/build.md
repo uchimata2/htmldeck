@@ -82,8 +82,12 @@ it was true of both example decks until 2026-08-10.
 Sync the sprite whenever a batch introduced an icon — it keeps DS-113 true by construction:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py icons <slug>.html --set <concept>=<lucide-name>
+python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py icons <slug>.html --set <concept>=<lucide-name>,<concept>=<lucide-name>
 ```
+
+**`--set` takes one comma-separated value, not one flag per icon.** Repeating the flag is refused
+with a message saying so; it used to wire the first pair and drop the rest, which surfaced two steps
+later as *icon `i-x` is used and nothing says which Lucide glyph it is*.
 
 ## 3. The per-batch loop
 

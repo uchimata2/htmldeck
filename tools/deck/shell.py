@@ -414,6 +414,19 @@ def self_test():
     ok("every symbol in the library is unique and non-empty",
        len(lib) == len(SYMBOL.findall(read(ICONS))) and all(v.strip() for v in lib.values()))
 
+    # 6. The argument shapes, because the documented one has to be the one that runs (T-091).
+    ok("one comma-separated --set carries every pair",
+       pairs(option(["deck.html", "--set", "when=clock,where=map"], "--set"))
+       == [("when", "clock"), ("where", "map")])
+    try:
+        option(["deck.html", "--set", "when=clock", "--set", "where=map"], "--set")
+        ok("a repeated --set is refused rather than half-read", False,
+           "the second pair was dropped in silence, which is the T-091 defect")
+    except SystemExit as exc:
+        ok("a repeated --set is refused rather than half-read",
+           "--set" in str(exc) and "comma-separated" in str(exc),
+           "it exited without naming the argument: %s" % exc)
+
     print("\n%d of %d fixtures behaved as specified.\n" % (len(ran) - len(failures), len(ran)))
     return failures
 
@@ -539,7 +552,19 @@ def pairs(raw):
 
 
 def option(argv, name):
-    """The value after `--name`, or None."""
+    """The value after `--name`, or None.
+
+    **A repeated option is refused, and that is T-091.** This reads `argv.index`, so a second
+    `--set` used to be dropped without a word: an author with three icons wrote what `build.md`
+    showed - one pair per flag - got the first pair wired and the others silently discarded, and
+    then read `icon 'i-analysis' is used and nothing says which Lucide glyph it is`. True, and two
+    steps downstream of the cause. The message has to name the argument that lost the value, not
+    the icon that went missing.
+    """
+    if argv.count(name) > 1:
+        sys.exit("%s was given %d times and this parser reads the first only, so the rest would be "
+                 "dropped in silence. It takes ONE comma-separated value:\n  %s a=x,b=y,c=z"
+                 % (name, argv.count(name), name))
     if name in argv:
         i = argv.index(name)
         if i + 1 < len(argv):
