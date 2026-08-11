@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-007]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.4
 owner: the project owner
 business_value: high
 effort: s
 created: 2026-08-09
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - tools/deck/theme.py
 ---
@@ -213,6 +214,6 @@ proves the assertion*.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-09 | → proposed | Created after `swap` overwrote the reference deck during [T-016](T-016-the-interaction-and-motion-layer.md). **v0.2**: nothing shipped depends on it, and the workaround is one flag that every correct invocation already passes — but it is a destructive default on a hand-built artefact, and the reason it was caught at all was a byte count that happened to change. |
+| 2026-08-09 | → proposed | Created after `swap` overwrote the reference deck during [T-016](T-016-the-interaction-and-motion-layer.md). **PH2**: nothing shipped depends on it, and the workaround is one flag that every correct invocation already passes — but it is a destructive default on a hand-built artefact, and the reason it was caught at all was a byte count that happened to change. |
 | 2026-08-10 | → done | Plan, implement and review in one pass. `swap` now defaults to `.assets-cache/deck/themed/` and refuses its own input by resolved path; four self-test assertions hold it there. All five criteria met — the last one only after seeding both defects exposed an **unreachable assertion**, which was fixed back in `implement` rather than in review. No child task. |
 | 2026-08-10 | → specified | Specify closed. The output question is settled in favour of a default under `.assets-cache/deck/themed/`; the deciding evidence is new — **four shipped copy sites print the bare two-argument command**, so requiring `-o` would have made all four document a command that errors. Criteria sharpened to that answer and split so the fresh-clone case and the refusal are judged separately. Estimated `high`/`s`. |

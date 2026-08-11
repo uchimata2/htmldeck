@@ -8,9 +8,10 @@ parent: null
 blocked_by: []
 related: [T-002, T-005, T-007, T-014, T-016, T-018]
 work_package: WP2
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-07
+updated: 2026-08-12
 deliverables:
   - tools/deck/contract.py
   - tools/deck/contract_variants.py

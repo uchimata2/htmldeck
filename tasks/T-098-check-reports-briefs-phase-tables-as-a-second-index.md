@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: []
 related: [T-063, T-080]
-work_package: v0.3
+work_package: PH3
 owner: the project owner
 business_value: low
 effort: xs
@@ -106,4 +106,4 @@ struck-through rows destroys the record the section exists to keep.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-12 | → proposed | Raised on the first run of **taskmd 0.5.0**, installed the same day over 0.4.0. Not a defect in either tool: the advisory is new, the count is right, and the document it names is right too. `v0.3` by the rule in [`../CLAUDE.md`](../CLAUDE.md) — v0.2 has shipped and this is not a defect in the published plugin, so it is not v0.1 work whatever its size. `low`/`xs`: nothing is broken, and what is owed is one written decision. |
+| 2026-08-12 | → proposed | Raised on the first run of **taskmd 0.5.0**, installed the same day over 0.4.0. Not a defect in either tool: the advisory is new, the count is right, and the document it names is right too. `PH3` by the rule in [`../CLAUDE.md`](../CLAUDE.md) — PH2 has shipped and this is not a defect in the published plugin, so it is not PH1 work whatever its size. `low`/`xs`: nothing is broken, and what is owed is one written decision. |

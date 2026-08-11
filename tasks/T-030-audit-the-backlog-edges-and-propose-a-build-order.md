@@ -8,9 +8,10 @@ parent: null
 blocked_by: []
 related: [T-008, T-020, T-028]
 work_package: none
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-07
-updated: 2026-08-07
+updated: 2026-08-12
 deliverables: []
 ---
 

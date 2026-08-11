@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-016, T-005]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.5
 owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-09
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - tools/examples/seed_defects.py
   - examples/reference-deck-seeded-defects.html
@@ -133,5 +134,5 @@ regenerating produces, at 244000 bytes, and the ledger prints all ten dimensions
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | **Three unguarded edits, not the one §1 named.** Reading for the S2 case found D1's reorder and D2's split appending to the ledger with nothing checked either, which is the same defect twice more in the same file — the rule is *an append next to an unasserted edit*, and it was worth looking for the shape rather than fixing the instance. Regenerating removed exactly the twelve lines the ledger had always claimed, and nothing else, so the fixture's other nine dimensions were never in question. The open question closed without building anything: `--check` already existed and had no place in any routine, so it went into the release gate list. |
-| 2026-08-10 | (specify) | **Estimated `medium`/`s`.** `medium` because the blindness fixture's entire claim is *a seeded defect on every dimension* and one seed has been counted without ever matching, so the claim is over-reported at its source; `s` because `static_variants.py`'s `build` already carries the assertion this needs. **Stays in `v0.2`.** |
-| 2026-08-09 | → proposed | Created by [T-016](T-016-the-interaction-and-motion-layer.md), which widened the S2 seed's pattern to admit the new `data-disc` value and found the regenerated fixture unchanged — because the seed had never matched in the first place. **v0.2**: the fixture's other nine dimensions are seeded and the gate's blindness claim rests on those; this is a fixture reporting one seed it did not apply, not a gate reporting a defect it cannot see. |
+| 2026-08-10 | (specify) | **Estimated `medium`/`s`.** `medium` because the blindness fixture's entire claim is *a seeded defect on every dimension* and one seed has been counted without ever matching, so the claim is over-reported at its source; `s` because `static_variants.py`'s `build` already carries the assertion this needs. **Stays in `PH2`.** |
+| 2026-08-09 | → proposed | Created by [T-016](T-016-the-interaction-and-motion-layer.md), which widened the S2 seed's pattern to admit the new `data-disc` value and found the regenerated fixture unchanged — because the seed had never matched in the first place. **PH2**: the fixture's other nine dimensions are seeded and the gate's blindness claim rests on those; this is a fixture reporting one seed it did not apply, not a gate reporting a defect it cannot see. |

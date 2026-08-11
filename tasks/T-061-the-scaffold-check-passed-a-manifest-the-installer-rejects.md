@@ -7,10 +7,11 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-008, T-015]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.1.1
 owner: the project owner
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables:
   - .claude-plugin/plugin.json
   - tools/plugin/check_scaffold.py
@@ -162,4 +163,4 @@ useless as evidence either way.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-09 | → done | **Fixed in both halves, and the gate is the half that mattered.** `author` is now an object per the schema, and `check_scaffold.py` types thirteen fields plus `author.name` instead of asking whether four keys exist. The order was fixtures first: three reported `expected BAD TYPE, got: nothing` before the fix, which is what the blind spot looked like from inside the tool. Shipped as `v0.1.1`; the `v0.1.0` release notes now say it does not install. **L-53** records the general form, that optional is not untyped and a presence test reads like a validator. One criterion is left to the owner because it needs a Claude Code client this session cannot drive: the end-to-end install. |
-| 2026-08-09 | → proposed | Raised from an install failure reported by another project on the day `v0.1.0` published. **`v0.1` rather than `v0.2`:** the shipped artefact does not install, so this is not a improvement held for later, it is the release not working. The one-line manifest fix is the smaller half. The larger half is that `check_scaffold.py` printed `OK - manifest valid` for it, because it tested that four fields were *present* and never what they contained, and the README cites that command as the proof the package is sound. |
+| 2026-08-09 | → proposed | Raised from an install failure reported by another project on the day `v0.1.0` published. **`PH1` rather than `PH2`:** the shipped artefact does not install, so this is not a improvement held for later, it is the release not working. The one-line manifest fix is the smaller half. The larger half is that `check_scaffold.py` printed `OK - manifest valid` for it, because it tested that four fields were *present* and never what they contained, and the README cites that command as the proof the package is sound. |

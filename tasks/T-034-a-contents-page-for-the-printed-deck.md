@@ -8,9 +8,10 @@ parent: null
 blocked_by: []
 related: [T-032, T-018, T-005, T-035]
 work_package: WP2
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-08
-updated: 2026-08-08
+updated: 2026-08-12
 deliverables:
   - examples/reference-deck.html
   - tools/deck/contents_bound.py

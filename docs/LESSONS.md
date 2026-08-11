@@ -1755,10 +1755,11 @@ accident of file order.
 
 ### L-69 — A phase name is not a version number
 
-Caught 2026-08-11, at the release it would have broken. This backlog is split into phases named
-`v0.1`, `v0.2` and `v0.3`, and `v0.1` means *a defect in the published plugin*. Three such fixes had
+Caught 2026-08-11, at the release it would have broken. This backlog was split into phases named
+`v0.1`, `v0.2` and `v0.3`, and `v0.1` meant *a defect in the published plugin*. Three such fixes had
 been recorded across nine task logs and [`BRIEF.md`](BRIEF.md) as awaiting **`v0.1.6`**. The published
-plugin was at **`0.2.0`**.
+plugin was at **`0.2.0`**. *(The phases are `PH1`, `PH2` and `PH3` since 2026-08-12 — point 4 below
+was reversed. The old names are kept in this entry because they are what the failure was made of.)*
 
 **Tagging `v0.1.6` would have shipped the three fixes to nobody.** A plugin manager compares versions;
 a tag below the installed one is never offered. Every document in the repository would have said the
@@ -1775,13 +1776,22 @@ first — which is exactly what this project's own splitting rule is designed to
 1. **Read the published version before tagging, not the phase the tasks carry.** `plugin.json` and
    the newest tag; the phase label is not evidence about either.
 2. **A patch takes the next patch number on the published line, whatever phase its tasks belong to.**
-   `0.2.0` plus three v0.1-phase fixes is `0.2.1`.
+   `0.2.0` plus three PH1-phase fixes is `0.2.1`.
 3. **The tell in a record is *awaiting vX.Y.Z* where X.Y.Z is not greater than what is installed.**
    Worth a grep at release time; it is cheaper than the alternative, which is finding out from an
    adopter who never got the fix.
-4. Renaming the phases would end the ambiguity and costs a rewrite of the whole backlog. The sentence
-   at the point where somebody picks a number is what actually gets read, so that is where it went:
-   [`../CLAUDE.md`](../CLAUDE.md), beside the release status.
+4. **Renaming the phases ends the ambiguity, and this entry declined it before taking it a day
+   later.** The first answer was that a rename costs a rewrite of the whole backlog, so the cheaper
+   fix went where somebody picks a number: [`../CLAUDE.md`](../CLAUDE.md), beside the release status.
+   That protected the *release sequence*, which is where the failure had happened, and it did nothing
+   for the *reading* cost — which kept accruing until the owner said they had confused the two
+   repeatedly in conversation. Renamed to `PH1`–`PH3` on 2026-08-12, 282 mentions across 60 files
+   (**T-099**).
+
+   **The transferable half is that those are two different costs and only one of them was measured.**
+   A label is read far more often than it is acted on, so pricing a naming fix by the edit it forces
+   understates it every time. And the rename could not be automated for the reason it was needed:
+   `v0.1` is a prefix of `v0.1.5`, so any pattern that finds the phase finds five real versions too.
 
 ### L-70 — A checker that forces a quotation to be edited has stopped checking and started writing
 

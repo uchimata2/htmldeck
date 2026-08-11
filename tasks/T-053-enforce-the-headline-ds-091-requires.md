@@ -8,9 +8,10 @@ parent: null
 blocked_by: []
 related: [T-051, T-038, T-005, T-037]
 work_package: none
+shipped_in: 0.1.0
 owner: the project owner
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables:
   - tools/deck/audit.py
   - tools/deck/static_variants.py

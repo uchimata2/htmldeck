@@ -18,29 +18,35 @@ tools/deck/check.py <deck>` decides 83 of the 114 rules a gate owns and names th
 reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed specification into a
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
-2026-08-09 as `docs/PUBLISHING.md`, and **v0.1 shipped the same day**: the repository is public at
-`github.com/uchimata2/htmldeck`, released and **now at `v0.2.1`** after five v0.1 patches, with
-`master` as the published branch. **v0.2 shipped 2026-08-11** carrying
+2026-08-09 as `docs/PUBLISHING.md`, and **PH1 shipped the same day as `0.1.0`**: the repository is
+public at `github.com/uchimata2/htmldeck`, released and **now at `0.2.1`** after five PH1 patches,
+with `master` as the published branch. **PH2 shipped 2026-08-11 as `0.2.0`** carrying
 [T-086](tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
 [T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
-**the phase stays open behind it**: T-036 keeps the `v0.2` label by the owner's decision, so a
+**the phase stays open behind it**: T-036 keeps the `PH2` label by the owner's decision, so a
 shipped release and an open phase are not a contradiction here. T-080 kept it too until it closed on
 2026-08-12.
 
 **A phase name is not a version number, and conflating the two nearly shipped a release nobody could
-install.** The backlog calls a defect in the published plugin `v0.1` work, which is a *phase*; the
+install.** The backlog calls a defect in the published plugin PH1 work, which is a *phase*; the
 record then wrote the next such release as `v0.1.6`, which as a *version* is lower than the published
 `0.2.0`. Plugin updates compare versions, so that tag would have reached no adopter at all. **Patches
 take the next patch number on the published line** — `0.2.1`, `0.2.2` — whatever phase the tasks in
 them belong to. Settled 2026-08-11, at the release it would have broken.
 
-**v0.3 is the main line now, but v0.1 has reopened seven times**: a defect in the published plugin is
-a `v0.1` **phase** task, not a later improvement. **`0.2.1` shipped three of them 2026-08-11** —
+**The phases were called `v0.1`, `v0.2` and `v0.3` until 2026-08-12 and are now `PH1`, `PH2` and
+`PH3`** — same three phases, renamed because a label shaped like a version gets read as one, which is
+what the paragraph above is about. The rule the rename makes visible: **`work_package` is the phase,
+`shipped_in` is the version**, and a task can hold `PH3` and `0.2.1` at once without contradiction.
+Never write a phase with a `v`. **T-099.**
+
+**PH3 is the main line now, but PH1 has reopened seven times**: a defect in the published plugin is
+a `PH1` **phase** task, not a later improvement. **`0.2.1` shipped three of them 2026-08-11** —
 [T-090](tasks/T-090-spec5-cannot-parse-a-descriptive-slide-label.md),
 [T-091](tasks/T-091-build-md-documents-icons-set-as-a-single-pair.md) and
 [T-094](tasks/T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md). The first two are the
 only ones ever **raised from outside this repository**, hit on the
-published `0.2.0` by the first adopting project and moved here from the `v0.3` they arrived labelled
+published `0.2.0` by the first adopting project and moved here from the `PH3` they arrived labelled
 with; T-094 is the project's own, found while rendering a deck to look at it. **The fifth
 was the first nobody reported** — `v0.1.5` carried
 [T-083](tasks/T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) and
@@ -49,14 +55,14 @@ was the first nobody reported** — `v0.1.5` carried
 argument for having written that list down. Read the brief first — its "Decisions taken" section overrides anything older
 in it.
 
-**The backlog is three release phases, all set by the owner: `v0.1` and `v0.2` on 2026-08-09, and
-`v0.3` split off v0.2 on 2026-08-10.** v0.1 is a working plugin someone can install — build mode,
-critique mode, the humanizer pass, publish — and nothing else, and it has shipped. v0.2 is the
-dependencies and every minor and moderate fix; v0.3 is the bigger tasks and the new capabilities,
+**The backlog is three release phases, all set by the owner: `PH1` and `PH2` on 2026-08-09, and
+`PH3` split off PH2 on 2026-08-10.** PH1 is a working plugin someone can install — build mode,
+critique mode, the humanizer pass, publish — and nothing else, and it has shipped. PH2 is the
+dependencies and every minor and moderate fix; PH3 is the bigger tasks and the new capabilities,
 and **the line between those two falls at an effort estimate of `l`**. `docs/BRIEF.md` *Release
 phases* is the decision and says what each contains; `tasks/README.md` is the current state, grouped
-by the same three names. **A new task belongs to one of them**: v0.1 only when a defect in the
-published plugin reopens it, v0.3 for anything `l` or `xl` — **and, since v0.2 shipped, for
+by the same three names. **A new task belongs to one of them**: PH1 only when a defect in the
+published plugin reopens it, PH3 for anything `l` or `xl` — **and, since PH2 shipped, for
 everything else that is not such a defect**, because reopening a shipped phase is reserved for them.
 That last clause is why a small task can sit in the phase of the big ones; T-089, T-092 and T-093 are
 all there against their size. A phase that quietly takes work the size of the next one is the failure

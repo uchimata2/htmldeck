@@ -3,13 +3,14 @@ id: T-072
 title: A corrupted comment opener in shell/components.css would swallow the rule beneath it
 type: fix
 status: cancelled
+shipped_in: 0.2.1
 phase: specify
 parent: null
 blocked_by: []
 related: [T-069, T-089]
 owner: the project owner
 created: 2026-08-10
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables: []
 ---
 

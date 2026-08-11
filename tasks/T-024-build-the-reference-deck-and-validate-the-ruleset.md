@@ -8,9 +8,10 @@ parent: null
 blocked_by: []
 related: [T-001, T-002, T-006, T-007, T-014, T-016, T-021, T-023]
 work_package: WP2
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-06
+updated: 2026-08-12
 deliverables:
   - examples/reference-deck.html
   - examples/reference-deck-seeded-defects.html

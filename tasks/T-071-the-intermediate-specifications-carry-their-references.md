@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: [T-069]
 related: [T-070]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.5
 owner: the project owner
 business_value: high
 effort: m
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - skills/htmldeck/references/artifacts.md
   - skills/htmldeck/references/build.md
@@ -210,4 +211,4 @@ record learns to agree with its gaps.
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | Six criteria met, and the sixth is the one that changed shape: the example needed regenerating for a reason §1 had not anticipated, since it had been failing `shell.py check` since T-069 landed earlier the same day and nothing had said so. Two defects found on the way out are raised rather than absorbed — an incomplete figure ledger (**T-082**) and a `hard` rule failing on the deck before this task touched it (**T-083**). The open question closed as recommended and the duplication it feared was a misreading: the two source lists belong to two different decks. |
 | 2026-08-10 | → in_progress | Written formats first, then the check, then the example — so the worked pair was filled in against a definition rather than the definition written to match what the pair happened to have. Two things came back that the specification did not predict. **The build check's absent-subject fixture rejected the new tool**, correctly: it enumerates verdict producers from the source of every module in the directory, so a new one is red the same afternoon, and all four rows now report `None` on an absent subject instead of a vacuous pass. **And the ledger it checks against was wrong in two cells**, both omitting slide 10 — fixed here, because a check calibrated against a record known to be wrong learns to agree with the defect. |
-| 2026-08-10 | → proposed | Raised from an owner request that the intermediate specifications list the references used. **Recorded as the gap that was measured, not as the request**: the foundation names a count and a folder and carries a figure ledger whose `Origin` is a bare slug, and the slide specification's eight fields include nothing about sources at all. The reference list that does exist — `examples/sources/README.md` — is hand-written outside the pipeline for the one deck that has no foundation document. **The one-home objection is answered in §1 rather than left for review to find**: the ledger covers figures, a slide can rest on a source it quotes no number from, and where the two overlap the ledger stays authoritative and the slide field is checked against it. Blocked by T-069, which decides the mark's form — this task is what makes that form reproducible from a specification rather than hand-authored. `v0.2`: nothing shipped is wrong. |
+| 2026-08-10 | → proposed | Raised from an owner request that the intermediate specifications list the references used. **Recorded as the gap that was measured, not as the request**: the foundation names a count and a folder and carries a figure ledger whose `Origin` is a bare slug, and the slide specification's eight fields include nothing about sources at all. The reference list that does exist — `examples/sources/README.md` — is hand-written outside the pipeline for the one deck that has no foundation document. **The one-home objection is answered in §1 rather than left for review to find**: the ledger covers figures, a slide can rest on a source it quotes no number from, and where the two overlap the ledger stays authoritative and the slide field is checked against it. Blocked by T-069, which decides the mark's form — this task is what makes that form reproducible from a specification rather than hand-authored. `PH2`: nothing shipped is wrong. |

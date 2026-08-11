@@ -8,9 +8,10 @@ parent: T-005
 blocked_by: []
 related: [T-024, T-028]
 work_package: WP3
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables:
   - examples/reference-deck.html
 ---

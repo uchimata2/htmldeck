@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-073]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.1.4
 owner: the project owner
 business_value: high
 effort: m
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - skills/htmldeck/references/build.md
   - tools/deck/render.py
@@ -94,7 +95,7 @@ by luck rather than by construction. The instance is one line of `build.md`; the
 - [ ] `render.py`'s docstring and `build.md` say the same thing, and the gate is what holds them together
 
 **Open questions**
-- **Which release?** This is a defect in the published `v0.1.3`, so `v0.1` and a patch. The output-root
+- **Which release?** This is a defect in the published `v0.1.3`, so `PH1` and a patch. The output-root
   half is larger than a patch usually carries, and splitting it would ship a correct sentence over a
   tool that still writes into its own install. Recommended: one patch, both halves — the owner's call.
 
@@ -191,4 +192,4 @@ by luck rather than by construction. The instance is one line of `build.md`; the
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | **Shipped in `v0.1.4`. Both halves in one patch, on the owner's call, and the second is the one that mattered.** The flag now exists and the documented line runs verbatim; underneath it, every tool that writes anything anchored that write to its own `__file__`, so an adopter running the documented pipeline put screenshots, PDFs, themed decks **and a full copy of their deck** inside the installed package. `paths.output_root` follows the deck instead, and every path inside this repository is unmoved because a deck here resolves to here. The rule-level half is check 7: a documented invocation is a claim, and it was the only kind this package made that nothing decided. **The check's own first version passed the defect it was built for** — the flag was still in `render.py`, in a comment quoting the traceback — which is why it tokenises and matches whole literals, and which is kept as a fixture. Generalised as **L-58**. |
 | 2026-08-10 | → in_progress | Started after [T-075](T-075-ds-064-probes-for-the-reference-decks-own-class-names.md), the other half of the same report, closed. |
-| 2026-08-10 | → proposed | **Reported from another project against the published `v0.1.3`, and reproduced by reading the parser rather than by running it.** `argv[2]` is parsed as a slide list, so the documented `--out` reaches `int()`; `render.py`'s own docstring already shows the working form, so the repository contradicts itself in two files and neither is gated. **The larger finding is underneath the flag**: `OUT` is anchored to `__file__`, so every adopter running the documented pipeline writes shots, PDFs and themed decks into the installed plugin. That makes `--out` the flag the pipeline needed rather than a flag that never existed, and it is why the fix is not a prose edit. `v0.1` because the broken command is the one that closes the visual gate, and the reporter names the cheap wrong response — skip the render, trust the checks — as the likely one. |
+| 2026-08-10 | → proposed | **Reported from another project against the published `v0.1.3`, and reproduced by reading the parser rather than by running it.** `argv[2]` is parsed as a slide list, so the documented `--out` reaches `int()`; `render.py`'s own docstring already shows the working form, so the repository contradicts itself in two files and neither is gated. **The larger finding is underneath the flag**: `OUT` is anchored to `__file__`, so every adopter running the documented pipeline writes shots, PDFs and themed decks into the installed plugin. That makes `--out` the flag the pipeline needed rather than a flag that never existed, and it is why the fix is not a prose edit. `PH1` because the broken command is the one that closes the visual gate, and the reporter names the cheap wrong response — skip the render, trust the checks — as the likely one. |

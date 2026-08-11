@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-016, T-070]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.4
 owner: the project owner
 business_value: high
 effort: m
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables: [docs/DESIGN-SYSTEM.md, docs/COMPONENT-CONTRACT.md, shell/components.css, shell/deck.js, tools/deck/audit.py, examples/reference-deck.html]
 ---
 
@@ -334,4 +335,4 @@ forbids.
 | 2026-08-10 | → specified | **Both remaining questions answered by the owner, as recommended: the reference deck is the carrier, and the colophon is an ordinary slide.** So the rule ships with a subject rather than repeating DS-087's blind check, and it costs no contract row and no tool change. Two consequences were recorded rather than left for `implement` to find: the deck goes to **thirteen slides**, which DS-082 permits on a recorded reason that the colophon exemption supplies; and the deck's PDF, its seeded-defect twin and the README figures move with it. Seven acceptance criteria, agreed. |
 | 2026-08-10 | (specify) | Criteria sharpened and **two findings raised that the earlier pass missed**. First: **no deck in the repository cites a source**, though both ship three source documents and `check.py --sources` already reconciles figures against them — so DS-105's link clause and the whole multi-source case have no subject, and `check.py`'s excuse for not checking (*"DS-001 having banned them"*) rests on the misreading this task already corrected. Second: **a colophon slide fails the component gate as markup** — five contract rows are `1` per `.slide` and `component.py` enforces them per host — so the owner's settled colophon carries an unstated cost. Both became open questions and were **asked, not guessed**; `specify` stays open on them. Three detail questions were settled here instead of carried up, per their rules' own reasons: no sprite glyph is added (`file-text` opens, `arrow-up-right` leaves), `.provenance` keeps `Count 1` with the box as its content (assumption, revisited at `plan`), and the dead-link check is written to what a static read can decide with the rest named in writing. |
 | 2026-08-10 | (specify) | **Both open questions settled by the owner**, as recommended: a colophon slide after the close carries deck-wide sources under a named DS-085 exemption, and the multi-source box is its own component rather than a fifth DS-230 kind. Both reasons are written into §1 — the exemption is scoped so the colophon cannot become a second ending, and the separate component keeps DS-230's panel census meaningful. Specify is not closed: the criteria still need agreeing. |
-| 2026-08-10 | → proposed | Raised from an owner request for upper-right source referencing. **Recorded as a delta rather than as the request**, because DS-105 already puts the mark upper-right, already requires a working link or plain text, and already forbids a dead link — the reference deck carries twelve. What is genuinely new is multiple sources, the disclosure that holds them, and where a deck-wide source lives. **Three collisions named before any work**: DS-085 on the last slide being a close, DS-230's closed four-kind panel vocabulary, and the `.provenance` cardinality of exactly 1. The local-file link is settled here on rule 1's existing precedent rather than left open. `v0.2`: nothing shipped is wrong, and this is a capability rather than a defect. |
+| 2026-08-10 | → proposed | Raised from an owner request for upper-right source referencing. **Recorded as a delta rather than as the request**, because DS-105 already puts the mark upper-right, already requires a working link or plain text, and already forbids a dead link — the reference deck carries twelve. What is genuinely new is multiple sources, the disclosure that holds them, and where a deck-wide source lives. **Three collisions named before any work**: DS-085 on the last slide being a close, DS-230's closed four-kind panel vocabulary, and the `.provenance` cardinality of exactly 1. The local-file link is settled here on rule 1's existing precedent rather than left open. `PH2`: nothing shipped is wrong, and this is a capability rather than a defect. |

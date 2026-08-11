@@ -7,12 +7,12 @@ phase: specify
 parent: null
 blocked_by: []
 related: [T-066, T-075, T-093]
-work_package: v0.3
+work_package: PH3
 owner: maintainer
 business_value: medium
 effort: s
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables: []
 ---
 
@@ -114,4 +114,4 @@ with the derivation still to be done.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-11 | → proposed | Raised from the closed-record sweep run before the post-`0.2.1` handoff, on evidence produced the same day: T-093 moved a rule between producers and the suite said `MISSED`. `v0.3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule — not a defect an adopter can hit, and v0.2 has shipped, so everything that is not such a defect goes there whatever its size. |
+| 2026-08-11 | → proposed | Raised from the closed-record sweep run before the post-`0.2.1` handoff, on evidence produced the same day: T-093 moved a rule between producers and the suite said `MISSED`. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule — not a defect an adopter can hit, and PH2 has shipped, so everything that is not such a defect goes there whatever its size. |

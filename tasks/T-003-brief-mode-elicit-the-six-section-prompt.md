@@ -8,9 +8,10 @@ parent: null
 blocked_by: [T-015]
 related: [T-002, T-020]
 work_package: WP3
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-07
+updated: 2026-08-12
 deliverables: []
 ---
 

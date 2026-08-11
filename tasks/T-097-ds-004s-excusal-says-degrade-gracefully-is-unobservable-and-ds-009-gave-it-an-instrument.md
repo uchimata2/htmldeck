@@ -7,12 +7,12 @@ phase: specify
 parent: null
 blocked_by: []
 related: [T-019, T-017, T-041]
-work_package: v0.3
+work_package: PH3
 owner: maintainer
 business_value: medium
 effort: s
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables: []
 ---
 
@@ -112,4 +112,4 @@ wider.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-11 | → proposed | Raised from the closed-record sweep after `0.2.1`. The sweep was looking for commitments that escaped the board and found the mirror image: a written-down blindness that had quietly stopped being one. `medium` because nothing is broken and a gate is claiming less than it has; `s` because the work is two rewordings and one decision. `v0.3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule. |
+| 2026-08-11 | → proposed | Raised from the closed-record sweep after `0.2.1`. The sweep was looking for commitments that escaped the board and found the mirror image: a written-down blindness that had quietly stopped being one. `medium` because nothing is broken and a gate is claiming less than it has; `s` because the work is two rewordings and one decision. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule. |

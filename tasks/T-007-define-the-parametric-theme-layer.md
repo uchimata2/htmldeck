@@ -8,9 +8,10 @@ parent: null
 blocked_by: [T-001, T-014]
 related: [T-002, T-016, T-021]
 work_package: WP2
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables:
   - docs/THEME-CONTRACT.md
   - themes/quarto.css

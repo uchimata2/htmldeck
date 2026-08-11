@@ -7,7 +7,8 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-063, T-073, T-079]
-work_package: v0.2
+work_package: PH2
+shipped_in: unreleased
 owner: the project owner
 business_value: medium
 effort: xs
@@ -160,7 +161,7 @@ the third row, and it stays out.
 filename, which is abridged the way a quotation abridges:
 
 ```
-| [T-041](T-041-implement-the-nine-glitch-free-…md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.3` | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097 |
+| [T-041](T-041-implement-the-nine-glitch-free-…md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097 |
 ```
 
 Before the change, that block alone turned the run red — the checker did not find a defect, it

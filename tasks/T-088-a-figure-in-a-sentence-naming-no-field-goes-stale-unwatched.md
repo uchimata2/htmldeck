@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-060, T-068, T-077, T-082]
-work_package: v0.3
+work_package: PH3
+shipped_in: 0.2.1
 owner: the project owner
 business_value: medium
 effort: l
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables:
   - tools/docs/figures.py
 ---
@@ -205,4 +206,4 @@ reference deck, and the built deck's `220 KB`, `225 639 bytes`, `12 slides` and 
 | 2026-08-11 | (shipped) | **Shipped in `0.2.1`.** A figure about a named artifact is decidable from this release on, which is what kept the size figures honest through it. |
 | 2026-08-11 | → done | All five criteria met, and **the rule found a third stale figure on its first run** - `BRIEF.md` gave the reference deck as 214 KB against 231, stale since 2026-08-09 and reported by nobody. Measured 1 true hit against 0 false alarms, where T-068's rejected rule measured 5 against 30. Three things are worth carrying. The binding that works is a **link**, not a name: it is the one reference a paragraph makes that cannot be a coincidence of vocabulary, which is the whole of T-068's objection. The scope is a **list item**, decided by measurement after block-scope bound a correct figure to a link thirty lines away - right by luck, and a rule that is right by luck is the one T-068 rejected. And `ARTIFACT_UNITS` is keyed by `stem()`'s output, because `stem` takes `bytes` to `byt` and `slides` to `slid`: keyed by the readable word, two of four units never matched and the run went green having judged half of what it claimed - this file's own defect class, in this file. |
 | 2026-08-11 | (no change) | Owner answered the open question the day it was raised: **allow a manifest**. §1 records what that buys (the rule declares which artifacts have measurable properties instead of inferring it) and what it owes: an entry whose artifact is gone must fail, since a hand-kept list is only acceptable here because §8's cadence re-reads it. Added as a fifth acceptance criterion so the condition is checkable rather than remembered. |
-| 2026-08-11 | → proposed | Raised while running [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8's step 4 for the `v0.2.0` release, which is the step no gate covers and the third release running in which it has found something. `v0.3` rather than `v0.2`: the effort is `l` by the rule in [`../CLAUDE.md`](../CLAUDE.md), because the deliverable is a measurement over every document the gate reads and a rule that survives it, not a patch to one binding. Not `v0.1`: no adopter's deck can hit this, it is a defect in this project's own record. |
+| 2026-08-11 | → proposed | Raised while running [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8's step 4 for the `v0.2.0` release, which is the step no gate covers and the third release running in which it has found something. `PH3` rather than `PH2`: the effort is `l` by the rule in [`../CLAUDE.md`](../CLAUDE.md), because the deliverable is a measurement over every document the gate reads and a rule that survives it, not a patch to one binding. Not `PH1`: no adopter's deck can hit this, it is a defect in this project's own record. |

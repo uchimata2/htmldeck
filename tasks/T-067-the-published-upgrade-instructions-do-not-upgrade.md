@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-056, T-061]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.1.4
 owner: the project owner
 business_value: high
 effort: xs
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - README.md
   - .claude-plugin/plugin.json

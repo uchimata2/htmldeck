@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-069, T-071, T-078, T-083]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.1.5
 owner: the project owner
 business_value: high
 effort: xs
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - examples/reference-deck.html
   - examples/reference-deck-seeded-defects.html
@@ -123,4 +124,4 @@ line is a normalisation, not a new icon — the deck holds the same ten it used.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | Two commands, two changed lines, and neither could render differently — which is the finding rather than the fix. **`shell/` and this deck are one fact in two files by design, and the design has no watcher except a command nobody ran.** Three decks-worth of the same failure in one day says the routine was the defect, not the deck: `PUBLISHING.md` §8 now lists the per-deck gates and names both examples, since running them against the deck being worked on is what let this one sit. Shipped in **`v0.1.5`**. |
-| 2026-08-10 | → proposed | Raised while running §8's gate list for the `v0.1.5` release. `v0.1` rather than `v0.2`: the deck is in the published repository, `README.md` points at it as the structural reference, and an adopter running the documented command on it gets a red run — CLAUDE.md's own test. `high` because it is the deck every other deck is assembled from; `xs` because the fix is the same two commands T-071 used on the other example. |
+| 2026-08-10 | → proposed | Raised while running §8's gate list for the `v0.1.5` release. `PH1` rather than `PH2`: the deck is in the published repository, `README.md` points at it as the structural reference, and an adopter running the documented command on it gets a red run — CLAUDE.md's own test. `high` because it is the deck every other deck is assembled from; `xs` because the fix is the same two commands T-071 used on the other example. |

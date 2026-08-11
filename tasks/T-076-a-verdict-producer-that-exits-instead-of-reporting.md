@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-075]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.5
 owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - tools/deck/contrast.py
 ---
@@ -146,4 +147,4 @@ the right one.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | **The open question closed against its own recommendation**, which is the note worth keeping: §1 proposed returning the four rows undecided, and `ABSENCE_IS_A_FAIL` already held a written decision saying the opposite and giving a better reason. Reading the declarations before changing them turned a reclassification into a one-line fix, and left the reference deck's account byte-identical. The sweep found two more producers reaching a `sys.exit` and both are correct — the line is whose input is malformed, the deck's or the tool's, and it is now written down. |
-| 2026-08-10 | → proposed | Found while T-075 brought every verdict producer inside the absent-subject fixture: `contrast.verdicts` is the one that cannot be handed the empty document, because it calls `sys.exit` rather than returning a row. **`v0.2` rather than `v0.1`, and the reason is that no adopter has hit it** — it fires only on a deck with no colour tokens at all, which the shell makes impossible to produce by accident. It is a defect in the gate's contract with itself rather than in what the gate reports, and T-075 has already declared the input it can take. |
+| 2026-08-10 | → proposed | Found while T-075 brought every verdict producer inside the absent-subject fixture: `contrast.verdicts` is the one that cannot be handed the empty document, because it calls `sys.exit` rather than returning a row. **`PH2` rather than `PH1`, and the reason is that no adopter has hit it** — it fires only on a deck with no colour tokens at all, which the shell makes impossible to produce by accident. It is a defect in the gate's contract with itself rather than in what the gate reports, and T-075 has already declared the input it can take. |

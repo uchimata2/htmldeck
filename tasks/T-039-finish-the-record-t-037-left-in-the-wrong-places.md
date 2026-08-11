@@ -8,9 +8,10 @@ parent: T-037
 blocked_by: []
 related: [T-005, T-014, T-021, T-022]
 work_package: WP2
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables: [docs/DESIGN-SYSTEM.md]
 ---
 

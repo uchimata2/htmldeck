@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: [T-002]
 related: [T-005, T-017]
-work_package: v0.3
+work_package: PH3
+shipped_in: 0.2.1
 owner: maintainer
 business_value: high
 effort: l
 created: 2026-08-06
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables:
   - tools/deck/preflight.py
   - shell/shell.html
@@ -284,6 +285,6 @@ whether a deck emits two rows or six.
 | 2026-08-11 | → in_progress | **Built, and the first fixture written caught the emitter reading its own documentation.** `"<template" in html` fired on every deck, because the shared block and the deck script both explain the quick view in a comment naming the tag and both ship inside every deck. The instrument written to prove the emitter right had the same defect an hour later, and reported a passing control as degraded. Both are **L-67**. |
 | 2026-08-11 | → planned | **Seven steps, and the shape decided: the preflight is a derived shell region, not an authored one.** The sprite is the precedent — `shell.py icons` reads the deck and rewrites the sprite to match, so DS-113 is true by construction rather than by memory — and *emit only the checks this deck uses* is the same sentence about a different region. Step 6 exists because `check.py` fails a run where a ruleset rule lands in no bucket, so DS-009 and its check are one step or the gate goes red. |
 | 2026-08-11 | → specified | **R6 §7's proposed check list does not survive contact with the shell, and §1 now records what does.** Counted across the shell, the theme and both shipped decks: container queries 0, `:has()` 0, the fonts API 0, `import()` 0, WebGL 0 — four of R6's six rows have no subject in any deck this project can build, and `isSecureContext` was already ruled out in 2026-08-07. The selection rule the owner generalised that day is what empties the list, so this is the rule working rather than a gap. What the shell does rest on is custom properties, `display:grid`, `transform:scale()`, `<template>` and `Element.closest`. Two decisions came out of the same measurement and are recorded in §1: the degraded state ships **on** and a passing preflight removes it, which also covers the deck being blank with JavaScript off; and the fallback block may use no custom property, no grid and no modern selector. One acceptance criterion added for the script-suppressed case — the same mechanism, its extreme. |
-| 2026-08-10 | (specify) | **Estimated `high`/`l`, and moved to `v0.3`.** `high` because the preflight is what makes CLAUDE.md rule 2's *degrade gracefully* real for a recipient who cannot debug a blank page; `l` because emitting only the checks a deck actually uses requires the builder to know what it emitted, which is not a property the deck can read off itself. `v0.3` under the release split set by the owner 2026-08-10 — a new capability of this size is neither a dependency nor a moderate fix. |
+| 2026-08-10 | (specify) | **Estimated `high`/`l`, and moved to `PH3`.** `high` because the preflight is what makes CLAUDE.md rule 2's *degrade gracefully* real for a recipient who cannot debug a blank page; `l` because emitting only the checks a deck actually uses requires the builder to know what it emitted, which is not a property the deck can read off itself. `PH3` under the release split set by the owner 2026-08-10 — a new capability of this size is neither a dependency nor a moderate fix. |
 | 2026-08-07 | (no change) | **Both open questions answered by the owner; §1 has none left.** *One behaviour, always visible* — the file cannot know who opened it, and an author-silent build would ship a different artifact from the one that was tested. *`isSecureContext` becomes a build-check row* — it is true for `file://`, so at runtime it can only pass. **The second answer generalises into the design step this task starts with**: step 1 selects checks per deck feature, and the selection rule is now stated — a row earns its place only where a real opening route makes it fail. That is testable against [R6](../docs/research/R6-portability-contract.md) §2's load-bearing list, and it will remove more than one candidate. |
 | 2026-08-06 | → proposed | Created. R6 §7 defines the deck's version floor as a capability preflight rather than a number; that position is only real if something emits the preflight. Blocked on T-002 because the preflight is emitted **by** build mode and cannot be built before it — the design work in steps 1–2 could start earlier if the owner wants it pulled forward. |

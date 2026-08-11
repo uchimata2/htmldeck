@@ -8,9 +8,10 @@ parent: null
 blocked_by: [T-014, T-020]
 related: [T-002, T-003, T-012, T-027]
 work_package: WP2
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-07
+updated: 2026-08-12
 deliverables:
   - .claude-plugin/plugin.json
   - skills/htmldeck/SKILL.md

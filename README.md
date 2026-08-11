@@ -148,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1388 document pointer(s) checked, 0 broken
-     608 section reference(s) resolved, 0 dead; 1448 not bound to a document and skipped.
+OK - 1409 document pointer(s) checked, 0 broken
+     609 section reference(s) resolved, 0 dead; 1452 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -261,16 +261,16 @@ describe a plan.
   part of what it claimed to have read; the second replaced that script with a fixture, and the
   fixture could see one file of the eight that needed it. The sample is one project.
 - **The gate names seven glitch-free conditions it does not check**, and there is no frame-rate
-  figure. Both are v0.3, not oversights.
+  figure. Both are PH3, not oversights.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
-is split into three releases. **v0.1** is what a first working plugin needs; it shipped, and took
-five patches. **v0.2** is the minor and moderate fixes already known. It shipped as v0.2.0 with two
-of its tasks still open behind it: a second printed contents sheet, which only bites on decks far
-longer than the target case, and one fix that waits on a decision upstream. The current release is
-v0.2.1, which carries three fixes to the published plugin. **v0.3** is the larger work, including 3D
-visuals, the frame-rate figure and those seven conditions. [`docs/BRIEF.md`](docs/BRIEF.md) says what
-is in each and why.
+is split into three phases, and a phase is not a version. **PH1** is what a first working plugin
+needs; it shipped as 0.1.0 and took five patches. **PH2** is the minor and moderate fixes already
+known. It shipped as 0.2.0 with two of its tasks open behind it. One of those has since closed. The
+other is a second printed contents sheet, which only bites on decks far longer than the target case.
+The current release is 0.2.1, which carries three fixes to the published plugin. **PH3** is the
+larger work, including 3D visuals, the frame-rate figure and those seven conditions.
+[`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
 **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
 half's first run and were settled the same day in

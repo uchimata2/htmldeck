@@ -7,12 +7,12 @@ phase: specify
 parent: T-016
 blocked_by: []
 related: [T-007, T-016, T-019, T-033]
-work_package: v0.3
+work_package: PH3
 owner: maintainer
 business_value: medium
 effort: xl
 created: 2026-08-09
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - docs/DESIGN-SYSTEM.md
   - docs/LESSONS.md
@@ -26,7 +26,7 @@ deliverables:
 The three capabilities [T-016](T-016-the-interaction-and-motion-layer.md) specified and did not
 build: a **functional 3D visual** whose motion *is* the depth encoding, a **frame-rate figure** with
 the machine it was measured on stated beside it, and the **DS-140 amendment** the first of those
-forces. Split out of T-016 on 2026-08-09 so that v0.1 ships; none of the three is a shipping
+forces. Split out of T-016 on 2026-08-09 so that PH1 ships; none of the three is a shipping
 requirement, and all three are wanted.
 
 **Why it is separate rather than dropped**
@@ -123,5 +123,5 @@ holds itself back for them is slower for no reader's benefit.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-10 | (specify) | **Estimated `medium`/`xl`, and moved to `v0.3`.** `medium` because all three are wanted and none is a shipping requirement — that is precisely why T-016 split them out rather than holding v0.1; `xl` because it is three deliverables and not one: a functional 3D visual with a chosen static projection as its reduced-motion and print fallback, a frame-rate figure with the machine stated beside it, and the DS-140 amendment the first forces. `v0.3` under the release split set by the owner 2026-08-10, as the largest new capability on the board. |
-| 2026-08-09 | → proposed | **Split out of [T-016](T-016-the-interaction-and-motion-layer.md) so that v0.1 ships.** T-016 replanned into eight steps on 2026-08-09 and completed four: the reduced-motion render, the component contract, the gate that holds a deck to it, and the editorial split rule. The remaining four are **capabilities the interaction layer does not reach**, not defects in what it does — the deck has no 3D at all, and no deck here has ever had its frame rate measured. Holding a release for them buys no reader anything, and each is wanted, so they move rather than being dropped. **The order inside the task is the part worth carrying over**: the wobble is a fifth motion or an exemption, DS-140 is a closed vocabulary of four, and shipping the figure before the ruleset has a named side produces a deck that fails its own gate. |
+| 2026-08-10 | (specify) | **Estimated `medium`/`xl`, and moved to `PH3`.** `medium` because all three are wanted and none is a shipping requirement — that is precisely why T-016 split them out rather than holding PH1; `xl` because it is three deliverables and not one: a functional 3D visual with a chosen static projection as its reduced-motion and print fallback, a frame-rate figure with the machine stated beside it, and the DS-140 amendment the first forces. `PH3` under the release split set by the owner 2026-08-10, as the largest new capability on the board. |
+| 2026-08-09 | → proposed | **Split out of [T-016](T-016-the-interaction-and-motion-layer.md) so that PH1 ships.** T-016 replanned into eight steps on 2026-08-09 and completed four: the reduced-motion render, the component contract, the gate that holds a deck to it, and the editorial split rule. The remaining four are **capabilities the interaction layer does not reach**, not defects in what it does — the deck has no 3D at all, and no deck here has ever had its frame rate measured. Holding a release for them buys no reader anything, and each is wanted, so they move rather than being dropped. **The order inside the task is the part worth carrying over**: the wobble is a fifth motion or an exemption, DS-140 is a closed vocabulary of four, and shipping the figure before the ruleset has a named side produces a deck that fails its own gate. |

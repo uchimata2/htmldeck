@@ -7,12 +7,12 @@ phase: specify
 parent: null
 blocked_by: []
 related: [T-078, T-083, T-084, T-095]
-work_package: v0.3
+work_package: PH3
 owner: maintainer
 business_value: high
 effort: m
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables: []
 ---
 
@@ -114,4 +114,4 @@ silently.*
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-11 | → proposed | Raised from the closed-record sweep after `0.2.1`, which was cut by running the sixteen commands by hand. The specification is [`PUBLISHING.md`](../docs/PUBLISHING.md) §8's own excusal, written 2026-08-10 and unclaimed since; this task is that paragraph with a number. `high` because the list has already missed three red checks once, and `m` rather than `s` because discovering the decks and their unguessable arguments is most of the work. `v0.3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule. |
+| 2026-08-11 | → proposed | Raised from the closed-record sweep after `0.2.1`, which was cut by running the sixteen commands by hand. The specification is [`PUBLISHING.md`](../docs/PUBLISHING.md) §8's own excusal, written 2026-08-10 and unclaimed since; this task is that paragraph with a number. `high` because the list has already missed three red checks once, and `m` rather than `s` because discovering the decks and their unguessable arguments is most of the work. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule. |

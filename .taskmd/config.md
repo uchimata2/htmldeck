@@ -22,8 +22,8 @@ effort_field: effort         # estimated cost; `none` to not order by it
 after_write: none          # command taskmd runs after it writes a file; `none` for no hook
 
 # ------------------------------------------------------------------- views
-context_fields: [status, phase, type, work_package, owner]
-index_columns: [work_package, status, phase]
+context_fields: [status, phase, type, work_package, shipped_in, owner]
+index_columns: [work_package, shipped_in, status, phase]
 ---
 
 # htmldeck — task schema
@@ -33,6 +33,18 @@ merging with it, so this file is this project's schema and will not pick up chan
 defaults; every key must be present for that reason. One row differs from the default: this
 project's `work_package` values are enumerated below, which both catches a typo and makes
 `taskmd list --work_package WP2` work, since the filter accepts exactly the enumerated fields.
+
+**The three release phases were `v0.1`, `v0.2` and `v0.3` until 2026-08-12 and are now `PH1`, `PH2`
+and `PH3`**, one to one, meaning unchanged. A phase name that looks like a version is one, and it had
+already come within a tag of shipping three fixes to nobody (**L-69**); it went on being misread in
+conversation afterwards. `WP1`–`WP3` keep their names — they were research and design packages and
+were never version-shaped. **T-099.**
+
+**`shipped_in` is a carried field, not an enumerated one.** It holds the version in which a task's
+work first reached an installed copy — bare, `0.2.1`, never `v0.2.1`, because the `v` belongs to the
+git tag and re-importing it here would re-import the confusion above. Version numbers are open-ended,
+so there is no row for it under *Vocabularies*; it appears on the board because `index_columns` names
+it, which is the mechanism this file documents for exactly this case.
 
 This is the schema taskmd uses when a project has no `.taskmd/config.md` of its own, so a
 clone works with no configuration at all. It is also the **only** description of what a
@@ -172,7 +184,7 @@ independent projects reached for it and neither could validate (T-088).
 | type | analysis, decision, deliverable, research, fix, admin, audit |
 | business_value | critical, high, medium, low |
 | effort | xs, s, m, l, xl |
-| work_package | WP1, WP2, WP3, v0.1, v0.2, v0.3, final, none |
+| work_package | WP1, WP2, WP3, PH1, PH2, PH3, final, none |
 
 ## Ordering
 

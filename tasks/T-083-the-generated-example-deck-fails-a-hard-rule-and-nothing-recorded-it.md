@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-021, T-071, T-075]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.1.5
 owner: the project owner
 business_value: high
 effort: s
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - examples/sort-window/sort-window.html
   - docs/THEME-CONTRACT.md
@@ -157,7 +158,7 @@ The slide is better for the change, which is the argument that it was a defect a
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-10 | → done | One token, and the deck reads better for it. **The instrument was never the suspect it looked like:** the sample is fixed indices, and the arithmetic reproduces the reported 15.0 px to the decimal from `--fs-base/1.155` at `k=0.667`. What made it worth a `v0.1` patch is that DS-064's own row records the owner scoping the probe *away* from `--fs-small` prose — correctly, for marginalia — and this slide put the ask itself in that band, which is the one place the exemption must not reach. The transferable half is the token's, not the slide's, so it is written beside `--fs-small` in the theme contract where an author choosing it will meet it. Shipped in **`v0.1.5`**. |
+| 2026-08-10 | → done | One token, and the deck reads better for it. **The instrument was never the suspect it looked like:** the sample is fixed indices, and the arithmetic reproduces the reported 15.0 px to the decimal from `--fs-base/1.155` at `k=0.667`. What made it worth a `PH1` patch is that DS-064's own row records the owner scoping the probe *away* from `--fs-small` prose — correctly, for marginalia — and this slide put the ask itself in that band, which is the one place the exemption must not reach. The transferable half is the token's, not the slide's, so it is written beside `--fs-small` in the theme contract where an author choosing it will meet it. Shipped in **`v0.1.5`**. |
 | 2026-08-10 | → in_progress | Read the element before deciding anything: slide 12 has no `.standfirst`, so the probe takes the first `<p>` of its `.body`, which is `.close-item`. That also settled the sample question — `SAMPLE = [0, 4, 7, 11]` is fixed, so the reference deck passing and this one failing is a difference between the two decks' slide 12, not a draw. |
-| 2026-08-10 | (no change) | **Moved from `v0.2` to `v0.1` by the owner.** The deck is in the published repository and `README.md` points at it; an adopter who runs the documented gate on the shipped example gets a red run today, which is exactly CLAUDE.md's test for reopening v0.1 — *a defect an adopter hits in the published plugin is a `v0.1` patch, not a v0.2 improvement*. The rival, leaving it in `v0.2` because nobody has reported it, is an argument that applies to every latent defect and is the one the rule exists to overrule. **This reopens v0.1 for the fifth time.** |
-| 2026-08-10 | → proposed | Raised from [T-071](T-071-the-intermediate-specifications-carry-their-references.md), which ran the build check on this deck as part of its own review and found a failure that task had not caused — confirmed against the committed file before recording, so the attribution is measured rather than assumed. `high` because the deck is the repository's own evidence that the generator works and it is public; `s` because the row names its slide and its number and the whole question is which of two things produced it. `v0.2`: a fix, not a capability. |
+| 2026-08-10 | (no change) | **Moved from `PH2` to `PH1` by the owner.** The deck is in the published repository and `README.md` points at it; an adopter who runs the documented gate on the shipped example gets a red run today, which is exactly CLAUDE.md's test for reopening PH1 — *a defect an adopter hits in the published plugin is a `PH1` patch, not a PH2 improvement*. The rival, leaving it in `PH2` because nobody has reported it, is an argument that applies to every latent defect and is the one the rule exists to overrule. **This reopens PH1 for the fifth time.** |
+| 2026-08-10 | → proposed | Raised from [T-071](T-071-the-intermediate-specifications-carry-their-references.md), which ran the build check on this deck as part of its own review and found a failure that task had not caused — confirmed against the committed file before recording, so the attribution is measured rather than assumed. `high` because the deck is the repository's own evidence that the generator works and it is public; `s` because the row names its slide and its number and the whole question is which of two things produced it. `PH2`: a fix, not a capability. |

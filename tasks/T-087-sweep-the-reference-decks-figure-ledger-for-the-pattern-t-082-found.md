@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-082, T-086]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.2.0
 owner: the project owner
 business_value: medium
 effort: m
 created: 2026-08-10
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables: [examples/sources/ridership-model.md, examples/reference-deck.html, examples/README.md]
 ---
 
@@ -175,4 +176,4 @@ existing gate rerun.
 | 2026-08-11 | → done | The condition T-082 attached has been discharged, and the answer is not the one the title assumed: there is no ledger here to sweep, and the deck does not owe one. Its record is source-level and it was **self-consistent and wrong** — the colophon and the twelve provenance marks agreed exactly, while three slides cited sources they did not declare (**L-65**). Twenty values sourced, one source statement corrected, four excused with reasons, two slides' marks and both colophon lists fixed. Every gate green, the derived seeded deck regenerated, three slides read offline. `FIG-1` reported `0 unsourced of 69` throughout, on the second deck to measure that (**L-62**). |
 | 2026-08-11 | → planned | §1 answered and §2 written in one pass: the open question is a `specify` decision and the plan is the sweep it implies. Worked straight through rather than parked, on the owner's instruction to run the full lifecycle. |
 | 2026-08-10 | (no change) | Reconnaissance only, recorded in §1 rather than acted on: no specification pair exists, 102 figure-shaped values sit across 13 slides, `SPEC-5`'s matcher is now reusable, and the first wide pattern over-captured in a way the next attempt must avoid. Left at `proposed` deliberately — the sweep and the per-value disposition are the task, and starting them with no room to finish is what T-068 cost a session by. |
-| 2026-08-10 | → proposed | Raised by [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) §1's own condition, which put the reference deck out of scope unless the sweep found a pattern. It found one three times the expected size, including eleven values traceable to no source. `m` rather than `s` because the throwaway extractor has to be rebuilt — L-62 rules out sweeping with the gate that missed them. `v0.2`, under the `l` line. |
+| 2026-08-10 | → proposed | Raised by [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) §1's own condition, which put the reference deck out of scope unless the sweep found a pattern. It found one three times the expected size, including eleven values traceable to no source. `m` rather than `s` because the throwaway extractor has to be rebuilt — L-62 rules out sweeping with the gate that missed them. `PH2`, under the `l` line. |

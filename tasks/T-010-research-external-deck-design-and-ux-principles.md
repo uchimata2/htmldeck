@@ -8,9 +8,10 @@ parent: null
 blocked_by: []
 related: [T-014]
 work_package: WP1
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-06
+updated: 2026-08-12
 deliverables: [docs/research/R2-external-principles.md]
 ---
 

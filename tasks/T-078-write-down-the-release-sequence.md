@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-008, T-056]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.5
 owner: the project owner
 business_value: medium
 effort: xs
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - docs/PUBLISHING.md
 ---
@@ -131,4 +132,4 @@ asked to justify or replace.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | The sequence is `PUBLISHING.md` §8 and the document is retitled. **The task justified itself while being done**: running the eleven commands it was about to write down found three red, all outside the five the README prints, and one of them refusing to start. A list of gates written without running them would have been a list of gates that had not been run — which is the same defect as the release sequence living in four task logs, one altitude up. §1–§7 keep their numbers so eight citations from T-008 and T-060 stay true, and the cost of that is a preamble pointer to the part read first. |
-| 2026-08-10 | → proposed | Raised while shipping `v0.1.4`, which was performed from precedent because nothing states the sequence. `v0.2` rather than `v0.1`: no adopter is affected and the releases have all shipped correctly, but each one has re-derived the same seven steps and the fourth of them is the one a gate cannot cover. |
+| 2026-08-10 | → proposed | Raised while shipping `v0.1.4`, which was performed from precedent because nothing states the sequence. `PH2` rather than `PH1`: no adopter is affected and the releases have all shipped correctly, but each one has re-derived the same seven steps and the fourth of them is the one a gate cannot cover. |

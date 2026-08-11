@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-008, T-061]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.1.2
 owner: the project owner
 business_value: critical
 effort: xs
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - tools/deck/paths.py
 ---
@@ -120,4 +121,4 @@ version of this bug rather than the mildest — the analysis was sound and is th
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | **Fixed at fifteen sites, not the two that were reported.** The helper degrades to the absolute path when a relative one cannot be expressed, which is the whole fix: every crashing call was formatting a heading. Its self-test asserts that `relpath` **raises** before asserting the fallback, so on a single-drive machine the fixture reports that it could not verify rather than passing vacuously. The three tool directories left alone take repository-internal paths and cannot receive a user's deck, which is recorded in §3 rather than skipped quietly. |
-| 2026-08-10 | → proposed | Reported from another project on `N:` and **reproduced here**. **`v0.1` rather than `v0.2`:** the plugin is published, and for anyone whose work is not on the plugin's drive it does not run at all — the same class as [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md), where the shipped artefact did not work and the fix was one line. Worth recording that every crashing call is **display-only**: the tool completes its analysis and then dies formatting the heading, so the fix cannot change a single verdict. |
+| 2026-08-10 | → proposed | Reported from another project on `N:` and **reproduced here**. **`PH1` rather than `PH2`:** the plugin is published, and for anyone whose work is not on the plugin's drive it does not run at all — the same class as [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md), where the shipped artefact did not work and the fix was one line. Worth recording that every crashing call is **display-only**: the tool completes its analysis and then dies formatting the heading, so the fix cannot change a single verdict. |

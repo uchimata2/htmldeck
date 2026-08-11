@@ -8,9 +8,10 @@ parent: T-042
 blocked_by: []
 related: [T-023, T-024, T-028, T-032, T-034, T-035, T-040]
 work_package: none
+shipped_in: 0.1.0
 owner: the project owner
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables:
   - examples/reference-deck-seeded-defects.html
   - examples/README.md

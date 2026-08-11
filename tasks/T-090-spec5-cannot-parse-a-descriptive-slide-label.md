@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-051, T-065, T-066, T-086]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.2.1
 owner: the project owner
 business_value: high
 effort: s
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables:
   - tools/deck/spec.py
   - tools/deck/audit.py
@@ -182,5 +183,5 @@ withdrawn on a false premise costs instead.
 | :--- | :--- | :--- |
 | 2026-08-11 | (shipped) | **Shipped in `0.2.1`.** **One of the three fixes this release is for**, and one of the two raised from outside the repository. It was `Awaiting v0.1.6` here, which is a phase name and was never a version anyone could install. |
 | 2026-08-11 | → done | All four criteria met. **The one-line pattern was the smaller half.** `SLIDE_NUMBER` closed on the quote, so it accepted only the accessible name both decks here happen to ship, and the adopter's better name parsed to nothing — measured as **0 matches against 12** on the same file rather than read out of the source. The half worth keeping is the second state: *deck supplied and unreadable* now FAILs with the cause in its text, where it used to print the words a two-argument run prints. It stayed inside the three verdict values on purpose — `audit.py`'s fixture partitions rows on `True in oks` and `False in oks`, so a fourth value would have taken this family straight back outside the fixture built to hold it (T-066, T-075), which is the same trade T-076 settled the same way. Awaiting a `v0.1.6` patch release with [T-091](T-091-build-md-documents-icons-set-as-a-single-pair.md); the sequence is `docs/PUBLISHING.md` section 8. |
-| 2026-08-11 | (specify) | **Moved to `v0.1`**, arriving labelled `v0.3` from the reporting project, which does not hold htmldeck's phase rule. An adopter's deck hit this on the published `0.2.0`, and [`../CLAUDE.md`](../CLAUDE.md) makes that a `v0.1` patch rather than a later improvement — [`../docs/BRIEF.md`](../docs/BRIEF.md) *v0.2* states the same line from the other side: an adopter cannot hit a v0.2 item, or it would be a v0.1 patch. Size does not enter it; the effort line at `l` sorts the phases that are not the published one. Sixth reopening of v0.1, and the first from outside this repository. |
+| 2026-08-11 | (specify) | **Moved to `PH1`**, arriving labelled `PH3` from the reporting project, which does not hold htmldeck's phase rule. An adopter's deck hit this on the published `0.2.0`, and [`../CLAUDE.md`](../CLAUDE.md) makes that a `PH1` patch rather than a later improvement — [`../docs/BRIEF.md`](../docs/BRIEF.md) *PH2* states the same line from the other side: an adopter cannot hit a PH2 item, or it would be a PH1 patch. Size does not enter it; the effort line at `l` sorts the phases that are not the published one. Sixth reopening of PH1, and the first from outside this repository. |
 | 2026-08-11 | → proposed | Raised by the AI Training 06 (DentalPro) project, htmldeck's first adopter outside this repository — the sixth defect it has found and the second raised here rather than as a GitHub issue. Found while building a twelve-slide board deck on 0.2.0: the rebuild was expected to settle SPEC-5, and with the deck supplied it was still `NO SUBJECT`. The adopting project deliberately did **not** shorten its slide labels to suit the pattern, on the grounds that nothing in the ruleset asks for the bare form and shortening them would trade accessibility for a regular expression. |

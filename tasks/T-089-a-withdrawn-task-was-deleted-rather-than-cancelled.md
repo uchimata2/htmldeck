@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-003, T-069]
-work_package: v0.3
+work_package: PH3
+shipped_in: 0.2.1
 owner: the project owner
 business_value: low
 effort: xs
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables:
   - tasks/T-072-a-corrupted-comment-opener-in-shell-components-css.md
   - tasks/TASK-WORKFLOW.md
@@ -99,7 +100,7 @@ and applies it to T-072. It does not reopen the question.
   between them is standing.
 - **The stub carries no `work_package`, and says so.** The original's was never recorded anywhere
   that survives. Several closed tasks already show `-` in that column, so the absence is a shape the
-  board holds; inventing `v0.2` from the date would have been the reconstruction claiming to know
+  board holds; inventing `PH2` from the date would have been the reconstruction claiming to know
   something it does not, in the one file whose entire purpose is to be honest about what is left.
 - **No acceptance criteria, plan or implementation in the stub either.** It was withdrawn in
   `specify` and never had them. Plausible ones would make it a forgery rather than a record.
@@ -132,4 +133,4 @@ and applies it to T-072. It does not reopen the question.
 | :--- | :--- | :--- |
 | 2026-08-11 | (shipped) | **Shipped in `0.2.1`.** The disposal rule and the reconstituted `T-072` stub travel with the repository rather than with the plugin, so this is the release they became public in. |
 | 2026-08-11 | → done | All five criteria met. **The rule was the cheap half; the stub is what makes it true.** A disposal rule saying *retain* while its only instance stayed deleted would have left exactly the hole it was written to close, which is why section 1 scoped both together. Two things the reconstruction had to refuse: a work package and a set of acceptance criteria, both easy to infer and neither recorded anywhere that survives - a reconstructed file that fills its own gaps is worse than the deletion it repairs, because it reads as evidence. Section 1 also pointed the rule at section 5, which is *The log*; it went to section 3.1 beside the status vocabulary instead. |
-| 2026-08-11 | → proposed | Raised from the pre-v0.3 audit, which found the T-072 hole by counting index rows against filenames — 87 files against IDs running to T-088. The owner settled both questions the audit put: **`cancelled` and retained**, and **`v0.3`**. `v0.3` is against the size rule, which sends `xs` to v0.2 — recorded here rather than left to be re-derived, because v0.2 has shipped and reopening it is reserved for adopter defects, which this is not. `low` value: it costs nobody anything today, and the audit that found it was not a gate and does not repeat. |
+| 2026-08-11 | → proposed | Raised from the pre-PH3 audit, which found the T-072 hole by counting index rows against filenames — 87 files against IDs running to T-088. The owner settled both questions the audit put: **`cancelled` and retained**, and **`PH3`**. `PH3` is against the size rule, which sends `xs` to PH2 — recorded here rather than left to be re-derived, because PH2 has shipped and reopening it is reserved for adopter defects, which this is not. `low` value: it costs nobody anything today, and the audit that found it was not a gate and does not repeat. |

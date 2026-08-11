@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-019, T-074]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.2.1
 owner: maintainer
 business_value: high
 effort: xs
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables:
   - tools/deck/render.py
 ---
@@ -151,6 +152,6 @@ And the failure line, forced by putting a directory where the image goes:
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-11 | (shipped) | **Shipped in `0.2.1`.** **One of the three fixes this release is for**, and the only one nobody reported. |
-| 2026-08-11 | → done | **Fixed by removing two of the three resolutions rather than correcting all three.** `make_probe` is the only place `--out` becomes a directory now, and `measure` and `cmd_shots` read theirs back off the probe — which is also what makes the fixture possible without a browser, and it is shown failing against the shape it replaced. One thing was found while forcing a failure to read the new message: `os.path.exists` is true of a directory, so a folder at the destination had been reporting as a successful `0 KB` capture; the test is `isfile` plus a size. Both example decks gate green and the four render-backed suites pass. Owed to the release: this is a `v0.1` patch and `v0.1.6` is still uncut, so it joins T-090 and T-091 there. |
+| 2026-08-11 | → done | **Fixed by removing two of the three resolutions rather than correcting all three.** `make_probe` is the only place `--out` becomes a directory now, and `measure` and `cmd_shots` read theirs back off the probe — which is also what makes the fixture possible without a browser, and it is shown failing against the shape it replaced. One thing was found while forcing a failure to read the new message: `os.path.exists` is true of a directory, so a folder at the destination had been reporting as a successful `0 KB` capture; the test is `isfile` plus a size. Both example decks gate green and the four render-backed suites pass. Owed to the release: this is a `PH1` patch and `v0.1.6` is still uncut, so it joins T-090 and T-091 there. |
 | 2026-08-11 | → planned | Three steps and a shape. The three call sites all wrote `out = out or out_dir(deck)`, which reads as resolution and is not — the `or` takes the override verbatim, so only the default ever reached `abspath`. Resolving at each site would fix the bug and leave three places to keep in step. |
-| 2026-08-11 | → proposed | Created from [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md), found while rendering the decks to look at them. `v0.1` by [`../CLAUDE.md`](../CLAUDE.md)'s rule — a defect in the published plugin, in a command [`build.md`](../skills/htmldeck/references/build.md) §3 tells an author to run. Nobody reported it, which is the precedent `v0.1.5` set rather than an argument against: a defect found by running the project's own instructions is still a defect an adopter can hit. |
+| 2026-08-11 | → proposed | Created from [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md), found while rendering the decks to look at them. `PH1` by [`../CLAUDE.md`](../CLAUDE.md)'s rule — a defect in the published plugin, in a command [`build.md`](../skills/htmldeck/references/build.md) §3 tells an author to run. Nobody reported it, which is the precedent `v0.1.5` set rather than an argument against: a defect found by running the project's own instructions is still a defect an adopter can hit. |

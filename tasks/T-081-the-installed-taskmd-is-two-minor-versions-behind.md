@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-062, T-073, T-079, T-080]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.5
 owner: the project owner
 business_value: medium
 effort: xs
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - tasks/_task-template.md
   - tasks/_audit-umbrella-template.md
@@ -98,7 +99,7 @@ Three defects in this project's own templates, none of which any earlier release
 | :--- | :--- | :--- |
 | `TEMPLATE UNREACHABLE` | the audit umbrella template sat one directory down, under a `_templates` folder, and `create` lists `_`-prefixed files directly in `tasks/` — so nothing would ever offer it | Moved to [`_audit-umbrella-template.md`](_audit-umbrella-template.md) |
 | `TEMPLATE FIELD` | `_task-template.md` offered five `type` values; the schema allows seven — `decision` and `audit` were missing | Both added |
-| `TEMPLATE FIELD` | the same template offered `WP<n> \| final \| none` for `work_package`, which predates the release split entirely | `v0.1 \| v0.2 \| v0.3` added, `WP1`–`WP3` spelled out |
+| `TEMPLATE FIELD` | the same template offered `WP<n> \| final \| none` for `work_package`, which predates the release split entirely | `PH1 \| PH2 \| PH3` added, `WP1`–`WP3` spelled out |
 
 **A template is the one document that cannot be checked by using it**, which is why all three
 survived: nothing reads a template except a person copying it, and a person copying it fixes the
@@ -147,4 +148,4 @@ drifts (**L-13**), and drift is exactly what happened. It is now gated, so the c
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | **The update paid for itself in one run**: three defects in this project's own templates, none visible to any earlier release, and one of them a template `create` would never have offered. It also settled both upstream tasks by measurement rather than by waiting — T-079's fix shipped and is verified on this board, T-080's has not and was reproduced against 0.3.0. The failure mode this task was raised for is the one it demonstrated: `TASK-WORKFLOW.md` asserted that `index` does not filter closed blockers, which was true when written and false the moment the plugin moved. |
-| 2026-08-10 | → proposed | Raised from [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md), which needed the version to explain why a predicted output line was absent. `medium` rather than low because the failure mode is silent: the gates pass, and the project records superseded behaviour as current — which it has already done once and called **L-59**. `xs` because the update is one command and the reading after it is bounded by two releases. `v0.2` under the release split: a minor fix. |
+| 2026-08-10 | → proposed | Raised from [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md), which needed the version to explain why a predicted output line was absent. `medium` rather than low because the failure mode is silent: the gates pass, and the project records superseded behaviour as current — which it has already done once and called **L-59**. `xs` because the update is one command and the reading after it is bounded by two releases. `PH2` under the release split: a minor fix. |

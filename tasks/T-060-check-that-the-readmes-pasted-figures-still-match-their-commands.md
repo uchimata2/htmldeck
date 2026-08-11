@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-050, T-056, T-067]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.4
 owner: the project owner
 business_value: high
 effort: m
 created: 2026-08-09
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - tools/docs/figures.py
 ---
@@ -237,4 +238,4 @@ limitation on every run rather than leaving a reader to infer coverage it does n
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | Specify, plan, implement and review in one pass. `tools/docs/figures.py` partitions all 17 fences and 9 prose numerals; `PUBLISHING.md` §6 now names the command instead of asking a person to diff five outputs by eye. All five criteria met. **Three prose figures were passing against rule IDs** (`163` vs `DS-163`, `113` vs `DS-113`, `221` vs `DS-221`) and one fixture was dead because it quoted a figure instead of deriving it — both found by looking at what the check matched rather than at whether it was green (**L-55**). The residual numeral-to-corpus binding is carried by [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md). |
-| 2026-08-09 | → proposed | Raised by [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md), which re-derived the README's figures and found **six already stale** and one place where the document contradicted itself. **v0.2, not v0.1:** the figures are correct today, so a first release is not blocked by the absence of a check that keeps them correct — holding publication for it would be exactly the failure the release split exists to prevent. Carries one finding that shapes the work before it starts: the `task.py check` block counts every pointer in the repository and therefore moves on almost every documentation commit, so a naive byte-comparison would fail constantly and be turned off within a week. |
+| 2026-08-09 | → proposed | Raised by [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md), which re-derived the README's figures and found **six already stale** and one place where the document contradicted itself. **PH2, not PH1:** the figures are correct today, so a first release is not blocked by the absence of a check that keeps them correct — holding publication for it would be exactly the failure the release split exists to prevent. Carries one finding that shapes the work before it starts: the `task.py check` block counts every pointer in the repository and therefore moves on almost every documentation commit, so a naive byte-comparison would fail constantly and be turned off within a week. |

@@ -77,12 +77,18 @@ and the reason the config exists.*
 
 Two things about this project's use of it that the config does not say:
 
-- **`work_package` is a grouping key, and its values are a release phase.** Open tasks use `v0.1`,
-  `v0.2` or `v0.3`; closed tasks keep the `WP1`–`WP3` packages they were worked under, which are
-  history rather than the current plan. `docs/BRIEF.md` *Release phases* is the decision behind the
-  split, and which phase a new task takes is `../CLAUDE.md`'s rule: `v0.1` only when a defect in the
-  published plugin reopens it, `v0.3` for anything `l` or `xl`, and — since v0.2 shipped — for
+- **`work_package` is a grouping key, and its values are a release phase.** Tasks use `PH1`, `PH2` or
+  `PH3`; the `WP1`–`WP3` packages belong to tasks worked under the research and design phases, which
+  are history rather than the current plan. `docs/BRIEF.md` *Release phases* is the decision behind
+  the split, and which phase a new task takes is `../CLAUDE.md`'s rule: `PH1` only when a defect in
+  the published plugin reopens it, `PH3` for anything `l` or `xl`, and — since PH2 shipped — for
   everything else that is not such a defect.
+- **`work_package` is the phase; `shipped_in` is the version.** They are different questions and they
+  give different answers: `PH3` work shipping in `0.2.1` is the rule working, since a patch takes the
+  next number on the published line whatever phase its tasks belong to. The phases were named `v0.1`
+  to `v0.3` until 2026-08-12, which made that sentence unreadable (**L-69**, **T-099**). **Never
+  write a phase with a `v`.** `shipped_in` is set at close, holds a bare version with no `v`, and is
+  the first release tag containing the commit that closed the task — `unreleased` until there is one.
 - **`deliverables:` is the only place an unproduced output is written as a path.** Front-matter is not
   prose, so `tools/docs/refcheck.py` does not scan it; in §2 and §3 of a task, name a not-yet-existing
   output rather than pointing at it (`` `R7-printable-mode.md`, under `docs/research/` ``), or the

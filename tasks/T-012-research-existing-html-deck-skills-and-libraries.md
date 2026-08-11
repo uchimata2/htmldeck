@@ -8,9 +8,10 @@ parent: null
 blocked_by: []
 related: [T-009, T-014, T-015]
 work_package: WP1
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-06
-updated: 2026-08-06
+updated: 2026-08-12
 deliverables: [docs/research/R4-prior-art.md]
 ---
 

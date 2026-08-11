@@ -7,10 +7,11 @@ phase: review
 parent: null
 blocked_by: [T-014, T-020]
 related: [T-002, T-005]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.1.0
 owner: maintainer
 created: 2026-08-04
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables:
   - skills/htmldeck/references/critique.md
   - tools/deck/critique.py

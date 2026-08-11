@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: []
 related: []
-work_package: v0.1 | v0.2 | v0.3 | WP1 | WP2 | WP3 | final | none
+work_package: PH1 | PH2 | PH3 | WP1 | WP2 | WP3 | final | none
 owner: the project owner
 business_value: critical | high | medium | low
 effort: xs | s | m | l | xl
@@ -19,8 +19,9 @@ deliverables: []
 <!--
 The lifecycle, which edge to use, and where each fact lives: the taskmd skill's METHOD.md, served
 by the installed plugin. The field names and allowed values are this project's own schema:
-`.taskmd/config.md`. Do not add `children:` or `blocks:` — both are derived. After filling this in,
-run:
+`.taskmd/config.md`. Do not add `children:` or `blocks:` — both are derived. `work_package` is the
+**phase**, never a version; `shipped_in` is the version, added at close and not written here. After
+filling this in, run:
     taskmd index
     taskmd check
 -->

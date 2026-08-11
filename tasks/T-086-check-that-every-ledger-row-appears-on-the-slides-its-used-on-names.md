@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-082, T-071]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.2.0
 owner: the project owner
 business_value: medium
 effort: m
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables: [tools/deck/spec.py, examples/sort-window/sort-window.foundation.md]
 ---
 
@@ -133,4 +134,4 @@ other two candidates lost.
 | 2026-08-10 | → planned | §2 written, and the open question closed with it: `spec.py`, optional third argument, `SPEC-5`. The specification pointed at `content.py` — *decide from which one already reads the deck per slide* — and that is the candidate the reasoning rejected, on which ledger each tool holds rather than on which one can read a slide. §3 carries all three. |
 | 2026-08-10 | → specified | §1 was complete when the task was raised and the owner ratified its one contested question the same day, so the status was the only thing missing. `deliverables:` declared at the same time, per `TASK-WORKFLOW.md` §6.2. |
 | 2026-08-10 | (no change) | Owner settled the scope on the day it was raised: **exact direction only**. Widening `content.py`'s figure pattern to gate completeness as well was put and declined, so the `Out:` line above is a decision rather than a proposal and is not to be re-argued at `plan`. |
-| 2026-08-10 | → proposed | Raised from [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) §3, which decided the checkable half of the ledger question and left the implementation here rather than growing a fix to a worked example into a tool change. `m` and not `s`: no existing tool takes both a foundation and a deck, so this adds an input to a signature rather than a rule to a list. `v0.2`, being under the `l` line. |
+| 2026-08-10 | → proposed | Raised from [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) §3, which decided the checkable half of the ledger question and left the implementation here rather than growing a fix to a worked example into a tool change. `m` and not `s`: no existing tool takes both a foundation and a deck, so this adds an input to a signature rather than a rule to a list. `PH2`, being under the `l` line. |

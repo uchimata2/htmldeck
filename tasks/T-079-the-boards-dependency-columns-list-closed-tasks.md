@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-031, T-062, T-063, T-073]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.5
 owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables: []
 ---
 
@@ -128,7 +129,7 @@ on 2026-08-09:
 
 ```
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability
-preflight every deck ships with | `v0.3` | `proposed` | `specify` | - | - | T-002 | - |
+preflight every deck ships with | `PH3` | `proposed` | `specify` | - | - | T-002 | - |
 ```
 
 (One row, wrapped here, with the trailing *Related* column cut.)
@@ -213,4 +214,4 @@ evidence that both directions landed, not just the one the symptom showed.
 | 2026-08-10 | (implement) | **Writing it up found a third instance, in this repository.** `TASK-WORKFLOW.md` §*Generated views* asserted that a closed task is absent from both columns — as **current behaviour**, not as an aim. That was true of `task.py` and false from the moment T-062 swapped the tool, and it survived because the sentence reads correctly and nothing checks a prose claim against a generated file. Amended to say which surfaces observe the rule and which does not. **This is the argument for T-079 twice over: the same swap broke a column and a paragraph, and neither had a watcher.** Generalised as **L-59**. |
 | 2026-08-10 | (implement) | **Proposal drafted, not sent.** Reading `cli.py` moved the argument off this project's precedent and onto taskmd's own inconsistency: `context` and the blocked-last sort both resolve a dependency edge against the far end's status, and `index` alone does not — `taskmd context T-019` prints *open, no blocker outstanding* for the row the board marks `Blocked By: T-002`. That is a stronger case than T-031, which is now the closing note rather than the argument. One thing the symptom did not show came out of the same read: `names` is computed before any filtering, so filtering only the cells would leave a column of dashes — the defect `index_block`'s docstring says was already fixed for `work_package`. |
 | 2026-08-10 | (specify) | **The one open question closed by the owner, as recommended: drop, not mark.** Step 1 of the plan is done and the reason is in §3. What remains is the proposal itself and sending it — the change is upstream's to make, so this task cannot close on a green run here. |
-| 2026-08-10 | → proposed | Raised by the owner from a status review that found the board and `taskmd list --open` disagreeing about three rows. `medium` because it misleads exactly the reader the board exists for and the cost is one column, not because anything is broken downstream — the sort is already right; `s` because the decision is small, the precedent is written, and the change itself is upstream's. `v0.2` under the release split set the same day: a minor fix. |
+| 2026-08-10 | → proposed | Raised by the owner from a status review that found the board and `taskmd list --open` disagreeing about three rows. `medium` because it misleads exactly the reader the board exists for and the cost is one column, not because anything is broken downstream — the sort is already right; `s` because the decision is small, the precedent is written, and the change itself is upstream's. `PH2` under the release split set the same day: a minor fix. |

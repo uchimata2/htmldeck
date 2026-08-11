@@ -8,9 +8,10 @@ parent: T-042
 blocked_by: []
 related: [T-029, T-031, T-037, T-039, T-045]
 work_package: none
+shipped_in: 0.1.0
 owner: the project owner
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables:
   - tools/docs/refcheck.py
   - tasks/TASK-WORKFLOW.md

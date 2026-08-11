@@ -7,10 +7,11 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-050, T-052, T-042]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.1.0
 owner: the project owner
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables:
   - docs/PUBLISHING.md
   - README.md
@@ -295,7 +296,7 @@ Both deck sizes survive: 220.6 KB rounds to the stated 221, and 212.0 is exact.
 | *The reference deck* | **changed** | Em dash after a link, and one aphorism formula (§32): *"a rubric that has never been tested is a rubric that passes everything"* became the concrete claim it gestures at. All eleven figures kept |
 | *The deck nobody authored by hand* | **changed** | Two em dashes, one of them attaching the deck's own title. The title itself is a proper name and was not touched, per the skill's *secondhand text* guidance |
 | *Reviewing a deck* | **changed** | Two em dashes bracketing the five dimension names, now parentheses. The staccato *"run over the parent, none"* was **kept**: it is a real contrast, not manufactured drama (§31) |
-| *What does not exist yet* | **changed** | Three em dashes, one aphorism (*"a README describing the plan is not a README"*), and one bullet deleted for being made false by this task. The v0.1 contents were **stale**, still naming build and critique mode as outstanding |
+| *What does not exist yet* | **changed** | Three em dashes, one aphorism (*"a README describing the plan is not a README"*), and one bullet deleted for being made false by this task. The PH1 contents were **stale**, still naming build and critique mode as outstanding |
 | *Where to go next* | **changed, minimally** | One em dash in a table cell became a semicolon. Table otherwise identical |
 | *Licence* | **changed, minimally** | One em dash after **MIT**. The OFL paragraph was read and **left alone**: it is specific, correctly hedged, and carries no tell |
 | Fenced blocks, all 13 | **unchanged by the pass** | Proven by a region diff, not asserted. Three were later corrected under step 6 as a separate, recorded pass |
@@ -322,7 +323,7 @@ them would have removed the strongest human signal on the page.
 - **[T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)** — the six
   stale figures were corrected in place, but nothing keeps them correct. The obligation to re-derive
   now exists in `PUBLISHING.md` §6, unchecked, which is the state this repository treats as a claim.
-  Raised to **v0.2**: the figures are right today, so a first release is not blocked by it. The
+  Raised to **PH2**: the figures are right today, so a first release is not blocked by it. The
   general finding is **L-52** in [`../docs/LESSONS.md`](../docs/LESSONS.md).
 
 ## Log

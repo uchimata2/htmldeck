@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-046, T-061]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.2
 owner: the project owner
 business_value: high
 effort: m
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-12
 deliverables:
   - tools/docs/refcheck.py
   - tasks/TASK-WORKFLOW.md

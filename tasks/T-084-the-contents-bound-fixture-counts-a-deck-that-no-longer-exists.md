@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-036, T-069, T-078, T-083]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.1.5
 owner: the project owner
 business_value: high
 effort: s
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - tools/deck/contents_bound.py
 ---
@@ -132,4 +133,4 @@ against, so its specification stands and its `blocked_by` edge is released.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | The fixture was wrong and the deck was not: thirteen is twelve slides plus T-069's colophon, counted off the deck. **Left hard-coded on purpose** — this assertion exists to trip when the deck moves, so deriving it would make it agree with everything; what it owed was saying which deck it describes, which is now in the comment. The bound came back **16 / 24**, the same pair T-036 was specified on, so that task's edge is released and its specification stands untouched. Shipped in **`v0.1.5`**. |
-| 2026-08-10 | → proposed | Raised from [T-078](T-078-write-down-the-release-sequence.md), which had to run each gate it was about to write down and found this one refusing to start. Attribution measured by checking the pre-T-069 deck out and back. `high` because a refusing self-test is a check nobody is getting an answer from, and T-036 is queued behind the measurement; `s` because the message names the deck and both numbers, so the work is one decision about which of them is wrong. `v0.2`: a fix. |
+| 2026-08-10 | → proposed | Raised from [T-078](T-078-write-down-the-release-sequence.md), which had to run each gate it was about to write down and found this one refusing to start. Attribution measured by checking the pre-T-069 deck out and back. `high` because a refusing self-test is a check nobody is getting an answer from, and T-036 is queued behind the measurement; `s` because the message names the deck and both numbers, so the work is one decision about which of them is wrong. `PH2`: a fix. |

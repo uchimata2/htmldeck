@@ -391,17 +391,17 @@ replaces enforced variety, with the template generator satisfying it later.
 ## Release phases — set 2026-08-09, split into three 2026-08-10
 
 **Three, drawn by two questions, both the owner's.** The first, on 2026-08-09: *is this between here
-and a plugin someone can install and use?* Everything it separated out shipped as **v0.1**. The
-second, on 2026-08-10, once v0.1 had closed and all fourteen remaining tasks sat under one label:
+and a plugin someone can install and use?* Everything it separated out shipped as **PH1**. The
+second, on 2026-08-10, once PH1 had closed and all fourteen remaining tasks sat under one label:
 *is this a dependency, or a minor-to-moderate fix — or is it a big piece of new capability?* The
-first is **v0.2**, the second **v0.3**. The board is [`../tasks/README.md`](../tasks/README.md),
+first is **PH2**, the second **PH3**. The board is [`../tasks/README.md`](../tasks/README.md),
 grouped by these names; this section is the decision, that page is its current state.
 
 **What made the second split necessary, and where the line actually fell.** A phase every open task
 belongs to has stopped sorting anything. Worse, **seven of the fourteen carried no estimate at all**,
 so the board's own ranking — value, then effort — was ordering half a backlog and leaving the rest in
 id order. Estimating those seven first is what made the line drawable, and it fell in one place:
-**at `l`.** Every task estimated `l` or `xl` is v0.3; everything `m` or below is v0.2. Size and the
+**at `l`.** Every task estimated `l` or `xl` is PH3; everything `m` or below is PH2. Size and the
 fix-versus-feature reading named the same five tasks, and where they could have disagreed — T-036 and
 T-071, both `m` and both arguably new behaviour rather than repair — **size won, because it is the
 half of the rule that can be checked.**
@@ -412,12 +412,12 @@ four steps left in [T-016](../tasks/T-016-the-interaction-and-motion-layer.md) w
 interaction layer does not reach — 3D, a frame-rate figure, the ruleset amendment the first forces —
 and every one of them was between the project and a release for no reader's benefit.
 
-### v0.1 — a working plugin, published
+### PH1 — a working plugin, published
 
 **The whole of it is: a deck gets written, a deck gets critiqued, and a stranger can install it.**
 Everything below is load-bearing for that sentence and nothing else is in.
 
-| | Why it is in v0.1 |
+| | Why it is in PH1 |
 | :--- | :--- |
 | ~~[T-016](../tasks/T-016-the-interaction-and-motion-layer.md) — the editorial split rule, its last step~~ **done 2026-08-09** | §5.3 gave build mode the mechanics of progressive disclosure and no editorial test, so without it the generator had to guess what belongs behind a click. **DS-230** now names the four kinds tier two comes in and closes the list, and **DS-231** is the one clause of DS-161 a check can decide. Struck through rather than deleted: what a release phase contained is a fact about the decision, and an item that vanishes is one nobody can check was delivered. |
 | ~~[T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md) — build mode~~ **done 2026-08-09** | The gate, the ruleset, both contracts and the reference deck all existed to serve a generator that did not. It does now: [`shell/`](../shell) is the reference deck with its content cut out, `tools/deck/shell.py` instantiates it, and `skills/htmldeck/references/build.md` is stage 6. [`examples/sort-window/`](../examples/sort-window) is a 12-slide deck built through it, with both specification files and its sources beside it. |
@@ -434,7 +434,7 @@ Everything below is load-bearing for that sentence and nothing else is in.
 | ~~[T-085](../tasks/T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md) — the reference deck did not carry the shell it defines~~ **done 2026-08-10** | `shell/` is cut losslessly out of this deck, so the two are one fact in two files, and nothing watched the pair except a command nobody ran. T-069 reworded a comment in `shell/components.css` and edited the deck two commits later without writing the shell back. Two lines, neither able to render differently, which is why it survived. **Three decks-worth of the same failure in one day says the routine was the defect**, and `PUBLISHING.md` §8 now names both examples. Shipped in **`v0.1.5`**. |
 | ~~[T-090](../tasks/T-090-spec5-cannot-parse-a-descriptive-slide-label.md) — SPEC-5 reports `NO SUBJECT` on a deck it was given~~ **done 2026-08-11** | The ledger-to-deck check identified slides by an `aria-label` of *Slide N* and nothing else, so a deck labelled *Slide 1 of 12: …* parsed to no slides and the rule reported the same verdict as a run with no deck at all — a whole gate skipped with no signal to the author. **The fourth finding of one shape**, the reference deck's own conventions encoded as though they were the contract, after `build.md`'s `--out` flag, DS-064's probe and `theme.py`'s self-test. Measured rather than reasoned: **0 pattern matches against 12** on one file. *Deck supplied and unreadable* is now a FAIL naming the cause, and it stayed inside the three verdict values because a fourth would fall outside the partition `audit.py`'s absent-subject fixture makes — the trade [T-076](../tasks/T-076-a-verdict-producer-that-exits-instead-of-reporting.md) settled the same way. Shipped in **`0.2.1`**. |
 | ~~[T-091](../tasks/T-091-build-md-documents-icons-set-as-a-single-pair.md) — `build.md` documents `icons --set` in a form that fails past one icon~~ **done 2026-08-11** | `--set` takes one comma-separated argument and §2 showed a single pair, so an author with three icons followed the documentation and got an error naming an icon rather than the argument shape that lost it. [T-074](../tasks/T-074-the-documented-render-command-does-not-exist.md)'s shape exactly: **a documented procedure nobody had executed**, found by an adopter because the maintainer's own runs use the form that works. Repaired one level above the report — `option()` reads `argv.index`, so **every** flag this parser takes was dropping a repeat in silence, and refusing it there covers four more flags than the one that was reported. |
-| ~~[T-008](../tasks/T-008-package-document-and-publish.md) — package and publish~~ **done 2026-08-09** | The deploy, and v0.1 is closed by it: public at `github.com/uchimata2/htmldeck`, released as `v0.1.0`, `master` as the default branch. Three things were not as recorded. `master` was never divergent, so publishing was a fast-forward that discarded nothing. The marketplace entry did not exist, so the install route promised in 2026-08-07 was half-built. And 119 of 121 commits carried a personal email, rewritten to a noreply address before the first push, which is irreversible afterwards. |
+| ~~[T-008](../tasks/T-008-package-document-and-publish.md) — package and publish~~ **done 2026-08-09** | The deploy, and PH1 is closed by it: public at `github.com/uchimata2/htmldeck`, released as `v0.1.0`, `master` as the default branch. Three things were not as recorded. `master` was never divergent, so publishing was a fast-forward that discarded nothing. The marketplace entry did not exist, so the install route promised in 2026-08-07 was half-built. And 119 of 121 commits carried a personal email, rewritten to a noreply address before the first push, which is irreversible afterwards. |
 
 | ~~[T-094](../tasks/T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) — `render.py shots --out` with a relative path writes nothing~~ **done 2026-08-11** | Three call sites wrote `out = out or out_dir(deck)`, which reads as resolution and is not: the `or` takes the override verbatim, so only the *default* reached the function where `abspath` lives, and `--screenshot=` arrived at Chrome as a relative path. Two shots printed `FAILED` and named the file rather than the cause, at the step that closes the visual gate. Fixed by deleting two of the three resolutions — `make_probe` is the only one now, and everything downstream takes its directory off the probe it returns, which is also what lets a fixture reach it with no browser. **[T-074](../tasks/T-074-the-documented-render-command-does-not-exist.md)'s flag one layer down**: that task made `--out` parse. Found by looking at a deck, which is the step CLAUDE.md rule 6 exists for. Shipped in **`0.2.1`**. |
 
@@ -447,7 +447,7 @@ belong to.** Caught at the release it would have broken, and written into
 
 *The phase has reopened seven times, and **the sixth was the first from outside this repository**:
 T-090 and T-091 were raised on 2026-08-11 by htmldeck's first adopting project, against the published
-`0.2.0`. Both arrived labelled `v0.3` and were moved, because the phase a defect belongs to is decided
+`0.2.0`. Both arrived labelled `PH3` and were moved, because the phase a defect belongs to is decided
 by where it was hit and not by its size — the effort line at `l` sorts the two phases that are not the
 published one. The five before them were the project's own: `v0.1.1` through `v0.1.5`. **The seventh
 is T-094, and it is the project's own again** — found on 2026-08-11 while rendering a deck to look at
@@ -456,14 +456,14 @@ it, which is where a defect in the looking step would have to be found.*
 **Nothing is owed to this phase.** All three went out in `0.2.1`, by
 [`PUBLISHING.md`](PUBLISHING.md) §8 and nothing else.
 
-### v0.2 — the dependencies, and every minor and moderate fix
+### PH2 — the dependencies, and every minor and moderate fix
 
-**None of these is a shipping defect** — an adopter's deck cannot hit one, or it would be a v0.1
+**None of these is a shipping defect** — an adopter's deck cannot hit one, or it would be a PH1
 patch by the rule in [`../CLAUDE.md`](../CLAUDE.md). They are the cheap half of what is already
 known: defects in the project's own tooling, items that sharpen its record, and the two moderate
 gaps in capability it already ships. Each is written up well enough to be picked up cold.
 
-**v0.2 ships on the two tasks this project can close, and the other two stay open behind it — the
+**PH2 ships on the two tasks this project can close, and the other two stay open behind it — the
 owner's decision, 2026-08-10.** Of the four open when the phase was last counted,
 [T-086](../tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
 [T-087](../tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) are
@@ -471,12 +471,12 @@ closable here. [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md
 purpose — it bites past 24 slides and the target case is 12 — and
 [T-080](../tasks/T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) waits on a proposal
 this project does not get to schedule, upstream's own item being `proposed` as of that date. **Both
-keep the `v0.2` label rather than moving to v0.3**, because the line between the two phases is drawn
+keep the `PH2` label rather than moving to PH3**, because the line between the two phases is drawn
 on effort and both are `m`: a task reassigned for being inconvenient would cost the one half of the
-rule that can be checked. So the release states what it ships without, as v0.1's did, and the phase
+rule that can be checked. So the release states what it ships without, as PH1's did, and the phase
 stays open behind the release that carries most of it.
 
-**Shipped as `v0.2.0` on 2026-08-11**, carrying T-086 and T-087. T-036 and T-080 kept the `v0.2`
+**Shipped as `v0.2.0` on 2026-08-11**, carrying T-086 and T-087. T-036 and T-080 kept the `PH2`
 label and stayed open behind it, exactly as decided above. **T-080 closed on 2026-08-12**, once
 upstream's half had shipped and the remaining change was this project's own; **T-036 is the one
 still open**, parked for the reason given above and not for want of a decision. Running §8's sequence for this release
@@ -522,22 +522,22 @@ edited away, because a rule that was vacuous and then was not is worth knowing a
 rather than anyone remembering: T-058 through T-063 on 2026-08-09 and 2026-08-10, then T-068 through
 T-070 on 2026-08-10 — **the same drift, caught the same way**, which is the argument for the sweep.
 T-071 and T-073 followed later that day, and T-076 through T-080 on 2026-08-10 from work done rather
-than from planning — T-080 while writing T-079's proposal, which is the shortest that gap has ever been. The five rows that left for v0.3 are below, not deleted: what a phase contained
+than from planning — T-080 while writing T-079's proposal, which is the shortest that gap has ever been. The five rows that left for PH3 are below, not deleted: what a phase contained
 is a fact about the decision.*
 
-### v0.3 — the bigger tasks and the new capabilities
+### PH3 — the bigger tasks and the new capabilities
 
-**Each is a capability the system does not reach, and each is `l` or `xl`.** They sat in v0.2 until
+**Each is a capability the system does not reach, and each is `l` or `xl`.** They sat in PH2 until
 2026-08-10 and moved on size, not on merit: batching ten cheap items behind the largest five would
-delay all ten for the benefit of none. **Two of the five — T-057 and T-041 — are things v0.1 was
+delay all ten for the benefit of none. **Two of the five — T-057 and T-041 — are things PH1 was
 explicitly announced without**, which is the same judgement reached twice by different routes. The
-third item on that announcement, printed contents past 24 slides, stayed in v0.2: it is `m`, and the
+third item on that announcement, printed contents past 24 slides, stayed in PH2: it is `m`, and the
 line is drawn on size rather than on which release last mentioned something.
 
 **The first sentence stopped being true on 2026-08-11 and is kept rather than rewritten.** Two rows
-below are here **against** the size rule — T-089 at `xs` and T-092 at `s` — because v0.2 has shipped,
+below are here **against** the size rule — T-089 at `xs` and T-092 at `s` — because PH2 has shipped,
 and reopening a shipped phase is reserved for defects an adopter hit. Size still draws the line
-between v0.2 and v0.3 while both are open; what changed is that only one of them still is. The rule a
+between PH2 and PH3 while both are open; what changed is that only one of them still is. The rule a
 new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 
 | | What it adds |
@@ -551,14 +551,14 @@ new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 | [T-097](../tasks/T-097-ds-004s-excusal-says-degrade-gracefully-is-unobservable-and-ds-009-gave-it-an-instrument.md) | DS-004's excusal calls *other engines degrade gracefully* unobservable. DS-009 gave the degradation half of it an instrument, and the account cannot notice an excusal that goes stale without its rule becoming checked. |
 | ~~[T-070](../tasks/T-070-the-quick-view-for-a-source-document.md)~~ **done 2026-08-11** | A source rendered inside the deck, as an overlay. **The format set is decided by three admission tests rather than enumerated** — embeds with no external reference, executes no script, stays inside the size bound — after the owner extended it past Markdown and plain text on 2026-08-10. Unblocked the same day: it owns the linked form T-069 deliberately left as plain text. |
 | ~~[T-088](../tasks/T-088-a-figure-in-a-sentence-naming-no-field-goes-stale-unwatched.md)~~ **done 2026-08-11** | A figure stating a property of a **named artifact** becomes decidable, so it stops living in `figures.py`'s `unanchored` bucket. Raised 2026-08-11 from the `v0.2.0` release, which found **three** stale figures in there by hand. `l` because the deliverable is a false-alarm measurement over every document the gate reads, in the shape [T-068](../tasks/T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) used to *reject* the wider rule — a recorded rejection meets its criteria too. The owner allowed a manifest on the day it was raised, which removes the inference half and leaves the measurement. |
-| ~~[T-089](../tasks/T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md)~~ **done 2026-08-11** | The disposal a withdrawn task gets, written down, and **T-072 reconstituted as the `cancelled` stub the rule then requires**. Raised 2026-08-11 from the pre-`v0.3` audit, which found the ID hole by counting index rows against filenames. **`xs`, and here against the size rule** — the owner placed it, because v0.2 has shipped and reopening a shipped phase is reserved for adopter defects, which this is not. |
+| ~~[T-089](../tasks/T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md)~~ **done 2026-08-11** | The disposal a withdrawn task gets, written down, and **T-072 reconstituted as the `cancelled` stub the rule then requires**. Raised 2026-08-11 from the pre-`PH3` audit, which found the ID hole by counting index rows against filenames. **`xs`, and here against the size rule** — the owner placed it, because PH2 has shipped and reopening a shipped phase is reserved for adopter defects, which this is not. |
 | ~~[T-093](../tasks/T-093-ds-005s-check-bans-the-one-esm-route-r6-measured-as-working.md)~~ **done 2026-08-11** | DS-005's predicate matched the call rather than the argument, so it forbade `import(blob:)` — the one route R6 §6 measured as working, and the one DS-006 exists to make work. Raised and closed the same day out of T-019, which found it by writing a preflight row that probes `import()` and noticing the row could never ship. The rule was right and is unamended. |
 | ~~[T-092](../tasks/T-092-product-feedback-from-the-first-external-deck.md)~~ **done 2026-08-11** | Six things a real deck owner found wanting after presenting-quality review, routed to the tasks that own them — **four of the six to tasks that are `done`**, each of which built exactly what it specified. Raised 2026-08-11 by the first adopting project, and kept apart from its defect reports on purpose: filed together, the interesting half gets triaged as bugs and closed by making code match documentation. It carries two named collisions it does not rule on — DS-105 forbids the `file://` link a deck needs to reach its own sources, and DS-092's four-sentence mark cannot hold a descriptive source line — and one reusable lesson: **a workaround recorded as a local deviation is a product finding nobody has reported yet.** `s`, and here by T-089's placement rather than by size. |
 
 *The largest thing on the board is T-070 and the least certain to be worth it is also T-070 — its own
 raising note says so. That pair is why the phase exists rather than an ordering within one.*
 
-**What v0.1 shipped without, stated rather than discovered.** No 3D. No frame-rate figure on any
+**What PH1 shipped without, stated rather than discovered.** No 3D. No frame-rate figure on any
 machine. Seven of R6's nine glitch-free conditions unimplemented, and a console error that does not
 stop a deck still invisible to the gate. Printed contents pages that do not continue past 24 slides.
 Those belong in the release notes, not in a list of things to fix first.

@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-060]
-work_package: v0.2
+work_package: PH2
+shipped_in: 0.2.0
 owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables: [tools/docs/figures.py]
 ---
 
@@ -200,4 +201,4 @@ label is bound to the label and not to the row. Narrower than what T-060 left, a
 | :--- | :--- | :--- |
 | 2026-08-10 | → in_progress → done | Built, and the second half was built twice. Binding a prose numeral to the label its command prints beside it works on the README and closed the two live false passes; the same rule pointed at five documents that paraphrase produced **30 false alarms against 5 true bindings**, because a gate's labels are ordinary English. Rebuilt to bind on the claim's own construction — *part of whole*, plus the remainder — which reaches all five, catches the drift in each, and false-alarms nowhere. `EXCLUDED_PROSE` is now empty: its last entry was derived instead of excused (**L-63**). |
 | 2026-08-10 | → specified → planned | Specified and planned in one sitting. The open question is **decided against changing the README**: a value's label is already printed beside it, so the binding is the command's labels against the document's words. Specifying it found the defect **live on the page** — `12` reported `compared` off `8-12` inside a `DS-082` note, twice — which moves this from a false pass needing a second coincidence to one already firing. The owner's clause needed one thing the scope did not anticipate: `BRIEF.md` states the coverage figure **both** live and as dated history, so the live/historical split had to be structural (a `**done**` row is skipped) rather than a choice of which documents to read. |
-| 2026-08-10 | → proposed | Raised by [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)'s review, which closed with this gap named rather than buried. **v0.2**: the figures on the published page are correct today and T-060's check keeps the stale-figure class red, so nothing shipped is wrong — this closes a *false pass* that needs a second coincidence to bite. `medium` rather than `high` for that reason, and because T-060 already removed the instance that was actually firing. |
+| 2026-08-10 | → proposed | Raised by [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)'s review, which closed with this gap named rather than buried. **PH2**: the figures on the published page are correct today and T-060's check keeps the stale-figure class red, so nothing shipped is wrong — this closes a *false pass* that needs a second coincidence to bite. `medium` rather than `high` for that reason, and because T-060 already removed the instance that was actually firing. |

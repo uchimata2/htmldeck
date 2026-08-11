@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-090]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.2.1
 owner: the project owner
 business_value: medium
 effort: xs
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables:
   - tools/deck/shell.py
   - skills/htmldeck/references/build.md
@@ -115,5 +116,5 @@ maintainer's own runs use the form that works.
 | :--- | :--- | :--- |
 | 2026-08-11 | (shipped) | **Shipped in `0.2.1`.** **One of the three fixes this release is for**, and the second raised from outside the repository. |
 | 2026-08-11 | → done | All three criteria met, and **the fix is one level up from the report**. `option()` reads `argv.index`, so every flag this parser takes drops a repeat in silence - `--set` is the one an adopter happened to repeat, because it is the one the documentation showed a single pair of. Refusing the repeat where the value is lost covers `--title`, `--theme`, `--stage-icons` and `--sheet` at the same time, which is the difference between fixing this report and fixing its family. Awaiting a `v0.1.6` patch release with [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md). |
-| 2026-08-11 | (specify) | **Moved to `v0.1`** with [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md), for the same rule and by the same route: an adopter following the shipped `build.md` hit it on `0.2.0`. The precedent is [T-074](T-074-the-documented-render-command-does-not-exist.md), a documented command that did not exist, shipped as `v0.1.4` — a procedure the plugin ships is part of the plugin. |
+| 2026-08-11 | (specify) | **Moved to `PH1`** with [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md), for the same rule and by the same route: an adopter following the shipped `build.md` hit it on `0.2.0`. The precedent is [T-074](T-074-the-documented-render-command-does-not-exist.md), a documented command that did not exist, shipped as `v0.1.4` — a procedure the plugin ships is part of the plugin. |
 | 2026-08-11 | → proposed | Raised by the AI Training 06 (DentalPro) project alongside [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md), found in the same build. Kept as its own task rather than folded into that one: they share a discovery session and nothing else, and a finding fixed inside another task's record makes that record claim a criterion it never had. |

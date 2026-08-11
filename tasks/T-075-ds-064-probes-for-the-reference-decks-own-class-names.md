@@ -7,12 +7,13 @@ phase: review
 parent: null
 blocked_by: []
 related: [T-051, T-065, T-066]
-work_package: v0.1
+work_package: PH1
+shipped_in: 0.1.4
 owner: the project owner
 business_value: critical
 effort: m
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-12
 deliverables:
   - tools/deck/render.py
   - tools/deck/contract.py
@@ -233,4 +234,4 @@ Doing (1) alone would close the report and leave the seventh instance live for t
 | :--- | :--- | :--- |
 | 2026-08-10 | → done | **Shipped in `v0.1.4`. The reported defect was one row; the fixture that was supposed to make it impossible could see two of the package's eight verdict producers.** DS-064's probe now finds its subject by contracted component, and a deck it cannot find one on is undecided rather than failed — the reporter's own direction, and the right one. The larger half is that `audit.self_test` derived its producer list from `globals()`, so `contract.py`, `contrast.py`, `theme.py`, `component.py` and `printpages.py` were outside the absent-subject discipline entirely. Moving the derivation to the directory found four modules nobody was looking at and **nine further rows reporting conformance about subjects that were not there**, six of them in `theme.py` reading clean on a document with no theme. DS-229 became the first rule legitimately declared in both tables, which retires a check T-066 had already argued was wrong. The reference deck's account is byte-identical and the seeded deck still fails its four. Generalised as **L-57**. |
 | 2026-08-10 | → in_progress | Specified and planned in one pass, since the mechanism was already reproduced when the task was raised. The plan's first step — splitting the render out of `scale_verdicts` — is what made every later step possible: while a producer needs a browser, no fixture can ask it what it does with nothing. |
-| 2026-08-10 | → proposed | **Reported from another project against the published `v0.1.3` and confirmed by reading the probe.** The reported half is that DS-064's selector names two composition classes belonging to the reference deck, so a conforming deck's prose is invisible and the rule fails a deck that satisfies it — the contract inverted, with `render.py`'s selector as the real specification. **The half found while confirming it is larger**: `contract.py` produces verdict rows that `check.py` consumes and sits entirely outside the absent-subject fixture, because `audit.self_test` derives its producer list from `globals()` — one module. T-066's criterion that an undeclared producer fails the run is therefore true only of the module it was written in, which is T-065's hand-run sweep repeated as a scoping error. `v0.1` because the published gate fails a legitimate deck for a rule it passes, and DS-064 was explicitly ruled **out** of T-065 as a genuine finding about that project's deck — it was not. |
+| 2026-08-10 | → proposed | **Reported from another project against the published `v0.1.3` and confirmed by reading the probe.** The reported half is that DS-064's selector names two composition classes belonging to the reference deck, so a conforming deck's prose is invisible and the rule fails a deck that satisfies it — the contract inverted, with `render.py`'s selector as the real specification. **The half found while confirming it is larger**: `contract.py` produces verdict rows that `check.py` consumes and sits entirely outside the absent-subject fixture, because `audit.self_test` derives its producer list from `globals()` — one module. T-066's criterion that an undeclared producer fails the run is therefore true only of the module it was written in, which is T-065's hand-run sweep repeated as a scoping error. `PH1` because the published gate fails a legitimate deck for a rule it passes, and DS-064 was explicitly ruled **out** of T-065 as a genuine finding about that project's deck — it was not. |
