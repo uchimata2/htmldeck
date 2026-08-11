@@ -335,6 +335,31 @@ The half nobody rewrites is still the shipped shell, and this is the check that 
 strayed out of the slides. The print mode counts **13 pages, 12 slides plus a contents sheet**,
 under `--print-pages`.
 
+### The sources open inside the deck
+
+Click a source in any provenance mark and the document opens over the slide. All three are in the
+file — Marnfield's service calendar, its throughput model, its fleet and cost model — so they open
+with the network off, on a machine that has never seen the folder they came from. Press `Escape`, or
+move to the next slide, and you are back in the argument. It works in the reading view too, which is
+where someone reads the deck alone.
+
+They cost **9 556 bytes, 4.1% of the file**. That is what three Markdown documents come to once
+rendered; you can see the arithmetic before committing to it:
+
+```bash
+python tools/deck/quickview.py list examples/sort-window/sort-window.html
+```
+
+Nothing is embedded unless you ask for it by name. `quickview.py plan` prints what each source would
+add and what the deck would weigh, and writes nothing at all — the version that writes is `add`. The
+reason for that order is worth saying plainly: a deck built from a client's internal document would
+carry that document to everyone who receives the deck, and no amount of convenience is worth making
+that the default.
+
+Each quick view says what it is in its own header: a rendering carried in the deck, not the original
+file. A source that arrives as HTML has its scripts, styles and ids taken out before it goes in, and
+the run tells you how many of each it removed.
+
 **What the batch loop caught that a final pass would not have.** The specification failed DS-091 on
 nine of twelve headlines and DS-092 on four bottom lines, and both were found and rewritten *before
 any HTML existed*. After that, three defects came out of looking at rendered slides rather than out
