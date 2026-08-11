@@ -32,10 +32,11 @@ happened.
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.3` | `proposed` | `specify` | - | - | - | T-005, T-016, T-019, T-042 |
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `v0.3` | `proposed` | `specify` | T-053 | - | - | T-005, T-037, T-043, T-051 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.3` | `proposed` | `specify` | T-016 | - | - | T-007, T-016, T-019, T-033 |
-| [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | - | T-019, T-069, T-071 |
+| [T-070](T-070-the-quick-view-for-a-source-document.md) | The quick view — a source document rendered inside the deck | `v0.3` | `proposed` | `specify` | - | - | - | T-019, T-069, T-071, T-092 |
 | [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | - | T-063, T-073, T-079, T-081 |
-| [T-088](T-088-a-figure-in-a-sentence-naming-no-field-goes-stale-unwatched.md) | A figure in a sentence that names no field goes stale unwatched, and two just did | `v0.3` | `proposed` | `specify` | - | - | - | T-060, T-068, T-077, T-082 |
+| [T-088](T-088-a-figure-in-a-sentence-naming-no-field-goes-stale-unwatched.md) | A figure in a sentence that names no field goes stale unwatched, and two just did | `v0.3` | `proposed` | `specify` | - | - | - | T-060, T-068, T-077, T-082, T-092 |
 | [T-089](T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md) | A task withdrawn on a false premise was deleted rather than cancelled, and no rule said which | `v0.3` | `proposed` | `specify` | - | - | - | T-003, T-069 |
+| [T-092](T-092-product-feedback-from-the-first-external-deck.md) | Product feedback from the first external deck — six needs, all against tasks that already exist | `v0.3` | `proposed` | `specify` | - | - | - | T-004, T-016, T-069, T-070, T-082, T-088 |
 
 ## Closed
 
@@ -44,7 +45,7 @@ happened.
 | [T-001](T-001-decide-the-font-strategy-embedded-subsets-or-a-syste.md) | Decide the font strategy: embedded subsets or a system stack | `WP2` | `done` | `review` | - | - | - | T-005, T-013, T-024 |
 | [T-002](T-002-build-mode-the-self-contained-deck-generator.md) | Build mode — the self-contained deck generator | `v0.1` | `done` | `review` | - | - | T-019 | T-003, T-004, T-005, T-006, T-007, T-015, T-016, T-017, T-018, T-020, T-021, T-023, T-024, T-026, T-027, T-028 |
 | [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) | Brief mode — elicit the six-section prompt | `WP3` | `cancelled` | `specify` | - | - | - | T-002, T-015, T-020, T-027, T-089 |
-| [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | `v0.1` | `done` | `review` | - | - | - | T-002, T-005, T-020, T-022, T-023, T-026, T-042, T-047, T-048 |
+| [T-004](T-004-critique-mode-blunt-section-by-section-review.md) | Critique mode — blunt section-by-section review | `v0.1` | `done` | `review` | - | - | - | T-002, T-005, T-020, T-022, T-023, T-026, T-042, T-047, T-048, T-092 |
 | [T-005](T-005-build-check-the-gate-the-deck-must-pass.md) | Build check — the gate the deck must pass | `WP3` | `done` | `review` | - | T-040 | - | T-001, T-002, T-004, T-007, T-016, T-017, T-018, T-019, T-021, T-022, T-023, T-025, T-027, T-028, T-032, T-034, T-036, T-037, T-038, T-039, T-041, T-042, T-043, T-047, T-048, T-050, T-051, T-053, T-054, T-055, T-058 |
 | [T-006](T-006-decide-the-chart-strategy.md) | Decide the chart strategy | `WP2` | `done` | `review` | - | - | - | T-002, T-013, T-016, T-017, T-024 |
 | [T-007](T-007-define-the-parametric-theme-layer.md) | Define the parametric theme layer | `WP2` | `done` | `review` | - | - | - | T-002, T-005, T-016, T-021, T-024, T-057, T-059 |
@@ -56,7 +57,7 @@ happened.
 | [T-013](T-013-research-offline-safe-assets-and-licences.md) | Research offline-safe assets — icons, illustration, fonts, diagram tooling | `WP1` | `done` | `review` | - | - | - | T-001, T-006, T-014, T-017 |
 | [T-014](T-014-synthesise-research-into-the-design-system-reference.md) | Synthesise the research into the htmldeck design-system reference | `WP1` | `done` | `review` | - | T-022 | - | T-009, T-010, T-011, T-012, T-013, T-020, T-021, T-023, T-024, T-025, T-037, T-038, T-039, T-047, T-049 |
 | [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | `WP2` | `done` | `review` | - | - | - | T-002, T-003, T-012, T-020, T-027, T-050, T-061 |
-| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | `v0.1` | `done` | `review` | - | T-057 | - | T-002, T-005, T-006, T-007, T-017, T-021, T-024, T-032, T-035, T-041, T-057, T-058, T-069 |
+| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | `v0.1` | `done` | `review` | - | T-057 | - | T-002, T-005, T-006, T-007, T-017, T-021, T-024, T-032, T-035, T-041, T-057, T-058, T-069, T-092 |
 | [T-017](T-017-define-the-portability-contract.md) | Define the portability contract — what "opens anywhere and works" actually permits | `WP1` | `done` | `review` | - | - | - | T-002, T-005, T-006, T-013, T-016, T-018, T-019, T-049 |
 | [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | `WP1` | `done` | `review` | - | - | - | T-002, T-005, T-017, T-021, T-029, T-032, T-034 |
 | [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | `WP1` | `done` | `review` | - | - | - | T-002, T-003, T-004, T-014, T-015, T-022, T-023, T-026, T-027, T-030 |
@@ -88,7 +89,7 @@ happened.
 | [T-048](T-048-gate-the-hard-rules-only-judgement-can-reach.md) | Gate the twenty-five hard rules only a judgement pass can reach | `WP2` | `done` | `review` | T-042 | T-052 | - | T-004, T-005, T-023, T-026, T-027, T-037 |
 | [T-049](T-049-reconcile-the-session-memory-with-the-research.md) | Reconcile the session memory with what the research settled and the owner last said | - | `done` | `review` | T-042 | - | - | T-014, T-017 |
 | [T-050](T-050-write-the-repository-readme.md) | Write the repository README — what exists, what does not, and how to run it | `final` | `done` | `review` | T-042 | - | - | T-005, T-008, T-015, T-024, T-056, T-060 |
-| [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | - | `done` | `review` | T-044 | - | - | T-005, T-038, T-043, T-053, T-054, T-065, T-066, T-075 |
+| [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | - | `done` | `review` | T-044 | - | - | T-005, T-038, T-043, T-053, T-054, T-065, T-066, T-075, T-090 |
 | [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | Settle the two hard-judge failures the checklist's first run found in the reference deck | - | `done` | `review` | T-048 | - | - | T-024, T-028, T-040, T-044, T-056 |
 | [T-053](T-053-enforce-the-headline-ds-091-requires.md) | Enforce the headline DS-091 requires, and excuse the fragment count no check can reach | - | `done` | `review` | - | T-054, T-055 | - | T-005, T-037, T-038, T-051 |
 | [T-055](T-055-a-variant-that-leaves-malformed-markup.md) | Close the slide-is-not-a-section variant's open tag, so it tests the tag and not parser repair | `v0.2` | `done` | `review` | T-053 | - | - | T-005, T-038 |
@@ -100,11 +101,11 @@ happened.
 | [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) | Retire the pre-split task tool and repoint what points at it | `v0.2` | `done` | `review` | - | - | - | T-046, T-061, T-063, T-073, T-079, T-081 |
 | [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `v0.2` | `done` | `review` | - | - | - | T-062, T-073, T-079, T-080 |
 | [T-064](T-064-the-tools-crash-when-the-deck-is-on-another-drive.md) | The tools crash when the deck is on a different drive from the plugin | `v0.1` | `done` | `review` | - | - | - | T-008, T-061, T-065 |
-| [T-065](T-065-four-rules-still-fail-a-deck-for-not-having-their-subject.md) | Four rules still fail a deck for not having their subject | `v0.1` | `done` | `review` | - | - | - | T-051, T-064, T-066, T-075 |
-| [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | - | T-051, T-065, T-075 |
+| [T-065](T-065-four-rules-still-fail-a-deck-for-not-having-their-subject.md) | Four rules still fail a deck for not having their subject | `v0.1` | `done` | `review` | - | - | - | T-051, T-064, T-066, T-075, T-090 |
+| [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | - | T-051, T-065, T-075, T-090 |
 | [T-067](T-067-the-published-upgrade-instructions-do-not-upgrade.md) | The published upgrade instructions do not upgrade anything | `v0.1` | `done` | `review` | - | - | - | T-056, T-060, T-061 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `done` | `review` | - | - | - | T-060, T-088 |
-| [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | T-070 | T-016, T-070, T-084, T-085, T-089 |
+| [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | T-070 | T-016, T-070, T-084, T-085, T-089, T-092 |
 | [T-071](T-071-the-intermediate-specifications-carry-their-references.md) | The intermediate specifications carry the sources they rest on | `v0.2` | `done` | `review` | - | - | - | T-070, T-082, T-083, T-085, T-086 |
 | [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `done` | `review` | - | - | - | T-062, T-063, T-074, T-077, T-079, T-080, T-081 |
 | [T-074](T-074-the-documented-render-command-does-not-exist.md) | The documented render command does not exist, and the tools write into their own install | `v0.1` | `done` | `review` | - | - | - | T-073 |
@@ -114,11 +115,13 @@ happened.
 | [T-078](T-078-write-down-the-release-sequence.md) | Write down the release sequence, which lives only in four task logs | `v0.2` | `done` | `review` | - | - | - | T-008, T-056, T-084, T-085 |
 | [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns list closed tasks, so open rows read as blocked | `v0.2` | `done` | `review` | - | - | - | T-031, T-062, T-063, T-073, T-080, T-081 |
 | [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) | The installed taskmd is two minor versions behind, so the gates run rules that have been superseded | `v0.2` | `done` | `review` | - | - | - | T-062, T-073, T-079, T-080 |
-| [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) | The worked example's figure ledger omits figures that reach slides, so the ledger cannot be the authority it is treated as | `v0.2` | `done` | `review` | - | - | - | T-071, T-086, T-087, T-088 |
+| [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) | The worked example's figure ledger omits figures that reach slides, so the ledger cannot be the authority it is treated as | `v0.2` | `done` | `review` | - | - | - | T-071, T-086, T-087, T-088, T-092 |
 | [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) | The generated example deck fails a hard rule and nothing recorded it | `v0.1` | `done` | `review` | - | - | - | T-021, T-071, T-075, T-084, T-085 |
 | [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed | `v0.2` | `done` | `review` | - | - | - | T-036, T-069, T-078, T-083 |
 | [T-085](T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md) | The reference deck does not carry the shell it defines, and its sprite is out of sync | `v0.1` | `done` | `review` | - | - | - | T-069, T-071, T-078, T-083 |
-| [T-086](T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) | Check that every figure ledger row appears on the slides its Used on names | `v0.2` | `done` | `review` | - | - | - | T-071, T-082, T-087 |
+| [T-086](T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) | Check that every figure ledger row appears on the slides its Used on names | `v0.2` | `done` | `review` | - | - | - | T-071, T-082, T-087, T-090 |
 | [T-087](T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) | Sweep the reference deck's figure ledger for the pattern T-082 found | `v0.2` | `done` | `review` | - | - | - | T-082, T-086 |
+| [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md) | SPEC-5 reports NO SUBJECT on a fully built deck whose slides carry a descriptive aria-label | `v0.1` | `done` | `review` | - | - | - | T-051, T-065, T-066, T-086, T-091 |
+| [T-091](T-091-build-md-documents-icons-set-as-a-single-pair.md) | build.md documents shell.py icons --set as a single pair, and it takes one comma-separated argument | `v0.1` | `done` | `review` | - | - | - | T-090 |
 
 <!-- taskmd:end -->
