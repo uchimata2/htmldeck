@@ -1753,6 +1753,36 @@ accident of file order.
    narrows its own input by a landmark inherits this, and the symptom is always a clean verdict
    rather than an error.
 
+### L-69 — A phase name is not a version number
+
+Caught 2026-08-11, at the release it would have broken. This backlog is split into phases named
+`v0.1`, `v0.2` and `v0.3`, and `v0.1` means *a defect in the published plugin*. Three such fixes had
+been recorded across nine task logs and [`BRIEF.md`](BRIEF.md) as awaiting **`v0.1.6`**. The published
+plugin was at **`0.2.0`**.
+
+**Tagging `v0.1.6` would have shipped the three fixes to nobody.** A plugin manager compares versions;
+a tag below the installed one is never offered. Every document in the repository would have said the
+release was out, the release page would have existed, and no adopter would have received it. The
+symptom is unavailable to any gate here: `figures.py` compares figures to the commands that print
+them, and nothing compares a *planned* version to a *published* one.
+
+**A phase says what kind of work this is. A version says what an installed copy compares itself
+against.** They were only ever the same string, and they came apart the moment a later phase shipped
+first — which is exactly what this project's own splitting rule is designed to allow.
+
+**How to apply.**
+
+1. **Read the published version before tagging, not the phase the tasks carry.** `plugin.json` and
+   the newest tag; the phase label is not evidence about either.
+2. **A patch takes the next patch number on the published line, whatever phase its tasks belong to.**
+   `0.2.0` plus three v0.1-phase fixes is `0.2.1`.
+3. **The tell in a record is *awaiting vX.Y.Z* where X.Y.Z is not greater than what is installed.**
+   Worth a grep at release time; it is cheaper than the alternative, which is finding out from an
+   adopter who never got the fix.
+4. Renaming the phases would end the ambiguity and costs a rewrite of the whole backlog. The sentence
+   at the point where somebody picks a number is what actually gets read, so that is where it went:
+   [`../CLAUDE.md`](../CLAUDE.md), beside the release status.
+
 ---
 
 ## Writing

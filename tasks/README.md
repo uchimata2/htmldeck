@@ -28,10 +28,13 @@ happened.
 | ID | Title | Work Package | Status | Phase | Parent | Children | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `v0.2` | `proposed` | `specify` | T-034 | - | T-005, T-034, T-042, T-084 |
-| [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.3` | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042 |
+| [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.3` | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097 |
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `v0.3` | `proposed` | `specify` | T-053 | - | T-005, T-037, T-043, T-051 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.3` | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033 |
 | [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | T-063, T-073, T-079, T-081 |
+| [T-095](T-095-static-variants-builds-its-static-half-from-a-hand-kept-list.md) | static_variants builds its static half from a hand-kept list, so a new producer is outside the suite | `v0.3` | `proposed` | `specify` | - | - | T-066, T-075, T-093, T-096 |
+| [T-096](T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | One command that runs every checker under tools/ and reports what it skipped, with a reason | `v0.3` | `proposed` | `specify` | - | - | T-078, T-083, T-084, T-095 |
+| [T-097](T-097-ds-004s-excusal-says-degrade-gracefully-is-unobservable-and-ds-009-gave-it-an-instrument.md) | DS-004's excusal says degrading gracefully is unobservable, and DS-009 gave half of it an instrument | `v0.3` | `proposed` | `specify` | - | - | T-017, T-019, T-041 |
 
 ## Closed
 
@@ -53,9 +56,9 @@ happened.
 | [T-014](T-014-synthesise-research-into-the-design-system-reference.md) | Synthesise the research into the htmldeck design-system reference | `WP1` | `done` | `review` | - | T-022 | T-009, T-010, T-011, T-012, T-013, T-020, T-021, T-023, T-024, T-025, T-037, T-038, T-039, T-047, T-049 |
 | [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | `WP2` | `done` | `review` | - | - | T-002, T-003, T-012, T-020, T-027, T-050, T-061 |
 | [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | `v0.1` | `done` | `review` | - | T-057 | T-002, T-005, T-006, T-007, T-017, T-021, T-024, T-032, T-035, T-041, T-057, T-058, T-069, T-092 |
-| [T-017](T-017-define-the-portability-contract.md) | Define the portability contract — what "opens anywhere and works" actually permits | `WP1` | `done` | `review` | - | - | T-002, T-005, T-006, T-013, T-016, T-018, T-019, T-049 |
+| [T-017](T-017-define-the-portability-contract.md) | Define the portability contract — what "opens anywhere and works" actually permits | `WP1` | `done` | `review` | - | - | T-002, T-005, T-006, T-013, T-016, T-018, T-019, T-049, T-097 |
 | [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | `WP1` | `done` | `review` | - | - | T-002, T-005, T-017, T-021, T-029, T-032, T-034 |
-| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `v0.3` | `done` | `review` | - | - | T-005, T-017, T-041, T-057, T-070, T-093, T-094 |
+| [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `v0.3` | `done` | `review` | - | - | T-005, T-017, T-041, T-057, T-070, T-093, T-094, T-097 |
 | [T-020](T-020-model-the-authoring-pipeline-not-just-the-modes.md) | Model the authoring pipeline, not just the three modes | `WP1` | `done` | `review` | - | - | T-002, T-003, T-004, T-014, T-015, T-022, T-023, T-026, T-027, T-030 |
 | [T-021](T-021-the-reflow-view-and-the-resolution-contract.md) | Build the reflow view and enforce the resolution contract | `WP2` | `done` | `review` | - | - | T-002, T-005, T-007, T-014, T-016, T-018, T-024, T-025, T-028, T-032, T-037, T-039, T-083 |
 | [T-022](T-022-split-the-design-system-from-its-rationale.md) | Split the operative ruleset from its rationale, and give every rule an ID | `WP1` | `done` | `review` | T-014 | - | T-004, T-005, T-020, T-023, T-025, T-037, T-039 |
@@ -98,7 +101,7 @@ happened.
 | [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `v0.2` | `done` | `review` | - | - | T-062, T-073, T-079, T-080 |
 | [T-064](T-064-the-tools-crash-when-the-deck-is-on-another-drive.md) | The tools crash when the deck is on a different drive from the plugin | `v0.1` | `done` | `review` | - | - | T-008, T-061, T-065 |
 | [T-065](T-065-four-rules-still-fail-a-deck-for-not-having-their-subject.md) | Four rules still fail a deck for not having their subject | `v0.1` | `done` | `review` | - | - | T-051, T-064, T-066, T-075, T-090 |
-| [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | T-051, T-065, T-075, T-090 |
+| [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `v0.1` | `done` | `review` | - | - | T-051, T-065, T-075, T-090, T-095 |
 | [T-067](T-067-the-published-upgrade-instructions-do-not-upgrade.md) | The published upgrade instructions do not upgrade anything | `v0.1` | `done` | `review` | - | - | T-056, T-060, T-061 |
 | [T-068](T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) | Bind a prose figure to the field that produces it, not to the whole output | `v0.2` | `done` | `review` | - | - | T-060, T-088 |
 | [T-069](T-069-extend-the-provenance-mark-to-multiple-sources.md) | Extend the provenance mark to multiple sources, and decide where deck-wide sources go | `v0.2` | `done` | `review` | - | - | T-016, T-070, T-072, T-084, T-085, T-089, T-092, T-093 |
@@ -107,15 +110,15 @@ happened.
 | [T-072](T-072-a-corrupted-comment-opener-in-shell-components-css.md) | A corrupted comment opener in shell/components.css would swallow the rule beneath it | - | `cancelled` | `specify` | - | - | T-069, T-089 |
 | [T-073](T-073-decide-whether-to-keep-refcheck-now-that-upstream-has-ruled.md) | Decide whether to keep refcheck now that upstream has ruled on bare paths | `v0.2` | `done` | `review` | - | - | T-062, T-063, T-074, T-077, T-079, T-080, T-081 |
 | [T-074](T-074-the-documented-render-command-does-not-exist.md) | The documented render command does not exist, and the tools write into their own install | `v0.1` | `done` | `review` | - | - | T-073, T-094 |
-| [T-075](T-075-ds-064-probes-for-the-reference-decks-own-class-names.md) | DS-064 probes for the reference deck's own class names, and contract.py is outside the fixture | `v0.1` | `done` | `review` | - | - | T-051, T-065, T-066, T-076, T-083 |
+| [T-075](T-075-ds-064-probes-for-the-reference-decks-own-class-names.md) | DS-064 probes for the reference deck's own class names, and contract.py is outside the fixture | `v0.1` | `done` | `review` | - | - | T-051, T-065, T-066, T-076, T-083, T-095 |
 | [T-076](T-076-a-verdict-producer-that-exits-instead-of-reporting.md) | A verdict producer that exits the process instead of reporting a row | `v0.2` | `done` | `review` | - | - | T-075 |
 | [T-077](T-077-report-a-figure-exclusion-that-outlived-its-numeral.md) | Report a figure exclusion that outlived the numeral it was written for | `v0.2` | `done` | `review` | - | - | T-060, T-073, T-088 |
-| [T-078](T-078-write-down-the-release-sequence.md) | Write down the release sequence, which lives only in four task logs | `v0.2` | `done` | `review` | - | - | T-008, T-056, T-084, T-085 |
+| [T-078](T-078-write-down-the-release-sequence.md) | Write down the release sequence, which lives only in four task logs | `v0.2` | `done` | `review` | - | - | T-008, T-056, T-084, T-085, T-096 |
 | [T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md) | The board's dependency columns list closed tasks, so open rows read as blocked | `v0.2` | `done` | `review` | - | - | T-031, T-062, T-063, T-073, T-080, T-081 |
 | [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) | The installed taskmd is two minor versions behind, so the gates run rules that have been superseded | `v0.2` | `done` | `review` | - | - | T-062, T-073, T-079, T-080 |
 | [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) | The worked example's figure ledger omits figures that reach slides, so the ledger cannot be the authority it is treated as | `v0.2` | `done` | `review` | - | - | T-071, T-086, T-087, T-088, T-092 |
-| [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) | The generated example deck fails a hard rule and nothing recorded it | `v0.1` | `done` | `review` | - | - | T-021, T-071, T-075, T-084, T-085 |
-| [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed | `v0.2` | `done` | `review` | - | - | T-036, T-069, T-078, T-083 |
+| [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) | The generated example deck fails a hard rule and nothing recorded it | `v0.1` | `done` | `review` | - | - | T-021, T-071, T-075, T-084, T-085, T-096 |
+| [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed | `v0.2` | `done` | `review` | - | - | T-036, T-069, T-078, T-083, T-096 |
 | [T-085](T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md) | The reference deck does not carry the shell it defines, and its sprite is out of sync | `v0.1` | `done` | `review` | - | - | T-069, T-071, T-078, T-083 |
 | [T-086](T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) | Check that every figure ledger row appears on the slides its Used on names | `v0.2` | `done` | `review` | - | - | T-071, T-082, T-087, T-090 |
 | [T-087](T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) | Sweep the reference deck's figure ledger for the pattern T-082 found | `v0.2` | `done` | `review` | - | - | T-082, T-086 |
@@ -124,7 +127,7 @@ happened.
 | [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md) | SPEC-5 reports NO SUBJECT on a fully built deck whose slides carry a descriptive aria-label | `v0.1` | `done` | `review` | - | - | T-051, T-065, T-066, T-086, T-091 |
 | [T-091](T-091-build-md-documents-icons-set-as-a-single-pair.md) | build.md documents shell.py icons --set as a single pair, and it takes one comma-separated argument | `v0.1` | `done` | `review` | - | - | T-090 |
 | [T-092](T-092-product-feedback-from-the-first-external-deck.md) | Product feedback from the first external deck — six needs, all against tasks that already exist | `v0.3` | `done` | `review` | - | - | T-004, T-016, T-069, T-070, T-082, T-088 |
-| [T-093](T-093-ds-005s-check-bans-the-one-esm-route-r6-measured-as-working.md) | DS-005's check bans the one ESM route R6 measured as working | `v0.3` | `done` | `review` | - | - | T-019, T-069 |
+| [T-093](T-093-ds-005s-check-bans-the-one-esm-route-r6-measured-as-working.md) | DS-005's check bans the one ESM route R6 measured as working | `v0.3` | `done` | `review` | - | - | T-019, T-069, T-095 |
 | [T-094](T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) | render.py shots --out with a relative path writes nothing and says FAILED | `v0.1` | `done` | `review` | - | - | T-019, T-074 |
 
 <!-- taskmd:end -->

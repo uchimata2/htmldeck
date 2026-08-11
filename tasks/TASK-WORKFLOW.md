@@ -127,6 +127,26 @@ Two things worth repeating because they cost this project real time:
 here ever carried the field and the register was never created, so it was documentation of a feature
 this project did not use.*
 
+### 4.1 A foreign tracker's id is written with its owner's name
+
+`T-nnn` means *this* board. Where a task record names an id belonging to another project — taskmd's,
+an adopter's — **write whose it is every time**: `taskmd's T-112`, `their T-111`. Never a bare
+`T-112`.
+
+**Because the two numbering lines collide, and the collision arrives without warning.** This
+repository's records already name taskmd's `T-095`, `T-102`, `T-111` and `T-112` from
+[T-079](T-079-the-boards-dependency-columns-list-closed-tasks.md),
+[T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) and
+[T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md), and `T-095` was the next free
+number here on 2026-08-11. Every one of those mentions is already written with its owner's name,
+which is why nothing broke; the rule exists so that stays true rather than staying lucky. Nothing
+mechanical can catch it — `check` resolves markdown links and front-matter edges, and a bare id in
+prose is neither, so a reader is the only instrument.
+
+*Two more ids in the record belong to nobody: `T-900` and `T-901` are fixtures inside
+[T-031](T-031-stop-the-index-blocks-column-listing-closed-tasks.md)'s evidence. Deliberately far outside
+the allocated range, which is the same rule solving the same problem.*
+
 ---
 
 ## 5. The log
