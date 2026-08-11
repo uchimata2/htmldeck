@@ -32,7 +32,9 @@ on a known slide instead of deciding what a figure is.
 
 **The deck argument is optional on purpose.** This tool is meant to run before a slide is written,
 let alone built; a required deck would break its own instructions. With no deck SPEC-5 reports no
-subject, exactly as the other four do when theirs is absent.
+subject, exactly as the other four do when theirs is absent. **A deck that was supplied and parsed
+to no slides is not that**, and since T-090 it is a FAIL naming the cause: the two arrived at one
+verdict, and a rule that skips itself must not be able to say so in the words for *not applicable*.
 
 Run it before writing any slide, and again after a deviation is written back. Pure standard
 library (**L-07**).
@@ -56,7 +58,13 @@ SOURCES_FIELD = re.compile(r"^-\s+\*\*Sources\.\*\*\s*(.*)$", re.M)
 # outside the run cannot silently shift every row by one.
 SLIDE_SECTION = re.compile(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>(.*?)</section>',
                            re.S | re.I)
-SLIDE_NUMBER = re.compile(r'aria-label="Slide\s+(\d+)"', re.I)
+# **A number-bearing prefix, not the whole accessible name.** This closed on the quote until T-090,
+# so it matched a label that is NOTHING BUT `Slide N` - the form both decks in this repository
+# happen to ship. An adopter's deck labelled `Slide 1 of 12: <title>` parsed to no slides at all,
+# and SPEC-5 then reported the same `NO SUBJECT` as a run with no deck: a whole gate skipped with
+# nothing said. Neither DESIGN-SYSTEM.md nor COMPONENT-CONTRACT.md §3.2 constrains the wording, and
+# the longer name is the better one, so the pattern was what needed widening.
+SLIDE_NUMBER = re.compile(r'aria-label="Slide\s+(\d+)\b', re.I)
 
 WORD_NUMBERS = "one two three four five six seven eight nine ten eleven twelve".split()
 MONTHS = ("january february march april may june july august september october "
@@ -215,7 +223,15 @@ def verdicts(foundation_text, slides_text, deck_html=""):
     # name. A `Used on` naming a slide the deck does not have is a FAIL and not an absent subject:
     # the cell is a claim about a deck, and a claim about a slide that does not exist is the
     # strongest form of the error this rule is for.
+    # **A deck that was supplied and could not be read is its own verdict, and it is a FAIL.**
+    # `absent` and `unparsed` used to arrive at the same `None`, and only one of the two is benign:
+    # `NO SUBJECT` reads as *not applicable*, so the author of an unreadable deck was told nothing
+    # (T-090). It stays inside the three verdict values rather than becoming a fourth, because
+    # `audit.py`'s absent-subject fixture partitions every producer's rows on `True in oks` and
+    # `False in oks` - a fourth value would fall in neither and put this family back outside the
+    # fixture, which is the failure T-066 and T-075 exist to prevent.
     on_deck = slide_text(deck_html) if deck_html else {}
+    unreadable = bool(deck_html) and not on_deck
     unbuilt, unshown, claimed = [], [], 0
     if on_deck:
         for row in ledger:
@@ -244,8 +260,10 @@ def verdicts(foundation_text, slides_text, deck_html=""):
                 "slide %d omits %s" % (n, s) for n, s in contradicted)),
          None if not scored else not contradicted),
         ("SPEC-5", "every ledger row reaches the slides it names%s" % (
+            " - DECK UNREADABLE: a deck was supplied and no slide parsed from it, so this rule "
+            "did not run. Every slide needs aria-label=\"Slide N ...\"" if unreadable else
             "" if not (unbuilt + unshown) else " - %s" % "; ".join(unbuilt + unshown)),
-         None if not claimed else not (unbuilt or unshown)),
+         False if unreadable else None if not claimed else not (unbuilt or unshown)),
     ]
 
 
@@ -283,6 +301,36 @@ def self_test():
     if [r for r, ok in without.items() if ok is not (None if r == "SPEC-5" else True)]:
         sys.exit("SELF-TEST FAILED: the run with no deck did not leave SPEC-1..4 alone and "
                  "SPEC-5 undecided - %r" % without)
+
+    # **The label the adopter's deck carried, and the label this repository's two decks carry.**
+    # Both parse, and the widened pattern is only worth having if the second still does - a fix
+    # that trades one accepted form for another is not a widening (T-090).
+    for label in ('aria-label="Slide 2 of 2: what the grant buys"',
+                  'aria-label="Slide 2 - b"',
+                  'aria-label="Slide 2"'):
+        wide = deck.replace('aria-label="Slide 2"', label)
+        got = dict((r, ok) for r, _w, ok in verdicts(foundation, good, wide))
+        if got["SPEC-5"] is not True:
+            sys.exit("SELF-TEST FAILED: SPEC-5 reported %r against a slide labelled %s. The rule "
+                     "decides on any accessible name that names the slide's number; a name it "
+                     "cannot read is the defect T-090 reported, not a deck at fault"
+                     % (got["SPEC-5"], label))
+
+    # **Absent and unparsed must not arrive at one verdict, and this is the assertion that says so.**
+    # It is the whole of T-090: four rules passed on the adopter's deck, so it was plainly being
+    # read, and SPEC-5 alone reported the words a two-argument run prints. A future widening of
+    # SLIDE_NUMBER that re-collapses them fails here rather than in an adopter's build.
+    unreadable_row = [(w, ok) for r, w, ok in
+                      verdicts(foundation, good, "<section class='slide'><h2>a</h2></section>")
+                      if r == "SPEC-5"]
+    (what, ok), = unreadable_row
+    if ok is not False:
+        sys.exit("SELF-TEST FAILED: SPEC-5 reported %r for a deck that was supplied and parsed to "
+                 "no slides. That is the state T-090 found collapsed into NO SUBJECT, and it has "
+                 "to be its own" % ok)
+    if "UNREADABLE" not in what or "supplied" not in what:
+        sys.exit("SELF-TEST FAILED: the unparsed-deck verdict reads %r, which does not name the "
+                 "cause. A reader has to be able to tell it from *not applicable*" % what)
 
     seeded = {
         "SPEC-1": ("## Slide 1 - a\n\n- **Archetype.** A-01\n\n"

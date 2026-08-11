@@ -1890,6 +1890,19 @@ def self_test():
     # discipline is about rows nobody makes choose between undecided and satisfied, not about which
     # command happens to print them (T-071).
     rows += spec.verdicts("", "")
+    # **An absent subject and an unreadable one are two states, and this is where they stay apart.**
+    # The line above supplies no deck, which leaves SPEC-5 undecided and is correct. A deck that WAS
+    # supplied and parsed to no slides reported that same `None` until T-090 - so a rule could skip
+    # itself entirely and say so in the words for *not applicable*, on a deck whose other four rows
+    # were passing. The assertion lives here as well as in `spec.py` because this is the file that
+    # holds every producer to what an absent subject means, and the collapse is a claim about that.
+    absent_deck = dict((r, ok) for r, _w, ok in spec.verdicts("", ""))
+    unread_deck = dict((r, ok) for r, _w, ok in
+                       spec.verdicts("", "", "<section class=\"slide\"><h2>a</h2></section>"))
+    if absent_deck["SPEC-5"] is not None or unread_deck["SPEC-5"] is not False:
+        sys.exit("SELF-TEST FAILED: SPEC-5 reports %r with no deck and %r for a deck it could not "
+                 "read. Those are different states and only one of them is benign (T-090)"
+                 % (absent_deck["SPEC-5"], unread_deck["SPEC-5"]))
     modelled_sweep = set(contract.PROBE_FOUND_NOTHING) | {"vw", "vh", "want"}
     unmodelled_sweep = sorted(set().union(*[r.read for r in sweep_rows]) - modelled_sweep)
     if unmodelled_sweep:
