@@ -12,7 +12,7 @@ owner: the project owner
 business_value: high
 effort: s
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-12
 deliverables:
   - docs/DESIGN-RATIONALE.md
   - docs/LESSONS.md
@@ -43,17 +43,23 @@ need.
 
 **The six, and where each lands**
 
-| # | The need | Belongs to | That task's status |
-| :-- | :--- | :--- | :--- |
-| N-1 | A source line that says what the document is and can be opened — not `D5 §2` | **T-070** as a scoping input, **T-069** as the origin | `proposed` / `done` |
-| N-2 | `Ctrl+R` should not be bound; it takes the browser's reload from a presenter mid-talk | **T-016** | `done` |
-| N-3 | Disclosure attached to **part of a figure**, not only to the slide | **T-016** | `done` |
-| N-4 | A green build reads as a finished deck; nothing in the run asks the X-08 question | **T-004**, critique mode | `done` |
-| N-5 | The T-082 ledger-omission pattern recurring independently in an unrelated deck | **T-088** | open |
-| N-6 | DS-091's six-word cap pulls an author toward the allusive headline — the X-08 failure itself | **T-004** | `done` |
+| # | The need | Belongs to | At routing, 2026-08-11 | Today |
+| :-- | :--- | :--- | :--- | :--- |
+| N-1 | A source line that says what the document is and can be opened — not `D5 §2` | **T-070** as a scoping input, **T-069** as the origin | `proposed` / `done` | `done` / `done` |
+| N-2 | `Ctrl+R` should not be bound; it takes the browser's reload from a presenter mid-talk | **T-016** | `done` | `done` |
+| N-3 | Disclosure attached to **part of a figure**, not only to the slide | **T-016** | `done` | `done` |
+| N-4 | A green build reads as a finished deck; nothing in the run asks the X-08 question | **T-004**, critique mode | `done` | `done` |
+| N-5 | The T-082 ledger-omission pattern recurring independently in an unrelated deck | **T-088** | open | `done` |
+| N-6 | DS-091's six-word cap pulls an author toward the allusive headline — the X-08 failure itself | **T-004** | `done` | `done` |
 
-**Four of the six belong to tasks that are `done`**, and that is the most useful thing this report
-says. Each of those tasks built exactly what it specified. These are what real use found afterwards.
+**Four of the six belonged to tasks that were already `done`** when this was written, and that is the
+most useful thing this report says. Each of those tasks built exactly what it specified. These are
+what real use found afterwards.
+
+**All six are `done` now.** T-070 and T-088 both closed on 2026-08-11 — the same day this table was
+written, which is why the routing column needed two of them. The snapshot column is kept rather than
+overwritten: *four of six landed on already-finished work* is the finding, and a column edited to
+today's answer would erase it.
 
 **Two collisions, named and not ruled on**
 - **DS-105 forbids a `file://` link in a shipped deck.** A deck whose sources are files beside it has
@@ -153,6 +159,7 @@ the one that answers back. Recorded on T-004 as a pair for that reason.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-12 | (reconciled) | **The routing table's status column had gone stale within hours of being written.** It recorded T-070 as `proposed` and T-088 as `open`; both closed on 2026-08-11, the same day. Split into two columns rather than corrected in place — *four of six landed on already-finished work* is this report's finding, and a column edited to today's answer erases the evidence for it. **All six are `done` now**, which is the answer to the question that surfaced it: whether a second project rebuilding a deck should wait for anything the first one asked for. It should not. |
 | 2026-08-11 | (shipped) | **Shipped in `0.2.1`.** The six findings and their routing are public from here; four of the six went to tasks that were already `done`. |
 | 2026-08-11 | → done | All four criteria met, and the report was right that **four of the six belong to closed tasks**. Routing them cost five task files, one rationale subsection and two copies of one lesson, and changed no rule - which is the outcome §1 asked for and the one a defect-shaped intake would not have produced. Two things worth carrying: **N-4 and N-6 are one need, not two** - where a checkable rule and a judged rule disagree the deck follows the check, because that is the one that answers back - and **N-5 is what makes T-088 worth its price**, since a pattern found twice in decks this repository wrote could be a house habit and a third in an adopter's deck could not. The collisions are `U-01` and `U-02`, open and owned or explicitly unowned. |
 | 2026-08-11 | (specify) | **Kept at `v0.3`, and against the size rule** — `s` would put it in v0.2 on effort alone. It follows [T-089](T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md), placed the same way a day earlier: v0.2 has shipped, and reopening a shipped phase is reserved for adopter defects. This report's own first line is that none of the six is a defect, which is exactly what disqualifies it. Its two companions, [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md) and [T-091](T-091-build-md-documents-icons-set-as-a-single-pair.md), *are* defects and went to `v0.1` — the three arrived together and split across two phases, which is the point of filing them apart. |
