@@ -77,9 +77,12 @@ and the reason the config exists.*
 
 Two things about this project's use of it that the config does not say:
 
-- **`work_package` is a grouping key, and its values are a release phase.** Open tasks use `v0.1` or
-  `v0.2`; closed tasks keep the `WP1`–`WP3` packages they were worked under, which are history rather
-  than the current plan. `docs/BRIEF.md` *Release phases* is the decision behind the split.
+- **`work_package` is a grouping key, and its values are a release phase.** Open tasks use `v0.1`,
+  `v0.2` or `v0.3`; closed tasks keep the `WP1`–`WP3` packages they were worked under, which are
+  history rather than the current plan. `docs/BRIEF.md` *Release phases* is the decision behind the
+  split, and which phase a new task takes is `../CLAUDE.md`'s rule: `v0.1` only when a defect in the
+  published plugin reopens it, `v0.3` for anything `l` or `xl`, and — since v0.2 shipped — for
+  everything else that is not such a defect.
 - **`deliverables:` is the only place an unproduced output is written as a path.** Front-matter is not
   prose, so `tools/docs/refcheck.py` does not scan it; in §2 and §3 of a task, name a not-yet-existing
   output rather than pointing at it (`` `R7-printable-mode.md`, under `docs/research/` ``), or the

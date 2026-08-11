@@ -25,8 +25,12 @@ deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py`
 [T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
 **the phase stays open behind it**: T-036 and T-080 keep the `v0.2` label by the owner's decision, so
 a shipped release and an open phase are not a contradiction here. **v0.3 is the main line now, but
-v0.1 has reopened five times**: a defect an adopter hits in the published plugin is a `v0.1` patch,
-not a later improvement. **The fifth was the first nobody reported** — `v0.1.5` carried
+v0.1 has reopened six times**: a defect an adopter hits in the published plugin is a `v0.1` patch,
+not a later improvement. **The sixth is the first raised from outside this repository** —
+[T-090](tasks/T-090-spec5-cannot-parse-a-descriptive-slide-label.md) and
+[T-091](tasks/T-091-build-md-documents-icons-set-as-a-single-pair.md), hit on the published `0.2.0`
+by the first adopting project and moved here from the `v0.3` they arrived labelled with. **The fifth
+was the first nobody reported** — `v0.1.5` carried
 [T-083](tasks/T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) and
 [T-085](tasks/T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md), both found by running
 [`docs/PUBLISHING.md`](docs/PUBLISHING.md) §8's gate list rather than by an adopter — which is the
@@ -39,9 +43,12 @@ critique mode, the humanizer pass, publish — and nothing else, and it has ship
 dependencies and every minor and moderate fix; v0.3 is the bigger tasks and the new capabilities,
 and **the line between those two falls at an effort estimate of `l`**. `docs/BRIEF.md` *Release
 phases* is the decision and says what each contains; `tasks/README.md` is the current state, grouped
-by the same three names. **A new task belongs to one of them**: v0.1 only when an adopter's defect
-reopens it, v0.3 for anything `l` or `xl`. A phase that quietly takes work the size of the next one
-is the failure both splits exist to prevent.
+by the same three names. **A new task belongs to one of them**: v0.1 only when a defect in the
+published plugin reopens it, v0.3 for anything `l` or `xl` — **and, since v0.2 shipped, for
+everything else that is not such a defect**, because reopening a shipped phase is reserved for them.
+That last clause is why a small task can sit in the phase of the big ones; T-089 and T-092 are both
+there against their size. A phase that quietly takes work the size of the next one is the failure
+both splits exist to prevent.
 
 **The objectives are still being shaped.** Research is expected to be able to overturn scope, not
 just fill it in. Findings that contradict the brief are surfaced as candidate changes of
