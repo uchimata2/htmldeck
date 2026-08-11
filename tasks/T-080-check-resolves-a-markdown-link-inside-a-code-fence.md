@@ -107,6 +107,38 @@ follow it and it cannot be broken. A bare path in a fence is a different thing a
   navigable*, in taskmd's own tracker — same channel as T-079's, left for the maintainer to index.
   Named by id and title rather than by path, since the file is in another repository.
 
+**Upstream is finished, measured against the installed 0.4.0 rather than read off a release note.**
+Their T-112 is `done` and its own review records fixtures for the fence, the span, a live link either
+side of the fence, and a document quoting a whole `index` run. Reproduced here, one fixture per row,
+each written into this file and taken out again:
+
+```
+taskmd skill: 0.4.0
+  no fixture                 exit 0  0 broken link(s)   <- baseline
+  inside a fence             exit 0  0 broken link(s)   <- NOT reported
+  inside an inline span      exit 0  0 broken link(s)   <- NOT reported
+  a real link, outside both  exit 1  1 broken link(s)   <- reported
+```
+
+**The target is `T-041-no-such-file-anywhere.md` and not the abridged form this task first used.**
+Their T-112 records that a target ending in `...` **resolves on Windows**, so a fixture built that
+way passes before the fix and proves nothing — which is what the first attempt at this measurement
+did on 2026-08-11.
+
+**What is left is `refcheck.py`, and it is the same two holes plus one behaviour that must survive.**
+The identical four fixtures:
+
+```
+  link syntax in a fence     exit 1  REPORTED     <- the defect
+  link syntax in a span      exit 1  REPORTED     <- the defect
+  a BARE path in a fence     exit 1  REPORTED     <- CORRECT, and §1 says keep it
+  a real link, outside both  exit 1  REPORTED     <- CORRECT
+```
+
+So the change is narrow and its boundary is already measured: stop resolving **link syntax** inside a
+fence or a span, and leave everything else exactly as it is. §1's *Out: bare paths inside fences* is
+the third row, and it stays out.
+
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
@@ -120,6 +152,7 @@ follow it and it cannot be broken. A bare path in a fence is a different thing a
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-11 | (implement) | **Upstream is done and the remaining work is measured, not guessed.** Four fixtures against taskmd 0.4.0 and the same four against `refcheck.py`, printed in §3: taskmd resolves neither a fenced link nor a spanned one and still catches a live broken link; `refcheck.py` reports all four, and the one it is **right** to report is the bare path. So the change is *stop resolving link syntax inside a fence or a span*, and nothing else — the boundary §1 argued for, now with both sides of it observed. The first attempt at this measurement used an abridged target ending in an ellipsis, which their T-112 records as **resolving on Windows**: a fixture that passes before the fix. |
 | 2026-08-11 | (implement) | **Upstream shipped it in 0.4.0, and the same defect is now this project's own.** The release note does not mention T-112, so it was tested rather than read: a real `taskmd index` row with an abridged filename, pasted into a fence in this file, and `taskmd check` passed 94 tasks over it. **`refcheck.py` failed the same line** — `BROKEN LINK ... -> T-041-implement-the-nine-glitch-free-…md`. §1 scoped `refcheck.py` out on the ground that it *wants* paths inside fences, which is true of **bare paths** and not of link syntax; §1's own narrow claim draws exactly that line. So the fixture is reverted for now and the task stays open on a deliverable that moved from upstream's tool to this one. Not folded into the release being cut the same hour: a patch shipping three adopter-facing fixes should not also carry a checker change discovered mid-sequence. |
 | 2026-08-10 | (implement) | **Not fixed in 0.3.0, measured rather than assumed.** [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) installed the current release and reproduced this against it: a fenced block in a task file carrying link syntax with an abridged target turns the run red, as before. Upstream's T-112 is still `proposed` — **their T-111, this task's sibling, is `done` and shipped in the same release**, so the pair has separated and only one is outstanding. Nothing to do here; the workaround stands. |
 | 2026-08-10 | (implement) | **Received upstream**, with T-111 — taskmd informed, reindexed, project updated. Their decision is not known here and is not assumed. Until it lands, the workaround stands and is written where a task author meets it: paraphrase link syntax, or paste a target that really resolves. |
