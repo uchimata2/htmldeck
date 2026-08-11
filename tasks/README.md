@@ -33,7 +33,6 @@ happened.
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `v0.3` | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033 |
 | [T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted | `v0.2` | `in_progress` | `implement` | - | - | T-063, T-073, T-079, T-081 |
 | [T-093](T-093-ds-005s-check-bans-the-one-esm-route-r6-measured-as-working.md) | DS-005's check bans the one ESM route R6 measured as working | `v0.3` | `proposed` | `specify` | - | - | T-019, T-069 |
-| [T-094](T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) | render.py shots --out with a relative path writes nothing and says FAILED | `v0.1` | `proposed` | `specify` | - | - | T-019, T-074 |
 
 ## Closed
 
@@ -126,5 +125,6 @@ happened.
 | [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md) | SPEC-5 reports NO SUBJECT on a fully built deck whose slides carry a descriptive aria-label | `v0.1` | `done` | `review` | - | - | T-051, T-065, T-066, T-086, T-091 |
 | [T-091](T-091-build-md-documents-icons-set-as-a-single-pair.md) | build.md documents shell.py icons --set as a single pair, and it takes one comma-separated argument | `v0.1` | `done` | `review` | - | - | T-090 |
 | [T-092](T-092-product-feedback-from-the-first-external-deck.md) | Product feedback from the first external deck — six needs, all against tasks that already exist | `v0.3` | `done` | `review` | - | - | T-004, T-016, T-069, T-070, T-082, T-088 |
+| [T-094](T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) | render.py shots --out with a relative path writes nothing and says FAILED | `v0.1` | `done` | `review` | - | - | T-019, T-074 |
 
 <!-- taskmd:end -->

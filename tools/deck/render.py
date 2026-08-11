@@ -49,7 +49,16 @@ OUT = os.path.join(ROOT, ".assets-cache", "deck")
 
 
 def out_dir(deck, override=None):
-    """Where this deck's shots, probes and measurements belong. `override` is `--out`, verbatim."""
+    """Where this deck's shots, probes and measurements belong, always as an absolute path.
+
+    **`--out` is resolved here and nowhere else**, and that is T-094. Three call sites wrote
+    `out = out or out_dir(deck)`, which reads as resolution and is not: the `or` takes the override
+    verbatim, and only the *default* ever reached the function where `abspath` lives. A relative
+    `--out` then arrived at Chrome as `--screenshot=.assets-cache/...`, which Chrome resolved
+    against its own working directory - so the run printed `FAILED` for two shots that were never
+    where the tool looked, and named the file rather than the cause. Everything downstream now takes
+    its directory from the probe `make_probe` returns, so there is one resolution to keep right.
+    """
     if override:
         return os.path.abspath(override)
     return os.path.join(paths.output_root(deck), ".assets-cache", "deck")
@@ -206,7 +215,7 @@ def make_probe(deck, name="probe.html", extra="", out=None):
     html = html.replace("</body>", (PROBE if not extra else extra) + "\n</body>")
     # The probe is a **whole copy of the deck**. Writing it under the tool put an adopter's
     # content inside the installed package; it goes with the deck now (T-074).
-    out = out or out_dir(deck)
+    out = out_dir(deck, out)
     os.makedirs(out, exist_ok=True)
     dest = os.path.join(out, name)
     with open(dest, "w", encoding="utf-8", newline="\n") as fh:
@@ -264,8 +273,9 @@ def calibrate(probe, w, h):
 def measure(deck, which, quiet=False, out=None):
     """Collect the per-slide geometry at every resolution. `quiet` suppresses the per-row log so
     a gate can call this without burying its own verdicts."""
-    out = out or out_dir(deck)
+    # The directory comes back off the probe rather than being resolved a second time (T-094).
     probe = make_probe(deck, out=out)
+    out = os.path.dirname(probe)
     results = {}
     for (w, h, label) in RESOLUTIONS:
         cw, ch = calibrate(probe, w, h)
@@ -333,14 +343,20 @@ def report(results):
 def cmd_shots(deck, which, out=None, w=1920, h=1234):
     """Uncalibrated on purpose: --screenshot captures the WINDOW, so asking for a window a little
     larger than the stage puts the whole stage inside the PNG instead of clipping its edge."""
-    out = out or out_dir(deck)
     probe = make_probe(deck, out=out)
+    out = os.path.dirname(probe)
     for s in which:
         dest = os.path.join(out, "slide-%02d.png" % (s + 1))
         chrome_run(file_url(probe) + "?s=%d&quiet=1" % s, w, h, ["--screenshot=" + dest])
-        ok = os.path.exists(dest)
-        print("  %s  %s" % (os.path.basename(dest),
-                            "%.0f KB" % (os.path.getsize(dest) / 1024) if ok else "FAILED"))
+        # `isfile` and a size, not `exists`: a DIRECTORY at the destination satisfies `exists` and
+        # reported as a successful `0 KB` shot, and an empty file is not a picture either.
+        if os.path.isfile(dest) and os.path.getsize(dest):
+            print("  %s  %.0f KB" % (os.path.basename(dest), os.path.getsize(dest) / 1024))
+        else:
+            # The path, not just the verdict. A bare FAILED sent T-094 looking at the deck for a
+            # defect that was in the argument handling, and a shot missing from a path the tool
+            # chose is a different problem from a shot Chrome could not take.
+            print("  %s  FAILED - no image at %s" % (os.path.basename(dest), dest))
     print("\n%s" % out)
 
 
@@ -371,6 +387,31 @@ def self_test():
     u = file_url(os.path.join("a", "b.html"))
     if not u.startswith("file:///") or "\\" in u:
         sys.exit("SELF-TEST FAILED: file_url built a path Chrome will not open: %s" % u)
+
+    # T-094, and the fixture is deliberately over the RELATIVE case: every path this tool was ever
+    # tested with was absolute, which is why a bug in the one branch that is not survived a task
+    # about the same flag. `make_probe` is the only thing that resolves a directory now, so proving
+    # what it returns proves what `shots` and `measure` write into - no browser needed.
+    if not os.path.isabs(out_dir("deck.html", os.path.join("rel", "ative"))):
+        sys.exit("SELF-TEST FAILED: a relative --out came back relative; Chrome would resolve it "
+                 "against its own working directory and the shots would land nowhere the caller "
+                 "looks")
+    fixture = tempfile.mkdtemp(prefix="htmldeck-selftest-")
+    try:
+        deck = os.path.join(fixture, "d.html")
+        with open(deck, "w", encoding="utf-8") as fh:
+            fh.write("<html><body><section class=\"slide\"></section></body></html>")
+        here = os.getcwd()
+        os.chdir(fixture)
+        try:
+            probe = make_probe(deck, out=os.path.join("out", "shots"))
+        finally:
+            os.chdir(here)
+        if not os.path.isabs(probe) or not os.path.exists(probe):
+            sys.exit("SELF-TEST FAILED: make_probe with a relative --out returned %r, which is "
+                     "what every caller joins its output paths onto" % probe)
+    finally:
+        shutil.rmtree(fixture, ignore_errors=True)
     return True
 
 
