@@ -476,8 +476,10 @@ on effort and both are `m`: a task reassigned for being inconvenient would cost 
 rule that can be checked. So the release states what it ships without, as v0.1's did, and the phase
 stays open behind the release that carries most of it.
 
-**Shipped as `v0.2.0` on 2026-08-11**, carrying T-086 and T-087. T-036 and T-080 keep the `v0.2`
-label and remain open behind it, exactly as decided above. Running §8's sequence for this release
+**Shipped as `v0.2.0` on 2026-08-11**, carrying T-086 and T-087. T-036 and T-080 kept the `v0.2`
+label and stayed open behind it, exactly as decided above. **T-080 closed on 2026-08-12**, once
+upstream's half had shipped and the remaining change was this project's own; **T-036 is the one
+still open**, parked for the reason given above and not for want of a decision. Running §8's sequence for this release
 found three things no gate reports: two stale figures in [`../examples/README.md`](../examples/README.md)
 (the built deck's size and its figure count, both in a sentence naming no field, so `figures.py`
 leaves them unanchored), and a `README.md` tally of the preview pane's wrong answers that counted a
@@ -512,7 +514,7 @@ edited away, because a rule that was vacuous and then was not is worth knowing a
 | ~~[T-077](../tasks/T-077-report-a-figure-exclusion-that-outlived-its-numeral.md)~~ **done 2026-08-10** | `figures.py` reports an excusal whose numeral has left the page, and fails on it. Four of the five prose exclusions were dead the minute the check existed. |
 | ~~[T-078](../tasks/T-078-write-down-the-release-sequence.md)~~ **done 2026-08-10** | `PUBLISHING.md` retitled, and section 8 is the seven steps with what proves each. Writing the gate list meant running it, and three of eleven were red -- all outside the five commands the README prints. |
 | ~~[T-079](../tasks/T-079-the-boards-dependency-columns-list-closed-tasks.md)~~ **done 2026-08-10** | Accepted upstream as taskmd's T-111 and shipped in 0.3.0: `index` now filters closed tasks out of both dependency columns. Verified on this board, not from a release note -- T-019's *Blocked by* is empty where it read T-002, and T-084's *Blocks* names an open task and nothing closed. |
-| [T-080](../tasks/T-080-check-resolves-a-markdown-link-inside-a-code-fence.md) | `taskmd check` resolves link syntax inside a code fence, so a task cannot quote a board row — and `index` emits a link per row. It edited this project's pasted evidence rather than finding a defect in it. Proposal delivered upstream 2026-08-10, argued from taskmd's own T-092. |
+| ~~[T-080](../tasks/T-080-check-resolves-a-markdown-link-inside-a-code-fence.md)~~ **done 2026-08-12** | Link syntax inside a fence or a span is a picture of a link: nobody can follow it, so nothing can break it. Both checkers agreed by the end — upstream shipped the proposal in taskmd 0.4.0, and `refcheck.py` followed here. **The half worth keeping is what the defect was**: the checker did not find a problem, it required the evidence to be edited, and this project's method is to paste what a tool actually printed. **Bare paths inside a fence stay checked** — a tool's own output is a promise like any other, which is why blanket fence-skipping was never the ask. The rule is in `TASK-WORKFLOW.md` §6.1 beside the `§`-in-code paragraph it generalises, and the transferable half is **L-70**. |
 | ~~[T-062](../tasks/T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md)~~ **done 2026-08-09** | Retired the pre-split task tool for taskmd, keeping the two reference checks taskmd does not have as `tools/docs/refcheck.py`. |
 | ~~[T-063](../tasks/T-063-improvements-to-propose-upstream-to-taskmd.md)~~ **done 2026-08-10** | Five proposals sent upstream to taskmd, from what the migration measured. |
 

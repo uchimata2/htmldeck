@@ -23,8 +23,9 @@ deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py`
 `master` as the published branch. **v0.2 shipped 2026-08-11** carrying
 [T-086](tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
 [T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
-**the phase stays open behind it**: T-036 and T-080 keep the `v0.2` label by the owner's decision, so
-a shipped release and an open phase are not a contradiction here.
+**the phase stays open behind it**: T-036 keeps the `v0.2` label by the owner's decision, so a
+shipped release and an open phase are not a contradiction here. T-080 kept it too until it closed on
+2026-08-12.
 
 **A phase name is not a version number, and conflating the two nearly shipped a release nobody could
 install.** The backlog calls a defect in the published plugin `v0.1` work, which is a *phase*; the

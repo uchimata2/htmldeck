@@ -90,6 +90,34 @@ def strip_code(text):
     return CODE_SPAN.sub(blank, FENCE.sub(blank, text))
 
 
+def links_in(text):
+    """Every markdown link check 1 is entitled to resolve - the ones a reader can follow.
+
+    **Link syntax inside code is a picture of a link.** It renders as the characters that were
+    typed: nobody can follow it, so nothing can break it. Resolving it does not find a defect, it
+    edits the evidence - this repository states results as what was actually produced, `taskmd
+    index` prints one markdown link per row, and quoting a board row with an abridged filename
+    therefore turned the run red until a *resolvable* target was substituted. A quotation adjusted
+    to satisfy a link checker is no longer a quotation, and the adjustment is invisible afterwards
+    (T-080).
+
+    So the same `strip_code` the section scan already relied on governs check 1. The two scans
+    disagree about **bare paths** on purpose - see `pointers_in`.
+    """
+    return LINK.finditer(strip_code(text))
+
+
+def pointers_in(text):
+    """Every prose or printed pointer check 2 is entitled to resolve.
+
+    **Fences are read here on purpose**, and that is the boundary rather than an oversight: a tool
+    printing `docs/LESSONS.md` into a block makes the same promise a sentence does, and check 2 has
+    caught real defects that way. It is also why blanket fence-skipping was the wrong ask upstream
+    (T-080 §1). Front-matter is not prose, so it is not scanned - `strip_front_matter`.
+    """
+    return POINTER.finditer(strip_front_matter(text))
+
+
 def read(path):
     with open(path, encoding="utf-8") as fh:
         return fh.read()
@@ -225,7 +253,7 @@ def cmd_check():
         if is_ignored(os.path.relpath(md, "."), ignore):
             continue
         base = os.path.dirname(md)
-        for m in LINK.finditer(read(md)):
+        for m in links_in(read(md)):
             target = m.group(1)
             if target.startswith(("http://", "https://", "mailto:")):
                 continue
@@ -254,7 +282,7 @@ def cmd_check():
             skipped += 1
             continue
         base = os.path.dirname(src)
-        for m in POINTER.finditer(strip_front_matter(read(src))):
+        for m in pointers_in(read(src)):
             target = m.group(1)
             if is_ignored(target, ignore):
                 continue
@@ -366,6 +394,32 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a repo-relative path in prose was not seen as a pointer")
     if POINTER.search("see README.md for the rest"):
         sys.exit("SELF-TEST FAILED: a bare filename with no directory was read as a path")
+
+    # Where the two scans part company (T-080). Four fixtures, the same four the task measured, and
+    # they assert the functions `cmd_check` actually calls rather than the patterns underneath them
+    # - a regex that happens to be used the right way today is not the shipped behaviour.
+    #
+    # The target names a directory this repository does not have, so the live scan over this file
+    # reads none of it as a promise: `points_into_repo` skips it, and check 1 no longer sees it at
+    # all. That trap is not hypothetical - the fixtures above are worded the way they are because an
+    # earlier self-test's data was scanned as live pointers and reported two.
+    link = "[T-041](no-such-dir/T-041-implement-the-nine-glitch-free-conditions.md)"
+    fenced = "before\n```\n%s\n```\nafter\n" % link
+    if any(links_in(fenced)):
+        sys.exit("SELF-TEST FAILED: link syntax inside a fence was resolved - it renders as the "
+                 "characters typed, so nobody can follow it and nothing can break it")
+    if any(links_in("the row reads `%s` verbatim" % link)):
+        sys.exit("SELF-TEST FAILED: link syntax inside an inline code span was resolved - a span "
+                 "is code for the same reason a fence is")
+    # Both halves, because a scan that reports nothing satisfies the two above on its own.
+    if not any(links_in("see [the brief](docs/BRIEF.md) for the rest")):
+        sys.exit("SELF-TEST FAILED: a real markdown link outside code was not seen at all, so the "
+                 "two assertions above prove nothing")
+    # The behaviour that has to survive them: check 2 reads inside fences deliberately.
+    if not any(pointers_in("```\nWrote no-such-dir/T-041-implement-the-nine-"
+                           "glitch-free-conditions.md - 8 active\n```\n")):
+        sys.exit("SELF-TEST FAILED: a bare path printed into a fence was skipped - that is a "
+                 "tool's own output and check 2 exists to hold it")
     return True
 
 

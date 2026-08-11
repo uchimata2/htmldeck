@@ -268,6 +268,19 @@ and is not resolved — which is how a document quotes a reference that is *wron
 this family had to write `` `DESIGN-SYSTEM.md §11` `` a dozen times to say it never existed; under any
 other rule the record of a dead pointer is itself a dead pointer.
 
+**Nor is showing a link following one**, and since 2026-08-12 both checkers agree. `[label](target)`
+inside a code span or a fenced block renders as the characters typed: nobody can follow it, so nothing
+can break it. taskmd stopped resolving it in 0.4.0 and `refcheck.py` in
+[T-080](T-080-check-resolves-a-markdown-link-inside-a-code-fence.md), so a task file may now paste a
+`taskmd index` row **verbatim, abridged filename and all**. Before that the checker did not find a
+defect, it required the evidence to be edited — and a quotation adjusted to satisfy a link checker is
+no longer a quotation, with nothing left to say it was adjusted.
+
+**A bare path inside a fence is the opposite case and stays checked.** A tool printing
+`docs/LESSONS.md` into a block makes the same promise a sentence does, and that check has caught real
+defects — which is why blanket fence-skipping was never the ask, upstream or here. The two rules meet
+at syntax, not at fences.
+
 **This is why the headings in this document were not renumbered when it was merged with METHOD.md.**
 Twelve task records cite `TASK-WORKFLOW.md` at §2 through §6.2. A renumbering is a silent falsification
 of all of them, and the check would have caught it — which is the rule working on the document that

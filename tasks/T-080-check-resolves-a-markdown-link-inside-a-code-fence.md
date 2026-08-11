@@ -2,8 +2,8 @@
 id: T-080
 title: taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted
 type: fix
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-063, T-073, T-079]
@@ -12,8 +12,9 @@ owner: the project owner
 business_value: medium
 effort: xs
 created: 2026-08-10
-updated: 2026-08-10
-deliverables: []
+updated: 2026-08-12
+deliverables:
+  - tools/docs/refcheck.py
 ---
 
 # T-080 — taskmd check resolves a markdown link inside a code fence, so pasted output cannot be quoted
@@ -87,6 +88,8 @@ follow it and it cannot be broken. A bare path in a fence is a different thing a
 | 1 | Reproduce against the current source, and check whether inline spans behave the same | this file §1, **done 2026-08-10** |
 | 2 | Write the proposal | taskmd's own **T-112**, **done 2026-08-10** |
 | 3 | Deliver it as a task in taskmd's tracker | **done 2026-08-10** |
+| 4 | Make the same change in `refcheck.py`, holding the boundary §3 measured | `tools/docs/refcheck.py`, **done 2026-08-12** |
+| 5 | Write the rule where a task author meets it | `TASK-WORKFLOW.md` §6.1, **done 2026-08-12** |
 
 ## 3. Implement
 
@@ -102,10 +105,24 @@ follow it and it cannot be broken. A bare path in a fence is a different thing a
   checked upstream and here: `refcheck.py` reads them deliberately and has caught real defects, so
   the two tools disagree about paths on purpose and only agree about link syntax.
 
+- **Inline code spans were brought in, not left alone** — 2026-08-10, and §1's acceptance criterion
+  still asks for the opposite because it was written before the measurement. Writing this task
+  reproduced the defect three more times in one run, every one a link-shaped example wrapped in
+  backticks in prose. A span and a fence are code for the same reason, so a rule that separated them
+  would need a second justification and has none.
+- **The rule goes in `TASK-WORKFLOW.md` §6.1 whether or not upstream declined** — 2026-08-12. §1's
+  last criterion made that conditional on a refusal, which was the wrong trigger: the fact a task
+  author needs is *what may be quoted*, and it is now the same sentence for both checkers. It sits
+  beside the `§`-in-code paragraph it generalises.
+
 **Outputs produced**
 - The proposal, delivered as **T-112**, *Stop check resolving a link that is displayed rather than
   navigable*, in taskmd's own tracker — same channel as T-079's, left for the maintainer to index.
   Named by id and title rather than by path, since the file is in another repository.
+- [`../tools/docs/refcheck.py`](../tools/docs/refcheck.py) — `links_in` and `pointers_in`, the two
+  call sites they replace, and four self-test assertions.
+- [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6.1 — two paragraphs: what may now be quoted, and the bare
+  path that is still checked.
 
 **Upstream is finished, measured against the installed 0.4.0 rather than read off a release note.**
 Their T-112 is `done` and its own review records fixtures for the fence, the span, a live link either
@@ -139,11 +156,51 @@ So the change is narrow and its boundary is already measured: stop resolving **l
 fence or a span, and leave everything else exactly as it is. §1's *Out: bare paths inside fences* is
 the third row, and it stays out.
 
+**The demonstration, and it is this file.** A real `taskmd index` row, pasted verbatim except for the
+filename, which is abridged the way a quotation abridges:
+
+```
+| [T-041](T-041-implement-the-nine-glitch-free-…md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `v0.3` | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097 |
+```
+
+Before the change, that block alone turned the run red — the checker did not find a defect, it
+required the evidence to be edited:
+
+```
+FAIL - 1 problem(s):
+
+  BROKEN LINK  tasks\T-080-check-resolves-a-markdown-link-inside-a-code-fence.md -> T-041-implement-the-nine-glitch-free-…md
+```
+
+After it, the same block is quoted and the chain is green. **The row above is the acceptance
+criterion, kept rather than described.**
+
+**The change is one call site each, and two functions that say which is which.** `links_in` runs
+check 1 over `strip_code(text)` — the same helper the section scan already used, so nothing new
+decides what code is. `pointers_in` runs check 2 over `strip_front_matter(text)` and **not** over
+`strip_code`, which is where the two deliberately disagree. Both are named so the self-test can
+assert the path `cmd_check` actually takes; asserting `LINK` and `POINTER` directly would have
+tested two patterns that merely happen to be used the right way today.
+
+**The self-test is load-bearing, and that was measured rather than trusted.** Four new assertions,
+one per row of the table above. Two mutations against them:
+
+```
+MUTATION 1 caught: SELF-TEST FAILED: link syntax inside a fence was resolved - it renders as the characters t
+MUTATION 2 caught: SELF-TEST FAILED: a bare path printed into a fence was skipped - that is a tool's own outp
+```
+
+Mutation 1 reverts the fix; mutation 2 applies it to check 2 as well, which is the over-correction
+§1 scoped out. Neither survives.
+
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The behaviour is decided and written down, including that inline spans were left alone and why | met, **the other way** | Spans were **not** left alone — they were brought in, on a measurement §1's Scope already records and this criterion predates. The criterion is met by the decision going the opposite way, written up in §3. Left as first drafted rather than corrected in place: a criterion edited to match the outcome cannot fail. |
+| The proposal is delivered upstream and named here | met | taskmd's **T-112**, `done`, shipped in their 0.4.0 and still correct on 0.5.0 — the fixture in §3 is a real index row and `taskmd check` passed 98 tasks over it today. |
+| A task file can quote a `taskmd index` row verbatim, abridged filename and all, and `lint.py` stays green | met | §3 holds the row. Red before the change, green after; both runs pasted there. |
+| If upstream declines, the workaround is written down in `TASK-WORKFLOW.md` | met, **unconditionally** | Upstream accepted, so the condition never fired. The rule went in anyway — §3 says why the trigger was wrong. |
 
 **Child fix tasks raised**
 - none
@@ -152,6 +209,7 @@ the third row, and it stays out.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-12 | → done | **Closed on this project's own half.** `refcheck.py` stops resolving link syntax inside a fence or a span and keeps resolving a bare path in either, which is the boundary the four fixtures had already drawn — so the implementation decided nothing the measurement had not. The change is two named functions and one call site each; the reason they are named is that the self-test then asserts what `cmd_check` runs rather than two regexes that happen to be used the right way. **Both mutations of that self-test were caught** (§3), including the over-correction of stripping code from check 2, which is the one way this fix could have taken a real check with it. Verified against **taskmd 0.5.0**, installed the same day: the fixture in §3 is a live index row and `check` passed 98 tasks over it. The generic half went to `TASK-WORKFLOW.md` §6.1 beside the `§`-in-code paragraph it generalises, and it went there unconditionally — §1 had made that conditional on upstream declining, which was the wrong trigger for a fact about what may be quoted. Generalised as **L-70**: a checker that forces a quotation to be edited has stopped checking and started writing. |
 | 2026-08-11 | (implement) | **Upstream is done and the remaining work is measured, not guessed.** Four fixtures against taskmd 0.4.0 and the same four against `refcheck.py`, printed in §3: taskmd resolves neither a fenced link nor a spanned one and still catches a live broken link; `refcheck.py` reports all four, and the one it is **right** to report is the bare path. So the change is *stop resolving link syntax inside a fence or a span*, and nothing else — the boundary §1 argued for, now with both sides of it observed. The first attempt at this measurement used an abridged target ending in an ellipsis, which their T-112 records as **resolving on Windows**: a fixture that passes before the fix. |
 | 2026-08-11 | (implement) | **Upstream shipped it in 0.4.0, and the same defect is now this project's own.** The release note does not mention T-112, so it was tested rather than read: a real `taskmd index` row with an abridged filename, pasted into a fence in this file, and `taskmd check` passed 94 tasks over it. **`refcheck.py` failed the same line** — `BROKEN LINK ... -> T-041-implement-the-nine-glitch-free-…md`. §1 scoped `refcheck.py` out on the ground that it *wants* paths inside fences, which is true of **bare paths** and not of link syntax; §1's own narrow claim draws exactly that line. So the fixture is reverted for now and the task stays open on a deliverable that moved from upstream's tool to this one. Not folded into the release being cut the same hour: a patch shipping three adopter-facing fixes should not also carry a checker change discovered mid-sequence. |
 | 2026-08-10 | (implement) | **Not fixed in 0.3.0, measured rather than assumed.** [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) installed the current release and reproduced this against it: a fenced block in a task file carrying link syntax with an abridged target turns the run red, as before. Upstream's T-112 is still `proposed` — **their T-111, this task's sibling, is `done` and shipped in the same release**, so the pair has separated and only one is outstanding. Nothing to do here; the workaround stands. |
