@@ -149,6 +149,41 @@ CLAIM = re.compile(r"(?<![\w.$-])(\d[\d,]*\d|\d)\*{0,2}\s+of\s+(?:the\s+)?\*{0,2
                    r"(\d[\d,]*\d|\d)(?![\w.%-])")
 REMAINDER = re.compile(r"other\s+\*{0,2}(\d[\d,]*\d|\d)(?![\w.%-])")
 
+# ---------------------------------------------------------------- a property of a named artifact
+# **The third binding, and the narrowest of the three** (T-088). `bound()` needs the sentence to name
+# the field's label and `claimed()` needs the *part of whole* shape; a page that says *"it is 220 KB
+# in one file, 12 slides"* has neither, and two figures of exactly that shape went stale inside the
+# `unanchored` bucket while the front README's bound copies of the same properties stayed correct.
+#
+# Three conditions together, and each is doing work:
+#   1. the **block** links the artifact - not names it, links it. `sentences()` splits *"It is 220 KB"*
+#      off from the sentence that says what *it* is, so a sentence-level test cannot see the subject.
+#      A link is the one reference a paragraph makes that cannot be a coincidence of vocabulary,
+#      which is the whole objection T-068 sustained against binding by words;
+#   2. the numeral is followed by a **unit** naming a property this tool computes, within three
+#      words and with no other numeral between - so `97 KB of it as base64` binds to `KB` and is
+#      then judged, while `slides 1, 5, 8` binds to nothing;
+#   3. the artifact is in `ARTIFACTS`, so what may be claimed is declared rather than inferred.
+#
+# A spelled-out number counts here and nowhere else in this file. `EXCLUDED_PROSE`'s rule - a figure
+# is a numeral - holds over free prose, where "two days" outnumbers measurements six to one. Inside
+# these three conditions the noun has already said it is a count: *"six hand-written SVG figures"* is
+# the figure `v0.2.0` corrected, and it was written as a word both before and after.
+# Keyed by `stem()`'s output, not by the word: `stem` strips the plural and then a trailing `e`
+# unconditionally, so `bytes` arrives as `byt` and `slides` as `slid`. Written out because keying
+# this by the readable form silently matched two of the four units and nothing said so - the run
+# went green having judged half of what it claims to judge.
+ARTIFACT_UNITS = {"kb": "KB", "byt": "bytes", "slid": "slides", "figur": "figures"}
+
+WORD_NUMBERS = dict((w, i) for i, w in enumerate(
+    "one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen "
+    "sixteen seventeen eighteen nineteen twenty".split(), 1))
+
+# A digit run may carry spaces as thousands separators - `225 639 bytes` is one figure, and
+# `PROSE_NUMERAL` reads it as two. The unit is what says where the number ends.
+ARTIFACT_NUMERAL = re.compile(r"(?<![\w.$-])(\d[\d ,]*\d|\d|[A-Za-z]+)")
+LINK_TARGET = re.compile(r"\]\(([^)#\s]+)")
+
 
 # ---------------------------------------------------------------------------- the document
 
@@ -209,8 +244,12 @@ def words(text):
     return set(stem(w.lower()) for w in raw if w.lower() not in STOPWORDS)
 
 
-def sentences(text):
-    """`[(sentence, is_dated_record)]` over prose - the unit a figure is bound inside.
+def blocks(text):
+    """`[(block, [(sentence, is_dated_record)])]` - prose split twice, and both units are needed.
+
+    A figure is bound inside a **sentence** by every rule here but one: a property of a named
+    artifact is bound inside the **block**, because *"It is 220 KB in one file"* is a sentence whose
+    subject is in the sentence before it (T-088).
 
     Table cells are their own sentences: a row states one claim per cell, and a wrapped markdown
     paragraph states one across several lines, so newlines join and `|` splits.
@@ -218,11 +257,18 @@ def sentences(text):
     out = []
     for block in re.split(r"\n\s*\n", text):
         dated = bool(DONE_ROW.search(block))
+        sents = []
         for cell in block.split("|"):
             for s in SENTENCE_END.split(" ".join(cell.split("\n"))):
                 if s.strip():
-                    out.append((s, dated))
+                    sents.append((s, dated))
+        out.append((block, sents))
     return out
+
+
+def sentences(text):
+    """`[(sentence, is_dated_record)]` over prose - the unit a figure is bound inside."""
+    return [s for _block, sents in blocks(text) for s in sents]
 
 
 def fields(outputs):
@@ -343,6 +389,25 @@ def bind(blocks):
 # where a value came from.
 DECK_FACTS = "the deck files themselves"
 
+# **The artifacts whose properties a document may state as a figure**, each with why it is here.
+# A manifest kept by hand, which `PUBLISHING.md` §2 is an argument against - so it is allowed one
+# thing only: it names *which files*, never which sentences or which numerals, so what binds stays
+# derived from the document and the file.
+#
+# **What makes a hand-kept list acceptable here is that it cannot go stale in silence.** An entry
+# naming a file that has moved or gone fails the run (`missing_artifacts`), rather than emitting no
+# fields and covering nothing - the shape T-051 settled for a check with no subject, and the
+# condition the owner's 2026-08-11 answer rests on (T-088). The old code skipped a missing path with
+# `if os.path.exists`, which is exactly the silence.
+ARTIFACTS = {
+    "examples/reference-deck.html":
+        "the hand-built reference deck; README.md and examples/README.md both state its size and "
+        "slide count",
+    "examples/sort-window/sort-window.html":
+        "the deck nobody authored by hand, which is what README.md points at as the generated "
+        "example - and the file both of v0.2.0's stale figures were about",
+}
+
 _RUNS = {}
 
 
@@ -363,6 +428,43 @@ def run(cmd):
     return _RUNS[cmd]
 
 
+def artifact_path(rel):
+    return os.path.join(ROOT, rel.replace("/", os.sep))
+
+
+def missing_artifacts(manifest=None):
+    """`[(rel, why)]` - every manifest entry whose file is not there.
+
+    **This is what buys the manifest its place.** A hand-kept list is acceptable only where it
+    cannot cover nothing quietly, so an entry that has moved is a failure of this tool and not a
+    property of the documents it reads (T-088). Takes the manifest as an argument so the fixture can
+    hand it a missing file without mutating the module.
+    """
+    return [(rel, why) for rel, why in sorted((ARTIFACTS if manifest is None else manifest).items())
+            if not os.path.exists(artifact_path(rel))]
+
+
+def artifact_facts():
+    """`{rel: {property: value}}` for every manifest artifact that is on disk.
+
+    **Four properties, and each is a claim some document already makes.** `KB` and `bytes` are the
+    same size stated two ways, because `examples/README.md` states it both ways in one sentence and
+    only the rounded half was ever derivable here - so the exact figure sat unwatched beside a
+    watched one, and at `v0.2.0` both were wrong.
+    """
+    out = {}
+    for rel in sorted(ARTIFACTS):
+        path = artifact_path(rel)
+        if not os.path.exists(path):
+            continue
+        html = io.open(path, encoding="utf-8").read()
+        out[rel] = {"KB": int(round(os.path.getsize(path) / 1024.0)),
+                    "bytes": os.path.getsize(path),
+                    "slides": len(re.findall(r'class="slide"', html)),
+                    "figures": len(re.findall(r'class="[^"]*\bfig\b', html))}
+    return out
+
+
 def deck_facts():
     """Sizes and slide counts the prose states, so each is a figure rather than a recollection.
 
@@ -372,14 +474,19 @@ def deck_facts():
     `compared` against `8-12` inside a `DS-082` triage note - a coincidence, in the one place this
     tool exists to refuse them. Counted from the markup; the reference deck's colophon carries
     `slide close` and is not one of the twelve, which is why the page says "and a colophon".
+
+    **The byte count is a field of its own, beside the rounded KB.** `examples/README.md` states
+    both - *"212 KB in one file - 217 050 bytes"* - and only one of them was ever derivable here, so
+    the exact figure was unwatched while the rounded one beside it was not. Both were wrong at
+    `v0.2.0`.
+
+    A path missing from disk emits nothing here and is reported by `missing_artifacts`; skipping it
+    silently is what this function used to do.
     """
     out = []
-    for rel in ("examples/reference-deck.html", "examples/sort-window/sort-window.html"):
-        path = os.path.join(ROOT, rel.replace("/", os.sep))
-        if os.path.exists(path):
-            out.append("%s %d KB" % (rel, int(round(os.path.getsize(path) / 1024.0))))
-            html = io.open(path, encoding="utf-8").read()
-            out.append("%s %d slides" % (rel, len(re.findall(r'class="slide"', html))))
+    for rel, props in sorted(artifact_facts().items()):
+        for prop in ("KB", "bytes", "slides", "figures"):
+            out.append("%s %d %s" % (rel, props[prop], prop))
     return "\n".join(out)
 
 
@@ -482,7 +589,7 @@ def audit(text):
     return rows, prose_rows, seen, table, outputs
 
 
-def declared(table, outputs, docs=None):
+def declared(table, outputs, docs=None, facts=None):
     """`(rows, skipped)` - the same figures, stated in documents that paste no command output.
 
     **The other half of the binding question, one scope out.** The coverage split lives in five
@@ -495,23 +602,117 @@ def declared(table, outputs, docs=None):
     prints, and is skipped and counted otherwise. Nothing is guessed at, and a page is never held
     to a partition it was not written as.
     """
+    facts = artifact_facts() if facts is None else facts
     rows, skipped = [], 0
     for rel in sorted(DECLARED_DOCS):
         if docs and rel in docs:
             text = docs[rel]
         else:
             text = io.open(os.path.join(ROOT, rel.replace("/", os.sep)), encoding="utf-8").read()
-        for sentence, dated in sentences(prose(text)):
-            nums = [m.group(1) for m in PROSE_NUMERAL.finditer(sentence)]
-            if not nums:
-                continue
-            claims = {} if dated else claimed(sentence, table, outputs)
-            for n in nums:
-                if n in claims:
-                    rows.append((claims[n][0], rel, n, claims[n][1]))
-                else:
-                    skipped += 1
+        for block, sents in blocks(prose(text)):
+            # **The block's own rule runs first, and it takes numerals out of the remainder.** A
+            # figure it judged is judged; leaving it in `unanchored` as well would report the same
+            # numeral in two buckets and make the count mean nothing.
+            art = {} if DONE_ROW.search(block) else artifact_claims(block, rel, facts)
+            for written, (verdict, why) in sorted(art.items()):
+                rows.append((verdict, rel, written, why))
+            spoken = sum(len(PROSE_NUMERAL.findall(w)) for w in art)
+            for sentence, dated in sents:
+                nums = [m.group(1) for m in PROSE_NUMERAL.finditer(sentence)]
+                if not nums:
+                    continue
+                claims = {} if dated else claimed(sentence, table, outputs)
+                for n in nums:
+                    if n in claims:
+                        rows.append((claims[n][0], rel, n, claims[n][1]))
+                    elif spoken:
+                        spoken -= 1
+                    else:
+                        skipped += 1
     return rows, skipped
+
+
+def linked_artifacts(block, rel_doc):
+    """Which manifest artifacts this block links to, resolved against the linking document.
+
+    A link to the artifact's **directory** counts - `examples/README.md` writes
+    ``[`sort-window/`](sort-window)`` and then describes the deck inside it, which is the paragraph
+    both of `v0.2.0`'s stale figures were in.
+    """
+    here = os.path.dirname(rel_doc)
+    out = []
+    for m in LINK_TARGET.finditer(block):
+        target = os.path.normpath(os.path.join(here, m.group(1))).replace(os.sep, "/")
+        for rel in ARTIFACTS:
+            if target in (rel, os.path.dirname(rel)) and rel not in out:
+                out.append(rel)
+    return out
+
+
+LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+\.)\s")
+
+
+def claim_scopes(block):
+    """A block, split again at list-item boundaries - the scope a link's subject reaches over.
+
+    **Measured, not assumed.** With the whole block as the scope, `BRIEF.md`'s *Definition of done*
+    list bound *"all twelve slides carry a bottom line"* to a link thirty lines above it in another
+    bullet. The verdict was right and the binding was luck, and a rule that is right by luck is the
+    one T-068 rejected. A bullet is where a subject stops carrying (T-088).
+    """
+    out, cur = [], []
+    for line in block.split("\n"):
+        if LIST_ITEM.match(line) and cur:
+            out.append("\n".join(cur))
+            cur = []
+        cur.append(line)
+    if cur:
+        out.append("\n".join(cur))
+    return out
+
+
+def artifact_claims(block, rel_doc, facts):
+    """`{figure_as_written: (verdict, why)}` over every claim scope in the block."""
+    out = {}
+    for scope in claim_scopes(block):
+        out.update(scope_claims(scope, rel_doc, facts))
+    return out
+
+
+def scope_claims(block, rel_doc, facts):
+    """`{figure_as_written: (verdict, why)}` for properties this block states about a linked file.
+
+    Returns nothing at all unless the block links **exactly one** manifest artifact: a paragraph
+    comparing both decks states two figures the same way and there is no honest way to say which
+    file each belongs to. Silence there is the point - an unanchored figure is a figure this tool
+    declines to judge, and it stays a declared bucket.
+    """
+    linked = [rel for rel in linked_artifacts(block, rel_doc) if rel in facts]
+    if len(linked) != 1:
+        return {}
+    have = facts[linked[0]]
+    out = {}
+    tokens = [(m.group(1), m.start()) for m in ARTIFACT_NUMERAL.finditer(block)]
+    for i, (tok, _at) in enumerate(tokens):
+        value = None
+        if tok[0].isdigit():
+            value = int(tok.replace(" ", "").replace(",", ""))
+        elif tok.lower() in WORD_NUMBERS:
+            value = WORD_NUMBERS[tok.lower()]
+        if value is None:
+            continue
+        for word, _pos in tokens[i + 1:i + 5]:
+            if word[0].isdigit() or word.lower() in WORD_NUMBERS:
+                break
+            prop = ARTIFACT_UNITS.get(stem(word.lower()))
+            if not prop:
+                continue
+            actual = have[prop]
+            out[tok] = (("compared", "%s %s of %s" % (tok, prop, linked[0]))
+                        if value == actual else
+                        ("STALE", "claims %s %s of %s, which is %d" % (tok, prop, linked[0], actual)))
+            break
+    return out
 
 
 def stale_exclusions(text):
@@ -699,6 +900,38 @@ def self_test():
         sys.exit("SELF-TEST FAILED: every figure a declared document states as part of a whole was "
                  "moved off its own account and the run stayed green. That is the 80/81/82 drift, "
                  "undetected in the five documents it drifted in")
+
+    # 9. **The two figures `v0.2.0` corrected, put back exactly as they were** (T-088). Seeded from
+    # the real wording rather than from a constructed sentence, because what has to be tested is
+    # that *this page's* way of stating a property binds - the sentence says "It is", and the file
+    # it is about is named a sentence earlier, which is why nothing caught these two the first time.
+    rel = "examples/README.md"
+    src = io.open(os.path.join(ROOT, rel.replace("/", os.sep)), encoding="utf-8").read()
+    was = (src.replace("**220 KB in one file**, 225 639 bytes", "**212 KB in one file**, 217 050 bytes")
+              .replace("six hand-written SVG figures", "five hand-written SVG figures"))
+    if was == src:
+        sys.exit("SELF-TEST FAILED: %s no longer states the built deck's size and figure count in "
+                 "the wording this fixture seeds, so the two figures T-088 was raised for are "
+                 "unexercised. Re-seed it from the wording the page uses now" % rel)
+    seeded = [r for r in declared(table, outputs, {rel: was})[0] if r[0] == "STALE"]
+    for want, what in (("212", "the rounded size"), ("217 050", "the exact byte count"),
+                       ("five", "the figure count, which the page writes as a word")):
+        if not [r for r in seeded if r[2] == want]:
+            sys.exit("SELF-TEST FAILED: %s was re-seeded as %s and no row reported it. That is the "
+                     "state this task was raised from - a figure about a named file, inside the "
+                     "unanchored bucket, wrong and unwatched. Got: %r"
+                     % (what, want, [(r[2], r[3]) for r in seeded]))
+
+    # 10. **A manifest entry whose artifact is gone fails**, which is the condition the manifest was
+    # allowed on. `PUBLISHING.md` §2 is an argument against hand-kept lists because they go stale in
+    # silence; this one cannot, and the assertion is what makes that a property rather than a claim.
+    if not missing_artifacts({"examples/no-such-deck.html": "a fixture entry, never on disk"}):
+        sys.exit("SELF-TEST FAILED: a manifest entry naming a file that does not exist was not "
+                 "reported. An entry that covers nothing in silence is this tool's own defect "
+                 "(T-088), in the shape T-051 settled for a check with no subject")
+    if missing_artifacts():
+        sys.exit("SELF-TEST FAILED: the live manifest names %s, which is not on disk"
+                 % ", ".join(rel for rel, _why in missing_artifacts()))
     return True
 
 
@@ -732,6 +965,10 @@ def report(values):
         dc[kind] = dc.get(kind, 0) + 1
         if kind == "STALE":
             print("  %-10s %s states %s - %s" % (kind, rel, n, why))
+    gone = missing_artifacts()
+    for rel, why in gone:
+        print("  %-10s the artifact manifest names %s and it is not there - %s"
+              % ("MISSING", rel, why))
 
     # **What was compared, not just how many.** A binding nobody can read is a claim to be taken on
     # trust, which is the thing this file was written to stop doing.
@@ -754,8 +991,20 @@ def report(values):
     for k in ("compared", "excluded", "STALE"):
         if dc.get(k):
             print("    %-12s %3d" % (k, dc[k]))
-    print("    %-12s %3d   = in a sentence that names no field, so not judged"
-          % ("unanchored", unanchored))
+    print("    %-12s %3d   = in a sentence naming no field and in no block linking an artifact, "
+          "so not judged" % ("unanchored", unanchored))
+
+    print("\n  the artifact manifest - a property of one of these, in a block that links it, is a "
+          "figure")
+    facts = artifact_facts()
+    for rel in sorted(ARTIFACTS):
+        props = facts.get(rel)
+        print("    %-42s %s" % (rel, "NOT ON DISK" if props is None else
+                                ", ".join("%s %s" % (props[p], p)
+                                          for p in ("KB", "bytes", "slides", "figures"))))
+    print("    %-12s %3d   = an entry whose file is not there, which fails the run"
+          % ("MISSING", len(gone)))
+
     print("\n  exclusions")
     print("    %-12s %3d" % ("declared", len(EXCLUDED_FENCES) + len(EXCLUDED_PROSE)))
     print("    %-12s %3d   = an excusal whose subject has left the page" % ("STALE", len(dead)))
@@ -772,7 +1021,8 @@ def report(values):
     # `audit.py` exits on its equivalent. Reporting it would keep the run green while a false
     # statement sits in the tool - the state this check was written from (T-077).
     fails = (counts.get("FAILING", 0) + counts.get("UNDECLARED", 0)
-             + pc.get("UNDECLARED", 0) + pc.get("STALE", 0) + len(dead) + dc.get("STALE", 0))
+             + pc.get("UNDECLARED", 0) + pc.get("STALE", 0) + len(dead) + dc.get("STALE", 0)
+             + len(gone))
     print("\n%s" % ("%d figure(s) to fix" % fails if fails else
                     "0 stale figure(s)%s" % (" - %d volatile block(s) drifted, which is reported "
                                              "rather than failed (see --values)" % len(drift)
