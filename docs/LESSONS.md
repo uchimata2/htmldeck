@@ -1658,6 +1658,33 @@ record to a deck needs something that can attribute a figure to a document.
    source carries it, and did the slide say so* — the second is what caught all three, and it is
    `SPEC-4`'s question asked of a deck with no ledger to ask it from.
 
+### L-66 — A workaround written down as a local deviation is a product finding nobody has reported
+
+Found 2026-08-11 in
+[T-092](../tasks/T-092-product-feedback-from-the-first-external-deck.md). The first project to build
+a deck with this plugin reported six things its owner found wanting after presenting-quality review.
+**Two of the six had already been hit, worked around, and written into that project's own build log
+as deviations** — one weeks earlier, one hours — and neither was recognised as feedback until the
+owner read the finished deck and said the source lines were useless.
+
+**The recognisable form is a log entry reading *built X instead of Y, because rule Z*.** That
+sentence already names the rule, the worse outcome and the circumstance: it is most of a report
+written by someone who did not think they were writing one. What stops it travelling is that the
+deviation feels like a decision the builder made — it is in their log, under their name, and it is
+closed. The maintainer never sees the log.
+
+**How to apply.**
+
+1. **On the building side, re-read the deviations before calling a piece of work done**, and ask of
+   each whether the rule or the tool would want to know. A deviation that names a rule is a
+   candidate; one that names only taste is not.
+2. **On the receiving side, ask an adopter for their deviations, not for their bugs.** A bug report
+   requires the reporter to believe something is broken, and this class is the tool working exactly
+   as documented and failing the reader — nobody files that as a defect.
+3. **Keep the two intakes apart.** Filed together, the interesting half gets triaged as bugs and
+   closed by making code match documentation. T-092 was kept separate from `T-090` and `T-091` for
+   exactly that reason, on the reporting owner's instruction.
+
 ---
 
 ## Writing

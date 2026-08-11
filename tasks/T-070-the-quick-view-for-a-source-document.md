@@ -167,6 +167,23 @@ and produce a displayable rendering of it, and nothing in this repository does t
   A `.doc`-style page would reuse more of what exists; it also interrupts more, and the thing being
   interrupted is the argument the source is supporting.
 
+**N-1, from the first external deck — the need this task was already the answer to, arriving from
+someone who had not read it.** Routed here 2026-08-11 by
+[T-092](T-092-product-feedback-from-the-first-external-deck.md). A deck owner reviewing a finished
+twelve-slide board deck said its source lines were useless: `D5 §2` names a document the reader
+cannot identify and cannot open, and the reader was not the author. That is a scoping input rather
+than a new requirement — it says which half of the quick view is load-bearing. **What the reader
+wanted first was the document's title, not its contents**, and a title is available with none of
+this task's machinery. Whatever the overlay ends up rendering, a mark that says only a slug fails
+the need before the overlay is reached.
+
+Two rules stand between a reader and the source today, both recorded as **U-01** and **U-02** in
+[`../docs/DESIGN-RATIONALE.md`](../docs/DESIGN-RATIONALE.md) §2.2 and neither ruled on: DS-105
+forbids a link that cannot be shown live, which a `file://` source beside the deck cannot be, and
+DS-092's four-sentence bound on the mark cannot hold five sources carrying titles. U-01 is this
+task's to close — the overlay is the other way to satisfy it, and the one that does not need a live
+link at all.
+
 ## 2. Plan
 
 | # | Step | Output |

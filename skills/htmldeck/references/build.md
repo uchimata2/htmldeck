@@ -126,6 +126,13 @@ Two obligations come with that authority, and the first is the one under pressur
    `<slug>.foundation.md` too when the outline moved. Those files exist to be what a reader opens
    when the deck turns out wrong, which they are not if they record only the intent.
 2. **Tell the user at delivery, as brief bullet points.** One line each, no rationale per item.
+3. **Say which deviations are worth reporting back to htmldeck**, in one line at delivery. A
+   deviation reading *built X instead of Y, because rule Z* is not only a decision this build made —
+   it is a rule costing a reader something, written down by the one person positioned to notice, and
+   it reaches nobody because it lives in a log the maintainer never sees. Two of the six needs in the
+   first external review had been sitting in that project's own build log for weeks. Nothing here
+   asks the user to file anything; the obligation is to say which entries are candidates rather than
+   let a closed workaround look like a settled question.
 
 **This is not the exit for everything.** `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §6.1 keeps its
 two: **STALL** — a design decision wearing a finding's clothes — escalates, and **OSCILLATION** —

@@ -92,6 +92,18 @@ false-alarm rate is this task's question, and it is answered by measurement, not
   that a check with no subject may not report a pass. An entry that can go stale without a red run
   is this task's own defect, not a compromise it accepted.
 
+**N-5, from the first external deck — the pattern recurred in a deck this project never touched.**
+Routed here 2026-08-11 by [T-092](T-092-product-feedback-from-the-first-external-deck.md). The
+ledger omission [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md)
+found in the worked example, and T-087 then looked for in the reference deck, appeared again
+**independently, in an unrelated twelve-slide deck built by an adopter**. That does not change this
+task's deliverable; it changes what the deliverable is worth. Two instances in decks this repository
+wrote could be one house habit — the same hand making the same omission twice — and a third in a deck
+written by someone who had read only the shipped skill is the evidence that separates *our habit*
+from *a gap in what the tool asks for*. Worth stating in this record because the false-alarm
+measurement §1 requires is the expensive half, and its justification rests on how general the defect
+is.
+
 ## 2. Plan
 
 | # | Step | Output |

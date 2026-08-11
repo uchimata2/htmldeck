@@ -118,6 +118,24 @@ who cannot satisfy DS-102 honestly will reach for real research quoted from memo
 misremembered elasticity is a fabricated metric wearing a citation. The rule is stricter with the
 provision than without it.
 
+### 2.2 The two real use found — U-01 and U-02, and neither is resolved
+
+**A third provenance, and it is the one the other two cannot reach.** §2's sixteen came from reading
+the corpus and §2.1's thirteen from building a deck against the ruleset. These two came from an
+**adopting project presenting a finished deck to its owner** — from a reader saying the deck did not
+serve them, on a build where every gate was green. Kept in their own subsection because the column
+above is *Resolution* and these have none: they are recorded so the next person to open DS-092 or
+DS-105 sees that the rule has a known cost, not so that a ruling can be inferred from the entry.
+
+| # | The tension | State |
+| :--- | :--- | :--- |
+| **U-01** | DS-105 forbids a dead link in a shipped deck, and a `file://` link cannot be shown to be live **vs** a source line a reader can open | **Open.** A deck whose sources sit beside it on disk has no conformant way to reach them, so the mark degrades to a slug — `D5 §2` — which names a document the reader cannot identify or open. The rule is right about dead links; what it has no answer for is a live one it cannot verify. Owned by [T-070](../tasks/T-070-the-quick-view-for-a-source-document.md), whose overlay is the other way to satisfy the same need. |
+| **U-02** | DS-092's four-sentence, twenty-word bound on the provenance mark **vs** a source line that says what each document *is* | **Open.** The mark is one `<p>`, so its items are counted together: give each source a full stop and the paragraph exceeds four sentences; leave them without one and they concatenate into a single sentence over twenty words. **Five sources cannot carry titles either way**, and the bound was written for a mark carrying one. Owned by nobody yet; it arrives with [T-092](../tasks/T-092-product-feedback-from-the-first-external-deck.md). |
+
+**Both were hit weeks before they were reported**, and by the same project, which had written each
+one into its own build log as a local deviation and moved on. That is the finding underneath the two
+findings — see **L-66** in [`LESSONS.md`](LESSONS.md).
+
 ---
 
 ## 3. The stage — DS-060 to DS-065, and the numbers behind them
