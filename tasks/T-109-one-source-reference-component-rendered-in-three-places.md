@@ -79,6 +79,20 @@ the written report did not reach:
    same icon as a one-source slide, and a count where the reader wants to know *which two*. The
    knowledgebase mark this task adds is what distinguishes them.
 
+**The full rendering already exists — in the reading view.** Captured the `.doc` view offline and
+looked at it. There, `.doc .sources-btn{display:none}` opens every mark, and a two-source slide shows
+**`D5 · Management decision matrix` / `D2 · Predictive analytics and data readiness`** in a tinted
+box — identifier and title, one row per source, which is most of the ladder this task specifies.
+**So half of this work is unifying two renderings that already exist**, not inventing one: the stage
+hides behind a count what the reading view already spells out. Build the component from the doc
+form's behaviour and give the stage a disclosure onto it.
+
+**And the colophon's instruction is false in two of the three renderings.** *"Open any of the five
+from the mark in the corner of the slide that cites it"* survives verbatim into the reading view,
+where there are no corners and the sources are already inline, and onto **paper**, where there is
+nothing to open at all. Confirmed in the exported PDF, page 14. A sentence that is merely unhelpful
+on the stage is simply untrue in the other two.
+
 **A fourth, about width.** A single-source mark renders as `D1 · CURRENT BUSINESS PROCESS ANALYSIS`,
 uppercased and letterspaced, and takes roughly a quarter of the row. The identifier bound below is
 the wrong instrument for that — **the case treatment is**. Sentence case on the title, with the
@@ -120,7 +134,9 @@ the wrong instrument for that — **the case treatment is**. Sentence case on th
 - [ ] Four kinds, closed, each with a contract row and an icon.
 - [ ] The colophon and the provenance mark render from one component; changing the component changes
       both, demonstrated by changing it.
-- [ ] The colophon carries no instruction to look for links on earlier slides.
+- [ ] The colophon carries no instruction to look for links on earlier slides — checked in **all
+      three renderings**, since the current sentence is false in the reading view and on paper.
+- [ ] The stage's mark and the reading view's open list are one component, not two behaviours.
 - [ ] An identifier longer than the contract's bound is dropped, and the title keeps its room.
 - [ ] A source that fails T-070's admission tests renders as plain text with no route, and no dead
       link appears anywhere in the deck.

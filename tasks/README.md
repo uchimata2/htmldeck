@@ -45,12 +45,13 @@ names cost.
 | [T-106](T-106-the-quick-view-sheet-is-sized-to-the-prose-measure.md) | The quick-view sheet is sized to the prose measure, so a source's tables are crushed | `PH1` | - | `proposed` | `specify` | - | - | - | T-110 | T-070, T-109, T-110 |
 | [T-107](T-107-quickviews-markdown-renderer-drops-thematic-breaks.md) | quickview.py's Markdown renderer drops thematic breaks, shipping "---" as body text | `PH1` | - | `proposed` | `specify` | - | - | - | T-110 | T-070, T-110 |
 | [T-108](T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md) | A deck has no back-matter stage, so the colophon is labelled with the last argument stage | `PH1` | - | `proposed` | `specify` | - | - | - | - | T-034, T-035, T-036, T-109 |
-| [T-109](T-109-one-source-reference-component-rendered-in-three-places.md) | One source-reference component, typed by what the source is, rendered in three places | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-069, T-070, T-103, T-106, T-108, T-110 |
+| [T-109](T-109-one-source-reference-component-rendered-in-three-places.md) | One source-reference component, typed by what the source is, rendered in three places | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-069, T-070, T-103, T-106, T-108, T-110, T-115 |
 | [T-110](T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md) | The quick view styles a source as deck copy, not as a document | `PH3` | - | `proposed` | `specify` | - | - | T-106, T-107 | - | T-070, T-106, T-107, T-109 |
 | [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) | A named slide transition, chosen per deck, with slide and immediate as the shipping pair | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-016, T-041, T-057, T-112 |
 | [T-112](T-112-motion-density-and-the-split-between-content-and-affordance-motion.md) | Motion density, and the split between content motion and affordance motion | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-016, T-041, T-057, T-111, T-113, T-114 |
 | [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-057, T-112 |
-| [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | The chrome row layout — give the pager the corner, and decide what happens to Read and Motion | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-035, T-036, T-112 |
+| [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | The chrome row layout — give the pager the corner, and decide what happens to Read and Motion | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-035, T-036, T-112, T-115 |
+| [T-115](T-115-the-specification-can-assert-a-layout-the-shell-cannot-honour.md) | A specification can assert a layout the shell cannot honour, and nothing reads the two together | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-109, T-114 |
 
 ## Closed
 
