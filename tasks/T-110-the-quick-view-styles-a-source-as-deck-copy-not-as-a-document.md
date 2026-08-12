@@ -5,8 +5,8 @@ type: deliverable
 status: proposed
 phase: specify
 parent: null
-blocked_by: [T-106, T-107]
-related: [T-070, T-109]
+blocked_by: []
+related: [T-070, T-109, T-122]
 work_package: PH3
 owner: the project owner
 business_value: medium
@@ -33,6 +33,18 @@ asks: tables as one dimmed rule and/or alternating rows, a horizontal line for `
 treatment. The reporter's own diagnosis was right — *"maybe it's just the style sheet config as it
 inherits the presentation style"*. That is exactly what it is, and no better converter would change
 it.
+
+**Its premise moved on 2026-08-13, and this paragraph is the part to re-read before starting.**
+Half of what the reporter saw was not the deck's values applied to a document — it was **no values
+at all**. [`COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) gives `.qv-doc` as an `<article>`
+the script creates, the script never created it, and the seventeen rules written against it matched
+nothing in every deck shipped to that date
+([T-122](T-122-the-quick-views-contracted-article-is-never-created-so-seventeen-rules-are-dead.md)).
+Tables rendered with uncollapsed borders at body size because `.qv-doc table` was dead, not because
+its values were wrong. **The scope below stands; the surface it starts from is not the one it was
+written against, so re-render before choosing anything.** Two of its three asks are already answered
+in passing: `---` now renders as a themed rule (T-107) and the sheet is 80rem rather than the prose
+measure (T-106), so what is left is the typographic scale and the table treatment.
 
 **This is scoped as an improvement, not a defect.** [`components.css`](../shell/components.css) `.qv-body`
 already carries the contract's promise that *"Every element it may contain is styled here, because
@@ -106,4 +118,5 @@ than a document's.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **Unblocked** — T-106 and T-107 are done. And its premise changed on the same day: T-122 found that the rules this task proposes to retune were matching nothing, so the *before* it was written against never existed on screen. Re-render the surface before choosing values. |
 | 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. Blocked on T-106 and T-107: the measure and the element set are both inputs, and choosing a scale before either is settled means choosing twice. |
