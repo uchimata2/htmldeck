@@ -37,7 +37,7 @@ names cost.
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `PH2` | - | `proposed` | `specify` | T-034 | - | - | - | T-005, T-034, T-042, T-084, T-108, T-114, T-116 |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112 |
-| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `PH3` | - | `proposed` | `specify` | T-053 | - | - | - | T-005, T-037, T-043, T-051 |
+| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `PH3` | - | `proposed` | `specify` | T-053 | - | - | - | T-005, T-037, T-043, T-051, T-119 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | - | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113 |
 | [T-095](T-095-static-variants-builds-its-static-half-from-a-hand-kept-list.md) | static_variants builds its static half from a hand-kept list, so a new producer is outside the suite | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-066, T-075, T-093, T-096 |
 | [T-096](T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | One command that runs every checker under tools/ and reports what it skipped, with a reason | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-078, T-083, T-084, T-095 |
@@ -49,12 +49,13 @@ names cost.
 | [T-110](T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md) | The quick view styles a source as deck copy, not as a document | `PH3` | - | `proposed` | `specify` | - | - | T-106, T-107 | - | T-070, T-106, T-107, T-109 |
 | [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) | A named slide transition, chosen per deck, with slide and immediate as the shipping pair | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-016, T-041, T-057, T-112 |
 | [T-112](T-112-motion-density-and-the-split-between-content-and-affordance-motion.md) | Motion density, and the split between content motion and affordance motion | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-016, T-041, T-057, T-111, T-113, T-114 |
-| [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-057, T-112 |
-| [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | The chrome row layout — give the pager the corner, and decide what happens to Read and Motion | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-035, T-036, T-112, T-115 |
-| [T-115](T-115-the-specification-can-assert-a-layout-the-shell-cannot-honour.md) | A specification can assert a layout the shell cannot honour, and nothing reads the two together | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-109, T-114, T-117, T-118 |
+| [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-057, T-112, T-119 |
+| [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | The chrome row layout — give the pager the corner, and decide what happens to Read and Motion | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-035, T-036, T-112, T-115, T-119 |
+| [T-115](T-115-the-specification-can-assert-a-layout-the-shell-cannot-honour.md) | A specification can assert a layout the shell cannot honour, and nothing reads the two together | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-109, T-114, T-117, T-118, T-119 |
 | [T-116](T-116-the-printed-contents-page-collides-at-thirteen-entries.md) | The printed contents page collides at thirteen entries, well below its measured bound | `PH1` | - | `proposed` | `specify` | - | - | - | - | T-034, T-036, T-084 |
 | [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md) | The decision diamond has no label slot, and diagrams sit off the text grid | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-016, T-109, T-115 |
 | [T-118](T-118-a-style-must-mean-the-same-thing-in-the-reading-view.md) | A style that carries meaning on a slide must carry the same meaning in the reading view | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-070, T-109, T-115 |
+| [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) | Audit the ruleset for rules that cost more to satisfy than they return | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-054, T-113, T-114, T-115 |
 
 ## Closed
 
