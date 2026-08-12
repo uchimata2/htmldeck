@@ -9,7 +9,7 @@ blocked_by: []
 related: [T-034, T-005]
 work_package: PH2
 owner: maintainer
-business_value: low
+business_value: high
 effort: m
 created: 2026-08-08
 updated: 2026-08-12
@@ -105,6 +105,7 @@ only bites past 24 slides and the target is 12.*
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-12 | (no change) | **Re-estimated `low` → `high`, and unparked.** Nothing about the task changed; its premise did. The `low` of 2026-08-10 rested on one sentence — *"the bound bites at 24 slides against a target deck of 12, so nothing this project produces reaches it"* — and the owner has now said the next deck is not limited to 12. **16 is the bound and 24 the hard limit**, so a deck of the size being planned crosses the first and can reach the second, where DS-226's invariant clips an entry. The work is no longer outside the target case; it is in front of it. Stays in `PH2`: the reason it sits there is unchanged. |
 | 2026-08-10 | (no change) | **Unblocked the same day.** [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) closed: the fixture was counting twelve boxes for a deck that now builds thirteen, and re-baselining it restored the tool. It re-measures **16 as the bound and 24 as the hard limit** — the same pair this task was specified on — so nothing in §1 moves and the edge is removed. |
 | 2026-08-10 | (no change) | **Now `blocked_by` [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md).** `contents_bound.py` refuses to start — its fixture expects 12 contents boxes and the reference deck now builds 13 — so the instrument that measured this task's 16-entry bound, and the only thing that could verify a split, does not run. The specification is unaffected: both its open questions were answered from a run made while the tool still worked. A hard edge rather than `related` because the *verification* is genuinely gated, which is the test `TASK-WORKFLOW.md` §4 sets. Recorded during T-078's sweep of the release gate list, which is what found the tool red. |
 | 2026-08-10 | (specify) | **Estimated `low`/`m`.** `low` because the bound bites at 24 slides against a target deck of 12, so nothing this project produces reaches it — what the task buys is closing DS-226's known-unimplementable range, not serving a reader; `m` for print pagination that must carry every entry across a break. **Stays in `PH2`** under the release split set by the owner 2026-08-10: moderate in size, and a conformance fix to a page that exists rather than a new capability. |

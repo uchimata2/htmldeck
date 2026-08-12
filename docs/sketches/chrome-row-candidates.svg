@@ -1,0 +1,186 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1780 900" width="1780" height="900"
+     font-family="Inter, 'Segoe UI', system-ui, sans-serif" role="img"
+     aria-label="Two candidate layouts for the htmldeck chrome row, compared with what ships today">
+  <title>Chrome row — X and Y (T-114, revision 2)</title>
+  <desc>What ships today, and two candidates built on one principle: the navigation container holds
+  the ruler, the counter and the pager, and nothing else. Read and Motion move outside it. Option X
+  puts them in a second quiet section; option Y folds them into a standalone More control whose menu
+  opens upward.</desc>
+
+  <style>
+    :root { color-scheme: light dark; }
+    .bg     { fill: #ffffff; }
+    .ink    { fill: #14161a; }
+    .dim    { fill: #6b7280; }
+    .faint  { fill: #9aa1ab; }
+    .rule   { stroke: #d9dde3; }
+    .box    { fill: none; stroke: #d9dde3; }
+    .box2   { fill: none; stroke: #d9dde3; stroke-dasharray: 5 4; }
+    .btn    { fill: #f2f4f7; stroke: #d9dde3; }
+    .btnq   { fill: none;    stroke: #e4e8ee; }
+    .btnp   { fill: #14161a; stroke: #14161a; }
+    .btnpi  { fill: #ffffff; }
+    .accent { fill: #b8452f; }
+    .accs   { stroke: #b8452f; }
+    .dot    { fill: #c3c9d2; }
+    .dotc   { fill: #14161a; }
+    .note   { fill: #6b7280; }
+    .win    { fill: #f6f8e9; stroke: #c8d18a; }
+    .warn   { fill: #b8452f; }
+    @media (prefers-color-scheme: dark) {
+      .bg    { fill: #101216; }
+      .ink   { fill: #eef1f5; }
+      .dim   { fill: #98a0ab; }
+      .faint { fill: #6d757f; }
+      .rule  { stroke: #2b3038; }
+      .box   { stroke: #2b3038; }
+      .box2  { stroke: #2b3038; }
+      .btn   { fill: #1b1f26; stroke: #2b3038; }
+      .btnq  { fill: none;    stroke: #262b33; }
+      .btnp  { fill: #eef1f5; stroke: #eef1f5; }
+      .btnpi { fill: #101216; }
+      .accent{ fill: #e0714f; }
+      .accs  { stroke: #e0714f; }
+      .dot   { fill: #3a4048; }
+      .dotc  { fill: #eef1f5; }
+      .note  { fill: #98a0ab; }
+      .win   { fill: #1c2016; stroke: #4d5a2c; }
+      .warn  { fill: #e0714f; }
+    }
+    text { font-size: 15px; }
+    .h1  { font-size: 27px; font-weight: 650; letter-spacing: -0.2px; }
+    .h2  { font-size: 18px; font-weight: 650; letter-spacing: 0.2px; }
+    .lbl { font-size: 13px; font-weight: 600; letter-spacing: 0.9px; }
+    .cap { font-size: 14px; }
+    .mono{ font-size: 13px; font-family: 'JetBrains Mono', Consolas, ui-monospace, monospace; }
+    .btxt{ font-size: 14px; font-weight: 550; }
+  </style>
+
+  <rect class="bg" x="0" y="0" width="1780" height="900"/>
+
+  <!-- ─────────────────────────────────────────────────────────── heading -->
+  <text class="h1 ink"  x="60" y="58">Chrome row — the box is for navigation</text>
+  <text class="cap dim" x="60" y="86">T-114 · revision 2 · the ruler, the counter and the pager share a container; Read and Motion leave it</text>
+  <line class="rule" x1="60" y1="110" x2="1720" y2="110"/>
+
+  <!-- ══════════════════════════════════════════════════ NOW (baseline) -->
+  <text class="lbl faint" x="60" y="158">NOW</text>
+  <text class="h2 ink"    x="60" y="186">One box holding four unrelated things</text>
+  <text class="cap note"  x="60" y="210">The pager is not under-styled. It is in the wrong company — two labelled text buttons outweigh two glyphs at any weight.</text>
+
+  <g transform="translate(60,230)">
+    <rect class="box" x="0" y="0" width="1600" height="64" rx="6"/>
+    <g transform="translate(24,32)">
+      <circle class="dot"  cx="0"   cy="0" r="4"/><circle class="dot" cx="26" cy="0" r="4"/>
+      <circle class="dot"  cx="52"  cy="0" r="4"/><circle class="dot" cx="78" cy="0" r="4"/>
+      <circle class="dot"  cx="104" cy="0" r="4"/><circle class="dot" cx="130" cy="0" r="4"/>
+      <circle class="dot"  cx="156" cy="0" r="4"/><circle class="dot" cx="182" cy="0" r="4"/>
+      <circle class="dotc" cx="208" cy="0" r="5"/><circle class="accs" cx="208" cy="0" r="9" fill="none"/>
+      <circle class="dot"  cx="234" cy="0" r="4"/><circle class="dot" cx="260" cy="0" r="4"/>
+      <circle class="dot"  cx="286" cy="0" r="4"/>
+      <text class="cap dim" x="316" y="5">Decision</text>
+    </g>
+    <g transform="translate(1186,14)">
+      <text class="mono faint" x="0" y="24">9 / 13</text>
+      <rect class="btn" x="62"  y="0" width="40" height="36" rx="5"/>
+      <path class="accs" d="M 87 12 L 79 18 L 87 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect class="btn" x="110" y="0" width="40" height="36" rx="5"/>
+      <path class="accs" d="M 125 12 L 133 18 L 125 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect class="btn" x="158" y="0" width="72"  height="36" rx="5"/>
+      <text class="btxt ink" x="194" y="24" text-anchor="middle">Read</text>
+      <rect class="btn" x="238" y="0" width="112" height="36" rx="5"/>
+      <text class="btxt ink" x="294" y="24" text-anchor="middle">Motion on</text>
+    </g>
+    <line class="accs" x1="1344" y1="76" x2="1576" y2="76" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <text class="mono accent" x="1460" y="96" text-anchor="middle">not navigation, and in the corner</text>
+  </g>
+
+  <line class="rule" x1="60" y1="360" x2="1720" y2="360"/>
+
+  <!-- ══════════════════════════════════════════════════════════ OPTION X -->
+  <text class="lbl faint" x="60" y="408">X · NOT TAKEN</text>
+  <text class="h2 ink"    x="60" y="436">A second section</text>
+  <text class="cap note"  x="60" y="460">Read and Motion get their own quiet section outside the nav box. The pager is filled and closes the navigation container.</text>
+
+  <g transform="translate(60,480)">
+    <!-- nav container -->
+    <rect class="box" x="0" y="0" width="1332" height="64" rx="6"/>
+    <g transform="translate(24,32)">
+      <circle class="dot"  cx="0"   cy="0" r="4"/><circle class="dot" cx="26" cy="0" r="4"/>
+      <circle class="dot"  cx="52"  cy="0" r="4"/><circle class="dot" cx="78" cy="0" r="4"/>
+      <circle class="dot"  cx="104" cy="0" r="4"/><circle class="dot" cx="130" cy="0" r="4"/>
+      <circle class="dot"  cx="156" cy="0" r="4"/><circle class="dot" cx="182" cy="0" r="4"/>
+      <circle class="dotc" cx="208" cy="0" r="5"/><circle class="accs" cx="208" cy="0" r="9" fill="none"/>
+      <circle class="dot"  cx="234" cy="0" r="4"/><circle class="dot" cx="260" cy="0" r="4"/>
+      <circle class="dot"  cx="286" cy="0" r="4"/>
+      <circle class="accs" cx="312" cy="0" r="4" fill="none" stroke-dasharray="2 2"/>
+      <text class="cap dim" x="342" y="5">Decision</text>
+    </g>
+    <g transform="translate(1104,12)">
+      <text class="mono faint" x="0" y="26">9 / 13</text>
+      <rect class="btnp" x="62"  y="0" width="46" height="40" rx="6"/>
+      <path class="btnpi" d="M 92 10 L 80 20 L 92 30 L 87 20 Z" stroke="none"/>
+      <rect class="btnp" x="116" y="0" width="46" height="40" rx="6"/>
+      <path class="btnpi" d="M 133 10 L 145 20 L 133 30 L 138 20 Z" stroke="none"/>
+    </g>
+    <text class="mono accent" x="666" y="-8" text-anchor="middle">navigation — ruler · counter · pager</text>
+
+    <!-- second section -->
+    <rect class="box2" x="1364" y="0" width="236" height="64" rx="6"/>
+    <text class="btxt faint" x="1392" y="38">Read</text>
+    <text class="btxt faint" x="1462" y="38">Motion on</text>
+    <text class="mono dim" x="1482" y="-8" text-anchor="middle">everything else</text>
+  </g>
+
+  <text class="cap note" x="60" y="590">Opens nothing, so <tspan class="mono">DS-138</tspan> never applies and <tspan class="mono">DS-218</tspan> is satisfied for free — Motion is persistent because it never leaves the screen.</text>
+  <line class="rule" x1="60" y1="614" x2="1720" y2="614"/>
+
+  <!-- ══════════════════════════════════════════════════════════ OPTION Y -->
+  <text class="lbl accent" x="60" y="662">Y · CHOSEN</text>
+  <text class="h2 ink"     x="60" y="690">More is the section</text>
+  <text class="cap note"  x="60" y="714">A single standalone control outside the nav box. Its two items open <tspan class="accent">upward</tspan>. Narrowest controls, so the ruler gains the most room.</text>
+
+  <g transform="translate(60,734)">
+    <rect class="box" x="0" y="0" width="1416" height="64" rx="6"/>
+    <g transform="translate(24,32)">
+      <circle class="dot"  cx="0"   cy="0" r="4"/><circle class="dot" cx="26" cy="0" r="4"/>
+      <circle class="dot"  cx="52"  cy="0" r="4"/><circle class="dot" cx="78" cy="0" r="4"/>
+      <circle class="dot"  cx="104" cy="0" r="4"/><circle class="dot" cx="130" cy="0" r="4"/>
+      <circle class="dot"  cx="156" cy="0" r="4"/><circle class="dot" cx="182" cy="0" r="4"/>
+      <circle class="dotc" cx="208" cy="0" r="5"/><circle class="accs" cx="208" cy="0" r="9" fill="none"/>
+      <circle class="dot"  cx="234" cy="0" r="4"/><circle class="dot" cx="260" cy="0" r="4"/>
+      <circle class="dot"  cx="286" cy="0" r="4"/>
+      <circle class="accs" cx="312" cy="0" r="4" fill="none" stroke-dasharray="2 2"/>
+      <circle class="accs" cx="338" cy="0" r="4" fill="none" stroke-dasharray="2 2"/>
+      <circle class="accs" cx="364" cy="0" r="4" fill="none" stroke-dasharray="2 2"/>
+      <text class="cap dim" x="394" y="5">Decision</text>
+    </g>
+    <g transform="translate(1188,12)">
+      <text class="mono faint" x="0" y="26">9 / 13</text>
+      <rect class="btnp" x="62"  y="0" width="46" height="40" rx="6"/>
+      <path class="btnpi" d="M 92 10 L 80 20 L 92 30 L 87 20 Z" stroke="none"/>
+      <rect class="btnp" x="116" y="0" width="46" height="40" rx="6"/>
+      <path class="btnpi" d="M 133 10 L 145 20 L 133 30 L 138 20 Z" stroke="none"/>
+    </g>
+
+    <!-- the standalone More control, outside the box -->
+    <g transform="translate(1462,12)">
+      <rect class="btnq" x="0" y="0" width="98" height="40" rx="6"/>
+      <g stroke-width="1.6" stroke-linecap="round" class="accs">
+        <line x1="15" y1="14" x2="29" y2="14"/><line x1="15" y1="20" x2="29" y2="20"/><line x1="15" y1="26" x2="29" y2="26"/>
+      </g>
+      <text class="btxt dim" x="39" y="26">More</text>
+      <!-- menu, opening upward -->
+      <g transform="translate(-24,-104)">
+        <rect class="win" x="0" y="0" width="146" height="88" rx="6"/>
+        <text class="btxt ink" x="16" y="34">Read</text>
+        <text class="btxt ink" x="16" y="66">Motion on</text>
+      </g>
+      <path class="accs" d="M 49 -16 L 49 -4" fill="none" stroke-width="1.4"/>
+      <path class="accs" d="M 44 -11 L 49 -17 L 54 -11" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <text class="cap note" x="60" y="844"><tspan class="warn" font-weight="650">Y needs DS-138 settled before any code.</tspan> That rule says a popover drops below its control, never above, and names this exact case — a control at the foot of the stage. Opening upward is the arrangement it exists to prevent.</text>
+  <text class="cap note" x="60" y="868">The way through is to argue that DS-138 governs tier-two content a reader is reading, and a two-item control menu is not that — then write the exemption into the rule with its boundary. The multi-source mark must stay bound by it.</text>
+</svg>
