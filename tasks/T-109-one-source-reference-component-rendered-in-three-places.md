@@ -61,9 +61,33 @@ project already chose is the right one — **the deck carries the rendering**
 ladder above rather than adding a link form that cannot survive delivery. Recorded here because the
 request will be made again.
 
+**What the rendered deck shows, 2026-08-12**
+Rendered offline in real Chrome with motion pinned (`render.py shots`), and looked at. Three things
+the written report did not reach:
+
+1. **The colophon renders every source as unreachable, and it is the one slide where every source is
+   reachable.** All five documents have embedded quick views — `D1` through `D5`, confirmed in the
+   markup — so any of them opens offline from inside the file. The colophon lists all five as plain
+   text with no icon and no route, its own provenance mark reads **"THE FIVE DOCUMENTS ABOVE"** as
+   plain text rather than a control, and its bottom line is the instruction *"Open any of the five
+   from the mark in the corner of the slide that cites it."* **The slide whose entire purpose is the
+   sources is the slide that routes to none of them**, and sends the reader back through twelve
+   slides to find marks it could have carried itself.
+2. **The `D1`–`D5` identifiers already exist there**, set in mono to the left of each title. Half the
+   ladder is built; it has no icon and no route.
+3. **A multi-source mark carries the single-source file glyph.** Slide 10 reads *"📄 2 SOURCES"* —
+   same icon as a one-source slide, and a count where the reader wants to know *which two*. The
+   knowledgebase mark this task adds is what distinguishes them.
+
+**A fourth, about width.** A single-source mark renders as `D1 · CURRENT BUSINESS PROCESS ANALYSIS`,
+uppercased and letterspaced, and takes roughly a quarter of the row. The identifier bound below is
+the wrong instrument for that — **the case treatment is**. Sentence case on the title, with the
+`D1` staying mono, buys the room back without truncating anything.
+
 **Scope**
 - In: the four-kind vocabulary, closed, with a row each in
   [`COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md).
+- In: **the mark's case treatment**, decided by rendering it both ways at the real stage width.
 - In: an icon per kind in [`shell/icons.svg`](../shell/icons.svg), including the knowledgebase mark
   the multi-source case needs.
 - In: an optional short identifier, with a stated length bound above which it is dropped. **The bound
@@ -143,3 +167,4 @@ request will be made again.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. Scoped as one component rendered three times rather than as two separate improvements to the mark and the colophon, because authoring them separately is what let the colophon drift. |
+| 2026-08-12 | (no change) | **Deck rendered offline and looked at**, per CLAUDE.md rule 6. Findings in §1: the colophon routes to none of the five sources it lists although all five are embedded and reachable; the `D1`–`D5` identifiers already exist there without icon or route; a two-source mark carries the one-source glyph. Also added the mark's **case treatment** to scope — the uppercased title, not its length, is what costs the corner its room, and the identifier bound would not have fixed it. |

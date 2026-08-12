@@ -123,3 +123,4 @@ hide the miscount and leave it.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Created. Reported against published `0.2.2` by the first adopting project and filed as theirs; re-derived here as this repository's, and as a missing vocabulary value rather than a label bug. The reporter's reading — "the title of the previous page" — is not what the code does; the resting label is the stage name. |
+| 2026-08-12 | (no change) | **Confirmed in a render**, offline with motion pinned: slide 13 of 13 shows `DECISION` beside the ruler while the slide's own name is *What this deck rests on*. Also visible is the second half nobody reported — the colophon holds the last **section tick**'s stage, so the Decision stage's census reads one slide longer than the argument is. |
