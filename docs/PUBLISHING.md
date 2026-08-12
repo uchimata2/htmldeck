@@ -228,6 +228,13 @@ python tools/deck/check.py <deck> --sources <dir>              #   examples/sort
 python tools/deck/spec.py <deck>.foundation.md <deck>.slides.md <deck>.html
 ```
 
+**The first command ends with one advisory that is expected**, and a release run meets it before
+anything else: `taskmd check` reports `DUPLICATE INDEX` against `docs/BRIEF.md`, because the phase
+tables name a majority of the board's ids. It is a true reading of a document that is not a duplicate
+index, it fires on every run, and the decision behind ignoring it is
+[`../tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) §6. **A `DUPLICATE INDEX` naming any other
+document is not covered by it and stops the release.**
+
 **`--sources` is the one argument that cannot be guessed from the deck's path**, and guessing wrong
 does not error — it reports `FIG-0 … source files this reader cannot open` and fails the run, which
 reads exactly like a defect in the deck. The two directories are not siblings of their decks in the

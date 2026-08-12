@@ -227,6 +227,18 @@ rule that survived a tool swap unnoticed is the thing to recognise faster next t
   allow, or sitting where `create` will not find it, is a failure. All three of this project's were,
   on the day it was installed. It now reads **only the documents a clone would receive** and prints
   how many it skipped, so a gitignored working file can no longer fail the run.
+- **One advisory is expected on every run, and is ignored by the file it names.** taskmd 0.5.0's
+  `DUPLICATE INDEX` counts the distinct known task ids a non-task document names outside the generated
+  markers, and fires when they are a majority of the board: `docs/BRIEF.md`, **78 of 105 on
+  2026-08-12**, both numbers climbing with every release. That document's *Release phases* section is
+  the decision record — one row per task, each carrying a *why it is in this phase* the generated board
+  does not hold, struck-through rows kept on purpose. The content is right and the count is right at
+  the same time. **So the line is read by file name, not by rule: a `DUPLICATE INDEX` naming any other
+  document is a real second board and is not covered by this.**
+  [T-098](T-098-check-reports-briefs-phase-tables-as-a-second-index.md) took the decision and rejected
+  both alternatives — splitting the tables out moves the count rather than lowering it, and no upstream
+  exclusion was asked for, because a per-document opt-out is the one change that would make the
+  advisory unbelievable everywhere it is right (**L-73**).
 - `refcheck.py` — every markdown link, **every repo-relative `.md` path written in prose or printed by
   a tool**, and **every `<named document> §n` reference** (§6.1). Two things are skipped and it prints
   how many: documents `.gitignore` excludes, which are machine-local by design and absent from a fresh

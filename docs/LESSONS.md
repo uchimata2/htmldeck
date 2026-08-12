@@ -1894,6 +1894,37 @@ for a deck to use, so the source emptied.
 
 ---
 
+### L-73 — An advisory you decide to ignore must be pinned to the subject that earns it
+
+Caught 2026-08-12 (**T-098**). taskmd 0.5.0 added a `DUPLICATE INDEX` advisory that fires when a
+non-task document names a majority of the board's task ids. It fires here, on `docs/BRIEF.md`, whose
+phase tables are the decision record behind the backlog — one row per task, kept deliberately. The
+reading is true, the document is right, and the count only climbs: **78 of 105** the day it was
+decided, and every release moves it.
+
+**The trap is the shape of the decision, not the decision.** *Ignore `DUPLICATE INDEX`* and *ignore
+`DUPLICATE INDEX` on `docs/BRIEF.md`* are one keystroke apart in a document and opposite in effect.
+The first spends the rule: a genuine second board arrives as a line in a place everyone reads past.
+The second spends one line of it, and leaves the alarm intact for every other file.
+
+**The rival was to make it stop firing**, by proposing a per-document opt-out upstream. It was
+refused for what it is rather than for its size: an advisory whose value is that it cannot be
+silenced, given a silencer. Every project that trips it believes its own document is legitimate, and
+that belief is exactly what upstream found to be wrong in an adopting project.
+
+**How to apply.**
+
+1. **Write the subject, not the rule.** Name the file, the rule id, the artefact — whatever makes
+   this instance correct — so a second instance reads as new rather than as the same known noise.
+2. **Date the number that made it fire.** A count that climbs with the project is a dated
+   measurement, never a current one, and a sentence naming no field is watched by nothing.
+3. **Put it where the tool's output is documented, not where the checklist is.** The gate runs far
+   more often than the release that enumerates it.
+4. **Refuse a silencer on its own terms.** *We are the exception* is what every project says; the
+   question is what the mechanism costs the projects that are not.
+
+---
+
 ## Writing
 
 ### L-12 — What is read every time must be short

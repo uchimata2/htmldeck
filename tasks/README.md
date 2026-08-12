@@ -42,7 +42,6 @@ names cost.
 | [T-095](T-095-static-variants-builds-its-static-half-from-a-hand-kept-list.md) | static_variants builds its static half from a hand-kept list, so a new producer is outside the suite | `PH3` | - | `proposed` | `specify` | - | - | T-066, T-075, T-093, T-096 |
 | [T-096](T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | One command that runs every checker under tools/ and reports what it skipped, with a reason | `PH3` | - | `proposed` | `specify` | - | - | T-078, T-083, T-084, T-095 |
 | [T-097](T-097-ds-004s-excusal-says-degrade-gracefully-is-unobservable-and-ds-009-gave-it-an-instrument.md) | DS-004's excusal says degrading gracefully is unobservable, and DS-009 gave half of it an instrument | `PH3` | - | `proposed` | `specify` | - | - | T-017, T-019, T-041 |
-| [T-098](T-098-check-reports-briefs-phase-tables-as-a-second-index.md) | taskmd check reports BRIEF.md's phase tables as a second index, and will on every run | `PH3` | - | `proposed` | `specify` | - | - | T-063, T-080, T-099 |
 
 ## Closed
 
@@ -138,6 +137,7 @@ names cost.
 | [T-092](T-092-product-feedback-from-the-first-external-deck.md) | Product feedback from the first external deck — six needs, all against tasks that already exist | `PH3` | `0.2.1` | `done` | `review` | - | - | T-004, T-016, T-069, T-070, T-082, T-088, T-099, T-100, T-103, T-104, T-105 |
 | [T-093](T-093-ds-005s-check-bans-the-one-esm-route-r6-measured-as-working.md) | DS-005's check bans the one ESM route R6 measured as working | `PH3` | `0.2.1` | `done` | `review` | - | - | T-019, T-069, T-095 |
 | [T-094](T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) | render.py shots --out with a relative path writes nothing and says FAILED | `PH1` | `0.2.1` | `done` | `review` | - | - | T-019, T-074 |
+| [T-098](T-098-check-reports-briefs-phase-tables-as-a-second-index.md) | taskmd check reports BRIEF.md's phase tables as a second index, and will on every run | `PH3` | `unreleased` | `done` | `review` | - | - | T-063, T-080, T-099 |
 | [T-099](T-099-rename-the-release-phases-so-they-cannot-be-read-as-versions.md) | Rename the release phases to PH1-PH3 and record which version shipped each task | `PH3` | `unreleased` | `done` | `review` | - | - | T-078, T-092, T-098 |
 | [T-100](T-100-a-release-adds-a-required-part-and-conforming-decks-fail-silently.md) | A release adds a required part, and every conforming deck becomes non-conforming in silence | `PH3` | `0.2.2` | `done` | `review` | - | - | T-092 |
 | [T-101](T-101-theme-py-self-test-fails-for-every-plugin-install.md) | theme.py exits on its own self-test for every plugin install, so no adopter can run it | `PH1` | `0.2.2` | `done` | `review` | - | - | T-059, T-064, T-074, T-075, T-090, T-102 |
