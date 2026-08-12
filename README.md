@@ -148,7 +148,7 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1438 document pointer(s) checked, 0 broken
+OK - 1439 document pointer(s) checked, 0 broken
      615 section reference(s) resolved, 0 dead; 1549 not bound to a document and skipped.
 ```
 
