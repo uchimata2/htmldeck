@@ -4,7 +4,7 @@ title: A release adds a required part, and every conforming deck becomes non-con
 type: admin
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.2.2
 parent: null
 blocked_by: []
 related: [T-092]
@@ -138,3 +138,4 @@ is the whole of the retrospective half.
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Filed from the adopting project's `HTMLDECK-FEEDBACK.md` `N-7`, written the same day it was found. The adopter upgraded, ran the same gates on an untouched deck, and compared against a pre-upgrade baseline — which is the only reason the report can say *these six failures are one documented feature* rather than *the upgrade broke our deck*. Filed as feedback rather than as a defect because the requirement is documented before it is enforced; the subject is how it arrives, not what it asks for. |
 | 2026-08-12 | → done | Phase derived as `PH3`. The open question was answered *a step in `PUBLISHING.md` §8*, over the stronger *new in 0.2.1* in gate output, which is `m`-sized and a second copy of what the release knows. §8 gained step 5 and §8.1; three releases are in the table, two of them retrospective. |
+| 2026-08-12 | (no change) | Shipped in `0.2.2`, 2026-08-12 — the first release run under the step this task added. |

@@ -4,7 +4,7 @@ title: The figure's pos, neg and caution roles are vocabulary, so the first deck
 type: admin
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.2.2
 parent: null
 blocked_by: []
 related: [T-092]
@@ -123,3 +123,4 @@ words.
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Filed from the adopting project's feedback document, `N-9`. Kept as feedback: §3.6 says what it does and says why, and the only thing that changed is that the deck it was waiting for exists. Re-verified against §3.6 on `master` before filing. |
 | 2026-08-12 | → done | Phase set to `PH1` by the owner, against the filer's *feedback* classification: a published gate failing a deck for using a documented class is a defect in the check. The sweep the criteria asked for found `.t-ink` and `.mono` in the same position, so all five rows moved and the `vocabulary` source now has no members. |
+| 2026-08-12 | (no change) | Shipped in `0.2.2`, 2026-08-12. |

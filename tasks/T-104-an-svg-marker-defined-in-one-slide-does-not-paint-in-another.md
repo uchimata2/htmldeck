@@ -4,7 +4,7 @@ title: An SVG marker defined in one slide does not paint in another, and four ga
 type: admin
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.2.2
 parent: null
 blocked_by: []
 related: [T-016, T-092]
@@ -149,3 +149,4 @@ checked to 84, 118 hard to 119. `figures.py` caught every one, which is the rele
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Filed from the adopting project's feedback document, `N-8`. Kept as feedback rather than a defect: DS-117's letter is satisfied by a diagram with no arrowheads, so the plugin behaves as documented. Re-verified against `shell/components.css` on `master` before filing — `.slide` still carries `visibility:hidden`, and only `[data-current]` is visible. |
 | 2026-08-12 | → done | Phase derived as `PH3` — feedback rather than a defect, and PH2 is shipped. The open question was answered *checkable cheaply*, so this shipped a rule and a check rather than only a sentence: **DS-232**, `auto`, with a seeded variant. DS-117 is unchanged, and §2 records why its *requires* half was rejected. |
+| 2026-08-12 | (no change) | Shipped in `0.2.2`, 2026-08-12. Named in the release's *what stops conforming* row: `DS-232` newly fails a deck with a cross-slide marker. |

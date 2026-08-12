@@ -4,7 +4,7 @@ title: data-stage is an index into STAGES, the contract does not say so, and com
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.2.2
 parent: null
 blocked_by: []
 related: [T-035, T-090, T-101]
@@ -132,3 +132,4 @@ all. Both example decks pass unchanged: 84 authored parts, five rows, no problem
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Filed from the adopting project's defect report, `Report 4`. The adopter reproduced the symptom, read `audit.py`'s own DS-166 implementation, and only then compared the reference deck's opening `<section>` with its own — the difference was in the first attribute either file carries. Re-verified against §3.2 on `master` before filing. |
 | 2026-08-12 | → done | Phase derived as `PH1`. §2 gained one notation, `attr:#NAME`, because neither existing form can express a deck-relative range — a deviation from the acceptance criterion, recorded in §2 with the alternative it rejects. |
+| 2026-08-12 | (no change) | Shipped in `0.2.2`, 2026-08-12. Named in the release's *what stops conforming* row: a deck carrying a stage name in `data-stage` newly fails. |

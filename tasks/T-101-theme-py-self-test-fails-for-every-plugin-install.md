@@ -4,7 +4,7 @@ title: theme.py exits on its own self-test for every plugin install, so no adopt
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.2.2
 parent: null
 blocked_by: []
 related: [T-059, T-064, T-074, T-075, T-090]
@@ -157,3 +157,4 @@ silent. The new one fails in a clone, which is where it will be run.
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Filed from the adopting project's defect report, `Report 2`. **Written there on 2026-08-11 and believed filed here ever since**; a reconciliation of every upstream id that project records found no task for it, which is how a defect that blocks a tool for every adopter sat unreported for a day. Re-verified on `master` before filing rather than trusted from the write-up. |
 | 2026-08-12 | → done | Phase derived as `PH1` — the task arrived with `work_package: none`. Fixed, and the `usage:` line carried the same defect and was fixed with it. Reproduced against a plugin layout with no `.git` before and after, and the new case was shown to fail from a clone with the defect re-seeded, which is the environment the old assertion could never fail in. |
+| 2026-08-12 | (no change) | Shipped in `0.2.2`, 2026-08-12. `theme.py check` has never once run for an adopter before this tag. |

@@ -4,7 +4,7 @@ title: build.md drops DS-105's link clause for a single-source slide, so the mar
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.2.2
 parent: null
 blocked_by: []
 related: [T-069, T-070, T-092]
@@ -190,3 +190,4 @@ repository, which is the state T-069 found it in.
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Filed from the adopting project's defect report, `Report 5`, written the same day. **The mechanism was corrected while writing it up**: the finding was first recorded there as *DS-105 specifies exactly this*, and reading DS-105 on `master` showed the rule is wider than the behaviour and the narrowing happens in `build.md`. That makes the report a contradiction between two documents rather than a rule someone dislikes. |
 | 2026-08-12 | → done | Phase derived as `PH1`. The open question was answered *the glyph alone*, which needed §3.2 to describe a mark with no button — a deviation from the scope's *out: changing §3.2*, recorded in §2. Both example decks carry the new mark and were rendered and looked at offline. |
+| 2026-08-12 | (no change) | Shipped in `0.2.2`, 2026-08-12. |
