@@ -173,6 +173,7 @@
   --doc-sp-lg:calc(var(--doc-sp)*var(--sp-ratio));
   --doc-pad-b:6rem;
   --doc-measure:46rem;
+  --qv-measure:80rem;
   --doc-hair:0.09rem;
   --doc-radius:0.5rem;
   --doc-tick:1.5rem;

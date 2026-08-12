@@ -111,4 +111,5 @@ nothing since it was written.**
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **The owner added it to `0.2.3`**, which is now five tasks rather than the four committed to on 2026-08-12. The alternative was deferring it to an unscheduled `0.2.4`; a one-line fix parked behind a release nobody has scheduled is one the next adopter reports. |
 | 2026-08-13 | → proposed | Raised by T-096's first run of the checkers the gate list omits — the run that command exists to make possible. `PH1` rather than the `PH3` default: a shipped checker returning a false FAIL on a conforming deck is T-105's class, and this one is a stored constant against a rendered fact (**L-08**). `xs`; `medium` rather than `high` because `check.py --print-pages` already gets the right answer and T-096 now passes that flag, so the count is covered while this is open. |

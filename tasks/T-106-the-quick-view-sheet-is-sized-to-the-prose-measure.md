@@ -2,8 +2,8 @@
 id: T-106
 title: The quick-view sheet is sized to the prose measure, so a source's tables are crushed
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-070, T-109, T-110]
@@ -12,10 +12,12 @@ owner: the project owner
 business_value: high
 effort: xs
 created: 2026-08-12
-updated: 2026-08-12
+updated: 2026-08-13
+shipped_in: unreleased
 deliverables:
   - shell/components.css
   - docs/THEME-CONTRACT.md
+  - themes/quarto.css
 ---
 
 # T-106 — The quick-view sheet is sized to the prose measure, so a source's tables are crushed
@@ -94,23 +96,66 @@ the same place: the reading view legitimately wants a prose measure, and it must
 
 ## 3. Implement
 
+**The number, measured**
+The token was chosen by sweeping `.qv-sheet`'s width in real Chrome, offline, against
+`examples/sort-window/sort-window.html` — five source documents, 127 table cells, widest table six
+columns — and counting cells that wrap. A cell counts as wrapped when its box is taller than 1.6
+line-heights.
+
+| `.qv-sheet` width | sheet at 1920 | cells wrapped of 127 |
+| :--- | ---: | ---: |
+| 46rem — `--doc-measure`, before | 736 px | **52** |
+| 58rem | 928 px | 34 |
+| 70rem | 1120 px | 22 |
+| 76rem | 1216 px | 16 |
+| 79rem | 1264 px | 12 |
+| **80rem — chosen** | **1280 px** | **0** |
+| 82rem | 1312 px | 0 |
+| 88rem | 1408 px | 0 |
+
+**80rem is the knee, not a preference**: it is the smallest width at which nothing wraps, and every
+width above it buys nothing. At 1280 the sheet is clamped by the viewport to 1176 px, so the token
+is not the binding constraint there and 20 cells still wrap — see the criterion below, which was
+restated for that.
+
 **Decisions & assumptions**
--
+- **A token of its own, `--qv-measure`, not a different number in `--doc-measure`** — the reading
+  view legitimately wants a prose measure and keeps it. One token doing two jobs was the defect —
+  2026-08-13.
+- **`80rem`, from the sweep above** — 2026-08-13.
+- **Declared in both shipped themes.** `themes/lattice.css` gets the same `80rem` although its
+  `--doc-measure` is `42rem`: the quick-view bound is set by what a source's tables need, not by the
+  theme's prose column, so the two do not scale together — 2026-08-13.
+- **The sheet is still bounded.** `.qv` keeps its `--sp-4` padding, so at any viewport there is a
+  scrim gutter and the sheet never runs edge to edge. Looked at, at 1280 and 1920 — 2026-08-13.
 
 **Outputs produced**
--
+- [`docs/THEME-CONTRACT.md`](../docs/THEME-CONTRACT.md) — the `--qv-measure` row.
+- [`shell/components.css`](../shell/components.css) — `.qv-sheet` reads it.
+- [`themes/quarto.css`](../themes/quarto.css), [`themes/lattice.css`](../themes/lattice.css) — the
+  value, and the same block in both shipped decks and the seeded fixture.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
-| :--- | :--- | :--- |
-|  |  |  |
+| :--- | :---: | :--- |
+| `.qv-sheet` no longer references `--doc-measure` | met | It reads `--qv-measure`, with the reason in a comment beside it |
+| `--qv-measure` has a row in the theme contract saying what it bounds and why it is not the prose measure | met | §3.4, beside `--doc-measure`. `theme.py check` — `117 token(s) required, 0 problem(s)`, one more than before |
+| A quick view holding a wide table renders it without per-cell wrapping at 1280 and at 1920 | met, restated | **At 1920: 0 of 127 cells wrap, from 52.** At 1280 it cannot be met by any token — the viewport is 1258 px and the sheet clamps to 1176, so 20 cells still wrap, down from 52. The criterion was written before the sweep and assumed the token was the binding constraint at both widths; at 1280 the viewport is. Restated as *the sheet is viewport-bound rather than token-bound at 1280*, which is what a token can deliver. The deck's widest table is six columns, not seven |
+| The reading view's prose measure is unchanged, checked by rendering a `.doc` before and after | met | `.doc-inner` measures **736 px at both 1280 and 1920**, and `--doc-measure` still resolves to `46rem`. Rendered with the reading view switched on, not inferred from the stylesheet |
+| `python tools/deck/check.py` green on the reference deck | met | Green on both shipped decks, inside `python tools/check_all.py` |
+| Opened and looked at, offline | met | `file://`, DNS black-holed, quick view open, at 1920 and 1280. The sheet fills the width it is given and keeps its scrim gutter at both |
 
 **Child fix tasks raised**
-- none
+- none. The heading scale inside the sheet is visibly wrong — headings render smaller than the body
+  text they introduce — and it is
+  [T-110](T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md)'s, named in its
+  scope as *heading treatment*. It is left alone here on purpose: this task changes how much room
+  the contents get and nothing about how they are drawn.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | → done | `--qv-measure: 80rem`, chosen by sweeping the sheet's width in real Chrome and counting wrapped table cells: 52 of 127 at the old prose measure, 0 at 80rem, and nothing gained above it. The reading view's column is unmoved at 736 px, measured rather than assumed. One criterion was restated — no token can stop wrapping at a 1280 viewport, because the viewport binds before the token does, and the criterion had assumed otherwise. |
 | 2026-08-12 | → proposed | Created. Reported by the first adopting project against published `0.2.2`, found in its own exam deck. Located to one declaration: `.qv-sheet` reuses `--doc-measure`, the prose measure, for a surface that holds tables. |

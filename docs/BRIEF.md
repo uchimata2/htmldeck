@@ -473,8 +473,8 @@ presentation on `0.2.2`, presented it, and reported on what it was like to read:
 
 | | |
 | :--- | :--- |
-| [T-106](../tasks/T-106-the-quick-view-sheet-is-sized-to-the-prose-measure.md) | `.qv-sheet` sizes itself with `--doc-measure`, the **prose** measure, on a surface that holds a source's tables. One token doing two jobs, and the fix is a second token rather than a different number in the same place. |
-| [T-107](../tasks/T-107-quickviews-markdown-renderer-drops-thematic-breaks.md) | `quickview.py`'s renderer has no thematic-break branch, so `---` ships as a paragraph of three hyphens — **7 of them in the reporting deck, and 0 `<hr>`.** The renderer's docstring lists its coverage honestly; the **self-test** does not exercise `---`, which is what let it through. **L-04** makes the tool refuse to report on a failing self-test, and this is the reminder that the guarantee is only as wide as the self-test is. |
+| ~~[T-106](../tasks/T-106-the-quick-view-sheet-is-sized-to-the-prose-measure.md)~~ **done 2026-08-13** — `--qv-measure`, swept to `80rem`: 52 of 127 table cells wrapped at the prose measure, 0 at the chosen one, and nothing gained above it. |
+| ~~[T-107](../tasks/T-107-quickviews-markdown-renderer-drops-thematic-breaks.md)~~ **done 2026-08-13** — the audit was the deliverable. Every block construct counted across **355 corpus documents**, counts only: three were one branch each and landed (thematic breaks in 119 documents, ordered lists rendered as `<ul>` in 161, front matter rendered as body text in 130), two went to **T-121**, and the `---`-versus-setext ambiguity was settled by counting rather than arguing — one setext underline in 355 documents. |
 | [T-108](../tasks/T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md) | `data-stage` is mandatory and its vocabulary holds only argument stages, so a colophon is pushed into the nearest one and the ruler names it at rest — *Decision*, on a slide that is in no stage. **Reported as the adopting project's own and re-derived here as this repository's**, and as a missing vocabulary value rather than the label bug it looks like: four renderings read one manifest, so the miscount is in all four. |
 
 **A fourth joined them on 2026-08-13, and it is the only one nobody reported.**
@@ -483,15 +483,23 @@ presentation on `0.2.2`, presented it, and reported on what it was like to read:
 | :--- | :--- |
 | [T-116](../tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md) | The **generated contents page collides at 13 entries** against a stated limit of 24. On paper, the fourth row prints through the page footnote and rows two and three have touching card borders where three-line bottom lines overrun their track. The bound is stated in *entries* and was measured on entries of one height, so it is not a bound. **`printpages.py` read `n` + 1 correctly throughout** — the count was right while the page was broken, which is **L-05**'s shape exactly. `critical`: the page is generated here, it reached a presented deliverable, and the only gate over it asserts something else. |
 
+**A sixth joined the same day, found while verifying the second.**
+
+| | |
+| :--- | :--- |
+| ~~[T-122](../tasks/T-122-the-quick-views-contracted-article-is-never-created-so-seventeen-rules-are-dead.md)~~ **done 2026-08-13** | [`COMPONENT-CONTRACT.md`](COMPONENT-CONTRACT.md) gives `.qv-doc` as an `<article>` the **script** creates inside `.qv-body`, and `openQuick()` never created it — so **seventeen style rules matched nothing in every deck this project has shipped**. A quoted source rendered at slide scale with uncollapsed table borders because the rules that say otherwise were dead. **Nothing could have caught it**: the placement check reads static markup, and the contract's own `origin: script` column is read by no check at all. **It changes [T-110](../tasks/T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md)'s premise** — that task reads the complaint as values chosen for a slide, and half of it was no values at all. |
+
 **A fifth joined on 2026-08-13, and it is the only one a command found.**
 
 | | |
 | :--- | :--- |
 | [T-120](../tasks/T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md) | `printpages.py`'s **own entry point** defaults the slide count to a hardcoded `12`, so it reports `FAIL` on a 13-slide deck that prints correctly, while `check.py` — which passes the rendered count to the same function — reports `pass` on the same file. A stored copy of a derivable fact (**L-08**). `PH1` by [T-105](../tasks/T-105-fig-pos-neg-caution-are-vocabulary-so-a-real-deck-fails-for-using-them.md)'s rule: a shipped gate failing a conforming deck is a defect in the check. **This is a different caller from the one T-116's row credits** — that row is right about `check.py` and this one is about the standalone `__main__`. Found by [T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md)'s first run. |
 
-**These five are `0.2.3`, and the owner committed to the release on 2026-08-12** — four of them then,
-and T-120 added on 2026-08-13 by the rule rather than by a decision. Open `PH1` is therefore exactly
-the release's contents, which is the phase doing the job it was split for.
+**These six are `0.2.3`, and the owner committed to the release on 2026-08-12** — four of them then,
+**T-120 added to it by the owner on 2026-08-13**, the day the rule put it in `PH1`, and
+**T-122 found the same day while closing T-107**. Open `PH1` is therefore exactly the release's
+contents, which is the phase doing the job it was split for. **Three of the six are closed**: T-106,
+T-107 and T-122.
 
 **Four of the five came from *looking*, not from a failing command** — three from an adopter reading a
 finished deck, and T-116 from opening the PDF that deck was printed to. No gate in this repository
@@ -703,7 +711,7 @@ Those belong in the release notes, not in a list of things to fix first.
 remain are both about the build and critique modes, not about the deck.***
 
 - ~~A deck renders correctly with the network disabled.~~ **Met.**
-  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 250 KB, zero
+  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 251 KB, zero
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
 - ~~The build check demonstrated failing on each class of problem it claims to catch.~~ **Met

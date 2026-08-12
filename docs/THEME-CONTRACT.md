@@ -160,6 +160,7 @@ fit one deck is worse than no threshold (**L-38**).
 | `--doc-sp-lg` | geometry | derived | One spacing step up, in the reading view. | — |
 | `--doc-pad-b` | geometry | primitive | Trailing space under the reading view. | — |
 | `--doc-measure` | geometry | primitive | The reading view's column width. | — |
+| `--qv-measure` | geometry | primitive | The quick-view sheet's width. **Not the prose measure**: the sheet holds a quoted source — headings, tables, fences — and a bound chosen so lines of prose stay short turns a six-column table into wrapped fragments. Sized from the widest table a source realistically carries, and bounded so the sheet stays a sheet rather than the window (T-106). | — |
 | `--doc-tick` | geometry | primitive | The eyebrow's tick in the reading view. | — |
 | `--doc-hit` | geometry | primitive | The view switch's target height. ≥ 44 CSS px is the floor DS-168 sets in a `rem` rendering. | rem 2.75- |
 

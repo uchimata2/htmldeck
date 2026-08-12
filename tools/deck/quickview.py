@@ -99,14 +99,56 @@ def inline(text):
     return out
 
 
+def front_matter(lines):
+    """`(rows, rest)` - a leading YAML block as key/value pairs, or `([], lines)`.
+
+    **130 of 355 corpus source documents open with one**, and without this branch the block renders
+    as a paragraph of `key: value` runs between two rules. Rendered as a table rather than dropped:
+    dropping content out of a quoted source is the one thing a provenance surface must not do, and
+    the quick view carries a fidelity claim on its own face (T-070).
+    """
+    if not lines or lines[0].strip() != "---":
+        return [], lines
+    for i in range(1, len(lines)):
+        if lines[i].strip() in ("---", "..."):
+            rows = []
+            for ln in lines[1:i]:
+                if not ln.strip() or ln.startswith((" ", "\t", "-")):
+                    # nested or list-valued YAML: kept as its own row rather than parsed. This
+                    # renders metadata, it does not implement YAML.
+                    if rows:
+                        rows[-1][1] = (rows[-1][1] + " " + ln.strip()).strip()
+                    continue
+                key, sep, val = ln.partition(":")
+                rows.append([key.strip(), val.strip()] if sep else [ln.strip(), ""])
+            return rows, lines[i + 1:]
+    return [], lines
+
+
 def markdown(text):
     """Enough Markdown to read a source document, and nothing that needs a dependency (**L-07**).
 
-    Headings, paragraphs, lists, tables, quotes and fences - the shapes the source documents in this
-    repository are actually written in. Anything unrecognised stays as its own paragraph, which is
-    the safe direction: a source renders as plainer than it was, never as something it is not.
+    Front matter, headings, paragraphs, ordered and unordered lists, thematic breaks, tables,
+    quotes and fences - the shapes source documents are actually written in, audited against the
+    355-document corpus by T-107 rather than assumed. Anything unrecognised stays as its own
+    paragraph, which is the safe direction: a source renders as plainer than it was, never as
+    something it is not.
+
+    **Two constructs are known to be missing and are counted rather than forgotten**: a nested list
+    is flattened to one level (995 lines in 125 corpus documents) and an indented code block becomes
+    paragraphs (958 lines in 124). Both change how the renderer holds state rather than adding a
+    branch to it, so both are T-121. Setext headings are not missing: the corpus uses `===` zero
+    times and `---`-under-text once in 355 documents, so `---` is read as a thematic break with no
+    ambiguity worth resolving.
     """
+    lines = text.split("\n")
+    fm, lines = front_matter(lines)
+    text = "\n".join(lines)
     out, para, rows, lst, fence = [], [], [], None, None
+    if fm:
+        out.append("<table>%s</table>"
+                   % "".join("<tr><th>%s</th><td>%s</td></tr>" % (inline(k), inline(v))
+                             for k, v in fm))
     def flush_para():
         if para:
             out.append("<p>%s</p>" % inline(" ".join(para)))
@@ -120,9 +162,15 @@ def markdown(text):
                                                     for c in cells))
             out.append("<table>%s</table>" % "".join(body))
             del rows[:]
+    # `ol` or `ul`. A one-element list rather than `nonlocal`, matching how `para` and `rows` are
+    # already held. An ordered list rendered as `<ul>` loses the numbering a source used to order
+    # its steps - 1994 lines in 161 corpus documents were losing it.
+    kind = ["ul"]
     def flush_list():
         if lst is not None and lst:
-            out.append("<ul>%s</ul>" % "".join("<li>%s</li>" % inline(i) for i in lst))
+            out.append("<%s>%s</%s>" % (kind[0],
+                                        "".join("<li>%s</li>" % inline(i) for i in lst),
+                                        kind[0]))
 
     for raw in text.split("\n"):
         line = raw.rstrip()
@@ -160,12 +208,21 @@ def markdown(text):
             if not all(re.match(r"^:?-{2,}:?$", c) for c in cells):
                 rows.append(cells)
             continue
-        item = re.match(r"\s*(?:[-*+]|\d+\.)\s+(.*)", line)
+        # A thematic break, before the list branch: `- - -` is not a list item, and `---` under a
+        # line of text is a setext heading exactly once in 355 corpus documents (T-107).
+        if re.match(r"^(?:-{3,}|\*{3,}|_{3,}|(?:[-*_] ){2,}[-*_])\s*$", line.strip()):
+            flush_para(); flush_rows()
+            if lst: flush_list()
+            lst = None
+            out.append("<hr>")
+            continue
+        item = re.match(r"\s*(?:[-*+]|(\d+)[.)])\s+(.*)", line)
         if item:
             flush_para(); flush_rows()
             if lst is None:
                 lst = []
-            lst.append(item.group(1))
+                kind[0] = "ol" if item.group(1) else "ul"
+            lst.append(item.group(2))
             continue
         if line.lstrip().startswith(">"):
             flush_para(); flush_rows()
@@ -336,12 +393,30 @@ def plan(deck, sources, write=False, out=None):
 
 def self_test():
     """One fixture per refusal this tool claims to make, and one for the shape it produces."""
-    md = markdown("# Title\n\nA line with **bold** and `code`.\n\n- one\n- two\n\n| a | b |\n"
-                  "| :-- | :-- |\n| 1 | 2 |\n")
-    for want in ("<h1>Title</h1>", "<b>bold</b>", "<code>code</code>", "<li>one</li>",
-                 "<th>a</th>", "<td>1</td>"):
+    # **One fixture per construct the corpus uses**, not per construct someone remembered. T-107
+    # counted them across 355 source documents, and the gap that reached a shipped deck - 7
+    # `<p>---</p>` and 0 `<hr>` - was a construct in 119 of them that no fixture named. A self-test
+    # narrower than the input is what makes L-04's guarantee narrower than it reads.
+    md = markdown("---\ntitle: A source\n---\n\n# Title\n\nA line with **bold** and `code`.\n\n"
+                  "- one\n- two\n\n1. first\n2. second\n\n---\n\n> quoted\n\n```\nfenced\n```\n\n"
+                  "| a | b |\n| :-- | :-- |\n| 1 | 2 |\n")
+    for want, construct in (("<th>title</th>", "front matter, in 130 of 355 corpus documents"),
+                            ("<h1>Title</h1>", "an ATX heading"),
+                            ("<b>bold</b>", "bold"),
+                            ("<code>code</code>", "inline code"),
+                            ("<ul><li>one</li>", "an unordered list"),
+                            ("<ol><li>first</li>", "an ordered list, as <ol> and not <ul>"),
+                            ("<hr>", "a thematic break, in 119 of 355 corpus documents"),
+                            ("<blockquote>quoted</blockquote>", "a quote"),
+                            ("<pre>fenced</pre>", "a fence"),
+                            ("<th>a</th>", "a table heading"),
+                            ("<td>1</td>", "a table cell")):
         if want not in md:
-            sys.exit("SELF-TEST FAILED: the Markdown renderer dropped %r - got %r" % (want, md))
+            sys.exit("SELF-TEST FAILED: the Markdown renderer dropped %s - wanted %r, got %r"
+                     % (construct, want, md))
+    if "<p>---</p>" in md:
+        sys.exit("SELF-TEST FAILED: a thematic break shipped as a paragraph of hyphens, which is "
+                 "the T-107 defect exactly: 7 of them reached a presented deck")
 
     hostile = ('<p>real content</p><script>document.body.innerHTML="";</script>'
                '<style>.slide{display:none}</style><div id="stage" onclick="go(99)">x</div>'

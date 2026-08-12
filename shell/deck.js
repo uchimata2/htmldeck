@@ -326,7 +326,14 @@
     closeAllDiscs(null);
     closeAllSources(null);
     qvBody.textContent = '';
-    qvBody.appendChild(tpl.content.cloneNode(true));
+    /* The contracted container, not a wrapper for its own sake: COMPONENT-CONTRACT.md gives
+       `.qv-doc` as an <article> this script creates inside `.qv-body`, and every rule that styles
+       a source - headings, lists, tables, quotes, fences, rules - is written against it. Without
+       it those 17 rules match nothing and a quoted source renders at slide scale (T-122). */
+    var article = document.createElement('article');
+    article.className = 'qv-doc';
+    article.appendChild(tpl.content.cloneNode(true));
+    qvBody.appendChild(article);
     qvTitle.textContent = title;
     qv.hidden = false;
     qvOpener = btn;
