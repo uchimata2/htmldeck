@@ -463,9 +463,22 @@ it, which is where a defect in the looking step would have to be found.*
 feedback; the owner ruled T-105 into this phase on the ground that a published gate failing a deck
 for using a documented class is a defect in the check, whatever the report calls it.
 
-**Nothing is owed to this phase.** All four went out in **`0.2.2`** on 2026-08-12, by
-[`PUBLISHING.md`](PUBLISHING.md) §8 and nothing else — the first release run under §8's new step 5,
-so it is also the first whose note names what an upgrade stops accepting.
+All four went out in **`0.2.2`** on 2026-08-12, by [`PUBLISHING.md`](PUBLISHING.md) §8 and nothing
+else — the first release run under §8's new step 5, so it is also the first whose note names what an
+upgrade stops accepting.
+
+**The ninth reopening is three tasks, also from the adopting project, also 2026-08-12** — and it is
+the first that came from a **finished deck rather than a failing command**. The project built an exam
+presentation on `0.2.2`, presented it, and reported on what it was like to read:
+
+| | |
+| :--- | :--- |
+| [T-106](../tasks/T-106-the-quick-view-sheet-is-sized-to-the-prose-measure.md) | `.qv-sheet` sizes itself with `--doc-measure`, the **prose** measure, on a surface that holds a source's tables. One token doing two jobs, and the fix is a second token rather than a different number in the same place. |
+| [T-107](../tasks/T-107-quickviews-markdown-renderer-drops-thematic-breaks.md) | `quickview.py`'s renderer has no thematic-break branch, so `---` ships as a paragraph of three hyphens — **7 of them in the reporting deck, and 0 `<hr>`.** The renderer's docstring lists its coverage honestly; the **self-test** does not exercise `---`, which is what let it through. **L-04** makes the tool refuse to report on a failing self-test, and this is the reminder that the guarantee is only as wide as the self-test is. |
+| [T-108](../tasks/T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md) | `data-stage` is mandatory and its vocabulary holds only argument stages, so a colophon is pushed into the nearest one and the ruler names it at rest — *Decision*, on a slide that is in no stage. **Reported as the adopting project's own and re-derived here as this repository's**, and as a missing vocabulary value rather than the label bug it looks like: four renderings read one manifest, so the miscount is in all four. |
+
+**These three are `0.2.3`, and the owner committed to the release on 2026-08-12.** Open `PH1` is
+therefore exactly the release's contents, which is the phase doing the job it was split for.
 
 ### PH2 — the dependencies, and every minor and moderate fix
 
@@ -490,7 +503,14 @@ stays open behind the release that carries most of it.
 **Shipped as `v0.2.0` on 2026-08-11**, carrying T-086 and T-087. T-036 and T-080 kept the `PH2`
 label and stayed open behind it, exactly as decided above. **T-080 closed on 2026-08-12**, once
 upstream's half had shipped and the remaining change was this project's own; **T-036 is the one
-still open**, parked for the reason given above and not for want of a decision. Running §8's sequence for this release
+still open**.
+
+**T-036 was unparked on 2026-08-12 and re-valued `low` → `high`.** Nothing about the task changed;
+its premise did. The `low` rested on one sentence — *it bites past 24 slides and the target case is
+12* — and the owner has said the next deck is not limited to 12. **16 is the bound and 24 the hard
+limit**, so a deck of the size now planned crosses the first and can reach the second, where DS-226's
+invariant clips an entry. It keeps `PH2`: the reason it sits in that phase is unchanged, and only its
+value moved. Running §8's sequence for the `v0.2.0` release
 found three things no gate reports: two stale figures in [`../examples/README.md`](../examples/README.md)
 (the built deck's size and its figure count, both in a sentence naming no field, so `figures.py`
 leaves them unanchored), and a `README.md` tally of the preview pane's wrong answers that counted a
@@ -507,7 +527,7 @@ edited away, because a rule that was vacuous and then was not is worth knowing a
 
 | | What it adds |
 | :--- | :--- |
-| [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md) | A second printed contents sheet. Measured to bite past 24 slides; the target case is 12. |
+| [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md) | A second printed contents sheet. Measured at **16 as the bound and 24 as the hard limit**. Was `low` while the target deck was 12 slides; **`high` since 2026-08-12**, when the owner said the next one is not. |
 | ~~[T-055](../tasks/T-055-a-variant-that-leaves-malformed-markup.md)~~ **done 2026-08-10** | One seeded variant tested Chrome's parser repair, not the tag it names. Closing its `<div>` took the collateral from four rules to none: DS-091 had been reporting a slide with no headline whose headline the parser had moved. |
 | ~~[T-058](../tasks/T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md)~~ **done 2026-08-10** | Every seed now asserts it landed. Three edits appended to the ledger unconditionally, not the one the task named -- the S2 assumption-marker removal had never matched since the day it was written, and D1 and D2 could no-op in silence. |
 | ~~[T-059](../tasks/T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md)~~ **done 2026-08-10** | `swap` defaults to `.assets-cache/deck/themed/` and refuses its own input by resolved path. Requiring `-o` was the rival and lost: four shipped copy sites print the bare command, so the flag would have made all four document a command that errors. |
@@ -560,6 +580,12 @@ new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 | [T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | **One command that runs every checker and partitions them into ran, skipped-with-a-reason, or failed.** [`PUBLISHING.md`](PUBLISHING.md) §8 specified it as its own excusal on 2026-08-10 and nothing claimed it; `0.2.1` was cut by running sixteen commands by hand, which is the hand-kept list one step slower rather than one step gone. |
 | [T-095](../tasks/T-095-static-variants-builds-its-static-half-from-a-hand-kept-list.md) | The seeded-defect suite names its verdict producers instead of deriving them, so a producer added tomorrow sits outside it. Found by T-093 moving a rule between producers and getting `MISSED` — loudly, because a variant for that rule happened to exist. |
 | [T-097](../tasks/T-097-ds-004s-excusal-says-degrade-gracefully-is-unobservable-and-ds-009-gave-it-an-instrument.md) | DS-004's excusal calls *other engines degrade gracefully* unobservable. DS-009 gave the degradation half of it an instrument, and the account cannot notice an excusal that goes stale without its rule becoming checked. |
+| [T-109](../tasks/T-109-one-source-reference-component-rendered-in-three-places.md) | **One source-reference component, four kinds, three render sites** — the mark, the list behind it, and the colophon. Authoring the colophon separately is what let it drift into bare titles with a footnote pointing backwards, so rendering one component three times is DS-136 applied where it most obviously was not. Carries the ruling that **a local file never ships as a `file://` link**: DS-105 already says so, the reason is that the recipient's machine has never seen the author's paths, and the request will be made again. |
+| [T-110](../tasks/T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md) | A quoted source inherits the deck's projection typography and is read at arm's length. The contract's promise that `.qv-body` styles every element it may contain is **kept** — the values are simply the deck's. Blocked on T-106 and T-107: the measure and the element set are both inputs, and choosing a scale before either is settled is choosing twice. |
+| [T-111](../tasks/T-111-a-named-slide-transition-chosen-per-deck.md) | **`slide` and `immediate`**, a closed pair. DS-141 already reserved 400–500 ms for an inter-slide transition, so this builds the thing the rule was written for. The outgoing slide animates and the incoming one does not — two slides moving at once is the mush that reads as cheap. The owner cut a book-page curl and an explosion on the day it was raised; **their DS-144 and DS-150 collisions are recorded in the task** so the later brainstorm starts from the constraints instead of rediscovering them. |
+| [T-112](../tasks/T-112-motion-density-and-the-split-between-content-and-affordance-motion.md) | **Motion density, 0–100, default 10** — and the split that makes one parameter coherent. **Affordance** motion says *this is a control and you just touched it* and always runs; **content** motion animates the argument and is what density selects. Every exemption the owner listed is an affordance, which is how the line was found. Density decides **how much conformant motion runs** and never invents an effect: the deck's best moment, a `0` that pulses under *"Nothing here measures the forecast"*, is DS-147 applied mechanically to a figure that happened to be zero, and nobody designed it. Selection must be **deterministic**, or the deck stops being diffable. |
+| [T-113](../tasks/T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Research, and **its first finding is that the question cannot be asked as posed**: there is no chart component to compare a library against — `0` chart classes in the shell, one incidental mention in the contract — while DS-146 and DS-147 both legislate chart behaviour. Six gates decide a candidate, all of them existing rules, and **framework weight is checked first** because it is the one most likely to settle it. Two deliverables, not one: a recommendation, and the threshold below which hand-authored SVG wins. |
+| [T-114](../tasks/T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | **The container is for navigation.** The ruler, the counter and the pager are one thing and share a box; *Read* and *Motion* are not and leave it. That principle explains the complaint without appealing to weight at all — the pager was not under-styled, it was in the wrong company. **Option Y chosen 2026-08-12**: a standalone `More` control whose menu opens **upward**, knowingly against DS-138, for the room to take a third item later. So **DS-138 is step one and gates every line of chrome code** — either the exemption is argued and written into the rule with its boundary, or the rule is amended. The boundary's test is that the multi-source mark is content and stays bound. Drawing the first sketch is what found the collision, which is the argument for sketching before building. |
 | ~~[T-070](../tasks/T-070-the-quick-view-for-a-source-document.md)~~ **done 2026-08-11** | A source rendered inside the deck, as an overlay. **The format set is decided by three admission tests rather than enumerated** — embeds with no external reference, executes no script, stays inside the size bound — after the owner extended it past Markdown and plain text on 2026-08-10. Unblocked the same day: it owns the linked form T-069 deliberately left as plain text. |
 | ~~[T-088](../tasks/T-088-a-figure-in-a-sentence-naming-no-field-goes-stale-unwatched.md)~~ **done 2026-08-11** | A figure stating a property of a **named artifact** becomes decidable, so it stops living in `figures.py`'s `unanchored` bucket. Raised 2026-08-11 from the `v0.2.0` release, which found **three** stale figures in there by hand. `l` because the deliverable is a false-alarm measurement over every document the gate reads, in the shape [T-068](../tasks/T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md) used to *reject* the wider rule — a recorded rejection meets its criteria too. The owner allowed a manifest on the day it was raised, which removes the inference half and leaves the measurement. |
 | ~~[T-089](../tasks/T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md)~~ **done 2026-08-11** | The disposal a withdrawn task gets, written down, and **T-072 reconstituted as the `cancelled` stub the rule then requires**. Raised 2026-08-11 from the pre-`PH3` audit, which found the ID hole by counting index rows against filenames. **`xs`, and here against the size rule** — the owner placed it, because PH2 has shipped and reopening a shipped phase is reserved for adopter defects, which this is not. |
