@@ -58,7 +58,7 @@ reflow it. Those rules belong to the reading view, and the classes they name sta
 | **Element** | The tag it must be, or `—` where the deck uses several and none is required. |
 | **Sits in** | The nearest **contracted** ancestor — not the immediate parent, which composition wrappers change. `on .x` instead means *a second class on the same element*: a modifier. `—` is a root. |
 | **Count** | How many, **per instance of what it sits in**. `1` · `0-1` · `1+` · `0+`. |
-| **Attributes** | Required on every instance. Absent ones fail; extra ones do not. `attr:text` additionally requires the value to contain `text`, which is how `style:--i` says *a `.rise` carries its stagger index* rather than merely *a style attribute*. `attr:a/b/c` instead requires the value to be **one of** the listed alternatives — a closed set, which is how `data-disc` carries DS-230's four editorial kinds and no fifth. |
+| **Attributes** | Required on every instance. Absent ones fail; extra ones do not. `attr:text` additionally requires the value to contain `text`, which is how `style:--i` says *a `.rise` carries its stagger index* rather than merely *a style attribute*. `attr:a/b/c` instead requires the value to be **one of** the listed alternatives — a closed set, which is how `data-disc` carries DS-230's four editorial kinds and no fifth. `attr:#NAME` requires a **zero-based index into the deck's own `var NAME = [...]`** — a range this document cannot enumerate, because its length is a per-deck fact written in the deck. |
 | **Source** | Who writes it — §2.1. |
 
 ### 2.1 The four sources, and what each one is checked for
@@ -75,8 +75,14 @@ reporting a script's work as missing markup — and to stop *unused* being a shr
 
 `vocabulary` is checked in the opposite direction on purpose. *Declared and unused* is otherwise
 unfalsifiable, and the deck already carries the lesson: a stale `.ribbon button::before` survived
-T-035 because **a rule that matches nothing looks exactly like a rule that passed**. Five rows
-below are `vocabulary`, and the number is meant to be looked at rather than grown.
+T-035 because **a rule that matches nothing looks exactly like a rule that passed**.
+
+**No row below is `vocabulary` today, and that is the correct number rather than a gap.** Five were
+until 2026-08-12, and every one of them turned out to be a class this document defines *for a deck
+to use* — so the source was asserting something about the reference deck and enforcing it against
+everybody else's (T-105). The source stays defined for the case it is actually for: a class the
+shared block styles that a deck must **not** author. A row only earns it by being that, never by
+being unused so far.
 
 ---
 
@@ -104,9 +110,15 @@ Every slide is a `<section>` (DS-080) and carries its own name, its stage and an
 the ruler and the printed contents page are both **renderings of those attributes**, so a slide
 that omits one goes missing from the navigation rather than looking wrong.
 
+**`data-stage` is the stage's position, not its name.** `deck.js` subscripts `STAGES` and
+`STAGE_ICON` with it, so `data-stage="2"` is the third stage the deck declares and
+`data-stage="Problem"` is nothing at all — a deck written that way opens, renders and reads
+correctly, and has no ruler and no arrow keys. It said only `data-stage` here until 2026-08-12, and
+the reference deck was the sole place the value was written down (T-102).
+
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `.slide` | `section` | `.stage` | `1+` | `data-name` `data-stage` `aria-label` | author |
+| `.slide` | `section` | `.stage` | `1+` | `data-name` `data-stage:#STAGES` `aria-label` | author |
 | `.eyebrow` | `p` | `.slide` | `1` | — | author |
 | `.tick` | `span` | `.eyebrow` | `1` | — | author |
 | `.headline` | `h2` | `.slide` | `1` | — | author |
@@ -116,11 +128,13 @@ that omits one goes missing from the navigation rather than looking wrong.
 | `.bottom-line--center` | — | `on .bottom-line` | `0+` | — | author |
 | `.provenance` | `p` | `.slide` | `1` | — | author |
 | `.sources` | `span` | `.provenance` | `0-1` | — | author |
-| `.sources-btn` | `button` | `.sources` | `1` | `aria-expanded` `aria-controls` | author |
-| `.sources-mark` | `svg` | `.sources-btn` | `1` | `aria-hidden` | author |
+| `.sources--one` | — | `on .sources` | `0+` | — | author |
+| `.sources-btn` | `button` | `.sources` | `0-1` | `aria-expanded` `aria-controls` | author |
+| `.sources-mark` | `svg` | `.sources` | `1` | `aria-hidden` | author |
 | `.sources-label` | `span` | `.sources-btn` | `1` | — | author |
 | `.sources-box` | `span` | `.sources` | `1` | `id` | author |
 | `.sources-item` | `span` | `.sources-box` | `1+` | — | author |
+| `.sources-link` | `a` | `.sources-item` | `0-1` | `href` | author |
 | `.sources-open` | `button` | `.sources-item` | `0-1` | `type` `data-qv` | author |
 | `.qv-src` | `template` | `.sources-item` | `0-1` | `data-qv` | author |
 | `.qv` | `div` | — | `1` | `id` `hidden` `role` `aria-modal` `aria-labelledby` | author |
@@ -140,9 +154,25 @@ print placement without anything appearing wrong. Keeping the box inside `.prove
 keeps that row at `1`: a slide has one provenance mark, and what changed is what the mark may
 contain.
 
-**`.sources-item` is `1+` and DS-105 says two.** The contract can only say a box has items; *a box
-is for more than one source* is an editorial claim about the slide, which is DS-105's to make and
-the critique pass's to judge. A one-item box is conformant markup and a pointless design.
+**`.sources-item` is `1+`, and since 2026-08-12 a one-item box is the point rather than a
+pointless design.** The mark has two shapes and `.sources--one` names which:
+
+| | `.sources-btn` | `.sources-box` | Reads as |
+| :--- | :--- | :--- | :--- |
+| Two or more sources | the control, labelled | shut at load, opens below the mark | a disclosure (DS-138) |
+| One source, `.sources--one` | **absent** | always open, on the line | the provenance line itself |
+
+So `.sources-btn` is `0-1` and `.sources-mark` sits in `.sources` rather than in the button: **the
+glyph is what a reader recognises, and at one source it is the whole affordance.** A slide resting
+on one source used to be a bare uppercase title in the corner, which the owner of the first
+adopting deck read as a subtitle and said so (T-103). The box survives at one source because it is
+where `.sources-link` and `.sources-open` live — a single **local** source keeps its route to the
+quick view, which it had no way to reach while the route ran through a control it did not get.
+
+**`.sources-link` is DS-105's link clause, and the clause is about reachability rather than
+count.** A source reachable from where the deck is presented is a working link at any number of
+sources; one that is not is plain text, or a `.sources-open` where a quick view can carry it.
+Never a dead link, and a `file://` href is an authoring form rather than a shipping one.
 
 **The quick view is two components' worth of rows for one reason: the surface is the shell's and
 the content is the deck's.** `.qv` and everything under it ship empty in `shell/shell.html`, like the
@@ -269,16 +299,19 @@ figure's business.
 | `.t-faint` | `text` | `.fig` | `0+` | — | author |
 | `.t-paper` | `text` | `.fig` | `0+` | — | author |
 | `.t-caution` | `text` | `.fig` | `0+` | — | author |
-| `.t-ink` | `text` | `.fig` | `0+` | — | vocabulary |
-| `.pos` | — | `.fig` | `0+` | — | vocabulary |
-| `.neg` | — | `.fig` | `0+` | — | vocabulary |
-| `.caution` | — | `.fig` | `0+` | — | vocabulary |
+| `.t-ink` | `text` | `.fig` | `0+` | — | author |
+| `.pos` | — | `.fig` | `0+` | — | author |
+| `.neg` | — | `.fig` | `0+` | — | author |
+| `.caution` | — | `.fig` | `0+` | — | author |
 
-**The three role classes are `vocabulary` and the reason is worth stating, because it looks like a
-mistake and is not.** DS-026 fixes the positive, negative and caution roles deck-wide, and this
-deck spends all thirteen of them in the ledger's `<b>` and `<div>` elements — `.ledger .pos` in the
-composition block, a different rule to `.fig .pos` here. So the roles are used and the *figure's*
-copy of them is not. A figure encoding a loss is the obvious next deck, which is why the rows stay.
+**The three role classes were `vocabulary` until 2026-08-12, and the deck they were waiting for
+arrived.** DS-026 fixes the positive, negative and caution roles deck-wide, and the reference deck
+spends all thirteen of them in the ledger's `<b>` and `<div>` elements — `.ledger .pos` in the
+composition block, a different rule to `.fig .pos` here — so the figure's copy of them was unused.
+The note under the old rows said *a figure encoding a loss is the obvious next deck, which is why
+the rows stay*; an adopting project then built exactly that deck and had to choose between drawing
+the loss in red and passing the gate (T-105). `.t-ink` moved with them: it is the sibling of five
+`author` text roles and would have failed the next deck to colour figure text explicitly.
 
 ### 3.7 Shared pieces
 
@@ -288,11 +321,13 @@ copy of them is not. A figure encoding a loss is the obvious next deck, which is
 | `.sm` | — | `on .icon` | `0+` | — | author |
 | `.est` | `span` | `.slide` | `0+` | — | author |
 | `.legend` | `div` | `.slide` | `0+` | — | author |
-| `.mono` | — | — | `0+` | — | vocabulary |
+| `.mono` | — | — | `0+` | — | author |
 
 `.est` is the `[est.]` marker DS-102 requires to survive; `.mono` is the same treatment as a
-standalone utility and no slide has needed it, `.est` and `.lab` covering the two places a mono
-label actually appears.
+standalone utility and no slide here has needed it, `.est` and `.lab` covering the two places a
+mono label actually appears. **It was `vocabulary` until 2026-08-12** and moved with the figure
+roles (T-105): a utility the contract styles and documents for a deck to use is one a deck may
+use, and unused-in-*this*-deck is not the same claim.
 
 ### 3.8 Motion
 

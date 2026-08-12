@@ -255,7 +255,12 @@
   /* Its own component and not a .disc - provenance is what the argument rests on rather than tier
      two (DS-230) - which is why it has its own list and its own toggle. It shares the precedence
      rule with the disclosure because a reader has one attention whatever the content is (DS-137). */
-  var srcs = Array.prototype.slice.call(stage.querySelectorAll('.sources'));
+  /* A one-source mark has no button and its box never closes (T-103), so it is not one of these:
+     there is nothing to toggle and nothing to close it for. Selecting on the button rather than on
+     `.sources` is what keeps that true - the list below is *the disclosures*, not the marks. */
+  var srcs = Array.prototype.slice.call(stage.querySelectorAll('.sources')).filter(function(s){
+    return !!s.querySelector('.sources-btn');
+  });
   srcs.forEach(function(s){
     var box = s.querySelector('.sources-box');
     s.querySelector('.sources-btn').addEventListener('click', function(){ toggleSources(s, null); });

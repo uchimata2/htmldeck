@@ -67,17 +67,39 @@ will not tell you, because they are this stage's judgement:
   a layout written for this one.
 - **Every value that could differ between themes is a token.** No colour, length, duration or easing
   curve outside the theme region; `theme.py check` fails one and names it under DS-010.
+- **A `<marker>`, gradient or filter belongs in the slide that uses it** (DS-232). Every slide but
+  the current one is `visibility:hidden`, and a hidden subtree paints nothing for a visible one to
+  reference — so a marker defined once and reused across slides draws on exactly one of them,
+  whichever you happen to be looking at. Define it again in each slide that needs it. The sprite is
+  the exception: it sits outside every slide, which is why `<use href="#i-name">` is fine anywhere.
 - **Tier two is a decision, not a leftover.** Every `.disc` declares its kind in `data-disc` —
   `derivation` · `scope` · `condition` · `instances`, and no fifth (DS-230). If what is behind the
   click is none of those four, it belongs on the slide or nowhere. A bottom line may never depend on
   a figure that lives only behind the click (DS-231).
 
 **The provenance mark is rendered from the slide's `Sources` field, never invented here** (DS-105).
-One named source is the source's own title as plain text; more than one is the `.sources` control,
-whose markup is `${CLAUDE_PLUGIN_ROOT}/docs/COMPONENT-CONTRACT.md` §3.2; `none` is no mark at all,
-unless the deck is illustrative and the slide carries that note instead. A mark that says the same
-thing on every slide of a deck resting on three documents is the defect this field exists to end —
-it was true of both example decks until 2026-08-10.
+`none` is no mark at all, unless the deck is illustrative and the slide carries that note instead.
+A mark that says the same thing on every slide of a deck resting on three documents is the defect
+this field exists to end — it was true of both example decks until 2026-08-10.
+
+**Every mark carries the glyph.** The count decides the *control*, and reachability decides the
+*route to the source* — two questions, and reading the second off the first is what made a
+one-source slide a bare title in the corner that its first reader took for a subtitle (T-103):
+
+| Sources | Mark |
+| :--- | :--- |
+| One | `.sources.sources--one` — the glyph and the title, no button, the box open on the line |
+| Two or more | the `.sources` control — glyph, label, and a box that opens below it |
+
+| The source is | The title is |
+| :--- | :--- |
+| Reachable where the deck is presented | an `<a class="sources-link">` — at one source as much as at three |
+| A local document you are shipping | a `.sources-open` beside its `.qv-src` template, so the quick view carries it |
+| Neither | plain text |
+
+The markup for all of it is `${CLAUDE_PLUGIN_ROOT}/docs/COMPONENT-CONTRACT.md` §3.2, and
+`component.py check` decides it. **A `file://` href is an authoring form and a defect in a
+delivered deck**, on the same footing as `linked` mode: ship the quick view instead.
 
 **A batch that introduces a `<template>`, a `<canvas>` or a `getContext` changes what the deck's
 capability preflight has to test** (DS-009), so re-derive it — the block is only correct for the

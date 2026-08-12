@@ -445,7 +445,12 @@ adopter at all. **A patch takes the next patch number on the published line what
 belong to.** Caught at the release it would have broken, and written into
 [`../CLAUDE.md`](../CLAUDE.md) where the next person decides a version.
 
-*The phase has reopened seven times, and **the sixth was the first from outside this repository**:
+| ~~[T-101](../tasks/T-101-theme-py-self-test-fails-for-every-plugin-install.md)~~ **done 2026-08-12** | `theme.py` refused to report anything from an installed plugin: its self-test compared the destination `output_root(deck)` decides against a constant anchored on the tool's own `ROOT`, and the two agree only where htmldeck is itself a git clone. So the assertion passed for the maintainer and failed for **every adopter**, and a failing self-test produces no verdict for any deck. The expectation now comes from the same deck the answer does, and the installed case — a deck with no repository above it — is one of the two it asserts. |
+| ~~[T-102](../tasks/T-102-data-stage-is-an-index-and-the-contract-does-not-say-so.md)~~ **done 2026-08-12** | `data-stage` is an index into the deck's `STAGES`, `deck.js` subscripts it, and §3.2's row said nothing about the value. A deck built strictly from the contract carried `data-stage="Problem"`, opened, rendered, passed four gates and had **no ruler and no arrow keys**. The contract now says it, in a notation §2 gained for the purpose — a deck-relative range no closed set can express — and `component.py` decides it against the deck's own array. |
+| ~~[T-103](../tasks/T-103-build-md-drops-ds-105s-link-clause-for-a-single-source-slide.md)~~ **done 2026-08-12** | DS-105 conditions the link on **reachability**; `build.md` conditioned it on **count**, so a slide resting on one source got a bare uppercase title that the first adopting deck's owner read as a subtitle. The one-source mark now carries the glyph and is itself the route — a link where the source is reachable, the quick view where it is a local document — which also gives `n = 1` the quick view built for exactly that case and reachable only through a control it did not get. |
+| ~~[T-105](../tasks/T-105-fig-pos-neg-caution-are-vocabulary-so-a-real-deck-fails-for-using-them.md)~~ **done 2026-08-12** | §3.6 classified `.fig .pos`, `.neg` and `.caution` as `vocabulary` — *the contract styles it and no deck authors it* — and wrote down that a figure encoding a loss was the obvious next deck. That deck arrived and had to choose between drawing the loss in red and passing the gate. The sweep the fix asked for found `.t-ink` and `.mono` in the same position, so **all five rows moved to `author`** and the source now has no members: every one of them was a class this contract defines for a deck to use. |
+
+*The phase has reopened eight times, and **the sixth was the first from outside this repository**:
 T-090 and T-091 were raised on 2026-08-11 by htmldeck's first adopting project, against the published
 `0.2.0`. Both arrived labelled `PH3` and were moved, because the phase a defect belongs to is decided
 by where it was hit and not by its size — the effort line at `l` sorts the two phases that are not the
@@ -453,8 +458,14 @@ published one. The five before them were the project's own: `v0.1.1` through `v0
 is T-094, and it is the project's own again** — found on 2026-08-11 while rendering a deck to look at
 it, which is where a defect in the looking step would have to be found.*
 
-**Nothing is owed to this phase.** All three went out in `0.2.1`, by
-[`PUBLISHING.md`](PUBLISHING.md) §8 and nothing else.
+**The eighth reopening is four tasks, not one, and all four came from the adopting project on
+2026-08-12** — T-101, T-102, T-103 and T-105. Three arrived as defect reports and the fourth as
+feedback; the owner ruled T-105 into this phase on the ground that a published gate failing a deck
+for using a documented class is a defect in the check, whatever the report calls it.
+
+**What is owed to this phase is a release.** All four are `done` and none has shipped: they carry
+`shipped_in: unreleased` until `0.2.2` is tagged, by [`PUBLISHING.md`](PUBLISHING.md) §8 and nothing
+else. §8.1 is new and holds that release's *what stops conforming* row already.
 
 ### PH2 — the dependencies, and every minor and moderate fix
 
@@ -555,6 +566,8 @@ new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 | ~~[T-093](../tasks/T-093-ds-005s-check-bans-the-one-esm-route-r6-measured-as-working.md)~~ **done 2026-08-11** | DS-005's predicate matched the call rather than the argument, so it forbade `import(blob:)` — the one route R6 §6 measured as working, and the one DS-006 exists to make work. Raised and closed the same day out of T-019, which found it by writing a preflight row that probes `import()` and noticing the row could never ship. The rule was right and is unamended. |
 | [T-098](../tasks/T-098-check-reports-briefs-phase-tables-as-a-second-index.md) | taskmd 0.5.0's new `DUPLICATE INDEX` advisory fires on **this section**, and correctly: the three tables here name a **majority** of every known task id, which is the threshold upstream chose so it scales instead of needing a number. The document is right too — a row per task with a rationale the generated board does not hold. What is owed is a written decision, because an advisory that prints on every run is one the next genuine duplicate arrives behind. |
 | ~~[T-099](../tasks/T-099-rename-the-release-phases-so-they-cannot-be-read-as-versions.md)~~ **done 2026-08-12** | **The phases stopped being called `v0.1`–`v0.3`.** L-69 had declined this rename the day before, having priced the edit and not the reading; the owner then reported confusing a phase for a version repeatedly in conversation, which is a cost no gate here can see. 282 mentions across 60 files, and it could not be a blind substitution — `v0.1` is a prefix of `v0.1.5`, so the pattern that finds the phase finds five real versions. `shipped_in` is the other half: the version a task's work first reached an installed copy in, derived from the first tag containing the commit that closed it, so this phase's tasks can read `PH3` and `0.2.1` at once without contradiction. |
+| ~~[T-100](../tasks/T-100-a-release-adds-a-required-part-and-conforming-decks-fail-silently.md)~~ **done 2026-08-12** | Two releases running added a required part and told adopters through failure output: `0.2.0`'s per-slide `Sources` field, then `0.2.1`'s capability preflight, six failures across three gates against a deck nobody had edited. The requirement is documented before it is enforced both times, so this is about **arrival**, not about what is asked. `PUBLISHING.md` §8 gained a step and §8.1 a table: what newly fails, and the smallest edit, per version. The expensive half was never the reading — an adopter who has not baselined cannot tell a new requirement from a regression. |
+| ~~[T-104](../tasks/T-104-an-svg-marker-defined-in-one-slide-does-not-paint-in-another.md)~~ **done 2026-08-12** | A `<marker>` defined in one slide and used in another paints nothing — every slide but the current one is `visibility:hidden` — so an adopting deck shipped **four of five diagrams with no arrowheads** past every gate here. DS-117 bans an arrowhead the data does not support and never required one it does, which is why nothing saw it. **DS-232** is the new rule and it is `auto`: a paint reference resolving in another slide is a static comparison. DS-117 is unchanged — *directional* is not decidable from markup. |
 | ~~[T-092](../tasks/T-092-product-feedback-from-the-first-external-deck.md)~~ **done 2026-08-11** | Six things a real deck owner found wanting after presenting-quality review, routed to the tasks that own them — **four of the six to tasks that are `done`**, each of which built exactly what it specified. Raised 2026-08-11 by the first adopting project, and kept apart from its defect reports on purpose: filed together, the interesting half gets triaged as bugs and closed by making code match documentation. It carries two named collisions it does not rule on — DS-105 forbids the `file://` link a deck needs to reach its own sources, and DS-092's four-sentence mark cannot hold a descriptive source line — and one reusable lesson: **a workaround recorded as a local deviation is a product finding nobody has reported yet.** `s`, and here by T-089's placement rather than by size. |
 
 *The largest thing on the board is T-070 and the least certain to be worth it is also T-070 — its own
@@ -643,7 +656,7 @@ Those belong in the release notes, not in a list of things to fix first.
 remain are both about the build and critique modes, not about the deck.***
 
 - ~~A deck renders correctly with the network disabled.~~ **Met.**
-  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 247 KB, zero
+  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 250 KB, zero
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
 - ~~The build check demonstrated failing on each class of problem it claims to catch.~~ **Met

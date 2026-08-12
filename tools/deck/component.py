@@ -276,9 +276,28 @@ def is_scoped(part, styled):
 # ---------------------------------------------------------------------------- the checks
 
 
-def structure(root, parts, styled):
+SCRIPT_ARRAY = re.compile(r"var\s+([A-Z][A-Z_]*)\s*=\s*\[(.*?)\]\s*;", re.S)
+
+
+def script_arrays(html):
+    """`{NAME: length}` for every `var NAME = [...]` the deck's script declares.
+
+    **The deck is the only place these lengths are written** (T-102). `data-stage` is an index into
+    `STAGES`, and `STAGES` is a per-deck line the shell fills in — so the contract can say *an index
+    into the deck's own array* but can never list the values, and a check that wants to decide the
+    attribute has to read the file it is checking.
+    """
+    out = {}
+    for name, body in SCRIPT_ARRAY.findall(html):
+        quoted = re.findall(r"'[^']*'|\"[^\"]*\"", body)
+        out[name] = len(quoted) if quoted else len([s for s in body.split(",") if s.strip()])
+    return out
+
+
+def structure(root, parts, styled, arrays=None):
     """Every way the markup departs from the contract, as `[message]`."""
     bad = []
+    arrays = arrays or {}
     nodes = list(walk(root))
     for name in sorted(parts):
         p = parts[name]
@@ -342,6 +361,28 @@ def structure(root, parts, styled):
                                   len([e for e in els
                                        if (e.attrs.get(attr.lower()) or "").strip()
                                        not in allowed]), " ".join(wrong)))
+            elif needs.startswith("#"):
+                # An index into one of the deck's own script arrays, which is a range no contract
+                # can enumerate: `STAGES` has as many entries as the deck has stages. A deck that
+                # writes the stage's *name* here opens, renders and passes four gates, and loses
+                # its ruler and its arrow keys, because `deck.js` subscripts the array with it
+                # (T-102). The failure names the attribute, not the navigation it breaks.
+                size = arrays.get(needs[1:])
+                held = [(e, (e.attrs.get(attr.lower()) or "").strip()) for e in els]
+                if size is None:
+                    if held:
+                        bad.append(".%s: %s is an index into %s and this deck declares no such "
+                                   "array" % (name, attr, needs[1:]))
+                else:
+                    wrong = sorted({v or "(empty)" for _e, v in held
+                                    if not (v.isdigit() and int(v) < size)})
+                    if wrong:
+                        bad.append(".%s: %s is a zero-based index into %s (0-%d) and %d "
+                                   "element(s) leave it: %s"
+                                   % (name, attr, needs[1:], size - 1,
+                                      len([v for _e, v in held
+                                           if not (v.isdigit() and int(v) < size)]),
+                                      " ".join(wrong)))
             elif needs:
                 empty = [e for e in els if needs not in (e.attrs.get(attr.lower()) or "")]
                 if empty:
@@ -413,7 +454,7 @@ def verdicts(html):
 
     authored = [p for p in parts.values() if p.source == "author"]
     vocab = [p for p in parts.values() if p.source == "vocabulary"]
-    bad = structure(root, parts, styled)
+    bad = structure(root, parts, styled, script_arrays(html))
     missing = missing_rows(parts, styled)
     gaps = motion_gaps(css, motions)
 
@@ -493,6 +534,25 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a data-disc outside DS-230's four kinds was not reported")
     if not any("closed set" in m for m in structure(parse(doc.replace('="scope"', '')), tiny, {})):
         sys.exit("SELF-TEST FAILED: a valueless data-disc was not reported")
+
+    # `data-stage` is an index into the deck's own `STAGES`, and the stage's *name* in that slot
+    # passes every other check in this file while costing the deck its ruler and its arrow keys
+    # (T-102). Three cases, because the two wrong ones fail differently: a name is not a number,
+    # and a number can still be past the end.
+    if "slide" in parts:
+        one, stages = {"slide": parts["slide"]}, {"STAGES": 8}
+        if structure(parse(doc), one, {}, stages):
+            sys.exit("SELF-TEST FAILED: an in-range data-stage was reported: %s"
+                     % structure(parse(doc), one, {}, stages))
+        for bad_value in ('data-stage="Problem"', 'data-stage="8"', 'data-stage=""'):
+            broke = parse(doc.replace('data-stage="0"', bad_value))
+            if not any("index into STAGES" in m for m in structure(broke, one, {}, stages)):
+                sys.exit("SELF-TEST FAILED: %s was not reported" % bad_value)
+        # ...and with no array to index, the deck is missing the declaration rather than the value.
+        if not any("declares no such array" in m for m in structure(parse(doc), one, {}, {})):
+            sys.exit("SELF-TEST FAILED: a data-stage with no STAGES declared was not reported")
+    if script_arrays("  var STAGES = ['a','b','c'];\n  var idx = 0;").get("STAGES") != 3:
+        sys.exit("SELF-TEST FAILED: the deck's STAGES array was not counted")
 
     # The completeness check has to notice a component nobody contracted, or it is decoration.
     if not missing_rows({}, {"invented": [".invented"]}):

@@ -102,14 +102,19 @@ STATIC_VARIANTS = [
         # perfectly on the machine the deck was written on and is dead the moment it is emailed.
         # `file://` is the honest form of it; a relative path is the same defect wearing a shorter
         # string, and the check treats them alike for that reason.
-        ('<p class="provenance">Ridership model</p>',
-         '<p class="provenance"><a href="file:///C:/sources/ridership-model.md">Ridership '
-         'model</a></p>')]),
+        # *Re-anchored 2026-08-12 by T-103*: a one-source mark is the `.sources--one` shape now,
+        # so the link is seeded where a link actually goes - inside the item.
+        ('<span class="sources-box" id="src20"><span class="sources-item">Ridership model</span>',
+         '<span class="sources-box" id="src20"><span class="sources-item">'
+         '<a class="sources-link" href="file:///C:/sources/ridership-model.md">Ridership '
+         'model</a></span>')]),
     ("provenance-link-to-a-fragment-that-is-not-there", "DS-105", [
         # The other half, and the one a person cannot see by reading: an in-document anchor whose
         # target was renamed. It looks like a working link and behaves like a dead one.
-        ('<p class="provenance">Cost model</p>',
-         '<p class="provenance"><a href="#src-cost-model">Cost model</a></p>')]),
+        # *Re-anchored 2026-08-12 by T-103*, for the reason above.
+        ('<span class="sources-box" id="src25"><span class="sources-item">Cost model</span>',
+         '<span class="sources-box" id="src25"><span class="sources-item">'
+         '<a class="sources-link" href="#src-cost-model">Cost model</a></span>')]),
     # ---- added by T-016, which made the markup a contract
     ("control-with-no-aria-controls", "DS-229", [
         # The defect a generator produces and a person does not: the tenth disclosure looks
@@ -162,6 +167,12 @@ STATIC_VARIANTS = [
          'aria-expanded="false" aria-controls="p8">',
          '<div class="disc" data-disc="appendix">\n    <button class="disc-btn" '
          'aria-expanded="false" aria-controls="p8">')]),
+    ("marker-defined-in-another-slide", "DS-232", [
+        # **The defect that shipped four blank arrowheads** (T-104). The reference deck defines a
+        # marker per slide, correctly; this points one slide's arrow at another slide's marker.
+        # Nothing else moves - the connector is still directional, still labelled, still meets its
+        # target - and it draws no arrowhead anywhere but the slide holding the definition.
+        ("url(#ar4)", "url(#ar9)")]),
     ("bottom-line-supported-only-behind-the-click", "DS-231", [
         # **The failure a generator writes and a reader meets closed.** The deliverable is rewritten
         # to quote the gate's 26%, which lives in the panel and nowhere on the slide - so the slide
@@ -174,6 +185,9 @@ STATIC_VARIANTS = [
 
 # One render each. These are the rules where T-005 added the MEASUREMENT and not just a threshold,
 # so a string edit alone would prove nothing about whether the probe can see the defect.
+# The one-source provenance mark, written once: two anchors below quote it (T-103).
+MARK21 = ('<p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src21"><span class="sources-item">Ridership model</span></span></span></p>')
+
 RENDER_VARIANTS = [
     ("slide-is-not-a-section", "DS-080", [
         ('<section class="slide" data-name="Waiting is the trip"',
@@ -184,8 +198,10 @@ RENDER_VARIANTS = [
         # with no headline whose headline the parser had lifted out of it. The anchor is the
         # slide's own bottom line: `</section>` is not unique and neither is the provenance mark
         # above it.
-        ('is half the headway.</b></p>\n  <p class="provenance">Ridership model</p>\n</section>',
-         'is half the headway.</b></p>\n  <p class="provenance">Ridership model</p>\n</div>')]),
+        # *Re-anchored 2026-08-12 by T-103*: the mark this anchors past is the one-source
+        # shape now. Still the slide's own bottom line plus its mark, for the reason above.
+        ('is half the headway.</b></p>\n  ' + MARK21 + '\n</section>',
+         'is half the headway.</b></p>\n  ' + MARK21 + '\n</div>')]),
     ("sentence-over-twenty-words", "DS-092", [
         ("<b>Spend the $5.6M grant on bus frequency, and hold",
          "<b>Spend the whole of the $5.6M state corridor grant on bus frequency across the six "
@@ -269,6 +285,7 @@ def static_failures(path):
     # whatever `check.py` gathers without a browser, not whatever happens to be in one table.
     rows = ([(r, w, bool(fn(html))) for r, w, fn in audit.STATIC]
             + audit.split_verdicts(html) + audit.provenance_verdicts(html)
+            + audit.marker_verdicts(html)
             + audit.fetch_verdicts(html)
             + contrast.verdicts(html) + theme.verdicts(html) + component.verdicts(html))
     return {r for r, _w, ok in rows if not ok}, rows

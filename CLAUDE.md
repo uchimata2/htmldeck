@@ -14,12 +14,12 @@ copy or behaviour to verify. It was described as working prior art until 2026-08
 was. **Status: the research is complete; the plugin scaffold exists and runs its own pipeline**
 (`.claude-plugin/`, `skills/htmldeck/`), **and as of 2026-08-09 the build check, the theme contract,
 the component contract, the editorial split rule and build mode are all built** — `python
-tools/deck/check.py <deck>` decides 83 of the 114 rules a gate owns and names the other 31 with a
+tools/deck/check.py <deck>` decides 84 of the 115 rules a gate owns and names the other 31 with a
 reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed specification into a
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
 2026-08-09 as `docs/PUBLISHING.md`, and **PH1 shipped the same day as `0.1.0`**: the repository is
-public at `github.com/uchimata2/htmldeck`, released and **now at `0.2.1`** after five PH1 patches,
+public at `github.com/uchimata2/htmldeck`, released and **now at `0.2.2`** after six PH1 patches,
 with `master` as the published branch. **PH2 shipped 2026-08-11 as `0.2.0`** carrying
 [T-086](tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
 [T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
@@ -40,14 +40,22 @@ what the paragraph above is about. The rule the rename makes visible: **`work_pa
 `shipped_in` is the version**, and a task can hold `PH3` and `0.2.1` at once without contradiction.
 Never write a phase with a `v`. **T-099.**
 
-**PH3 is the main line now, but PH1 has reopened seven times**: a defect in the published plugin is
-a `PH1` **phase** task, not a later improvement. **`0.2.1` shipped three of them 2026-08-11** —
+**PH3 is the main line now, but PH1 has reopened eight times**: a defect in the published plugin is
+a `PH1` **phase** task, not a later improvement. **`0.2.2` shipped four of them 2026-08-12** —
+[T-101](tasks/T-101-theme-py-self-test-fails-for-every-plugin-install.md),
+[T-102](tasks/T-102-data-stage-is-an-index-and-the-contract-does-not-say-so.md),
+[T-103](tasks/T-103-build-md-drops-ds-105s-link-clause-for-a-single-source-slide.md) and
+[T-105](tasks/T-105-fig-pos-neg-caution-are-vocabulary-so-a-real-deck-fails-for-using-them.md), all
+four from the adopting project. **`0.2.1` shipped three on 2026-08-11** —
 [T-090](tasks/T-090-spec5-cannot-parse-a-descriptive-slide-label.md),
 [T-091](tasks/T-091-build-md-documents-icons-set-as-a-single-pair.md) and
-[T-094](tasks/T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md). The first two are the
-only ones ever **raised from outside this repository**, hit on the
+[T-094](tasks/T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md). T-090 and T-091 were
+the first ever **raised from outside this repository**, hit on the
 published `0.2.0` by the first adopting project and moved here from the `PH3` they arrived labelled
-with; T-094 is the project's own, found while rendering a deck to look at it. **The fifth
+with; T-094 is the project's own, found while rendering a deck to look at it. **T-105 is the first
+this phase took over its filer's own classification**: it arrived as feedback because the contract
+behaves as written, and a published gate that fails a deck for using a class the contract defines is
+a defect in the check whatever the report calls it. **The fifth
 was the first nobody reported** — `v0.1.5` carried
 [T-083](tasks/T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) and
 [T-085](tasks/T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md), both found by running

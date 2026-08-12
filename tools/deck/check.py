@@ -166,6 +166,10 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     # to travel in the text, because a deck that cites nothing must not read as a deck whose links
     # were checked. It replaces an excuse that rested on DS-001 banning links, which DS-001 does not.
     rows += audit.provenance_verdicts(html)
+    # DS-232, added by T-104. Same shape and same reason: the count travels in the text, because a
+    # deck with one slide and no SVG has pointed nowhere and must not read as one whose references
+    # were checked.
+    rows += audit.marker_verdicts(html)
     # DS-005, added by T-093. Same shape and same reason as the two rows above: the verdict needs a
     # count in its text, and the boolean it replaced forbade `import(blob:)` - the one route R6 §6
     # measured as working, and the one DS-006 exists to make work.

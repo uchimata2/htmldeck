@@ -193,9 +193,10 @@ over `SKILL.md`.
 
 ## 8. The release sequence
 
-Seven steps, in order, each with what proves it was done. Written down on 2026-08-10 after `v0.1.4`
+Eight steps, in order, each with what proves it was done. Written down on 2026-08-10 after `v0.1.4`
 shipped: four releases had each re-derived the same sequence from the last one's commits, which works
-until the person doing it is not the person who did it last.
+until the person doing it is not the person who did it last. *Step 5 was added on 2026-08-12 by
+[T-100](../tasks/T-100-a-release-adds-a-required-part-and-conforming-decks-fail-silently.md).*
 
 | # | Step | What proves it |
 | :-- | :--- | :--- |
@@ -203,9 +204,10 @@ until the person doing it is not the person who did it last.
 | 2 | **Bump the version** in `.claude-plugin/plugin.json`, `CLAUDE.md` and `README.md` | Three files carry it; a grep for the outgoing version returns nothing outside `docs/BRIEF.md`'s history |
 | 3 | **Humanize the human-facing set** (§2's test), then re-run `python tools/docs/figures.py` and re-paste the `volatile` block from `--values` | `0 stale figure(s)`. §6 is why: a rewrite that re-derives a number from memory is a defect, not a style improvement |
 | 4 | **Read the prose around the figures** | Nothing. **This is the step no gate covers** — `v0.1.4` found a spelled-out fixture count and a defect tally that had both gone false while every pasted figure was correct (**L-05**) |
-| 5 | **Commit, tag `vX.Y.Z`, push both** | `git push origin master --tags`, and the tag on the remote |
-| 6 | **`gh release create`**, with a note written to §2's test | The published release page. A release note is read before installing, so §2 covers it — it is not an exception to the rule, it is an instance of it |
-| 7 | **Record the shipping version** in each closed task's log and in [`BRIEF.md`](BRIEF.md) | The version appears in the record without anyone reconstructing it later, which is the failure this whole section exists for |
+| 5 | **Name what stops conforming** — §8.1. If this release adds or tightens a required part, write the row before you tag | A row in §8.1's table, naming the rule ids that will newly fail and the smallest edit that satisfies them |
+| 6 | **Commit, tag `vX.Y.Z`, push both** | `git push origin master --tags`, and the tag on the remote |
+| 7 | **`gh release create`**, with a note written to §2's test, **carrying §8.1's row verbatim** | The published release page. A release note is read before installing, so §2 covers it — it is not an exception to the rule, it is an instance of it |
+| 8 | **Record the shipping version** in each closed task's log and in [`BRIEF.md`](BRIEF.md) | The version appears in the record without anyone reconstructing it later, which is the failure this whole section exists for |
 
 **The gate list is an enumeration, and it is declared as one.**
 
@@ -266,3 +268,24 @@ ran and which it skipped **with a reason** — the partition [`figures.py`](../t
 already applies to fences and [`check.py`](../tools/deck/check.py) to rules. Until that exists, a list
 kept by hand is what there is, and a list kept by hand goes stale silently — which is §2's own
 argument about the covered set, one document over.
+
+### 8.1 What each release newly required
+
+**A conforming deck is not edited by an upgrade, and can stop conforming anyway.** The requirement
+arrives documented — `DESIGN-SYSTEM.md`, the two contracts and `build.md` all describe a new part
+before a gate enforces it — and the adopter's first news of it is a wall of failures against a file
+nobody touched. That has now happened twice running.
+
+**The expensive half is not the reading.** An adopter who has not baselined the old build cannot
+tell a new requirement from a regression, and the first reading of six failures after an upgrade is
+that the upgrade broke something. Naming them here, and in the release note, is what makes
+baselining unnecessary.
+
+| Version | What it newly required | What newly fails | The smallest edit |
+| :--- | :--- | :--- | :--- |
+| `0.2.0` | A per-slide `Sources` field in the specification, and a provenance mark rendered from it (DS-105, T-069) | `spec.py` on every slide of a deck written before it | Add `Sources:` to each slide in the `.slides.md`, then rebuild the marks |
+| `0.2.1` | The capability preflight and its degraded state (DS-009, T-019) | `check.py` — `DS-009` ×3, `DS-013`, `DS-229`; `shell.py check` — `NOT A SHELL`, no `<script id="preflight">`; `theme.py check` — `DS-013`, `--scrim` undeclared | `python tools/deck/shell.py preflight <deck>` writes the block and the anchor; declare `--scrim` in the theme region |
+| `0.2.2` | `data-stage` decided as an index (T-102); `.fig` role classes usable (T-105); the one-source provenance mark (T-103); DS-232, cross-slide SVG references (T-104) | `component.py` on a deck whose `data-stage` carries a stage **name**; `check.py` — `DS-232` on a deck defining a `<marker>` in one slide and using it in another. **Nothing that passed 0.2.1 newly fails for the other two**: T-105 stops a gate failing a legal deck, and T-103 changes what `build.md` asks for on new work | `data-stage="2"` — the zero-based index into the deck's `STAGES`; move each `<marker>` into the slide that uses it |
+
+**A release with nothing to say here says so** — the row is the evidence the question was asked, and
+an absent row is indistinguishable from a forgotten one.

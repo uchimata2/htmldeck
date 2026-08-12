@@ -15,8 +15,9 @@ anyone editing this file. The same reason `ruleset.py` reads `DESIGN-SYSTEM.md`.
     python tools/deck/theme.py check <deck>                 # the rows the gate asks for
 
 Without `-o`, a swap writes to `.assets-cache/deck/themed/<deck>-<theme>.html` — where
-`docs/THEME-CONTRACT.md` §1 says a themed copy belongs. **It never writes to the deck it was
-given**, whatever `-o` says; that default cost a recovery once (**T-059**).
+`docs/THEME-CONTRACT.md` §1 says a themed copy belongs, **under the project the deck belongs to
+rather than this tool's** (**T-074**). **It never writes to the deck it was given**, whatever `-o`
+says; that default cost a recovery once (**T-059**).
 
 Runs its own self-test first and refuses to report if it fails (**L-04**). Pure standard
 library (**L-07**).
@@ -26,6 +27,7 @@ import io
 import os
 import re
 import sys
+import tempfile
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -36,7 +38,11 @@ import paths                                                        # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CONTRACT = os.path.join(ROOT, "docs", "THEME-CONTRACT.md")
 FACES = os.path.join(ROOT, "themes", "faces")
-OUT = os.path.join(ROOT, ".assets-cache", "deck", "themed")
+# **Relative on purpose, and joined onto the deck's project rather than this tool's** (T-101). It
+# was `os.path.join(ROOT, ...)`, which is the right answer only when htmldeck is a git clone; an
+# installed plugin has no repository above it, `output_root` correctly answered the deck's own
+# directory, and the self-test comparing the two killed `theme.py` before it read any deck at all.
+THEMED = os.path.join(".assets-cache", "deck", "themed")
 
 AXES = ("colour", "type", "geometry", "shape", "motion")
 KINDS = ("primitive", "derived", "fixed")
@@ -324,7 +330,7 @@ def destination(deck, theme, out=None):
     # **Under the deck's project, not this tool's** (T-074). `OUT` is still that directory for a
     # deck in this repository, which is every deck the suites here point at; for an adopter's deck
     # it is theirs, and a themed copy of their work no longer lands in the package cache.
-    themed = os.path.join(paths.output_root(deck), ".assets-cache", "deck", "themed")
+    themed = os.path.join(paths.output_root(deck), THEMED)
     if out is None:
         stem = lambda p: os.path.splitext(os.path.basename(p))[0]                      # noqa: E731
         out = os.path.join(themed, "%s-%s.html" % (stem(deck), stem(theme)))
@@ -596,18 +602,35 @@ def self_test():
     # than exercised (T-059). The deck used below need not exist: `destination` decides a path and
     # reads nothing, which is what lets the input case be constructed on any machine.
     deck = os.path.join(ROOT, "examples", "reference-deck.html")
+    lattice = os.path.join(ROOT, "themes", "lattice.css")
     # Caught rather than compared. Restoring the old `out = deck` default makes this call *raise*,
     # so a comparison on the return value is a line that can never run - it read like an assertion
     # and was dead code. The failure has to be diagnosed here or it surfaces as a traceback.
     try:
-        default = destination(deck, os.path.join(ROOT, "themes", "lattice.css"))
+        default = destination(deck, lattice)
     except ValueError:
         sys.exit("SELF-TEST FAILED: the default destination is the input deck. That is the defect "
                  "T-059 exists for, and it cost a recovery the one time it fired")
-    if os.path.dirname(os.path.realpath(default)) != os.path.realpath(OUT):
-        sys.exit("SELF-TEST FAILED: the default destination is not under %s, where "
-                 "THEME-CONTRACT.md §1 says a themed copy belongs - %r"
-                 % (paths.display_path(OUT, ROOT), default))
+    # **Expected from the deck, not from this tool** (T-101). The two agree only where htmldeck is
+    # itself a repository, so this assertion used to pass for the maintainer and fail for every
+    # adopter - and a failing self-test refuses to report, so `check` produced no verdict for any
+    # deck. The second case is the installed one: a deck with no repository above it, which is what
+    # `output_root` falls back on. Neither path is created; `destination` decides and reads nothing.
+    outside = os.path.join(tempfile.gettempdir(), "htmldeck-self-test", "deck.html")
+    for where, default in ((deck, default), (outside, destination(outside, lattice))):
+        want = os.path.join(paths.output_root(where), THEMED)
+        if os.path.dirname(os.path.realpath(default)) != os.path.realpath(want):
+            # Shown absolute when it is outside this tool, because a display path that climbs out
+            # of `ROOT` is a row of `..` and the reader is being told *which project* was wrong.
+            show = paths.display_path(want, ROOT)
+            sys.exit("SELF-TEST FAILED: the default destination is not under %s, where "
+                     "THEME-CONTRACT.md §1 says a themed copy belongs - %r"
+                     % (want if show.startswith("..") else show, default))
+    # ...and the placement that made T-074 a defect: an adopter's deck themed into the package
+    # cache, a directory that is not theirs and a reinstall erases.
+    if os.path.realpath(destination(outside, lattice)).startswith(os.path.realpath(ROOT) + os.sep):
+        sys.exit("SELF-TEST FAILED: a deck outside this tool's own project was themed into it - %r"
+                 % destination(outside, lattice))
     # Both spellings of "the deck itself" have to be refused, or the guard only catches the
     # spelling somebody happened to try (**L-36**: a refusal never seen refusing is not a refusal).
     for named in (deck, os.path.join(ROOT, "examples", "..", "examples", "reference-deck.html")):
@@ -618,7 +641,7 @@ def self_test():
             pass
     # ...and an ordinary -o must still go through, or the guard is refusing everything and the
     # command is simply broken in a way that looks like safety.
-    elsewhere = os.path.join(OUT, "elsewhere.html")
+    elsewhere = os.path.join(ROOT, THEMED, "elsewhere.html")
     if destination(deck, "themes/lattice.css", elsewhere) != elsewhere:
         sys.exit("SELF-TEST FAILED: an -o that is not the input deck was not honoured")
     return True
@@ -700,8 +723,8 @@ def main(argv):
         return print_check(argv[1])
     sys.exit("usage: theme.py tokens | validate <theme.css> | swap <deck> <theme.css> [-o out] "
              "| check <deck>\n"
-             "       swap without -o writes to %s/<deck>-<theme>.html"
-             % paths.display_path(OUT, ROOT))
+             "       swap without -o writes to %s/<deck>-<theme>.html, under the deck's own "
+             "project" % THEMED.replace(os.sep, "/"))
 
 
 if __name__ == "__main__":

@@ -393,6 +393,24 @@ svg{display:block}
 .sources-item{display:block;white-space:nowrap}
 .sources-item + .sources-item{margin-top:var(--sp-1);padding-top:var(--sp-1);
   border-top:var(--hair) solid var(--line)}
+/* One source is not a disclosure: there is nothing to choose between, so there is no button and
+   no panel - the mark sits on the line and the title beside it. It reads as provenance because of
+   the glyph, which is the whole of T-103: a bare title in the corner reads as a subtitle, and the
+   owner of the first adopting deck said so in those words. The box stays, because it is where the
+   link or the quick view lives and because the reading view and print already know it. */
+/* Same hit-height and inset as the button it replaces, so the mark does not step up the page as a
+   reader moves between a one-source slide and a three-source one. */
+.sources--one{display:inline-flex;align-items:center;gap:var(--sp-1);
+  min-height:var(--disc-hit);padding:0 var(--sp-1)}
+.sources--one .sources-box{
+  position:static;z-index:auto;min-width:0;padding:0;
+  border:0;border-radius:0;background:none;box-shadow:none;
+  font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:inherit;color:inherit;
+}
+/* DS-105's link half, where the source is reachable from where the deck is presented. Underlined
+   in the line colour rather than the accent: it is a route to the source, not a call to take it. */
+.sources-link{color:inherit;text-decoration:underline;text-decoration-color:var(--line)}
+.sources-link:hover{color:var(--accent);text-decoration-color:var(--accent)}
 
 /* ---------------------------------------------------------------- disclosure (DS-160..170) */
 /* The control sits under the header, not at the foot of the slide. DS-138 requires the panel to
@@ -788,6 +806,11 @@ svg{display:block}
   display:block;width:100%;padding:0;border:0;background:none;
   color:inherit;font:inherit;text-align:left;text-decoration:underline;
   text-decoration-color:var(--line);
+  /* A UA stylesheet sets `text-transform:none` on form controls and `font:` does not carry it, so
+     the button has to re-inherit both the way `.sources-btn` does. Inside a box it reads the box's
+     `none`; inside a one-source mark it reads the provenance line's own case, and without this the
+     same title rendered sentence-case on one slide and uppercase on the next (T-103). */
+  text-transform:inherit;letter-spacing:inherit;
 }
 .sources-open:hover{color:var(--accent);text-decoration-color:var(--accent)}
 
@@ -1091,8 +1114,8 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
  <defs>
   <g id="lucide" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
  </defs>
- <symbol id="i-late" data-icon="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
  <symbol id="i-source" data-icon="file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+ <symbol id="i-late" data-icon="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
  <symbol id="i-after" data-icon="trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17h6v-6"/><path d="m22 17-8.5-8.5-5 5L2 7"/></symbol>
  <symbol id="i-fleet" data-icon="truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
  <symbol id="i-when" data-icon="calendar-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 14v2.2l1.6 1"/><path d="M16 2v3"/><path d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338"/><path d="M3 9h5.859"/><path d="M8 2v3"/><circle cx="16" cy="16" r="6"/></symbol>
@@ -1180,7 +1203,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Eight weeks' notice before the 14 November review means
     this is decided in a fortnight or not this season.</b></p>
-  <p class="provenance">Service calendar</p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src13"><span class="sources-item"><button class="sources-open" type="button" data-qv="Service calendar">Service calendar</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 3 — single number (A-03) -->
@@ -1213,7 +1236,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>At peak we move 27,600 parcels a day and 12.4% of them
     arrive late.</b></p>
-  <p class="provenance">Throughput model</p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src14"><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 4 — animated trajectory (A-05) -->
@@ -1329,7 +1352,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>7,200 parcels land at 23:40 and clear the sorter at
     01:59, an hour past the 01:00 cut-off.</b></p>
-  <p class="provenance">Throughput model</p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src15"><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 6 — small multiple (A-06) -->
@@ -1383,7 +1406,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The last district loaded misses 18.7%, and the district
     furthest away is loaded second and misses 11.2%.</b></p>
-  <p class="provenance">Throughput model</p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src16"><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 7 — before / after (A-07) -->
@@ -2040,7 +2063,12 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   /* Its own component and not a .disc - provenance is what the argument rests on rather than tier
      two (DS-230) - which is why it has its own list and its own toggle. It shares the precedence
      rule with the disclosure because a reader has one attention whatever the content is (DS-137). */
-  var srcs = Array.prototype.slice.call(stage.querySelectorAll('.sources'));
+  /* A one-source mark has no button and its box never closes (T-103), so it is not one of these:
+     there is nothing to toggle and nothing to close it for. Selecting on the button rather than on
+     `.sources` is what keeps that true - the list below is *the disclosures*, not the marks. */
+  var srcs = Array.prototype.slice.call(stage.querySelectorAll('.sources')).filter(function(s){
+    return !!s.querySelector('.sources-btn');
+  });
   srcs.forEach(function(s){
     var box = s.querySelector('.sources-box');
     s.querySelector('.sources-btn').addEventListener('click', function(){ toggleSources(s, null); });

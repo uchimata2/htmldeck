@@ -705,6 +705,54 @@ def split_verdicts(html):
              not bad)]
 
 
+# ------------------------------------------------------- stage 1d: references across the slides
+# **DS-232**, added 2026-08-12 (T-104). A `<marker>` defined in one slide and referenced from
+# another paints nothing: `.slide` is `visibility:hidden` except `[data-current]`, and a hidden
+# subtree has nothing for a visible one to point at. It works on exactly one slide — whichever
+# happened to be open when the author looked — and an adopting deck shipped four of five diagrams
+# with no arrowheads at all, past every gate here.
+#
+# **Only paint references count.** `url(#id)` and `<use href="#id">` are the two ways an SVG names
+# something to draw with; an `<a href="#x">` is navigation and resolves whatever is hidden, which
+# is why matching every `#` would report a defect the reader does not have.
+#
+# **An id defined nowhere is not this rule's subject.** The sprite, the quick view and the chrome
+# all sit outside every slide and are legitimate targets, so the test is *defined in a DIFFERENT
+# slide* rather than *not defined here* — the second would fail every `<use href="#i-source">` in
+# the deck.
+PAINT_REF = re.compile(r'url\(\s*#([A-Za-z][-\w.:]*)\s*\)|<use\b[^>]*?href="#([^"]+)"')
+ELEMENT_ID = re.compile(r'\bid="([^"]+)"')
+
+
+def marker_data(html):
+    """`(examined, [(slide, id)])` — paint references resolving inside a *different* slide."""
+    slides = []
+    for m in SLIDE_BLOCK.finditer(html):
+        name = re.search(r'data-name="([^"]*)"', m.group(0))
+        slides.append(((name.group(1) if name else "?"), m.group(0)))
+    owned = [set(ELEMENT_ID.findall(body)) for _n, body in slides]
+    elsewhere = [set().union(*(owned[:i] + owned[i + 1:])) if len(slides) > 1 else set()
+                 for i in range(len(slides))]
+    examined, bad = 0, []
+    for i, (name, body) in enumerate(slides):
+        for a, b in PAINT_REF.findall(body):
+            ref = a or b
+            examined += 1
+            if ref in elsewhere[i] and ref not in owned[i]:
+                bad.append((name, ref))
+    return examined, bad
+
+
+def marker_verdicts(html):
+    """DS-232's row. A prohibition over the deck's SVG references — see `ABSENCE_IS_A_PASS`."""
+    examined, bad = marker_data(html)
+    return [("DS-232", "SVG paint references defined in another slide, which never render: "
+             "%d of %d%s"
+             % (len(bad), examined,
+                "" if not bad else " - " + "; ".join("%s: #%s" % b for b in bad[:3])),
+             not bad)]
+
+
 # ------------------------------------------------------------- stage 1c: the provenance mark
 # **DS-105's *never a dead link* half**, checked from 2026-08-10 (T-069). It sat excused on the
 # stated ground that *there are no links to test, DS-001 having banned them* — which is a misreading
@@ -1537,6 +1585,10 @@ ABSENCE_IS_A_PASS = {
     "DS-219": ("conditional", "a label sitting on a data mark owes two ratios; no label on a mark, "
                               "no pair to measure. The row prints its own denominator, `0 of 0`"),
     "DS-227": ("prohibition", "no panel open at load"),
+    "DS-232": ("prohibition", "no SVG paint reference pointing into another slide. The subject is "
+                              "the deck's own `url(#id)` and `<use href=\"#id\">` references, and "
+                              "the row prints its own denominator - a deck with one slide, or with "
+                              "no SVG at all, has pointed nowhere"),
     "DS-231": ("prohibition", "no figure a bottom line cites living only behind a disclosure. The "
                               "subject is the deck's bottom lines, and the row prints its own "
                               "denominator - a deck with no panels, or none whose bottom line "
@@ -1977,7 +2029,7 @@ def self_test():
         # found nothing, which is a different thing from a render where the preference never took -
         # `reduced_verdicts` reports that one as its own failure and it is not an absent subject.
         rows = (render_verdicts(empty) + split_verdicts("") + provenance_verdicts("")
-                + fetch_verdicts("") + reduced_verdicts(reduced))
+                + fetch_verdicts("") + marker_verdicts("") + reduced_verdicts(reduced))
     except KeyError as exc:
         sys.exit("SELF-TEST FAILED: a verdict reads data[%s] unconditionally, so it is not in "
                  "ALWAYS_MEASURED and the nothing-was-found measurement cannot be built. Add the "
@@ -2067,7 +2119,7 @@ def self_test():
     # equally invisible. The source is read rather than imported so a module nothing imports is
     # still found.
     exercised = {"audit.render_verdicts", "audit.split_verdicts", "audit.provenance_verdicts",
-                 "audit.fetch_verdicts",
+                 "audit.fetch_verdicts", "audit.marker_verdicts",
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
                  "printpages.verdicts", "spec.verdicts"}
@@ -2228,6 +2280,23 @@ def self_test():
     if split_verdicts(one("<p>the committee reads it in public</p>"))[0][2] is not False:
         sys.exit("SELF-TEST FAILED: DS-231 passed a bottom line whose only support is behind the "
                  "click, which is the whole of the rule")
+    # DS-232, and the pair matters more than either half: the failing case is the one that shipped
+    # four blank arrowheads, and the passing case is every `<use href="#i-x">` in every deck here.
+    def two(second_svg):
+        return ('<section class="slide" data-name="a"><svg><defs>'
+                '<marker id="m-arrow"><path d="M0 0"/></marker></defs>'
+                '<path marker-end="url(#m-arrow)"/></svg></section>'
+                '<section class="slide" data-name="b"><svg>%s</svg></section>' % second_svg)
+    if marker_verdicts(two('<path marker-end="url(#m-arrow)"/>'))[0][2] is not False:
+        sys.exit("SELF-TEST FAILED: DS-232 passed a marker defined in another slide, which is the "
+                 "reference that paints nothing and the whole of the rule")
+    if marker_verdicts(two('<use href="#i-source"/>'))[0][2] is not True:
+        sys.exit("SELF-TEST FAILED: DS-232 fired on a sprite reference, which resolves outside "
+                 "every slide and is what DS-113 requires")
+    if marker_verdicts(two('<marker id="m-arrow"/><path marker-end="url(#m-arrow)"/>'))[0][2] \
+            is not True:
+        sys.exit("SELF-TEST FAILED: DS-232 fired on a slide carrying its own copy of the marker, "
+                 "which is the fix the rule asks for")
     if magnitude("11 minutes") != magnitude("11"):
         sys.exit("SELF-TEST FAILED: a unit word changed a figure's identity, so a bottom line "
                  "citing `11 minutes` cannot be cleared by a face that shows `11`")

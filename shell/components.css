@@ -129,6 +129,24 @@ svg{display:block}
 .sources-item{display:block;white-space:nowrap}
 .sources-item + .sources-item{margin-top:var(--sp-1);padding-top:var(--sp-1);
   border-top:var(--hair) solid var(--line)}
+/* One source is not a disclosure: there is nothing to choose between, so there is no button and
+   no panel - the mark sits on the line and the title beside it. It reads as provenance because of
+   the glyph, which is the whole of T-103: a bare title in the corner reads as a subtitle, and the
+   owner of the first adopting deck said so in those words. The box stays, because it is where the
+   link or the quick view lives and because the reading view and print already know it. */
+/* Same hit-height and inset as the button it replaces, so the mark does not step up the page as a
+   reader moves between a one-source slide and a three-source one. */
+.sources--one{display:inline-flex;align-items:center;gap:var(--sp-1);
+  min-height:var(--disc-hit);padding:0 var(--sp-1)}
+.sources--one .sources-box{
+  position:static;z-index:auto;min-width:0;padding:0;
+  border:0;border-radius:0;background:none;box-shadow:none;
+  font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:inherit;color:inherit;
+}
+/* DS-105's link half, where the source is reachable from where the deck is presented. Underlined
+   in the line colour rather than the accent: it is a route to the source, not a call to take it. */
+.sources-link{color:inherit;text-decoration:underline;text-decoration-color:var(--line)}
+.sources-link:hover{color:var(--accent);text-decoration-color:var(--accent)}
 
 /* ---------------------------------------------------------------- disclosure (DS-160..170) */
 /* The control sits under the header, not at the foot of the slide. DS-138 requires the panel to
@@ -524,6 +542,11 @@ svg{display:block}
   display:block;width:100%;padding:0;border:0;background:none;
   color:inherit;font:inherit;text-align:left;text-decoration:underline;
   text-decoration-color:var(--line);
+  /* A UA stylesheet sets `text-transform:none` on form controls and `font:` does not carry it, so
+     the button has to re-inherit both the way `.sources-btn` does. Inside a box it reads the box's
+     `none`; inside a one-source mark it reads the provenance line's own case, and without this the
+     same title rendered sentence-case on one slide and uppercase on the next (T-103). */
+  text-transform:inherit;letter-spacing:inherit;
 }
 .sources-open:hover{color:var(--accent);text-decoration-color:var(--accent)}
 

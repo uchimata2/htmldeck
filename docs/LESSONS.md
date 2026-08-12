@@ -1828,6 +1828,70 @@ mutation-tested rather than reasoned about (T-080 §3).
    [`../tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) §6.1, next to the same rule for `§`
    marks, because that is the page an author reads before pasting something.
 
+### L-71 — A tool that asserts its own environment fails for everyone except the person who wrote it
+
+Caught 2026-08-12, from an adopting project. `theme.py` ran a self-test before every command and
+refused to report if it failed. The test asserted that the destination a swap writes to — derived
+from **the deck**, by walking up to the nearest repository — equals a module constant derived from
+**the tool**. Those agree in exactly one arrangement: htmldeck sitting in a git clone. Everyone who
+installs the plugin the documented way gets the failing branch, so `theme.py check` produced **no
+verdict for any deck** for two releases, while the maintainer's every run was green (**T-101**).
+
+**The guard was right to exist and right to be strict.** A default destination that overwrote its
+input cost a recovery once (**T-059**), and the assertion is what keeps that fixed. What it must not
+do is take the reference environment as the definition of correct.
+
+**It was the fourth of a family, and the family is what makes it a lesson**: `build.md`'s `--out`,
+DS-064's probe for the reference deck's own class names, `SPEC-5`'s slide pattern, and this. The
+first three fail a conforming deck; this one blocks the tool, which is the same mistake in the one
+place where it also silences the instrument that would report it.
+
+**How to apply.**
+
+1. **An expectation derives from the same input as the answer.** If the function takes the deck,
+   the assertion about it takes the deck. A constant anchored on `__file__` is a claim about where
+   the tool lives, and no function that accepts a path should be asserted against one.
+2. **Make the constant unable to express the mistake.** The fix that lasts is not a better
+   comparison, it is a **relative** fragment — `.assets-cache/deck/themed` joined onto whichever
+   project is being talked about. A relative path cannot name the wrong project.
+3. **Test the installed arrangement, not only the developed one.** A case with no repository above
+   it costs two lines and is the environment every adopter is in. Prove it by re-seeding the defect
+   **in a clone**: a regression test that can only fail where nobody runs it is not a test.
+4. **A failing self-test is a silence, not a message.** Any tool that refuses to report on a failed
+   pre-check should be assumed to have zero coverage in every environment where that check can fail.
+
+### L-72 — A classification that describes the reference deck becomes a rule against every other deck
+
+Caught 2026-08-12, from an adopting project. The component contract has a `Source` column, and
+`vocabulary` means *styled, emittable, and this deck contains none* — checked in the opposite
+direction, for **zero** instances, so that a rule matching nothing cannot pass as a rule that
+passed. Five rows carried it. One of them, `.fig .pos`, had a note saying in writing that *a figure
+encoding a loss is the obvious next deck, which is why the rows stay*. That deck was then built by
+an adopter, drew a shortfall in red, used the contract's own class and **failed the gate for it**
+(**T-105**).
+
+**The classification was a true statement about one deck and an enforced prohibition on all of
+them.** Nobody wrote the prohibition; it fell out of a description being read as a rule, which is
+what a `Source` column is.
+
+**The sweep is where the real finding was.** Asked which other rows were in the same position, the
+answer was *all of them*: `.t-ink` is the sibling of five `author` text roles, and `.mono` was
+documented as a standalone utility. Every row carrying `vocabulary` was a class the contract defines
+for a deck to use, so the source emptied.
+
+**How to apply.**
+
+1. **Separate *no deck has needed this yet* from *no deck may have this*.** Only the second is a
+   rule. The first is a measurement, and dating it is how it stays one.
+2. **When a note anticipates the case that breaks it, that note is the alarm.** *Which is why the
+   rows stay* was written before any deck needed them and was still true; what changed is that the
+   anticipated deck existed, and nothing was watching for it.
+3. **Sweep the whole class, not the reported row.** The report names one instance because one
+   adopter hit one. The question to answer is which others would fail the moment somebody did the
+   obvious thing.
+4. **A check with no members is honest; a check with misfiled members is not.** Emptying the source
+   is not losing coverage — the claim it makes is about rows that exist.
+
 ---
 
 ## Writing
