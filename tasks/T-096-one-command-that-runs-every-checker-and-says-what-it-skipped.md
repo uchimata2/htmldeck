@@ -2,8 +2,8 @@
 id: T-096
 title: One command that runs every checker under tools/ and reports what it skipped, with a reason
 type: deliverable
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-078, T-083, T-084, T-095]
@@ -12,8 +12,9 @@ owner: maintainer
 business_value: high
 effort: m
 created: 2026-08-11
-updated: 2026-08-12
-deliverables: []
+updated: 2026-08-13
+shipped_in: unreleased
+deliverables: [tools/check_all.py]
 ---
 
 # T-096 — One command that runs every checker under tools/ and reports what it skipped, with a reason
@@ -76,12 +77,12 @@ silently.*
 - [ ] `PUBLISHING.md` §8 points at the command instead of enumerating, and its excusal is struck out
 - [ ] Run against this repository, it reproduces the sixteen verdicts `0.2.1` was cut on
 
-**Open questions**
-- Does it live at `tools/check_all.py`, or as a mode of an existing tool? *Recommend its own file:
-  it composes tools from three directories and belongs to none of them.*
-- Does a green run of this command replace step 1 of the release sequence, or sit inside it?
-  *Recommend it replaces step 1 outright — a step whose evidence is sixteen exit codes read by a
-  person is the thing being fixed.*
+**Open questions** — *both settled 2026-08-13, as recommended; see §3.*
+- ~~Does it live at `tools/check_all.py`, or as a mode of an existing tool?~~ **Its own file**: it
+  composes tools from six directories and belongs to none of them.
+- ~~Does a green run of this command replace step 1 of the release sequence, or sit inside it?~~
+  **It replaces step 1 outright** — a step whose evidence is sixteen exit codes read by a person is
+  the thing being fixed.
 
 ## 2. Plan
 
@@ -96,22 +97,65 @@ silently.*
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **Its own file, `tools/check_all.py`** — it composes tools from six directories under `tools/` and
+  belongs to none of them — 2026-08-13.
+- **It replaces step 1 of the release sequence outright**, rather than sitting inside it. A step
+  whose evidence is sixteen exit codes read by a person is the thing being fixed — 2026-08-13.
+- **The discovery rule is `git ls-files`, not a directory walk.** `control/`, `dist/` and `.kb/` are
+  machine-local by design, and a checker discovered in one of them is a checker no adopter has. Same
+  rule `refcheck.py` reaches through `.gitignore` and `taskmd check` adopted in 0.3.0: only what a
+  clone receives — 2026-08-13.
+- **The manifest is four tables inside the tool, checked against the filesystem in both
+  directions** — a tracked tool no table names is `UNCLASSIFIED`, an entry naming a file that is gone
+  is `STALE`, and both fail. That is what stops it being a list: `figures.py`'s rule for an exclusion
+  whose subject has left the page, applied to checkers (**L-08**, **L-13**) — 2026-08-13.
+- **It does not stop at the first failure**, which is the opposite of `tools/tasks/lint.py` and is
+  stated in both files. A release run needs every verdict, or the next run finds the second defect
+  after fixing the first — 2026-08-13.
+- **Child output is captured and printed only for a failure**, with `--verbose` to restore the
+  inherited stream. Sixteen accounts is thousands of lines, and a wall of green is where the three
+  red checks of 2026-08-10 hid — 2026-08-13.
+
+**Two deviations from the sixteen, both additions rather than changes**
+
+1. **Three sibling variant suites are now gates.** `deliverable_variants.py`, `contract_variants.py`
+   and `content_variants.py` were never in the list while `static_variants.py`, their fourth sibling
+   and the one with the same purpose, was. All three are green, and were run standalone to confirm
+   it before wiring. The partition forced the question; nothing else had.
+2. **The per-deck `check.py` line now passes `--print-pages`.** `PRINT-1`, the printed page count,
+   was reached by nothing: `check.py` evaluates it only under that flag and the list never passed it,
+   and `printpages.py`'s own entry point is red on a correct deck. Both shipped decks pass with the
+   flag. The defect behind the red is
+   [T-120](T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md).
+
+Neither changes a verdict the sixteen produced; both add one the sixteen never asked for.
 
 **Outputs produced**
-- <none yet>
+- [`tools/check_all.py`](../tools/check_all.py) — the command, its manifest and its self-test.
+- [`docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8 — step 1 is the command, the enumeration is gone,
+  and the excusal is struck through with what closed it.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Every checker under `tools/` ends the run in exactly one of ran / skipped-with-a-reason / failed | met | `35 tools(s)`, partitioned `10` gate + `5` per-deck gate + `20` not run, `0` unclassified, `0` stale. The commands partition too: `19 ran`, `1 skipped`, `0 FAILED`, `total 20`. Both totals are printed as `= so the account is a partition` and both are arithmetic on the run, not a claim |
+| A checker in none of the three **fails the run**, demonstrated by adding one and not wiring it | met | `tools/deck/unwired_check.py` added and `git add -N`'d, nothing wired. Full run: `0 failure(s), 1 unclassified, 0 stale`, **exit 1**, and `This is step 1 of docs/PUBLISHING.md section 8, and it is red.` Every checker was still green — the red came from the partition alone, which is the point. `--list` fails on it too, in a second rather than six minutes, because `--list` is what someone runs after adding a tool |
+| Every deck the repository ships gets the per-deck set, discovered rather than named | met | Decks come from `git ls-files -- '*.html'`, not a list. All four tracked `.html` are classified: two decks, and `reference-deck-seeded-defects.html` and `shell/shell.html` declared as not-decks with what each is. An undeclared `.html` refuses the run before any checker starts |
+| A wrong or missing `--sources` is refused, not run against a guess | met | Declared per deck in `DECKS`; a deck absent from both tables returns exit 2 with what to add and why guessing is worse than stopping. The self-test asserts the reference deck's entry exists, so the file cannot ship without one |
+| The permanent `spec.py` exception is skipped **with its reason printed**, not silently omitted | met | `skip python tools/deck/spec.py <examples/reference-deck.html>` followed by five lines naming T-087's ruling and pointing at `PUBLISHING.md` §8 for the argument. It is the only skip in the run |
+| `PUBLISHING.md` §8 points at the command instead of enumerating, and its excusal is struck out | met | Step 1 of the table is `python tools/check_all.py` with its own last line as the evidence; the thirteen-line code block is one line; the excusal is struck through with what closed it and kept visible, because it is the specification this was built to |
+| Run against this repository, it reproduces the sixteen verdicts `0.2.1` was cut on | met | All sixteen appear and all sixteen pass — the by-hand baseline was re-run first on 2026-08-13 and was `EXIT 0` sixteen times. Two of the sixteen now carry `--print-pages` in addition, and three commands are new. **No verdict changed; three were added** |
 
 **Child fix tasks raised**
-- none
+- [T-120](T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md) —
+  `printpages.py`'s own entry point defaults the slide count to a hardcoded 12 and fails a deck that
+  prints correctly. `PH1`, so it joins `0.2.3`.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | → done | `tools/check_all.py`, and `PUBLISHING.md` §8 step 1 is now that command. Every criterion met. **The run that mattered was the first one**: it found three variant suites nobody had wired — `deliverable_variants.py`, `contract_variants.py`, `content_variants.py`, siblings of the `static_variants.py` that was in the list — all three green, and `PRINT-1` reached by no command at all, with the checker behind it red on a correct deck (**T-120**, raised `PH1`). That is the argument for the whole task, made by the thing itself on its first use rather than by anyone's prediction. |
+| 2026-08-13 | proposed → planned | Both open questions settled as recommended: its own file, and it replaces step 1 outright. The design question the specification did not ask turned out to be the load-bearing one — what stops a manifest being the list it replaces — and the answer is `figures.py`'s: check it against the filesystem in **both** directions, so an unwired tool and a deleted one both go red (**L-08**). |
 | 2026-08-11 | → proposed | Raised from the closed-record sweep after `0.2.1`, which was cut by running the sixteen commands by hand. The specification is [`PUBLISHING.md`](../docs/PUBLISHING.md) §8's own excusal, written 2026-08-10 and unclaimed since; this task is that paragraph with a number. `high` because the list has already missed three red checks once, and `m` rather than `s` because discovering the decks and their unguessable arguments is most of the work. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule. |

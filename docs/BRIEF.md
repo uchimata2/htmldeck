@@ -483,12 +483,21 @@ presentation on `0.2.2`, presented it, and reported on what it was like to read:
 | :--- | :--- |
 | [T-116](../tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md) | The **generated contents page collides at 13 entries** against a stated limit of 24. On paper, the fourth row prints through the page footnote and rows two and three have touching card borders where three-line bottom lines overrun their track. The bound is stated in *entries* and was measured on entries of one height, so it is not a bound. **`printpages.py` read `n` + 1 correctly throughout** — the count was right while the page was broken, which is **L-05**'s shape exactly. `critical`: the page is generated here, it reached a presented deliverable, and the only gate over it asserts something else. |
 
-**These four are `0.2.3`, and the owner committed to the release on 2026-08-12.** Open `PH1` is
-therefore exactly the release's contents, which is the phase doing the job it was split for.
+**A fifth joined on 2026-08-13, and it is the only one a command found.**
 
-**All four of the ninth reopening came from *looking*, not from a failing command** — three from an
-adopter reading a finished deck, and T-116 from opening the PDF that deck was printed to. No gate in
-this repository could have produced any of them, and CLAUDE.md rule 6 is the only step that would.
+| | |
+| :--- | :--- |
+| [T-120](../tasks/T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md) | `printpages.py`'s **own entry point** defaults the slide count to a hardcoded `12`, so it reports `FAIL` on a 13-slide deck that prints correctly, while `check.py` — which passes the rendered count to the same function — reports `pass` on the same file. A stored copy of a derivable fact (**L-08**). `PH1` by [T-105](../tasks/T-105-fig-pos-neg-caution-are-vocabulary-so-a-real-deck-fails-for-using-them.md)'s rule: a shipped gate failing a conforming deck is a defect in the check. **This is a different caller from the one T-116's row credits** — that row is right about `check.py` and this one is about the standalone `__main__`. Found by [T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md)'s first run. |
+
+**These five are `0.2.3`, and the owner committed to the release on 2026-08-12** — four of them then,
+and T-120 added on 2026-08-13 by the rule rather than by a decision. Open `PH1` is therefore exactly
+the release's contents, which is the phase doing the job it was split for.
+
+**Four of the five came from *looking*, not from a failing command** — three from an adopter reading a
+finished deck, and T-116 from opening the PDF that deck was printed to. No gate in this repository
+could have produced any of those four, and CLAUDE.md rule 6 is the only step that would. **T-120 is
+the exception and it needed a new instrument**: no command in the sixteen the last two releases were
+cut on ever ran the checker that was wrong.
 
 ### PH2 — the dependencies, and every minor and moderate fix
 
@@ -587,7 +596,7 @@ new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 | ~~[T-019](../tasks/T-019-build-the-capability-preflight-the-deck-ships-wit.md)~~ **done 2026-08-11** | The capability preflight a deck ships with, as DS-009. Portability was already gated at build time; this is what the deck does on a machine that surprises it. **R6 §7's proposed check list did not survive being measured** — four of its six rows have no subject in any deck this project can build, so a deck emits two rows, or three with quick views, and the floor it declines to name turns out to be roughly *engines that shipped CSS grid*. Two things R6 did not anticipate are in the shipped mechanism: the degraded state **ships switched on**, so a blank page cannot happen by a check running too late; and the same marker covers **a browser that runs no script at all**, which no preflight can catch and which was the deck's real worst case all along. |
 | [T-041](../tasks/T-041-implement-the-nine-glitch-free-conditions.md) | The seven of R6's nine glitch-free conditions nothing adopted. The gate names the gap today rather than hiding it. |
 | [T-054](../tasks/T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Coverage recorded per *clause* rather than per rule — a sharper account, not a missing one. `l` because `DEFERRED` is keyed by rule ID and every producer writing into it moves with the key. |
-| [T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | **One command that runs every checker and partitions them into ran, skipped-with-a-reason, or failed.** [`PUBLISHING.md`](PUBLISHING.md) §8 specified it as its own excusal on 2026-08-10 and nothing claimed it; `0.2.1` was cut by running sixteen commands by hand, which is the hand-kept list one step slower rather than one step gone. |
+| ~~[T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) — one command instead of the gate list~~ **done 2026-08-13** | [`PUBLISHING.md`](PUBLISHING.md) §8 specified it as its own excusal on 2026-08-10 and nothing claimed it; `0.2.1` was cut by running sixteen commands by hand, which is the hand-kept list one step slower rather than one step gone. `tools/check_all.py` discovers what `git` says a clone receives — **35 tools, 2 decks** — and ends with the partition: **19 ran, 1 skipped with its reason, 0 failed, 0 unclassified, 0 stale.** A tool no table names fails the run, demonstrated by adding one. **Its first run paid for itself**: three variant suites nobody had wired (all green, now gates), and `PRINT-1` — the printed page count — reached by no command at all, with the checker behind it red on a correct deck (**T-120**). |
 | [T-095](../tasks/T-095-static-variants-builds-its-static-half-from-a-hand-kept-list.md) | The seeded-defect suite names its verdict producers instead of deriving them, so a producer added tomorrow sits outside it. Found by T-093 moving a rule between producers and getting `MISSED` — loudly, because a variant for that rule happened to exist. |
 | [T-097](../tasks/T-097-ds-004s-excusal-says-degrade-gracefully-is-unobservable-and-ds-009-gave-it-an-instrument.md) | DS-004's excusal calls *other engines degrade gracefully* unobservable. DS-009 gave the degradation half of it an instrument, and the account cannot notice an excusal that goes stale without its rule becoming checked. |
 | [T-109](../tasks/T-109-one-source-reference-component-rendered-in-three-places.md) | **One source-reference component, four kinds, three render sites** — the mark, the list behind it, and the colophon. Authoring the colophon separately is what let it drift into bare titles with a footnote pointing backwards, so rendering one component three times is DS-136 applied where it most obviously was not. Carries the ruling that **a local file never ships as a `file://` link**: DS-105 already says so, the reason is that the recipient's machine has never seen the author's paths, and the request will be made again. |

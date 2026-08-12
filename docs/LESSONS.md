@@ -1925,6 +1925,39 @@ that belief is exactly what upstream found to be wrong in an adopting project.
 
 ---
 
+### L-74 — When a fact cannot be derived, make the stored copy fail loudly in both directions
+
+Caught 2026-08-13 (**T-096**). **L-08** says a stored copy of a derivable fact drifts, and the fix is
+to derive it. Some facts cannot be derived: *is this file a checker?* has no mechanical answer — 34
+scripts under `tools/` all have a `__main__`, and the four that break rules on purpose look exactly
+like the one the release runs. So the answer has to be written down, which is the hand-kept list that
+had already missed three red checks.
+
+**What makes a written-down answer safe is reconciliation, not care.** The list becomes a manifest
+when it is checked against the world **both ways**: a file no entry names fails the run, and an entry
+naming a file that is gone fails it too. Neither direction alone is enough — the first catches the
+tool nobody wired, the second catches the entry nobody deleted, and a list that goes stale silently
+is one that does neither.
+
+**The proof is what the first run found**, on a repository whose gate list had been written down
+three days earlier and run twice: three suites nobody had wired, all green and all invisible, and a
+printed page count reached by no command at all. None of the three was hidden. Each was one line
+missing from a list that nothing compared to anything.
+
+**How to apply.**
+
+1. **Ask whether the fact is derivable before writing it down.** If it is, derive it — that is L-08
+   and it is still the first answer.
+2. **If it is not, enumerate over a discovered set, never over the entries.** Walk what exists,
+   classify each, and let the unclassified be the failure. A loop over the list can only ever confirm
+   the list.
+3. **Give every entry a stated reason, not a flag.** *Skipped* is a value; *skipped because its
+   checks run inside `check.py`* is a fact the next reader can check and disagree with.
+4. **Both directions, or it is still a list.** An unwired file and a deleted one are the same defect
+   seen from two sides, and a manifest that catches one of them is trusted for catching neither.
+
+---
+
 ## Writing
 
 ### L-12 — What is read every time must be short

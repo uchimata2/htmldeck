@@ -131,9 +131,14 @@ enforce it at build time rather than hoping.
 
 ## Publishing constraints
 
-**The steps of a release, in order, are [`docs/PUBLISHING.md`](docs/PUBLISHING.md) §8** — including
-the gate list, which is an enumeration that has already missed two red checks. Do not re-derive the
-sequence from the last release's commits; that is what §8 was written to stop.
+**The steps of a release, in order, are [`docs/PUBLISHING.md`](docs/PUBLISHING.md) §8.** Do not
+re-derive the sequence from the last release's commits; that is what §8 was written to stop. **Step 1
+is one command** — `python tools/check_all.py` — which discovers every checker a clone receives and
+every deck this repository ships, and ends with a partition: each **ran**, **was skipped with a
+stated reason**, or **failed**. A tool in none of those three fails the run. It replaced a
+hand-kept list of sixteen commands on 2026-08-13 (**T-096**); that list had missed three red checks
+the day it was written, and its first replacement run found three suites nobody had wired and a
+printed page count no gate reached.
 
 This repository goes to GitHub. Everything written here must be:
 

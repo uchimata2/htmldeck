@@ -200,7 +200,7 @@ until the person doing it is not the person who did it last. *Step 5 was added o
 
 | # | Step | What proves it |
 | :-- | :--- | :--- |
-| 1 | **Every gate green** — the whole set, not the routine one | Each command's own verdict line. See *the gate list* below, which is the step that has already gone wrong |
+| 1 | **`python tools/check_all.py` green** — the whole set, not the routine one | Its own last line: `0 failure(s), 0 unclassified, 0 stale`. It replaced a list of sixteen commands on 2026-08-13 ([T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md)) |
 | 2 | **Bump the version** in `.claude-plugin/plugin.json`, `CLAUDE.md` and `README.md` | Three files carry it; a grep for the outgoing version returns nothing outside `docs/BRIEF.md`'s history |
 | 3 | **Humanize the human-facing set** (§2's test), then re-run `python tools/docs/figures.py` and re-paste the `volatile` block from `--values` | `0 stale figure(s)`. §6 is why: a rewrite that re-derives a number from memory is a defect, not a style improvement |
 | 4 | **Read the prose around the figures** | Nothing. **This is the step no gate covers** — `v0.1.4` found a spelled-out fixture count and a defect tally that had both gone false while every pasted figure was correct (**L-05**) |
@@ -209,26 +209,31 @@ until the person doing it is not the person who did it last. *Step 5 was added o
 | 7 | **`gh release create`**, with a note written to §2's test, **carrying §8.1's row verbatim** | The published release page. A release note is read before installing, so §2 covers it — it is not an exception to the rule, it is an instance of it |
 | 8 | **Record the shipping version** in each closed task's log and in [`BRIEF.md`](BRIEF.md) | The version appears in the record without anyone reconstructing it later, which is the failure this whole section exists for |
 
-**The gate list is an enumeration, and it is declared as one.**
+**The gate list was an enumeration for three days, and is now one command.**
 
 ```
-python tools/tasks/lint.py                                     # index, check, refcheck
-python tools/docs/figures.py                                   # every figure the README pastes,
-                                                               # and the same figures in five
-                                                               # documents that paste none
-python tools/deck/ruleset.py --counts                          # the ruleset's own arithmetic
-python tools/plugin/check_scaffold.py                          # the plugin manifest
-python tools/deck/static_variants.py                           # the seeded-defect suite
-python tools/examples/seed_defects.py --check                  # the blindness fixture, still derived
-python tools/deck/contents_bound.py                            # the contents-page bound
-python tools/deck/shell.py check <deck>                        # the five below run PER DECK, and
-python tools/deck/component.py check <deck>                    # this repository ships TWO:
-python tools/deck/theme.py check <deck>                        #   examples/reference-deck.html
-python tools/deck/check.py <deck> --sources <dir>              #   examples/sort-window/sort-window.html
-python tools/deck/spec.py <deck>.foundation.md <deck>.slides.md <deck>.html
+python tools/check_all.py
 ```
 
-**The first command ends with one advisory that is expected**, and a release run meets it before
+It discovers what to run rather than listing it: every `tools/**/*.py` that `git` says a clone
+receives, and every deck this repository ships, with the per-deck five run against each. It ends
+with the partition [`check.py`](../tools/deck/check.py) keeps over rules and
+[`figures.py`](../tools/docs/figures.py) over fences, one altitude up — each checker **ran**, **was
+skipped with a stated reason**, or **failed**. **A tool in none of those three fails the run**, so a
+checker added and left unwired goes red instead of going unnoticed, and an entry naming a deleted
+file goes red too. `--list` prints what it would run without running it; `--verbose` lets every
+child write its own account to the console.
+
+**Its first run found what a list cannot.** Three checkers the sixteen never ran are green and are
+now gates — `deliverable_variants.py`, `contract_variants.py` and `content_variants.py`, siblings of
+the `static_variants.py` that was already in the list. And **`PRINT-1`, the printed page count, was
+reached by nothing**: `check.py` evaluates it only under `--print-pages` and the list never passed
+that flag, while `printpages.py`'s own entry point defaults the slide count to a hardcoded 12 and
+fails a deck that prints correctly
+([T-120](../tasks/T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md)).
+The per-deck `check.py` line now passes `--print-pages`.
+
+**The first checker ends with one advisory that is expected**, and a release run meets it before
 anything else: `taskmd check` reports `DUPLICATE INDEX` against `docs/BRIEF.md`, because the phase
 tables name a majority of the board's ids. It is a true reading of a document that is not a duplicate
 index, it fires on every run, and the decision behind ignoring it is
@@ -237,17 +242,14 @@ document is not covered by it and stops the release.**
 
 **`--sources` is the one argument that cannot be guessed from the deck's path**, and guessing wrong
 does not error — it reports `FIG-0 … source files this reader cannot open` and fails the run, which
-reads exactly like a defect in the deck. The two directories are not siblings of their decks in the
-same way, so they are written out rather than left to `<dir>`:
-
-```
-examples/reference-deck.html              --sources examples/sources
-examples/sort-window/sort-window.html     --sources examples/sort-window/sources
-```
+reads exactly like a defect in the deck. So it is **declared per deck** in `check_all.py`'s manifest,
+and a deck with no declaration is refused rather than run against a guess. Adding a deck to this
+repository means adding its `--sources` directory there; the run says so if you forget.
 
 **The per-deck five are where every defect this list was written from was hiding**, and the reason is
 structural: the README prints repository-wide commands, so the set anyone runs by habit never reaches
-a deck. Run them against **both** examples, not the one being worked on.
+a deck. That is now the command's job rather than the reader's — it runs them against **every** deck
+it discovers, not the one being worked on.
 
 **The last of the five is the exception, and it is one deck rather than two — permanently.**
 `spec.py` reads a specification pair, and `examples/reference-deck.html` ships without one: it was
@@ -256,9 +258,10 @@ built by hand before the two documents existed, so there is no `.foundation.md` 
 settled on 2026-08-11 that it owes a provenance record but **not that one**, and **rejected
 retrofitting a `.foundation.md`** — it would make a hand-built deck claim to be a build-mode output,
 buying a checkable `SPEC-5` at the cost of the only example showing what hand-built provenance looks
-like. That deck's record is source-level instead (`examples/sources/` plus the colophon), so the line
-above runs on `sort-window` alone and always will. Stated here so nobody reads a command that cannot
-run as one that passed, or reopens a question that has an answer.
+like. That deck's record is source-level instead (`examples/sources/` plus the colophon), so `spec.py`
+runs on `sort-window` alone and always will. It is declared as a permanent exemption in
+`check_all.py`'s manifest and **printed as a skip with that reason on every run**, so nobody reads a
+command that cannot run as one that passed, or reopens a question that has an answer.
 
 **It has already failed, which is why it is declared rather than trusted.** The README prints five
 commands and that set was treated as the list. Writing this section meant running everything in it,
@@ -270,11 +273,15 @@ and `contents_bound.py` refused to start at all
 the three would have been found by running the printed five, and each had been red since the day a
 task changed a deck without running the checks that read it.
 
-**What closes the excusal:** one command that runs every checker under `tools/` and reports which it
-ran and which it skipped **with a reason** — the partition [`figures.py`](../tools/docs/figures.py)
-already applies to fences and [`check.py`](../tools/deck/check.py) to rules. Until that exists, a list
-kept by hand is what there is, and a list kept by hand goes stale silently — which is §2's own
-argument about the covered set, one document over.
+~~**What closes the excusal:** one command that runs every checker under `tools/` and reports which it
+ran and which it skipped **with a reason** — the partition `figures.py` already applies to fences and
+`check.py` to rules. Until that exists, a list kept by hand is what there is, and a list kept by hand
+goes stale silently — which is §2's own argument about the covered set, one document over.~~
+
+**Closed 2026-08-13** by
+[T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md), which built
+that command. The excusal is kept struck through rather than deleted: it is the specification the
+command was written to, and a paragraph that says what a step owes is worth more visible than gone.
 
 ### 8.1 What each release newly required
 
