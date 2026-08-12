@@ -39,7 +39,9 @@ known set, chosen upstream so the threshold scales instead of needing a number. 
 not a task file, so nothing is discounted: **70 of 97 when this was raised**, and both numbers move
 with the backlog — the block above is what the command printed that morning, not a current reading.
 The count is deliberately absent from this task's row in `BRIEF.md`: it sits in a sentence naming no
-field, so `figures.py` cannot watch it, and it had already gone 70 to 72 within the day.
+field, so `figures.py` cannot watch it, and it had already gone 70 to 72 within the day. **78 on
+2026-08-12**, after the `0.2.2` release added six rows — which is the argument, not a detail: the
+number only ever climbs, and every release moves it.
 
 **It is a true reading of a document that is not a duplicate index.** [`../docs/BRIEF.md`](../docs/BRIEF.md)
 *Release phases* is the decision record — three tables, one row per task, each carrying a *why it is

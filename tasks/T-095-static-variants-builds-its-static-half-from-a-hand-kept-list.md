@@ -115,3 +115,4 @@ with the derivation still to be done.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-11 | → proposed | Raised from the closed-record sweep run before the post-`0.2.1` handoff, on evidence produced the same day: T-093 moved a rule between producers and the suite said `MISSED`. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule — not a defect an adopter can hit, and PH2 has shipped, so everything that is not such a defect goes there whatever its size. |
+| 2026-08-12 | (no change) | **A second instance, and this time the hand-edit was remembered.** T-104 added `audit.marker_verdicts` and the same three lines had to be edited by hand — `check.py`, `static_variants.static_failures`, and the fixture's `exercised` set. The suite caught the DS-232 variant only because the middle one was not forgotten. |
