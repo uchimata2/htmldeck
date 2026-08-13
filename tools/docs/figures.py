@@ -603,7 +603,7 @@ def declared(table, outputs, docs=None, facts=None):
     to a partition it was not written as.
     """
     facts = artifact_facts() if facts is None else facts
-    rows, skipped = [], 0
+    rows, skipped, watched = [], 0, {}
     for rel in sorted(DECLARED_DOCS):
         if docs and rel in docs:
             text = docs[rel]
@@ -613,10 +613,11 @@ def declared(table, outputs, docs=None, facts=None):
             # **The block's own rule runs first, and it takes numerals out of the remainder.** A
             # figure it judged is judged; leaving it in `unanchored` as well would report the same
             # numeral in two buckets and make the count mean nothing.
-            art = {} if DONE_ROW.search(block) else artifact_claims(block, rel, facts)
-            for written, (verdict, why) in sorted(art.items()):
+            art = [] if DONE_ROW.search(block) else artifact_claims(block, rel, facts)
+            for written, verdict, why, prop, art_rel in art:
                 rows.append((verdict, rel, written, why))
-            spoken = sum(len(PROSE_NUMERAL.findall(w)) for w in art)
+                watched[(art_rel, prop)] = watched.get((art_rel, prop), 0) + 1
+            spoken = sum(len(PROSE_NUMERAL.findall(w)) for w, _v, _y, _p, _a in art)
             for sentence, dated in sents:
                 nums = [m.group(1) for m in PROSE_NUMERAL.finditer(sentence)]
                 if not nums:
@@ -629,7 +630,7 @@ def declared(table, outputs, docs=None, facts=None):
                         spoken -= 1
                     else:
                         skipped += 1
-    return rows, skipped
+    return rows, skipped, watched
 
 
 def linked_artifacts(block, rel_doc):
@@ -651,9 +652,18 @@ def linked_artifacts(block, rel_doc):
 
 LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+\.)\s")
 
+# **A table row is a scope for the same reason a bullet is**, and for one more: a row states one
+# claim about one thing, and the row under it states another about another, so a table that indexes
+# several files links several artifacts in a single block. `examples/README.md` opens with exactly
+# that table - three decks, three rows - and as one block it linked two manifest artifacts, which
+# `scope_claims` declines to judge at all. Two true figures sat unbound in it for that reason and no
+# other, and splitting the rows binds both with no new alarm anywhere (T-129).
+TABLE_ROW = re.compile(r"^\s*\|")
+
 
 def claim_scopes(block):
-    """A block, split again at list-item boundaries - the scope a link's subject reaches over.
+    """A block, split again at list-item and table-row boundaries - the scope a link's subject
+    reaches over.
 
     **Measured, not assumed.** With the whole block as the scope, `BRIEF.md`'s *Definition of done*
     list bound *"all twelve slides carry a bottom line"* to a link thirty lines above it in another
@@ -662,7 +672,7 @@ def claim_scopes(block):
     """
     out, cur = [], []
     for line in block.split("\n"):
-        if LIST_ITEM.match(line) and cur:
+        if (LIST_ITEM.match(line) or TABLE_ROW.match(line)) and cur:
             out.append("\n".join(cur))
             cur = []
         cur.append(line)
@@ -672,15 +682,23 @@ def claim_scopes(block):
 
 
 def artifact_claims(block, rel_doc, facts):
-    """`{figure_as_written: (verdict, why)}` over every claim scope in the block."""
-    out = {}
+    """`[(figure_as_written, verdict, why, property, artifact)]` per claim scope, in document order.
+
+    **A list, because two scopes can state the same numeral about different files.** This merged the
+    scopes into a dict keyed by the written figure until T-129, and the day the index table split
+    into rows both decks claimed `12 slides` - so the second row's verdict replaced the first row's
+    and one of the two decks went unwatched while the count read as though both were judged. Nothing
+    had triggered it before only because no two bullets of one block had ever linked different files.
+    """
+    out = []
     for scope in claim_scopes(block):
-        out.update(scope_claims(scope, rel_doc, facts))
+        out.extend(scope_claims(scope, rel_doc, facts))
     return out
 
 
 def scope_claims(block, rel_doc, facts):
-    """`{figure_as_written: (verdict, why)}` for properties this block states about a linked file.
+    """`[(figure_as_written, verdict, why, property, artifact)]` for properties this block states
+    about a linked file.
 
     Returns nothing at all unless the block links **exactly one** manifest artifact: a paragraph
     comparing both decks states two figures the same way and there is no honest way to say which
@@ -689,9 +707,9 @@ def scope_claims(block, rel_doc, facts):
     """
     linked = [rel for rel in linked_artifacts(block, rel_doc) if rel in facts]
     if len(linked) != 1:
-        return {}
+        return []
     have = facts[linked[0]]
-    out = {}
+    out = []
     tokens = [(m.group(1), m.start()) for m in ARTIFACT_NUMERAL.finditer(block)]
     for i, (tok, _at) in enumerate(tokens):
         value = None
@@ -701,16 +719,25 @@ def scope_claims(block, rel_doc, facts):
             value = WORD_NUMBERS[tok.lower()]
         if value is None:
             continue
-        for word, _pos in tokens[i + 1:i + 5]:
+        for k in range(i + 1, min(i + 5, len(tokens))):
+            word = tokens[k][0]
             if word[0].isdigit() or word.lower() in WORD_NUMBERS:
                 break
             prop = ARTIFACT_UNITS.get(stem(word.lower()))
             if not prop:
                 continue
+            # **A part of the file is not the file.** *"97 KB of it as base64"* states the size of
+            # the three embedded typefaces, in the same sentence as the deck's own size and in the
+            # same shape, and judging it against the whole would report the true sentence as STALE.
+            # `of` directly after the unit is the whole of the signal, and it is the construction
+            # rather than the vocabulary - which is what `claimed()` binds on for the same reason.
+            if k + 1 < len(tokens) and tokens[k + 1][0].lower() == "of":
+                break
             actual = have[prop]
-            out[tok] = (("compared", "%s %s of %s" % (tok, prop, linked[0]))
-                        if value == actual else
-                        ("STALE", "claims %s %s of %s, which is %d" % (tok, prop, linked[0], actual)))
+            out.append((tok, "compared", "%s %s of %s" % (tok, prop, linked[0]), prop, linked[0])
+                       if value == actual else
+                       (tok, "STALE", "claims %s %s of %s, which is %d"
+                        % (tok, prop, linked[0], actual), prop, linked[0]))
             break
     return out
 
@@ -954,20 +981,31 @@ def self_test():
     bound = set(r[2] for r in declared(table, outputs)[0]
                 if r[0] in ("compared", "STALE") and r[1] == rel)
 
-    # **Only the claims of those shapes this page actually binds.** A claim of the right shape that
-    # is bound to nothing is a real defect - it is the one T-088 was raised for, and T-129 carries
-    # the live instance - but it is a defect in the *page's* coverage, and asserting it here would
-    # put the tool back where T-127 found it: down, blaming itself, for something the page did. The
-    # report says how many figures are unanchored; this fixture says the detector works.
-    claims = []
+    # **Every claim of these shapes must bind, not one of each shape** (T-129). The weaker form let
+    # this page state one deck's size in a paragraph linking nothing while the other deck's identical
+    # sentence bound: both shapes were exercised, the fixture was satisfied, and two figures drifted
+    # 12 KB inside the `unanchored` bucket for a whole release. Requiring all of them is the
+    # assertion that fails on the day the defect appears rather than at the next reading of the page.
+    #
+    # **It asserts what the page's wording BINDS, never that the page is right** - which is the line
+    # T-127 drew and the reason a drifted figure counts as bound above. The one edit that trips it
+    # honestly is a size sentence about a file outside `ARTIFACTS`, so the message names both
+    # remedies; a fixture that fires without saying what to do is the one nobody can act on.
+    claims, unbound = [], []
     for m in SIZE.finditer(src):
         for g in (1, 2):
-            if m.group(g) in bound:
-                claims.append((m.start(g), m.group(g), moved_numeral(m.group(g)), "a size figure"))
+            (claims if m.group(g) in bound else unbound).append(
+                (m.start(g), m.group(g), moved_numeral(m.group(g)), "a size figure"))
     for m in COUNT.finditer(src):
-        if m.group(1) in bound:
-            claims.append((m.start(1), m.group(1), moved_word(m.group(1)),
-                           "a figure count, which the page writes as a word"))
+        (claims if m.group(1) in bound else unbound).append(
+            (m.start(1), m.group(1), moved_word(m.group(1)),
+             "a figure count, which the page writes as a word"))
+    if unbound:
+        sys.exit("SELF-TEST FAILED: %s states %s (%s) and it binds to nothing, so no run can ever "
+                 "report it stale - which is the state T-129 was raised from. Either link the file "
+                 "inside that paragraph, row or bullet, the way the other decks' claims are linked, "
+                 "or add it to ARTIFACTS if the manifest should carry it"
+                 % (rel, unbound[0][3], unbound[0][1]))
     for _at, text, wrong, what in claims:
         if wrong is None:
             sys.exit("SELF-TEST FAILED: no wrong value could be built for %s (%r) - every candidate "
@@ -1004,7 +1042,7 @@ def self_test():
 def report(values):
     text = io.open(README, encoding="utf-8").read()
     rows, prose_rows, _seen, table, outputs = audit(text)
-    doc_rows, unanchored = declared(table, outputs)
+    doc_rows, unanchored, watched = declared(table, outputs)
     print("README figures - %s\n" % os.path.basename(README))
 
     counts = {}
@@ -1068,6 +1106,17 @@ def report(values):
         print("    %-42s %s" % (rel, "NOT ON DISK" if props is None else
                                 ", ".join("%s %s" % (props[p], p)
                                           for p in ("KB", "bytes", "slides", "figures"))))
+
+    # **How many documents each property is watched in, because a zero is the shape of this defect.**
+    # The reference deck's size was stated on a published page and bound nowhere, and every count in
+    # this report was of things the tool *did* judge - so nothing anywhere read as missing. A zero
+    # here is not a failure on its own: a property no document states is correctly watched by nobody.
+    # It is the one number that would have made T-129 visible without reading the page.
+    print("\n    where each property is watched - a zero means no declared document binds a claim "
+          "to it")
+    for rel in sorted(ARTIFACTS):
+        print("    %-42s %s" % (rel, ", ".join("%s %d" % (p, watched.get((rel, p), 0))
+                                               for p in ("KB", "bytes", "slides", "figures"))))
     print("    %-12s %3d   = an entry whose file is not there, which fails the run"
           % ("MISSING", len(gone)))
 

@@ -52,7 +52,6 @@ names cost.
 | [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) | Audit the ruleset for rules that cost more to satisfy than they return | `PH3` | - | `proposed` | `specify` | - | - | T-054, T-113, T-114, T-115 |
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-107, T-110 |
 | [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | - | `proposed` | `specify` | - | - | T-085, T-123, T-124, T-125, T-129 |
-| [T-129](T-129-the-reference-decks-figures-in-examples-readme-are-unwatched-and-two-are-wrong.md) | The reference deck's figures in examples/README.md are bound to nothing, and two of them are wrong on the published page | `PH3` | - | `proposed` | `specify` | - | - | T-085, T-088, T-127, T-128 |
 
 ## Closed
 
@@ -169,5 +168,6 @@ names cost.
 | [T-125](T-125-a-split-contents-page-still-clamps-its-descriptions-to-one-line.md) | Decide whether a split contents page should take a further sheet rather than clamp every description to one line | `PH3` | `unreleased` | `done` | `review` | - | - | T-034, T-036, T-116, T-126, T-128 |
 | [T-126](T-126-shell-py-refuses-every-command-while-a-tracked-deck-is-behind-the-shell.md) | Stop shell.py refusing every command while a tracked deck is behind the shell | `PH3` | `unreleased` | `done` | `review` | - | - | T-101, T-124, T-125, T-127 |
 | [T-127](T-127-figures-py-refuses-to-report-a-drifted-figure-because-its-fixture-needs-an-undrifted-page.md) | Stop figures.py refusing to report a drifted figure because its own fixture needs an undrifted page | `PH3` | `unreleased` | `done` | `review` | - | - | T-088, T-126, T-129 |
+| [T-129](T-129-the-reference-decks-figures-in-examples-readme-are-unwatched-and-two-are-wrong.md) | The reference deck's figures in examples/README.md are bound to nothing, and two of them are wrong on the published page | `PH3` | `unreleased` | `done` | `review` | - | - | T-085, T-088, T-127, T-128 |
 
 <!-- taskmd:end -->
