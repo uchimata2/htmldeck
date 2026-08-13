@@ -57,6 +57,13 @@ What enters context unasked, per session, before any work.
 project 207 + memory index 39 = **338 lines**. That project's tier 1 is one file of 144 lines, bounded
 by a relation rather than a constant — `R8-context-economy-for-coding-agents.md` §2.1.
 
+*Re-measured 2026-08-13 at T-134's close, which moved the only figure here this repository owns:
+[`../CLAUDE.md`](../CLAUDE.md) is **18,642 bytes / 249 lines** — 15,630 at the audit and 15,952 before
+T-134 wrote the tier section, so it had drifted 322 bytes in a day, which is why §6.2 opens with
+*re-measure*. Tier 1 is **30,645 bytes / ~7,661 tokens / 380 lines**, holding the other two files at
+their audit figures. The model, the membership rule and the bound now live in `../CLAUDE.md` itself,
+which is also over that bound by 4,555 bytes and says so.*
+
 **Tool schemas are already deferred** — roughly 100 tool names are listed without their schemas, and
 a schema loads on request. That is the single largest saving available on this surface and the
 harness already takes it. No finding.
@@ -241,7 +248,7 @@ the finding itself, and four closures showed that none of it is obvious from the
 | ~~3~~ | **CE-07** | A / F5 | Enable skills per project, not globally — **done, and the band was wrong** | ~~`L`~~ **`S`** | `xs` | stated | R8 §8 |
 | ~~4~~ | **CE-13** | B / F4 | Write down that a deck is never read whole — **done, inside rule 6 rather than as a new rule; the numbers are cited about 130 times** | *bimodal* | `xs` | none | §6.1 |
 | 5 | **CE-01** | A / F1 | Split the release chronology out of `CLAUDE.md` | `L` | `s` | stated | R8 §8 |
-| 6 | **CE-11** | A / F1 | Adopt the tier model and a relation-bound tier 1 | *enabler* | `s` | none | §6.1 |
+| ~~6~~ | **CE-11** | A / F1 | Adopt the tier model and a relation-bound tier 1 — **done, and the file is over the bound the day it was set, so it is written as dated debt** | *enabler* | `s` | none | §6.1 |
 | 7 | **CE-05** | B / F1 | Move `BRIEF.md`'s *Release phases* to its own document | `XL` | `m` | stated | R8 §8 |
 | 8 | **CE-06** | B / F1 | One file per lesson, plus a generated index | `XL` | `m`–`l` | stated | R8 §8 |
 | 9 | **CE-09** | B / F1 | One workflow file per lifecycle phase | `L` | `m` | stated | §6.1 |

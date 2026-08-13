@@ -2369,3 +2369,34 @@ genuinely needed for flow, keep it to a sentence and link the owner in the same 
 `../CLAUDE.md` owns the rules, [`BRIEF.md`](BRIEF.md) owns what to build,
 [`../tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) owns the task mechanics, and this file
 owns the lessons.
+
+### L-88 — A budget written as a relation is only as good as what its second term is bound to
+
+Learned 2026-08-13 (**T-134**). Writing a limit as *this must stay smaller than that* rather than as
+a number is the right move — a constant and the arithmetic that justified it are a pair that must be
+edited together, and the constant wins by staying put while the comparison rots. **The move is only
+half the rule.** The second term decides whether the limit means anything, and the two obvious
+choices fail in opposite directions:
+
+- **A sum or a mean of everything the file defers to** is slack. Here it would have let the
+  always-loaded file triple before anything complained, which is a rule that can only be broken by an
+  accident nobody was going to have.
+- **The smallest file it merely mentions** is worse than slack, it is *unstable*: a new 2 KB note,
+  linked for an unrelated reason, tightens the budget by an order of magnitude and makes the next
+  editor argue with a rule that moved under them. A limit that an unrelated edit can pull is one that
+  gets ignored the first time it is wrong.
+
+**How to apply.**
+
+1. **Bind to a set that changes only by a deliberate act.** What was chosen here is the documents the
+   file names as an **authority** over a domain — five of them — so the second term moves when
+   someone decides to add an authority, never as a side effect.
+2. **Say what the inequality means, in one sentence, next to it.** *Once the file you pay for on
+   every turn costs more than any single document you open on demand, the split has inverted.* A
+   relation nobody can restate is a constant with extra steps.
+3. **Ship the measurement with the command that reproduces it**, dated. A stale figure beside its
+   command is evidence; a stale figure alone is a false rule (**L-12** is the principle, **L-74** the
+   general case).
+4. **If the rule is unmet on the day it is written, say so in the same breath.** `../CLAUDE.md` went
+   in 4,555 bytes over its own bound and names the two findings that close it. An unmet budget that
+   reads as met is worse than no budget, because every later edit cites it as headroom.

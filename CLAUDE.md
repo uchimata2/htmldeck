@@ -2,6 +2,44 @@
 
 Read this before doing anything in this folder.
 
+## What loads every turn, and what bounds it
+
+**Tier 1 is what the harness loads without being asked** — a property of the tree, not a list anyone
+maintains. Establish it by observation and never from a file's claim about itself: a document that
+asserts a load discipline the harness does not implement is worse than one over budget, because the
+claim cannot be falsified and content keeps being written on the strength of it. **Tier 2** is what a
+skill or workflow document pulls in when work of a kind starts. **Tier 3** is what tier 2 loads one
+at a time, for the branch actually taken.
+
+**Observed 2026-08-13:** a session here receives three files unasked — the owner's global
+preferences, this file, and the memory index. Method: read what the session was given before its
+first tool call, then confirm the tree holds no second `CLAUDE.md`. **This repository owns one of the
+three**; the other two are the owner's and outside this bound, and the memory index is `CE-10`'s. The
+plugin also writes into an adopter's tier 1, through `skills/htmldeck/SKILL.md`'s description block
+and nothing else.
+
+**The bound: this file stays smaller than the smallest document it defers to** — `docs/BRIEF.md`,
+`docs/PUBLISHING.md`, `tasks/TASK-WORKFLOW.md`, `tasks/README.md`, `.taskmd/config.md`. Both terms
+are counted from the tree and **no constant is written anywhere**, because a number and the
+arithmetic that justified it have to be edited together and the number wins by staying put. The
+inequality says something: once the file you pay for on every turn costs more than any single
+document you open on demand, the split has inverted. Measure both terms with
+
+```bash
+python -c "import pathlib;[print(f'{p.stat().st_size:>7}  {p}') for p in map(pathlib.Path,'CLAUDE.md docs/BRIEF.md docs/PUBLISHING.md tasks/TASK-WORKFLOW.md tasks/README.md .taskmd/config.md'.split())]"
+```
+
+**Tiers 2 and 3 carry no budget**, and that is deliberate rather than an omission: they are not paid
+every turn, so a size limit there measures the wrong cost, and what constrains them is loading one at
+a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
+that starts loading on every turn has become tier 1, and this bound applies to it.
+
+**This file is over its own bound today** — 18,642 bytes against `.taskmd/config.md`'s 14,087,
+measured 2026-08-13 with the command above. That is dated debt and not a rule already met: `CE-01`
+(split the release chronology out of here) and `CE-04` (one operative home per cumulative rule),
+ranked in [`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6, are the cuts that close it, and
+neither is raised as a task yet.
+
 ## What this is
 
 A publishable Claude Code plugin: **single-file HTML presentations that don't look generated**,
