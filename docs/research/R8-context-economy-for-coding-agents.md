@@ -391,7 +391,13 @@ restarts and three measurements produced **~800 tokens of a 7,300-token listing*
 moving. What the numbers established is a boundary rather than a saving: **a per-skill override
 reaches the skills the harness itself and the user provide; skills a plugin supplies are governed by
 whatever enables the plugin** — and where those plugins are not installed locally, no file on the
-machine names them. The connector switch behaved the same way: accepted at project scope, inert.
+machine names them. The connector switch behaved the same way: **accepted at every scope tried and
+inert at all of them**, including the user scope that was supposed to be the decisive test.
+
+**Three mechanisms, three scopes, three null results.** That is the shape of a harness-level cost: it
+is visible in the accounting, attributable to a named source, and not addressable by the project that
+pays it. **An audit must be able to report that**, or it will keep converting *I cannot reach this*
+into *this is not worth doing* — which reads the same in a ranking and is a different fact entirely.
 
 Three lessons, and the third is the one that costs most to learn late:
 
