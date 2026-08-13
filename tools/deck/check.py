@@ -21,11 +21,19 @@ A stored copy of a derivable fact drifts on the first amendment (**L-08**).
     python tools/deck/check.py deck.html --sources notes/          # adds the content half
     python tools/deck/check.py deck.html --print-pages             # adds the printed page count
     python tools/deck/check.py deck.html --json                    # the report T-004 consumes
+    python tools/deck/check.py deck.html --quiet                   # a passing run in one line
+
+**`--quiet` is for the caller who cannot read 169 lines, and it changes no verdict.** A green run
+prints its notes and one summary line - 345 bytes against 17,581 - and a run that is not green
+prints everything, because the output of a failure is the reason to have run it. The default is
+unchanged: a person reading the per-rule listing is why the listing exists. `check_all.py` makes the
+same choice one altitude up, with the polarity that suits who calls it (`CE-03`, T-132).
 
 Pure standard library (**L-07**), real Chrome offline through `render.py`.
 """
 
 import inspect
+import io
 import json
 import os
 import sys
@@ -474,17 +482,54 @@ def self_test():
         if len(why) < 40:
             sys.exit("SELF-TEST FAILED: %s is excused in a phrase, not in writing" % rid)
 
+    # **`--quiet` must never be able to swallow a red run.** The whole objection to a quiet gate is
+    # that it hides something, so the one thing it must not hide is asserted rather than reviewed.
+    red = {"deck": "x", "notes": [], "account": account([]), "ok": False,
+           "failures": [{"rule": "DS-000", "what": "a failure the quiet path must still print"}],
+           "rows": [], "blindTo": BLIND}
+    out = io.StringIO()
+    stdout, sys.stdout = sys.stdout, out
+    try:
+        code = report(red, quiet=True)
+    finally:
+        sys.stdout = stdout
+    if code != 1 or "DS-000" not in out.getvalue():
+        sys.exit("SELF-TEST FAILED: --quiet on a failing run exited %r and %s the failure. A quiet "
+                 "mode that reports a red run as one line, or as none, is worse than no quiet mode"
+                 % (code, "printed" if "DS-000" in out.getvalue() else "dropped"))
+
     # Every verdict producer is in the static half or declared outside it. Here as well as in
     # `static_variants.py`, because the composition is this file's and a producer arrives here first.
     producer_split()
     return True
 
 
-def report(res, verbose=True):
+def summary(res):
+    """A passing run in one line - the partition, spelled as the sum it has to be.
+
+    **The line is the whole report under `--quiet`, so what it omits is unreachable.** That is why it
+    carries counts rather than a verdict: the risk `CE-03` names is a rule that quietly stops being
+    checked, and `checked` falling while `owned` holds is what that looks like. A rule that loses its
+    check entirely lands in `SILENT`, which is a coverage fault and never reaches this line at all.
+    """
+    a = res["account"]
+    return ("pass  %s  %d owned = %d checked + %d excused here + %d excused in the rules + "
+            "%d undecided + %d SILENT, %d failing"
+            % (res["deck"], len(a["owned"]), len(a["checked"]), len(a["deferred"]),
+               len(a["excusedByRuleset"]), len(a["undecided"]), len(a["silent"]),
+               len(res["failures"])))
+
+
+def report(res, verbose=True, quiet=False):
     a = res["account"]
     print("deck:    %s" % res["deck"])
     for n in res["notes"]:
         print("         %s" % n)
+    if quiet and res["ok"]:
+        # The notes above stay. They say which halves of the check ran, and a quiet run that hid
+        # `content half: NOT RUN` would conceal more than the 169 lines it saved.
+        print(summary(res))
+        return 0
     if verbose:
         print("\n=== verdicts")
         for row in res["rows"]:
@@ -558,7 +603,7 @@ def main(argv):
     if "--json" in argv:
         print(json.dumps(res, indent=1))
         return 0 if res["ok"] else 1
-    return report(res)
+    return report(res, quiet="--quiet" in argv)
 
 
 if __name__ == "__main__":
