@@ -1,5 +1,11 @@
 # Observations for the agent harness
 
+> **Status: not yet sent, and still filling.** The reporting project is part-way through acting on
+> its own audit, and every finding it implements has so far produced something the finding did not
+> predict. This document is handed over once that work is done, so what you eventually receive is
+> one document rather than three revisions of it. If you are reading it before then, it is a draft
+> in the open.
+
 **From the htmldeck project, one machine, two shells.** Two observations, neither ranked and neither
 a request. This document exists because the first of them was originally filed against the wrong
 project, and the register it sat in had no home for an owner that is not a plugin.

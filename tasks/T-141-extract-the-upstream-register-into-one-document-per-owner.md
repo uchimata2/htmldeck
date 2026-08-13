@@ -131,6 +131,7 @@ where it was assembled, not where it should arrive. Decided by the owner 2026-08
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **The handover is deferred and the documents are a register that is still filling** — ruled by the owner: nothing is sent until the audit's findings are worked and their fixes land, because every implementation so far has added rows and sending early means sending three times. Each document now opens with a *not yet sent, still filling* banner, and the rule is in [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §7 where a session that finds something reads it: add the row to the owner's document and stop there. |
 | 2026-08-13 | → done | Fourteen observations into three documents, each standing alone. **§7 keeps all four of its headings and became an index**: `§7`, `§7.1`, `§7.2` and `§7.3` are cited from seven places, and a heading removed is a citation falsified with nothing to say so. The rewrite was from the recipient's side — *your* `T-085`, not *their* — which is the half an extraction usually skips and the half that decides whether the document is readable at all. |
 | 2026-08-13 | → in_progress | Built in the planned order. Step 1 paid for itself immediately: the citation sweep is what turned *delete §7* into *reduce §7*. |
 | 2026-08-13 | → planned | Six steps, and the first is *find every citation before moving anything*. |

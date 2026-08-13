@@ -1,5 +1,11 @@
 # Observations for the handoff skill
 
+> **Status: not yet sent, and still filling.** The reporting project is part-way through acting on
+> its own audit, and every finding it implements has so far produced something the finding did not
+> predict. This document is handed over once that work is done, so what you eventually receive is
+> one document rather than three revisions of it. If you are reading it before then, it is a draft
+> in the open.
+
 **From the htmldeck project, which uses it.** Six observations, none of them ranked and none of them
 a request. They come from one adopting repository over about a week of daily use, and they are
 written down because an adopter sees usage the author's own repositories cannot show.
@@ -53,7 +59,10 @@ contain a mode word. What was applied instead:
 
 Rule 4 is the part worth arguing with. It adds a question to a flow that currently never asks in this
 position, and the alternative — always treating the remainder as a qualifier — is simpler and wrong
-about one real phrasing.
+about one real phrasing. **It was put to the skill's author on 2026-08-13 and kept**: the simpler rule
+buys its simplicity by being confidently wrong about `resume the migration next week`, and a question
+in a rare position costs less than a mode chosen against the user's intent. Recorded as a decision
+rather than removed from the document, so the trade stays visible to whoever reads the rule next.
 
 ## Provenance
 

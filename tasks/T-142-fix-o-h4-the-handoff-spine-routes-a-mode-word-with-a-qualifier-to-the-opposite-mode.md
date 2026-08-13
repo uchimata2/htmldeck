@@ -120,6 +120,7 @@ else. The patch therefore has to exist as text in a place the owner keeps.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **The debatable clause was put to the skill's author and kept.** Rule 4 — ask when a qualifier after `resume` really describes work for a later session — stays. The simpler alternative buys its simplicity by being confidently wrong about one real phrasing, and a question in a rare position costs less than a mode chosen against the user's intent. The trade is left visible in [`../docs/upstream/handoff-skill.md`](../docs/upstream/handoff-skill.md) rather than deleted now that it is settled. |
 | 2026-08-13 | → done | The asymmetry was in a parenthesis, not in the rule everyone reads: `create <text>` already meant mode-plus-subject, and the same reading was explicitly denied to the other three modes. Fixed as three cases plus one question. **The installed copy is not the source and the patch is the deliverable** — an unversioned directory under a user profile is not where a fix lives, and the next install would take it back. |
 | 2026-08-13 | → in_progress | Applied to the installed copy so the behaviour is right today, and written out for the source. |
 | 2026-08-13 | → planned | Four steps. Step 1 is *find where the asymmetry actually is*, because the reported symptom pointed at the bullet and the fault was in the clause after it. |

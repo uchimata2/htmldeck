@@ -390,6 +390,13 @@ observed*, never *this is not already known*.
 repository uses, which quietly assumed every outside defect belongs to one of them; `O-C1` belongs to
 neither, and the missing home is why it was first filed against the wrong project (**L-87**).
 
+**Nothing has been sent, and nothing is sent until the audit's findings are worked and their fixes
+land.** Ruled by the owner 2026-08-13. The documents are **a register that is still filling**, not a
+report waiting on a courier: every finding still to be implemented is a session that may add rows,
+and four out of four implementations so far have. Sending early would mean sending three times.
+**So a session that finds something adds it to the owner's document and stops there** — the handover
+is one deliberate act, later, and not a step in anyone's task.
+
 ### 7.1 The handoff skill
 
 **[`upstream/handoff-skill.md`](upstream/handoff-skill.md)** — `O-H1` to `O-H6`. Backlog read for the

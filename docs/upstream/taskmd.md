@@ -1,5 +1,11 @@
 # Observations for the taskmd plugin
 
+> **Status: not yet sent, and still filling.** The reporting project is part-way through acting on
+> its own audit, and every finding it implements has so far produced something the finding did not
+> predict. This document is handed over once that work is done, so what you eventually receive is
+> one document rather than three revisions of it. If you are reading it before then, it is a draft
+> in the open.
+
 **From the htmldeck project, which uses it to track 141 tasks.** Six observations, none of them
 ranked and none of them a request. They come from one adopting repository, and they are written down
 because an adopter sees usage the author's own repositories cannot show.
