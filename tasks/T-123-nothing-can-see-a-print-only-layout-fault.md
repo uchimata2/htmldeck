@@ -119,9 +119,13 @@ Three things stand in the way, and they are the substance of the decision:
   wider. So the 2026-08-08 ruling stands where it was aimed — DS-222 to DS-226 as *judgements* stay
   with the person who prints — and it is narrowed only where the property is arithmetic. What is
   left for `specify` is the instrument, not the question.
-- **Is `examples/` the only surface this gates, or does an adopter's deck get it too — the owner.**
-  Evidence arrived 2026-08-13 and is in *What a second adopter deck adds* above. **Recommendation:
-  any deck it is pointed at, with `check_all.py` running it over `examples/`** — the shape every
+- ~~**Is `examples/` the only surface this gates, or does an adopter's deck get it too?**~~
+  **Answered 2026-08-13 by the owner: any deck it is pointed at**, with `check_all.py` running it
+  over `examples/`. So the instrument is a per-deck gate and the dependency question below is
+  settled against L-07 rather than around it — whatever it costs, an adopter has to be able to run
+  it. What is left for `specify` is the instrument, on both counts.
+  Evidence arrived 2026-08-13 and is in *What a second adopter deck adds* above. The reasoning was:
+  any deck it is pointed at, with `check_all.py` running it over `examples/` — the shape every
   other per-deck gate already has (`check.py`, `shell.py check`, `theme.py check`), and the shape the
   evidence asks for, because the fix travels in the shell and only the deck's owner can confirm it
   landed. The argument the other way is the dependency: a gate an adopter runs is a gate whose
@@ -155,6 +159,7 @@ Three things stand in the way, and they are the substance of the decision:
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **The owner ruled the second open question the same day: any deck the gate is pointed at, not `examples/` alone.** That settles scope and hands `specify` a harder instrument problem than it had — an adopter must be able to run it, so the pure-stdlib question can no longer be dodged by keeping the tool internal. |
 | 2026-08-13 | (no change) | The owner supplied a deck built with the plugin outside this repository, printed the day before `0.2.3`. It carries the T-116 collision — four intersecting card pairs and the last card through the footnote — which makes three printed decks with this fault and the first that no gate here would ever have run over. Measured geometry only; nothing from that document is recorded anywhere in this repository. Recorded in §1, with a recommendation against the second open question and one false-positive class the measurement found for free. |
 | 2026-08-13 | → proposed | Raised out of T-116, which found a printed collision that the screen measurement reported as clean and that reached two shipped decks. `PH3` and `l`: the instrument is a PDF graphics-state parser or a new dependency, and either way it revisits the owner's 2026-08-08 ruling on what the print gate asserts. |
 | 2026-08-13 | (no change) | **The owner answered the same day: yes, narrowly.** Gate *no card overlaps another and none reaches the footnote*, and nothing else. The type stays `decision` because the decision is what was asked for and it is now recorded; the remaining work is the instrument, and this task carries it under its second acceptance criterion. **Stays `PH3` and out of `0.2.3`** — `l` puts it there by the rule in [`../CLAUDE.md`](../CLAUDE.md), and the release it would protect is three tasks that are nearly done. Not `blocked_by` anything. |

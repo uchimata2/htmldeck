@@ -152,6 +152,11 @@ This repository goes to GitHub. Everything written here must be:
 - **Free of personal, client and machine data.** The source corpus is training work for real
   named scenarios; **do not copy deck content into this repository.** Patterns, structure and
   measurements only. Any example deck shipped here must be written fresh on a neutral topic.
+  **One scoped exception, ruled by the owner 2026-08-13:** the adopting project's D6 deck and its
+  two specifications may be copied in and published as an example, because that deliverable is an
+  exam exercise rather than a real engagement — **sanitized on the way in**, and the source folder
+  is read-only in this matter. The exception is that deck and nothing else; the corpus rule above is
+  unchanged. [T-128](tasks/T-128-publish-the-adopter-deck-as-a-worked-example.md) carries it.
 - **Committed under the publishing identity**, `uchimata2 <112070643+uchimata2@users.noreply.github.com>`,
   set in this repository's local git config. The personal address was rewritten out of all 121
   commits before the first push and **must not come back** — history is public now, so a single
