@@ -13,7 +13,7 @@ business_value: medium
 effort: xs
 created: 2026-08-13
 updated: 2026-08-13
-shipped_in: unreleased
+shipped_in: 0.2.3
 deliverables:
   - tools/deck/printpages.py
   - tools/deck/render.py
@@ -150,3 +150,4 @@ nothing since it was written.**
 | 2026-08-13 | → planned | §2 was already complete and unchanged. |
 | 2026-08-13 | → in_progress | Step 1 needed `render.slide_count` fixed before it could be the derivation: it matched `class="slide` as a prefix where the DOM matches `slide` as a class token, so adopting it as-is would have made the two callers agree on today's decks and disagree on a deck writing `class="close slide"`. Latent rather than reported, and fixing it is what makes acceptance criterion 4 an assertion instead of a coincidence. |
 | 2026-08-13 | → done | Four criteria met. Both shipped decks pass standalone and print the same `wanted` line as `check.py --print-pages`. Two documents that described the defect as current were corrected — `check_all.py`'s skip reason and `PUBLISHING.md` §8 — because a fixed defect left documented is the next reader's wrong fact. |
+| 2026-08-13 | (no change) | **Shipped in `0.2.3`**, tagged `v0.2.3`. `python tools/check_all.py` green on the tagged tree: 19 ran, 1 skipped with its reason, 0 failed. |

@@ -477,6 +477,10 @@ presentation on `0.2.2`, presented it, and reported on what it was like to read:
 | ~~[T-107](../tasks/T-107-quickviews-markdown-renderer-drops-thematic-breaks.md)~~ **done 2026-08-13** — the audit was the deliverable. Every block construct counted across **355 corpus documents**, counts only: three were one branch each and landed (thematic breaks in 119 documents, ordered lists rendered as `<ul>` in 161, front matter rendered as body text in 130), two went to **T-121**, and the `---`-versus-setext ambiguity was settled by counting rather than arguing — one setext underline in 355 documents. |
 | ~~[T-108](../tasks/T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md) — a deck has no back-matter stage~~ **done 2026-08-13** | `data-stage` was mandatory and held only argument stages, so a colophon was pushed into the nearest one and the ruler named it at rest — *Decision*, on a slide in no stage. Fixed as the missing vocabulary value it was, not the label bug it looked like: **`data-stage="back"`**, and the four renderings of the one manifest all follow. **This repository had it worse than the deck that reported it.** The reference deck had invented an eighth stage, `Colophon`, and left `STAGE_ICON` at seven — so its contents box drew `<use href="#undefined">` and printed with no mark, and its Decision-stage census ran a slide long. The census now reads **7 section ticks where it read 8**. Two rules moved with it: DS-225 had said the marks cannot be uneven, which back matter makes false, and `shell.py check` gained a `STAGE TABLE` gate so the two halves of that one table can never differ in length again. |
 
+**All three shipped as `0.2.3` on 2026-08-13**, the ninth PH1 reopening, together with T-120 below.
+Two of the three were found by looking at a rendered deck rather than by running anything, and both
+were in this repository's own reference deck as well as in the adopter's.
+
 **A fourth joined them on 2026-08-13, and it is the only one nobody reported.**
 
 | | |

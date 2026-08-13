@@ -13,7 +13,7 @@ business_value: critical
 effort: s
 created: 2026-08-13
 updated: 2026-08-13
-shipped_in: unreleased
+shipped_in: 0.2.3
 deliverables:
   - shell/components.css
   - tools/deck/contents_bound.py
@@ -222,3 +222,4 @@ instrument is a parser or a dependency and either way it reopens that ruling.
 | 2026-08-13 | → in_progress | Step 1 overturned §1's diagnosis before step 2 began. The 13-entry fixture with three-line descriptions reproduced the collision in print, and the same fixture measured clean on screen — so the fixture's entry height was the second cause and the first is that the fault exists only in paged layout. Recorded in §3 rather than worked around, and the instrument gap raised as T-123. |
 | 2026-08-13 | (no change) | Scope adjusted during implementation, both directions. The track sizing and the footnote placement named in §1 needed no edit — the tracks were right and the footnote was painted over, so one `min()` closes both. A second edit was added past the literal scope: with the cards held to their rows, every description printed cut mid-line, and a bound whose page prints severed letterforms does not satisfy the Outcome. |
 | 2026-08-13 | → done | Six §1 criteria met and one added. The fix is two rules in `shell/components.css`, propagated byte for byte into the three tracked decks so `shell.py check` holds. |
+| 2026-08-13 | (no change) | **Shipped in `0.2.3`**, tagged `v0.2.3`. `python tools/check_all.py` green on the tagged tree: 19 ran, 1 skipped with its reason, 0 failed. |

@@ -13,7 +13,7 @@ business_value: high
 effort: m
 created: 2026-08-12
 updated: 2026-08-13
-shipped_in: unreleased
+shipped_in: 0.2.3
 deliverables:
   - shell/deck.js
   - docs/COMPONENT-CONTRACT.md
@@ -182,3 +182,4 @@ hide the miscount and leave it.
 | 2026-08-13 | → in_progress | Built as the owner specified — `data-stage="back"`, a value in the stage vocabulary. Four consumers branch on it and the fifth, `firstSlideOfStage`, needed a guard rather than a branch. |
 | 2026-08-13 | (no change) | **The open decision resolved from the ruleset, not from the printed page.** DS-113/114 key the mark to the stage, so a slide with no stage carries none and the absence is the rule holding. That also made DS-225 false where it said the marks cannot be uneven, so the ruleset took a correction. The knock-on nobody predicted: the contents box's label then disagreed with the slide's own eyebrow, which `buildContents` states as a property a reader relies on — repaired by changing the deck's authored word to the vocabulary's. |
 | 2026-08-13 | → done | Eight §1 criteria met and one added. The census reads 7 section ticks where it read 8, the ruler rests on `SOURCES`, and the contents box carries a label and no empty mark. `check.py` and `chrome_row.py` green; both renderings looked at offline. |
+| 2026-08-13 | (no change) | **Shipped in `0.2.3`**, tagged `v0.2.3`. `python tools/check_all.py` green on the tagged tree: 19 ran, 1 skipped with its reason, 0 failed. |
