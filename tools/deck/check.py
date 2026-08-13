@@ -105,11 +105,12 @@ DEFERRED = {
               "animation never played still counts as a page, so the count cannot see it; what "
               "sees it is a person turning the sheet over.",
     "DS-225": "The same ruling as DS-222. The count does reach half of it: a contents "
-              "page that never rendered shows up as `n` rather than `n` + 1.",
+              "page that never rendered shows up as `n` rather than `n` + `k`.",
     "DS-226": "The same ruling as DS-222, and this one already has an instrument: "
               "`contents_bound.py` measures the compression bound the rule states - 16 entries "
-              "with descriptions, 24 without - in a real browser, and is run separately because "
-              "it sweeps nine deck sizes rather than reading the one in front of it.",
+              "with descriptions, 24 without - in a real browser, and exercises the split that "
+              "keeps every sheet inside it. Run separately because it sweeps seventeen sheet "
+              "sizes and eight stage shapes rather than reading the deck in front of it.",
 
     # ---- `default` rules, held back by the owner's triage order: the account, then the hard ones
     "DS-004": "Triage: `default`. *Other engines degrade gracefully* is unobservable from a "

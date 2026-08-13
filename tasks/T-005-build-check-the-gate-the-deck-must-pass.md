@@ -144,9 +144,13 @@ count over a document and a program output, and both move.
       2026-08-08** — `DESIGN-SYSTEM.md` §5.4 was amended by the owner to match, and the row now
       asserts **five** rules rather than three: **DS-225** the contents page is generated rather
       than authored and is placed *first* (last would re-break the trailing-page selector), and
-      **DS-226** printed type has a floor in points rather than design units. The `n` + 1 count is
-      what makes the off-by-one visible in either direction: `n` means the contents page never
-      rendered, `n` + 2 means the trailing blank page is back
+      **DS-226** printed type has a floor in points rather than design units. The count is
+      what makes the off-by-one visible in either direction: too few means the contents page never
+      rendered, one too many means the trailing blank page is back.
+      **Amended 2026-08-13 by [T-036](T-036-the-second-contents-page-for-long-decks.md): the count
+      is `n` + `k`**, for `n` slides and `k` contents sheets, because the page now continues onto
+      further sheets past 16 entries. `k` is 1 for every deck at or under the bound, which is what
+      `n` + 1 was describing; the gate reads `k` out of the deck's DOM rather than recomputing it
 - [ ] Proven **failing** on each class before being trusted
 
 *Content — run when source documents are supplied*

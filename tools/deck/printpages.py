@@ -6,9 +6,15 @@ thirteen blank pages (DS-222), and nothing on the presentation list can see that
 the stage still holds, because the stage is still there — it just did not reach the paper. The page
 count is the smallest measurement that makes it loud.
 
-**`n` + 1 for `n` slides**, since [T-034] put a generated contents page in front. The count is what
-makes an off-by-one visible in *either* direction: `n` means the contents page never rendered, and
-`n` + 2 means the trailing blank page DS-222's corollary removed has come back.
+**`n` + `k` for `n` slides and `k` contents sheets**, since [T-034] put a generated contents page in
+front and [T-036] let it continue onto further sheets past 16 entries. The count is what makes an
+off-by-one visible in *either* direction: `n` means the contents page never rendered, and one more
+than expected means the trailing blank page DS-222's corollary removed has come back.
+
+**`k` is read out of the deck's own DOM, never recomputed here** - the same rule as the slide count
+below it (T-120, **L-08**). A copy of the split rule in this file would agree with the deck until
+the day one of them changed, and the check exists to notice exactly that kind of day. `k` is 1 for
+every deck at or under the bound, which is every deck this repository ships.
 
 DS-222 to DS-226 themselves are **not** asserted here. The owner's ruling, 2026-08-08: automate the
 count and only the count; *disclosure content dropped, slides clip* stays with the print a person
@@ -65,22 +71,56 @@ def page_count(pdf):
     return declared, objects
 
 
+SHEET_PROBE = r"""
+<script>
+(function(){
+  function run(){
+    var n = document.querySelectorAll('main.stage > section.contents').length;
+    document.title = 'RESULT' + JSON.stringify({sheets:n}) + 'ENDRESULT';
+  }
+  if (document.readyState === 'complete') run();
+  else window.addEventListener('load', run);
+})();
+</script>
+"""
+
+
+def sheet_count(deck):
+    """`(k, problem)` - how many contents sheets the deck builds, counted in its own DOM.
+
+    The sheets are generated at start-up, so a file scan cannot see them; this asks the deck. Zero
+    is a problem rather than an answer: a deck that builds no contents page would otherwise make
+    `n` + 0 the expectation and pass while missing the page this check exists for."""
+    probe = render.make_probe(deck, name="pagecount-sheets-probe.html", extra=SHEET_PROBE)
+    data, err = render.read_result(render.file_url(probe), 1280, 800)
+    if not data:
+        return None, "the deck did not report a contents-sheet count\n%s" % err[:300]
+    k = data.get("sheets")
+    if not k:
+        return None, "the deck builds no contents sheet - there is no `n` + k to compare against"
+    return k, None
+
+
 def verdicts(deck, slide_count):
     """`(rule, what, ok)` rows. `PRINT-1` is its own ID rather than a DS number: no rule in the
-    ruleset states a page count - §5.4 states the *shape* of the printed artifact, and `n` + 1 is
+    ruleset states a page count - §5.4 states the *shape* of the printed artifact, and `n` + `k` is
     the arithmetic that follows from it."""
     if not slide_count:
         return [("PRINT-1", "no slide count to compare against - the render gate produced none",
                  False)]
+    sheets, problem = sheet_count(deck)
+    if problem:
+        return [("PRINT-1", problem, False)]
     pdf = print_to_pdf(deck)
     if not pdf:
         return [("PRINT-1", "Chrome produced no PDF - the print path is unmeasured", False)]
     declared, objects = page_count(pdf)
-    want = slide_count + 1
+    want = slide_count + sheets
     agree = declared is not None and declared == objects
     return [
-        ("PRINT-1", "printed pages: %s declared, %s counted, wanted %d (%d slides + contents)"
-         % (declared, objects, want, slide_count),
+        ("PRINT-1", "printed pages: %s declared, %s counted, wanted %d (%d slides + %d contents "
+                    "sheet%s)" % (declared, objects, want, slide_count, sheets,
+                                  "" if sheets == 1 else "s"),
          agree and declared == want),
     ]
 

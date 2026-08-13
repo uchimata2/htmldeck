@@ -745,10 +745,21 @@ svg{display:block}
      (~2.0 in on A4 landscape) and a title is a claim of four to seven words (DS-210), so it
      would set at three lines and the box would grow TALLER than the row the extra column was
      meant to shorten. `1fr` rows then divide whatever height is left, so a longer deck
-     compresses vertically on its own with no second code path. */
+     compresses vertically on its own with no second code path.
+
+     THE ROW COUNT IS DECLARED, not left to the item count (T-036). Past 16 entries the page
+     continues onto further sheets, and a sheet that took its rows from its own entry count would
+     print taller boxes than a fuller one beside it - two sheets of one page disagreeing about box
+     height, which reads as a rendering fault rather than as a continuation. `--crows` is the
+     largest sheet's row count and every sheet gets it, so the short sheet ends in empty tracks
+     instead of stretched ones. `grid-auto-rows` stays as the safety net: if the declared count is
+     ever short, the overflow becomes extra rows rather than boxes leaving the page, which is the
+     direction T-116 showed is the dangerous one. A single-sheet deck is unaffected - the declared
+     count is the count it already had. */
   .contents-grid{
     flex:1;min-height:0;
     display:grid;grid-template-columns:repeat(var(--ccols,4),1fr);
+    grid-template-rows:repeat(var(--crows,1),1fr);
     grid-auto-rows:1fr;gap:var(--sp-3);
   }
   .cbox{

@@ -15,10 +15,16 @@ uses, and reads the numbers back out of the DOM.
 not a copy of them, the rules themselves - and the grid is then grown a box at a time. Because rows
 are `ceil(n / 4)`, the answer is a step function, and two different numbers fall out of it:
 
-    the bound       the largest deck where every box still shows a readable description
-    the hard limit  the largest deck where the number and title render at all
+    the bound       the largest SHEET where every box still shows a readable description
+    the hard limit  the largest sheet where the number and title render at all
 
-Past the hard limit the page must continue onto a second sheet (T-036); no compression resolves it.
+**Since T-036 those are sheet numbers, not deck numbers, and the deck can no longer reach either.**
+Past 16 entries the page continues onto further sheets, so the compression bands past the bound are
+what a sheet *would* do if the cap moved rather than what any deck prints. They are still measured
+here, because they are the only instrument DS-226's two numbers have. What is asserted instead is
+the cap: the split rule the deck ships is exercised on stage shapes that stress it, and a sheet
+that came back over the bound - or an entry that came back missing, reordered or duplicated - fails
+the run.
 
 **Both numbers are entry counts, and an entry's height is not constant - so the fixture pins the
 height.** Every cloned box gets the same three-line description (`BOTTOM`), which is what a real
@@ -69,6 +75,40 @@ COUNTS = [4, 6, 7, 8, 9, 10, 12, 13, 16, 17, 20, 21, 24, 25, 28, 32, 40]
 BOTTOM = ("Frequency compounds where bike-share plateaus, and the gap is already visible in the "
           "2029 figures rather than in the forecast that follows them.")
 
+
+def even(n, stages):
+    """`n` entries dealt into `stages` stages as evenly as they divide - the shape a real argument
+    has. Returned as one stage key per entry, in slide order."""
+    out = []
+    for s in range(stages):
+        take = -(-(n - len(out)) // (stages - s))
+        out += [s] * take
+    return out
+
+
+# The split rule's input is the stage SHAPE, not the entry count, because the cut falls at a stage
+# boundary (T-036). Each case is one stage key per entry in slide order, `-1` for back matter, plus
+# the number of sheets it should take - written out rather than computed, so the expectation is a
+# number a reader can check by hand rather than a second copy of the rule.
+#
+# **`ceil(n / 16)` is a floor, not the answer.** At 43 entries in seven even stages the runs are
+# 7 · 6 · 6 · 6 · 6 · 6 · 6, and no three contiguous groups of them come in at or under 16 - the
+# closest is 13 · 12 · 18. So that case takes FOUR sheets where the arithmetic says three, and it
+# is the answered question working as specified: the boundary is preferred to the sheet count.
+#
+# The last two are the cases with no boundary to cut at, where DS-226's never-drop invariant forces
+# the split inside a stage. They are the reason `splitLongRuns` exists.
+SPLIT_CASES = [
+    ("13 entries, the reference deck's length", even(13, 7), 1),
+    ("16 entries, exactly the bound", even(16, 7), 1),
+    ("17 entries, one past it", even(17, 7), 2),
+    ("25 entries, past the old hard limit", even(25, 7), 2),
+    ("43 entries, the longest deck anyone reports", even(43, 7), 4),
+    ("17 entries, a stage of 12 then a stage of 5", [0] * 12 + [1] * 5, 2),
+    ("20 entries, one stage throughout", [0] * 20, 2),
+    ("43 entries, a stage of 40 and a colophon", [0] * 40 + [1, 1] + [-1], 3),
+]
+
 PROBE = r"""
 <script>
 (function(){
@@ -116,15 +156,32 @@ PROBE = r"""
          repeating the rule - a second copy here is what would silently stop measuring what
          ships (L-08). */
       var layout = window.htmldeckContentsLayout;
-      if (typeof layout !== 'function'){
-        out.error = 'the deck exports no htmldeckContentsLayout - this tool would be measuring '
-                  + 'its own copy of the layout rule instead of the deck\'s';
+      var split = window.htmldeckContentsSheets;
+      if (typeof layout !== 'function' || typeof split !== 'function'){
+        out.error = 'the deck exports no htmldeckContentsLayout/htmldeckContentsSheets - this '
+                  + 'tool would be measuring its own copy of the rules instead of the deck\'s';
         document.title = 'RESULT' + JSON.stringify(out) + 'ENDRESULT';
         return;
       }
+
+      /* The shipped split rule (T-036), run on the stage shapes that stress it. The entries are
+         synthetic because the input that matters is the SHAPE - where one stage ends and the next
+         begins - and no single deck carries eight of them. `idx` rides along so the flattened
+         result proves every entry survived, once, in order. */
+      out.splits = SPLITS.map(function(c){
+        var man = c[1].map(function(st, i){
+          return { idx: i, back: st < 0, stage: st < 0 ? null : st };
+        });
+        var sheets = split(man);
+        return { name: c[0], want: c[2],
+                 sizes: sheets.map(function(s){ return s.length; }),
+                 order: [].concat.apply([], sheets).map(function(m){ return m.idx; }) };
+      });
+
       COUNTS.forEach(function(n){
         var lay = layout(n);
         contents.style.setProperty('--ccols', lay.cols);
+        contents.style.setProperty('--crows', lay.rows);
         contents.dataset.rows = lay.rows;
         if (lay.dense) contents.dataset.dense = ''; else delete contents.dataset.dense;
         grid.innerHTML = '';
@@ -242,6 +299,32 @@ def self_test(data):
     # measurement, so a value read from the deck would agree with every deck and catch nothing. What
     # a re-baseline owes instead is saying which deck the number describes, so the next trip is
     # readable rather than mysterious - and that is what the paragraph above is.
+    # ---- the split rule (T-036). Three invariants, and the first is the one DS-226 states.
+    #
+    # Checked here rather than trusted because the split is the only thing now standing between a
+    # long deck and the compression bands below: every band past the bound is unreachable if and
+    # only if no sheet ever exceeds the bound.
+    if len(data.get("splits") or []) != len(SPLIT_CASES):
+        failures.append("the probe returned %d split results for %d cases - the sheet rule was "
+                        "not exercised, so nothing here says the bound is respected"
+                        % (len(data.get("splits") or []), len(SPLIT_CASES)))
+    for s in data.get("splits") or []:
+        n = sum(s["sizes"])
+        # DS-226, the whole of it: every entry, exactly once, in slide order. A contents page that
+        # silently omits or reorders a slide is confidently wrong about the shape of the argument.
+        if s["order"] != list(range(n)):
+            failures.append("%s: the sheets do not carry every entry once in order" % s["name"])
+        over = [z for z in s["sizes"] if z > 16]
+        if over:
+            failures.append("%s: sheet of %s entries, over the bound of 16 - the compression "
+                            "bands past the bound are reachable again"
+                            % (s["name"], ", ".join(str(z) for z in over)))
+        if 0 in s["sizes"]:
+            failures.append("%s: an empty sheet" % s["name"])
+        if len(s["sizes"]) != s["want"]:
+            failures.append("%s: %d sheets, expected %d"
+                            % (s["name"], len(s["sizes"]), s["want"]))
+
     AUTHORED = 13
     if data.get("authored") != AUTHORED:
         failures.append("the deck built %r contents boxes, expected %d (twelve slides and the "
@@ -258,7 +341,9 @@ def main():
         print("Deck not found: %s" % paths.display_path(DECK, ROOT))
         return 1
 
-    probe_src = PROBE.replace("COUNTS", json.dumps(COUNTS)).replace("BOTTOM", json.dumps(BOTTOM))
+    probe_src = (PROBE.replace("COUNTS", json.dumps(COUNTS))
+                      .replace("SPLITS", json.dumps(SPLIT_CASES))
+                      .replace("BOTTOM", json.dumps(BOTTOM)))
     probe = render.make_probe(DECK, name="contents-bound-probe.html", extra=probe_src)
     data, err = render.read_result(render.file_url(probe), 1920, 1200)
     if not data:
@@ -301,18 +386,32 @@ def main():
               % (r["n"], r["cols"], r["gridRows"], r["boxH"], r["boxH"] * PT_PER_DU,
                  r["descLines"], verdict))
     print("-" * 78)
-    print("  THE BOUND      %s slides - the largest deck that still shows a description," % bound)
+    print("  THE BOUND      %s slides - the largest sheet that still shows a description," % bound)
     print("                 measured where every entry wants %.2f lines of one. A deck whose"
           % fixture)
     print("                 descriptions are shorter does not earn a higher bound; it gets")
     print("                 emptier boxes, because the clamp is per row band and the band is")
     print("                 decided by the slide count alone.")
-    print("  THE HARD LIMIT %s slides - the largest deck whose number and title render at all"
+    print("  THE HARD LIMIT %s slides - the largest sheet whose number and title render at all"
           % hard)
-    print("\n  Past the hard limit the page must continue onto a second sheet (T-036). This is a")
-    print("  LAYOUT measurement in a real browser; it does not discharge printing and looking -")
-    print("  and T-116 was a print-only fault that these numbers were clean throughout. The")
-    print("  module docstring says what that means for how far to trust them.")
+    print("\n  Both are SHEET numbers since T-036, and the split below keeps every sheet at or")
+    print("  under the bound - so the compression bands past it are what a sheet would do if the")
+    print("  cap moved, not what any deck prints.")
+
+    print("\nTHE SPLIT - how a deck past the bound divides across sheets")
+    print("-" * 78)
+    print("  %-46s %-7s %s" % ("stage shape", "sheets", "entries per sheet"))
+    for s in data["splits"]:
+        print("  %-46s %-7d %s"
+              % (s["name"], len(s["sizes"]), " · ".join(str(z) for z in s["sizes"])))
+    print("-" * 78)
+    print("  The cut falls at a stage boundary, and the sheets are balanced rather than filled")
+    print("  and spilled - 17 entries print 9 and 8, not 16 and 1. The last two shapes have no")
+    print("  boundary to cut at, so the boundary yields and the entry does not (DS-226).")
+
+    print("\n  This is a LAYOUT measurement in a real browser; it does not discharge printing and")
+    print("  looking - and T-116 was a print-only fault that these numbers were clean throughout.")
+    print("  The module docstring says what that means for how far to trust them.")
     return 0
 
 

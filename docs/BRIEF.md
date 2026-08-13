@@ -533,8 +533,10 @@ stays open behind the release that carries most of it.
 
 **Shipped as `v0.2.0` on 2026-08-11**, carrying T-086 and T-087. T-036 and T-080 kept the `PH2`
 label and stayed open behind it, exactly as decided above. **T-080 closed on 2026-08-12**, once
-upstream's half had shipped and the remaining change was this project's own; **T-036 is the one
-still open**.
+upstream's half had shipped and the remaining change was this project's own; **T-036 closed on
+2026-08-13, and PH2 has nothing open behind it.** The phase was open for two days past its release
+and both tasks in it closed on their own terms rather than being folded into the next thing, which
+is what the decision above was for.
 
 **T-036 was unparked on 2026-08-12 and re-valued `low` → `high`.** Nothing about the task changed;
 its premise did. The `low` rested on one sentence — *it bites past 24 slides and the target case is
@@ -558,7 +560,7 @@ edited away, because a rule that was vacuous and then was not is worth knowing a
 
 | | What it adds |
 | :--- | :--- |
-| [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md) | A second printed contents sheet — a **capability** for decks past the bound. Was `low` while the target deck was 12 slides; **`high` since 2026-08-12**, when the owner said the next one is not. **Its bound is 16 / 24 and that survived the re-measurement**: [T-116](../tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md) closed 2026-08-13 having measured it again against a three-line description in every entry, and both numbers held. What changed is that they are now true — the collision below the bound is fixed and no band prints a part-line — so this task may be built against 16 / 24 after all. Split rather than merged on 2026-08-13 — the owner asked for it in `0.2.3`, and what a patch release owes is the defect, not the capability. |
+| ~~[T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md)~~ **done 2026-08-13** | Built for `k` sheets rather than two: the title said *second* because 24 was the number in front of it in August, and a presented deck of 43 makes two sheets of 16 eleven entries short. Past 16 the page continues, the cut falls at a stage boundary, the sheets are balanced — 17 entries print 9 and 8, never 16 and 1 — and every sheet takes the largest sheet's grid so they cannot disagree about box height. Printed at 17, 25 and 43 and read out of the PDFs' own rectangles (**L-76**); the page count is now `n` + `k`, with `k` counted in the deck's DOM rather than recomputed. **`ceil(n / 16)` turned out to be a floor and not the answer** — 43 entries in seven even stages take four sheets, because no three contiguous stage runs fit — which is the answered question preferring the boundary to the paging. One thing was not fixed and is [T-125](../tasks/T-125-a-split-contents-page-still-clamps-its-descriptions-to-one-line.md): a 25-entry deck lands in the four-row band and clamps every description to one line where a 17-entry deck prints three. **What it closes is DS-226's unimplementable range**, which is why the task existed. *Why it sat in this phase, unchanged:* a **capability** for decks past the bound, `low` while the target deck was 12 slides and **`high` since 2026-08-12**, when the owner said the next one is not. Split rather than merged on 2026-08-13 — the owner asked for it in `0.2.3`, and what a patch release owes is the defect, not the capability — and built against the 16 / 24 that [T-116](../tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md) re-measured with a three-line description in every entry. |
 | ~~[T-055](../tasks/T-055-a-variant-that-leaves-malformed-markup.md)~~ **done 2026-08-10** | One seeded variant tested Chrome's parser repair, not the tag it names. Closing its `<div>` took the collateral from four rules to none: DS-091 had been reporting a slide with no headline whose headline the parser had moved. |
 | ~~[T-058](../tasks/T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md)~~ **done 2026-08-10** | Every seed now asserts it landed. Three edits appended to the ledger unconditionally, not the one the task named -- the S2 assumption-marker removal had never matched since the day it was written, and D1 and D2 could no-op in silence. |
 | ~~[T-059](../tasks/T-059-theme-swap-overwrites-its-input-when-o-is-omitted.md)~~ **done 2026-08-10** | `swap` defaults to `.assets-cache/deck/themed/` and refuses its own input by resolved path. Requiring `-o` was the rival and lost: four shipped copy sites print the bare command, so the flag would have made all four document a command that errors. |
@@ -715,7 +717,7 @@ Those belong in the release notes, not in a list of things to fix first.
 remain are both about the build and critique modes, not about the deck.***
 
 - ~~A deck renders correctly with the network disabled.~~ **Met.**
-  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 255 KB, zero
+  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 261 KB, zero
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
 - ~~The build check demonstrated failing on each class of problem it claims to catch.~~ **Met

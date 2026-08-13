@@ -23,9 +23,9 @@ public at `github.com/uchimata2/htmldeck`, released and **now at `0.2.3`** after
 with `master` as the published branch. **PH2 shipped 2026-08-11 as `0.2.0`** carrying
 [T-086](tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
 [T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
-**the phase stays open behind it**: T-036 keeps the `PH2` label by the owner's decision, so a
-shipped release and an open phase are not a contradiction here. T-080 kept it too until it closed on
-2026-08-12.
+**the phase stayed open behind it for two days**: T-080 and T-036 kept the `PH2` label by the
+owner's decision, so a shipped release and an open phase were not a contradiction here. T-080 closed
+2026-08-12 and **T-036 closed 2026-08-13, which empties the phase.**
 
 **A phase name is not a version number, and conflating the two nearly shipped a release nobody could
 install.** The backlog calls a defect in the published plugin PH1 work, which is a *phase*; the
@@ -179,11 +179,11 @@ results as what was actually produced, not as "works".
 **12 is the floor, not the target, and the target moved on 2026-08-13.** The first adopting project
 presented a 13-slide deck and reported the constraint as the problem: the material needed far more
 room than 12 slides, a peer presented **43**, and the next deck from the same sources will be much
-longer. **Nothing here has ever been built or measured above 13.** What is already known to bite
-above it: a second contents sheet does not exist
-([T-036](tasks/T-036-the-second-contents-page-for-long-decks.md), and it may now be built against a
-contents bound of **16 / 24** that survived re-measurement), and the ruler degrades to dense mode
-once the slide count passes a capacity the controls' width decides
+longer. **One thing here has now been built and printed at 17, 25 and 43** — the contents page
+continues onto `k` sheets past 16 entries and the printed page count is `n` + `k`
+([T-036](tasks/T-036-the-second-contents-page-for-long-decks.md), 2026-08-13). **Nothing else has
+been measured above 13**, and what is still known to bite above it is the ruler, which degrades to
+dense mode once the slide count passes a capacity the controls' width decides
 ([T-114](tasks/T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md)). Treat a long deck as
 **untested territory** rather than as a longer version of a tested one, and say which length a
 result was measured at.

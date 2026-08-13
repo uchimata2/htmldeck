@@ -1010,10 +1010,21 @@ svg{display:block}
      (~2.0 in on A4 landscape) and a title is a claim of four to seven words (DS-210), so it
      would set at three lines and the box would grow TALLER than the row the extra column was
      meant to shorten. `1fr` rows then divide whatever height is left, so a longer deck
-     compresses vertically on its own with no second code path. */
+     compresses vertically on its own with no second code path.
+
+     THE ROW COUNT IS DECLARED, not left to the item count (T-036). Past 16 entries the page
+     continues onto further sheets, and a sheet that took its rows from its own entry count would
+     print taller boxes than a fuller one beside it - two sheets of one page disagreeing about box
+     height, which reads as a rendering fault rather than as a continuation. `--crows` is the
+     largest sheet's row count and every sheet gets it, so the short sheet ends in empty tracks
+     instead of stretched ones. `grid-auto-rows` stays as the safety net: if the declared count is
+     ever short, the overflow becomes extra rows rather than boxes leaving the page, which is the
+     direction T-116 showed is the dangerous one. A single-sheet deck is unaffected - the declared
+     count is the count it already had. */
   .contents-grid{
     flex:1;min-height:0;
     display:grid;grid-template-columns:repeat(var(--ccols,4),1fr);
+    grid-template-rows:repeat(var(--crows,1),1fr);
     grid-auto-rows:1fr;gap:var(--sp-3);
   }
   .cbox{
@@ -2355,7 +2366,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   /* ------------------------------------------------------------ the printed contents page */
   /* A RENDERING of manifest(), not a second reading of the deck (T-034). The on-screen index
      T-035 builds is the other rendering of the same manifest, and the two legitimately differ:
-     this one must fit a single page and is read once to orient, that one scrolls and is read
+     this one is bounded by the sheet and is read once to orient, that one scrolls and is read
      repeatedly to jump.
 
      Built at start-up rather than on `beforeprint`, because the page has to exist for a print
@@ -2365,9 +2376,14 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
      Each box's number and stage name are formatted exactly as the slide's own eyebrow renders
      them (`01 · WHY NOW`), so a reader matching a box to its page finds the identical string,
      and the per-stage icon has a label rather than being a glyph to decode. */
-  /* How many columns, and whether the page is too dense to carry descriptions. Pure arithmetic on
-     the slide count - no DOM, no measurement - so it gives the same answer on screen, in print and
-     to the measuring tool.
+  /* How many columns ONE SHEET uses, and whether it is too dense to carry descriptions. Pure
+     arithmetic on an entry count - no DOM, no measurement - so it gives the same answer on screen,
+     in print and to the measuring tool.
+
+     Its argument is a SHEET's entry count, not the deck's: since T-036 the cap below keeps that at
+     16 or under, so the dense band and the hard limit past it are unreachable through the shipped
+     rule. They are kept, not dead: they are what a sheet would do if the cap ever moved, and
+     DS-226's two numbers would otherwise have no instrument left measuring them.
 
      THREE columns below ten slides, four above. Columns are what decide the row count, and the row
      count is what decides how tall a box gets stretched: seven slides at four columns is two rows
@@ -2379,18 +2395,99 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     var rows = Math.ceil(n / cols);
     return { cols: cols, rows: rows, dense: rows >= 5 };
   }
-  /* The one export, and it exists for a reason: tools/deck/contents_bound.py has to measure the
-     layout rule the deck SHIPS rather than a copy of it kept in step by hand (L-08). Nothing in
-     the deck reads this back, and it carries no DOM. */
-  window.htmldeckContentsLayout = contentsLayout;
 
-  function buildContents(){
+  /* ---- WHEN THE PAGE BECOMES SHEETS (T-036)
+     16 is the largest number of entries one sheet carries with a description on every box - T-034
+     measured it, T-116 re-measured it against a three-line description in every entry and it did
+     not move. Past it the page CONTINUES rather than degrading: the alternative was to let the
+     layout above compress, which drops the description at 17 and clips the entry itself at 25, and
+     DS-226 forbids the second outright. */
+  var CONTENTS_CAP = 16;
+
+  /* Runs of one stage, in slide order. Back matter has no stage (T-108) and forms its own run, so
+     a colophon lands on a sheet boundary rather than in the middle of the last argument stage. */
+  function stageRuns(man){
+    var runs = [], last;
+    man.forEach(function(m){
+      var key = m.back ? 'back' : m.stage;
+      if (!runs.length || key !== last){ runs.push([]); last = key; }
+      runs[runs.length - 1].push(m);
+    });
+    return runs;
+  }
+
+  /* A stage longer than a whole sheet has no boundary inside it, so THE BOUNDARY IS WHAT YIELDS -
+     never the entry. DS-226: a box may lose its description, the page may never lose the box. Cut
+     into even pieces rather than cap-sized ones, so the overflow is a short piece rather than a
+     one-box remainder. */
+  function splitLongRuns(runs, cap){
+    var out = [];
+    runs.forEach(function(r){
+      if (r.length <= cap){ out.push(r); return; }
+      var parts = Math.ceil(r.length / cap), at = 0;
+      for (var p = 0; p < parts; p++){
+        var take = Math.ceil((r.length - at) / (parts - p));
+        out.push(r.slice(at, at + take));
+        at += take;
+      }
+    });
+    return out;
+  }
+
+  /* How many sheets a capacity needs, packing runs left to right. Greedy is exact here: the runs
+     keep their order, so the first sheet taking as much as it can never costs a later one. */
+  function sheetsNeeded(runs, cap){
+    var sheets = 1, used = 0;
+    for (var i = 0; i < runs.length; i++){
+      if (used && used + runs[i].length > cap){ sheets++; used = 0; }
+      used += runs[i].length;
+    }
+    return sheets;
+  }
+
+  /* The sheets, as arrays of manifest entries.
+     Two objectives in order: the FEWEST sheets, then the SMALLEST largest sheet. The second is
+     what stops 17 slides printing sixteen boxes and then one - a lone box on a sheet is the
+     stretched-empty-box fault T-034 already paid to fix at the short end. Binary search the
+     capacity down to the tightest one that still fits in the same number of sheets, which is
+     exact for that objective and needs no scoring heuristic to defend. */
+  function contentsSheets(man){
+    if (man.length <= CONTENTS_CAP) return [man];
+    var runs = splitLongRuns(stageRuns(man), CONTENTS_CAP);
+    var k = sheetsNeeded(runs, CONTENTS_CAP);
+    var lo = 1, hi = CONTENTS_CAP;
+    runs.forEach(function(r){ if (r.length > lo) lo = r.length; });
+    while (lo < hi){
+      var mid = Math.floor((lo + hi) / 2);
+      if (sheetsNeeded(runs, mid) <= k) hi = mid; else lo = mid + 1;
+    }
+    var sheets = [], cur = [];
+    runs.forEach(function(r){
+      if (cur.length && cur.length + r.length > lo){ sheets.push(cur); cur = []; }
+      cur = cur.concat(r);
+    });
+    if (cur.length) sheets.push(cur);
+    return sheets;
+  }
+
+  /* The two exports, and they exist for a reason: tools/deck/contents_bound.py has to measure the
+     rules the deck SHIPS rather than copies of them kept in step by hand (L-08). Nothing in the
+     deck reads these back, and they carry no DOM. */
+  window.htmldeckContentsLayout = contentsLayout;
+  window.htmldeckContentsSheets = contentsSheets;
+
+  /* One <section class="contents"> per sheet, and EVERY SHEET GETS THE SAME GRID - taken from the
+     largest, not from its own entry count. Sheets that each sized themselves would print boxes of
+     different heights, and two sheets of one page that disagree about box height read as a
+     rendering fault rather than as a continuation. */
+  function buildContentsSheet(entries, lay, index, total){
     var sec = document.createElement('section');
     sec.className = 'contents';
-    sec.setAttribute('aria-label', 'Contents');
+    sec.setAttribute('aria-label', total > 1
+      ? 'Contents, sheet ' + index + ' of ' + total : 'Contents');
 
-    var lay = contentsLayout(slides.length);
     sec.style.setProperty('--ccols', lay.cols);
+    sec.style.setProperty('--crows', lay.rows);
     sec.dataset.rows = lay.rows;
     if (lay.dense) sec.dataset.dense = '';
 
@@ -2398,7 +2495,9 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     head.className = 'contents-head';
     var eyebrow = document.createElement('span');
     eyebrow.className = 'contents-eyebrow';
-    eyebrow.textContent = 'Contents';
+    /* The marker goes on EVERY sheet including the first, which is the one that needs it: a reader
+       holding sheet one has no other way to know the map is not finished. */
+    eyebrow.textContent = total > 1 ? 'Contents · ' + index + ' of ' + total : 'Contents';
     var title = document.createElement('h2');
     title.className = 'contents-title';
     title.textContent = DECK;
@@ -2409,7 +2508,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     var grid = document.createElement('div');
     grid.className = 'contents-grid';
 
-    manifest().forEach(function(m){
+    entries.forEach(function(m){
       var box = document.createElement('div');
       box.className = 'cbox';
 
@@ -2453,17 +2552,36 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
 
     /* The one line that reaches the person holding the paper. T-032 put the statement of what
        print does not preserve into the handover text, which is read by whoever is ABOUT to
-       print and never by whoever is handed the pages (R7 §5). */
+       print and never by whoever is handed the pages (R7 §5).
+
+       On EVERY sheet, for two reasons that agree. Paper gets separated, so a sheet read alone
+       still owes the reader the statement; and the line takes height, so a sheet without it would
+       hand its grid more room than the others and print taller boxes - which is the thing the
+       shared grid above exists to prevent. */
     var foot = document.createElement('p');
     foot.className = 'contents-foot';
     foot.textContent = 'Detail behind the disclosure panels is on screen only — '
                      + 'it is not on these pages.';
     sec.appendChild(foot);
+    return sec;
+  }
+
+  function buildContents(){
+    var sheets = contentsSheets(manifest());
+    var largest = 0;
+    sheets.forEach(function(s){ if (s.length > largest) largest = s.length; });
+    var lay = contentsLayout(largest);
+
+    var frag = document.createDocumentFragment();
+    sheets.forEach(function(s, i){
+      frag.appendChild(buildContentsSheet(s, lay, i + 1, sheets.length));
+    });
 
     /* FIRST, and that is load-bearing: `section.slide:last-of-type` matches by element type, so
        a <section> appended after slide 12 would make it match nothing and bring back the empty
-       thirteenth page (DS-222's corollary). */
-    stage.insertBefore(sec, stage.firstChild);
+       thirteenth page (DS-222's corollary). The sheets go in as one fragment so they stay in
+       order ahead of slide 1. */
+    stage.insertBefore(frag, stage.firstChild);
   }
 
   function setView(toDocView){
