@@ -231,6 +231,9 @@ Gain per unit of effort, risk as a veto. **`any`-marked findings are stated in f
 [`research/R8-context-economy-for-coding-agents.md`](research/R8-context-economy-for-coding-agents.md)
 §8 and are not restated here** — one numbering space, one statement per finding.
 
+**Before working one of these, read §6.2.** It is what a session implementing a finding owes beyond
+the finding itself, and four closures showed that none of it is obvious from the row.
+
 | Rank | ID | Surface / Family | What | Gain | Effort | Risk | Stated in |
 | ---: | :--- | :--- | :--- | :---: | :---: | :--- | :--- |
 | ~~1~~ | **CE-02** | B / F4 | Expose the tracker's `list` and `context` so the board is not read whole — **done, and the band held while the multiple was understated** | `L` | `xs` | none | R8 §8 |
@@ -316,6 +319,54 @@ sessions and saves a whole session's runway on the one that would otherwise open
 | **Risk** | `none` |
 | **Applies to** | `this project` |
 | **Source** | this audit |
+
+### 6.2 Working one of these — what to check, what to report, and where each thing goes
+
+Written 2026-08-13 after `CE-02`, `CE-03`, `CE-13` and one raised defect were implemented in one
+session. **None of the four cost what the row said it would, and all four produced something the row
+did not predict** — so this is the part of an audit task that is not in the audit task.
+
+**What to check, beyond the finding**
+
+1. **Re-measure before you claim a saving, and again after.** Every figure in this document is dated
+   and the subjects grow: the board was 33,676 bytes when `CE-02` was written and 36,813 five
+   closures later. A ratio computed against a stale denominator is not a measurement.
+2. **Measure the thing a session actually does, not the thing the row compares.** `CE-02` compared
+   the whole board against a full listing — 17.7×. The question a session asks is *what next*, which
+   is 389×. The row understated its own finding by twenty times.
+3. **Capture the before-state first when a criterion says *unchanged*.** Once the edit is in there is
+   no instrument left (`CE-03`).
+4. **Prove which component failed before naming one.** A symptom measured in your environment is not
+   evidence about whose defect it is (**L-87**), and a local workaround that sidesteps the broken
+   mechanism will keep working while the attribution stays wrong.
+5. **Check a throwaway scan against a case whose answer you know**, before reading its output as a
+   finding (**L-86**).
+6. **Assert what a change must never do.** Not review it — assert it, in a self-test that runs on
+   every invocation, with a synthetic fixture rather than the current state of a tracked file
+   (**L-78**, **L-85**).
+
+**What to report — everything seen, filtered by nobody**
+
+The value of an observation is the receiving project's call, not the reporter's. Record the rows that
+look marginal, the ones with no obvious action, and **the assumptions worth double-checking** —
+including the ones your own result rests on. There is no cost to a row nobody acts on.
+
+**Where each thing goes**
+
+| What you found | Where it goes |
+| :--- | :--- |
+| A saving in this repository | a `CE-nn` here, or a task if it is already ranked |
+| Something belonging to the handoff skill, taskmd, or the harness | §7, under that owner, stamped *implementation*, **never ranked or banded** (`R8` §6) |
+| An owner §7 has no subsection for | a **new subsection**. `O-C1` was misfiled because the only homes available were wrong ones |
+| Anything noticed that is not token efficiency | §8, the byproduct register |
+| A rule that outlives the task | [`LESSONS.md`](LESSONS.md), as `L-nn`, and cited from the task rather than restated in it |
+| What the *method* taught, for the skill that packages it | [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) §1 — it is the only place that survives the sessions |
+| A correction to a row already written | in the row, marked, with the old value kept. `CE-07`'s band and `O-T2`'s owner are both corrections and both still legible |
+
+**What a closure owes the record.** The task's §3 and §4, a `BRIEF.md` row folded to two cells
+(*Release phases*, above the PH3 table), the execution-order table renumbered, `shipped_in` set, and
+any figure this document states that your change moved — `CE-09`'s moved because `CE-02`'s fix added
+to the very section `CE-09` measures.
 
 ---
 

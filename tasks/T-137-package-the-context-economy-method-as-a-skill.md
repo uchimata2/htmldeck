@@ -6,7 +6,7 @@ status: proposed
 phase: specify
 parent: T-130
 blocked_by: [T-136]
-related: [T-130, T-135, T-136]
+related: [T-130, T-131, T-132, T-133, T-135, T-136, T-139, T-140]
 work_package: PH3
 owner: the project owner
 business_value: medium
@@ -45,6 +45,28 @@ is met.
 | **The upstream rule paid for itself** | Reading the upstream backlog first turned a proposal into an adoption | Keep *read their backlog before proposing* as a step, not a note |
 | **The byproduct register caught five things** | None of them token efficiency; one a real defect | It works. Keep it outside the ranking, as ruled |
 
+**What implementing four of the findings then said — added 2026-08-13, and this is the half that decays**
+
+The table above is what the *audit* run taught. Below is what came out of **building** four of its
+findings in one session, which is a different instrument: every one of the four produced something
+the finding had not predicted. **This section is the recall point.** A session starting the skill
+reads it first and follows the pointers; the sessions themselves are gone.
+
+| | What happened | What it means for the skill |
+| :--- | :--- | :--- |
+| **A finding understated itself by twenty times** | `CE-02` banded the board against a full listing — 17.7×. The question a session actually issues is *what next*, answered in **94 bytes against 36,813 — 389×** | The estimator must measure **the query the agent will issue**, not the pair of surfaces the finding names. Both are honest measurements of different things, and only one is the saving |
+| **A filed observation had the wrong owner** | `O-T2` reported the unreachable command surface to taskmd. Measured later: taskmd ships a working launcher, the harness emits it onto `PATH`, and the shell snapshot's `PATH` line is truncated mid-value (**L-87**, `O-C1`) | The method needs a *prove which component failed* step **before** an observation is filed, not after. A local workaround that sidesteps the broken mechanism keeps working while the attribution stays wrong, so nothing forces the question |
+| **The register's shape caused it** | §7 had one subsection per tool this project uses, so the only homes available for a harness defect were wrong ones | The skill's register template ships with a home for **an owner you have no subsection for**. A missing slot is where a wrong owner comes from |
+| **Three of nine new observations would have been dropped** | They looked marginal or had no obvious action. The owner's ruling: record everything; what an observation is worth is the receiving project's call | State it as a rule, with the reason. A filter that asks *can I see what they would do with this* is the reporter deciding with less information than the reader has |
+| **A throwaway scan's first output was a claim about its own tuning** | A twenty-line scan named three defective rows; one was its own regex (**L-86**) | Any scanning step owes a known-good case before its output is read as a finding. The scan was still the right move — one step was missing, not the tool |
+| **Implementations feed the register, and nothing said so** | All four closures produced upstream-relevant material the audit had not seen; it took a separate task ([T-140](T-140-correct-and-extend-the-upstream-register-from-what-implementing-the-audit-found.md)) to collect it | The method's last step is not *rank and stop*. Implementing is a measurement pass, and the loop back into the register belongs in the method rather than in someone's memory |
+
+**Where the rest of it is.** [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6.2 is the
+operative version of the first four rows — what to check, what to report, where each thing goes —
+written for a session working a finding. **L-85**, **L-86** and **L-87** in
+[`../docs/LESSONS.md`](../docs/LESSONS.md) are the general halves. §7's preamble carries the
+*audit* / *implementation* vintage rule and why it exists.
+
 **Scope**
 - In: the skill package — the eleven steps, the checklist, the rubric, the ten-field record, the three
   audiences, the byproduct register.
@@ -61,6 +83,7 @@ is met.
 - Out: publishing or releasing. That is a separate decision with its own gate list.
 
 **Inputs**
+- [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6.2 — what a session working an audit finding owes beyond the finding: what to check, what to report, and where each thing goes. Read before starting
 - [`../docs/research/R8-context-economy-for-coding-agents.md`](../docs/research/R8-context-economy-for-coding-agents.md)
   — the whole method, and §10's four limits, which the skill must carry rather than drop
 - [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) — the worked example, and the only evidence
@@ -68,7 +91,7 @@ is met.
 - [`../skills/htmldeck/`](../skills/htmldeck) — the local model for a three-stage skill, measured in
   the audit at 472 bytes to discover and 5,206 to activate
 - **L-82**, **L-83**, **L-84** in [`../docs/LESSONS.md`](../docs/LESSONS.md) — the three the one run
-  produced
+  produced; **L-85**, **L-86** and **L-87** are the three that implementing it produced
 
 **Acceptance criteria**
 - [ ] The skill runs the eleven steps and produces both documents, on a repository that is not this one

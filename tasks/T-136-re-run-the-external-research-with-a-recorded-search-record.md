@@ -65,6 +65,7 @@ complete; it can only be shown.
   bought.
 
 **Inputs**
+- [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6.2 — what a session working an audit finding owes beyond the finding: what to check, what to report, and where each thing goes. Read before starting
 - [`../docs/research/R8-context-economy-for-coding-agents.md`](../docs/research/R8-context-economy-for-coding-agents.md)
   §3 step 5 — the coverage rule this task is the first to run under — and §7, §10
 - [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §4 — the screening to re-derive

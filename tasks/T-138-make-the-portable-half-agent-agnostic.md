@@ -68,6 +68,7 @@ it tells the reader where their budget goes and who to ask.
 - Out: re-ranking. A controller field changes how a finding is read, not what the inventory measured.
 
 **Inputs**
+- [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6.2 — what a session working an audit finding owes beyond the finding: what to check, what to report, and where each thing goes. Read before starting
 - [`../docs/research/R8-context-economy-for-coding-agents.md`](../docs/research/R8-context-economy-for-coding-agents.md)
   §2.1, §3 step 1, §6, §8 `CE-07`, §10
 - [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §2.1 — where the mechanism detail lands

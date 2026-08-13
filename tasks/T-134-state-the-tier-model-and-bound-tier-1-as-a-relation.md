@@ -59,6 +59,7 @@ and it should land first so those cuts are not chosen to fit a number nobody agr
 - Out: the global preferences file, which is not this repository's.
 
 **Inputs**
+- [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6.2 — what a session working an audit finding owes beyond the finding: what to check, what to report, and where each thing goes. Read before starting
 - [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §2.1 and §6.1 — the measurement and `CE-11`
 - [`../docs/research/R8-context-economy-for-coding-agents.md`](../docs/research/R8-context-economy-for-coding-agents.md)
   §2.1 — the tier model, the membership rule and the relation-bound, stated portably
