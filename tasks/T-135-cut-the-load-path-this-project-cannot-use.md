@@ -4,6 +4,7 @@ title: Cut the load path this project cannot use
 type: fix
 status: done
 phase: review
+shipped_in: unreleased
 parent: T-130
 blocked_by: []
 related: [T-130, T-134]

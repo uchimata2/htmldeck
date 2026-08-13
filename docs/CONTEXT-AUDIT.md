@@ -233,7 +233,7 @@ Gain per unit of effort, risk as a veto. **`any`-marked findings are stated in f
 
 | Rank | ID | Surface / Family | What | Gain | Effort | Risk | Stated in |
 | ---: | :--- | :--- | :--- | :---: | :---: | :--- | :--- |
-| 1 | **CE-02** | B / F4 | Expose the tracker's `list` and `context` so the board is not read whole | `L` | `xs` | none | R8 §8 |
+| ~~1~~ | **CE-02** | B / F4 | Expose the tracker's `list` and `context` so the board is not read whole — **done, and the band held while the multiple was understated** | `L` | `xs` | none | R8 §8 |
 | 2 | **CE-03** | C / F5 | A quiet mode for the deck gate's green run | `L` | `xs` | stated | R8 §8 |
 | ~~3~~ | **CE-07** | A / F5 | Enable skills per project, not globally — **done, and the band was wrong** | ~~`L`~~ **`S`** | `xs` | stated | R8 §8 |
 | 4 | **CE-13** | B / F4 | Write down that a deck is never read whole | *bimodal* | `xs` | none | §6.1 |
@@ -257,7 +257,7 @@ sessions and saves a whole session's runway on the one that would otherwise open
 | | |
 | :--- | :--- |
 | **Surface / Family** | B / F1 |
-| **Finding** | [`tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) is 21,374 bytes and §6 *The tooling* is **11,026 of them, 52%** — most of it the history of which checker resolved what, which upstream release changed it, and why one advisory is expected forever. A session at `plan` needs §2, which is 1,291 bytes |
+| **Finding** | [`tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) is 22,190 bytes and §6 *The tooling* is **11,842 of them, 53%** — most of it the history of which checker resolved what, which upstream release changed it, and why one advisory is expected forever. A session at `plan` needs §2, which is 1,291 bytes. *Measured at 21,374 / 11,026 / 52% when this was written; **T-131 added 816 bytes to §6 the same day**, which is the finding describing itself — the section grows because every tooling change lands in it* |
 | **Change** | One file per lifecycle phase, following `R8-context-economy-for-coding-agents.md` §9, P2: preflight, do, do-not, close. **Section numbers must survive** — the document itself records that a dozen task records cite it at §2 through §6.2 and that renumbering silently falsifies all of them |
 | **Gain** | `L` on the read path of every task |
 | **Effort** | `m` |

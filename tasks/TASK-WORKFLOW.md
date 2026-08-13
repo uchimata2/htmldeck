@@ -181,17 +181,27 @@ python tools/docs/refcheck.py    # validate every reference in every document
 
 **The bare `taskmd` command does not resolve in an agent shell**, which is a property of how the
 plugin is put on `PATH` rather than of the plugin — so the four `taskmd` lines above are what to
-type at a terminal, and not what an agent can run. For the three that a task edit owes, there is one
-command that finds the installed skill itself:
+type at a terminal, and not what an agent can run. Two commands here run them, and between them they
+cover all four:
 
 ```
-python tools/tasks/lint.py
+python tools/tasks/lint.py                  # index, then check, then refcheck.py
+python tools/tasks/query.py list --open     # what to work on next
+python tools/tasks/query.py context T-NNN   # everything needed to start one task
 ```
 
-It runs `index`, then `check`, then `refcheck.py`, stops at the first failure and exits with that
-failure's code. It is `tracker_lint` in [`../.handoff/config.md`](../.handoff/config.md), and it
-exists so that the incantation for locating the skill has one home rather than one per document
+`lint.py` is the three checks a task edit owes: it stops at the first failure and exits with that
+failure's code, and it is `tracker_lint` in [`../.handoff/config.md`](../.handoff/config.md).
+`query.py` is the two questions: everything after the command name goes to taskmd untouched, and it
+refuses `index` and `check` by name because `lint.py` owns those. Both find the installed skill
+through one locator, in `lint.py`, so the incantation has one home rather than one per document
 (**L-13**).
+
+**An agent asks the board a question; it does not read the board.** [`README.md`](README.md) is
+generated for people, and answers *what next* only by being read whole — **36,559 bytes on
+2026-08-13, against 94 for `query.py list --open --limit 1` and 716 for one task's `context`**.
+Reading it whole to find the next task is the finding `CE-02` names and
+[T-131](T-131-expose-the-trackers-query-commands-so-the-board-is-not-read-whole.md) closed.
 
 `taskmd` owns tasks. `refcheck.py` owns **documents**, and exists because taskmd's check sees
 markdown-link syntax only: a path written as prose, a path printed by a tool into a fenced block, and

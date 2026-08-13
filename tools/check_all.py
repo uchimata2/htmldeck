@@ -93,6 +93,12 @@ DECK_EXEMPT = {
 NOT_RUN = {
     "tools/docs/refcheck.py":
         "runs inside tools/tasks/lint.py, the first gate, which is where its exit code is read",
+    "tools/tasks/query.py":
+        "a question, not a check. It asks the tracker what to work on next and what one task "
+        "points at, so a session pays 1,901 bytes instead of reading the 33,676-byte board "
+        "(CE-02, T-131). It has no verdict to give: every answer it can return is a correct one. "
+        "The locator it shares with lint.py is asserted in that file's self-test, which is the "
+        "first gate above",
 
     "tools/deck/audit.py":
         "runs inside tools/deck/check.py, which imports it - the whole auto gate and the "
