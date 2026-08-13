@@ -173,10 +173,17 @@ results as what was actually produced, not as "works".
 presented a 13-slide deck and reported the constraint as the problem: the material needed far more
 room than 12 slides, a peer presented **43**, and the next deck from the same sources will be much
 longer. **Nothing here has ever been built or measured above 13.** What is already known to bite
-above it: the printed contents page collides at 13
-([T-116](tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md)), a second contents
-sheet does not exist ([T-036](tasks/T-036-the-second-contents-page-for-long-decks.md)), and the
-ruler degrades to dense mode once the slide count passes a capacity the controls' width decides
+above it: a second contents sheet does not exist
+([T-036](tasks/T-036-the-second-contents-page-for-long-decks.md), and it may now be built against a
+contents bound of **16 / 24** that survived re-measurement), and the ruler degrades to dense mode
+once the slide count passes a capacity the controls' width decides
 ([T-114](tasks/T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md)). Treat a long deck as
 **untested territory** rather than as a longer version of a tested one, and say which length a
 result was measured at.
+
+**And print it, because nothing here can.** The contents page collided at 13 entries in a presented
+deck *and* in this repository's own reference deck, while every gate stayed green and the tool aimed
+at that page reported it clean — the fault lives only in paged layout, which no screen measurement
+reaches ([T-116](tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md), **L-76**,
+gap raised as [T-123](tasks/T-123-nothing-can-see-a-print-only-layout-fault.md)). Rule 6 is not
+satisfied by a screen render at any length.

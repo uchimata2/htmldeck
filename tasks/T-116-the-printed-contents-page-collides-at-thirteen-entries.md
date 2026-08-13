@@ -2,8 +2,8 @@
 id: T-116
 title: The printed contents page collides at thirteen entries, well below its measured bound
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-034, T-036, T-084]
@@ -13,9 +13,13 @@ business_value: critical
 effort: s
 created: 2026-08-13
 updated: 2026-08-13
+shipped_in: unreleased
 deliverables:
   - shell/components.css
   - tools/deck/contents_bound.py
+  - examples/reference-deck.html
+  - examples/sort-window/sort-window.html
+  - examples/reference-deck-seeded-defects.html
 ---
 
 # T-116 — The printed contents page collides at thirteen entries, well below its measured bound
@@ -98,20 +102,123 @@ the page was broken, which is the exact shape **L-05** warns about.
   T-036 is a **capability** (a second sheet) and this is a **defect** below the bound. Shipping the
   defect fix is what `0.2.3` needs, and building pagination into a patch release is not.
 
+**What actually broke, which is not what §1 assumed**
+
+§1 blamed the fixture's entry height, and that is real but it is the second cause. The first is that
+**the fault exists only in paged layout, and `contents_bound.py` measures a screen simulation of
+print.** Both readings were taken on the same deck on the same day:
+
+| | box height | rows 2→3 gap | verdict |
+| :--- | ---: | ---: | :--- |
+| screen, print rules lifted onto it | 175.7 du | +26.0 du | clean |
+| the printed PDF | 200.2 pt = 267 du | **−49.2 pt** | rows print through each other |
+
+The tracks were right in both — 175.7 du, a 151 pt printed pitch. What differed is the **item**: on
+screen a grid item's automatic minimum size is zeroed by `overflow:hidden`, so the box takes its
+track and clips; Chrome's paged layout gives it its own content height instead, which the 268 du cap
+stopped at 267. A 267 du card in a 201 du pitch overhangs by 66 du, so rows 2 and 3 met and card 13
+reached the footnote and ran off the sheet.
+
+So a taller fixture alone would **not** have caught this. Measured, not assumed: with three-line
+descriptions and the CSS unfixed, the screen reading stayed clean at 175.7 du and no overlap.
+
+**The shipped reference deck had it too, and nothing recorded that either.** It is 13 entries, the
+same count the adopter hit. Printed from `HEAD` before the fix: rows 2→3 gap **−12.5 pt**, rows 3→4
+**−34.0 pt**, and the footnote block (735.7–751.5 pt) sitting inside card 13 (636.0–798.8 pt). This
+is [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md)'s pattern
+a second time, and the same argument for it: the deck was never printed and looked at after the
+colophon took it to 13.
+
+**The fix, and why it is `min()` rather than a track change**
+
+`.cbox` was `max-height:calc(268*var(--du))` and is now
+`max-height:min(calc(268*var(--du)),100%)`. The 268 du cap is the short-deck bound T-034 measured
+and is untouched; `100%` is the grid area, and it states the invariant the stretch was being trusted
+to deliver. A box is now never taller than the cap and never taller than the row it sits in, on
+either surface.
+
+The track sizing named in **Scope** needed no change — the tracks were correct throughout. **Nor did
+the footnote's placement**: it was never displaced, it was painted over by a card that had left its
+own row. One edit closes both scope items, and it is worth saying plainly because the scope was
+written from the symptom.
+
+**A second edit, past the literal scope and inside the Outcome**
+
+With the cards held to their rows, every description printed cut through the middle of its second
+line — the boxes had only been showing three whole lines by overflowing. §1's Outcome asks for a
+stated bound "measured against real entries", and a bound of 16 whose page prints severed
+letterforms is not one. The room per band is fractional and the old clamp of 4 ignored that:
+
+| rows | slides | room for description | clamp before | clamp now |
+| ---: | :--- | ---: | ---: | ---: |
+| 2 | 4–6 | 4.00 lines | 4 | 4 |
+| 3 | 7–12 | 3.82 lines | 4 → the 4th line cut at 82% | 3 |
+| 4 | 13–16 | 1.56 lines | 4 → the 2nd line cut at 56% | 1 |
+| ≥5 | 17+ | dropped by `[data-dense]` | — | — |
+
+`.contents[data-rows="3"]` and `[data-rows="4"]` now clamp to 3 and 1. This is the mechanism the
+page already used — `dense: rows >= 5` is the same rule clamping to zero — extended to the two bands
+between, and it keys on `data-rows`, which the deck already publishes. Every band now reports a
+whole number of lines: 4.00, 3.00, 1.00, 0.00.
+
+**And it turns out not to be past the scope at all.** DS-226 already says, as a `hard` rule: *"A
+description is shown at a full line or not at all: shrinking one until a part-line survives puts a
+few units of clipped letterform on the page, which a reader takes for a rendering fault rather than
+a compact mode."* Written 2026-08-08 and violated at two of the four bands ever since, because the
+rule was implemented only at the `[data-dense]` end. So this edit implements a stated rule rather
+than adding one — which is also why the ruleset needed a dated correction rather than a new row.
+Found by reading DS-226 while reconciling, after the edit was already made on the argument from the
+Outcome; the rule says it better.
+
+**What was NOT built, and why**
+
+An automated print-geometry gate. It is the one change that would catch this class of fault
+mechanically, and it was prototyped far enough to price: Chrome draws the rounded cards as béziers
+rather than `re` operators and nests the graphics state, so reading card positions from the PDF
+needs a real CTM stack, and the obvious shortcut — pymupdf — is not a repository dependency and
+`contents_bound.py` is pure standard library by **L-07**. More decisive than the cost: the owner
+ruled on 2026-08-08 that `printpages.py` asserts the page count *and only the count*, with the rest
+left to the print a person does under `CLAUDE.md` rule 6. Overturning that inside an `s` defect fix
+is not this task's call. It is raised instead —
+[T-123](T-123-nothing-can-see-a-print-only-layout-fault.md), which is `PH3` and `l` because the
+instrument is a parser or a dependency and either way it reopens that ruling.
+
 **Outputs produced**
--
+- [`shell/components.css`](../shell/components.css) — the `min()` clamp on `.cbox`, and the two
+  per-row-band description clamps. Both carry the measurement that produced them.
+- [`tools/deck/contents_bound.py`](../tools/deck/contents_bound.py) — every fixture entry now
+  carries the same three-line description; a self-test measures that the fixture really sets to
+  three lines rather than trusting the sentence; the report states the entry height the bound
+  assumes; and the docstring says what the tool cannot see.
+- The three tracked decks, which carry the component block byte for byte
+  (`shell.py check`): [`examples/reference-deck.html`](../examples/reference-deck.html),
+  [`examples/sort-window/sort-window.html`](../examples/sort-window/sort-window.html) and
+  [`examples/reference-deck-seeded-defects.html`](../examples/reference-deck-seeded-defects.html).
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
-| :--- | :--- | :--- |
-|  |  |  |
+| :--- | :---: | :--- |
+| A 13-entry contents page prints with no overlapping cards and no text touching the footnote | met | `examples/reference-deck.html` is 13 entries. Printed: four rows at a 151 pt pitch, gaps `+19.8, +19.8, +19.8` pt, last card bottom 712.2 pt, footnote 735.7–751.5 pt. Before: `+19.8, −12.5, −34.0` pt with the footnote inside card 13. Read out of the PDF's own rectangles, then looked at. |
+| The same at the re-measured bound, and one entry past it fails visibly rather than silently | met | At the bound (16) the band is the same 4-row layout as 13 and prints identically. Past it, 17 goes `[data-dense]` — gaps `+19.8, +18.8, +19.8, +19.8` pt, description dropped by design and named as such in the report. Past the hard limit, 25 clips inside its own card and the report says `BREAKS`; gaps stay positive, so it fails in the entry rather than across the page. |
+| Every entry has a three-line bottom line in the test fixture | met | `BOTTOM` in `contents_bound.py`, applied to every clone. Not asserted in prose: a self-test measures the unclamped `scrollHeight` of each description and fails the run below three lines, so a fixture that quietly shortens takes the tool down with it. |
+| The bound is restated with the entry height it assumes | met | The report prints the fixture's measured line count in its header and repeats the assumption under `THE BOUND`, with the consequence — a deck with shorter descriptions gets emptier boxes, not a higher bound, because the clamp is per row band. |
+| `printpages.py` still reads `n` + 1; `contents_bound.py` green | met | `printed pages: 14 declared, 14 counted, wanted 14 (13 slides + contents) pass`. `contents_bound.py` self-test ok, bound 16, hard limit 24 — the same two numbers as before, now measured against a three-line entry. |
+| **Looked at as a printed PDF**, not as a screen render | met | Three prints looked at: the deck at `HEAD` before the fix, a 13-entry fixture with three-line descriptions, and the deck after. The first two show the collision; the last is clean. Nothing here was decided from a screen render, which is the point of the criterion. |
+| *(added)* No band prints a part-line description | met | Every band now reports a whole number of lines — 4.00, 3.00, 1.00, 0.00. Not in §1 because the collision was hiding it: an overflowing box printed the rest of its text outside the card, which reads as a full description. Not an addition to the standard either — **DS-226 already required it as a `hard` rule** and it had been honoured only at the `[data-dense]` end since 2026-08-08. |
 
 **Child fix tasks raised**
-- none
+- [T-123](T-123-nothing-can-see-a-print-only-layout-fault.md) — nothing can see a print-only layout
+  fault. Raised rather than built: it revisits the owner's 2026-08-08 ruling on what the print gate
+  asserts, and the instrument is a PDF graphics-state parser or a new dependency.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-13 | → proposed | Found by looking at the adopting project's exported PDF, which is the only rendering that shows it. `critical`, the value this project reserves for a published tool being actively wrong: the page is generated by htmldeck, it reached a presented deliverable, and the one gate over it asserts the page count, which was correct throughout. |
+| 2026-08-13 | → specified | §1 was already complete and unchanged. |
+| 2026-08-13 | → planned | §2 was already complete and unchanged. |
+| 2026-08-13 | → in_progress | Step 1 overturned §1's diagnosis before step 2 began. The 13-entry fixture with three-line descriptions reproduced the collision in print, and the same fixture measured clean on screen — so the fixture's entry height was the second cause and the first is that the fault exists only in paged layout. Recorded in §3 rather than worked around, and the instrument gap raised as T-123. |
+| 2026-08-13 | (no change) | Scope adjusted during implementation, both directions. The track sizing and the footnote placement named in §1 needed no edit — the tracks were right and the footnote was painted over, so one `min()` closes both. A second edit was added past the literal scope: with the cards held to their rows, every description printed cut mid-line, and a bound whose page prints severed letterforms does not satisfy the Outcome. |
+| 2026-08-13 | → done | Six §1 criteria met and one added. The fix is two rules in `shell/components.css`, propagated byte for byte into the three tracked decks so `shell.py check` holds. |

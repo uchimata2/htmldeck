@@ -760,8 +760,19 @@ svg{display:block}
        The cap is 268 du, a little above the twelve-slide row height (242.8), so the target case
        is untouched and only over-tall rows are pulled back. Boxes still STRETCH to
        their row - `align-items` is deliberately left alone - or a twelve-slide page would
-       shrink to its content and lose the look this cap exists to protect. */
-    max-height:calc(268*var(--du));
+       shrink to its content and lose the look this cap exists to protect.
+
+       `100%` is the SECOND bound, and it is the one that prints. On screen a box takes its grid
+       area and clips, because `overflow:hidden` zeroes a grid item's automatic minimum size.
+       Chrome's PAGED layout does not. At 13 entries with three-line descriptions the tracks came
+       out right - 175.7 du, the same number the screen gives - and every box took its own content
+       height instead, stopping at the cap: 200.2 pt of card in a 151 pt pitch, so rows 2 and 3
+       printed through each other and card 13 printed through the footnote and off the sheet.
+       `min()` states both bounds rather than trusting the stretch to hold: never taller than
+       268 du, never taller than the row it sits in. The footnote needed no move of its own - it
+       was never displaced, it was painted over. Read out of the PDF, because the screen layout
+       was correct throughout and said so (T-116). */
+    max-height:min(calc(268*var(--du)),100%);
   }
   /* Five rows or more: the description is dropped rather than shrunk. Measured - at four rows it
      still shows 1.55 lines, at five it shows 0.19, and 0.19 of a line is a few units of clipped
@@ -808,6 +819,19 @@ svg{display:block}
        not the clamp, is the binding constraint, so this costs nothing there. */
     display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
   }
+  /* THE CLAMP IS PER ROW BAND, because the room is. Four is the two-row case; below that the box
+     hands the description a FRACTION of a line, and a fraction prints as cut letterform - the same
+     fault `[data-dense]` refuses at five rows, only at a larger fraction and so less obviously a
+     fault. Measured with a three-line description in every entry (tools/deck/contents_bound.py):
+     three rows leave 3.82 lines of room and four rows leave 1.56, so each band clamps to the whole
+     line that fits and the leftover shows as an even space instead of a severed one.
+
+     Two things hid this until T-116. The reference deck's own bottom lines are shorter than a real
+     deck's, so the fixture never asked for the fourth line; and the box that overflowed its track
+     printed the rest of the text OUTSIDE the card, which reads as a full description until you
+     notice it is sitting in the card below. */
+  .contents[data-rows="3"] .cbox-bottom{-webkit-line-clamp:3}
+  .contents[data-rows="4"] .cbox-bottom{-webkit-line-clamp:1}
   .contents-foot{
     margin-top:var(--sp-3);font-family:var(--font-mono);font-size:calc(21*var(--du));
     letter-spacing:var(--track-mono);color:var(--ink-soft);

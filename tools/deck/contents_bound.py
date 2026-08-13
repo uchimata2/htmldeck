@@ -20,6 +20,20 @@ are `ceil(n / 4)`, the answer is a step function, and two different numbers fall
 
 Past the hard limit the page must continue onto a second sheet (T-036); no compression resolves it.
 
+**Both numbers are entry counts, and an entry's height is not constant - so the fixture pins the
+height.** Every cloned box gets the same three-line description (`BOTTOM`), which is what a real
+deck writes and what the reference deck happens not to. Until T-116 the clones carried the
+reference deck's own shorter bottom lines, and a bound measured on entries of one height is not a
+bound: the first adopting project collided at 13 against a stated limit of 24. The clones keep
+their real titles, so the box with the tallest title is the one the description is measured in.
+
+**What this tool cannot see, stated because it already cost a release.** It measures a SCREEN
+simulation of print. T-116 was a print-only divergence: Chrome's paged layout gave a grid item its
+own content height instead of its track, so cards printed 200.2 pt tall in a 151 pt pitch and rows
+overlapped - while the numbers below, measured the same day on the same deck, were correct and
+clean. The closing line about printing and looking is not a formality; it is the only instrument
+that sees that class of fault (**L-05**).
+
 Pure standard library, by L-07. Reuses `render.py` rather than re-launching Chrome its own way.
 
     python tools/deck/contents_bound.py
@@ -48,6 +62,12 @@ PT_PER_DU = 0.75 * (841.89 / 1440.0)
 # question about long decks, so the first sweep ran upward from twelve and never looked below it -
 # and a seven-slide page turned out to be the worse-looking of the two ends.
 COUNTS = [4, 6, 7, 8, 9, 10, 12, 13, 16, 17, 20, 21, 24, 25, 28, 32, 40]
+
+# The tallest realistic entry, and the reason the numbers below are believable (T-116). DS-211
+# wants the map to state the argument rather than label it, so three lines is what a deck writes
+# when the slide has one; the self-test measures this string rather than trusting the sentence.
+BOTTOM = ("Frequency compounds where bike-share plateaus, and the gap is already visible in the "
+          "2029 figures rather than in the forecast that follows them.")
 
 PROBE = r"""
 <script>
@@ -87,6 +107,11 @@ PROBE = r"""
       function lines(el){
         return el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight);
       }
+      /* what the description WOULD set to with nothing clamping it - the fixture's entry height,
+         measured rather than asserted (T-116) */
+      function fullLines(el){
+        return el.scrollHeight / parseFloat(getComputedStyle(el).lineHeight);
+      }
       /* The deck decides its own columns and its own density, and this asks it rather than
          repeating the rule - a second copy here is what would silently stop measuring what
          ships (L-08). */
@@ -103,19 +128,27 @@ PROBE = r"""
         contents.dataset.rows = lay.rows;
         if (lay.dense) contents.dataset.dense = ''; else delete contents.dataset.dense;
         grid.innerHTML = '';
-        for (var i=0;i<n;i++) grid.appendChild(originals[i % originals.length].cloneNode(true));
+        for (var i=0;i<n;i++){
+          var clone = originals[i % originals.length].cloneNode(true);
+          /* the fixture's one pinned variable: every entry carries the SAME three-line
+             description, so the bound is measured on the entry that breaks it (T-116) */
+          clone.querySelector('.cbox-bottom').textContent = BOTTOM;
+          grid.appendChild(clone);
+        }
         grid.offsetHeight;
         var boxes = Array.prototype.slice.call(grid.children);
-        var minBot = 99, cutTitle = 0, cutNum = 0;
+        var minBot = 99, maxFull = 0, cutTitle = 0, cutNum = 0;
         boxes.forEach(function(b){
           var br = b.getBoundingClientRect();
           minBot = Math.min(minBot, lines(b.querySelector('.cbox-bottom')));
+          maxFull = Math.max(maxFull, fullLines(b.querySelector('.cbox-bottom')));
           if (b.querySelector('.cbox-title').getBoundingClientRect().bottom > br.bottom + 0.5) cutTitle++;
           if (b.querySelector('.cnum').getBoundingClientRect().bottom > br.bottom + 0.5) cutNum++;
         });
         out.rows.push({ n:n, cols:lay.cols, gridRows:lay.rows, dense:!!lay.dense,
                         boxH:+boxes[0].getBoundingClientRect().height.toFixed(2),
-                        descLines:+minBot.toFixed(2), cutTitle:cutTitle, cutNum:cutNum });
+                        descLines:+minBot.toFixed(2), fixtureLines:+maxFull.toFixed(2),
+                        cutTitle:cutTitle, cutNum:cutNum });
       });
       /* leave the deck as it shipped */
       grid.innerHTML = '';
@@ -157,6 +190,18 @@ def self_test(data):
                         % (data.get("contentsBox"),))
 
     by_n = dict((r["n"], r) for r in data["rows"])
+
+    # The fixture's own claim, measured rather than trusted. A "three-line description" that
+    # quietly sets to two makes every number below describe a shorter entry than the one that
+    # broke the page - which is the exact way the old fixture was wrong (T-116).
+    # A dense row hides the description outright, so it has no height to measure - excluded here
+    # rather than special-cased below, because "0.00 lines" there means dropped, not short.
+    thin = [(r["n"], r["fixtureLines"]) for r in data["rows"]
+            if r["cols"] == 4 and not r["dense"] and r["fixtureLines"] < 3]
+    if thin:
+        failures.append("the fixture's description sets to fewer than three lines at %s - the "
+                        "bound below describes a shorter entry than the one that broke the page"
+                        % ", ".join("%d slides (%.2f lines)" % t for t in thin))
 
     # The row arithmetic, by hand: three rows of boxes plus two gaps must fill the grid height.
     # gap is --sp-3 = 26 du. 3*boxH + 2*26 == gridH, within a rounding unit.
@@ -213,7 +258,7 @@ def main():
         print("Deck not found: %s" % paths.display_path(DECK, ROOT))
         return 1
 
-    probe_src = PROBE.replace("COUNTS", json.dumps(COUNTS))
+    probe_src = PROBE.replace("COUNTS", json.dumps(COUNTS)).replace("BOTTOM", json.dumps(BOTTOM))
     probe = render.make_probe(DECK, name="contents-bound-probe.html", extra=probe_src)
     data, err = render.read_result(render.file_url(probe), 1920, 1200)
     if not data:
@@ -233,7 +278,10 @@ def main():
     print("-" * 78)
     print("  grid height %.1f du of the page's 936 usable, at %d columns"
           % (data["gridH"], data["columns"]))
-    print("  1 design unit = %.4f pt printed on A4 landscape\n" % PT_PER_DU)
+    print("  1 design unit = %.4f pt printed on A4 landscape" % PT_PER_DU)
+    fixture = max(r["fixtureLines"] for r in data["rows"] if not r["dense"])
+    print("  every entry carries the same description, which sets to %.2f lines at 4 columns\n"
+          % fixture)
     print("  %-7s %-5s %-5s %-20s %-14s %s"
           % ("slides", "cols", "rows", "box height", "description", "verdict"))
     bound = hard = None
@@ -253,11 +301,18 @@ def main():
               % (r["n"], r["cols"], r["gridRows"], r["boxH"], r["boxH"] * PT_PER_DU,
                  r["descLines"], verdict))
     print("-" * 78)
-    print("  THE BOUND      %s slides - the largest deck that still shows a description" % bound)
+    print("  THE BOUND      %s slides - the largest deck that still shows a description," % bound)
+    print("                 measured where every entry wants %.2f lines of one. A deck whose"
+          % fixture)
+    print("                 descriptions are shorter does not earn a higher bound; it gets")
+    print("                 emptier boxes, because the clamp is per row band and the band is")
+    print("                 decided by the slide count alone.")
     print("  THE HARD LIMIT %s slides - the largest deck whose number and title render at all"
           % hard)
     print("\n  Past the hard limit the page must continue onto a second sheet (T-036). This is a")
-    print("  LAYOUT measurement in a real browser; it does not discharge printing and looking.")
+    print("  LAYOUT measurement in a real browser; it does not discharge printing and looking -")
+    print("  and T-116 was a print-only fault that these numbers were clean throughout. The")
+    print("  module docstring says what that means for how far to trust them.")
     return 0
 
 

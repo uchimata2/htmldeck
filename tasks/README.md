@@ -35,7 +35,7 @@ names cost.
 
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `PH2` | - | `proposed` | `specify` | T-034 | - | T-005, T-034, T-042, T-084, T-108, T-114, T-116 |
+| [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `PH2` | - | `proposed` | `specify` | T-034 | - | T-005, T-034, T-042, T-084, T-108, T-114, T-116, T-123 |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | - | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112 |
 | [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `PH3` | - | `proposed` | `specify` | T-053 | - | T-005, T-037, T-043, T-051, T-119 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113 |
@@ -49,12 +49,12 @@ names cost.
 | [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | - | `proposed` | `specify` | - | - | T-057, T-112, T-119 |
 | [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | The chrome row layout — give the pager the corner, and decide what happens to Read and Motion | `PH3` | - | `proposed` | `specify` | - | - | T-035, T-036, T-112, T-115, T-119 |
 | [T-115](T-115-the-specification-can-assert-a-layout-the-shell-cannot-honour.md) | A specification can assert a layout the shell cannot honour, and nothing reads the two together | `PH3` | - | `proposed` | `specify` | - | - | T-109, T-114, T-117, T-118, T-119 |
-| [T-116](T-116-the-printed-contents-page-collides-at-thirteen-entries.md) | The printed contents page collides at thirteen entries, well below its measured bound | `PH1` | - | `proposed` | `specify` | - | - | T-034, T-036, T-084, T-120 |
 | [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md) | The decision diamond has no label slot, and diagrams sit off the text grid | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-109, T-115 |
 | [T-118](T-118-a-style-must-mean-the-same-thing-in-the-reading-view.md) | A style that carries meaning on a slide must carry the same meaning in the reading view | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-109, T-115 |
 | [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) | Audit the ruleset for rules that cost more to satisfy than they return | `PH3` | - | `proposed` | `specify` | - | - | T-054, T-113, T-114, T-115 |
 | [T-120](T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md) | printpages.py's own entry point defaults the slide count to a hardcoded 12, so it fails a correct deck | `PH1` | - | `proposed` | `specify` | - | - | T-096, T-116 |
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-107, T-110 |
+| [T-123](T-123-nothing-can-see-a-print-only-layout-fault.md) | Nothing can see a print-only layout fault, and one reached two shipped decks | `PH3` | - | `proposed` | `specify` | - | - | T-034, T-036, T-084, T-116 |
 
 ## Closed
 
@@ -93,7 +93,7 @@ names cost.
 | [T-031](T-031-stop-the-index-blocks-column-listing-closed-tasks.md) | Stop the index `Blocks` column listing closed downstream tasks | - | `0.1.0` | `done` | `review` | - | - | T-029, T-030, T-046, T-079 |
 | [T-032](T-032-adopt-the-paginated-print-mode-in-the-reference-deck.md) | Adopt the paginated print mode in the reference deck, and decide whether print carries tier two | `WP2` | `0.1.0` | `done` | `review` | - | - | T-005, T-016, T-018, T-021, T-028, T-034, T-044 |
 | [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md) | Reconcile DS-131 with the chrome budget it now contradicts | `WP2` | `0.1.0` | `done` | `review` | - | - | T-025, T-027, T-028, T-035, T-037, T-057 |
-| [T-034](T-034-a-contents-page-for-the-printed-deck.md) | Add a contents page to the printed deck | `WP2` | `0.1.0` | `done` | `review` | - | T-036 | T-005, T-018, T-032, T-035, T-036, T-044, T-108, T-116 |
+| [T-034](T-034-a-contents-page-for-the-printed-deck.md) | Add a contents page to the printed deck | `WP2` | `0.1.0` | `done` | `review` | - | T-036 | T-005, T-018, T-032, T-035, T-036, T-044, T-108, T-116, T-123 |
 | [T-035](T-035-the-ruler-navigator.md) | Replace the stage ribbon with a ruler navigator, and rescope the chrome budget it breaks | `WP2` | `0.1.0` | `done` | `review` | - | - | T-016, T-027, T-028, T-033, T-034, T-044, T-102, T-108, T-114 |
 | [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md) | Record in the ruleset itself which rules no check can reach | `WP2` | `0.1.0` | `done` | `review` | - | T-039 | T-005, T-014, T-021, T-022, T-033, T-038, T-042, T-043, T-045, T-046, T-048, T-053, T-054 |
 | [T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) | Stop the gate reporting judge rules, and one verdict under the wrong rule ID | `WP3` | `0.1.0` | `done` | `review` | - | - | T-005, T-014, T-037, T-043, T-051, T-053, T-055 |
@@ -139,7 +139,7 @@ names cost.
 | [T-081](T-081-the-installed-taskmd-is-two-minor-versions-behind.md) | The installed taskmd is two minor versions behind, so the gates run rules that have been superseded | `PH2` | `0.1.5` | `done` | `review` | - | - | T-062, T-073, T-079, T-080 |
 | [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) | The worked example's figure ledger omits figures that reach slides, so the ledger cannot be the authority it is treated as | `PH2` | `0.2.0` | `done` | `review` | - | - | T-071, T-086, T-087, T-088, T-092 |
 | [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) | The generated example deck fails a hard rule and nothing recorded it | `PH1` | `0.1.5` | `done` | `review` | - | - | T-021, T-071, T-075, T-084, T-085, T-096 |
-| [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed | `PH2` | `0.1.5` | `done` | `review` | - | - | T-036, T-069, T-078, T-083, T-096, T-116 |
+| [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed | `PH2` | `0.1.5` | `done` | `review` | - | - | T-036, T-069, T-078, T-083, T-096, T-116, T-123 |
 | [T-085](T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md) | The reference deck does not carry the shell it defines, and its sprite is out of sync | `PH1` | `0.1.5` | `done` | `review` | - | - | T-069, T-071, T-078, T-083 |
 | [T-086](T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) | Check that every figure ledger row appears on the slides its Used on names | `PH2` | `0.2.0` | `done` | `review` | - | - | T-071, T-082, T-087, T-090 |
 | [T-087](T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) | Sweep the reference deck's figure ledger for the pattern T-082 found | `PH2` | `0.2.0` | `done` | `review` | - | - | T-082, T-086 |
@@ -161,6 +161,7 @@ names cost.
 | [T-105](T-105-fig-pos-neg-caution-are-vocabulary-so-a-real-deck-fails-for-using-them.md) | The figure's pos, neg and caution roles are vocabulary, so the first deck to use them fails component.py | `PH1` | `0.2.2` | `done` | `review` | - | - | T-092 |
 | [T-106](T-106-the-quick-view-sheet-is-sized-to-the-prose-measure.md) | The quick-view sheet is sized to the prose measure, so a source's tables are crushed | `PH1` | `unreleased` | `done` | `review` | - | - | T-070, T-109, T-110 |
 | [T-107](T-107-quickviews-markdown-renderer-drops-thematic-breaks.md) | quickview.py's Markdown renderer drops thematic breaks, shipping "---" as body text | `PH1` | `unreleased` | `done` | `review` | - | - | T-070, T-110, T-121, T-122 |
+| [T-116](T-116-the-printed-contents-page-collides-at-thirteen-entries.md) | The printed contents page collides at thirteen entries, well below its measured bound | `PH1` | `unreleased` | `done` | `review` | - | - | T-034, T-036, T-084, T-120, T-123 |
 | [T-122](T-122-the-quick-views-contracted-article-is-never-created-so-seventeen-rules-are-dead.md) | The quick view's contracted `.qv-doc` article is never created, so seventeen style rules are dead | `PH1` | `unreleased` | `done` | `review` | - | - | T-070, T-107, T-110 |
 
 <!-- taskmd:end -->
