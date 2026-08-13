@@ -116,6 +116,28 @@ that omits one goes missing from the navigation rather than looking wrong.
 correctly, and has no ruler and no arrow keys. It said only `data-stage` here until 2026-08-12, and
 the reference deck was the sole place the value was written down (T-102).
 
+**`data-stage="back"` is the one value that is not a position.** It marks a slide as **back matter**
+— outside the argument rather than late in it — and a colophon, an appendix, a sources page or a
+glossary may carry it. Nothing else may: a slide the reader is meant to be argued *to* is in a
+stage, however near the end it sits. What it changes, in every rendering of the manifest at once:
+
+| | A slide in a stage | `data-stage="back"` |
+| :--- | :--- | :--- |
+| Ruler tick | a section tick where it opens a stage | never a section tick |
+| Ruler label at rest | the stage's name | **the slide's own name** |
+| Ruler label on hover | the slide's name | unchanged |
+| Any stage's slide count | counted | counted in none |
+| Contents box label | the stage's name | `Back matter` |
+| Contents box mark | the stage's mark | **none** — DS-113/114 key the mark to the stage, and there is no stage |
+
+The constant is the shell's rather than the deck's because there is no stage entry to read a word
+from, and *Back matter* is true of all four of the things that may carry it where *Colophon* is true
+of one. **The absent mark is the rule holding, not a gap.** Added by
+[T-108](../tasks/T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md);
+before it, back matter had to declare an argument stage, and this repository's own reference deck
+invented an eighth one — with `STAGE_ICON` left at seven, so the colophon's contents box printed
+with a mark that referenced nothing.
+
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `.slide` | `section` | `.stage` | `1+` | `data-name` `data-stage:#STAGES` `aria-label` | author |

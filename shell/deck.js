@@ -72,18 +72,33 @@
      slide 1 carries no disclosure panel where the other eleven carry one */
   var STAGE_ICON = [{{STAGE_ICON}}];
 
+  /* Back matter is a slide that is not part of the argument - a colophon, an appendix, a sources
+     page - and `data-stage="back"` is how it says so (T-108). Before this it had nowhere to go:
+     `data-stage` is mandatory and held only argument stages, so back matter was pushed into the
+     nearest one and every rendering of the census inherited the miscount.
+
+     Two consequences follow from rules already written, rather than from taste. It carries NO MARK,
+     because DS-113/114 key the mark to the stage and this slide has no stage - so the absence is
+     the rule holding. And its label is a constant here rather than a deck-supplied word, because
+     there is no stage entry to read one from; `Back matter` is also true of all three of the things
+     it names, where `Colophon` is true of one. */
+  var BACK_MATTER = 'Back matter';
+
   function manifest(){
     return slides.map(function(s, i){
       var b = s.querySelector('.bottom-line');
-      var st = parseInt(s.dataset.stage, 10);
+      var raw = (s.dataset.stage || '').trim();
+      var back = raw === 'back';
+      var st = parseInt(raw, 10);
       if (isNaN(st) || st < 0 || st >= STAGES.length) st = 0;
       return {
         n:         i + 1,
         title:     s.dataset.name || '',
         bottom:    b ? b.textContent.replace(/\s+/g, ' ').trim() : '',
-        stage:     st,
-        stageName: STAGES[st],
-        icon:      STAGE_ICON[st]
+        back:      back,
+        stage:     back ? null : st,
+        stageName: back ? BACK_MATTER : STAGES[st],
+        icon:      back ? null : STAGE_ICON[st]
       };
     });
   }
@@ -128,7 +143,10 @@
 
   function buildRuler(){
     MAN.forEach(function(m, i){
-      var isSection = firstSlideOfStage(m.stage) === i;
+      /* Back matter starts no section, and the guard is load-bearing rather than tidy:
+         `firstSlideOfStage(null)` matches nothing and returns 0, so without it the deck's FIRST
+         slide would be re-declared a section every time a back-matter slide was drawn (T-108). */
+      var isSection = !m.back && firstSlideOfStage(m.stage) === i;
       var li = document.createElement('li');
       li.dataset.slide = i;
       if (isSection) li.dataset.section = '';
@@ -173,10 +191,13 @@
     rulerLabel.textContent = text;
     rulerLabel.setAttribute('data-preview','');
   }
+  /* At rest the ruler names the STAGE, where hover names the slide (DS-163). Back matter has no
+     stage to name, so it falls back to its own title - which is also what the reporter of T-108 saw
+     the lack of: a colophon captioned `Decision`, the stage it had been forced into. */
   function restoreLabel(){
     rulerLabel.removeAttribute('data-preview');
     var m = MAN[idx];
-    rulerLabel.textContent = m ? m.stageName : '';
+    rulerLabel.textContent = m ? (m.back ? m.title : m.stageName) : '';
   }
 
   /* Sized after layout, and again on resize - the controls' width is what decides capacity, and a
@@ -557,15 +578,20 @@
       var st = document.createElement('span');
       st.className = 'cstage';
       st.textContent = m.stageName;
-      var ico = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      ico.setAttribute('class', 'cico');
-      ico.setAttribute('aria-hidden', 'true');
-      var use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-      use.setAttribute('href', '#' + m.icon);
-      ico.appendChild(use);
       top.appendChild(num);
       top.appendChild(st);
-      top.appendChild(ico);
+      /* No stage, no mark (DS-113/114) - and no EMPTY mark either. Back matter used to reach here
+         with `m.icon` undefined and get a `<use href="#undefined">`, which draws nothing and leaves
+         a box that looks like a glyph that failed to load rather than one that has none (T-108). */
+      if (m.icon){
+        var ico = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        ico.setAttribute('class', 'cico');
+        ico.setAttribute('aria-hidden', 'true');
+        var use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        use.setAttribute('href', '#' + m.icon);
+        ico.appendChild(use);
+        top.appendChild(ico);
+      }
 
       var t = document.createElement('h3');
       t.className = 'cbox-title';

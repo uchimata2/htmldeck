@@ -278,6 +278,12 @@ def is_scoped(part, styled):
 
 SCRIPT_ARRAY = re.compile(r"var\s+([A-Z][A-Z_]*)\s*=\s*\[(.*?)\]\s*;", re.S)
 
+# Values an `#ARRAY` attribute may hold that are not subscripts. One so far: `data-stage="back"`
+# marks a slide as outside the argument, so it indexes nothing (T-108). Kept as a set rather than a
+# literal because the contract states it as a vocabulary, and the next one must not need this
+# branch rewritten.
+NOT_AN_INDEX = frozenset(["back"])
+
 
 def script_arrays(html):
     """`{NAME: length}` for every `var NAME = [...]` the deck's script declares.
@@ -374,14 +380,18 @@ def structure(root, parts, styled, arrays=None):
                         bad.append(".%s: %s is an index into %s and this deck declares no such "
                                    "array" % (name, attr, needs[1:]))
                 else:
-                    wrong = sorted({v or "(empty)" for _e, v in held
-                                    if not (v.isdigit() and int(v) < size)})
+                    def indexes(v):
+                        # `back` is the one non-positional value: it marks a slide as outside the
+                        # argument, so it indexes nothing and must not be read as out of range
+                        # (T-108, COMPONENT-CONTRACT.md).
+                        return v in NOT_AN_INDEX or (v.isdigit() and int(v) < size)
+                    wrong = sorted({v or "(empty)" for _e, v in held if not indexes(v)})
                     if wrong:
-                        bad.append(".%s: %s is a zero-based index into %s (0-%d) and %d "
+                        bad.append(".%s: %s is a zero-based index into %s (0-%d), or %s, and %d "
                                    "element(s) leave it: %s"
                                    % (name, attr, needs[1:], size - 1,
-                                      len([v for _e, v in held
-                                           if not (v.isdigit() and int(v) < size)]),
+                                      " or ".join("`%s`" % v for v in sorted(NOT_AN_INDEX)),
+                                      len([v for _e, v in held if not indexes(v)]),
                                       " ".join(wrong)))
             elif needs:
                 empty = [e for e in els if needs not in (e.attrs.get(attr.lower()) or "")]
@@ -548,6 +558,22 @@ def self_test():
             broke = parse(doc.replace('data-stage="0"', bad_value))
             if not any("index into STAGES" in m for m in structure(broke, one, {}, stages)):
                 sys.exit("SELF-TEST FAILED: %s was not reported" % bad_value)
+        # `back` indexes nothing and is legal (T-108). Asserted in BOTH directions, because a
+        # vocabulary widened by one value is one step from a vocabulary that admits anything: the
+        # word passes and a near-miss still fails.
+        okd = parse(doc.replace('data-stage="0"', 'data-stage="back"'))
+        if structure(okd, one, {}, stages):
+            sys.exit("SELF-TEST FAILED: data-stage=\"back\" was reported: %s"
+                     % structure(okd, one, {}, stages))
+        for near in ('data-stage="backmatter"', 'data-stage="Back"', 'data-stage="back matter"'):
+            broke = parse(doc.replace('data-stage="0"', near))
+            if not any("index into STAGES" in m for m in structure(broke, one, {}, stages)):
+                sys.exit("SELF-TEST FAILED: %s was accepted - the back-matter value is a word, "
+                         "not a prefix" % near)
+        # `data-stage="back "` is deliberately NOT in that list. Surrounding whitespace is stripped
+        # here and `deck.js` trims the same attribute before reading it, so the two agree that it is
+        # the same value - and a checker stricter than the runtime it guards reports defects that
+        # are not there.
         # ...and with no array to index, the deck is missing the declaration rather than the value.
         if not any("declares no such array" in m for m in structure(parse(doc), one, {}, {})):
             sys.exit("SELF-TEST FAILED: a data-stage with no STAGES declared was not reported")

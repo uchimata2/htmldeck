@@ -317,6 +317,19 @@ def check(html, path="the deck"):
         if script_skeleton != read(DECK_JS):
             problems.append("SCRIPT        %s: differs from shell/deck.js%s"
                             % (path, first_difference(script_skeleton, read(DECK_JS))))
+        # `STAGES` and `STAGE_ICON` are subscripted by the same `data-stage`, so they are one
+        # table written as two and a deck is wrong the moment they differ in length. `new()`
+        # builds them together and cannot get this wrong; a deck edited by hand can, and one
+        # was - the reference deck carried eight stages against seven icons, so its colophon's
+        # contents box drew `<use href="#undefined">` and printed with no mark (T-108).
+        counts = [(name, len(re.findall(r"'[^']*'|\"[^\"]*\"", body)))
+                  for name, body in ((n, b) for n, b in _script_parts.items()
+                                     if n in ("STAGES", "STAGE_ICON"))]
+        if len(counts) == 2 and counts[0][1] != counts[1][1]:
+            problems.append("STAGE TABLE   %s: %s has %d entries and %s has %d - they are one "
+                            "table subscripted by one `data-stage`, so a slide in the longer one "
+                            "reads `undefined` out of the shorter"
+                            % ((path,) + counts[0] + counts[1]))
 
     # DS-009: the preflight holds exactly the rows this deck has a subject for. Same shape as the
     # sprite check below, and the same failure it prevents - a region that was right when it was
@@ -394,6 +407,14 @@ def self_test():
 
     broken = fresh.replace("<script>", "<script>\nvoid 0;", 1)
     ok("an edited script is caught", any(p.startswith("SCRIPT") for p in check(broken)))
+
+    # The defect this check was added for, seeded: one more stage than there are icons. Both
+    # directions, because a table that is short at either end subscripts to `undefined` (T-108).
+    longer = fresh.replace("var STAGES = ['Claim'];", "var STAGES = ['Claim','Extra'];", 1)
+    ok("a stage with no icon is caught", any(p.startswith("STAGE TABLE") for p in check(longer)))
+    shorter = fresh.replace("var STAGE_ICON = ['i-info'];", "var STAGE_ICON = [];", 1)
+    ok("an icon table shorter than the stages is caught",
+       any(p.startswith("STAGE TABLE") for p in check(shorter)))
 
     broken = fresh.replace('<button class="btn" id="toDoc">Read</button>',
                            '<button class="btn" id="toDoc">Document</button>', 1)
