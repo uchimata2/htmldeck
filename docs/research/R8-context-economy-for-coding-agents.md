@@ -93,6 +93,13 @@ steps 7–9 are the gain and are **estimated**.
 4. **Inventory write volume (D)** for the same representative unit.
 5. **Research externally.** How practitioners reduce context and token use with coding agents.
    Produce a catalogue of *techniques*, each with what it costs and what it assumes (§7).
+
+   **Record what was searched, and screen named tools as well as ideas.** A catalogue with no search
+   record cannot be told apart from a short one, and the screening partition in step 7 then proves
+   only that every gathered technique was judged — never that the gathering was adequate. So the
+   catalogue carries: the queries run, the sources read, and an explicit statement that named tools
+   in this space were looked for by name. **Two searches and two articles is a start, not a survey**,
+   and a step-5 output that does not say which it was is claiming the second while doing the first.
 6. **Read the local precedent.** Repositories where the same owner has already done this work are an
    input the internet cannot supply: they are proof a technique survived contact with how this owner
    actually works. **Patterns, structures and measurements only** — nothing is copied across, and no
@@ -254,9 +261,17 @@ is step 7 and belongs to the project doing the audit, not to this catalogue.
 | T17 | **Planner → implementer → reviewer** | Splits a task across phases so the expensive model runs briefly | Handover overhead; each phase must record enough for the next | The phases can hand over in writing |
 | T18 | **Fresh context per checklist item** | A loop restarts context for each item | Loses cross-item learning | The items are genuinely independent |
 | T19 | **Evidence quoted forward** | An earlier phase records verbatim quotes and `path:line` refs so a later phase greps instead of re-reading | The earlier phase writes more | The later phase would otherwise re-read whole files |
+| T20 | **Generation restraint — a decision ladder before writing code** | A rule set the agent applies before generating: does this need to exist, is it already in the codebase, in the standard library, a native platform feature, an installed dependency, a one-liner — and only then, write it | Its own instructions are a permanent load-path cost; a minimalism rule pointed at output that is *meant* to be rich fights the brief | The saving is in what the agent does not write, and the domain rewards less code |
+| T21 | **Semantic index over the repository** | A vector or embedding index of the project's own documents and code, queried for the few relevant passages instead of loading files | An index to build, host and keep fresh; a stale index answers confidently and wrongly | A service or library dependency is acceptable, and the corpus is large enough that retrieval beats naming files |
 
 **T19 came from local precedent rather than the literature**, and it is the one most easily missed: it
 does not reduce a document, it moves a cost from an expensive phase to a cheap one.
+
+**T20 and T21 were added 2026-08-13, after the first pass missed both.** They are recorded here with
+their provenance because *how* they were missed matters more than that they were: T20 is a named,
+installable tool that reports its own measurements, and T21 is a mainstream technique the first pass
+folded into T2 rather than listing. **A reader found both by asking one question.** See §3 step 5's
+coverage rule, which exists because of this, and §10's fourth limit.
 
 ---
 
@@ -417,6 +432,12 @@ Stated so a reader does not mistake the audit's silence for a clean bill.
   agent guess, that is a risk field, not a measurement.
 - **A green gate proves the gate ran, not that the saving is safe.** Every finding here is a proposal
   for someone to review.
+- **The screening partition says nothing about the catalogue's completeness.** *Adopted + rejected +
+  deferred = every technique gathered* is an arithmetic check on step 7, and it reads like a coverage
+  claim. It is not one. **Demonstrated on this document's first pass**: the partition summed
+  correctly over nineteen techniques while two were missing, including a named tool that publishes
+  its own measurements. Step 5's coverage rule is the guard, and it is weaker than the partition —
+  a search record can be read and judged, but nothing can prove a survey complete.
 
 ---
 

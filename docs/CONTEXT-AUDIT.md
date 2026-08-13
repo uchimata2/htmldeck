@@ -163,7 +163,14 @@ work), not assumed.
 ## 4. Screening the technique catalogue
 
 Every technique in `R8-context-economy-for-coding-agents.md` §7, screened against this project. **The
-three verdicts partition the catalogue: 9 adopted, 4 rejected, 6 deferred, summing to 19.**
+three verdicts partition the catalogue: 9 adopted, 5 rejected, 7 deferred, summing to 21.**
+
+**And the partition is not a coverage claim.** It summed correctly at 19 while two techniques were
+missing from the catalogue entirely — T20 and T21, both added 2026-08-13 after a reader asked whether
+one specific tool had been checked. It had not. The gap is the research step's, not the screening's,
+and [T-136](../tasks/T-136-re-run-the-external-research-with-a-recorded-search-record.md) re-runs it
+with a search record. Rows T20 and T21 below are screened on what is known now and are provisional
+until that task lands.
 
 | # | Technique | Verdict | Why |
 | :--- | :--- | :--- | :--- |
@@ -186,6 +193,8 @@ three verdicts partition the catalogue: 9 adopted, 4 rejected, 6 deferred, summi
 | T17 | Planner → implementer → reviewer | **adopted** | Already in force as `specify → plan → implement → review` |
 | T18 | Fresh context per checklist item | **deferred** | Would suit the variant and seeded-defect suites. Closed by deciding whether per-item isolation is worth losing cross-item learning |
 | T19 | Evidence quoted forward | **deferred** | The strongest untaken idea here. Closed by measuring how much of a `review` phase's reading duplicates what `implement` already had — unmeasured, so no band is written |
+| T20 | Generation restraint — a decision ladder | **deferred** | Two constraints pull opposite ways and neither settles it. **For the tooling** it may fit: standard-library-only is already a rung of that ladder (**L-07**). **For the decks it fights the brief** — rule 2 wants richness, interaction, animation and 3D, so a minimalism rule pointed at deck output is aimed at the wrong artifact. And its own instructions are a permanent load-path cost, which an audit ranking by load path has to count against it. Closed by deciding whether it can be scoped to `tools/` alone, and by measuring its own listing cost against the write volume it removes |
+| T21 | Semantic index over the repository | **rejected** | Collides with two rules at once. **L-07** and the out-of-the-box constraint: this repository ships standard library only and must clone and run, so an index service or embedding library is a dependency it does not take. And the index would be a machine-local artifact that no clone receives — the same property that made `taskmd check` refuse a link to the git-ignored settings file. The corpus is also small enough that naming files works: the read path is a dozen documents, not a codebase |
 
 ---
 

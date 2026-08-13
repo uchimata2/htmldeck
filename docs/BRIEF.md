@@ -642,6 +642,7 @@ new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 | [T-133](../tasks/T-133-write-down-that-a-deck-is-never-read-whole.md) — write down that a deck is never read whole | **T-130's `CE-13`, and the one whose gain is bimodal.** The example decks are 810,746 bytes; the rule saves nothing on almost every session and saves an entire session on the one that opens a deck to ask what a tool already answers. Nothing, nothing, nothing, catastrophe is what a written rule is for and what a habit is not. `xs`, and it adds a line to the file two sibling tasks exist to shorten — a real tension, named in its scope. |
 | [T-134](../tasks/T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md) — state the tier model and bound tier 1 as a relation | **T-130's `CE-11`, and the direction of travel is upstream to here.** The audit went looking for something to send taskmd about context budgeting and found they had settled it first — membership as a property of the tree, three tiers, a budget on tier 1 only, the bound as a relation so no number and its justification can drift, and both alternatives rejected in writing. Tier 1 measures 338 lines across three files. `s`, an **enabler** that saves nothing itself: it decides what `CE-01` and `CE-04` may cut, so it lands before them rather than after, and a budget that also chooses its own cut is a cut chosen to fit a number. |
 | [T-135](../tasks/T-135-cut-the-load-path-this-project-cannot-use.md) — cut the load path this project cannot use | **T-130's `CE-07`, which the audit had ranked and then excluded from repository work on reasoning that was sound and wrong.** The plugins supplying most skills are not installed on disk, so no plugin-enable setting reaches them — but the listing override keys on the skill's *name* rather than on its delivery, and is honoured at project scope. The audit reasoned from where the files were instead of from what the configuration could address; the portable half of that lesson is in `R8` §8. `xs`, worked the day it was raised, and **left open until a restart measures it** — a saving that rests on a figure and never gets the after-figure is what this whole umbrella was raised to stop. The larger half, the cloud connectors at ~34.5k for one of them, is an open question rather than a unilateral change: the switch's coverage is not established and **rule 6** depends on a browser surface. |
+| [T-136](../tasks/T-136-re-run-the-external-research-with-a-recorded-search-record.md) — re-run the external research with a recorded search record | **T-130's step 5 was two searches and two articles, and it shipped as a catalogue.** The owner asked whether one named tool had been checked; it had not, and checking it produced a technique the catalogue had no entry for — with a second gap surfacing in the same question. **Neither was excluded on principle**, which is the part worth writing down: nothing in the method required looking for named tools at all. **The screening partition is what hid it** — *adopted + rejected + deferred = everything gathered* sums correctly over a catalogue of any length, so it reads like coverage while checking only the screening. `m`, research, and the first task to run under the coverage rule the method now carries. |
 | ~~[T-123](../tasks/T-123-nothing-can-see-a-print-only-layout-fault.md) — nothing can see a print-only layout fault~~ **done 2026-08-13** | The fault T-116 fixed had reached **three printed decks with every gate green**, because the only tool aimed at that page measures a screen simulation of print (**L-76**). The owner narrowed the 2026-08-08 ruling twice: gate the printed geometry, and gate **any deck the tool is pointed at** — which made the dependency question unavoidable, since an adopter has to be able to run it. `l` on the instrument, and the instrument turned out to be ~330 lines of standard library: the tens-of-thousands coordinates that had defeated two earlier attempts were a missing graphics-state stack, not a property of Chrome's writer. **`printgeom.py` reads card rectangles out of the printed PDF; `contents_bound.py` keeps the bands and loses the claim about paper.** DS-222 to DS-225 stay with the person who prints — this narrows the ruling only where the property is arithmetic. |
 
 *Until 2026-08-13 this read "the largest thing on the board is T-070 and the least certain to be
@@ -662,19 +663,20 @@ followed.
 | — | T-135 | **in progress, not queued** — worked the day it was raised; it waits on a restart to measure, not on a session |
 | 1–3 | T-131, T-132, T-133 | T-130's three `xs` savings, in its ranked order — every task below is paid at the un-inventoried rate until they land |
 | 4 | T-134 | the enabler; it decides what a later cut to `../CLAUDE.md` is allowed to remove |
-| 5 | T-128 | prepared, ruled and surveyed |
-| 6 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
-| 7 | T-114 | the ruler is the one thing still known to bite past 13 slides |
-| 8 | T-109 | the hub of the source cluster; 9–11 are rework if it lands after them |
-| 9–11 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
-| 12 | T-115 | needs 7 and 8 to have settled what the shell offers |
-| 13 | T-117 | independent |
-| 14 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
-| 15 | T-054 | after 6, which may change which clauses are worth recording |
-| 16 | T-113 | research, and it decides ground 17–20 build on |
-| 17–18 | T-112, T-111 | the motion cluster, in that order |
-| 19 | T-041 | named in *what PH1 shipped without* |
-| 20 | T-057 | `xl`, and the least certain to be worth it |
+| 5 | T-136 | it can invalidate rows below it: a technique the first pass missed may raise a finding that outranks them |
+| 6 | T-128 | prepared, ruled and surveyed |
+| 7 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 8 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 9 | T-109 | the hub of the source cluster; 10–12 are rework if it lands after them |
+| 10–12 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 13 | T-115 | needs 8 and 9 to have settled what the shell offers |
+| 14 | T-117 | independent |
+| 15 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
+| 16 | T-054 | after 7, which may change which clauses are worth recording |
+| 17 | T-113 | research, and it decides ground 18–21 build on |
+| 18–19 | T-112, T-111 | the motion cluster, in that order |
+| 20 | T-041 | named in *what PH1 shipped without* |
+| 21 | T-057 | `xl`, and the least certain to be worth it |
 
 **Two placements were argued and kept.** T-095 sits above a `high` task because it is `s` and guards
 what follows; T-119 delays T-114 by a real amount and is still first of the two, because a rule

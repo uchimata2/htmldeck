@@ -68,12 +68,13 @@ a browser tool set already loaded eagerly**.
 - [ ] The connector question below is answered before any connector is disabled
 
 **Open questions**
-- **Do the cloud connectors get disabled for this project?** It is the larger saving by far — one
-  connector alone is ~34.5k estimated tokens — and the schema offers a single switch that stops them
-  being fetched. **Not taken unilaterally**, for one reason: it is not established which of the
-  loaded surfaces that switch covers, and if the in-app browser is among them it removes the surface
-  **rule 6** depends on for looking at a rendered deck. What would close it: set it, restart, and read
-  the tool list. — the owner.
+- ~~**Do the cloud connectors get disabled for this project?**~~ **Answered 2026-08-13 — the unused
+  ones, and the browser stays.** The blanket switch cannot express that, so a per-server denylist was
+  used instead and the note-taking connector is the only entry. See §3. **What is still open is
+  narrower and is a measurement, not a decision**: whether the second browser surface — real Chrome
+  with logged-in sessions, ~8.1k — is needed here at all, given the in-app browser is already loaded
+  and this repository renders through its own subprocess Chrome rather than through either. Read the
+  tool list after the restart before deciding.
 
 ## 2. Plan
 
@@ -103,6 +104,26 @@ a browser tool set already loaded eagerly**.
   current names. This is a user-scoped change and is outside `CE-07`, recorded here because it was
   found here.
 
+**Reviewed against the repository's actual needs, at the owner's challenge, and one entry was wrong.**
+
+- **`cli-tool-dev` was turned back on.** This repository ships thirty-six command-line tools and
+  [T-131](T-131-expose-the-trackers-query-commands-so-the-board-is-not-read-whole.md) is about to add
+  another. It is squarely in domain, and turning it off broke this task's own rule that anything
+  arguable is left alone. The rule was right; the application of it was not.
+- **`document-figures` was the closest call and stays off.** It names a *figure ledger*, and this
+  project has one — but they are different objects: theirs extracts figures and diagrams from
+  existing documents, and `tools/docs/figures.py` checks numeric claims in prose against their
+  sources. Nothing in this repository reads Word, PowerPoint or PDF as an input.
+- **`humanize-prose` is off and `humanizer` is on**, which is the intended direction. The project's
+  humanizer rule in [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) is served by the installed
+  `humanizer` plugin; two skills answering to the same idea is a routing hazard for a project that
+  gates releases on one of them.
+- **The rest are out of domain and were checked individually**: enterprise-architecture modelling,
+  BPMN, academic and literature tooling, mathematics, the business-strategy family, other
+  presentation formats, Office-document skills, Tauri, translation, the cowork setup skills, and one
+  duplicate of the built-in code review.
+- **The connectors are now partly answered** — see the decision below.
+
 **Decisions & assumptions**
 - **Project scope, in the git-ignored file, not the committed one.** — A committed settings file would
   disable an adopter's skills when they clone a public repository, which is a defect this project
@@ -113,8 +134,15 @@ a browser tool set already loaded eagerly**.
   that keeps a skill listed while dropping its description, at about a tenth of the cost. It is the
   right choice for an arguable skill, and no skill in this set is arguable — the arguable ones were
   left fully on instead. — 2026-08-13
-- **The connectors were not touched**, though they are the larger number. The switch's coverage is not
-  established and rule 6 depends on a browser surface. — 2026-08-13
+- **One connector denied by name; the blanket switch not used.** — The owner's answer was *the unused
+  ones, but the Chrome connection may be needed for rendering and validating*, and the blanket switch
+  cannot express that: it stops cloud connectors being fetched at all, so it would take any browser
+  surface with them. A per-server denylist can, and the schema states it merges from all sources so a
+  user can deny a server for themselves. The one denied is the note-taking connector — **~34.5k
+  estimated tokens, and this repository tracks its tasks in local Markdown**. Both browser surfaces
+  are untouched. **Denied by the server's id, which is fragile**: that id has already changed once,
+  which is the defect fixed below, so a future rotation silently restores the cost. Worth knowing at
+  the next measurement rather than assumed stable. — 2026-08-13
 
 **Outputs produced**
 - `.claude/settings.local.json` — 35 overrides, one plugin disabled, existing permissions preserved,
