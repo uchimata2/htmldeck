@@ -8,7 +8,7 @@ parent: null
 blocked_by: []
 related: [T-063, T-080]
 work_package: PH3
-shipped_in: unreleased
+shipped_in: 0.2.3
 owner: the project owner
 business_value: low
 effort: xs
@@ -154,3 +154,4 @@ alarms this project has decided are permanently correct — and §8 carries a po
 | :--- | :--- | :--- |
 | 2026-08-12 | → done | **Accepted and recorded, and the upstream rival refused on its merits rather than on its size.** Both moves are decisions this task existed to take, so it closes at `done` with nothing implemented and no document edited except the two that now carry the record. The home moved off the candidate §1 named: a release checklist is read a few times a month and `lint.py` runs on every task edit. |
 | 2026-08-12 | → proposed | Raised on the first run of **taskmd 0.5.0**, installed the same day over 0.4.0. Not a defect in either tool: the advisory is new, the count is right, and the document it names is right too. `PH3` by the rule in [`../CLAUDE.md`](../CLAUDE.md) — PH2 has shipped and this is not a defect in the published plugin, so it is not PH1 work whatever its size. `low`/`xs`: nothing is broken, and what is owed is one written decision. |
+| 2026-08-13 | (no change) | **Shipped in `0.2.3`.** `shipped_in` read `unreleased` until this sweep: the closing commit `0c5d61c` is contained in `v0.2.3`, which is what the field holds (TASK-WORKFLOW.md §3). Found by reconciling the board after the `0.2.3` release rather than by a check - nothing validates the field against the tags. |

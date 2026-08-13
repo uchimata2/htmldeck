@@ -13,7 +13,7 @@ business_value: high
 effort: xs
 created: 2026-08-12
 updated: 2026-08-13
-shipped_in: unreleased
+shipped_in: 0.2.3
 deliverables:
   - tools/deck/quickview.py
   - shell/components.css
@@ -173,3 +173,4 @@ carrying a fidelity claim must not do.
 | :--- | :--- | :--- |
 | 2026-08-13 | → done | The reported construct plus two more the audit found in the same class, all three one branch each: thematic breaks (119 of 355 corpus documents), ordered lists rendered as `<ul>` (161), and YAML front matter rendered as body text (130). Two that are not one branch went to T-121. **The audit was the deliverable, not the `<hr>`** — it also settled the `---`-versus-setext ambiguity by counting it: one setext underline in 355 documents, and the 131 that looked like more were all front-matter closers. Verifying *renders themed* found T-122, without which the criterion could not be met. |
 | 2026-08-12 | → proposed | Created. Reported by the first adopting project against published `0.2.2`: 7 literal `<p>---</p>` and 0 `<hr>` in its deck. Scoped past the one construct to the self-test's coverage, which is what let it through. |
+| 2026-08-13 | (no change) | **Shipped in `0.2.3`.** `shipped_in` read `unreleased` until this sweep: the closing commit `788742a` is contained in `v0.2.3`, which is what the field holds (TASK-WORKFLOW.md §3). Found by reconciling the board after the `0.2.3` release rather than by a check - nothing validates the field against the tags. |

@@ -4,7 +4,7 @@ title: Rename the release phases to PH1-PH3 and record which version shipped eac
 type: admin
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.2.2
 parent: null
 blocked_by: []
 related: [T-078, T-092, T-098]
@@ -153,3 +153,4 @@ list was right and incomplete**, which is the failure mode of every exclusion li
 | :--- | :--- | :--- |
 | 2026-08-12 | → done | **282 phase mentions across 60 files, and the guard held on every one.** The substitution refuses to write a file whose `v?N.N.N` tokens changed, so *no version was touched* is enforced rather than claimed; the 80 phase mentions in task prose were read first, which is what licensed using a tool at all. **The one thing it got wrong was mine, not the tool's**: three sentences written this session to quote the old names were rewritten into nonsense by the sweep that followed them, and the two documents I had excluded by hand were the two that never needed excluding. The board now answers the question that started this — `Work Package` beside `Shipped In`, so `PH3` work shipping in `0.2.1` reads as the rule working instead of as a mistake. |
 | 2026-08-12 | → in_progress | Raised and started on the owner's word, after they asked why closed tasks show a phase that looks like a version they had already shipped. **L-69 declined this rename and was right to at the time**: it priced the rewrite and bought protection for the release sequence, which is where the failure had actually happened. What it could not price was the reading cost, and that is what came due. Both naming questions went to the owner rather than being settled here — the label is what everyone reads, and `WP1`–`WP3` already occupy the shape. |
+| 2026-08-13 | (no change) | **Shipped in `0.2.2`.** `shipped_in` read `unreleased` until this sweep: the closing commit `e636698` is contained in `v0.2.2`, which is what the field holds (TASK-WORKFLOW.md §3). Found by reconciling the board after the `0.2.3` release rather than by a check - nothing validates the field against the tags. |

@@ -13,7 +13,7 @@ business_value: high
 effort: xs
 created: 2026-08-13
 updated: 2026-08-13
-shipped_in: unreleased
+shipped_in: 0.2.3
 deliverables: [shell/deck.js]
 ---
 
@@ -122,3 +122,4 @@ against.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-13 | → done | Found while verifying T-107's *renders themed* criterion, which could not be met: the rule that themes an `<hr>` is one of seventeen written against a class no deck carried. Three lines in `openQuick()`. `PH1` — it is a defect in the published plugin, and it is the reason a quoted source has always rendered at slide scale. **It changes T-110's premise**, which is the part worth reading twice: that task was scoped against values chosen badly, and half of what it describes is no values at all. |
+| 2026-08-13 | (no change) | **Shipped in `0.2.3`.** `shipped_in` read `unreleased` until this sweep: the closing commit `788742a` is contained in `v0.2.3`, which is what the field holds (TASK-WORKFLOW.md §3). Found by reconciling the board after the `0.2.3` release rather than by a check - nothing validates the field against the tags. |

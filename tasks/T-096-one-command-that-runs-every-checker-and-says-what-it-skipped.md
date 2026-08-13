@@ -13,7 +13,7 @@ business_value: high
 effort: m
 created: 2026-08-11
 updated: 2026-08-13
-shipped_in: unreleased
+shipped_in: 0.2.3
 deliverables: [tools/check_all.py]
 ---
 
@@ -159,3 +159,4 @@ Neither changes a verdict the sixteen produced; both add one the sixteen never a
 | 2026-08-13 | → done | `tools/check_all.py`, and `PUBLISHING.md` §8 step 1 is now that command. Every criterion met. **The run that mattered was the first one**: it found three variant suites nobody had wired — `deliverable_variants.py`, `contract_variants.py`, `content_variants.py`, siblings of the `static_variants.py` that was in the list — all three green, and `PRINT-1` reached by no command at all, with the checker behind it red on a correct deck (**T-120**, raised `PH1`). That is the argument for the whole task, made by the thing itself on its first use rather than by anyone's prediction. |
 | 2026-08-13 | proposed → planned | Both open questions settled as recommended: its own file, and it replaces step 1 outright. The design question the specification did not ask turned out to be the load-bearing one — what stops a manifest being the list it replaces — and the answer is `figures.py`'s: check it against the filesystem in **both** directions, so an unwired tool and a deleted one both go red (**L-08**). |
 | 2026-08-11 | → proposed | Raised from the closed-record sweep after `0.2.1`, which was cut by running the sixteen commands by hand. The specification is [`PUBLISHING.md`](../docs/PUBLISHING.md) §8's own excusal, written 2026-08-10 and unclaimed since; this task is that paragraph with a number. `high` because the list has already missed three red checks once, and `m` rather than `s` because discovering the decks and their unguessable arguments is most of the work. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule. |
+| 2026-08-13 | (no change) | **Shipped in `0.2.3`.** `shipped_in` read `unreleased` until this sweep: the closing commit `4d60870` is contained in `v0.2.3`, which is what the field holds (TASK-WORKFLOW.md §3). Found by reconciling the board after the `0.2.3` release rather than by a check - nothing validates the field against the tags. |

@@ -13,7 +13,7 @@ business_value: high
 effort: xs
 created: 2026-08-12
 updated: 2026-08-13
-shipped_in: unreleased
+shipped_in: 0.2.3
 deliverables:
   - shell/components.css
   - docs/THEME-CONTRACT.md
@@ -159,3 +159,4 @@ restated for that.
 | :--- | :--- | :--- |
 | 2026-08-13 | → done | `--qv-measure: 80rem`, chosen by sweeping the sheet's width in real Chrome and counting wrapped table cells: 52 of 127 at the old prose measure, 0 at 80rem, and nothing gained above it. The reading view's column is unmoved at 736 px, measured rather than assumed. One criterion was restated — no token can stop wrapping at a 1280 viewport, because the viewport binds before the token does, and the criterion had assumed otherwise. |
 | 2026-08-12 | → proposed | Created. Reported by the first adopting project against published `0.2.2`, found in its own exam deck. Located to one declaration: `.qv-sheet` reuses `--doc-measure`, the prose measure, for a surface that holds tables. |
+| 2026-08-13 | (no change) | **Shipped in `0.2.3`.** `shipped_in` read `unreleased` until this sweep: the closing commit `788742a` is contained in `v0.2.3`, which is what the field holds (TASK-WORKFLOW.md §3). Found by reconciling the board after the `0.2.3` release rather than by a check - nothing validates the field against the tags. |
