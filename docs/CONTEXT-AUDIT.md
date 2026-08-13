@@ -236,7 +236,7 @@ Gain per unit of effort, risk as a veto. **`any`-marked findings are stated in f
 | ~~1~~ | **CE-02** | B / F4 | Expose the tracker's `list` and `context` so the board is not read whole — **done, and the band held while the multiple was understated** | `L` | `xs` | none | R8 §8 |
 | ~~2~~ | **CE-03** | C / F5 | A quiet mode for the deck gate's green run — **done; 345 bytes against 17,581, and the default proved unchanged** | `L` | `xs` | stated | R8 §8 |
 | ~~3~~ | **CE-07** | A / F5 | Enable skills per project, not globally — **done, and the band was wrong** | ~~`L`~~ **`S`** | `xs` | stated | R8 §8 |
-| 4 | **CE-13** | B / F4 | Write down that a deck is never read whole | *bimodal* | `xs` | none | §6.1 |
+| ~~4~~ | **CE-13** | B / F4 | Write down that a deck is never read whole — **done, inside rule 6 rather than as a new rule; the numbers are cited about 130 times** | *bimodal* | `xs` | none | §6.1 |
 | 5 | **CE-01** | A / F1 | Split the release chronology out of `CLAUDE.md` | `L` | `s` | stated | R8 §8 |
 | 6 | **CE-11** | A / F1 | Adopt the tier model and a relation-bound tier 1 | *enabler* | `s` | none | §6.1 |
 | 7 | **CE-05** | B / F1 | Move `BRIEF.md`'s *Release phases* to its own document | `XL` | `m` | stated | R8 §8 |

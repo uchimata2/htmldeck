@@ -110,7 +110,11 @@ direction, not quietly worked around.
    per-topic palette. Every value that could differ between themes is a token. Variety comes later,
    from a tool that generates new templates — design for it now, do not build it yet.
 5. **Printing is optional.** A mode the user can force on, never a constraint on the design.
-6. **Look at the rendered deck.** A deck that validates is not a deck that reads well.
+6. **Look at the rendered deck, and never read one whole.** A deck that validates is not a deck
+   that reads well — so *look* means render it and open it, which nothing here replaces. It does
+   **not** mean reading the file: the three shipped decks are 810,746 bytes, and a question about
+   what is inside one is answered by a tool in `tools/deck/` or by a targeted search, never by
+   opening the HTML.
 7. **Critique is a first-class mode**, not a footnote. It is what turns a first draft into
    something worth presenting, and it is the part users cannot do for their own work.
 
