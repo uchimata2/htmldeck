@@ -2187,6 +2187,87 @@ from it. Nor is a task record: the backlog is published with everything else.
 
 ---
 
+### L-82 — A gain band is a claim about *reachable* saving, not about the size of the surface
+
+Caught 2026-08-13 (**T-130**, **T-135**). `CE-07` was banded `L` because the skill-description block
+is ~7,300 estimated tokens and most of it is irrelevant to this repository. Both halves were true. The
+band was still wrong by four times, because **what could actually be changed was 11% of it** — and
+nothing in the estimate had asked that question.
+
+**Size and addressability are different measurements, and only one of them is a saving.** An estimate
+that reads the surface and skips the mechanism produces a number that survives review, gets ranked,
+and prices work nobody can do. Here it ranked third of thirteen and returned ~800 tokens for two
+restarts of the owner's environment.
+
+**How to apply.**
+
+1. **Before banding, name the mechanism** that would collect the saving, and say whether it is known
+   to work. *No mechanism identified* is a legitimate and useful state — it belongs in the band's
+   justification, not out of it.
+2. **Band the addressable share.** Where the share is unknown, the honest band is the low one with the
+   uncertainty stated, because an over-band buys work and an under-band only delays it.
+3. **Correct the band when the measurement lands**, in the document that published it. A band left at
+   its original value after being measured is a false price, and the ranking is what someone buys work
+   from.
+
+---
+
+### L-83 — Two failed experiments in someone else's environment is the signal to stop, not to try a third
+
+Caught 2026-08-13 (**T-135**). Two settings changes were made, each plausible, each requiring the
+owner to restart before it could be measured. Both were inert. The third attempt was not made, and
+that was the first correct decision in the sequence.
+
+**The cost of an experiment is not the edit, it is the cycle.** A change only this session can write
+but only the owner can test turns every guess into an interruption of their work. Two of those is
+already an imposition; the third is a habit.
+
+**Both wrong guesses came from reading an authority loosely.** The first inferred a scope rule for one
+setting from a sentence in a *different* setting's description — the neighbour was describing itself.
+The second assumed a documented key applies at whatever scope it is written in. **A schema says what a
+setting means and is often silent about which sources honour it**, and silence is not permission.
+
+**How to apply.**
+
+1. **State the hypothesis and the expected number before asking for the measurement.** A prediction
+   that misses by four times is a finding; the same attempt with no prediction is just a retry.
+2. **After the second failure, write down the boundary instead of the next guess.** *These respond,
+   those do not* is durable and stops the next session repeating the sequence — it outlived the tokens
+   here.
+3. **Quote the field itself.** If the rule you are relying on is written under a different key, you do
+   not have the rule.
+4. **Leave no dead configuration behind.** Entries that demonstrably do nothing read as working policy;
+   move the list into the task record and reduce the file to what is proven.
+
+---
+
+### L-84 — A partition that sums is a check on the sorting, never on the gathering
+
+Caught 2026-08-13 (**T-130**, **T-136**), by a reader asking one question. The audit's technique
+catalogue was screened into *adopted / rejected / deferred*, the three summed to the catalogue, and
+the arithmetic was stated as evidence of rigour. It was — of the screening. **The same sum is
+achieved by a catalogue of nineteen entries and by one of two**, so it said nothing about whether the
+research had found what was out there. Two techniques were missing, including a named tool that
+publishes its own measurements, and neither had been excluded on principle — nothing in the method
+required looking.
+
+**Every completeness device in this repository has this shape and most of them earn it.** `check.py`
+partitions rules, `check_all.py` partitions checkers, `figures.py` partitions fences — and each is a
+statement about the items *it was given*. The failure is not the partition; it is reading it as
+coverage of the input.
+
+**How to apply.**
+
+1. **Ask what the denominator is.** A partition is sound over its input and silent about it. Write the
+   input's provenance next to the sum.
+2. **A gathering step owes a record of what it searched**, because a thin gather and a thorough one
+   produce identically valid partitions. Queries run, sources read, and — for any survey of a tool
+   space — a statement that named tools were searched for **by name**.
+3. **Say plainly that the guard is weaker.** A search record can be read and judged; nothing proves a
+   survey complete. Claiming otherwise re-creates the problem one level up.
+
+---
+
 ## Writing
 
 ### L-12 — What is read every time must be short
