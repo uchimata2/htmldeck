@@ -19,7 +19,7 @@ reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
 2026-08-09 as `docs/PUBLISHING.md`, and **PH1 shipped the same day as `0.1.0`**: the repository is
-public at `github.com/uchimata2/htmldeck`, released and **now at `0.2.2`** after six PH1 patches,
+public at `github.com/uchimata2/htmldeck`, released and **now at `0.2.3`** after seven PH1 patches,
 with `master` as the published branch. **PH2 shipped 2026-08-11 as `0.2.0`** carrying
 [T-086](tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
 [T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
@@ -40,8 +40,15 @@ what the paragraph above is about. The rule the rename makes visible: **`work_pa
 `shipped_in` is the version**, and a task can hold `PH3` and `0.2.1` at once without contradiction.
 Never write a phase with a `v`. **T-099.**
 
-**PH3 is the main line now, but PH1 has reopened eight times**: a defect in the published plugin is
-a `PH1` **phase** task, not a later improvement. **`0.2.2` shipped four of them 2026-08-12** —
+**PH3 is the main line now, but PH1 has reopened nine times**: a defect in the published plugin is
+a `PH1` **phase** task, not a later improvement. **`0.2.3` shipped three of them 2026-08-13** —
+[T-116](tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md),
+[T-108](tasks/T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md)
+and [T-120](tasks/T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md).
+**Two of the three were found by looking at a rendered deck rather than by a command, and both were
+in this repository's own reference deck as well as in the adopter's** — the printed contents page
+collided at 13 entries in both, and the colophon drew a mark that referenced nothing in both, with
+every gate green the whole time. T-120 is the exception and came from `check_all.py`'s first run. **`0.2.2` shipped four 2026-08-12** —
 [T-101](tasks/T-101-theme-py-self-test-fails-for-every-plugin-install.md),
 [T-102](tasks/T-102-data-stage-is-an-index-and-the-contract-does-not-say-so.md),
 [T-103](tasks/T-103-build-md-drops-ds-105s-link-clause-for-a-single-source-slide.md) and

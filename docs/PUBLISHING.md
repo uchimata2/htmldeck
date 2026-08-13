@@ -302,5 +302,14 @@ baselining unnecessary.
 | `0.2.1` | The capability preflight and its degraded state (DS-009, T-019) | `check.py` — `DS-009` ×3, `DS-013`, `DS-229`; `shell.py check` — `NOT A SHELL`, no `<script id="preflight">`; `theme.py check` — `DS-013`, `--scrim` undeclared | `python tools/deck/shell.py preflight <deck>` writes the block and the anchor; declare `--scrim` in the theme region |
 | `0.2.2` | `data-stage` decided as an index (T-102); `.fig` role classes usable (T-105); the one-source provenance mark (T-103); DS-232, cross-slide SVG references (T-104) | `component.py` on a deck whose `data-stage` carries a stage **name**; `check.py` — `DS-232` on a deck defining a `<marker>` in one slide and using it in another. **Nothing that passed 0.2.1 newly fails for the other two**: T-105 stops a gate failing a legal deck, and T-103 changes what `build.md` asks for on new work | `data-stage="2"` — the zero-based index into the deck's `STAGES`; move each `<marker>` into the slide that uses it |
 
+| `0.2.3` | Nothing new is *required* of a deck's content. What changed is the **shared shell** — the component block (T-116) and the deck script (T-108) — plus a new `data-stage` value, `back`, which is additive | `shell.py check` on **every deck built before this release**: `COMPONENTS differs from shell/components.css` and `SCRIPT differs from shell/deck.js`. Also `STAGE TABLE` on a deck whose `STAGES` and `STAGE_ICON` differ in length, which is a real defect the gate could not see before. **Nothing that passed `0.2.2` newly fails for `back`**: it adds a legal value and takes none away | For `STAGE TABLE`, give every stage an icon, or move back matter to `data-stage="back"` and delete the stage invented for it. **For the two region failures there is no command yet** — rebuild the deck, or replace the two regions by hand; [T-124](../tasks/T-124-an-adopter-cannot-refresh-a-decks-shell-after-an-upgrade.md) exists to make this one command |
+
+**The `0.2.3` row is the third in a row whose smallest edit is "rebuild it", and that is the finding
+rather than the footnote.** A byte-for-byte shell comparison is what makes the shared half
+trustworthy (T-085), and its other edge is that every release touching `shell/` fails every deck in
+the wild through no fault of the deck. Measured on this repository's own deck at `fa3c439`, run
+against the `0.2.3` tooling: three problems, of which one was a genuine defect and two were the deck
+being one release behind. That is what T-124 is for.
+
 **A release with nothing to say here says so** — the row is the evidence the question was asked, and
 an absent row is indistinguishable from a forgotten one.
