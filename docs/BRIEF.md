@@ -636,7 +636,11 @@ new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 | ~~[T-127](../tasks/T-127-figures-py-refuses-to-report-a-drifted-figure-because-its-fixture-needs-an-undrifted-page.md) — figures.py refuses to report a drifted figure~~ **done 2026-08-13** | **L-78's second instance, found the same afternoon.** `figures.py` seeds fixture 9 against the *correct* value of a figure in `examples/README.md`; when that page has drifted the string is not there, nothing is seeded, and the tool exits saying the tool is wrong — with the drift it exists to report sitting in the failure message. `xs`, and it announces itself loudly, so it costs a moment rather than a session. |
 | ~~[T-129](../tasks/T-129-the-reference-decks-figures-in-examples-readme-are-unwatched-and-two-are-wrong.md) — the reference deck's figures were unwatched and two were wrong~~ **done 2026-08-13** | **A published page understated a shipped deck by 12 KB, and no gate could see it.** `examples/README.md` states 250 KB / 255 787 bytes for a deck that is 262 KB / 268 563; the manifest prints the right answer two lines below the wrong one and the run ends `0 stale figure(s)`, because that sentence is bound to nothing while sort-window's is bound. **T-088's defect class on the other deck** — that task fixed the instance it found rather than the class. Found by T-127's rebuilt fixture refusing on a claim the page does not bind. `s`, and it went **before T-128**, which would otherwise have added a third deck to the same page and the same hole. **Widening the anchor to the section — the recommendation on the task — binds nothing**, because that section links the deck nowhere; what worked was widening a claim scope to the **table row**, which the recommendation did not consider, plus the link the sentence lacked. The widening then exposed a dict keyed by the written figure, merging two rows' verdicts into one, with both reading `compared`. |
 | [T-128](../tasks/T-128-publish-the-adopter-deck-as-a-worked-example.md) — publish the adopter deck as a third worked example | **The only deck here nobody wrote to pass these gates.** Both existing examples were authored inside this repository against its own rules; this one was built elsewhere by someone reading the published skill, which makes it the only honest test of the ruleset — and it is 13 slides, where the contents page first collided. It also exercises the upgrade path end to end, since the copy is two releases behind. `l` because the sanitizing is editorial work across a 13-slide deck and its documents rather than a substitution. It carries **the one scoped exception** to *never copy deck content in*, ruled 2026-08-13 and recorded in `../CLAUDE.md`. |
-| [T-130](../tasks/T-130-audit-the-context-economy-of-an-agent-driven-repository.md) — audit the context economy and rank the savings | **The only task whose subject is what every other task costs.** A session spends a large and growing share of its context before any work starts, across four surfaces nobody has inventoried: what loads unasked, what one unit of work must read, what the gates print back, and what a closure writes. `l`, an umbrella, and it implements nothing — it researches how this is done elsewhere, screens each technique against this project's constraints, estimates each saving as a band rather than measuring it, and ranks. **Two documents on purpose**: a portable playbook plus the generic findings, which the owner lifts into other repositories, and this repository's own audit against it. The written record is in scope and its completeness is not — layering and load-on-demand, never a fact losing its only home. |
+| ~~[T-130](../tasks/T-130-audit-the-context-economy-of-an-agent-driven-repository.md) — audit the context economy and rank the savings~~ **done 2026-08-13** | **41% of a 200k window is spent before the work starts** — the mandatory read path for one task is 328,185 bytes, on top of a load path of 27,633 before the skill-description block and 48,574 with it. Thirteen findings, eight of them portable, and **the largest saving is not a document**: the board is read whole at 33,676 bytes because the tracker's own query commands do not resolve in an agent shell, where `taskmd list --open` answers the same question in 1,901. The three cheapest fixes are all `xs` and none deletes anything. **One intended upstream proposal came back reversed** — taskmd had already settled the tier model, the membership rule and the budget-as-a-relation, with both alternatives rejected in writing, so the finding became *adopt what they settled*. `skills/htmldeck/` produced **no finding** and that is reported as a result. Seven candidates are ranked and **none raised**; the cut-off is the owner's. Below, and unchanged: why it went to the top of the order. | A session spends a large and growing share of its context before any work starts, across four surfaces nobody has inventoried: what loads unasked, what one unit of work must read, what the gates print back, and what a closure writes. `l`, an umbrella, and it implements nothing — it researches how this is done elsewhere, screens each technique against this project's constraints, estimates each saving as a band rather than measuring it, and ranks. **Two documents on purpose**: a portable playbook plus the generic findings, which the owner lifts into other repositories, and this repository's own audit against it. The written record is in scope and its completeness is not — layering and load-on-demand, never a fact losing its only home. |
+| [T-131](../tasks/T-131-expose-the-trackers-query-commands-so-the-board-is-not-read-whole.md) — expose the tracker's query commands so the board is not read whole | **T-130's `CE-02`, and the highest measured saving per unit of effort in the whole audit.** The board is read whole at 33,676 bytes because the bare `taskmd` command does not resolve in an agent shell; `list --open` answers the same question in 1,901 and `context` answers one task in 790. `xs`, no risk, and the hard part — locating the installed skill across version bumps — is already solved and shipping inside `tools/tasks/lint.py`. Here rather than PH1 because it is an improvement to this repository's own workflow, not a defect in the published plugin. |
+| [T-132](../tasks/T-132-give-the-deck-gate-a-quiet-mode-for-its-green-run.md) — give the deck gate a quiet mode for its green run | **T-130's `CE-03`: one gate on one deck prints more on a passing run than the entire release gate prints over the whole repository** — 17,391 bytes and 169 lines against 8,233. The default does not change, because a person reading the per-rule listing is why it exists; `check_all.py` already demonstrates quiet-by-default one altitude up. `xs`, and the risk the audit names is a criterion rather than a note: the summary line carries the count of rules evaluated, so a quiet green run cannot hide a rule that stopped being checked. |
+| [T-133](../tasks/T-133-write-down-that-a-deck-is-never-read-whole.md) — write down that a deck is never read whole | **T-130's `CE-13`, and the one whose gain is bimodal.** The example decks are 810,746 bytes; the rule saves nothing on almost every session and saves an entire session on the one that opens a deck to ask what a tool already answers. Nothing, nothing, nothing, catastrophe is what a written rule is for and what a habit is not. `xs`, and it adds a line to the file two sibling tasks exist to shorten — a real tension, named in its scope. |
+| [T-134](../tasks/T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md) — state the tier model and bound tier 1 as a relation | **T-130's `CE-11`, and the direction of travel is upstream to here.** The audit went looking for something to send taskmd about context budgeting and found they had settled it first — membership as a property of the tree, three tiers, a budget on tier 1 only, the bound as a relation so no number and its justification can drift, and both alternatives rejected in writing. Tier 1 measures 338 lines across three files. `s`, an **enabler** that saves nothing itself: it decides what `CE-01` and `CE-04` may cut, so it lands before them rather than after, and a budget that also chooses its own cut is a cut chosen to fit a number. |
 | ~~[T-123](../tasks/T-123-nothing-can-see-a-print-only-layout-fault.md) — nothing can see a print-only layout fault~~ **done 2026-08-13** | The fault T-116 fixed had reached **three printed decks with every gate green**, because the only tool aimed at that page measures a screen simulation of print (**L-76**). The owner narrowed the 2026-08-08 ruling twice: gate the printed geometry, and gate **any deck the tool is pointed at** — which made the dependency question unavoidable, since an adopter has to be able to run it. `l` on the instrument, and the instrument turned out to be ~330 lines of standard library: the tens-of-thousands coordinates that had defeated two earlier attempts were a missing graphics-state stack, not a property of Chrome's writer. **`printgeom.py` reads card rectangles out of the printed PDF; `contents_bound.py` keeps the bands and loses the claim about paper.** DS-222 to DS-225 stay with the person who prints — this narrows the ruling only where the property is arithmetic. |
 
 *Until 2026-08-13 this read "the largest thing on the board is T-070 and the least certain to be
@@ -653,33 +657,44 @@ followed.
 | ---: | :--- | :--- |
 | — | ~~T-129~~ **done 2026-08-13** | a wrong figure on a published page, and T-128 adds a third deck to it |
 | — | ~~T-095~~ **done 2026-08-13** | `s`, and this session put a producer outside the hand-kept suite it names |
-| 1 | T-130 | **the owner put it here 2026-08-13.** Every task after it is paid for at the current rate until it lands |
-| 2 | T-128 | prepared, ruled and surveyed |
-| 3 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
-| 4 | T-114 | the ruler is the one thing still known to bite past 13 slides |
-| 5 | T-109 | the hub of the source cluster; 6–8 are rework if it lands after them |
-| 6–8 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
-| 9 | T-115 | needs 4 and 5 to have settled what the shell offers |
-| 10 | T-117 | independent |
-| 11 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
-| 12 | T-054 | after 3, which may change which clauses are worth recording |
-| 13 | T-113 | research, and it decides ground 14–17 build on |
-| 14–15 | T-112, T-111 | the motion cluster, in that order |
-| 16 | T-041 | named in *what PH1 shipped without* |
-| 17 | T-057 | `xl`, and the least certain to be worth it |
+| — | ~~T-130~~ **done 2026-08-13** | it ranked thirteen savings and raised nothing; the top three are `xs` |
+| 1–3 | T-131, T-132, T-133 | T-130's three `xs` savings, in its ranked order — every task below is paid at the un-inventoried rate until they land |
+| 4 | T-134 | the enabler; it decides what a later cut to `../CLAUDE.md` is allowed to remove |
+| 5 | T-128 | prepared, ruled and surveyed |
+| 6 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 7 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 8 | T-109 | the hub of the source cluster; 9–11 are rework if it lands after them |
+| 9–11 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 12 | T-115 | needs 7 and 8 to have settled what the shell offers |
+| 13 | T-117 | independent |
+| 14 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
+| 15 | T-054 | after 6, which may change which clauses are worth recording |
+| 16 | T-113 | research, and it decides ground 17–20 build on |
+| 17–18 | T-112, T-111 | the motion cluster, in that order |
+| 19 | T-041 | named in *what PH1 shipped without* |
+| 20 | T-057 | `xl`, and the least certain to be worth it |
 
 **Two placements were argued and kept.** T-095 sits above a `high` task because it is `s` and guards
 what follows; T-119 delays T-114 by a real amount and is still first of the two, because a rule
 deleted after the work is built to it is the expensive order.
 
-**The first two rows closed on 2026-08-13, and the live rows were renumbered rather than left with
-holes.** A closed row keeps its place and loses its number; the order is not re-derived by either.
+**Three rows closed on 2026-08-13, and the live rows were renumbered rather than left with holes.** A
+closed row keeps its place and loses its number; the order is not re-derived by either. The notes
+above cite row numbers, so they were renumbered with the rows — that pass is owed every time.
 
 **T-130 went in at the top the same day, on the owner's ruling**, ahead of a task already prepared
 and surveyed. The argument is that it is the only row whose subject is *what every other row costs*:
 sixteen tasks executed before it are sixteen paid at a rate nobody has inventoried. It is an
 umbrella and implements nothing — its ranked findings become child tasks at the owner's review,
-which is where the saving is actually decided.
+which is where the saving is actually decided. *It landed the same day, and the review followed
+within the hour: four of seven candidates accepted, which are rows 1–4 above. The two documents are
+[`research/R8-context-economy-for-coding-agents.md`](research/R8-context-economy-for-coding-agents.md)
+and [`CONTEXT-AUDIT.md`](CONTEXT-AUDIT.md).*
+
+**T-131 to T-134 went to the top by the same argument that put T-130 there**, and this is the one
+placement not separately ruled: the owner accepted the four, and the audit's case is that three of
+them are `xs` and every row below is paid at the rate nobody had inventoried. Moving them down is a
+one-word change; leaving them here spends about a session to stop paying.
 
 **What PH1 shipped without, stated rather than discovered.** No 3D. No frame-rate figure on any
 machine. Seven of R6's nine glitch-free conditions unimplemented, and a console error that does not

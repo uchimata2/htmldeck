@@ -2,8 +2,8 @@
 id: T-130
 title: Audit the context economy of an agent-driven repository, and rank the savings
 type: audit
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-096, T-128]
@@ -270,31 +270,122 @@ them and not lose them**, while keeping them out of the ranking.
 
 ## 2. Plan
 
+**The representative unit of work, chosen before the audit starts** (§1 method step 2 requires this):
+**one task carried from `proposed` to `done`** — the only unit this project has. It is instantiated on
+a task of median file size on this board, named in the report, and the mandatory part of its read path
+is the same for every task: the two instruction files, the specification, the lessons, the workflow
+document, the board, and the task file itself.
+
+**Inventory is measured by a script, not by reading.** Sizes come from the filesystem, and gate output
+is captured to a file whose length is measured without printing it. Reading a file to find out how big
+it is would spend the very budget under audit — and the script's own existence is an F4 finding about
+this method.
+
+**The token figures are estimates from bytes and are labelled as such.** No tokeniser ships here and
+adding one would be a dependency (**L-07**); the conversion is stated once in the report, applied
+uniformly, and never used to separate two findings that a byte count does not already separate.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Measure surfaces **A**, **B** and **D** from the filesystem with one throwaway script — every load-path item at every scope, the read path of the representative unit, and the write volume one closure produces | inventory tables, bytes and estimated tokens per item (method steps 1, 2, 4) |
+| 2 | Measure surface **C** by running each gate a unit of work runs and capturing its *green* output to a file, measuring the file | output size and wall time per gate, including `check_all.py` and `tools/tasks/lint.py` (method step 3) |
+| 3 | Research externally — how practitioners cut context and token use with coding agents | a catalogue of techniques, each with its cost and its assumption (method step 5) |
+| 4 | Read the local precedent the owner supplies in chat — **patterns, structures and measurements only** | which techniques survived contact with this owner's way of working, credited without naming a location (method step 6) |
+| 5 | Screen every technique to *adopted / rejected / deferred*, band the gain, band the effort, rank by gain per effort with risk as a veto | the `CE-nn` findings table, ten fields each (method steps 7–9) |
+| 6 | Split, and write part 1 — `R8-context-economy-for-coding-agents.md` under `docs/research/` — then apply the extraction test to it | the portable half: research, the numbered method, the rubric, every `any` finding (method step 10) |
+| 7 | Write part 2 — `CONTEXT-AUDIT.md` under `docs/` — with the two subjects separate, the upstream section, and the byproduct register | this repository's ranked findings, and the observations for the handoff skill and the taskmd plugin |
+| 8 | Review against the fourteen acceptance criteria; name the top of the list as candidate child tasks and **raise none** | §4 filled, verdict per criterion, the owner's review left to the owner (method step 11) |
 
 ## 3. Implement
 
+**What the inventory found, in one line each.** Tier 1 is **27,633 bytes / ~6,908 estimated tokens**
+before the skill-description block, and **48,574 / ~12,143** with it. The mandatory read path for one
+task is **328,185 bytes / ~82,046 estimated tokens — 41% of a 200k window before the work starts.**
+One gate on one deck prints **17,391 bytes on a green run**, more than the whole release gate prints
+over the whole repository. Thirteen findings, `CE-01` to `CE-13`, eight of them portable.
+
+**The largest single saving is not a document.** `tasks/README.md` is read whole at 33,676 bytes
+because the tracker's own query commands do not resolve in an agent shell; `taskmd list --open`
+answers the same question in **1,901**, and `taskmd context T-130` answers one task in **790**. Both
+were run through the locator `tools/tasks/lint.py` already ships, so the fix is an entry point in a
+file that has already solved the hard part.
+
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The token conversion is bytes ÷ 4, stated once and labelled everywhere.** — A tokeniser is a
+  dependency this project does not take (**L-07**), and the estimate is never used to separate two
+  findings a byte count does not already separate. — 2026-08-13
+- **One numbering space across both documents, and each finding is stated in full exactly once** —
+  in part 1 if `any`, in part 2 if `this project`, with part 2's ranked table listing every id
+  wherever it is stated. An audit about redundancy that prints its findings twice has answered its
+  own question. — 2026-08-13
+- **The general F3 sweep is recorded as rejected, not quietly dropped.** — Tool docstrings are 30% of
+  `tools/**/*.py` and every sample checked carried a reason a future reader needs, so the sweep fails
+  §1's own test. What survives is two outliers at 85% and 58%, and even there the change is
+  relocation. — 2026-08-13
+- **Nothing was proposed upstream before their backlogs were read, and one intended proposal died
+  there.** — taskmd's own `T-028` had already established the tier model, the membership rule and
+  the budget-as-a-relation, and had rejected both alternatives an outsider would arrive with. The
+  finding reversed direction: it is now `CE-11`, *this project adopts what they settled*. — 2026-08-13
+- **`skills/htmldeck/` produced no finding, and that is reported as a result.** — Discovery costs 472
+  bytes, activation 5,206, a build one 12 KB reference. It is the best-tiered artifact here and the
+  newest, which is the argument for the rest of the record following it. — 2026-08-13
+- **Two ranked findings are not repository work and say so.** — `CE-07` (enable skills per project)
+  and `CE-10` (prune the memory index) are the owner's machine and the owner's memory. Ranking them
+  and then labelling them keeps the saving visible without creating a task nobody can do here.
+  — 2026-08-13
 
 **Outputs produced**
-- <none yet>
+- [`docs/research/R8-context-economy-for-coding-agents.md`](../docs/research/R8-context-economy-for-coding-agents.md)
+  — part 1: the research, the eleven-step method, the F1–F5 checklist, the rubric, the 19-technique
+  catalogue, the six local-precedent patterns, and `CE-01` to `CE-08`
+- [`docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) — part 2: both subjects measured separately,
+  the screening partition, the family walk, the ranked thirteen, the upstream section, and the
+  byproduct register
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `R8` carries the external research, the method as numbered steps, the ranking rubric, and every `any`-marked finding | met | §3 is eleven steps, §5 the rubric, §7 the 19-technique catalogue with cost and assumption per row, §8 the eight `any` findings in full, §11 the sources |
+| **The extraction test passes**: part 1 names no htmldeck file as required reading, and a reader with only that document can run steps 1–11 elsewhere | met | Part 1 names no file of this repository at all. Its figures appear as worked examples attributed to *the audited repository*, and the four shaping rules are followed — numbered imperative steps with inputs and outputs, a walkable `F1`–`F5` checklist, stable `CE-nn` ids |
+| `CONTEXT-AUDIT.md` carries this repository's findings, ranked, with the two subjects reported separately | met | §2 the workflow, §3 the plugin as an adopter loads it, §6 the ranked thirteen |
+| Every finding carries all ten fields, and every `Risk` is written rather than left blank | met | Thirteen findings, ten fields each. Four carry `none` as an explicit value; the rest name what the change could cost, including one that names a checker which will follow the content it moves |
+| Every technique is adopted, rejected with the constraint it collides with, or deferred with what would close it — and the three sum to the catalogue | met | 9 + 4 + 6 = 19, arithmetic stated in §4 so a silent fourth category is visible as a mismatch |
+| **Every family F1–F5 is walked and reported on, including any that yielded nothing** | met | All five yielded a finding, so the stronger reading applies: each row also carries its **negative** result, which is the part that would otherwise be lost — F2 found no contradicting pair, F5 found the gate split already correct |
+| Each F3 finding names what the prose would stop deciding, or is recorded as rejected | met | The general sweep is recorded as **rejected** in §5.1 with its reason. `CE-12` survives on two distributional outliers and proposes relocation |
+| The handoff and taskmd findings sit in their own section, phrased as observations, and each says whether their backlog was read | met | §7. Six open issues read for one, 138 task files and 8 open items for the other, both listed. Three observations each carry *where it might land*, naming their items rather than assigning priority |
+| The byproduct register exists, is separate from the ranking, and carries no gain band | met | §8, five entries, no bands and no `CE-nn` |
+| Steps 1–4's inventory figures are measurements and are stated as such; every gain is a band | met | §0 states the instrument and the estimator; every inventory table is measured output. **One limit is stated rather than hidden**: the split between operative prose and narrative inside a section is a reader's judgement, and `R8` §10 says so |
+| No skill, plugin or package is produced; part 1 satisfies the four shaping rules | met | Two documents. Part 1 says in its own opening that it is not a skill |
+| The local precedent is credited on each finding it produced, without naming its location | met | `CE-09` and `CE-11` name it as their source; `R8` §9 carries the six patterns and states that the repositories are deliberately unnamed |
+| No path, machine name, or personal datum from any local repository appears in either document | met | Checked on both. The precedent appears only as structures and ratios; the upstream section names two components this project already declares it uses, with issue and task numbers written as theirs per `TASK-WORKFLOW.md` §4.1 |
+| The ranked list's top entries are named as candidate child tasks, and none is raised before the owner's review | met | §9, seven candidates in ranked order, **none raised**. The cut-off is left to the owner, per §1's answered question |
+
+Fourteen met, none carried, nothing implemented — which is the point of an umbrella.
+
+**One result reverses the direction it was expected to run in.** The audit went looking for something
+to send upstream about context budgeting and found that upstream had already settled it, in more
+detail and with the alternatives rejected in writing. The finding survived as `CE-11` pointing the
+other way. Reading their backlog first is what turned a proposal into an adoption.
 
 **Child fix tasks raised**
-- none
+- **None at close. Four at the owner's review, the same day** — the criterion was *none before the
+  review*, and the review happened.
+- [T-131](T-131-expose-the-trackers-query-commands-so-the-board-is-not-read-whole.md) — `CE-02`, `xs`
+- [T-132](T-132-give-the-deck-gate-a-quiet-mode-for-its-green-run.md) — `CE-03`, `xs`
+- [T-133](T-133-write-down-that-a-deck-is-never-read-whole.md) — `CE-13`, `xs`
+- [T-134](T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md) — `CE-11`, `s`, the enabler
+- The remaining three candidates in [`docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §9 are not
+  raised, and two of the thirteen findings are not repository work at all.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **Reviewed by the owner within the hour, and four of the seven candidates raised** — T-131, T-132, T-133, T-134, which is `CE-02`, `CE-03`, `CE-13` and `CE-11`. Three are `xs`; the fourth is the enabler and carries the only open question among them, because taskmd's bound has a natural second term and this project's does not. The owner also ruled the collision `CE-05` names: **the `DUPLICATE INDEX` excusal moves in the same task as the content it excuses**, rather than being split out, so the advisory cannot fire correctly against a file no rule covers. Recorded in [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §9 beside the candidate it constrains. |
+| 2026-08-13 | → done | Fourteen criteria met, none carried, nothing implemented. **The load path is 27,633 bytes before the skill-description block and 48,574 with it; the mandatory read path for one task is 328,185 — 41% of a 200k window spent before the work starts.** Thirteen findings, eight portable. **The largest saving is not a document**: the board is read whole at 33,676 bytes because the tracker's query commands do not resolve in an agent shell, and `taskmd list --open` answers the same question in 1,901 — both measured through the locator `tools/tasks/lint.py` already ships, so the fix is `xs`. **One intended upstream proposal died in their backlog and came back reversed**: taskmd's own `T-028` had already settled the tier model, the membership rule and the budget-as-a-relation, and had rejected both alternatives an outsider arrives with — so the finding is now `CE-11`, *this project adopts what they settled*. **The F3 sweep is recorded as rejected** rather than dropped: every sample of the record's rationale prose carried a reason a future reader needs, and only two distributional outliers survive, with relocation rather than deletion as the change. `skills/htmldeck/` produced **no finding**, reported as a result — 472 bytes to discover, 5,206 to activate, and it is the newest thing in the repository, which is the argument for the rest of the record following it. Seven candidate child tasks are named in ranked order and **none is raised**, because the cut-off is the owner's. |
+| 2026-08-13 | → in_progress | Inventory by script rather than by reading, and the release gate captured to a file so its size could be measured without paying for it — 8,233 bytes in 154 seconds, which is a third of the run time five successive handoffs had been carrying for it. That figure had no durable home in any tracked file, which became `CE-08` and the register's `BP-2`. |
+| 2026-08-13 | → planned | Eight steps, following the method's eleven. Two choices are made here rather than left to execution. **The representative unit is one task from `proposed` to `done`**, because it is the only unit this project has and its mandatory read path is identical for every task — so the figure generalises instead of describing one file. **The inventory is measured by a script**, since reading files to find their size spends the budget under audit; that the script exists at all is an F4 observation about this method, and it is recorded as one. Token counts are estimated from bytes and labelled, because a tokeniser is a dependency this project does not take (**L-07**). |
+| 2026-08-13 | → specified | Nothing was added. §1 was already complete and both open questions closed, so the record passes through the status the phase earns rather than skipping it — the phase table in [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §2 is what a later reader checks the file against. |
 | 2026-08-13 | (no change) | **Both open questions answered and the scope widened three ways, all by the owner the same day.** The audit's *subject* is token efficiency and nothing else, which is a different question from its ranking axis and now says so. A **finding taxonomy** of five families was seeded — F3 is the delicate one and the specification draws its line, because this project keeps rationale on purpose and *decides something future* is the test. A **third audience** was added: the handoff skill and the taskmd plugin are the owner's, are used here, and this repository is the adopter whose real usage their own repositories cannot show — observed here, handed over, implemented there. And a **byproduct register** takes everything seen in passing that is not token efficiency, deliberately outside the ranking so an unranked observation cannot enter a list the owner is buying work from. The skill question resolved to *not here, and shaped so it is cheap later*: four structural rules that cost nothing to follow, and no further packaging effort. |
 | 2026-08-13 | → proposed | Raised by the owner, who put it at the top of the execution order ahead of T-128. The four scope questions were asked and answered before the specification was written: **context runway** is the ranking axis, the **written record is in scope** provided no fact loses its only home, the portable half is a **playbook plus findings**, and **both surfaces** are audited and reported separately. `l` and `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule. It is an umbrella: it implements nothing, and the ranked findings become child tasks at the owner's review. |
