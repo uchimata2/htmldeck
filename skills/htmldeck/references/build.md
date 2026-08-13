@@ -138,6 +138,20 @@ python ${CLAUDE_PLUGIN_ROOT}/tools/deck/render.py shots <slug>.html --out <dir>
 `.assets-cache/deck/` **under the deck's own project**, never under the plugin. Add
 `<slides>` before it — `0,4,6`, zero-based — to render a subset.
 
+**If `shell.py check` reports `COMPONENTS differs` or `SCRIPT differs` on a deck you did not edit
+there, the deck was built on an older release of this plugin.** That is not a defect in the deck and
+there is nothing to hand-patch:
+
+```
+python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py sync <slug>.html
+python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py sync <slug>.html --write
+```
+
+The first reports which regions move and confirms every per-deck region is untouched; the second
+applies it. Run the first and read it — a deck one release behind and a deck whose shell someone
+edited deliberately are the same bytes. `sync` fixes only the shared half: anything `check.py`,
+`component.py` or `spec.py` reports is the deck's own content and stays yours.
+
 Then score **S3 Encoding · S5 Craft · S6 Motion** on the batch's slides, per
 `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md`. **And look at the shots.** A deck that passes every
 check can still be a deck nobody can read; that is why the render step is in the loop and not at the

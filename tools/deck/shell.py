@@ -10,6 +10,7 @@ this tool is what puts it back.
     python tools/deck/shell.py new <out.html> --title "..." --subtitle "..."
     python tools/deck/shell.py icons <deck> [--set concept=lucide,...] [--check]
     python tools/deck/shell.py icons --sheet <out.svg>
+    python tools/deck/shell.py sync <deck> [--write]
     python tools/deck/shell.py check <deck>
     python tools/deck/shell.py parts
 
@@ -17,6 +18,13 @@ this tool is what puts it back.
 the deck and compares what is left with `shell/shell.html` byte for byte, so a batch edit that
 strayed into the shared block is a red run rather than a discovery two decks later. The stale
 fixture (**L-05**) is the same failure in a different file.
+
+**`sync` is what `check` leaves you needing.** A release that touches `shell/` makes every deck
+already built fail that comparison through no fault of its author, and for three releases running
+there was no command to name (T-124). It reports by default and writes on `--write`, which inverts
+`icons` and `preflight` deliberately: those derive a region from the deck's own content, while this
+one overwrites the deck's shell with a foreign one and cannot tell a version gap from a deliberate
+edit.
 
 Runs its own self-test first and refuses to report if it fails (**L-04**). Pure standard
 library (**L-07**).
@@ -287,6 +295,61 @@ def sheet(lib=None):
     return "\n".join(out)
 
 
+# ------------------------------------------------------------------------------- sync
+
+
+def sync(html):
+    """The deck, with the **installed** shell under its own eleven regions (T-124).
+
+    `cut` gives the deck's parts and throws its shell away; filling `shell/shell.html` with those
+    parts is the same operation in the other direction, and that is the whole upgrade. The script
+    nests, so its three per-deck declarations are cut out and put back into the shipped `deck.js`.
+
+    **Why this needs to exist.** `check` compares three regions byte for byte, which is what makes
+    the shared half trustworthy (T-085) - and the other edge of it is that any release touching
+    `shell/` makes every deck already in the world fail, through no fault of its author. Until this
+    command there was nothing to run: `new` builds an empty deck, and pointing it at a deck with
+    slides in it is not an upgrade path. Three releases in a row could not name a smallest edit.
+    """
+    _skeleton, parts = cut(html)
+    _script_skeleton, script_parts = cut(parts["SCRIPT"], SCRIPT_SLOTS)
+    parts["SCRIPT"] = fill(read(DECK_JS), script_parts)
+    parts["COMPONENTS"] = read(COMPONENTS)
+    return fill(read(SHELL_HTML), parts)
+
+
+def kept(html):
+    """Every per-deck part, flattened - the ten top-level regions that are not the component block,
+    with the script replaced by the three declarations nested inside it.
+
+    This is what a sync must not touch, and comparing it before and after is the whole guarantee."""
+    _skeleton, parts = cut(html)
+    _script_skeleton, script_parts = cut(parts["SCRIPT"], SCRIPT_SLOTS)
+    out = dict((k, v) for k, v in parts.items() if k not in ("COMPONENTS", "SCRIPT"))
+    out.update(script_parts)
+    return out
+
+
+def changes(before, after):
+    """`[(region, note)]` - what a sync moved, region by region.
+
+    An adopter is being asked to accept a rewrite of a 250 KB file they cannot read, so the command
+    that does it owes them a statement of where. Line counts plus the first difference is enough to
+    tell a shell that moved from an edit of their own being reverted, which is the distinction no
+    program here can make for them."""
+    rows = []
+    for name, old, new_ in (("SKELETON", cut(before)[0], cut(after)[0]),
+                            ("COMPONENTS", cut(before)[1]["COMPONENTS"],
+                             cut(after)[1]["COMPONENTS"]),
+                            ("SCRIPT", cut(cut(before)[1]["SCRIPT"], SCRIPT_SLOTS)[0],
+                             cut(cut(after)[1]["SCRIPT"], SCRIPT_SLOTS)[0])):
+        if old == new_:
+            continue
+        rows.append((name, "%d lines -> %d lines%s"
+                     % (old.count("\n") + 1, new_.count("\n") + 1, first_difference(old, new_))))
+    return rows
+
+
 # ------------------------------------------------------------------------------- check
 
 
@@ -384,6 +447,14 @@ def self_test():
         if not condition:
             failures.append(label)
 
+    def not_a_shell(fn):
+        """True when `fn` refuses rather than returning something plausible."""
+        try:
+            fn()
+        except NotAShell:
+            return True
+        return False
+
     # 1. The cut is lossless. Everything else rests on this.
     reference = os.path.join(ROOT, "examples", "reference-deck.html")
     if os.path.exists(reference):
@@ -423,6 +494,36 @@ def self_test():
     broken = fresh.replace('<main class="stage" id="stage" aria-label="Presentation">', "<main>", 1)
     ok("a file without the shell's structure is caught",
        any(p.startswith("NOT A SHELL") for p in check(broken)))
+
+    # 3a. `sync` (T-124), against the three regions `check` compares. Each fixture is a deck one
+    # release behind in exactly one of them, which is the shape an adopter actually meets.
+    stale_parts = {
+        "COMPONENTS": fresh.replace("\n<style>", "\n<style>\n.from-an-older-release{color:red}", 1),
+        "SCRIPT": fresh.replace("<script>", "<script>\nvoid 0;  /* an older release */", 1),
+        "SKELETON": fresh.replace('<button class="btn" id="toDoc">Read</button>',
+                                  '<button class="btn" id="toDoc">Document</button>', 1),
+    }
+    for region, stale in sorted(stale_parts.items()):
+        ok("a deck behind in %s fails check" % region, check(stale) != [])
+        synced = sync(stale)
+        ok("and sync brings it back", check(synced) == [], "; ".join(check(synced))[:70])
+        ok("and says %s is what moved" % region,
+           [r[0] for r in changes(stale, synced)] == [region],
+           "reported %r" % ([r[0] for r in changes(stale, synced)],))
+
+    # The property the command asserts on the adopter's file, asserted here on a deck that has
+    # something in every per-deck region - a fresh skeleton would pass this vacuously.
+    original = read(reference)
+    ok("sync leaves every per-deck region of the reference deck untouched",
+       kept(sync(original)) == kept(original),
+       "moved: %r" % sorted(k for k in kept(original)
+                            if kept(original)[k] != kept(sync(original)).get(k)))
+    ok("and the reference deck is already synced, so it is a no-op",
+       sync(original) == original, first_difference(sync(original), original)[:90])
+    ok("sync is idempotent", sync(sync(stale_parts["COMPONENTS"]))
+       == sync(stale_parts["COMPONENTS"]))
+    ok("a deck with no anchors is refused rather than guessed at",
+       not_a_shell(lambda: sync(broken)))
 
     # 4. The sprite. Three ways it goes wrong, each with its own verdict.
     lib = library()
@@ -613,6 +714,49 @@ def main(argv):
         print("Why each row is a row: python tools/deck/preflight.py rows")
         return 0
 
+    if cmd == "sync":
+        if not rest:
+            sys.exit("usage: shell.py sync <deck> [--write]")
+        deck = rest[0]
+        rel = paths.display_path(deck, ROOT).replace("\\", "/")
+        html = read(deck)
+        try:
+            fresh = sync(html)
+        except NotAShell as exc:
+            sys.exit("%s: %s\nRefusing to guess where the regions are." % (rel, exc))
+
+        # The guarantee, asserted on the adopter's own file rather than on a fixture that passed
+        # here once. If a single per-deck region moved, the sync is wrong and nothing is written.
+        was, now = kept(html), kept(fresh)
+        lost = sorted(k for k in was if was[k] != now.get(k))
+        if lost:
+            print("REFUSING - a sync must leave every per-deck region untouched and this one "
+                  "changed %s." % ", ".join(lost))
+            print("Nothing was written. This is a defect in shell.py, not in %s." % rel)
+            return 2
+
+        rows = changes(html, fresh)
+        if not rows:
+            print("OK - %s already carries the installed shell. Nothing to sync." % rel)
+            return 0
+        for name, note in rows:
+            print("  %-12s %s" % (name, note))
+        if "--write" not in rest:
+            print("\n%d region(s) would change; %d per-deck region(s) untouched. Nothing written."
+                  % (len(rows), len(was)))
+            print("Review the above, then run again with --write.")
+            print("""
+A deck one release behind and a deck whose shell someone edited on purpose are the same
+bytes - nothing in a deck records which release built it - so this reports before it
+writes, every time. And if this file is GENERATED by something else, regenerate it
+instead: a sync writes the shipped shell over whatever that generator added (L-77).""")
+            return 0
+        write(deck, fresh)
+        print("\n%s - %d region(s) synced, %d per-deck region(s) untouched."
+              % (rel, len(rows), len(was)))
+        print("Next: python tools/deck/shell.py check %s" % rel)
+        return 0
+
     if cmd == "check":
         if not rest:
             sys.exit("usage: shell.py check <deck>")
@@ -631,7 +775,7 @@ This checks the **half nobody rewrites**, not the deck. It cannot tell you a sli
 anything - that is tools/deck/check.py, and the five dimensions past it (L-05).""")
         return 0
 
-    sys.exit("unknown command %r - one of: new, icons, preflight, check, parts" % cmd)
+    sys.exit("unknown command %r - one of: new, icons, preflight, sync, check, parts" % cmd)
 
 
 def pairs(raw):

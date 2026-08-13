@@ -2036,8 +2036,8 @@ property, and one is enough.
 ### L-77 — A generated artifact is regenerated, never synced
 
 Caught 2026-08-13 (**T-036**). An edit to `shell/components.css` and `shell/deck.js` has to reach the
-tracked decks, and there is no command for that yet, so it was done by hand with `shell.py`'s own
-cut and fill — over three files, one of which was
+tracked decks, and there was no command for it that morning, so it was done by hand with `shell.py`'s
+own cut and fill — over three files, one of which was
 [`examples/reference-deck-seeded-defects.html`](../examples/reference-deck-seeded-defects.html). That
 file is **derived from the reference deck by `seed_defects.py`**, and it carries eleven lines of
 seeded CSS the shell does not have. Writing the shipped component block into it deleted them
@@ -2055,6 +2055,12 @@ owners is fine — a file **edited** by the one that only reads part of it is no
    removed; the damage would have been a fixture that no longer proves what it is kept to prove.
 3. **Do not read a green sync check as coverage.** `shell.py check` passing on a file it had just
    helped break is the same shape as **L-05** — the gate answered the question it owns, correctly.
+
+**The command now exists and this gets sharper, not weaker.** `shell.py sync` shipped the same day
+(**T-124**), so the four-line script is one command an adopter is told to run — which is precisely
+what will be pointed at a generated file next. `sync` cannot detect the case from inside someone
+else's repository, so it states it in the report every time, at the moment someone is about to type
+`--write`. A warning that cannot be earned by detection is earned by placement.
 
 ---
 

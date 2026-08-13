@@ -52,7 +52,6 @@ names cost.
 | [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) | Audit the ruleset for rules that cost more to satisfy than they return | `PH3` | - | `proposed` | `specify` | - | - | T-054, T-113, T-114, T-115 |
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-107, T-110 |
 | [T-123](T-123-nothing-can-see-a-print-only-layout-fault.md) | Nothing can see a print-only layout fault, and one reached two shipped decks | `PH3` | - | `proposed` | `specify` | - | - | T-034, T-036, T-084, T-116 |
-| [T-124](T-124-an-adopter-cannot-refresh-a-decks-shell-after-an-upgrade.md) | An adopter cannot refresh a deck's shell after an upgrade, so every release breaks every deck | `PH3` | - | `proposed` | `specify` | - | - | T-085, T-108, T-116 |
 | [T-125](T-125-a-split-contents-page-still-clamps-its-descriptions-to-one-line.md) | Decide whether a split contents page should take a further sheet rather than clamp every description to one line | `PH3` | - | `specified` | `plan` | - | - | T-034, T-036, T-116 |
 
 ## Closed
@@ -94,7 +93,7 @@ names cost.
 | [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md) | Reconcile DS-131 with the chrome budget it now contradicts | `WP2` | `0.1.0` | `done` | `review` | - | - | T-025, T-027, T-028, T-035, T-037, T-057 |
 | [T-034](T-034-a-contents-page-for-the-printed-deck.md) | Add a contents page to the printed deck | `WP2` | `0.1.0` | `done` | `review` | - | T-036 | T-005, T-018, T-032, T-035, T-036, T-044, T-108, T-116, T-123, T-125 |
 | [T-035](T-035-the-ruler-navigator.md) | Replace the stage ribbon with a ruler navigator, and rescope the chrome budget it breaks | `WP2` | `0.1.0` | `done` | `review` | - | - | T-016, T-027, T-028, T-033, T-034, T-044, T-102, T-108, T-114 |
-| [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `PH2` | `unreleased` | `done` | `review` | T-034 | - | T-005, T-034, T-042, T-084, T-108, T-114, T-116, T-123, T-125 |
+| [T-036](T-036-the-second-contents-page-for-long-decks.md) | Continue the contents page onto a second sheet for decks past the measured bound | `PH2` | `unreleased` | `done` | `review` | T-034 | - | T-005, T-034, T-042, T-084, T-108, T-114, T-116, T-123, T-124, T-125 |
 | [T-037](T-037-record-in-the-ruleset-which-rules-no-check-can-reach.md) | Record in the ruleset itself which rules no check can reach | `WP2` | `0.1.0` | `done` | `review` | - | T-039 | T-005, T-014, T-021, T-022, T-033, T-038, T-042, T-043, T-045, T-046, T-048, T-053, T-054 |
 | [T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) | Stop the gate reporting judge rules, and one verdict under the wrong rule ID | `WP3` | `0.1.0` | `done` | `review` | - | - | T-005, T-014, T-037, T-043, T-051, T-053, T-055 |
 | [T-039](T-039-finish-the-record-t-037-left-in-the-wrong-places.md) | Finish the record T-037 left in the wrong places | `WP2` | `0.1.0` | `done` | `review` | T-037 | - | T-005, T-014, T-021, T-022, T-042, T-046 |
@@ -165,5 +164,6 @@ names cost.
 | [T-116](T-116-the-printed-contents-page-collides-at-thirteen-entries.md) | The printed contents page collides at thirteen entries, well below its measured bound | `PH1` | `0.2.3` | `done` | `review` | - | - | T-034, T-036, T-084, T-120, T-123, T-124, T-125 |
 | [T-120](T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md) | printpages.py's own entry point defaults the slide count to a hardcoded 12, so it fails a correct deck | `PH1` | `0.2.3` | `done` | `review` | - | - | T-096, T-116 |
 | [T-122](T-122-the-quick-views-contracted-article-is-never-created-so-seventeen-rules-are-dead.md) | The quick view's contracted `.qv-doc` article is never created, so seventeen style rules are dead | `PH1` | `0.2.3` | `done` | `review` | - | - | T-070, T-107, T-110 |
+| [T-124](T-124-an-adopter-cannot-refresh-a-decks-shell-after-an-upgrade.md) | An adopter cannot refresh a deck's shell after an upgrade, so every release breaks every deck | `PH3` | `unreleased` | `done` | `review` | - | - | T-036, T-085, T-108, T-116 |
 
 <!-- taskmd:end -->
