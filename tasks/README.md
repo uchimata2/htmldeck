@@ -53,7 +53,7 @@ names cost.
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-107, T-110 |
 | [T-123](T-123-nothing-can-see-a-print-only-layout-fault.md) | Nothing can see a print-only layout fault, and one reached two shipped decks | `PH3` | - | `proposed` | `specify` | - | - | T-034, T-036, T-084, T-116 |
 | [T-124](T-124-an-adopter-cannot-refresh-a-decks-shell-after-an-upgrade.md) | An adopter cannot refresh a deck's shell after an upgrade, so every release breaks every deck | `PH3` | - | `proposed` | `specify` | - | - | T-085, T-108, T-116 |
-| [T-125](T-125-a-split-contents-page-still-clamps-its-descriptions-to-one-line.md) | Decide whether a split contents page should take a further sheet rather than clamp every description to one line | `PH3` | - | `proposed` | `specify` | - | - | T-034, T-036, T-116 |
+| [T-125](T-125-a-split-contents-page-still-clamps-its-descriptions-to-one-line.md) | Decide whether a split contents page should take a further sheet rather than clamp every description to one line | `PH3` | - | `specified` | `plan` | - | - | T-034, T-036, T-116 |
 
 ## Closed
 

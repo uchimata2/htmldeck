@@ -2,8 +2,8 @@
 id: T-125
 title: Decide whether a split contents page should take a further sheet rather than clamp every description to one line
 type: decision
-status: proposed
-phase: specify
+status: specified
+phase: plan
 parent: null
 blocked_by: []
 related: [T-036, T-034, T-116]
@@ -13,7 +13,10 @@ business_value: medium
 effort: s
 created: 2026-08-13
 updated: 2026-08-13
-deliverables: []
+deliverables:
+  - shell/deck.js
+  - tools/deck/contents_bound.py
+  - docs/DESIGN-SYSTEM.md
 ---
 
 # T-125 — Decide whether a split contents page should take a further sheet rather than clamp every description to one line
@@ -78,11 +81,12 @@ printed exactly that way since its colophon took it to 13 — the owner has seen
 - [ ] A 25-entry deck is **printed and looked at** under the ruling (**L-01**, **L-35**, **L-76**)
 
 **Open questions**
-- **Does a splitting contents page cap its sheets at 12 rather than 16?** — the project owner.
-  **Recommended: yes.** The reason the trigger is 16 is the description, and at 13–16 entries the
-  description is a truncated fragment; a deck long enough to need two sheets is long enough to need
-  three. The rival is *no, keep one number* — simpler to explain, no discontinuity at 17, and it
-  keeps the pathological one-long-stage deck at three sheets instead of five.
+- ~~**Does a splitting contents page cap its sheets at 12 rather than 16?**~~ **Answered 2026-08-13
+  by the owner: yes, split at 12.** So the rule has two numbers: **one sheet up to 16, then sheets of
+  at most 12.** The trigger is untouched — a deck at or under 16 still prints the single sheet T-034
+  measured and T-116 fixed — and what moves is the capacity of a sheet once the page is already
+  continuing. The three costs are accepted as stated above: a second number, a discontinuity at 17,
+  and five sheets rather than three for a 43-entry deck whose argument is one stage of 40.
 
 ## 2. Plan
 
@@ -109,4 +113,5 @@ printed exactly that way since its colophon took it to 13 — the owner has seen
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | → specified | **Answered the day it was raised: the owner ruled yes, split at 12.** §1 needed no other change — it was written as a decision with both sides argued, so the ruling closes it rather than rewriting it. What is left is implementation and re-measurement: the cap in `shell/deck.js`, the eight cases in `contents_bound.py` re-baselined, DS-226 restated, and a 25-entry deck printed and looked at. |
 | 2026-08-13 | → proposed | Raised by [T-036](T-036-the-second-contents-page-for-long-decks.md) from a printed sheet rather than from a gate — the 25-entry deck's map is poorer than the 17-entry deck's, and nothing mechanical can see that. Raised rather than taken because the number it would move is one the owner answered and two tasks re-measured; T-034's own precedent for this shape is raising T-036 instead of building it (**L-37**). `PH3` and `medium`: it is a quality improvement to a page that works, not a defect in one that does not. |
