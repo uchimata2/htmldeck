@@ -193,9 +193,15 @@ dense mode once the slide count passes a capacity the controls' width decides
 **untested territory** rather than as a longer version of a tested one, and say which length a
 result was measured at.
 
-**And print it, because nothing here can.** The contents page collided at 13 entries in a presented
-deck *and* in this repository's own reference deck, while every gate stayed green and the tool aimed
-at that page reported it clean — the fault lives only in paged layout, which no screen measurement
-reaches ([T-116](tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md), **L-76**,
-gap raised as [T-123](tasks/T-123-nothing-can-see-a-print-only-layout-fault.md)). Rule 6 is not
-satisfied by a screen render at any length.
+**And print it. One thing here can now read the paper, and it reads two numbers.** The contents page
+collided at 13 entries in a presented deck *and* in this repository's own reference deck, while every
+gate stayed green and the tool aimed at that page reported it clean — the fault lives only in paged
+layout, which no screen measurement reaches
+([T-116](tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md), **L-76**). **That
+gap closed on 2026-08-13**: `tools/deck/printgeom.py` reads the card rectangles out of the printed
+PDF and asserts `PRINT-2` *no two cards intersect* and `PRINT-3` *no card reaches the footnote*, on
+any deck it is pointed at, standard library only
+([T-123](tasks/T-123-nothing-can-see-a-print-only-layout-fault.md)). **It is two numbers and nothing
+wider.** Whether the page reads as a compact mode rather than as damage is still a person's, which is
+the 2026-08-08 ruling on DS-222 to DS-226 and is untouched. Rule 6 is not satisfied by a screen
+render at any length, nor by a green `PRINT-2`.

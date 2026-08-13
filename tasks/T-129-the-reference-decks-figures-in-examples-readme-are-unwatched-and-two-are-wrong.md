@@ -6,7 +6,7 @@ status: proposed
 phase: specify
 parent: null
 blocked_by: []
-related: [T-127, T-088, T-085]
+related: [T-127, T-088, T-085, T-128]
 work_package: PH3
 owner: the project owner
 business_value: high
@@ -115,4 +115,5 @@ worth opening, and it is in the humanizer's covered set under
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **The owner ruled this goes before [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md).** T-128 puts a third deck on the same page, and a binding hole that already swallows one deck's figures would swallow that one's too — so the coverage is worth closing while the page has two decks on it rather than three. `related` now names T-128 for that reason; it is not a `blocked_by`, because either could be done alone. |
 | 2026-08-13 | → proposed | Raised out of [T-127](T-127-figures-py-refuses-to-report-a-drifted-figure-because-its-fixture-needs-an-undrifted-page.md), whose rebuilt fixture refused on a claim the page does not bind. Not folded into it: T-127 is about a self-test asserting repository state, and this is a live wrong figure on a human-facing page plus the coverage hole that let it sit there. `s` and `high` — the correction is a paste, the binding is the work, and the page is what a stranger reads before installing anything. |
