@@ -148,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1544 document pointer(s) checked, 0 broken
-     625 section reference(s) resolved, 0 dead; 1579 not bound to a document and skipped.
+OK - 1557 document pointer(s) checked, 0 broken
+     625 section reference(s) resolved, 0 dead; 1586 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -185,7 +185,7 @@ and need nothing but Python.
 
 ## The reference deck
 
-[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **253 KB
+[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **255 KB
 in one file, zero external references**, three embedded typefaces, ten icons and eight hand-written
 SVG figures. Download it, disconnect, double-click it. Every measurement behind it, and how to
 reproduce each, is in [`examples/README.md`](examples/README.md).
@@ -202,7 +202,7 @@ names every one it misses.
 ## The deck nobody authored by hand
 
 [`examples/sort-window/`](examples/sort-window) holds *Move the window, not the fleet*: 12 slides,
-**250 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
+**252 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
 panels. It was built through the pipeline rather than written, assembled from
 [`shell/`](shell), which is the reference deck with its content cut out, then authored three slides
 at a time with the gate run per batch.

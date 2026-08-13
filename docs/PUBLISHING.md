@@ -228,10 +228,11 @@ child write its own account to the console.
 now gates — `deliverable_variants.py`, `contract_variants.py` and `content_variants.py`, siblings of
 the `static_variants.py` that was already in the list. And **`PRINT-1`, the printed page count, was
 reached by nothing**: `check.py` evaluates it only under `--print-pages` and the list never passed
-that flag, while `printpages.py`'s own entry point defaults the slide count to a hardcoded 12 and
-fails a deck that prints correctly
+that flag, while `printpages.py`'s own entry point defaulted the slide count to a hardcoded 12 and
+failed a deck that prints correctly. The per-deck `check.py` line now passes `--print-pages`, and
+that entry point derives its count from the deck — the two callers agreed on both shipped decks on
+2026-08-13
 ([T-120](../tasks/T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md)).
-The per-deck `check.py` line now passes `--print-pages`.
 
 **The first checker ends with one advisory that is expected**, and a release run meets it before
 anything else: `taskmd check` reports `DUPLICATE INDEX` against `docs/BRIEF.md`, because the phase

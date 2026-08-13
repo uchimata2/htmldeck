@@ -41,7 +41,6 @@ names cost.
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113 |
 | [T-095](T-095-static-variants-builds-its-static-half-from-a-hand-kept-list.md) | static_variants builds its static half from a hand-kept list, so a new producer is outside the suite | `PH3` | - | `proposed` | `specify` | - | - | T-066, T-075, T-093, T-096 |
 | [T-097](T-097-ds-004s-excusal-says-degrade-gracefully-is-unobservable-and-ds-009-gave-it-an-instrument.md) | DS-004's excusal says degrading gracefully is unobservable, and DS-009 gave half of it an instrument | `PH3` | - | `proposed` | `specify` | - | - | T-017, T-019, T-041 |
-| [T-108](T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md) | A deck has no back-matter stage, so the colophon is labelled with the last argument stage | `PH1` | - | `proposed` | `specify` | - | - | T-034, T-035, T-036, T-109 |
 | [T-109](T-109-one-source-reference-component-rendered-in-three-places.md) | One source-reference component, typed by what the source is, rendered in three places | `PH3` | - | `proposed` | `specify` | - | - | T-069, T-070, T-103, T-106, T-108, T-110, T-115, T-117, T-118 |
 | [T-110](T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md) | The quick view styles a source as deck copy, not as a document | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-106, T-107, T-109, T-121, T-122 |
 | [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) | A named slide transition, chosen per deck, with slide and immediate as the shipping pair | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-041, T-057, T-112 |
@@ -52,7 +51,6 @@ names cost.
 | [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md) | The decision diamond has no label slot, and diagrams sit off the text grid | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-109, T-115 |
 | [T-118](T-118-a-style-must-mean-the-same-thing-in-the-reading-view.md) | A style that carries meaning on a slide must carry the same meaning in the reading view | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-109, T-115 |
 | [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) | Audit the ruleset for rules that cost more to satisfy than they return | `PH3` | - | `proposed` | `specify` | - | - | T-054, T-113, T-114, T-115 |
-| [T-120](T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md) | printpages.py's own entry point defaults the slide count to a hardcoded 12, so it fails a correct deck | `PH1` | - | `proposed` | `specify` | - | - | T-096, T-116 |
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-107, T-110 |
 | [T-123](T-123-nothing-can-see-a-print-only-layout-fault.md) | Nothing can see a print-only layout fault, and one reached two shipped decks | `PH3` | - | `proposed` | `specify` | - | - | T-034, T-036, T-084, T-116 |
 
@@ -161,7 +159,9 @@ names cost.
 | [T-105](T-105-fig-pos-neg-caution-are-vocabulary-so-a-real-deck-fails-for-using-them.md) | The figure's pos, neg and caution roles are vocabulary, so the first deck to use them fails component.py | `PH1` | `0.2.2` | `done` | `review` | - | - | T-092 |
 | [T-106](T-106-the-quick-view-sheet-is-sized-to-the-prose-measure.md) | The quick-view sheet is sized to the prose measure, so a source's tables are crushed | `PH1` | `unreleased` | `done` | `review` | - | - | T-070, T-109, T-110 |
 | [T-107](T-107-quickviews-markdown-renderer-drops-thematic-breaks.md) | quickview.py's Markdown renderer drops thematic breaks, shipping "---" as body text | `PH1` | `unreleased` | `done` | `review` | - | - | T-070, T-110, T-121, T-122 |
+| [T-108](T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md) | A deck has no back-matter stage, so the colophon is labelled with the last argument stage | `PH1` | `unreleased` | `done` | `review` | - | - | T-034, T-035, T-036, T-109 |
 | [T-116](T-116-the-printed-contents-page-collides-at-thirteen-entries.md) | The printed contents page collides at thirteen entries, well below its measured bound | `PH1` | `unreleased` | `done` | `review` | - | - | T-034, T-036, T-084, T-120, T-123 |
+| [T-120](T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md) | printpages.py's own entry point defaults the slide count to a hardcoded 12, so it fails a correct deck | `PH1` | `unreleased` | `done` | `review` | - | - | T-096, T-116 |
 | [T-122](T-122-the-quick-views-contracted-article-is-never-created-so-seventeen-rules-are-dead.md) | The quick view's contracted `.qv-doc` article is never created, so seventeen style rules are dead | `PH1` | `unreleased` | `done` | `review` | - | - | T-070, T-107, T-110 |
 
 <!-- taskmd:end -->

@@ -2,8 +2,8 @@
 id: T-120
 title: printpages.py's own entry point defaults the slide count to a hardcoded 12, so it fails a correct deck
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-096, T-116]
@@ -13,7 +13,12 @@ business_value: medium
 effort: xs
 created: 2026-08-13
 updated: 2026-08-13
-deliverables: [tools/deck/printpages.py]
+shipped_in: unreleased
+deliverables:
+  - tools/deck/printpages.py
+  - tools/deck/render.py
+  - tools/check_all.py
+  - docs/PUBLISHING.md
 ---
 
 # T-120 — printpages.py's own entry point defaults the slide count to a hardcoded 12, so it fails a correct deck
@@ -93,16 +98,44 @@ nothing since it was written.**
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+
+- **The override argument was removed, not kept** — the open question's recommendation, taken. It
+  existed only to correct the constant by hand, and a second way to state a fact the deck already
+  states is a second way to be wrong about it.
+- **`render.slide_count` is the derivation, and it had to be fixed to be one.** It matched
+  `class="slide` as a *prefix*, where the DOM count it now has to agree with matches `slide` as a
+  class *token*. Two live disagreements: `class="close slide"` is a slide the prefix match missed,
+  and `class="slide-note"` is not one that it took. Splitting the attribute is what `.slide` does,
+  so the two cannot disagree by construction rather than by inspection. Neither case exists in a
+  shipped deck today, which is why it was a latent disagreement and not a second bug report —
+  the fix is what makes acceptance criterion 4 mean anything.
+- **The agreement is asserted on fixture markup, not by rendering.** `render.self_test` counts a
+  six-section fixture holding both wrong cases and expects 4. A self-test that launched Chrome to
+  prove a file-read matches a DOM read would make the harness's own self-test cost a browser.
+- **The count is printed on every run** (`slides: 13, counted in the deck`). The failure this task
+  fixes was silent because nothing said where the number came from.
+- **`check_all.py` keeps `printpages.py` in `NOT_RUN`, and the reason changed rather than the
+  classification.** It was "its entry point is red on a correct deck"; it is now "the per-deck
+  `check.py` line already evaluates `PRINT-1`, so running this too would print the same verdict from
+  a second Chrome launch". The tool being broken was never the reason it was skipped, and leaving
+  the old wording would have left a fixed defect documented as current.
 
 **Outputs produced**
-- <none yet>
+- [`tools/deck/printpages.py`](../tools/deck/printpages.py) — `main(deck)` derives the count; the
+  second positional argument and the `12` are gone, including from the usage line.
+- [`tools/deck/render.py`](../tools/deck/render.py) — `slide_count` matches a class token, with the
+  fixture that pins it.
+- [`tools/check_all.py`](../tools/check_all.py) and
+  [`docs/PUBLISHING.md`](../docs/PUBLISHING.md) — both described the defect as current.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `printpages.py examples/reference-deck.html` passes, and its `wanted` line agrees with `check.py --print-pages` | met | `printed pages: 14 declared, 14 counted, wanted 14 (13 slides + contents) pass` — the identical line `check.py --print-pages` prints for that deck. It read `wanted 13` and `FAIL` before. |
+| The same command on `sort-window.html` still passes | met | `printed pages: 13 declared, 13 counted, wanted 13 (12 slides + contents) pass`. This deck passed under the constant too, by coincidence: it has 12 slides. |
+| No slide count is written as a literal anywhere in the file | met | The `12` is gone from `main`, from the `__main__` block and from the usage line. The only integer left is `+ 1` for the contents page, which is the rule rather than a count. |
+| The self-test asserts the two callers agree, so this cannot drift back silently | met | Asserted where the two could actually diverge: `render.self_test` counts a fixture of six `<section>`s — `slide`, `slide close`, `close slide`, `id` before `class`, `slide-note`, `contents` — and requires 4. Both of the old prefix match's errors are in it, so the fixture fails if the derivation stops meaning what `.slide` means. |
 
 **Child fix tasks raised**
 - none
@@ -113,3 +146,7 @@ nothing since it was written.**
 | :--- | :--- | :--- |
 | 2026-08-13 | (no change) | **The owner added it to `0.2.3`**, which is now five tasks rather than the four committed to on 2026-08-12. The alternative was deferring it to an unscheduled `0.2.4`; a one-line fix parked behind a release nobody has scheduled is one the next adopter reports. |
 | 2026-08-13 | → proposed | Raised by T-096's first run of the checkers the gate list omits — the run that command exists to make possible. `PH1` rather than the `PH3` default: a shipped checker returning a false FAIL on a conforming deck is T-105's class, and this one is a stored constant against a rendered fact (**L-08**). `xs`; `medium` rather than `high` because `check.py --print-pages` already gets the right answer and T-096 now passes that flag, so the count is covered while this is open. |
+| 2026-08-13 | → specified | §1 was already complete, including the recommendation on the override. |
+| 2026-08-13 | → planned | §2 was already complete and unchanged. |
+| 2026-08-13 | → in_progress | Step 1 needed `render.slide_count` fixed before it could be the derivation: it matched `class="slide` as a prefix where the DOM matches `slide` as a class token, so adopting it as-is would have made the two callers agree on today's decks and disagree on a deck writing `class="close slide"`. Latent rather than reported, and fixing it is what makes acceptance criterion 4 an assertion instead of a coincidence. |
+| 2026-08-13 | → done | Four criteria met. Both shipped decks pass standalone and print the same `wanted` line as `check.py --print-pages`. Two documents that described the defect as current were corrected — `check_all.py`'s skip reason and `PUBLISHING.md` §8 — because a fixed defect left documented is the next reader's wrong fact. |

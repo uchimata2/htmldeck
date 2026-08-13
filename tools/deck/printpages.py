@@ -15,7 +15,7 @@ count and only the count; *disclosure content dropped, slides clip* stays with t
 does anyway under CLAUDE.md rule 6. A gate that claimed those five would be claiming a judgement it
 cannot make, which is the whole of T-038.
 
-    python tools/deck/printpages.py examples/reference-deck.html 12
+    python tools/deck/printpages.py examples/reference-deck.html
 
 Pure standard library (**L-07**) - including the PDF reading, which is a page count and no more.
 """
@@ -105,11 +105,22 @@ def self_test():
     return True
 
 
-def main(deck, slides):
+def main(deck):
     self_test()
     render.self_test()
+    # Derived from the deck, never passed in and never defaulted (T-120). It used to be
+    # `int(a[1]) if len(a) > 1 else 12` - a stored copy of a fact the file states (**L-08**) - and it
+    # went wrong the day the reference deck gained its colophon: this entry point reported FAIL on a
+    # deck printing 14 correct pages while `check.py`, calling `verdicts` with a rendered count,
+    # reported pass on the same file. Two callers, one number, and only one of them was reading it.
+    #
+    # The override argument went with the constant rather than being kept. Its only purpose was to
+    # correct the constant by hand, and an override is a second way to be wrong about something the
+    # deck already says.
+    slides = render.slide_count(deck)
     print("browser: %s" % render.CHROME)
     print("deck:    %s" % paths.display_path(deck, ROOT))
+    print("slides:  %d, counted in the deck" % slides)
     rows = verdicts(deck, slides)
     for rule, what, ok in rows:
         print("  %-8s %-70s %s" % (rule, what, "pass" if ok else "FAIL"))
@@ -120,4 +131,4 @@ def main(deck, slides):
 if __name__ == "__main__":
     a = sys.argv[1:]
     sys.exit(main(os.path.abspath(a[0]) if a else os.path.join(
-        ROOT, "examples", "reference-deck.html"), int(a[1]) if len(a) > 1 else 12))
+        ROOT, "examples", "reference-deck.html")))

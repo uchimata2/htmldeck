@@ -105,10 +105,11 @@ NOT_RUN = {
         "runs inside tools/deck/check.py under --sources, which is why that argument is declared "
         "per deck in DECKS rather than guessed",
     "tools/deck/printpages.py":
-        "runs inside tools/deck/check.py under --print-pages, which the per-deck line above now "
-        "passes - the gate list never did, so DS-222's page count was checked by nothing. Its own "
-        "entry point is NOT run: it defaults the slide count to a hardcoded 12 rather than reading "
-        "the render, which is why it is red on a 13-slide deck that prints correctly (T-120)",
+        "runs inside tools/deck/check.py under --print-pages, which the per-deck line above passes "
+        "- the old gate list never did, so DS-222's page count was checked by nothing. Its own "
+        "entry point now derives the slide count from the deck instead of defaulting to a hardcoded "
+        "12 and agrees with that caller on both shipped decks (T-120), so running it here would "
+        "print the same verdict from a second Chrome launch",
 
     "tools/deck/critique.py":
         "the review mode, not a gate. It assembles the half of a critique a program can assemble "

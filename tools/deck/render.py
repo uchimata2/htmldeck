@@ -360,14 +360,24 @@ def cmd_shots(deck, which, out=None, w=1920, h=1234):
     print("\n%s" % out)
 
 
+SECTION_CLASS = re.compile(r'<section[^>]*\sclass="([^"]*)"', re.I)
+
+
 def slide_count(deck):
     """How many slides the deck has, read from the file rather than assumed.
 
-    Counts `<section class="slide...">`, which is what the stage iterates. A deck this cannot read
-    is a deck this tool should not silently render a guess at, so zero is fatal rather than empty.
+    Counts `<section>` whose class list holds `slide`, which is what `.slide` selects and what the
+    stage iterates. A deck this cannot read is a deck this tool should not silently render a guess
+    at, so zero is fatal rather than empty.
+
+    **Matched as a class TOKEN, not as a prefix** (T-120). This is the file-side half of a number
+    whose other half is counted in the DOM by `audit.py` and handed to `printpages.verdicts` by
+    `check.py`, so the two have to mean the same thing: `class="close slide"` is a slide and the old
+    prefix match missed it, while `class="slide-note"` is not one and the old match took it. Splitting
+    the attribute is what `.slide` does, so it cannot disagree by construction.
     """
     html = open(deck, "r", encoding="utf-8").read()
-    n = len(re.findall(r'<section[^>]*\bclass="slide\b', html))
+    n = sum(1 for m in SECTION_CLASS.finditer(html) if "slide" in m.group(1).split())
     if not n:
         sys.exit("no `<section class=\"slide\">` found in %s - refusing to guess a slide count"
                  % paths.display_path(deck, ROOT))
@@ -412,7 +422,26 @@ def self_test():
                      "what every caller joins its output paths onto" % probe)
     finally:
         shutil.rmtree(fixture, ignore_errors=True)
+
+    # `slide_count` has to mean what `.slide` means, because `printpages` compares its answer with
+    # a DOM count taken by `audit.py` through `check.py` (T-120). Both the cases the old prefix
+    # match got wrong are here, and so is one it got right, or the fixture only proves the change.
+    counted = _count_classes(['<section class="slide">',
+                              '<section class="slide close">',
+                              '<section class="close slide">',
+                              '<section id="x" class="slide">',
+                              '<section class="slide-note">',
+                              '<section class="contents">'])
+    if counted != 4:
+        sys.exit("SELF-TEST FAILED: slide_count read %d slides out of a fixture holding 4 - it no "
+                 "longer matches `slide` as a class token, so it and the DOM count disagree" % counted)
     return True
+
+
+def _count_classes(sections):
+    """`slide_count`'s matching, over fixture markup rather than a file."""
+    return sum(1 for m in SECTION_CLASS.finditer("".join(sections))
+               if "slide" in m.group(1).split())
 
 
 def main(argv):

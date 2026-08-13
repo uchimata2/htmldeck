@@ -89,6 +89,11 @@ Three things stand in the way, and they are the substance of the decision:
       will read it, and the manual print step is named in the release gate rather than assumed.
 
 **Open questions**
+- ~~Should the printed geometry be gated at all?~~ **Answered by the owner 2026-08-13: yes,
+  narrowly.** The assertion is *no card overlaps another and none reaches the footnote*, and nothing
+  wider. So the 2026-08-08 ruling stands where it was aimed — DS-222 to DS-226 as *judgements* stay
+  with the person who prints — and it is narrowed only where the property is arithmetic. What is
+  left for `specify` is the instrument, not the question.
 - Is `examples/` the only surface this gates, or does an adopter's deck get it too — the owner.
 
 ## 2. Plan
@@ -119,3 +124,4 @@ Three things stand in the way, and they are the substance of the decision:
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-13 | → proposed | Raised out of T-116, which found a printed collision that the screen measurement reported as clean and that reached two shipped decks. `PH3` and `l`: the instrument is a PDF graphics-state parser or a new dependency, and either way it revisits the owner's 2026-08-08 ruling on what the print gate asserts. |
+| 2026-08-13 | (no change) | **The owner answered the same day: yes, narrowly.** Gate *no card overlaps another and none reaches the footnote*, and nothing else. The type stays `decision` because the decision is what was asked for and it is now recorded; the remaining work is the instrument, and this task carries it under its second acceptance criterion. **Stays `PH3` and out of `0.2.3`** — `l` puts it there by the rule in [`../CLAUDE.md`](../CLAUDE.md), and the release it would protect is three tasks that are nearly done. Not `blocked_by` anything. |
