@@ -637,7 +637,9 @@ raising note says so. That pair is why the phase exists rather than an ordering 
 **What PH1 shipped without, stated rather than discovered.** No 3D. No frame-rate figure on any
 machine. Seven of R6's nine glitch-free conditions unimplemented, and a console error that does not
 stop a deck still invisible to the gate. Printed contents pages that do not continue past 24 slides.
-Those belong in the release notes, not in a list of things to fix first.
+Those belong in the release notes, not in a list of things to fix first. **The last of them was
+built after all** — T-036 on 2026-08-13, and T-125 capped its sheets the same day; the rest of this
+list still stands.
 
 ---
 
