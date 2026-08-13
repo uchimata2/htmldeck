@@ -57,6 +57,32 @@ editorial work and not a find-and-replace:
 - **`exam` / `exercise`, 54 occurrences in rendered text** — the deck names its own assessment
   context, which a published example must not do.
 
+**The provenance ruling, 2026-08-13 — the answer is publish, and the figures stay**
+
+The owner ruled step 1: **the case and its figures are theirs and the trainer's, made up rather than
+supplied, and neither secret nor proprietary.** So the artefact ships with its analysis coherent —
+no re-basing of figures, which was the recommendation below and is now withdrawn as unnecessary
+rather than rejected. What must go is wider than the two classes measured above:
+
+| Class | Where it stands |
+| :--- | :--- |
+| the case company's name | 53 occurrences in rendered text, measured |
+| `exam` / `exercise`, **and any reference to the training context** | 54 occurrences measured; *references* are new and widen the scan beyond the two words |
+| **place names** | new to the ruling; part of the case identity and not yet counted |
+| external dependencies | the deck already measures **zero external references**, so this is a re-check rather than work |
+| sensitive, personal or local-system data | the survey returned none of it; re-checked on the copy rather than trusted |
+| the figures | **kept** |
+| the colour palette | **unchanged.** The owner allowed a new one only if it were free, and it is not free in the way that matters: an example carries the plugin's one theme, which is CLAUDE.md rule 4. A palette of its own would make it the only deck here that does not demonstrate the shipped theme |
+
+**Two questions the ruling settles by implication, decided here rather than sent back**
+
+- **It ships with its sources.** The analysis documents are the author's own by the same ruling that
+  freed the figures, and a deck without a `--sources` directory cannot be gated the way both existing
+  examples are — `check_all.py` refuses a deck with no declaration. The provider's PDFs stay out;
+  that was already Scope.
+- **The `D6` name goes.** A name from another project's numbering means nothing here. It is named for
+  its subject, as `sort-window` is.
+
 **The one thing this task must not decide by itself**
 The deck analyses a business case **supplied by a training provider** as module material. Renaming
 the company does not change where the scenario, its structure and possibly its figures came from,
@@ -94,25 +120,26 @@ and this repository is public. That is a provenance question for the owner, not 
 
 **Acceptance criteria**
 - [ ] The provenance question is answered by the owner before anything is copied
-- [ ] No occurrence of the two sanitization classes survives in any published file, checked by
-      re-running the scan rather than by reading
+- [ ] No occurrence of **any** of the ruling's classes survives in a published file — case identity,
+      training context and references to it, place names, external references, sensitive or
+      local-system data — checked by re-running the scan rather than by reading
+- [ ] The figures and the analysis are intact: the deck still argues what it argued
 - [ ] The deck passes every per-deck gate `check_all.py` runs, and `check_all.py` accounts for it
 - [ ] It renders offline and is **printed and looked at** — the contents sheet clean at 13 entries
 - [ ] The source project's folder is byte-for-byte unchanged, verified rather than asserted
 - [ ] `examples/README.md` states what the deck is, where it came from, and what it demonstrates
 
 **Open questions**
-- **May the scenario itself be published, or only the artefact?** The case comes from a provider's
-  module material. **Recommended: publish the artefact with the scenario re-based** — keep the
-  structure, the diagrams, the pipeline record and the analysis, and replace the case's identity and
-  any figure the provider supplied rather than the author derived. The alternative is to publish it
-  as-is once the owner confirms the case is theirs to republish, which is cheaper and is the owner's
-  to assert, not mine. — the owner
-- **Does it ship with its sources, like `sort-window/`, or alone?** Recommended: with them, since a
-  provenance mark that opens nothing is a mark for a feature the deck is demonstrating. Depends
-  entirely on the answer above.
-- **Does it keep its `D6` name?** Recommended: no — a name from another project's numbering means
-  nothing here. Name it for its subject, as `sort-window` is.
+- ~~**May the scenario itself be published, or only the artefact?**~~ **Answered by the owner
+  2026-08-13: published, with the figures kept** — they were invented by the owner and the trainer,
+  and are neither secret nor proprietary. The sanitization list widened; see *The provenance ruling*
+  above.
+- ~~**Does it ship with its sources, like `sort-window/`, or alone?**~~ **With them**, decided from
+  the ruling rather than sent back: the same sentence that frees the figures frees the analysis, and
+  a deck with no `--sources` directory cannot be gated the way its two siblings are.
+- ~~**Does it keep its `D6` name?**~~ **No** — named for its subject, as `sort-window` is.
+- **Where is the adopting project?** No record in this repository names its path, and the survey that
+  produced §1 was done in a session that knew it. Needed before step 2. — the owner
 
 ## 2. Plan
 
@@ -122,10 +149,10 @@ away from being published.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Get the provenance ruling, and the naming decision with it | the answers |
-| 2 | Copy the deck and its two specifications out to `examples/<name>/`, read-only at the source | the raw copy |
-| 3 | Sanitize the copy: the case identity and every `exam` / `exercise` mention, in the deck **and** both specs, keeping the analysis intact | the copy |
-| 4 | Re-run the scan over the copy — zero hits in both classes, and re-run it over the two font-licence URLs to confirm they are all that is left | the evidence |
+| 1 | ~~Get the provenance ruling, and the naming decision with it~~ **done 2026-08-13**; what is still missing is the source path | the answers |
+| 2 | Copy the deck, its two specifications and its analysis documents out to `examples/<name>/`, read-only at the source | the raw copy |
+| 3 | Sanitize the copy across the ruling's six classes — case identity, training context **and references to it**, place names, external references, sensitive or local-system data — in the deck **and** every document beside it, keeping figures and analysis intact | the copy |
+| 4 | Re-run the scan over the copy — zero hits in every class, and confirm the two font-licence URLs are all that is left | the evidence |
 | 5 | `shell.py sync <deck> --write`, then `shell.py check` — the first real adopter upgrade this repository performs | a current deck |
 | 6 | Every per-deck gate: `check.py`, `component.py`, `theme.py`, `spec.py` against the specs | green or a list |
 | 7 | Register it: `check_all.py`'s deck list, `examples/README.md`, and the measurement figures `figures.py` watches | the account |
@@ -150,4 +177,5 @@ away from being published.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **The owner ruled step 1: publish, and the figures stay** — the case and its numbers were invented by the owner and the trainer, so nothing here is the provider's to withhold. The re-basing this task recommended is withdrawn as unnecessary rather than rejected. The sanitization list widened in exchange: place names, *references* to the training context as well as the two words, and a re-check for external and local-system data. The palette stays the shipped one — the owner allowed a new one only if free, and an example that does not carry the plugin's single theme is not free (CLAUDE.md rule 4). Two dependent questions decided here rather than sent back: it ships with its sources, and the `D6` name goes. **Still not started, and nothing has been copied**: no record in this repository names the adopting project's path. |
 | 2026-08-13 | → proposed | Raised on the owner's instruction, with the source surveyed read-only and the sanitization surface measured rather than guessed: no personal data of any kind, and two classes of visible copy totalling 107 occurrences. Specified and planned in one pass because the owner was closing the session and asked for the migration *prepared*; nothing has been copied, which is deliberate — step 1 is a question only they can answer. `l` because the sanitizing is editorial work across a 13-slide deck and two specifications, not a substitution. |

@@ -2099,6 +2099,34 @@ Different mechanism, same substitution: one asserted the state, the other built 
 **When auditing for this, the question is not "does a fixture compare against the repository" but
 "does any fixture stop working when a tracked file legitimately changes".**
 
+### L-79 — Seed the whole defect, or the negative fixture proves the instrument blind
+
+Caught 2026-08-13 (**T-123**), building the printed-geometry gate T-116's collision asked for. The
+gate has to be measured against a page that is wrong as well as one that is right (**L-05**), so the
+wrong page was made by reverting the fix. **The revert took the headline edit — `.cbox`'s
+`max-height` clamp — and the deck printed clean.** Gate green, no collision, on a deck the record
+says collided.
+
+The fix had been **two** edits. The second clamped a four-row band's description to one line, and it
+is the one that makes the box tall enough to overhang its row. Reverting either alone prints a
+correct page. Had the run stopped at the first attempt, the reading would have been *the reader
+cannot see the fault* — a false negative that looks exactly like a blind instrument, on a gate that
+was in fact working.
+
+**How to apply.**
+
+1. **Build the negative fixture from the fix's own record, not from its summary.** The change that
+   closed the defect is whatever the task's §3 lists — often more than the one edit that gets
+   remembered. Re-read it and revert all of it.
+2. **A negative fixture that passes is a result to explain, never one to accept.** It has exactly two
+   causes: the instrument is blind, or the seed is incomplete. Both are cheap to tell apart —
+   *look at the seeded artifact* — and only one of them is a reason to abandon the gate.
+3. **Prefer a seed whose effect you can see.** The printed sheet showed rows cutting through each
+   other and the footnote printing through a card, which confirmed the seed before the gate's verdict
+   was read at all. A fixture nobody looks at can only be argued about.
+4. **It is L-05 with the failure moved.** There the risk is measuring only the clean case; here the
+   dirty case was measured and was quietly clean. Both end with an instrument trusted on one reading.
+
 ---
 
 ## Writing

@@ -31,6 +31,7 @@ import content                                                      # noqa: E402
 # Imported for the absent-subject fixture, which holds every verdict producer in `tools/deck/` to
 # the same bar since T-075 - not for anything this module's own rows measure.
 import component                                                    # noqa: E402
+import printgeom                                                    # noqa: E402
 import printpages                                                   # noqa: E402
 import spec                                                         # noqa: E402
 
@@ -1667,9 +1668,20 @@ ABSENCE_IS_A_FAIL = {
                               "names, and every rule the contract lists reads the motion tokens it "
                               "lists. Both require the parts to be there; a document with none is "
                               "missing 65 of them"),
-    "PRINT-1": ("requirement", "the printed page count is n + 1. With no slide count from the "
-                               "render stage there is nothing to compare, and that is a failure of "
-                               "the gate's own pipeline rather than a deck lacking a subject"),
+    "PRINT-1": ("requirement", "the printed page count is n + k, for n slides and k contents "
+                               "sheets. With no slide count from the render stage there is nothing "
+                               "to compare, and that is a failure of the gate's own pipeline rather "
+                               "than a deck lacking a subject. *Said n + 1 here until 2026-08-13, "
+                               "which T-036 falsified the day it let the contents page continue "
+                               "onto further sheets - the arithmetic in `printpages.py` was right "
+                               "throughout and only this description was stale*"),
+    "PRINT-2": ("requirement", "no two cards on a printed contents sheet intersect. With no deck "
+                               "there is no sheet to print, and a geometry reader that reports an "
+                               "unblemished page from nothing is the exact failure it exists to "
+                               "catch (T-123, **L-36**)"),
+    "PRINT-3": ("requirement", "no card reaches the footnote band on a printed contents sheet. "
+                               "Same absent subject as PRINT-2, and the same reason it must fail "
+                               "rather than pass"),
 }
 
 # --------------------------------------------------------------- what the probe actually emits
@@ -2059,6 +2071,9 @@ def self_test():
     rows += contrast.verdicts("")
     rows += theme.verdicts("") + component.verdicts("")
     rows += printpages.verdicts("", 0)
+    # `printgeom` takes the deck itself, so its absent subject is the empty path - and it must
+    # decline rather than report an unblemished page, which is the whole reason it exists.
+    rows += printgeom.verdicts("")
     # `spec.verdicts` reads the two specification documents rather than the deck, so its absent
     # subject is a pair of empty ones - no source list, no slide, no ledger. It is the first
     # producer here that `check.py` does not consume, and it is held to the same bar anyway: the
@@ -2122,7 +2137,7 @@ def self_test():
                  "audit.fetch_verdicts", "audit.marker_verdicts",
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
-                 "printpages.verdicts", "spec.verdicts"}
+                 "printpages.verdicts", "printgeom.verdicts", "spec.verdicts"}
     producers = verdict_producers()
     undeclared_producers = sorted(set(producers) - exercised - set(DELEGATING_PRODUCERS))
     if undeclared_producers:

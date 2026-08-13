@@ -42,8 +42,12 @@ their real titles, so the box with the tallest title is the one the description 
 simulation of print. T-116 was a print-only divergence: Chrome's paged layout gave a grid item its
 own content height instead of its track, so cards printed 200.2 pt tall in a 151 pt pitch and rows
 overlapped - while the numbers below, measured the same day on the same deck, were correct and
-clean. The closing line about printing and looking is not a formality; it is the only instrument
-that sees that class of fault (**L-05**).
+clean. **Nothing here decides whether a printed sheet is clean, and this tool must not be read as
+saying so** - that is `printgeom.py`, which reads the card rectangles out of the printed PDF and
+asserts that none intersects and none reaches the footnote (T-123). What is measured here is the
+bands and the two caps - the *inputs* to the split rule - which the printed reading does not measure
+and which are worth having in seconds rather than in a minute of Chrome. The two are not
+alternatives; the screen tool sizes the rule and the printed one decides the page.
 
 Pure standard library, by L-07. Reuses `render.py` rather than re-launching Chrome its own way.
 
@@ -428,9 +432,9 @@ def main():
     print("  and spilled - 17 entries print 9 and 8, not 12 and 5. The last two shapes have no")
     print("  boundary to cut at, so the boundary yields and the entry does not (DS-226).")
 
-    print("\n  This is a LAYOUT measurement in a real browser; it does not discharge printing and")
-    print("  looking - and T-116 was a print-only fault that these numbers were clean throughout.")
-    print("  The module docstring says what that means for how far to trust them.")
+    print("\n  This is a SCREEN measurement of the bands and the caps. It says nothing about")
+    print("  whether a printed sheet is clean - T-116 was a print-only fault that these numbers")
+    print("  were clean throughout. `printgeom.py` decides the printed page; this sizes the rule.")
     return 0
 
 

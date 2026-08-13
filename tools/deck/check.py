@@ -38,6 +38,7 @@ import contrast                                                     # noqa: E402
 import contract                                                     # noqa: E402
 import content                                                      # noqa: E402
 import printpages                                                   # noqa: E402
+import printgeom                                                    # noqa: E402
 import theme                                                        # noqa: E402
 import component                                                    # noqa: E402
 
@@ -95,9 +96,11 @@ DEFERRED = {
     # Kept as a comment rather than deleted, because the entry named its own closing condition and
     # a reader should be able to see that the condition is what happened.
     "DS-222": "The owner ruled the print row automates the PAGE COUNT and nothing else "
-              "(2026-08-08). DS-222 to DS-226 are asserted by a person printing and looking, "
-              "which CLAUDE.md rule 6 requires regardless; `print_variants.py` builds the "
-              "variants for that. The count is checked here under `--print-pages`.",
+              "(2026-08-08), and narrowed that on 2026-08-13 to admit printed GEOMETRY as well - "
+              "a collision is arithmetic rather than a judgement (T-123). DS-222 to DS-225 are "
+              "still asserted by a person printing and looking, which CLAUDE.md rule 6 requires "
+              "regardless; `print_variants.py` builds the variants for that. The count is checked "
+              "here under `--print-pages`, and so is DS-226's geometry.",
     "DS-223": "The same ruling as DS-222. A slide staying a containing block for its own overlays "
               "is observable only in the printed output, where a panel that escaped its slide "
               "shows up scattered across a break - which is a look at paper, not a page count.",
@@ -106,11 +109,16 @@ DEFERRED = {
               "sees it is a person turning the sheet over.",
     "DS-225": "The same ruling as DS-222. The count does reach half of it: a contents "
               "page that never rendered shows up as `n` rather than `n` + `k`.",
-    "DS-226": "The same ruling as DS-222, and this one already has an instrument: "
+    "DS-226": "The most reached of the five, by two instruments measuring different things. "
               "`contents_bound.py` measures the compression bound the rule states - 16 entries "
               "with descriptions, 24 without - in a real browser, and exercises the split that "
-              "keeps every sheet inside it. Run separately because it sweeps seventeen sheet "
-              "sizes and eight stage shapes rather than reading the deck in front of it.",
+              "keeps every sheet inside it; run separately because it sweeps seventeen sheet "
+              "sizes and eight stage shapes rather than reading the deck in front of it. "
+              "**And since T-123 the printed page itself is measured**: PRINT-2 and PRINT-3 above "
+              "read the card rectangles out of the printed PDF and assert that none intersects "
+              "and none reaches the footnote. What is still excused is the rest of the rule - "
+              "whether the compression reads as a compact mode rather than as damage - which is "
+              "the judgement the 2026-08-08 ruling left with the person who prints.",
 
     # ---- `default` rules, held back by the owner's triage order: the account, then the hard ones
     "DS-004": "Triage: `default`. *Other engines degrade gracefully* is unobservable from a "
@@ -216,8 +224,13 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
 
     if print_pages:
         rows += printpages.verdicts(deck, data["slideCount"] if data else None)
+        # The geometry rides the same flag as the count. Both need a real print through Chrome, so
+        # separating them would buy a caller nothing and cost the one thing T-116 showed matters:
+        # a run that asserts the page count and leaves the page's own layout unmeasured (**L-76**).
+        rows += printgeom.verdicts(deck)
     else:
-        notes.append("printed page count: NOT RUN - opt-in, printing is a mode and not a gate")
+        notes.append("printed page count and geometry: NOT RUN - opt-in, printing is a mode and "
+                     "not a gate")
 
     return rows, data, notes, ledger
 

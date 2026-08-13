@@ -110,6 +110,13 @@ NOT_RUN = {
         "entry point now derives the slide count from the deck instead of defaulting to a hardcoded "
         "12 and agrees with that caller on both shipped decks (T-120), so running it here would "
         "print the same verdict from a second Chrome launch",
+    "tools/deck/printgeom.py":
+        "runs inside tools/deck/check.py under the same --print-pages the per-deck line above "
+        "passes. It is the printed GEOMETRY - no two contents cards intersect, no card reaches the "
+        "footnote - which is the one fault class no screen measurement reaches and which shipped in "
+        "three decks with every gate green (T-123, T-116, **L-76**). Its own entry point takes any "
+        "deck it is pointed at, which is what an adopter runs; here it would be a second Chrome "
+        "print of a verdict check.py already has",
 
     "tools/deck/critique.py":
         "the review mode, not a gate. It assembles the half of a critique a program can assemble "
