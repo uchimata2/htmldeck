@@ -638,8 +638,37 @@ new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 | [T-128](../tasks/T-128-publish-the-adopter-deck-as-a-worked-example.md) — publish the adopter deck as a third worked example | **The only deck here nobody wrote to pass these gates.** Both existing examples were authored inside this repository against its own rules; this one was built elsewhere by someone reading the published skill, which makes it the only honest test of the ruleset — and it is 13 slides, where the contents page first collided. It also exercises the upgrade path end to end, since the copy is two releases behind. `l` because the sanitizing is editorial work across a 13-slide deck and its documents rather than a substitution. It carries **the one scoped exception** to *never copy deck content in*, ruled 2026-08-13 and recorded in `../CLAUDE.md`. |
 | ~~[T-123](../tasks/T-123-nothing-can-see-a-print-only-layout-fault.md) — nothing can see a print-only layout fault~~ **done 2026-08-13** | The fault T-116 fixed had reached **three printed decks with every gate green**, because the only tool aimed at that page measures a screen simulation of print (**L-76**). The owner narrowed the 2026-08-08 ruling twice: gate the printed geometry, and gate **any deck the tool is pointed at** — which made the dependency question unavoidable, since an adopter has to be able to run it. `l` on the instrument, and the instrument turned out to be ~330 lines of standard library: the tens-of-thousands coordinates that had defeated two earlier attempts were a missing graphics-state stack, not a property of Chrome's writer. **`printgeom.py` reads card rectangles out of the printed PDF; `contents_bound.py` keeps the bands and loses the claim about paper.** DS-222 to DS-225 stay with the person who prints — this narrows the ruling only where the property is arithmetic. |
 
-*The largest thing on the board is T-070 and the least certain to be worth it is also T-070 — its own
-raising note says so. That pair is why the phase exists rather than an ordering within one.*
+*Until 2026-08-13 this read "the largest thing on the board is T-070 and the least certain to be
+worth it is also T-070 — that pair is why the phase exists rather than an ordering within one."
+**T-070 shipped in `0.2.1`**, so the sentence named a closed task; the pair is now T-057 on both
+counts. What it said about the phase not being an ordering is superseded by the paragraph below.*
+
+**The execution order, ruled by the owner 2026-08-13.** The phase split says what is in PH3; this
+says what to do next, because eighteen open tasks and **no `blocked_by` edge between any of them**
+means the order is judgement and re-deriving it every session is how it gets re-argued instead of
+followed.
+
+| | | |
+| ---: | :--- | :--- |
+| 1 | T-129 | a wrong figure on a published page, and T-128 adds a third deck to it |
+| 2 | T-095 | `s`, and this session put a producer outside the hand-kept suite it names |
+| 3 | T-128 | prepared, ruled and surveyed |
+| 4 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 5 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 6 | T-109 | the hub of the source cluster; 7–9 are rework if it lands after them |
+| 7–9 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 10 | T-115 | needs 5 and 6 to have settled what the shell offers |
+| 11 | T-117 | independent |
+| 12 | T-097 | cheap, and the same class as 2 — an excusal that went stale when its rule got an instrument |
+| 13 | T-054 | after 4, which may change which clauses are worth recording |
+| 14 | T-113 | research, and it decides ground 15–18 build on |
+| 15–16 | T-112, T-111 | the motion cluster, in that order |
+| 17 | T-041 | named in *what PH1 shipped without* |
+| 18 | T-057 | `xl`, and the least certain to be worth it |
+
+**Two placements were argued and kept.** T-095 sits above a `high` task because it is `s` and guards
+what follows; T-119 delays T-114 by a real amount and is still first of the two, because a rule
+deleted after the work is built to it is the expensive order.
 
 **What PH1 shipped without, stated rather than discovered.** No 3D. No frame-rate figure on any
 machine. Seven of R6's nine glitch-free conditions unimplemented, and a console error that does not
