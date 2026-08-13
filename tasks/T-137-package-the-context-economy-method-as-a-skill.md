@@ -87,11 +87,27 @@ is met.
       audits context economy and is expensive to have installed is the joke that writes itself
 
 **Open questions**
-- **Does it ship, and to whom?** A skill useful to any agent-driven repository is not obviously this
-  project's to publish, and htmldeck's marketplace entry is about decks. — the owner.
+- ~~**Does it ship, and to whom?**~~ **Answered 2026-08-13 — it is published on GitHub as a token-saver
+  audit skill, in its own right.** Not inside the htmldeck plugin, which settles the scope line above
+  and adds three things this task now owes, because a published skill is a different artifact from an
+  internal one:
+  - **The extraction test becomes the product test.** `R8`'s rule that part 1 names no file of any one
+    repository was a discipline; it is now the thing that makes the skill installable at all. It is
+    verified by running the skill against a repository that is not this one, which is already a
+    criterion.
+  - **Its own load cost is a published cost.** Every adopter pays the description on every session,
+    the way this project's deck skill costs 472 bytes to discover. That criterion stops being
+    self-discipline and becomes a promise.
+  - **The publishing rules apply**: no personal, client or machine data; the humanizer pass over
+    whatever a stranger reads before installing; a licence; and out-of-the-box operation. See
+    [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) — its §8 gate list is written for this repository
+    and a new repository needs its own equivalent, which is work this task should size rather than
+    discover.
 - **One skill or two?** The measurement half is deterministic and scriptable; the screening and
   ranking half is judgement. They may want different shapes. — the implementer, from the rule's own
   reason.
+- **Which repository does it live in?** Its own, by the answer above — but that is a new repository
+  with its own gates, identity and release process, and none of that exists yet. — the owner, at plan.
 
 ## 2. Plan
 
@@ -121,4 +137,5 @@ is met.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **The ship question is answered and it enlarges the task: published on GitHub as a token-saver audit skill, in its own right rather than inside the htmldeck plugin.** Three consequences are written into §1 rather than left to be met at review. The extraction test stops being a discipline and becomes the product test — a skill naming another repository's files is not installable. Its own load cost stops being self-discipline and becomes a promise every adopter pays on every session. And the publishing rules apply in full: no personal, client or machine data, the humanizer pass on what a stranger reads before installing, a licence, and out-of-the-box operation. A new question replaces the closed one: **it needs a repository, and that repository needs its own gate list** — `PUBLISHING.md` §8 is written for this one and does not travel. The effort stays `m` for the packaging; the repository is not sized here. |
 | 2026-08-13 | → proposed | Raised at the owner's request, ahead of a session they have already planned, so the one run's evidence is not lost with the session that produced it. [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md)'s condition — *if and when the method survives being used once* — **is met**: it ran end to end and produced findings, a ranking, five child tasks and three corrections to itself. §1 records what the run says about the method rather than only that it ran, because that is the input a packaging task actually needs: steps 1–4 held, step 5 was thin, one band was wrong by four times, and the F3 line held under pressure. **Blocked on [T-136](T-136-re-run-the-external-research-with-a-recorded-search-record.md)** — packaging a method whose research half is known to be thin would set that defect in a form other projects copy, and T-136 is the fix already scheduled. `m`, and its own load cost is an acceptance criterion. |
