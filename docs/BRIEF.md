@@ -720,7 +720,7 @@ and surveyed. The argument is that it is the only row whose subject is *what eve
 sixteen tasks executed before it are sixteen paid at a rate nobody has inventoried. It is an
 umbrella and implements nothing — its ranked findings become child tasks at the owner's review,
 which is where the saving is actually decided. *It landed the same day, and the review followed
-within the hour: four of seven candidates accepted, which are the closed T-134 and rows 1–3 above. The two documents are
+within the hour: four of seven candidates accepted, which are the closed T-134 and rows 3–5 above. The two documents are
 [`research/R8-context-economy-for-coding-agents.md`](research/R8-context-economy-for-coding-agents.md)
 and [`CONTEXT-AUDIT.md`](CONTEXT-AUDIT.md).*
 
