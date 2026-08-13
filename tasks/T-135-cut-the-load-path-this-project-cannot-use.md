@@ -151,10 +151,45 @@ a browser tool set already loaded eagerly**.
   The gate caught it on the first run, which is the scope rule doing exactly its job — and it is also
   the evidence for the decision above that this file must not be committed.
 
-**Not yet done, and why this task is open:** the saving is unmeasured. Both files parse and the
-settings take effect on restart, which this session cannot perform. **A change of this kind that is
-never measured is exactly what the audit that produced it warns against** — the whole finding rests on
-a figure, and the after-figure does not exist yet.
+### Measurement 1, after the first restart — mostly a failure, and it named its own cause
+
+| | Before | After | Verdict |
+| :--- | ---: | ---: | :--- |
+| Skill listing | 7.3k | **6.5k** | −800, against a predicted 2–3k |
+| Deferred MCP schemas | 50.4k | **50.4k** | unchanged |
+
+**Only four things actually disappeared**, and they are the whole of the −800: the six `bpmn` entries,
+`claude-api`, `keybindings-help`, and one `business-consultant`. Every plugin-supplied skill survived.
+
+**The cause is the key, not the scope, and the listing contained a controlled experiment nobody
+arranged.** `business-consultant` was listed **twice** — once from a user-level skill and once from a
+plugin, as `business-consultant:business-consultant`. The single override `"business-consultant":
+"off"` removed the user-level one and left the plugin one standing. Same bare name, two sources, one
+match. **An override keyed by name must use the name exactly as the listing prints it**, which for a
+plugin skill is `plugin:skill`. The bare names matched built-ins and user skills, which is why those
+three vanished and thirty-one did not.
+
+**`enabledPlugins` worked** — all six `bpmn` rows are gone, which also confirms the file is being read
+at project scope. So scope was never the problem.
+
+**`deniedMcpServers` did nothing and has been removed.** Its own description calls it an enterprise
+denylist; the sentence suggesting it merges from all sources belongs to a *different* key
+(`allowManagedMcpServersOnly`) and was describing that key's behaviour, not granting user scope. **The
+literal reading of a field's own description beats an inference drawn from its neighbour's**, and this
+cost a restart to learn.
+
+### What is set now, for measurement 2
+
+- **33 overrides, 31 of them `plugin:skill`.** Expected saving ~3.4k of the 6.5k.
+- **`disableClaudeAiConnectors: true`**, replacing the denylist that does not work here. **Stated as a
+  hypothesis before the measurement**: the servers named by a UUID are the account connectors and go —
+  the note-taking one at ~34.5k and the widget one at ~1.5k — while the app-provided servers named in
+  words stay, **including both browser surfaces**. If both browsers disappear, the switch is wrong for
+  this repository and the line comes out, because **rule 6** outranks the saving.
+
+**Why this task is still open:** measurement 2 does not exist yet, and measurement 1 is the argument
+for why it must. A change of this kind that is never measured is what the audit that produced it warns
+against — and the first attempt looked plausible, parsed cleanly, and was 90% ineffective.
 
 ## 4. Review
 
@@ -169,4 +204,5 @@ a figure, and the after-figure does not exist yet.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **Measured after the first restart, and the change was 90% ineffective: skills 7.3k → 6.5k against a predicted 2–3k, deferred MCP unchanged at 50.4k.** The listing then named its own cause. `business-consultant` appeared **twice** — once from a user skill, once from a plugin as `business-consultant:business-consultant` — and the single bare-name override removed the first and left the second. Same name, two sources, one match: **an override keyed by name must use the name the listing prints**, and for a plugin skill that is `plugin:skill`. Thirty-one keys were rewritten. `enabledPlugins` had worked all along — the six `bpmn` rows were gone — so **scope was never the problem and the file was being read**. `deniedMcpServers` did nothing and is removed: its own description calls it an enterprise denylist, and the merge sentence I reasoned from belongs to a neighbouring key describing itself. **The literal reading of a field beats an inference from the field next to it.** Replaced with the blanket connector switch, set with its hypothesis written down first — the UUID-named servers are the account connectors and go, the word-named ones including both browsers stay. If both browsers vanish the line comes out, because rule 6 outranks the saving. |
 | 2026-08-13 | → in_progress | Raised and worked in one sitting, from `CE-07`, which [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md) had ranked third **and excluded from repository work on reasoning that was sound and wrong**: the plugins supplying most skills are not installed on disk, so no plugin-enable setting reaches them — but the listing override keys on the skill's *name*, not on its delivery, and works at project scope. The audit had reasoned from where the files were instead of from what the configuration could address, and the correction is recorded in `R8` §8 under `CE-07` because the lesson is portable. 35 skills off, one local plugin off, one unrelated permission defect fixed in passing — five allow rules naming a renamed server, matching nothing. **Left open deliberately**: the saving is unmeasured until a restart, and the connector half — the larger number by far — is an open question rather than a unilateral change, because it may cover the browser surface rule 6 depends on. |
