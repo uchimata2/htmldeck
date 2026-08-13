@@ -90,4 +90,5 @@ repository's part is the check, not the edit.**
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-14 | → proposed | Raised at the owner's direction with the rest of the unraised findings; it ranked twelfth and was never a candidate. **Scheduled to `plan` and no further.** The one row of the six whose work is not a repository change, which is why its specification is mostly about the test for *spent* and about where the result is recorded. |
+| 2026-08-14 | → proposed | Raised at the owner's direction with the rest of the unraised findings; it ranked twelfth and was never a candidate. Scheduled to `plan` and no further. The one row of the six whose work is not a repository change, which is why its specification is mostly about the test for *spent* and about where the result is recorded. |
+| 2026-08-14 | (unchanged) | **Removed from the decision batch the same day, with [T-148](T-148-give-a-measured-figure-a-durable-home.md), by the same argument**: `xs`, the instance already measured, and the entries that call themselves spent are named in `CE-10` — so a pass to decide whether it is worth doing costs what doing it costs. It takes the ordinary lifecycle in its turn. **The work itself is still the owner's**, because the store is not in this tree; what this repository owes is the test and the record. |

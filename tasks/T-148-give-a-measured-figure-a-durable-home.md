@@ -59,10 +59,12 @@ reach; a figure in a handoff is outside every gate this project owns.
 - Written at `specify`. §6.2 owns what an audit task owes beyond them.
 
 **Open questions**
-- **Whether this needs a specify pass at all.** It is `xs` with a known instance and a mechanism that
-  already exists, so writing the specification may cost more than doing the work. Raised for the
-  record: the recommendation is to implement it in turn rather than stage a decision, and the owner
-  scheduled `specify → plan` for all six together.
+- ~~**Whether this needs a specify pass at all.**~~ **Answered 2026-08-14 by the owner: it does not
+  need a decision pass.** It is `xs` with a known instance and a mechanism that already ships, so a
+  specification written only to decide whether to spend the hour costs about what the hour costs.
+  **This left the decision batch and takes the ordinary lifecycle in its turn** — `specify → plan →
+  implement → review` in one pass, which is mandatory however small
+  ([`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §2). What was dropped is the parking, not the phases.
 
 ## 2. Plan
 
@@ -92,4 +94,5 @@ reach; a figure in a handoff is outside every gate this project owns.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-14 | → proposed | Raised at the owner's direction with the rest of the unraised findings; it ranked eleventh and was never a candidate. **Scheduled to `plan` and no further**, with one argument against that for this row in particular: it is `xs`, its instance is already measured, and the mechanism it would use ships — so the specification may be the expensive half. |
+| 2026-08-14 | → proposed | Raised at the owner's direction with the rest of the unraised findings; it ranked eleventh and was never a candidate. Scheduled to `plan` and no further, with one argument against that for this row in particular: it is `xs`, its instance is already measured, and the mechanism it would use ships — so the specification may be the expensive half. |
+| 2026-08-14 | (unchanged) | **Removed from the decision batch the same day, the argument above accepted.** It sits in the execution order as ordinary work and runs the whole lifecycle when its turn comes. A task whose worth is not in doubt does not need a pass to establish it. |

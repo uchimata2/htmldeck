@@ -656,6 +656,7 @@ counting cells against the header.
 | [T-148](../tasks/T-148-give-a-measured-figure-a-durable-home.md) — give a measured figure a durable home | **T-130's `CE-08`, and its instance is `BP-2`**: five successive handoffs carried *"the release gate takes 7–11 minutes"* against a measured 154 seconds, and **no committed document was wrong because none stated it at all**. A figure outside the tree is outside every gate here. `xs`, the mechanism already ships as `figures.py`, and that pair is the argument that its specification may cost more than its implementation. |
 | [T-149](../tasks/T-149-prune-the-memory-index-of-spent-entries.md) — prune the memory index of spent entries | **T-130's `CE-10`, and the one row whose deliverable is not in this repository.** The memory index is 6,134 bytes over 39 lines, tier 1 by `../CLAUDE.md`'s own record, and several of its 35 entries mark themselves superseded in their own hook text — so it is paid every turn to tell the reader not to use them. `xs`, the owner's action on the owner's store, with the same shape as the closed T-135. What `specify` owes is a test for *spent* that gives the same answer twice. |
 | [T-150](../tasks/T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) — relocate the research prose in the two docstring outliers | **T-130's `CE-12`, and it is bounded by a rejection.** Docstrings at 30% of `tools/**/*.py` are this project's style and the general sweep is rejected in writing (`CONTEXT-AUDIT.md` §5.1); `build_probes.py` at 85% and `print_variants.py` at 58% are what survived it. `s`, gain `M` on a read path taken rarely, against the finding's own risk — these are the files whose behaviour is least obvious, which is plausibly why they explain themselves most. Deletion is not the change. |
+| [T-151](../tasks/T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md) — generate the finding-to-task listing instead of keeping it by hand | **Not a finding — the first new capability the audit produced rather than ranked.** Answering *which finding is which task* once meant reading six sources and writing a fourteenth copy of facts that already existed, stale by the next closure. The same defect has a second instance in this document: the execution table numbers its rows, its own notes cite those numbers, and **every insertion is a hand renumbering pass across both** — three of them on 2026-08-13 and 2026-08-14 alone. `s` if the finding-to-task link fits in task front matter, larger if the schema resists. **The local half of a requirement written into T-137 the same day**, and it is here first because everything portable in this method was proven here first. |
 | [T-138](../tasks/T-138-make-the-portable-half-agent-agnostic.md) — make the portable half agent-agnostic, and classify the load path by who controls it | **Part 1 passes its extraction test and fails the spirit of it.** `CE-07` and `R8` §10 carry one harness's mechanism — an override key form, a connector switch, three null results against one product's settings files — which is noise to an agent that has no skills, plugins or connectors and wrong to one whose concepts differ. The audit is meant to be run by other agents on other machines. **The deeper gap is that the method never asked who *controls* each load-path item** — project, user, or harness — and that omission is what let `CE-07` be banded `L` on a cost no project could reach. A controller field turns *unreachable* into a reportable result rather than a low rank; today those two read identically in a ranking and are different facts. `s`, and it lands **before T-137**, because packaging a method that assumes one agent publishes that assumption. |
 | [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) — package the context-economy method as a skill | **T-130's condition is met**: it ruled *no skill here, shaped so one is cheap later, and a second task does it if and when the method survives being used once* — and it has now been used once, end to end, producing findings, a ranking, five child tasks and three corrections to itself. `m`, **blocked on T-136**, because packaging a method whose research half is known to be thin sets that defect in a form other projects copy. §1 records what the one run says about the method rather than only that it ran: steps 1–4 held, step 5 was thin, one band was wrong by four times, and the F3 line held under pressure. Its own load cost is an acceptance criterion — a skill that audits context economy and is expensive to install is the joke that writes itself. |
 | ~~[T-135](../tasks/T-135-cut-the-load-path-this-project-cannot-use.md) — cut the load path this project cannot use~~ **done 2026-08-13** | **Closed at a quarter of its band, and the correction is the useful part.** ~800 tokens of a 7,300-token skill listing, bought with two restarts of the owner's environment, after which nothing moved. Three measurements agree on one rule: a per-skill override reaches **built-in and user** skills, and plugin-supplied ones are governed by whatever enables the plugin — which for these is not any file on this machine. `CE-07`'s band is corrected `L` → `S`: **a gain band is a claim about reachable saving, not about the size of the surface** (**L-82**). Thirty-one no-op entries were removed rather than left looking like policy, with the list kept in the task. Stopped at two failed experiments rather than trying a third (**L-83**); the boundary that was established is worth more than the tokens, because it stops the next session repeating them. *Why it was raised, unchanged from when it was open:* **T-130's `CE-07`, which the audit had ranked and then excluded from repository work on reasoning that was sound and wrong.** The plugins supplying most skills are not installed on disk, so no plugin-enable setting reaches them — but the listing override keys on the skill's *name* rather than on its delivery, and is honoured at project scope. The audit reasoned from where the files were instead of from what the configuration could address; the portable half of that lesson is in `R8` §8. `xs`, worked the day it was raised, and **left open until a restart measures it** — a saving that rests on a figure and never gets the after-figure is what this whole umbrella was raised to stop. The larger half, the cloud connectors at ~34.5k for one of them, is an open question rather than a unilateral change: the switch's coverage is not established and **rule 6** depends on a browser surface. |
@@ -690,24 +691,27 @@ followed.
 | — | ~~T-141~~ **done 2026-08-13** | the register is three standalone documents now, one per owner, and §7 is the index |
 | — | ~~T-142~~ **done 2026-08-13** | the one observation the owner directed be fixed rather than only reported |
 | — | ~~T-134~~ **done 2026-08-13** | the enabler landed first, as it was ordered to: `../CLAUDE.md` now states what a cut may remove, and reports itself over the bound |
-| **next** | T-145 to T-150 | **`specify → plan` only, in one batch, and no implementation** — six findings raised together need a decision each before any of them earns a place in this order. Ruled 2026-08-14 |
+| **next** | **T-145**, then T-146, T-147, T-150 | **`specify → plan` only, in one batch, and no implementation** — four findings whose worth is genuinely in doubt, decided before any of them earns a place in this order. **T-145 opens it**, because it settles the policy T-146 and T-147 depend on. Ruled 2026-08-14 |
 | 1–2 | T-143, T-144 | the two cuts T-134 was raised to make decidable, both `s`, and the only rows that reduce what every row below them costs |
-| 3 | T-136 | it can invalidate rows below it: a technique the first pass missed may raise a finding that outranks them |
-| 4 | T-138 | the other repair to `R8`, and `s` — both fixes land before the method is packaged |
-| 5 | T-137 | after 3 and 4, which it is blocked on in substance — the one run's evidence is freshest now and decays |
-| 6 | T-128 | prepared, ruled and surveyed |
-| 7 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
-| 8 | T-114 | the ruler is the one thing still known to bite past 13 slides |
-| 9 | T-109 | the hub of the source cluster; 10–12 are rework if it lands after them |
-| 10–12 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
-| 13 | T-115 | needs 8 and 9 to have settled what the shell offers |
-| 14 | T-117 | independent |
-| 15 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
-| 16 | T-054 | after 7, which may change which clauses are worth recording |
-| 20 | T-113 | research, and it decides ground 21–24 build on |
-| 21–22 | T-112, T-111 | the motion cluster, in that order |
-| 23 | T-041 | named in *what PH1 shipped without* |
-| 24 | T-057 | `xl`, and the least certain to be worth it |
+| 3 | T-151 | it makes every later review of this backlog cheaper, and the renumbering pass this table owes is its second instance |
+| 4 | T-149 | `xs`, and tier 1 — the memory index is paid on every turn to say it is spent |
+| 5 | T-148 | `xs`, the instance already measured, the mechanism already shipping |
+| 6 | T-136 | it can invalidate rows below it: a technique the first pass missed may raise a finding that outranks them |
+| 7 | T-138 | the other repair to `R8`, and `s` — both fixes land before the method is packaged |
+| 8 | T-137 | after 6 and 7, which it is blocked on in substance — the one run's evidence is freshest now and decays |
+| 9 | T-128 | prepared, ruled and surveyed |
+| 10 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 11 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 12 | T-109 | the hub of the source cluster; 13–15 are rework if it lands after them |
+| 13–15 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 16 | T-115 | needs 11 and 12 to have settled what the shell offers |
+| 17 | T-117 | independent |
+| 18 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
+| 19 | T-054 | after 10, which may change which clauses are worth recording |
+| 23 | T-113 | research, and it decides ground 24–27 build on |
+| 24–25 | T-112, T-111 | the motion cluster, in that order |
+| 26 | T-041 | named in *what PH1 shipped without* |
+| 27 | T-057 | `xl`, and the least certain to be worth it |
 
 **T-143 and T-144 went in at 1–2 on 2026-08-14, by the argument that put T-130 and T-131 to T-134
 there**: a row whose subject is what every other row costs is paid for by every row it precedes.
@@ -715,13 +719,20 @@ Both are `s`, both cut a file loaded on every turn, and T-134 — which exists t
 remove — has landed. It delays T-136 by two small tasks, and that is the owner's to reverse.
 
 **The `next` row is a batch and a scope limit, not a position.** On 2026-08-14 the owner raised every
-remaining finding of T-130's thirteen, and scheduled the six new ones to `specify → plan` **and no
+remaining finding of T-130's thirteen, and scheduled the new ones to `specify → plan` **and no
 further**: enough to answer whether each is worth implementing, and nothing spent on implementing one
 that is not. They take a place in this order only if that pass says they earn one — `cancelled` is a
 legitimate outcome and keeps the file. **T-145, T-146 and T-147 are one policy question in three
 tasks** — whether this project splits large documents by unit with a generated index — and the first
 of them specified settles it for all three, so that the batch cannot produce three inconsistent
-answers.
+answers. That is why T-145 opens it.
+
+**Two left the batch the same day, and the reason is a rule worth keeping.** T-148 and T-149 are `xs`
+with their instances already measured and their mechanisms already present, so a pass written only to
+decide whether to spend the hour costs about what the hour costs — **a decision pass is for work
+whose worth is in doubt, and buying certainty about a cheap thing is not cheap.** They sit at 4–5 as
+ordinary rows and run the whole lifecycle when their turn comes; what they lost is the parking, not
+the phases, which stay mandatory however small.
 
 **Two placements were argued and kept.** T-095 sits above a `high` task because it is `s` and guards
 what follows; T-119 delays T-114 by a real amount and is still first of the two, because a rule
@@ -736,7 +747,7 @@ and surveyed. The argument is that it is the only row whose subject is *what eve
 sixteen tasks executed before it are sixteen paid at a rate nobody has inventoried. It is an
 umbrella and implements nothing — its ranked findings become child tasks at the owner's review,
 which is where the saving is actually decided. *It landed the same day, and the review followed
-within the hour: four of seven candidates accepted, which are the closed T-134 and rows 3–5 above. The two documents are
+within the hour: four of seven candidates accepted, which are the closed T-134 and rows 6–8 above. The two documents are
 [`research/R8-context-economy-for-coding-agents.md`](research/R8-context-economy-for-coding-agents.md)
 and [`CONTEXT-AUDIT.md`](CONTEXT-AUDIT.md).*
 

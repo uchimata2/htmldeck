@@ -467,6 +467,16 @@ outcome for any of them and keeps the file** (`../tasks/TASK-WORKFLOW.md` §3.1)
 never candidates at all — this list stopped being the record of what is raised, and
 [`BRIEF.md`](BRIEF.md) *Release phases* is where every one of them now has a row.
 
+**T-148 and T-149 left that batch within the hour**, on the argument that a decision pass is for work
+whose worth is in doubt: both are `xs`, both have their instance measured in this document, and both
+have their mechanism already present, so the pass would cost what the work costs. They run the
+ordinary lifecycle in their turn. **The same review raised
+[T-151](../tasks/T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md), which
+is not a finding** — `CE-nn` closed at thirteen. Answering *which finding is which task* had just
+been done by hand out of six sources, including this section, and the copy it produced was stale at
+the next closure; T-151 makes that listing derived, and is the local proof of the requirement written
+into [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) the same day.
+
 | Candidate | From | Effort | Why it is where it is | Outcome |
 | :--- | :--- | :---: | :--- | :--- |
 | Expose `taskmd list` and `context` through a wrapper beside `tools/tasks/lint.py` | CE-02 | `xs` | Largest measured saving per unit of effort in the audit, no risk, and the locating problem is already solved in a file that ships | **[T-131](../tasks/T-131-expose-the-trackers-query-commands-so-the-board-is-not-read-whole.md)** |
