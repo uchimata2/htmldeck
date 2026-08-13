@@ -443,8 +443,16 @@ something else.
 ## 9. Candidate child tasks, and what the owner picked
 
 Seven candidates were put up in ranked order with **none raised**, the cut-off left to the owner.
-**Reviewed 2026-08-13: the top four were accepted and raised the same day.** The remaining three
-stand as candidates and are not tasks.
+**Reviewed 2026-08-13: the top four were accepted and raised the same day.**
+
+**The cut-off moved again on 2026-08-14, and one of the two additions was never on this list.** With
+`CE-11`'s bound set and [`../CLAUDE.md`](../CLAUDE.md) reporting itself 4,555 bytes over it, the owner
+raised both cuts that bound was written to make decidable:
+[T-143](../tasks/T-143-split-the-release-chronology-out-of-claude-md.md) for `CE-01`, the fifth
+candidate, and [T-144](../tasks/T-144-give-each-cumulative-rule-one-operative-home.md) for `CE-04`,
+which ranked tenth in §6 and was never put up here. **A debt statement in tier 1 naming a finding is
+what turned the citation into a task** — the enabler's stated purpose, arriving one day later than
+the enabler. `CE-05` and `CE-06` remain candidates and are not tasks.
 
 | Candidate | From | Effort | Why it is where it is | Outcome |
 | :--- | :--- | :---: | :--- | :--- |
@@ -452,7 +460,7 @@ stand as candidates and are not tasks.
 | Add a quiet mode to `tools/deck/check.py` | CE-03 | `xs` | 4,348 estimated tokens per green invocation, several per deck session | **[T-132](../tasks/T-132-give-the-deck-gate-a-quiet-mode-for-its-green-run.md)** |
 | Write down that a deck is never read whole | CE-13 | `xs` | One line, and it removes a failure that costs an entire session | **[T-133](../tasks/T-133-write-down-that-a-deck-is-never-read-whole.md)** |
 | State the tier model and bound tier 1 as a relation | CE-11 | `s` | The enabler. It should land before CE-01 and CE-04 so those cuts are decided rather than negotiated | **[T-134](../tasks/T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md)** |
-| Split the release chronology out of `CLAUDE.md` | CE-01 | `s` | 45% of a tier-1 file, paid every turn | candidate |
+| Split the release chronology out of `CLAUDE.md` | CE-01 | `s` | 45% of a tier-1 file, paid every turn | **[T-143](../tasks/T-143-split-the-release-chronology-out-of-claude-md.md)** |
 | Move `BRIEF.md`'s *Release phases* to its own document | CE-05 | `m` | 61% of the document new sessions are told to read first. **Carries a named collision**: the `DUPLICATE INDEX` advisory is excused by file name and would follow the content | candidate |
 | One file per lesson, with a generated index | CE-06 | `m`–`l` | The largest read-path document in the repository, needed one entry at a time | candidate |
 

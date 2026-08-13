@@ -34,11 +34,13 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is over its own bound today** — 18,642 bytes against `.taskmd/config.md`'s 14,087,
-measured 2026-08-13 with the command above. That is dated debt and not a rule already met: `CE-01`
+**This file is over its own bound today** — 18,807 bytes against `.taskmd/config.md`'s 14,087,
+measured 2026-08-14 with the command above. That is dated debt and not a rule already met: `CE-01`
 (split the release chronology out of here) and `CE-04` (one operative home per cumulative rule),
-ranked in [`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6, are the cuts that close it, and
-neither is raised as a task yet.
+ranked in [`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6, are the cuts that close it — raised
+2026-08-14 as [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and
+[T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), and first in the execution
+order.
 
 ## What this is
 
