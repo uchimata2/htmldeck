@@ -83,6 +83,33 @@ rather than rejected. What must go is wider than the two classes measured above:
 - **The `D6` name goes.** A name from another project's numbering means nothing here. It is named for
   its subject, as `sort-window` is.
 
+**The surface measured against the ruling, read-only 2026-08-13**
+
+Scanned across the deck, both specifications, D1–D5, D7, the deliverables README and the two BPMN
+models. **Nothing was written to the source.**
+
+| Class | Count | Where |
+| :--- | ---: | :--- |
+| case company — `DentalPro Solutions GmbH` / `DentalPro` | **121** | every file; a rename, plus a legal form that goes with it |
+| training context — `course` / `course's` | **17** | deck, both specs, D4, D5, the To-Be model |
+| place names | **0** | measured against countries, regions and 24 cities — the case names none |
+| external references | 14, **all inert** | 4 OFL licence URLs, 3 SVG namespaces, 3 font repositories, 1 Lucide licence. Text, not loads: the deck still fetches nothing |
+| personal data | **3**, all in D7 | `Gábor` in the audit report — **and D7 is not in the copy set**, so the class is empty for what ships |
+| local-system paths, `file://` links, e-mail addresses | **0** | the one `file://` hit is a sentence *about* DS-105 forbidding such a link |
+
+**Two of the classes were false alarms until the scan was made to bind on structure rather than on
+vocabulary, and the difference is 148 hits.** A first pass matching `exam*`, `exercis*` and
+`assessment` returned 165 training-context hits; 97 were the word *example*, 24 were the case's own
+*business value assessment matrix*, and `trainer` and `training` are a role and a staff activity in
+the redesigned process, not the course. The real class is `course` alone, and every one of its 17
+occurrences cites the training material **as a source** — *the same option the course material
+suggests*, *the course's four phases*, *the course names that limit*. That makes it editorial work
+rather than a substitution: the deck uses the citation as a rhetorical move, and the replacement has
+to keep the argument.
+
+**D7 is out of the copy set**, which is what empties the personal-data class. The deck cites D1–D5;
+D7 is an audit of the build and names the owner three times.
+
 **The one thing this task must not decide by itself**
 The deck analyses a business case **supplied by a training provider** as module material. Renaming
 the company does not change where the scenario, its structure and possibly its figures came from,
@@ -138,8 +165,8 @@ and this repository is public. That is a provenance question for the owner, not 
   the ruling rather than sent back: the same sentence that frees the figures frees the analysis, and
   a deck with no `--sources` directory cannot be gated the way its two siblings are.
 - ~~**Does it keep its `D6` name?**~~ **No** — named for its subject, as `sort-window` is.
-- **Where is the adopting project?** No record in this repository names its path, and the survey that
-  produced §1 was done in a session that knew it. Needed before step 2. — the owner
+- ~~**Where is the adopting project?**~~ **Answered by the owner 2026-08-13.** Surveyed read-only
+  the same day; the measured surface is in §1 and the naming decisions are in §3.
 
 ## 2. Plan
 
@@ -162,7 +189,22 @@ away from being published.
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- 2026-08-13 — **the new case identity is `Larkfield Dental Group`**, replacing `DentalPro Solutions
+  GmbH`. Invented, and `Group` rather than `GmbH` drops the jurisdiction marker, which is the
+  *locations* half of the owner's instruction — there are no other place names to remove. The page
+  says it is illustrative, as `examples/README.md` already does for Riverbend.
+- 2026-08-13 — **the example is named `measure-first`**, after its argument rather than after
+  another project's numbering, as `sort-window` is. The governing idea is that measurement and
+  discipline fix demand planning before any AI is bought.
+- 2026-08-13 — **the 17 `course` citations become citations of a reference framework**, one at a
+  time. They are load-bearing — *the same option the course material suggests, for reasons of our
+  own* is a rhetorical move, not a decoration — so each is rewritten to keep the argument rather
+  than deleted. This is the editorial work the `l` estimate is about.
+- 2026-08-13 — **D7 is not copied.** The deck cites D1–D5; D7 audits the build and carries the only
+  three occurrences of personal data in the whole set.
+
+**Not started.** Nothing has been copied out of the source, and the source is byte-for-byte
+untouched: every scan above opened files read-only.
 
 ## 4. Review
 
@@ -177,5 +219,6 @@ away from being published.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-13 | (no change) | **Source located and surveyed read-only; the sanitization surface is now measured rather than estimated.** 121 case-company occurrences, **17** genuine training-context ones, **no place names, no personal data, no local-system paths**, and 14 external references that are all licence text and SVG namespaces rather than loads. The first scan reported 165 training-context hits and 148 of them were false — *example*, *assessment*, and a `trainer` who is a role in the redesigned process. Bound on structure instead, which is the difference between a rename and an audit. Naming decided: `Larkfield Dental Group`, published as `measure-first`. **Nothing copied; the source is untouched.** |
 | 2026-08-13 | (no change) | **The owner ruled step 1: publish, and the figures stay** — the case and its numbers were invented by the owner and the trainer, so nothing here is the provider's to withhold. The re-basing this task recommended is withdrawn as unnecessary rather than rejected. The sanitization list widened in exchange: place names, *references* to the training context as well as the two words, and a re-check for external and local-system data. The palette stays the shipped one — the owner allowed a new one only if free, and an example that does not carry the plugin's single theme is not free (CLAUDE.md rule 4). Two dependent questions decided here rather than sent back: it ships with its sources, and the `D6` name goes. **Still not started, and nothing has been copied**: no record in this repository names the adopting project's path. |
 | 2026-08-13 | → proposed | Raised on the owner's instruction, with the source surveyed read-only and the sanitization surface measured rather than guessed: no personal data of any kind, and two classes of visible copy totalling 107 occurrences. Specified and planned in one pass because the owner was closing the session and asked for the migration *prepared*; nothing has been copied, which is deliberate — step 1 is a question only they can answer. `l` because the sanitizing is editorial work across a 13-slide deck and two specifications, not a substitution. |

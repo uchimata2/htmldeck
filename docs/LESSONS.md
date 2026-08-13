@@ -2126,6 +2126,38 @@ was in fact working.
    was read at all. A fixture nobody looks at can only be argued about.
 4. **It is L-05 with the failure moved.** There the risk is measuring only the clean case; here the
    dirty case was measured and was quietly clean. Both end with an instrument trusted on one reading.
+5. **A seeded value has to be shown wrong, not assumed wrong.** Found the same day in a second tool
+   (**T-127**): `figures.py`'s fixture staled a figure by adding 8 to it. The page said `252`, the
+   deck is `260`, and the seed **corrected** the page — so nothing reported it and the fixture failed
+   for want of a defect it had just repaired. A fixed delta is not a wrong value. Choose the seed
+   against the set of values the thing under test would accept, and refuse to run when no candidate
+   is outside it.
+
+### L-80 — Undoing a seeded break with `git checkout` throws the fix away, and the green run afterwards looks like proof
+
+Caught 2026-08-13 (**T-127**), one command before the task would have been committed as `done` with
+nothing in it. The fixture had been rebuilt in `tools/docs/figures.py` and the rebuild was uncommitted.
+Proving it catches a broken detector meant breaking the detector on purpose, and the break was undone
+with `git checkout -- tools/docs/figures.py`.
+
+That restores the file **from the index**, so it discarded the break *and the whole rebuild*. The
+confirming run printed `0 stale figure(s)` and exited 0 — which the original fixture also does on a
+clean page. **The evidence for the fix was produced by a file that no longer contained it**, and only
+`git status` showing the file unmodified gave it away.
+
+**How to apply.**
+
+1. **Reverse a deliberate break the way you made it.** Read the file, apply the break, run, then
+   write the saved text back — and assert the restored bytes equal the saved bytes. `git checkout`,
+   `git restore` and `git stash` all resolve against committed state, which is not the state you are
+   protecting.
+2. **A passing run is only evidence if the thing under test is still there.** Check `git diff --stat`
+   on the file after any experiment that touched it, before recording a result from it.
+3. **Or commit first, then break.** If the fix is committed, `git checkout` is exactly the right undo.
+   The trap is only ever *uncommitted work plus a git-level undo*.
+4. **It is L-79's sibling.** There the seeded defect was incomplete, so a working instrument read as
+   blind. Here the instrument was removed, so a missing fix read as working. Both are a seeded-defect
+   run whose result describes something other than what you meant to measure.
 
 ---
 

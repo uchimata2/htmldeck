@@ -51,8 +51,8 @@ names cost.
 | [T-118](T-118-a-style-must-mean-the-same-thing-in-the-reading-view.md) | A style that carries meaning on a slide must carry the same meaning in the reading view | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-109, T-115 |
 | [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) | Audit the ruleset for rules that cost more to satisfy than they return | `PH3` | - | `proposed` | `specify` | - | - | T-054, T-113, T-114, T-115 |
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-107, T-110 |
-| [T-127](T-127-figures-py-refuses-to-report-a-drifted-figure-because-its-fixture-needs-an-undrifted-page.md) | Stop figures.py refusing to report a drifted figure because its own fixture needs an undrifted page | `PH3` | - | `proposed` | `specify` | - | - | T-088, T-126 |
 | [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | - | `proposed` | `specify` | - | - | T-085, T-123, T-124, T-125 |
+| [T-129](T-129-the-reference-decks-figures-in-examples-readme-are-unwatched-and-two-are-wrong.md) | The reference deck's figures in examples/README.md are bound to nothing, and two of them are wrong on the published page | `PH3` | - | `proposed` | `specify` | - | - | T-085, T-088, T-127 |
 
 ## Closed
 
@@ -139,10 +139,10 @@ names cost.
 | [T-082](T-082-the-worked-examples-figure-ledger-omits-figures-that-reach-slides.md) | The worked example's figure ledger omits figures that reach slides, so the ledger cannot be the authority it is treated as | `PH2` | `0.2.0` | `done` | `review` | - | - | T-071, T-086, T-087, T-088, T-092 |
 | [T-083](T-083-the-generated-example-deck-fails-a-hard-rule-and-nothing-recorded-it.md) | The generated example deck fails a hard rule and nothing recorded it | `PH1` | `0.1.5` | `done` | `review` | - | - | T-021, T-071, T-075, T-084, T-085, T-096 |
 | [T-084](T-084-the-contents-bound-fixture-counts-a-deck-that-no-longer-exists.md) | The contents-bound fixture counts a deck that no longer exists, and has been red since the day the deck changed | `PH2` | `0.1.5` | `done` | `review` | - | - | T-036, T-069, T-078, T-083, T-096, T-116, T-123 |
-| [T-085](T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md) | The reference deck does not carry the shell it defines, and its sprite is out of sync | `PH1` | `0.1.5` | `done` | `review` | - | - | T-069, T-071, T-078, T-083, T-124, T-128 |
+| [T-085](T-085-the-reference-deck-does-not-carry-the-shell-it-defines.md) | The reference deck does not carry the shell it defines, and its sprite is out of sync | `PH1` | `0.1.5` | `done` | `review` | - | - | T-069, T-071, T-078, T-083, T-124, T-128, T-129 |
 | [T-086](T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) | Check that every figure ledger row appears on the slides its Used on names | `PH2` | `0.2.0` | `done` | `review` | - | - | T-071, T-082, T-087, T-090 |
 | [T-087](T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md) | Sweep the reference deck's figure ledger for the pattern T-082 found | `PH2` | `0.2.0` | `done` | `review` | - | - | T-082, T-086 |
-| [T-088](T-088-a-figure-in-a-sentence-naming-no-field-goes-stale-unwatched.md) | A figure in a sentence that names no field goes stale unwatched, and two just did | `PH3` | `0.2.1` | `done` | `review` | - | - | T-060, T-068, T-077, T-082, T-092, T-127 |
+| [T-088](T-088-a-figure-in-a-sentence-naming-no-field-goes-stale-unwatched.md) | A figure in a sentence that names no field goes stale unwatched, and two just did | `PH3` | `0.2.1` | `done` | `review` | - | - | T-060, T-068, T-077, T-082, T-092, T-127, T-129 |
 | [T-089](T-089-a-withdrawn-task-was-deleted-rather-than-cancelled.md) | A task withdrawn on a false premise was deleted rather than cancelled, and no rule said which | `PH3` | `0.2.1` | `done` | `review` | - | - | T-003, T-069, T-072 |
 | [T-090](T-090-spec5-cannot-parse-a-descriptive-slide-label.md) | SPEC-5 reports NO SUBJECT on a fully built deck whose slides carry a descriptive aria-label | `PH1` | `0.2.1` | `done` | `review` | - | - | T-051, T-065, T-066, T-086, T-091, T-101, T-102 |
 | [T-091](T-091-build-md-documents-icons-set-as-a-single-pair.md) | build.md documents shell.py icons --set as a single pair, and it takes one comma-separated argument | `PH1` | `0.2.1` | `done` | `review` | - | - | T-090 |
@@ -168,5 +168,6 @@ names cost.
 | [T-124](T-124-an-adopter-cannot-refresh-a-decks-shell-after-an-upgrade.md) | An adopter cannot refresh a deck's shell after an upgrade, so every release breaks every deck | `PH3` | `unreleased` | `done` | `review` | - | - | T-036, T-085, T-108, T-116, T-126, T-128 |
 | [T-125](T-125-a-split-contents-page-still-clamps-its-descriptions-to-one-line.md) | Decide whether a split contents page should take a further sheet rather than clamp every description to one line | `PH3` | `unreleased` | `done` | `review` | - | - | T-034, T-036, T-116, T-126, T-128 |
 | [T-126](T-126-shell-py-refuses-every-command-while-a-tracked-deck-is-behind-the-shell.md) | Stop shell.py refusing every command while a tracked deck is behind the shell | `PH3` | `unreleased` | `done` | `review` | - | - | T-101, T-124, T-125, T-127 |
+| [T-127](T-127-figures-py-refuses-to-report-a-drifted-figure-because-its-fixture-needs-an-undrifted-page.md) | Stop figures.py refusing to report a drifted figure because its own fixture needs an undrifted page | `PH3` | `unreleased` | `done` | `review` | - | - | T-088, T-126, T-129 |
 
 <!-- taskmd:end -->

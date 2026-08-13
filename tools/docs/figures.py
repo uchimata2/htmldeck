@@ -901,35 +901,92 @@ def self_test():
                  "moved off its own account and the run stayed green. That is the 80/81/82 drift, "
                  "undetected in the five documents it drifted in")
 
-    # 9. **The two figures `v0.2.0` corrected, put back exactly as they were** (T-088). Seeded from
-    # the real wording rather than from a constructed sentence, because what has to be tested is
-    # that *this page's* way of stating a property binds - the sentence says "It is", and the file
-    # it is about is named a sentence earlier, which is why nothing caught these two the first time.
+    # 9. **The two claim shapes `v0.2.0` corrected** (T-088). Seeded from the real wording rather
+    # than from a constructed sentence, because what has to be tested is that *this page's* way of
+    # stating a property binds - the sentence says "It is", and the file it is about is named a
+    # sentence earlier, which is why nothing caught these two the first time.
+    #
+    # **Found by the sentence's SHAPE, never by what the deck measures today** (T-127, **L-78**).
+    # This built its seed from `artifact_facts()` and `replace`d the page's *correct* sentence until
+    # 2026-08-13. On the one day that matters - the day the page has drifted - the replace matched
+    # nothing, the seed was empty, and the fixture took the whole tool down saying `the tool itself
+    # is wrong`, while the drift it exists to report sat in its own failure message. A fixture may
+    # assert what the page's wording binds. It may not require the page to be right first, which is
+    # the same substitution `shell.py` made in T-126.
+    #
+    # It also stopped being the *two* figures and became every claim of either shape the page binds.
+    # Naming the deck's own two was what tied the fixture to the deck's own numbers.
     rel = "examples/README.md"
     src = io.open(os.path.join(ROOT, rel.replace("/", os.sep)), encoding="utf-8").read()
-    # **Derived from the live figures, not written out.** The wording survives a deck that grows;
-    # a hardcoded `220 KB` would seed nothing the day the deck changed, and a fixture that seeds
-    # nothing passes. The deck did grow - T-070 put quick views in it - and this is the version
-    # that noticed.
-    facts = artifact_facts()["examples/sort-window/sort-window.html"]
-    grouped = "{:,}".format(facts["bytes"]).replace(",", " ")
-    wrong_kb, wrong_bytes = str(facts["KB"] - 8), "{:,}".format(facts["bytes"] - 8569).replace(",", " ")
-    was = (src.replace("**%d KB in one file**, %s bytes" % (facts["KB"], grouped),
-                       "**%s KB in one file**, %s bytes" % (wrong_kb, wrong_bytes))
-              .replace("six hand-written SVG figures", "five hand-written SVG figures"))
-    if was == src:
-        sys.exit("SELF-TEST FAILED: %s no longer states the built deck's size as "
-                 "'**%d KB in one file**, %s bytes', so the two figures T-088 was raised for are "
-                 "unexercised. Re-seed from the wording the page uses now"
-                 % (rel, facts["KB"], grouped))
-    seeded = [r for r in declared(table, outputs, {rel: was})[0] if r[0] == "STALE"]
-    for want, what in ((wrong_kb, "the rounded size"), (wrong_bytes, "the exact byte count"),
-                       ("five", "the figure count, which the page writes as a word")):
-        if not [r for r in seeded if r[2] == want]:
+    NUMBER_WORDS = ("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+                    "eleven", "twelve")
+    SIZE = re.compile(r"\*\*(\d[\d  ]*) KB in one file\*\*, (\d[\d  ]*) bytes")
+    COUNT = re.compile(r"\b(%s)\b(?= hand-written SVG figures)" % "|".join(NUMBER_WORDS))
+
+    # Every value any account prints. A seed has to avoid all of them, or the fixture can "stale" a
+    # figure onto another correct number and then fail because nothing reported it - which is what
+    # the first drifted page tried did: the page said 252, the seed added 8, and 260 is the right
+    # answer. **A fixed delta is not a wrong value; not being in this set is** (**L-79**).
+    account_values = set(v for v, _label, _cmd in table)
+
+    def moved_numeral(text):
+        """The same figure, wrong, in the notation the page wrote it in - so the row that reports
+        it is the row a reader would see, separators and all. `None` when no candidate is actually
+        wrong, which the caller reports rather than seeding a figure that is secretly correct."""
+        digits = int(re.sub(r"\D", "", text))
+        sep = next((s for s in (" ", " ") if s in text), "")
+        for delta in (8, 17, 33, 71, 137):
+            n = digits + delta
+            out = "{:,}".format(n).replace(",", sep) if sep else str(n)
+            if out != text and out not in account_values:
+                return out
+        return None
+
+    def moved_word(text):
+        """A different count word, and one no account prints - the same rule as the numerals."""
+        return next((w for w in NUMBER_WORDS if w != text and w not in account_values), None)
+
+    # **`compared` OR `STALE` - binding is the question, not correctness.** A figure that has
+    # drifted reports as `STALE`, which is *proof* it binds; counting only `compared` would drop it
+    # out of its own shape on exactly the day it went wrong, and the fixture would then refuse for
+    # want of a shape the page still carries. That is T-127's own defect one level further in, and
+    # it was caught by seeding a real drift rather than by reading the code.
+    bound = set(r[2] for r in declared(table, outputs)[0]
+                if r[0] in ("compared", "STALE") and r[1] == rel)
+
+    # **Only the claims of those shapes this page actually binds.** A claim of the right shape that
+    # is bound to nothing is a real defect - it is the one T-088 was raised for, and T-129 carries
+    # the live instance - but it is a defect in the *page's* coverage, and asserting it here would
+    # put the tool back where T-127 found it: down, blaming itself, for something the page did. The
+    # report says how many figures are unanchored; this fixture says the detector works.
+    claims = []
+    for m in SIZE.finditer(src):
+        for g in (1, 2):
+            if m.group(g) in bound:
+                claims.append((m.start(g), m.group(g), moved_numeral(m.group(g)), "a size figure"))
+    for m in COUNT.finditer(src):
+        if m.group(1) in bound:
+            claims.append((m.start(1), m.group(1), moved_word(m.group(1)),
+                           "a figure count, which the page writes as a word"))
+    for _at, text, wrong, what in claims:
+        if wrong is None:
+            sys.exit("SELF-TEST FAILED: no wrong value could be built for %s (%r) - every candidate "
+                     "is a value some account prints, so seeding it would test nothing"
+                     % (what, text))
+    numeral_claims = [c for c in claims if c[3] == "a size figure"]
+    word_claims = [c for c in claims if c[3] != "a size figure"]
+    if not numeral_claims or not word_claims:
+        sys.exit("SELF-TEST FAILED: %s no longer binds both of the claim shapes T-088 was raised "
+                 "for - '**N KB in one file**, N bytes' and 'N hand-written SVG figures'. Bound "
+                 "values found: %r. One shape is now unexercised, which is how the two figures got "
+                 "through the first time" % (rel, sorted(bound)))
+    for at, text, wrong, what in claims:
+        was = src[:at] + wrong + src[at + len(text):]
+        if not [r for r in declared(table, outputs, {rel: was})[0]
+                if r[0] == "STALE" and r[2] == wrong]:
             sys.exit("SELF-TEST FAILED: %s was re-seeded as %s and no row reported it. That is the "
                      "state this task was raised from - a figure about a named file, inside the "
-                     "unanchored bucket, wrong and unwatched. Got: %r"
-                     % (what, want, [(r[2], r[3]) for r in seeded]))
+                     "unanchored bucket, wrong and unwatched" % (what, wrong))
 
     # 10. **A manifest entry whose artifact is gone fails**, which is the condition the manifest was
     # allowed on. `PUBLISHING.md` §2 is an argument against hand-kept lists because they go stale in
