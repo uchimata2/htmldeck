@@ -55,7 +55,6 @@ names cost.
 | [T-136](T-136-re-run-the-external-research-with-a-recorded-search-record.md) | Re-run the external research with a recorded search record | `PH3` | - | `proposed` | `specify` | T-130 | - | - | T-137 | T-130, T-135, T-137, T-138 |
 | [T-137](T-137-package-the-context-economy-method-as-a-skill.md) | Package the context-economy method as a skill | `PH3` | - | `proposed` | `specify` | T-130 | - | T-136 | - | T-130, T-135, T-136, T-138 |
 | [T-138](T-138-make-the-portable-half-agent-agnostic.md) | Make the portable half agent-agnostic, and classify the load path by who controls it | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-135, T-136, T-137 |
-| [T-139](T-139-three-rows-in-brief-md-carry-a-cell-the-table-cannot-render.md) | Three rows in BRIEF.md carry a cell the table cannot render | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-131 |
 
 ## Closed
 
@@ -179,5 +178,6 @@ names cost.
 | [T-132](T-132-give-the-deck-gate-a-quiet-mode-for-its-green-run.md) | Give the deck gate a quiet mode for its green run | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130 |
 | [T-133](T-133-write-down-that-a-deck-is-never-read-whole.md) | Write down that a deck is never read whole | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134 |
 | [T-135](T-135-cut-the-load-path-this-project-cannot-use.md) | Cut the load path this project cannot use | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134, T-136, T-137, T-138 |
+| [T-139](T-139-two-rows-in-brief-md-carry-a-cell-the-table-cannot-render.md) | Two rows in BRIEF.md carry a cell the table cannot render | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-131 |
 
 <!-- taskmd:end -->

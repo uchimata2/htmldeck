@@ -2294,6 +2294,32 @@ so no edit here would ever prompt anyone to look.
 
 ---
 
+### L-86 — A throwaway scan is an instrument, and its first output is a claim about its own tuning
+
+Caught 2026-08-13 (**T-139**). A twenty-line script counted table cells against table headers across
+the record and named three defective rows. Two were real. The third was the script: it treated
+`` | | | `` — a legal two-column header whose labels are empty — as the separator line, skipped the
+real header, and measured the rows that followed against the width of the wrong line. **The task was
+raised, titled and scoped around three before anyone checked**, and acting on that list would have
+meant editing a correct row to satisfy a mis-tuned tool.
+
+**The scan was still the right move**, and that is the part not to over-correct: nothing else in this
+repository can see a cell that renders nowhere, and reading the table would never have found it. What
+was missing was one step, not the tool.
+
+**How to apply.**
+
+1. **Run it against a case you already know the answer for**, before reading any of its output as a
+   finding. One known-good row is enough and costs a minute.
+2. **When a scan names a defect in something long-standing, look at the thing itself.** Two of the
+   three here were recent edits and one was years-stable by the record's standards; the odds were
+   never even between *the record is wrong* and *my regex is wrong*.
+3. **Correct the specification, not just the fix list.** The count had already reached a task title, a
+   `BRIEF.md` row and a filename by the time it was caught, and each of those is a place the wrong
+   number outlives the session (**L-08**).
+
+---
+
 ## Writing
 
 ### L-12 — What is read every time must be short
