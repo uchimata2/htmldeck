@@ -25,6 +25,7 @@ A stored copy of a derivable fact drifts on the first amendment (**L-08**).
 Pure standard library (**L-07**), real Chrome offline through `render.py`.
 """
 
+import inspect
 import json
 import os
 import sys
@@ -157,16 +158,42 @@ DEFERRED = {
 BLIND = "S1 Claim, S2 Evidence, S4 Density, D1 Spine, D4 Consistency"
 
 
-def gather(deck, sources=None, print_pages=False, skip_contract=False):
-    """Every verdict, from every stage, as one list of `(rule, what, ok)` rows.
+# **The producers a run cannot reach from markup, and why each is outside the static half.** The
+# complement is declared, never the membership: a list of what is *in* is what `static_variants.py`
+# kept by hand, and a name nobody adds is a name nobody misses (T-066). A list of what is *out*
+# cannot go stale in silence, because `producer_split()` fails the run for a producer in neither -
+# which is the only thing that tells a deliberate exclusion from a forgotten one. T-123 added
+# `printgeom.verdicts` and it is the first whose absence from the static half is **correct**; before
+# this table there was nowhere to write that down (T-095).
+NOT_STATIC = {
+    "audit.render_verdicts": "reads a measurement taken in real Chrome. There is no markup answer "
+                             "to a computed style or a laid-out box",
+    "audit.reduced_verdicts": "a second real render with prefers-reduced-motion forced, which is a "
+                              "measurement of what the browser did rather than of what the deck says",
+    "contract.verdicts": "sweeps four viewports and two resolutions; §2.4 and §2.5 are claims about "
+                         "what happens BETWEEN renders and no single one of them decides it",
+    "contract.scale_verdicts": "the same sweep, and it delegates after a render it must first take",
+    "contract.scale_verdicts_from": "takes the sweep's measurement as its subject, never a deck",
+    "printpages.verdicts": "counts the pages a real Chrome print produces, which no markup states",
+    "printgeom.verdicts": "reads the card rectangles out of the printed PDF. The fault it exists "
+                          "for lives only in paged layout, which no screen measurement reaches "
+                          "(T-123, **L-76**)",
+    "spec.verdicts": "the content half. Its subject is the specification and the sources beside the "
+                     "deck, not the deck's own markup",
+}
 
-    Returns `(rows, data, notes)`. `notes` carries what a reader needs to know about the run
-    itself - which halves ran, and anything that failed to measure.
+
+def static_rows(html):
+    """Every verdict a run reaches from the markup alone - no browser, no print, no sources.
+
+    **One composition, imported rather than restated.** `static_variants.py` seeds a defect into the
+    markup and requires the gate to notice it, so it needs exactly this half - and it used to compose
+    its own copy by naming the producers. The two descriptions disagreed the first time either
+    changed: T-093 moved DS-005 out of `STATIC` into a producer, `gather` picked it up, and the suite
+    reported `MISSED` for a rule that was being checked (**L-08**, **L-13**). Which producers this
+    function calls is now the definition of the static half; `NOT_STATIC` is the rest, with a reason.
     """
-    html = open(deck, "r", encoding="utf-8").read()
-    rows, notes = [], []
-
-    rows += [(rule, what, bool(fn(html))) for rule, what, fn in audit.STATIC]
+    rows = [(rule, what, bool(fn(html))) for rule, what, fn in audit.STATIC]
     # The editorial split, added by T-016. DS-230 names what tier two is for and stays `judge`;
     # this is the one clause of DS-161 a program can settle, and it needs a count in its text,
     # which `STATIC`'s boolean shape cannot carry.
@@ -193,6 +220,64 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     # would change; this holds it to the elements a generator has to emit - the other half of the
     # same claim, and the one T-002 cannot start without.
     rows += component.verdicts(html)
+    return rows
+
+
+def static_producers():
+    """Which verdict producers `static_rows` reaches, read from its own source.
+
+    **Derived, so adding a producer to the composition adds it here too.** Reading the source is the
+    same technique `audit.verdict_producers` uses one scope out, and for the same reason: a second
+    list agreeing with the code is a list that agrees until somebody edits one of them.
+    """
+    src = inspect.getsource(static_rows)
+    return sorted(n for n in audit.verdict_producers() if "%s(" % n in src)
+
+
+def producer_split():
+    """`(static, elsewhere)` - every verdict producer classified, or the run stops.
+
+    **This is what the hand-kept list could not do.** Deleting the list makes the suite run whatever
+    `static_rows` runs, which closes the drift; it does not say whether a producer *missing* from
+    the static half is missing on purpose. Three have arrived since this discipline was needed and
+    the third is the first whose exclusion is correct, so the question is now permanent: a producer
+    in neither the composition nor `NOT_STATIC` fails the run until somebody decides which it is.
+    """
+    producers = set(audit.verdict_producers())
+    static = set(static_producers())
+    stray = sorted(producers - static - set(NOT_STATIC))
+    if stray:
+        sys.exit("SELF-TEST FAILED: %s produce verdict rows and are neither called by "
+                 "check.static_rows() nor declared in check.NOT_STATIC. Wire it into the static "
+                 "half, or say there why it cannot run without a browser, a print or sources - a "
+                 "producer in neither is a family of rows no seeded-defect suite reaches, and the "
+                 "suite's own count would still read n of n (T-095)" % ", ".join(stray))
+    gone = sorted(set(NOT_STATIC) - producers)
+    if gone:
+        sys.exit("SELF-TEST FAILED: NOT_STATIC declares %s and no module defines them - an excusal "
+                 "that has outlived its subject, which is the shape T-077 was raised from"
+                 % ", ".join(gone))
+    both = sorted(static & set(NOT_STATIC))
+    if both:
+        sys.exit("SELF-TEST FAILED: %s are called by static_rows() and declared outside it. The "
+                 "table is the complement of the composition, so an entry in both makes it neither"
+                 % ", ".join(both))
+    for name, why in sorted(NOT_STATIC.items()):
+        if len(why) < 40:
+            sys.exit("SELF-TEST FAILED: %s is excluded in a phrase, not in writing" % name)
+    return sorted(static), sorted(NOT_STATIC)
+
+
+def gather(deck, sources=None, print_pages=False, skip_contract=False):
+    """Every verdict, from every stage, as one list of `(rule, what, ok)` rows.
+
+    Returns `(rows, data, notes)`. `notes` carries what a reader needs to know about the run
+    itself - which halves ran, and anything that failed to measure.
+    """
+    html = open(deck, "r", encoding="utf-8").read()
+    rows, notes = [], []
+
+    rows += static_rows(html)
 
     data, err = audit.render_data(deck)
     if not data:
@@ -388,6 +473,10 @@ def self_test():
     for rid, why in DEFERRED.items():
         if len(why) < 40:
             sys.exit("SELF-TEST FAILED: %s is excused in a phrase, not in writing" % rid)
+
+    # Every verdict producer is in the static half or declared outside it. Here as well as in
+    # `static_variants.py`, because the composition is this file's and a producer arrives here first.
+    producer_split()
     return True
 
 

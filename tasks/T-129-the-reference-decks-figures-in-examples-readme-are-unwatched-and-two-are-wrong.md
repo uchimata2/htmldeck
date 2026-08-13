@@ -190,6 +190,7 @@ files.
 
 `python tools/tasks/lint.py` — all three passed, with the expected `DUPLICATE INDEX docs/BRIEF.md`.
 `python tools/docs/refcheck.py` — 1634 pointers, 0 broken.
+`python tools/check_all.py` — 19 ran, 1 skipped with its reason, 0 FAILED, 0 unclassified, 0 stale.
 
 **What this does not close.** The `unanchored` bucket is still 560 figures and still silent one
 figure at a time; what changed is that a *property of a manifest artifact* now has a number that

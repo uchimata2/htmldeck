@@ -28,9 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths                                                        # noqa: E402
 import render                                                        # noqa: E402
 import audit                                                         # noqa: E402
-import contrast                                                      # noqa: E402
-import theme                                                         # noqa: E402
-import component                                                     # noqa: E402
+import check                                                         # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -278,16 +276,20 @@ def build(name, edits):
 
 
 def static_failures(path):
+    """The gate's browserless half, run on one seeded deck.
+
+    **Imported, never restated** (T-095). This composed its own copy by naming the producers until
+    2026-08-13, and `check.py:gather` composed the same half in its own order from its own list -
+    two descriptions of one thing, which is **L-13**'s subject and **L-08**'s. They disagreed the
+    first time either changed: T-093 moved DS-005 out of `STATIC` into a producer, `check.py` picked
+    it up, and this suite reported `MISSED` for a rule that was being checked. **It was loud by
+    luck**, because a seeded variant for DS-005 happened to exist; a producer added for a rule with
+    no variant left no trace at all, since the rules it has no variant for are not in its denominator
+    either. A gate's static half is whatever `check.py` gathers without a browser, and now that is
+    the only place it is written down.
+    """
     html = open(path, "r", encoding="utf-8").read()
-    # `fetch_verdicts` joined the list when T-093 moved DS-005 out of `STATIC`, and this suite is
-    # what noticed: the variant that seeds a file read reported MISSED the moment the rule left the
-    # static list, because the producer it moved to was not being run here. A gate's static half is
-    # whatever `check.py` gathers without a browser, not whatever happens to be in one table.
-    rows = ([(r, w, bool(fn(html))) for r, w, fn in audit.STATIC]
-            + audit.split_verdicts(html) + audit.provenance_verdicts(html)
-            + audit.marker_verdicts(html)
-            + audit.fetch_verdicts(html)
-            + contrast.verdicts(html) + theme.verdicts(html) + component.verdicts(html))
+    rows = check.static_rows(html)
     return {r for r, _w, ok in rows if not ok}, rows
 
 
@@ -328,6 +330,12 @@ def self_test():
     if base:
         sys.exit("SELF-TEST FAILED: the UNBROKEN deck already fails %s - a seeded break cannot be "
                  "shown caught against a red baseline" % sorted(base))
+
+    # **Every verdict producer is inside this suite or declared outside it with a reason.** Importing
+    # the composition stops the two halves drifting; it does not notice a producer that joined the
+    # gate and reached neither half. Run here as well as in `check.py` because this is the suite the
+    # answer is about, and a run of it must not depend on somebody having run the other.
+    check.producer_split()
     return True
 
 
@@ -352,6 +360,14 @@ def main(argv):
     self_test()
     print("source:  %s\n" % paths.display_path(SRC, ROOT))
     print("=== static (no browser)")
+    # **What the denominator is over.** *n of n caught* says nothing until a reader can see which
+    # producers were run: the count is over the variants, and a rule with no variant is absent from
+    # numerator and denominator alike. Printing the producers is what makes the gap visible instead
+    # of arithmetically invisible.
+    static, elsewhere = check.producer_split()
+    print("  producers run:  %s" % ", ".join(static))
+    print("  outside this half, with a reason in check.NOT_STATIC:\n    %s\n"
+          % "\n    ".join(elsewhere))
     bad = run(STATIC_VARIANTS, static_failures, "static")
     if "--static-only" not in argv:
         render.self_test()
