@@ -54,7 +54,8 @@ names cost.
 | [T-131](T-131-expose-the-trackers-query-commands-so-the-board-is-not-read-whole.md) | Expose the tracker's query commands so the board is not read whole | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130 |
 | [T-132](T-132-give-the-deck-gate-a-quiet-mode-for-its-green-run.md) | Give the deck gate a quiet mode for its green run | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130 |
 | [T-133](T-133-write-down-that-a-deck-is-never-read-whole.md) | Write down that a deck is never read whole | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-134 |
-| [T-134](T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md) | State the tier model and bound tier 1 as a relation | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-133 |
+| [T-134](T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md) | State the tier model and bound tier 1 as a relation | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-133, T-135 |
+| [T-135](T-135-cut-the-load-path-this-project-cannot-use.md) | Cut the load path this project cannot use | `PH3` | - | `in_progress` | `implement` | T-130 | - | T-130, T-134 |
 
 ## Closed
 
@@ -173,6 +174,6 @@ names cost.
 | [T-126](T-126-shell-py-refuses-every-command-while-a-tracked-deck-is-behind-the-shell.md) | Stop shell.py refusing every command while a tracked deck is behind the shell | `PH3` | `unreleased` | `done` | `review` | - | - | T-101, T-124, T-125, T-127 |
 | [T-127](T-127-figures-py-refuses-to-report-a-drifted-figure-because-its-fixture-needs-an-undrifted-page.md) | Stop figures.py refusing to report a drifted figure because its own fixture needs an undrifted page | `PH3` | `unreleased` | `done` | `review` | - | - | T-088, T-126, T-129 |
 | [T-129](T-129-the-reference-decks-figures-in-examples-readme-are-unwatched-and-two-are-wrong.md) | The reference deck's figures in examples/README.md are bound to nothing, and two of them are wrong on the published page | `PH3` | `unreleased` | `done` | `review` | - | - | T-085, T-088, T-127, T-128 |
-| [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md) | Audit the context economy of an agent-driven repository, and rank the savings | `PH3` | - | `done` | `review` | - | T-131, T-132, T-133, T-134 | T-096, T-128, T-131, T-132, T-133, T-134 |
+| [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md) | Audit the context economy of an agent-driven repository, and rank the savings | `PH3` | - | `done` | `review` | - | T-131, T-132, T-133, T-134, T-135 | T-096, T-128, T-131, T-132, T-133, T-134, T-135 |
 
 <!-- taskmd:end -->

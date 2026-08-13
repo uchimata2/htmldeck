@@ -378,6 +378,14 @@ advisory is believable everywhere else precisely because that excusal is narrow.
 from the excusal would leave the advisory firing correctly against a document no rule covers, in the
 window between two tasks — which is the state the excusal exists to prevent.
 
-**Two of these are not repository work at all** — CE-07 (enable skills per project) and CE-10 (prune
-the memory index) are the owner's machine and the owner's memory. They are ranked because they are
-real savings, and they are named here so they are not mistaken for tasks.
+**CE-07 turned out to be repository work after all, and is now
+[T-135](../tasks/T-135-cut-the-load-path-this-project-cannot-use.md).** It was ranked as the owner's
+machine on the reasoning that the plugins supplying most skills are not installed on disk, so no
+setting could reach them. The configuration schema says otherwise: the listing override keys on the
+**skill's name**, not on its delivery, and it is honoured at project scope in a file this repository
+already keeps out of git. The correction is recorded in
+[`research/R8-context-economy-for-coding-agents.md`](research/R8-context-economy-for-coding-agents.md)
+§8, under CE-07, because the lesson is portable and larger than the finding.
+
+**CE-10 stands as not repository work** — pruning the memory index is the owner's memory, and is
+named here so it is not mistaken for a task.

@@ -349,12 +349,27 @@ repository* — the first project this method was run on — and are illustratio
 | :--- | :--- |
 | **Surface / Family** | A / F5 |
 | **Finding** | Every available skill contributes its name and description to every session, whether or not the project could ever use it. Measured on the audited machine: **55 skills, 20,941 bytes of description, ~5,200 estimated tokens per session** — comparable to the whole always-loaded instruction set, and mostly for skills irrelevant to the repository at hand |
-| **Change** | Enable per project rather than globally. This is a harness setting, not a repository change, so it is the owner's action and not a work item in any one project |
+| **Change** | Turn off, per project, the skills a project cannot use. **Find the mechanism that keys on the skill's own name, not on where it came from** — see the correction below |
 | **Gain** | `L` on the load path |
 | **Effort** | `xs` |
-| **Risk** | A skill that would have helped is silently absent. Mitigated because the mechanism that lists skills also allows adding one back |
+| **Risk** | A skill that would have helped is silently absent. Mitigated because the same mechanism adds one back, and because a middle setting that keeps the name and drops the description costs about a tenth and stays discoverable |
 | **Applies to** | `any` |
 | **Source** | external research (T4); this audit |
+
+**A correction worth more than the finding, recorded 2026-08-13.** The audit first reported this as
+untouchable — the reasoning was that the plugins supplying most of the skills were not installed
+anywhere on disk, so no plugin-enable setting could reach them. That was true and irrelevant. **The
+configuration schema turned out to expose a per-skill listing override keyed on the skill's *name*,
+which does not care where the skill is served from**, plus a switch that stops cloud connectors being
+fetched at all, and a budget fraction that caps what the whole listing may cost.
+
+Two general lessons, and the second is the one that generalises:
+
+- **A skill's delivery mechanism and its listing cost are different questions.** An audit that reasons
+  from *where the files are* answers the wrong one.
+- **Read the configuration schema before concluding a thing cannot be configured.** Three of this
+  audit's conclusions about what was reachable were wrong in the same direction — too pessimistic —
+  and all three were settled by one document that was available the whole time.
 
 ### CE-08 — A measured figure that lives only in the handover chain
 
