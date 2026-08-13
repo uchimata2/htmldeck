@@ -235,7 +235,7 @@ Gain per unit of effort, risk as a veto. **`any`-marked findings are stated in f
 | ---: | :--- | :--- | :--- | :---: | :---: | :--- | :--- |
 | 1 | **CE-02** | B / F4 | Expose the tracker's `list` and `context` so the board is not read whole | `L` | `xs` | none | R8 §8 |
 | 2 | **CE-03** | C / F5 | A quiet mode for the deck gate's green run | `L` | `xs` | stated | R8 §8 |
-| 3 | **CE-07** | A / F5 | Enable skills per project, not globally | `L` | `xs` | stated | R8 §8 |
+| ~~3~~ | **CE-07** | A / F5 | Enable skills per project, not globally — **done, and the band was wrong** | ~~`L`~~ **`S`** | `xs` | stated | R8 §8 |
 | 4 | **CE-13** | B / F4 | Write down that a deck is never read whole | *bimodal* | `xs` | none | §6.1 |
 | 5 | **CE-01** | A / F1 | Split the release chronology out of `CLAUDE.md` | `L` | `s` | stated | R8 §8 |
 | 6 | **CE-11** | A / F1 | Adopt the tier model and a relation-bound tier 1 | *enabler* | `s` | none | §6.1 |
@@ -387,8 +387,15 @@ advisory is believable everywhere else precisely because that excusal is narrow.
 from the excusal would leave the advisory firing correctly against a document no rule covers, in the
 window between two tasks — which is the state the excusal exists to prevent.
 
-**CE-07 turned out to be repository work after all, and is now
-[T-135](../tasks/T-135-cut-the-load-path-this-project-cannot-use.md).** It was ranked as the owner's
+**CE-07 closed the same day at a quarter of its band, and the correction is the useful part.**
+[T-135](../tasks/T-135-cut-the-load-path-this-project-cannot-use.md) bought **~800 tokens of a 7,300
+token listing over two restarts**, then stopped moving. A per-skill override reaches built-in and
+user skills; plugin-supplied ones are governed by whatever enables the plugin, and those plugins are
+not installed here. `L` was an honest reading of the block's size and a careless one of its
+addressable share — **a gain band is a claim about reachable saving, and this one was not.** One
+experiment would decide the rest and it is the owner's, because it touches every project they work in.
+
+**How it became a task at all:** It was ranked as the owner's
 machine on the reasoning that the plugins supplying most skills are not installed on disk, so no
 setting could reach them. The configuration schema says otherwise: the listing override keys on the
 **skill's name**, not on its delivery, and it is honoured at project scope in a file this repository

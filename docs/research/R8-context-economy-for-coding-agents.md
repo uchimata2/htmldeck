@@ -365,8 +365,8 @@ repository* — the first project this method was run on — and are illustratio
 | **Surface / Family** | A / F5 |
 | **Finding** | Every available skill contributes its name and description to every session, whether or not the project could ever use it. Measured on the audited machine: **55 skills, 20,941 bytes of description, ~5,200 estimated tokens per session** — comparable to the whole always-loaded instruction set, and mostly for skills irrelevant to the repository at hand |
 | **Change** | Turn off, per project, the skills a project cannot use. **Find the mechanism that keys on the skill's own name, not on where it came from** — see the correction below |
-| **Gain** | `L` on the load path |
-| **Effort** | `xs` |
+| **Gain** | **`S`, corrected from `L` on 2026-08-13 after measurement.** The block is large; the *addressable* part was 11% of it. See the second correction below |
+| **Effort** | `xs` to attempt, and it may take more than one attempt |
 | **Risk** | A skill that would have helped is silently absent. Mitigated because the same mechanism adds one back, and because a middle setting that keeps the name and drops the description costs about a tenth and stays discoverable |
 | **Applies to** | `any` |
 | **Source** | external research (T4); this audit |
@@ -385,6 +385,23 @@ Two general lessons, and the second is the one that generalises:
 - **Read the configuration schema before concluding a thing cannot be configured.** Three of this
   audit's conclusions about what was reachable were wrong in the same direction — too pessimistic —
   and all three were settled by one document that was available the whole time.
+
+**A second correction, from measuring the first one. The band was `L` and the truth was `S`.** Two
+restarts and three measurements produced **~800 tokens of a 7,300-token listing**, and then stopped
+moving. What the numbers established is a boundary rather than a saving: **a per-skill override
+reaches the skills the harness itself and the user provide; skills a plugin supplies are governed by
+whatever enables the plugin** — and where those plugins are not installed locally, no file on the
+machine names them. The connector switch behaved the same way: accepted at project scope, inert.
+
+Three lessons, and the third is the one that costs most to learn late:
+
+- **A schema that documents a setting does not promise it applies at the scope you are writing it in.**
+  The schema was right about what the keys mean and silent about which sources honour them.
+- **Estimate the addressable share, not the surface.** `L` was an honest reading of the block's size
+  and a careless one of what could be changed. A gain band is a claim about *reachable* saving.
+- **Two failed experiments is the signal to stop, not to try a third.** Each attempt here cost a
+  restart of someone else's environment. The finding that survives is the boundary, written down so
+  the next session does not re-run the same two tests — which is worth more than the tokens were.
 
 ### CE-08 — A measured figure that lives only in the handover chain
 
