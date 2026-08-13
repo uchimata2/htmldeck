@@ -1349,7 +1349,7 @@ paragraph. This is **L-57** at project scale: a comparison is bounded by what it
    about behaviour is the class none of those reach.
 3. **Expect the finder to be a review, not a gate.** Both halves were found by reading the project
    end to end with no defect in hand. That is an argument for scheduling the sweep, not for
-   remembering harder — the same argument [`BRIEF.md`](BRIEF.md) *Release phases* makes twice about
+   remembering harder — the same argument [`RELEASE-PHASES.md`](RELEASE-PHASES.md) makes twice about
    its own tables.
 
 ### L-26 — Measure the content, not the box; and pin motion before capturing
@@ -2400,3 +2400,39 @@ choices fail in opposite directions:
 4. **If the rule is unmet on the day it is written, say so in the same breath.** `../CLAUDE.md` went
    in 4,555 bytes over its own bound and names the two findings that close it. An unmet budget that
    reads as met is worse than no budget, because every later edit cites it as headroom.
+
+### L-89 — Split a document by kind; split it by unit only when the unit has an address
+
+Learned 2026-08-14 (**T-145**). Three findings in one backlog each proposed splitting a large
+document, and they were read as one policy question — *does this project split large documents?* They
+are two different moves and only one of them fits any given document:
+
+> **Split to a document when a section is a different *kind* of document from its host. Split to one
+> file per unit only when the unit is addressed by its own id and is wanted one at a time.**
+
+A decision record inside a specification is the first: two kinds, one file, and the fix is one more
+file. A set of `L-nn` lessons or `§n` workflow phases is the second: the id already *is* an address,
+so storage can follow it and a generated index restores the whole. Applying the second move to the
+first gives 134 files holding one table row each, answering a question nobody asks.
+
+**How to apply.**
+
+1. **Ask what cites the content, and at what grain.** Cited as a whole, or scanned as a table → one
+   document. Cited singly by id → one file per id. The citations are the measurement, not the size.
+2. **Move the part that grows, not the part that is finished.** The finding here proposed leaving the
+   open phase in place and extracting only the completed rows — but the open phase *was* the growth,
+   52,894 of 92,894 bytes and gaining a row per closure. A split that leaves the growing table behind
+   re-creates the finding by itself, on a timer. **Ask which half has the growth rate before choosing
+   which half moves.**
+3. **Sweep the citations before moving a byte, and keep every cited heading as a pointer** (**L-39**,
+   and **T-141** is the worked precedent). A heading removed is a citation falsified.
+4. **Move by slicing, and assert the moved bytes equal the removed bytes.** 93 KB retyped is 93 KB of
+   places for a transcription error that no gate reads.
+5. **Do not claim the bytes as a saving.** They moved. What was bought is that the on-demand document
+   is no longer paid for by a session that wanted the other kind — say that, and give the two
+   measured sizes.
+
+*The related trap: a prior task may have considered the same split and refused it on a **different**
+question. Here **T-098** refused it as a way to silence an advisory, correctly, and never weighed the
+read path. Read what it actually decided — its refusal contained the prediction that made this move
+safe to check.*

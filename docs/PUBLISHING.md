@@ -235,11 +235,14 @@ that entry point derives its count from the deck — the two callers agreed on b
 ([T-120](../tasks/T-120-printpages-standalone-defaults-the-slide-count-to-a-hardcoded-twelve.md)).
 
 **The first checker ends with one advisory that is expected**, and a release run meets it before
-anything else: `taskmd check` reports `DUPLICATE INDEX` against `docs/BRIEF.md`, because the phase
+anything else: `taskmd check` reports `DUPLICATE INDEX` against
+[`RELEASE-PHASES.md`](RELEASE-PHASES.md), because the phase
 tables name a majority of the board's ids. It is a true reading of a document that is not a duplicate
 index, it fires on every run, and the decision behind ignoring it is
 [`../tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) §6. **A `DUPLICATE INDEX` naming any other
-document is not covered by it and stops the release.**
+document is not covered by it and stops the release.** *It named `docs/BRIEF.md` until 2026-08-14,
+when the tables moved; the advisory followed them, which is what the file-name form of the excusal is
+for.*
 
 **`--sources` is the one argument that cannot be guessed from the deck's path**, and guessing wrong
 does not error — it reports `FIG-0 … source files this reader cannot open` and fails the run, which

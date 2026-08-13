@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: []
 related: []
-work_package: PH2   # the release phase — see docs/BRIEF.md, Release phases
+work_package: PH2   # the release phase — see docs/RELEASE-PHASES.md
 owner: <name>
 created: YYYY-MM-DD
 updated: YYYY-MM-DD

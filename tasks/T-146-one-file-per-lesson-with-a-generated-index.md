@@ -48,10 +48,14 @@ comparison to argue against, not a new invention.
   stored copy fail loudly in both directions. It is the rule a generated index lives or dies by
 
 **What specifying must settle**
-- **The shared policy question**, with [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md)
+- ~~**The shared policy question**, with [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md)
   and [T-147](T-147-one-workflow-file-per-lifecycle-phase.md): does this project split large documents
   by unit, with a generated index? **The first of the three specified settles it**; the other two
-  adopt it or argue explicitly.
+  adopt it or argue explicitly.~~ **Settled 2026-08-14 by T-145 as `L-89`**, and this task is the
+  limb that says yes: *split to one file per unit only when the unit is addressed by its own id and
+  is wanted one at a time.* `L-nn` is an address and lessons are cited singly, so the shape is
+  decided and what is left to specify is below. **Adopt it or argue against it — do not re-decide
+  it.**
 - Whether the gain is real for an agent that already greps a single file cheaply, or whether the cost
   is paid mostly by whole-file reads nobody performs.
 - What generates the index, what checks it, and where that runs in the gate chain.

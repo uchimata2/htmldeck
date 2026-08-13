@@ -16,7 +16,7 @@ Schema, statuses and lifecycle: [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md). Carried 
 **PH1** is what a first working release needs and nothing else, and it has shipped; **PH2** is the
 dependencies and every minor and moderate fix; **PH3** is the bigger tasks and the new capabilities,
 everything estimated `l` or `xl`. What is in each and why is in
-[`../docs/BRIEF.md`](../docs/BRIEF.md) *Release phases* — that section is the decision, this page is
+[`../docs/RELEASE-PHASES.md`](../docs/RELEASE-PHASES.md) — that document is the decision, this page is
 the current state of it. **Closed tasks keep the `WP1`–`WP3` packages they were worked under**;
 those were phases of the research and design work and rewriting them would be rewriting what
 happened.
@@ -56,7 +56,6 @@ names cost.
 | [T-138](T-138-make-the-portable-half-agent-agnostic.md) | Make the portable half agent-agnostic, and classify the load path by who controls it | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-135, T-136, T-137 |
 | [T-143](T-143-split-the-release-chronology-out-of-claude-md.md) | Split the release chronology out of CLAUDE.md | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134, T-144 |
 | [T-144](T-144-give-each-cumulative-rule-one-operative-home.md) | Give each cumulative rule one operative home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134, T-143 |
-| [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-146, T-147 |
 | [T-146](T-146-one-file-per-lesson-with-a-generated-index.md) | One file per lesson, with a generated index | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-145, T-147 |
 | [T-147](T-147-one-workflow-file-per-lifecycle-phase.md) | One workflow file per lifecycle phase | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-145, T-146 |
 | [T-148](T-148-give-a-measured-figure-a-durable-home.md) | Give a measured figure a durable home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130 |
@@ -161,7 +160,7 @@ names cost.
 | [T-094](T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) | render.py shots --out with a relative path writes nothing and says FAILED | `PH1` | `0.2.1` | `done` | `review` | - | - | - | - | T-019, T-074 |
 | [T-095](T-095-static-variants-builds-its-static-half-from-a-hand-kept-list.md) | static_variants builds its static half from a hand-kept list, so a new producer is outside the suite | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-066, T-075, T-093, T-096 |
 | [T-096](T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | One command that runs every checker under tools/ and reports what it skipped, with a reason | `PH3` | `0.2.3` | `done` | `review` | - | - | - | - | T-078, T-083, T-084, T-095, T-120, T-130 |
-| [T-098](T-098-check-reports-briefs-phase-tables-as-a-second-index.md) | taskmd check reports BRIEF.md's phase tables as a second index, and will on every run | `PH3` | `0.2.3` | `done` | `review` | - | - | - | - | T-063, T-080, T-099 |
+| [T-098](T-098-check-reports-briefs-phase-tables-as-a-second-index.md) | taskmd check reports BRIEF.md's phase tables as a second index, and will on every run | `PH3` | `0.2.3` | `done` | `review` | - | - | - | - | T-063, T-080, T-099, T-145 |
 | [T-099](T-099-rename-the-release-phases-so-they-cannot-be-read-as-versions.md) | Rename the release phases to PH1-PH3 and record which version shipped each task | `PH3` | `0.2.2` | `done` | `review` | - | - | - | - | T-078, T-092, T-098 |
 | [T-100](T-100-a-release-adds-a-required-part-and-conforming-decks-fail-silently.md) | A release adds a required part, and every conforming deck becomes non-conforming in silence | `PH3` | `0.2.2` | `done` | `review` | - | - | - | - | T-092 |
 | [T-101](T-101-theme-py-self-test-fails-for-every-plugin-install.md) | theme.py exits on its own self-test for every plugin install, so no adopter can run it | `PH1` | `0.2.2` | `done` | `review` | - | - | - | - | T-059, T-064, T-074, T-075, T-090, T-102, T-126 |
@@ -189,7 +188,8 @@ names cost.
 | [T-135](T-135-cut-the-load-path-this-project-cannot-use.md) | Cut the load path this project cannot use | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134, T-136, T-137, T-138 |
 | [T-139](T-139-two-rows-in-brief-md-carry-a-cell-the-table-cannot-render.md) | Two rows in BRIEF.md carry a cell the table cannot render | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-131, T-137, T-140 |
 | [T-140](T-140-correct-and-extend-the-upstream-register-from-what-implementing-the-audit-found.md) | Correct and extend the upstream register from what implementing the audit found | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-130, T-131, T-137, T-139, T-141, T-142 |
-| [T-141](T-141-extract-the-upstream-register-into-one-document-per-owner.md) | Extract the upstream register into one document per owner | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-130, T-140, T-142 |
+| [T-141](T-141-extract-the-upstream-register-into-one-document-per-owner.md) | Extract the upstream register into one document per owner | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-130, T-140, T-142, T-145 |
 | [T-142](T-142-fix-o-h4-the-handoff-spine-routes-a-mode-word-with-a-qualifier-to-the-opposite-mode.md) | Fix O-H4 — the handoff spine routes a mode word with a qualifier to the opposite mode | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-140, T-141 |
+| [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-098, T-130, T-141, T-146, T-147 |
 
 <!-- taskmd:end -->

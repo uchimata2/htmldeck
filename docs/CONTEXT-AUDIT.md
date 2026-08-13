@@ -92,7 +92,7 @@ raised about, and it is measured rather than felt.
 
 | Document | Largest section | Bytes | Share |
 | :--- | :--- | ---: | ---: |
-| `docs/BRIEF.md` | *Release phases* — 112 rows, 68 struck through | 66,461 | **61%** |
+| ~~`docs/BRIEF.md`~~ | ~~*Release phases* — 112 rows, 68 struck through~~ **moved out 2026-08-14 by [T-145](../tasks/T-145-move-brief-mds-release-phases-to-its-own-document.md); it read 92,894 / 69% over 134 rows on the day it went, and `BRIEF.md` is now 42,485 bytes** | ~~66,461~~ | ~~**61%**~~ |
 | `docs/LESSONS.md` | 81 entries, mean 1,873 bytes | 151,751 | **>99%** |
 | `tasks/TASK-WORKFLOW.md` | §6 *The tooling* | 11,026 | **52%** |
 | `CLAUDE.md` | *What this is* — release chronology | 6,980 | **45%** |
@@ -370,10 +370,12 @@ including the ones your own result rests on. There is no cost to a row nobody ac
 | What the *method* taught, for the skill that packages it | [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) §1 — it is the only place that survives the sessions |
 | A correction to a row already written | in the row, marked, with the old value kept. `CE-07`'s band and `O-T2`'s owner are both corrections and both still legible |
 
-**What a closure owes the record.** The task's §3 and §4, a `BRIEF.md` row folded to two cells
-(*Release phases*, above the PH3 table), the execution-order table renumbered, `shipped_in` set, and
+**What a closure owes the record.** The task's §3 and §4, a
+[`RELEASE-PHASES.md`](RELEASE-PHASES.md) row folded to two cells (above the PH3 table), the
+execution-order table renumbered, `shipped_in` set, and
 any figure this document states that your change moved — `CE-09`'s moved because `CE-02`'s fix added
-to the very section `CE-09` measures.
+to the very section `CE-09` measures. *The row was written into `BRIEF.md` until 2026-08-14, when
+`CE-05` moved that section out; the obligation is unchanged and the file is not.*
 
 ---
 
@@ -434,7 +436,7 @@ something else.
 | :--- | :--- | :--- |
 | **BP-1** | [`tools/deck/check.py`](../tools/deck/check.py) | Given a directory instead of a deck file it raises an unhandled `PermissionError` traceback (14 lines) rather than printing usage. Reproduced with `python tools/deck/check.py examples/sort-window` |
 | **BP-2** | `.handoff/` (gitignored) | Five successive handoffs carried "the release gate takes 7–11 minutes"; measured 154 seconds. **Nothing tracked in the repository states a run time**, so no committed document is wrong — the figure had no durable home at all, which is CE-08 |
-| **BP-3** | [`docs/BRIEF.md`](BRIEF.md) | *Release phases* is 112 rows of which **68 are struck through**. Correct by the section's own convention; recorded because it is the weight behind CE-05 |
+| **BP-3** | [`docs/RELEASE-PHASES.md`](RELEASE-PHASES.md) | *Release phases* is 112 rows of which **68 are struck through**. Correct by the section's own convention; recorded because it is the weight behind CE-05. **134 rows and 76 struck when CE-05 was worked on 2026-08-14** — the count that grew is the finding, and it moved out of `BRIEF.md` into its own document that day |
 | **BP-4** | `tools/portability/build_probes.py` | 85% docstring — the highest ratio in the tree by a wide margin, and the file is 61,484 bytes. Feeds CE-12 |
 | **BP-5** | The plugin cache | Seven copies of this plugin's skill description exist on this machine, one per cached version. A machine-level accumulation, not a repository fact, and `lint.py` already assumes it by globbing for the newest |
 
@@ -465,7 +467,11 @@ six raised last carry a scope limit rather than a place in the order —
 `specify → plan` and stop, so that each is decided rather than assumed. **`cancelled` is the honest
 outcome for any of them and keeps the file** (`../tasks/TASK-WORKFLOW.md` §3.1). Four of the six were
 never candidates at all — this list stopped being the record of what is raised, and
-[`BRIEF.md`](BRIEF.md) *Release phases* is where every one of them now has a row.
+[`RELEASE-PHASES.md`](RELEASE-PHASES.md) is where every one of them now has a row.
+
+**The `specify → plan` limit was lifted by the owner on 2026-08-14**, before any of the six was
+worked: they run the full lifecycle. The reason the limit existed still stands and is recorded above
+— it is `cancelled` that the pass makes available, not a smaller amount of work.
 
 **T-148 and T-149 left that batch within the hour**, on the argument that a decision pass is for work
 whose worth is in doubt: both are `xs`, both have their instance measured in this document, and both

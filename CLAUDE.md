@@ -114,8 +114,9 @@ in it.
 `PH3` split off PH2 on 2026-08-10.** PH1 is a working plugin someone can install — build mode,
 critique mode, the humanizer pass, publish — and nothing else, and it has shipped. PH2 is the
 dependencies and every minor and moderate fix; PH3 is the bigger tasks and the new capabilities,
-and **the line between those two falls at an effort estimate of `l`**. `docs/BRIEF.md` *Release
-phases* is the decision and says what each contains; `tasks/README.md` is the current state, grouped
+and **the line between those two falls at an effort estimate of `l`**.
+[`docs/RELEASE-PHASES.md`](docs/RELEASE-PHASES.md) is the decision and says what each contains;
+`tasks/README.md` is the current state, grouped
 by the same three names. **A new task belongs to one of them**: PH1 only when a defect in the
 published plugin reopens it, PH3 for anything `l` or `xl` — **and, since PH2 shipped, for
 everything else that is not such a defect**, because reopening a shipped phase is reserved for them.

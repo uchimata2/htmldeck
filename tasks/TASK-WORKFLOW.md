@@ -79,7 +79,8 @@ Two things about this project's use of it that the config does not say:
 
 - **`work_package` is a grouping key, and its values are a release phase.** Tasks use `PH1`, `PH2` or
   `PH3`; the `WP1`–`WP3` packages belong to tasks worked under the research and design phases, which
-  are history rather than the current plan. `docs/BRIEF.md` *Release phases* is the decision behind
+  are history rather than the current plan. [`../docs/RELEASE-PHASES.md`](../docs/RELEASE-PHASES.md)
+  is the decision behind
   the split, and which phase a new task takes is `../CLAUDE.md`'s rule: `PH1` only when a defect in
   the published plugin reopens it, `PH3` for anything `l` or `xl`, and — since PH2 shipped — for
   everything else that is not such a defect.
@@ -242,16 +243,23 @@ rule that survived a tool swap unnoticed is the thing to recognise faster next t
   how many it skipped, so a gitignored working file can no longer fail the run.
 - **One advisory is expected on every run, and is ignored by the file it names.** taskmd 0.5.0's
   `DUPLICATE INDEX` counts the distinct known task ids a non-task document names outside the generated
-  markers, and fires when they are a majority of the board: `docs/BRIEF.md`, **78 of 105 on
-  2026-08-12**, both numbers climbing with every release. That document's *Release phases* section is
-  the decision record — one row per task, each carrying a *why it is in this phase* the generated board
-  does not hold, struck-through rows kept on purpose. The content is right and the count is right at
-  the same time. **So the line is read by file name, not by rule: a `DUPLICATE INDEX` naming any other
-  document is a real second board and is not covered by this.**
-  [T-098](T-098-check-reports-briefs-phase-tables-as-a-second-index.md) took the decision and rejected
-  both alternatives — splitting the tables out moves the count rather than lowering it, and no upstream
-  exclusion was asked for, because a per-document opt-out is the one change that would make the
-  advisory unbelievable everywhere it is right (**L-73**).
+  markers, and fires when they are a majority of the board:
+  [`../docs/RELEASE-PHASES.md`](../docs/RELEASE-PHASES.md), **105 of 151 on 2026-08-14**, both numbers
+  climbing with every release. That document is the decision record — one row per task, each carrying
+  a *why it is in this phase* the generated board does not hold, struck-through rows kept on purpose.
+  The content is right and the count is right at the same time. **So the line is read by file name,
+  not by rule: a `DUPLICATE INDEX` naming any other document is a real second board and is not covered
+  by this.** [T-098](T-098-check-reports-briefs-phase-tables-as-a-second-index.md) took the decision
+  and rejected both alternatives — splitting the tables out moves the count rather than lowering it,
+  and no upstream exclusion was asked for, because a per-document opt-out is the one change that would
+  make the advisory unbelievable everywhere it is right (**L-73**).
+  **The named file changed on 2026-08-14 and the decision did not.** It read `docs/BRIEF.md`, **78 of
+  105 on 2026-08-12**, until [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) moved
+  the tables to a document of their own for a read-path reason T-098 never weighed. T-098's refusal
+  was the prediction that made this safe to check: the count **moved intact** — 105 ids to the new
+  file, 22 left behind against a threshold of 76, so `BRIEF.md` stopped firing and the new file
+  started. **Still one named file, so T-098's reopening condition — a *second* document legitimately
+  tripping the advisory — is still not met** and no upstream exclusion is due.
 - `refcheck.py` — every markdown link, **every repo-relative `.md` path written in prose or printed by
   a tool**, and **every `<named document> §n` reference** (§6.1). Two things are skipped and it prints
   how many: documents `.gitignore` excludes, which are machine-local by design and absent from a fresh

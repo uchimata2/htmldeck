@@ -44,9 +44,14 @@ not falsifies twelve records at once.
 - [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §6.1 — the section-reference rule this task is bound by
 
 **What specifying must settle**
-- **The shared policy question**, with [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md)
+- ~~**The shared policy question**, with [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md)
   and [T-146](T-146-one-file-per-lesson-with-a-generated-index.md): does this project split large
-  documents by unit? **The first of the three specified settles it**; the other two adopt or argue.
+  documents by unit? **The first of the three specified settles it**; the other two adopt or argue.~~
+  **Settled 2026-08-14 by T-145 as `L-89`.** Both limbs bear on this task and they point different
+  ways, which is the second bullet below: `§n` is an address and a planner wants one phase at a time,
+  which argues the by-unit limb; but the weight is in one section, which argues the by-kind limb and
+  a single extraction. **`L-89`'s rule 2 decides it — move the part that grows.** Adopt that or argue
+  against it; do not re-decide the policy.
 - Whether the four-part shape fits a document whose weight is in one section, or whether extracting
   that one section is the whole change and the rest is churn.
 - How `§n` citations survive a split — the constraint that decides the shape.
