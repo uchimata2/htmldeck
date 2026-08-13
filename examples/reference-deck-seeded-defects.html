@@ -2621,10 +2621,12 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
      arithmetic on an entry count - no DOM, no measurement - so it gives the same answer on screen,
      in print and to the measuring tool.
 
-     Its argument is a SHEET's entry count, not the deck's: since T-036 the cap below keeps that at
-     16 or under, so the dense band and the hard limit past it are unreachable through the shipped
-     rule. They are kept, not dead: they are what a sheet would do if the cap ever moved, and
-     DS-226's two numbers would otherwise have no instrument left measuring them.
+     Its argument is a SHEET's entry count, not the deck's: since T-036 the caps below keep that at
+     16 or under, and since T-125 at 12 or under wherever the page splits. So the four-row band is
+     reached only by a deck of 13 to 16 that prints one sheet, and the dense band and the hard limit
+     past it are unreachable through the shipped rule. They are kept, not dead: they are what a
+     sheet would do if a cap ever moved, and DS-226's numbers would otherwise have no instrument
+     left measuring them.
 
      THREE columns below ten slides, four above. Columns are what decide the row count, and the row
      count is what decides how tall a box gets stretched: seven slides at four columns is two rows
@@ -2644,6 +2646,25 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
      layout above compress, which drops the description at 17 and clips the entry itself at 25, and
      DS-226 forbids the second outright. */
   var CONTENTS_CAP = 16;
+
+  /* ---- AND HOW FULL A SHEET GETS ONCE IT DOES (T-125)
+     TWO NUMBERS, deliberately: one sheet up to 16, then sheets of at most 12. 16 is where the page
+     splits; 12 is the largest sheet that still shows a THREE-LINE description, because 13 crosses
+     into the four-row band and that band clamps every description to one line. Printed at 25
+     entries the old single number split 12 / 13, put both sheets in the four-row band and printed
+     thirteen fragments - `Spend the $5.6M grant on bus...` - while 17 entries, one band down,
+     printed full sentences. A longer deck got a better map than a shorter one.
+
+     The owner ruled on 2026-08-13 and accepted the three costs: a second number; a discontinuity at
+     17, where a 16-entry deck prints fragments on one sheet and a 17-entry deck prints sentences on
+     two; and five sheets rather than three for a 43-entry deck whose argument is one stage of 40.
+     The argument that carried it is T-036's own, one band deeper - the description is what makes a
+     contents page more than a list of titles, and a page that degrades by growing must not buy a
+     sheet back by dropping to fragments.
+
+     The trigger is untouched. A deck at or under 16 still prints the single sheet T-034 measured
+     and T-116 fixed; what moves is the capacity of a sheet once the page is already continuing. */
+  var SHEET_CAP = 12;
 
   /* Runs of one stage, in slide order. Back matter has no stage (T-108) and forms its own run, so
      a colophon lands on a sheet boundary rather than in the middle of the last argument stage. */
@@ -2688,15 +2709,15 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
 
   /* The sheets, as arrays of manifest entries.
      Two objectives in order: the FEWEST sheets, then the SMALLEST largest sheet. The second is
-     what stops 17 slides printing sixteen boxes and then one - a lone box on a sheet is the
+     what stops 17 slides printing twelve boxes and then five - a near-empty sheet is the
      stretched-empty-box fault T-034 already paid to fix at the short end. Binary search the
      capacity down to the tightest one that still fits in the same number of sheets, which is
      exact for that objective and needs no scoring heuristic to defend. */
   function contentsSheets(man){
     if (man.length <= CONTENTS_CAP) return [man];
-    var runs = splitLongRuns(stageRuns(man), CONTENTS_CAP);
-    var k = sheetsNeeded(runs, CONTENTS_CAP);
-    var lo = 1, hi = CONTENTS_CAP;
+    var runs = splitLongRuns(stageRuns(man), SHEET_CAP);
+    var k = sheetsNeeded(runs, SHEET_CAP);
+    var lo = 1, hi = SHEET_CAP;
     runs.forEach(function(r){ if (r.length > lo) lo = r.length; });
     while (lo < hi){
       var mid = Math.floor((lo + hi) / 2);

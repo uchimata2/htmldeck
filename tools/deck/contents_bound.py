@@ -20,11 +20,16 @@ are `ceil(n / 4)`, the answer is a step function, and two different numbers fall
 
 **Since T-036 those are sheet numbers, not deck numbers, and the deck can no longer reach either.**
 Past 16 entries the page continues onto further sheets, so the compression bands past the bound are
-what a sheet *would* do if the cap moved rather than what any deck prints. They are still measured
-here, because they are the only instrument DS-226's two numbers have. What is asserted instead is
-the cap: the split rule the deck ships is exercised on stage shapes that stress it, and a sheet
-that came back over the bound - or an entry that came back missing, reordered or duplicated - fails
-the run.
+what a sheet *would* do if a cap moved rather than what any deck prints. They are still measured
+here, because they are the only instrument DS-226's numbers have. What is asserted instead is the
+cap: the split rule the deck ships is exercised on stage shapes that stress it, and a sheet that
+came back over its cap - or an entry that came back missing, reordered or duplicated - fails the
+run.
+
+**And since T-125 there are two caps, so which one applies depends on whether the page split.** One
+sheet holds up to 16; once the page continues, every sheet holds at most 12, because 13 crosses into
+the four-row band and that band clamps a description to one line. Both are asserted below, on the
+same eight shapes.
 
 **Both numbers are entry counts, and an entry's height is not constant - so the fixture pins the
 height.** Every cloned box gets the same three-line description (`BOTTOM`), which is what a real
@@ -91,22 +96,29 @@ def even(n, stages):
 # the number of sheets it should take - written out rather than computed, so the expectation is a
 # number a reader can check by hand rather than a second copy of the rule.
 #
-# **`ceil(n / 16)` is a floor, not the answer.** At 43 entries in seven even stages the runs are
-# 7 · 6 · 6 · 6 · 6 · 6 · 6, and no three contiguous groups of them come in at or under 16 - the
-# closest is 13 · 12 · 18. So that case takes FOUR sheets where the arithmetic says three, and it
-# is the answered question working as specified: the boundary is preferred to the sheet count.
+# **`ceil(n / 12)` is a floor, not the answer.** The 43-entry deck whose argument is one stage of 40
+# splits into runs of 10 · 10 · 10 · 10, then a stage of 2 and a colophon: four sheets are full
+# before the last three entries are placed, so it takes FIVE where the arithmetic says four. That is
+# the answered question working as specified - the boundary is preferred to the sheet count. Under
+# the single cap of 16 the same sentence was true of the seven-even-stages case at 43, which now
+# lands exactly on its floor of four; the demonstration moved, the rule did not.
 #
 # The last two are the cases with no boundary to cut at, where DS-226's never-drop invariant forces
 # the split inside a stage. They are the reason `splitLongRuns` exists.
+#
+# **Two of these moved on 2026-08-13 with T-125's second cap**, and they are the whole reason it was
+# taken: the 25-entry deck went from 12 · 13 to three sheets, and the 40-entry stage from three
+# sheets to five. Both bought their old sheet count by printing one-line fragments. Nothing else
+# here moved, because the balancing search already reached below 12 for the other six.
 SPLIT_CASES = [
     ("13 entries, the reference deck's length", even(13, 7), 1),
     ("16 entries, exactly the bound", even(16, 7), 1),
     ("17 entries, one past it", even(17, 7), 2),
-    ("25 entries, past the old hard limit", even(25, 7), 2),
+    ("25 entries, past the old hard limit", even(25, 7), 3),
     ("43 entries, the longest deck anyone reports", even(43, 7), 4),
     ("17 entries, a stage of 12 then a stage of 5", [0] * 12 + [1] * 5, 2),
     ("20 entries, one stage throughout", [0] * 20, 2),
-    ("43 entries, a stage of 40 and a colophon", [0] * 40 + [1, 1] + [-1], 3),
+    ("43 entries, a stage of 40 and a colophon", [0] * 40 + [1, 1] + [-1], 5),
 ]
 
 PROBE = r"""
@@ -314,11 +326,18 @@ def self_test(data):
         # silently omits or reorders a slide is confidently wrong about the shape of the argument.
         if s["order"] != list(range(n)):
             failures.append("%s: the sheets do not carry every entry once in order" % s["name"])
-        over = [z for z in s["sizes"] if z > 16]
+        # Which cap applies is decided by whether the page split at all (T-125): a lone sheet holds
+        # 16, every sheet of a continued page holds 12. Read off the result rather than off the
+        # entry count, so a rule that split when it should not have is still measured against the
+        # cap it actually used.
+        cap = 16 if len(s["sizes"]) == 1 else 12
+        over = [z for z in s["sizes"] if z > cap]
         if over:
-            failures.append("%s: sheet of %s entries, over the bound of 16 - the compression "
-                            "bands past the bound are reachable again"
-                            % (s["name"], ", ".join(str(z) for z in over)))
+            why = ("the compression bands past the bound are reachable again" if cap == 16 else
+                   "a split sheet in the four-row band clamps every description to one line, "
+                   "which is what T-125 ruled out")
+            failures.append("%s: sheet of %s entries, over the cap of %d - %s"
+                            % (s["name"], ", ".join(str(z) for z in over), cap, why))
         if 0 in s["sizes"]:
             failures.append("%s: an empty sheet" % s["name"])
         if len(s["sizes"]) != s["want"]:
@@ -394,9 +413,9 @@ def main():
     print("                 decided by the slide count alone.")
     print("  THE HARD LIMIT %s slides - the largest sheet whose number and title render at all"
           % hard)
-    print("\n  Both are SHEET numbers since T-036, and the split below keeps every sheet at or")
-    print("  under the bound - so the compression bands past it are what a sheet would do if the")
-    print("  cap moved, not what any deck prints.")
+    print("\n  Both are SHEET numbers since T-036, and there are two caps since T-125: a lone")
+    print("  sheet holds 16, a sheet of a continued page holds 12 - so the four-row band is")
+    print("  reached only by a deck of 13 to 16, and the bands past the bound by no deck at all.")
 
     print("\nTHE SPLIT - how a deck past the bound divides across sheets")
     print("-" * 78)
@@ -406,7 +425,7 @@ def main():
               % (s["name"], len(s["sizes"]), " · ".join(str(z) for z in s["sizes"])))
     print("-" * 78)
     print("  The cut falls at a stage boundary, and the sheets are balanced rather than filled")
-    print("  and spilled - 17 entries print 9 and 8, not 16 and 1. The last two shapes have no")
+    print("  and spilled - 17 entries print 9 and 8, not 12 and 5. The last two shapes have no")
     print("  boundary to cut at, so the boundary yields and the entry does not (DS-226).")
 
     print("\n  This is a LAYOUT measurement in a real browser; it does not discharge printing and")

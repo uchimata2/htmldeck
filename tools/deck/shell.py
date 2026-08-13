@@ -518,8 +518,17 @@ def self_test():
        kept(sync(original)) == kept(original),
        "moved: %r" % sorted(k for k in kept(original)
                             if kept(original)[k] != kept(sync(original)).get(k)))
-    ok("and the reference deck is already synced, so it is a no-op",
-       sync(original) == original, first_difference(sync(original), original)[:90])
+    # A deck ALREADY IN STEP is not changed - asserted on a deck this line syncs itself, never on
+    # the repository's copy. `sync(original) == original` was the fixture until 2026-08-13, and it
+    # asserts the current contents of a tracked artifact rather than a property of the tool: one
+    # edit to `shell/deck.js` fails it, the self-test refuses to report, and the command that exists
+    # to carry that edit to the decks is the command it takes down (T-126). L-71's family, one step
+    # over - there the reference ENVIRONMENT was taken for correct, here the reference STATE. What
+    # the fixture was standing in for is a gate's job and already done: check_all.py runs
+    # `shell.py check` over every tracked deck.
+    ok("and syncing a deck that is already in step changes nothing",
+       sync(sync(original)) == sync(original),
+       first_difference(sync(sync(original)), sync(original))[:90])
     ok("sync is idempotent", sync(sync(stale_parts["COMPONENTS"]))
        == sync(stale_parts["COMPONENTS"]))
     ok("a deck with no anchors is refused rather than guessed at",
