@@ -50,7 +50,8 @@ names cost.
 | [T-118](T-118-a-style-must-mean-the-same-thing-in-the-reading-view.md) | A style that carries meaning on a slide must carry the same meaning in the reading view | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-109, T-115 |
 | [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) | Audit the ruleset for rules that cost more to satisfy than they return | `PH3` | - | `proposed` | `specify` | - | - | T-054, T-113, T-114, T-115 |
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-107, T-110 |
-| [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | - | `proposed` | `specify` | - | - | T-085, T-123, T-124, T-125, T-129 |
+| [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | - | `proposed` | `specify` | - | - | T-085, T-123, T-124, T-125, T-129, T-130 |
+| [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md) | Audit the context economy of an agent-driven repository, and rank the savings | `PH3` | - | `proposed` | `specify` | - | - | T-096, T-128 |
 
 ## Closed
 
@@ -148,7 +149,7 @@ names cost.
 | [T-093](T-093-ds-005s-check-bans-the-one-esm-route-r6-measured-as-working.md) | DS-005's check bans the one ESM route R6 measured as working | `PH3` | `0.2.1` | `done` | `review` | - | - | T-019, T-069, T-095 |
 | [T-094](T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) | render.py shots --out with a relative path writes nothing and says FAILED | `PH1` | `0.2.1` | `done` | `review` | - | - | T-019, T-074 |
 | [T-095](T-095-static-variants-builds-its-static-half-from-a-hand-kept-list.md) | static_variants builds its static half from a hand-kept list, so a new producer is outside the suite | `PH3` | `unreleased` | `done` | `review` | - | - | T-066, T-075, T-093, T-096 |
-| [T-096](T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | One command that runs every checker under tools/ and reports what it skipped, with a reason | `PH3` | `0.2.3` | `done` | `review` | - | - | T-078, T-083, T-084, T-095, T-120 |
+| [T-096](T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | One command that runs every checker under tools/ and reports what it skipped, with a reason | `PH3` | `0.2.3` | `done` | `review` | - | - | T-078, T-083, T-084, T-095, T-120, T-130 |
 | [T-098](T-098-check-reports-briefs-phase-tables-as-a-second-index.md) | taskmd check reports BRIEF.md's phase tables as a second index, and will on every run | `PH3` | `0.2.3` | `done` | `review` | - | - | T-063, T-080, T-099 |
 | [T-099](T-099-rename-the-release-phases-so-they-cannot-be-read-as-versions.md) | Rename the release phases to PH1-PH3 and record which version shipped each task | `PH3` | `0.2.2` | `done` | `review` | - | - | T-078, T-092, T-098 |
 | [T-100](T-100-a-release-adds-a-required-part-and-conforming-decks-fail-silently.md) | A release adds a required part, and every conforming deck becomes non-conforming in silence | `PH3` | `0.2.2` | `done` | `review` | - | - | T-092 |

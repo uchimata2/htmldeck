@@ -636,6 +636,7 @@ new task is placed by is [`../CLAUDE.md`](../CLAUDE.md)'s.
 | ~~[T-127](../tasks/T-127-figures-py-refuses-to-report-a-drifted-figure-because-its-fixture-needs-an-undrifted-page.md) — figures.py refuses to report a drifted figure~~ **done 2026-08-13** | **L-78's second instance, found the same afternoon.** `figures.py` seeds fixture 9 against the *correct* value of a figure in `examples/README.md`; when that page has drifted the string is not there, nothing is seeded, and the tool exits saying the tool is wrong — with the drift it exists to report sitting in the failure message. `xs`, and it announces itself loudly, so it costs a moment rather than a session. |
 | ~~[T-129](../tasks/T-129-the-reference-decks-figures-in-examples-readme-are-unwatched-and-two-are-wrong.md) — the reference deck's figures were unwatched and two were wrong~~ **done 2026-08-13** | **A published page understated a shipped deck by 12 KB, and no gate could see it.** `examples/README.md` states 250 KB / 255 787 bytes for a deck that is 262 KB / 268 563; the manifest prints the right answer two lines below the wrong one and the run ends `0 stale figure(s)`, because that sentence is bound to nothing while sort-window's is bound. **T-088's defect class on the other deck** — that task fixed the instance it found rather than the class. Found by T-127's rebuilt fixture refusing on a claim the page does not bind. `s`, and it went **before T-128**, which would otherwise have added a third deck to the same page and the same hole. **Widening the anchor to the section — the recommendation on the task — binds nothing**, because that section links the deck nowhere; what worked was widening a claim scope to the **table row**, which the recommendation did not consider, plus the link the sentence lacked. The widening then exposed a dict keyed by the written figure, merging two rows' verdicts into one, with both reading `compared`. |
 | [T-128](../tasks/T-128-publish-the-adopter-deck-as-a-worked-example.md) — publish the adopter deck as a third worked example | **The only deck here nobody wrote to pass these gates.** Both existing examples were authored inside this repository against its own rules; this one was built elsewhere by someone reading the published skill, which makes it the only honest test of the ruleset — and it is 13 slides, where the contents page first collided. It also exercises the upgrade path end to end, since the copy is two releases behind. `l` because the sanitizing is editorial work across a 13-slide deck and its documents rather than a substitution. It carries **the one scoped exception** to *never copy deck content in*, ruled 2026-08-13 and recorded in `../CLAUDE.md`. |
+| [T-130](../tasks/T-130-audit-the-context-economy-of-an-agent-driven-repository.md) — audit the context economy and rank the savings | **The only task whose subject is what every other task costs.** A session spends a large and growing share of its context before any work starts, across four surfaces nobody has inventoried: what loads unasked, what one unit of work must read, what the gates print back, and what a closure writes. `l`, an umbrella, and it implements nothing — it researches how this is done elsewhere, screens each technique against this project's constraints, estimates each saving as a band rather than measuring it, and ranks. **Two documents on purpose**: a portable playbook plus the generic findings, which the owner lifts into other repositories, and this repository's own audit against it. The written record is in scope and its completeness is not — layering and load-on-demand, never a fact losing its only home. |
 | ~~[T-123](../tasks/T-123-nothing-can-see-a-print-only-layout-fault.md) — nothing can see a print-only layout fault~~ **done 2026-08-13** | The fault T-116 fixed had reached **three printed decks with every gate green**, because the only tool aimed at that page measures a screen simulation of print (**L-76**). The owner narrowed the 2026-08-08 ruling twice: gate the printed geometry, and gate **any deck the tool is pointed at** — which made the dependency question unavoidable, since an adopter has to be able to run it. `l` on the instrument, and the instrument turned out to be ~330 lines of standard library: the tens-of-thousands coordinates that had defeated two earlier attempts were a missing graphics-state stack, not a property of Chrome's writer. **`printgeom.py` reads card rectangles out of the printed PDF; `contents_bound.py` keeps the bands and loses the claim about paper.** DS-222 to DS-225 stay with the person who prints — this narrows the ruling only where the property is arithmetic. |
 
 *Until 2026-08-13 this read "the largest thing on the board is T-070 and the least certain to be
@@ -650,28 +651,35 @@ followed.
 
 | | | |
 | ---: | :--- | :--- |
-| 1 | ~~T-129~~ **done 2026-08-13** | a wrong figure on a published page, and T-128 adds a third deck to it |
-| 2 | ~~T-095~~ **done 2026-08-13** | `s`, and this session put a producer outside the hand-kept suite it names |
-| 3 | T-128 | prepared, ruled and surveyed |
-| 4 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
-| 5 | T-114 | the ruler is the one thing still known to bite past 13 slides |
-| 6 | T-109 | the hub of the source cluster; 7–9 are rework if it lands after them |
-| 7–9 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
-| 10 | T-115 | needs 5 and 6 to have settled what the shell offers |
-| 11 | T-117 | independent |
-| 12 | T-097 | cheap, and the same class as 2 — an excusal that went stale when its rule got an instrument |
-| 13 | T-054 | after 4, which may change which clauses are worth recording |
-| 14 | T-113 | research, and it decides ground 15–18 build on |
-| 15–16 | T-112, T-111 | the motion cluster, in that order |
-| 17 | T-041 | named in *what PH1 shipped without* |
-| 18 | T-057 | `xl`, and the least certain to be worth it |
+| — | ~~T-129~~ **done 2026-08-13** | a wrong figure on a published page, and T-128 adds a third deck to it |
+| — | ~~T-095~~ **done 2026-08-13** | `s`, and this session put a producer outside the hand-kept suite it names |
+| 1 | T-130 | **the owner put it here 2026-08-13.** Every task after it is paid for at the current rate until it lands |
+| 2 | T-128 | prepared, ruled and surveyed |
+| 3 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 4 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 5 | T-109 | the hub of the source cluster; 6–8 are rework if it lands after them |
+| 6–8 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 9 | T-115 | needs 4 and 5 to have settled what the shell offers |
+| 10 | T-117 | independent |
+| 11 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
+| 12 | T-054 | after 3, which may change which clauses are worth recording |
+| 13 | T-113 | research, and it decides ground 14–17 build on |
+| 14–15 | T-112, T-111 | the motion cluster, in that order |
+| 16 | T-041 | named in *what PH1 shipped without* |
+| 17 | T-057 | `xl`, and the least certain to be worth it |
 
 **Two placements were argued and kept.** T-095 sits above a `high` task because it is `s` and guards
 what follows; T-119 delays T-114 by a real amount and is still first of the two, because a rule
 deleted after the work is built to it is the expensive order.
 
-**Rows 1 and 2 closed on 2026-08-13 and the next thing to do is row 3.** The order is not re-derived
-by that: what closed, closed in the order ruled here.
+**The first two rows closed on 2026-08-13, and the live rows were renumbered rather than left with
+holes.** A closed row keeps its place and loses its number; the order is not re-derived by either.
+
+**T-130 went in at the top the same day, on the owner's ruling**, ahead of a task already prepared
+and surveyed. The argument is that it is the only row whose subject is *what every other row costs*:
+sixteen tasks executed before it are sixteen paid at a rate nobody has inventoried. It is an
+umbrella and implements nothing — its ranked findings become child tasks at the owner's review,
+which is where the saving is actually decided.
 
 **What PH1 shipped without, stated rather than discovered.** No 3D. No frame-rate figure on any
 machine. Seven of R6's nine glitch-free conditions unimplemented, and a console error that does not
