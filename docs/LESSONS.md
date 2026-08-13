@@ -2159,6 +2159,32 @@ clean page. **The evidence for the fix was produced by a file that no longer con
    blind. Here the instrument was removed, so a missing fix read as working. Both are a seeded-defect
    run whose result describes something other than what you meant to measure.
 
+### L-81 — A scan for a forbidden class reports the class and the count, never the value
+
+Caught 2026-08-13 (**T-128**), one commit too late. A read-only survey of an adopting project was
+measuring what had to be removed before publication — case identity, training context, personal
+data — and the finding *the owner's given name appears three times* was written into the task record
+**as the name**, in this repository, which is public. The scan report reproduced the thing the scan
+existed to find, and it was pushed before anyone looked.
+
+**It is `PUBLISHING.md`'s redaction rule with the subject changed.** A secret's existence may be
+recorded; its value may not. The same holds for every class `CLAUDE.md`'s publishing constraint
+names — personal, client and machine data — and a *measurement* of that class is not an exemption
+from it. Nor is a task record: the backlog is published with everything else.
+
+**How to apply.**
+
+1. **Write the class and the count.** *The owner's given name, three times, in D7* carries every fact
+   a later reader needs and none of the data. A placeholder works where structure matters.
+2. **The rule binds hardest while you are looking for the thing.** Survey output, grep results
+   pasted into a record, a failure message quoting a matched line — these are where the value gets
+   in, because at that moment it is evidence rather than a leak.
+3. **Absolute paths are in the class.** A local path names a drive, a user and often a person. Say
+   *the adopting project*; the person who needs the path has it.
+4. **Check before pushing, not after.** `git grep` for the class over the working tree costs one
+   command. A public commit cannot be unmade the way an unpushed one can, which is the same reason
+   the personal address was rewritten out of all 121 commits *before* the first push.
+
 ---
 
 ## Writing

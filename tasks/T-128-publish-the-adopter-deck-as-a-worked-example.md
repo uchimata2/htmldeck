@@ -94,7 +94,7 @@ models. **Nothing was written to the source.**
 | training context — `course` / `course's` | **17** | deck, both specs, D4, D5, the To-Be model |
 | place names | **0** | measured against countries, regions and 24 cities — the case names none |
 | external references | 14, **all inert** | 4 OFL licence URLs, 3 SVG namespaces, 3 font repositories, 1 Lucide licence. Text, not loads: the deck still fetches nothing |
-| personal data | **3**, all in D7 | `Gábor` in the audit report — **and D7 is not in the copy set**, so the class is empty for what ships |
+| personal data | **3**, all in D7 | the owner's given name in the audit report — **and D7 is not in the copy set**, so the class is empty for what ships |
 | local-system paths, `file://` links, e-mail addresses | **0** | the one `file://` hit is a sentence *about* DS-105 forbidding such a link |
 
 **Two of the classes were false alarms until the scan was made to bind on structure rather than on
@@ -109,6 +109,13 @@ to keep the argument.
 
 **D7 is out of the copy set**, which is what empties the personal-data class. The deck cites D1–D5;
 D7 is an audit of the build and names the owner three times.
+
+**A note this task earned the hard way.** The survey above first recorded the owner's given name
+verbatim, in this file, in a public repository — the exact class it was measuring, written down while
+measuring it. `CLAUDE.md`'s publishing constraint is *free of personal, client and machine data*, and
+a scan report is not an exemption from it. **Name the class, never the value**, the same rule
+`docs/PUBLISHING.md` applies to secrets. The adopting project's path is deliberately absent from this
+record for the same reason: it is an absolute path on somebody's machine and it names a person.
 
 **The one thing this task must not decide by itself**
 The deck analyses a business case **supplied by a training provider** as module material. Renaming
