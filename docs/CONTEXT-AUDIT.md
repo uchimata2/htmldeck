@@ -452,7 +452,20 @@ raised both cuts that bound was written to make decidable:
 candidate, and [T-144](../tasks/T-144-give-each-cumulative-rule-one-operative-home.md) for `CE-04`,
 which ranked tenth in §6 and was never put up here. **A debt statement in tier 1 naming a finding is
 what turned the citation into a task** — the enabler's stated purpose, arriving one day later than
-the enabler. `CE-05` and `CE-06` remain candidates and are not tasks.
+the enabler.
+
+**Later the same day the cut-off went to all of them: every finding in §6 now has a task**, and the
+six raised last carry a scope limit rather than a place in the order —
+[T-145](../tasks/T-145-move-brief-mds-release-phases-to-its-own-document.md) (`CE-05`),
+[T-146](../tasks/T-146-one-file-per-lesson-with-a-generated-index.md) (`CE-06`),
+[T-147](../tasks/T-147-one-workflow-file-per-lifecycle-phase.md) (`CE-09`),
+[T-148](../tasks/T-148-give-a-measured-figure-a-durable-home.md) (`CE-08`),
+[T-149](../tasks/T-149-prune-the-memory-index-of-spent-entries.md) (`CE-10`) and
+[T-150](../tasks/T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) (`CE-12`) go to
+`specify → plan` and stop, so that each is decided rather than assumed. **`cancelled` is the honest
+outcome for any of them and keeps the file** (`../tasks/TASK-WORKFLOW.md` §3.1). Four of the six were
+never candidates at all — this list stopped being the record of what is raised, and
+[`BRIEF.md`](BRIEF.md) *Release phases* is where every one of them now has a row.
 
 | Candidate | From | Effort | Why it is where it is | Outcome |
 | :--- | :--- | :---: | :--- | :--- |
@@ -461,8 +474,8 @@ the enabler. `CE-05` and `CE-06` remain candidates and are not tasks.
 | Write down that a deck is never read whole | CE-13 | `xs` | One line, and it removes a failure that costs an entire session | **[T-133](../tasks/T-133-write-down-that-a-deck-is-never-read-whole.md)** |
 | State the tier model and bound tier 1 as a relation | CE-11 | `s` | The enabler. It should land before CE-01 and CE-04 so those cuts are decided rather than negotiated | **[T-134](../tasks/T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md)** |
 | Split the release chronology out of `CLAUDE.md` | CE-01 | `s` | 45% of a tier-1 file, paid every turn | **[T-143](../tasks/T-143-split-the-release-chronology-out-of-claude-md.md)** |
-| Move `BRIEF.md`'s *Release phases* to its own document | CE-05 | `m` | 61% of the document new sessions are told to read first. **Carries a named collision**: the `DUPLICATE INDEX` advisory is excused by file name and would follow the content | candidate |
-| One file per lesson, with a generated index | CE-06 | `m`–`l` | The largest read-path document in the repository, needed one entry at a time | candidate |
+| Move `BRIEF.md`'s *Release phases* to its own document | CE-05 | `m` | 61% of the document new sessions are told to read first. **Carries a named collision**: the `DUPLICATE INDEX` advisory is excused by file name and would follow the content | **[T-145](../tasks/T-145-move-brief-mds-release-phases-to-its-own-document.md)** |
+| One file per lesson, with a generated index | CE-06 | `m`–`l` | The largest read-path document in the repository, needed one entry at a time | **[T-146](../tasks/T-146-one-file-per-lesson-with-a-generated-index.md)** |
 
 **CE-05's collision was ruled at the same review: the excusal moves with the content, inside the same
 task.** `tasks/TASK-WORKFLOW.md` §6 excuses the `DUPLICATE INDEX` advisory *by file name*, and the

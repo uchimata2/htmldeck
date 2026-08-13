@@ -56,6 +56,12 @@ names cost.
 | [T-138](T-138-make-the-portable-half-agent-agnostic.md) | Make the portable half agent-agnostic, and classify the load path by who controls it | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-135, T-136, T-137 |
 | [T-143](T-143-split-the-release-chronology-out-of-claude-md.md) | Split the release chronology out of CLAUDE.md | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134, T-144 |
 | [T-144](T-144-give-each-cumulative-rule-one-operative-home.md) | Give each cumulative rule one operative home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134, T-143 |
+| [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-146, T-147 |
+| [T-146](T-146-one-file-per-lesson-with-a-generated-index.md) | One file per lesson, with a generated index | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-145, T-147 |
+| [T-147](T-147-one-workflow-file-per-lifecycle-phase.md) | One workflow file per lifecycle phase | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-145, T-146 |
+| [T-148](T-148-give-a-measured-figure-a-durable-home.md) | Give a measured figure a durable home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130 |
+| [T-149](T-149-prune-the-memory-index-of-spent-entries.md) | Prune the memory index of spent entries | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134 |
+| [T-150](T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) | Relocate the research prose in the two docstring outliers | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130 |
 
 ## Closed
 
@@ -174,11 +180,11 @@ names cost.
 | [T-126](T-126-shell-py-refuses-every-command-while-a-tracked-deck-is-behind-the-shell.md) | Stop shell.py refusing every command while a tracked deck is behind the shell | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-101, T-124, T-125, T-127 |
 | [T-127](T-127-figures-py-refuses-to-report-a-drifted-figure-because-its-fixture-needs-an-undrifted-page.md) | Stop figures.py refusing to report a drifted figure because its own fixture needs an undrifted page | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-088, T-126, T-129 |
 | [T-129](T-129-the-reference-decks-figures-in-examples-readme-are-unwatched-and-two-are-wrong.md) | The reference deck's figures in examples/README.md are bound to nothing, and two of them are wrong on the published page | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-085, T-088, T-127, T-128 |
-| [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md) | Audit the context economy of an agent-driven repository, and rank the savings | `PH3` | `unreleased` | `done` | `review` | - | T-131, T-132, T-133, T-134, T-135, T-136, T-137, T-138, T-143, T-144 | - | - | T-096, T-128, T-131, T-132, T-133, T-134, T-135, T-136, T-137, T-138, T-140, T-141, T-143, T-144 |
+| [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md) | Audit the context economy of an agent-driven repository, and rank the savings | `PH3` | `unreleased` | `done` | `review` | - | T-131, T-132, T-133, T-134, T-135, T-136, T-137, T-138, T-143, T-144, T-145, T-146, T-147, T-148, T-149, T-150 | - | - | T-096, T-128, T-131, T-132, T-133, T-134, T-135, T-136, T-137, T-138, T-140, T-141, T-143, T-144, T-145, T-146, T-147, T-148, T-149, T-150 |
 | [T-131](T-131-expose-the-trackers-query-commands-so-the-board-is-not-read-whole.md) | Expose the tracker's query commands so the board is not read whole | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-137, T-139, T-140 |
 | [T-132](T-132-give-the-deck-gate-a-quiet-mode-for-its-green-run.md) | Give the deck gate a quiet mode for its green run | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-137 |
 | [T-133](T-133-write-down-that-a-deck-is-never-read-whole.md) | Write down that a deck is never read whole | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134, T-137 |
-| [T-134](T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md) | State the tier model and bound tier 1 as a relation | `PH3` | - | `done` | `review` | T-130 | - | - | - | T-130, T-133, T-135, T-143, T-144 |
+| [T-134](T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md) | State the tier model and bound tier 1 as a relation | `PH3` | - | `done` | `review` | T-130 | - | - | - | T-130, T-133, T-135, T-143, T-144, T-149 |
 | [T-135](T-135-cut-the-load-path-this-project-cannot-use.md) | Cut the load path this project cannot use | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134, T-136, T-137, T-138 |
 | [T-139](T-139-two-rows-in-brief-md-carry-a-cell-the-table-cannot-render.md) | Two rows in BRIEF.md carry a cell the table cannot render | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-131, T-137, T-140 |
 | [T-140](T-140-correct-and-extend-the-upstream-register-from-what-implementing-the-audit-found.md) | Correct and extend the upstream register from what implementing the audit found | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-130, T-131, T-137, T-139, T-141, T-142 |

@@ -77,6 +77,14 @@ written for a session working a finding. **L-85**, **L-86** and **L-87** in
   measured best in the very audit being packaged, and it is the local model to copy.
 - In: the four shaping rules T-130 followed — numbered imperative steps, a walkable checklist with
   stable ids, stable `CE-nn` ids, and no file of any one repository named as required reading.
+- In: **a listing that answers *which finding is which task, and where is it* without reading the
+  audit.** Requested by the owner 2026-08-14, from the cost of doing it by hand: assembling that
+  picture here meant reading the ranking table, the two blocks of finding statements, the candidate
+  table, the per-owner upstream documents and thirteen task files, and the result was a fourteenth
+  hand-kept copy of facts that already existed. **The finding's prose is not the target** — the
+  argument in a row is why the row survives. The index is: `id`, one-line title, subject or owner,
+  band, effort, the task it became, and that task's status. See the criteria below for what
+  *efficient* has to mean.
 - Out: changing the method. Corrections belong to T-136 and to whoever runs it next; this task moves
   it into a package.
 - Out: shipping it in the htmldeck plugin. **This is a different product from a deck builder**, and
@@ -110,6 +118,23 @@ written for a session working a finding. **L-85**, **L-86** and **L-87** in
       as a defect in the shaping rules rather than quietly fixed
 - [ ] Its own load cost is measured — description, body, and each reference — because a skill that
       audits context economy and is expensive to have installed is the joke that writes itself
+- [ ] **A command answers *every finding, its task and its state* in one output**, and the output is
+      small enough to read whole — the tracker's own `list --open --limit 1` at 94 bytes is the bar
+      that already exists here, not a new idea
+- [ ] **The listing is derived, never maintained.** Each finding's key fields live in exactly one
+      place, and every table that shows them — the ranking, the candidate record, the per-owner
+      upstream documents — is generated from that place or checked against it. A hand-kept second
+      table is the defect this criterion exists to prevent
+- [ ] **A finding's link to its task is structured, not prose.** Today it is a sentence inside §1 of a
+      task file, which no tool can follow; whatever replaces it must be readable by a command without
+      parsing English
+- [ ] **The check fails loudly in both directions** (**L-74**): a finding whose task has closed and
+      still reads open, and a task naming a finding that does not exist, both stop the run. A
+      generator without that check moves the inconsistency rather than removing it
+- [ ] **The listing does not become a second board.** This repository's `DUPLICATE INDEX` advisory
+      exists because a table of task ids outside the tracker's markers is exactly that, and it is
+      excused for one file by name — so the skill's index must key on findings and reference tasks,
+      never mirror them
 
 **Open questions**
 - ~~**Does it ship, and to whom?**~~ **Answered 2026-08-13 — it is published on GitHub as a token-saver
