@@ -180,7 +180,10 @@ python tools/docs/refcheck.py    # validate every reference in every document
 ```
 
 **The bare `taskmd` command does not resolve in an agent shell**, which is a property of how the
-plugin is put on `PATH` rather than of the plugin — so the four `taskmd` lines above are what to
+plugin is put on `PATH` rather than of the plugin — **measured 2026-08-13 and it is neither the
+plugin's fault nor this project's**: taskmd ships `bin/taskmd`, it runs when invoked directly, and
+the harness does emit its directory into the shell snapshot, whose `PATH` line is then truncated
+mid-value and loses every plugin (**L-87**, `O-C1`). So the four `taskmd` lines above are what to
 type at a terminal, and not what an agent can run. Two commands here run them, and between them they
 cover all four:
 

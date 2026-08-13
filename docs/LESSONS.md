@@ -2320,6 +2320,34 @@ was missing was one step, not the tool.
 
 ---
 
+### L-87 — Before reporting a tool's defect, prove the tool is the one that failed
+
+Caught 2026-08-13 (**T-140**, correcting **T-130**'s `O-T2`). *The bare `taskmd` command does not
+resolve in an agent shell* was true, was measured, and cost this repository a wrapper. It was also
+filed as an observation for taskmd, pointing at their in-progress *install on a fresh machine* task.
+Chasing the cause while implementing the fix found that **taskmd ships the launcher, the launcher
+works when invoked directly, and the harness does put its directory on `PATH`** — into a shell
+snapshot whose `PATH` line is cut mid-value at 5,551 characters, losing 30 entries including every
+plugin. The symptom belonged to the plugin's user, the defect to neither.
+
+**The local fix was right either way**, which is what made the misattribution survivable and also
+what hid it: a locator that does not depend on `PATH` works whatever broke `PATH`, so nothing forced
+the question. A report is not a fix, and it is the report that has to name the right owner.
+
+**How to apply.**
+
+1. **Run the thing directly before concluding it is absent.** The launcher was two directories from
+   the locator that existed because it was thought missing.
+2. **Read the mechanism the tool says it relies on**, then check that mechanism rather than the tool.
+   `bin/taskmd`'s own comment states the `PATH` contract in four lines; verifying it took one command.
+3. **A register of observations needs a home for *neither of the above*.** §7 had a subsection per
+   tool this project uses, which quietly assumed every outside defect belongs to one of them — so the
+   only available slot was the wrong one, and the wrong slot is where a wrong owner comes from.
+4. **State the environment.** One machine, two shells, one measurement: enough to correct an
+   attribution, not enough to describe a surface.
+
+---
+
 ## Writing
 
 ### L-12 — What is read every time must be short

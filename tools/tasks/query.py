@@ -11,6 +11,11 @@ commands all along. What stopped them being used is that the bare `taskmd` comma
 in an agent shell, which is the obstacle `tools/tasks/lint.py` was written for; this is a second
 entry point through the same door (`CE-02`).
 
+**That is the harness, not the plugin** - taskmd ships `bin/taskmd` and it runs when invoked
+directly, but the shell snapshot's `PATH` line is truncated mid-value and loses every plugin's
+`bin/` (T-140, **L-87**). Locating the skill ourselves is the right answer either way, because it
+does not depend on a `PATH` that cannot be relied on.
+
 **It refuses `index` and `check` by name.** `lint.py` chains those two with `refcheck.py` and stops
 at the first failure. A second way to run half of that chain is exactly the duplicate this tool
 exists to avoid (**L-13**), so the refusal names the tool that owns them rather than being silent.
