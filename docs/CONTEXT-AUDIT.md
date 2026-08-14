@@ -592,10 +592,11 @@ behind six". Both figures are spent, and the first was too wide:* the execution 
 backlog that has nothing to do with the audit. **What phase 2 actually waits on is
 [T-136](../tasks/T-136-re-run-the-external-research-with-a-recorded-search-record.md)
 and [T-138](../tasks/T-138-make-the-portable-half-agent-agnostic.md)** — the two repairs to `R8`, one
-of which can still raise a finding. It is blocked behind **two**, both
-`next` or adjacent to it, and **nothing still schedules it.** Raising it is the owner's, on the same
-cut-off precedent this section records; the condition is now decidable, which it was not when this was
-written.
+of which can still raise a finding. It is blocked behind **two**, both `next` or adjacent to it.
+**Raised the same day as [T-153](../tasks/T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md)**,
+at the owner's direction, on the argument that raised T-152 the day before: a remainder nothing
+schedules is a remainder that depends on this paragraph being re-read. It carries the two `blocked_by`
+edges, so it sorts last and changes nothing about what to work on next.
 
 **CE-10 stands as not repository work** — pruning the memory index is the owner's memory, and is
 named here so it is not mistaken for a task.
