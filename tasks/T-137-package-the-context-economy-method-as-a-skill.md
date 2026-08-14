@@ -131,6 +131,24 @@ cost and found is the input this task wants.
 | **A named tool's own figures were four times its measured effect** | Advertised −54% code / −20% cost; an 80-task independent benchmark measured −15% and −10.3%, concentrated on big builds and zero elsewhere (**L-98**) | **Step 7 should require the source of every figure it screens on.** A verdict resting on a vendor's number is a verdict resting on their best case, and the shape of the effect — where it concentrates — decides more screenings than its size |
 | **Re-running the research changed no finding, and that had to be written down** | `CONTEXT-AUDIT.md` §4.1. Ten of fourteen new techniques were addressed to the harness or the API, and the one real local candidate was unmeasured | **A step that can produce nothing needs a place to say so.** `T-153` was blocked on this answer, and *no new finding* is only an answer if it is recorded as one. The method's step 5 should say that a null result is an output |
 
+**What grading the whole ranking said — added 2026-08-14, and it is the only row set written with
+every outcome known**
+
+Phase 2's steps 12 and 13, by [T-153](T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md).
+Thirteen findings paired against what they bought:
+[`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §10. **This is the row set that cost the most
+to produce and is the least likely to be reproducible** — it needed fourteen closed records at 80,721
+bytes and a year of nobody having thrown them away.
+
+| What happened | Detail | What the method owes |
+| :--- | :--- | :--- |
+| **Two of thirteen bands held as written** | Four wrong on magnitude, three on shape, one on premise, two costs by design, one undercounting its own subject | **The band is not a forecast and the method should stop implying it is.** `R8` §5 now says `Change` is a hypothesis; the skill has to carry that at the point a user writes a band, not in a paragraph they read afterwards |
+| **Every error was in the `Change` cell and none in the `Finding` cell** | The inventory said where the weight was and was right thirteen times out of thirteen | **Split the record's reliability, visibly.** A user who trusts both halves equally will obey a ranking; four rows here were refused by measurement during implementation, and obeying them would have deleted two tools' payloads |
+| **Two findings carried a band the rubric did not define** | `enabler` and `bimodal`, invented at ranking time because nothing in the four-value table fits a gain that is not a saving | **A rubric that gets extended in the field is under-specified.** Both are in `R8` §5 now. The skill should ask *is this a saving?* before it asks *how big?* |
+| **The audit's own remedies were most of the growth it then had to cut** | 3,012 of 3,405 bytes onto tier 1, from the two findings written to govern tier 1 | **This is step 16's warning, and this run committed it before step 16 existed.** The skill must price a governance rule against the surface it lands on, at the moment it is written |
+| **The method has no cheap way to know what a finding bought** | Step 12 reconstructed it from 80,721 bytes; a twelfth field would be paid by every finding to serve one step | **The closure owes one line, in the record that already exists.** Not a field. `R8` §6 now says so, and this is the clearest case in the method of the cheap answer and the tidy answer disagreeing |
+| **Six of eight byproducts were one class, and no row could show it** | Text a reader follows and no checker reads: link labels, bare `§n`, unallocated citations, a dangling pointer outside the tree | **Read the register for a shape at step 12.** `R8` §6.3 now says so. As rows they are eight small defects; as a class they are a gap in what a project's gates can see |
+
 **Where the rest of it is.** [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6.2 is the
 operative version of the first four rows — what to check, what to report, where each thing goes —
 written for a session working a finding. **L-85**, **L-86** and **L-87** in

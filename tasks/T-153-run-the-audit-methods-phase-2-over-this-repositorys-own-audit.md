@@ -183,11 +183,53 @@ is [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §10.1 and is not repe
   **L-97**'s rule is that a figure nothing owns drifts, and inventing a winner here would be a third
   unowned figure.
 
+### Steps 4–6 — `R8` steps 14, 15 and 16, done 2026-08-14
+
+**Decisions & assumptions**
+- **Step 14's output went to `R8` and to T-137 §1, and none of it came here** — 2026-08-14. That is
+  the step's own rule and it is the easiest one to break: a method finding written into this
+  repository's audit is how a portable method acquires one repository's habits.
+- **The rubric was under-specified and the first run proved it in the field** — 2026-08-14. `enabler`
+  and `bimodal` were invented at ranking time because the four-value table cannot express a gain that
+  is not a saving. **Two of thirteen findings carried a band the rubric did not define.** Both are in
+  `R8` §5 now, with the reason.
+- **The record does *not* gain a twelfth field** — 2026-08-14. Step 12 reconstructed thirteen outcomes
+  from 80,721 bytes and the obvious fix is an `Outcome` field, paid by every finding to serve one step
+  that runs once. **The closure owes one line instead**, in the record that already exists. The cheap
+  answer and the tidy answer disagree here, which is why it is written down.
+- **Step 15 ran and found an empty window, which is a result rather than a skipped step** —
+  2026-08-14. Step 5 was re-run to declared saturation the same day by `T-136`, so the delta is **zero
+  days**. Re-searching would be the third full survey of this catalogue, which step 15 forbids by
+  name. `R8` §7.1 records the null with the condition that makes it real work next time: elapsed time
+  and nothing else.
+- **Step 16 produced one local policy, and it collides** — 2026-08-14. Almost everything belongs to
+  the method; **an audit is a guest and a guest leaving ten house rules has misread the job.** The one
+  local rule — the tier-1 bound should be measured rather than remembered — cannot be implemented
+  without breaking either step 16's *do not write governance into the file you just cut* or
+  `CLAUDE.md`'s *a figure about this file cannot be corrected anywhere else*. **Both are the project's
+  own, both are right, and step 16 says the collision goes to the owner unresolved.**
+- **The standing re-measure is therefore not delivered, and it is written down as not delivered** —
+  2026-08-14. *Review this annually* is the failure step 16 names; a policy blocked on one decision is
+  not an improvement on it. Recorded in `CONTEXT-AUDIT.md` §10.4 rather than softened.
+
+**Two observations, neither a finding.** `figures.py` reports the tier-1 figures as **unanchored**,
+among 413 — the number governing what every session pays is checked by nobody. And it reports a live
+drift in `README.md`'s pasted `refcheck` output (2,485 → 2,562 pointers) at **exit 0**, which reads as
+deliberate: those counts move on every commit and failing on them would block every release.
+
 **Outputs produced**
+- [`../docs/research/R8-context-economy-for-coding-agents.md`](../docs/research/R8-context-economy-for-coding-agents.md)
+  — §5 gains `enabler` and `bimodal` plus the two rules the run returns (`Change` is a hypothesis; the
+  inventory is what survives); §3 step 11 gains the re-measure obligation; §6 rules out a twelfth
+  field and marks `Controller` untested; §6.3 gains *read the register for a shape*; §7.1 records
+  step 15's null delta
+- [T-137](T-137-package-the-context-economy-method-as-a-skill.md) §1 — a sixth row set, six rows,
+  written with every outcome known
 - [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §10 — §10.1 the pairing, §10.2 the pattern and
   its corollary, §10.3 the cost: the tier-1 arc, the five remedies that grew the repository, the four
   standing gates, the price of a withdrawal, the `F2` duplicate one remedy manufactured, and the eight
-  defects found in passing that no row could have forecast
+  defects found in passing that no row could have forecast, and §10.4 the one local policy with its
+  collision reported unresolved
 
 ## 4. Review
 

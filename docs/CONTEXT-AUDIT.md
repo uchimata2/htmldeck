@@ -845,3 +845,46 @@ same shape — text a reader follows and no checker reads.**
 *One figure to reconcile rather than repeat: §9 states the pair took `CLAUDE.md` to **14,821**, and
 T-144's own record measures **14,917** the same day. 96 bytes apart, both dated, neither reproducible
 now. Recorded as a disagreement rather than resolved — which is what `L-97` asks for.*
+
+### 10.4 Standing policy — one rule, and it collides
+
+`R8` §3.1 step 16. **Almost everything this run learned belongs to the method, not to this project**,
+and it went to `R8` §3, §5, §6 and §6.3 rather than here. That is the step working: an audit is a
+guest, and a guest that leaves ten new house rules has misread what it was for.
+
+**One policy is local, and it is the smallest one imaginable: the tier-1 bound should be measured by
+something, not remembered by someone.**
+
+- **Governing document:** [`../CLAUDE.md`](../CLAUDE.md), *What loads every turn* — it states both
+  figures, carries the command that produces them, and already rules that they are re-measured
+  together.
+- **Verdict: extends.** It does not change the bound, the comparison set, or which document owns the
+  number. It makes the existing *re-measure both, never one* enforced instead of remembered.
+- **Price on the load path: it must be zero**, which is what makes this hard rather than obvious.
+
+**The evidence that it is needed is in this document.** §10.3 measures tier 1 at **15,208** against a
+figure that was **15,034** when T-152 closed — 174 bytes of drift that nothing reported. `CLAUDE.md`'s
+own debt statement says it *has now been wrong in both terms twice*. And `tools/docs/figures.py`
+reports the two figures as **unanchored** — *in a sentence naming no field*, among 413 others. **The
+one number in this repository that governs what every session pays is checked by nobody**, which is
+`CE-08`'s finding — a measured figure with no owner drifts — reappearing on the audit's own governance
+rule.
+
+**The collision, reported rather than resolved.** The mechanism that would catch it is `figures.py`,
+which compares a stated figure against **pasted command output** in the same document. Two ways to
+get there, and each breaks a rule this project has already settled:
+
+| Route | What it breaks |
+| :--- | :--- |
+| Paste the command's output into `CLAUDE.md` | `R8` step 16's own second constraint — **an audit that closes by writing governance into the file it just cut has undone itself.** The paste lands on surface A, paid every turn, in the file `CE-01` and `CE-04` were raised to shrink |
+| Move the two figures to a document that can be gated | `CLAUDE.md`'s explicit ruling: *a figure about this file cannot be corrected anywhere else* — written after a session recorded the pair in a task record instead, which is how the statement came to be wrong twice |
+
+**Both rules are the project's own and both are right.** Step 16 says the project's rule stands and
+the collision goes to the owner, so it does — this section is the report, and the third route
+(`figures.py` learns to run a command from a document that pastes no output) is a change to a tool
+rather than a policy, which is a task and not a ruling.
+
+**What phase 2 therefore leaves that re-measures without being asked: nothing yet, and that is
+recorded rather than papered over.** *Review this annually* is the failure mode step 16 names by name,
+and a policy nobody can implement without the owner picking a side is not better. The obligation is
+open and it is one decision wide.

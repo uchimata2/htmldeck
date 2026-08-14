@@ -166,6 +166,14 @@ produced material the audit had not seen, and it took a separate task to collect
     stands alone.
 11. **Raise child work** for the top of the ranked list — **at the owner's review, not before.**
 
+    **Re-measure the inventory figure when the work starts, not when the row was written.** The
+    subjects keep growing between ranking and implementation, and a saving computed against a stale
+    denominator is not a measurement. *Added 2026-08-14 by phase 2, from three of thirteen: one
+    finding's board grew 33,676 → 36,559 before its task began, one's share had already fallen from
+    45% to 37.9% with the section itself unchanged, and one's was 61% at the audit and 69.0% on the
+    day it was cut.* **A share is a ratio and the denominator usually moves faster than the
+    numerator** — which is the same error as measuring the wrong unit, arrived at from the other side.
+
 **Measure with a program, not by reading.** Opening a file to find out how big it is spends the exact
 budget under audit. Sizes come off the filesystem; gate output is captured to a file whose length is
 measured without printing it. The script is throwaway and belongs outside the repository.
@@ -295,9 +303,33 @@ the ranking exists to decide on.
 | `L` | roughly a tenth to a third |
 | `M` | a few per cent |
 | `S` | under a per cent, or unquantifiable but real |
+| `enabler` | it saves nothing and makes a later saving decidable. **Its gain is the finding it unblocks, named** |
+| `bimodal` | it costs one surface to save another. **Both figures are stated, and the trade is argued rather than netted** |
+
+*The last two were added 2026-08-14 by phase 2. The table had four values and the first run used six —
+`CE-11` was banded `enabler` and `CE-13` `bimodal` at ranking time, because no listed band can express
+a finding whose gain is not a saving. **Two of thirteen findings carried a band this table did not
+define**, which is a rubric staying silent where it should have fired.*
 
 A band is always read against its own surface: `L` on the load path and `L` on the read path are
 different quantities, and the finding record says which.
+
+**The band prices the finding. It does not price the remedy, and the remedy is where a ranking goes
+wrong.** In the first run, eleven of thirteen bands missed — four on magnitude, three on the *shape*
+of the change, one on its direction, one on a false premise. **Every error was in the `Change` cell,
+never in the `Finding` cell**: the inventory said where the weight was and was right each time; the
+proposed remedy said what removing it was worth and was wrong more often than not.
+
+Two rules follow, and they are the first run's whole return on this section:
+
+- **`Change` is a hypothesis and is read as one.** It is written with the same authority as `Finding`
+  and does not deserve it. **Re-measure a remedy before carrying it out, and let the measurement
+  refuse it** — four rows were refused exactly this way, and a ranking obeyed instead would have
+  deleted two tools' payloads, rebuilt one finding on a timer, and split a small document into four
+  smaller ones.
+- **The inventory is what survives.** *Only the saving is banded* already said this; what the run adds
+  is that it is the load-bearing half of the rubric rather than a caveat on it. A finding whose
+  inventory figure is sound and whose remedy is refused is **still a good finding**.
 
 Effort uses whatever scale the project already has for work items. **Inventory figures from steps 1–4
 are measurements and are stated as measurements; only the saving is banded.** A band with no
@@ -329,6 +361,16 @@ and are correct about themselves.*
 | Applies to | `any`, `this project`, or `upstream: <component>` — **who implements the change.** `<component>` may be the **harness itself**, when the fix has to be made by the agent's own vendor |
 | Controller | `project`, `user` or `harness` (§2.2) — **who can reach the cost.** A different question from `Applies to`, and the pair is not redundant: a finding can be `any` and `harness` at once — every project pays it and no project can change it |
 | Source | external research, local precedent, or this audit |
+
+**The record has no field for what the finding actually bought, and it should not gain one.** Phase 2
+had to reconstruct thirteen outcomes from **80,721 bytes** across fourteen closed task records, which
+is the most expensive step in the method. A twelfth field would be paid by every finding to serve one
+step that runs once. **What the closure owes instead is one line** — the measured outcome, in the
+record that already exists, written on the day it is known. The rest is derivable: id, band, task and
+status all come out of the project's own tracker. *Added 2026-08-14 by phase 2.*
+
+*`Controller` is the one field this run cannot report on: it was added on the last day, after every
+finding had closed. It is untested rather than held.*
 
 **`Applies to` and `Controller` are deliberately two fields.** Merging them was considered and
 rejected: one says who does the work, the other says whether the work is possible from here, and a
@@ -371,6 +413,16 @@ ranking.
 - A register entry that is really a defect is raised as its own work item at review, and the register
   row then points at it.
 
+**Read the register for a shape, not only row by row — at step 12, once the run is over.** *Added
+2026-08-14 by phase 2, and it is the register's largest return in the first run.* Eight defects
+surfaced in passing, each recorded as an unrelated row, and **six of the eight are one class: text a
+reader follows and no checker reads** — a link label stating a wrong path beside a working target, a
+bare `§n` cross-reference left behind by an extraction, a citation of an id that was never allocated,
+a dangling pointer in a store outside the tree. Row by row they are eight small defects. As a class
+they are a gap in what the project's gates can see at all, which is worth a work item and no single
+row was. **The register is where a whole-repository sweep leaves its evidence; nothing else in the
+method ever reads it back.**
+
 ---
 
 ## 7. The technique catalogue
@@ -379,6 +431,20 @@ Gathered in step 5. Each row is a *technique*, with what it costs and what it as
 is step 7 and belongs to the project doing the audit, not to this catalogue.
 
 ### 7.1 The search record
+
+**Step 15, 2026-08-14 — the delta window is empty, and no search was run.** Phase 2 owes *what is new
+since step 5*, bounded to the delta. Step 5 was re-run to declared saturation on **2026-08-14**, the
+same day, so the window between the baseline and this refresh is **zero days** and there is nothing in
+it. Running the queries again would return the rows below and would be the third full survey of a
+catalogue that has had two — which step 15 names and forbids: *a closing phase that re-runs step 5 in
+full is another audit wearing a different number.*
+
+**This is a null result with a reason, not a step skipped.** The distinction matters because the two
+are indistinguishable from outside a year later, and only one of them means the catalogue is current.
+**What would make step 15 real work is elapsed time and nothing else** — the next phase 2 over this
+catalogue searches the window from 2026-08-14 to its own date, on the three axes below and under the
+same stopping rule. *The catalogue's date is part of the catalogue*, which is this step's own premise,
+and today that date and this refresh's date are the same.
 
 **Re-run 2026-08-14 under step 5's coverage rule, which this is the first pass to satisfy.** The
 first pass was two searches and two articles; this one is 23 searches and one fetched page, along
