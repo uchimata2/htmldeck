@@ -2,8 +2,8 @@
 id: T-160
 title: Correct the three errors the recipients found in the delivered registers
 type: admin
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-157, T-141, T-130]
@@ -13,6 +13,7 @@ business_value: medium
 effort: s
 created: 2026-08-15
 updated: 2026-08-15
+shipped_in: unreleased
 deliverables: []
 ---
 
@@ -82,30 +83,99 @@ it did not need to do.
 
 ## 2. Plan
 
+**The cross-reference audit runs first, because it decides how many corrections there are.** It was
+the one acceptance criterion whose answer was unknown when this task was written — the other four
+correct errors already named.
+
+**The owner ruled the open question on 2026-08-15: post a comment, do not edit the issue body.** The
+thread is the record of the exchange, and rewriting what someone replied to is the worse of two
+imperfect options.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Extract every foreign id from both registers with the claim it sits in, and check each against the project it names — the taskmd ids against that repository's task files, the handoff ids against the live issues | A verdict per citation, and a count, so the criterion is met by an audit rather than a spot check |
+| 2 | Correct `O-T2` at the source: the text sort was real, was found, and is fixed by `version_key` and a self-test. The row never said so, which is why it was read as outstanding | A row that cannot cost the recipient work again |
+| 3 | Correct `O-T6` at the source: drop the wrong id, and say what the audit found in its place | A row citing nothing rather than citing something false |
+| 4 | Post one correction comment per thread — the corrections above, the missing O-H4 quote in full, and why the wrapper advice does not reach the gate | The delivered copy and the source agree |
+| 5 | Give the standing send rule a home in `../docs/CONTEXT-AUDIT.md` §7, so the next send diffs the whole artifact rather than the part it feared for | Error 3's class cannot recur silently |
+| 6 | Gates, commit, push | `lint`, `check_all`, one commit |
 
 ## 3. Implement
 
+**The audit, which is the part that was not already known**
+
+Seven foreign-id citations across the two registers. Each was checked against the project it names —
+the taskmd ids against that repository's task files, the handoff ids against the live issues.
+
+| Id | Claim in the register | Verdict |
+| :--- | :--- | :---: |
+| their `T-028` | established the tiering rule and the budget-as-a-relation | correct |
+| their `T-063` | *an open task at `specified` or later declaring no deliverable* | **wrong** — it is *Measure the tier-1 member the rule declares*, and closed |
+| their `T-085` | *install the published plugin on a machine that has never seen it* | correct, both uses |
+| their `T-087` | let `list` filter on a field the index shows | correct |
+| `#53` | nearest open item to `O-H1`, and does not cover it | correct |
+| `#57` | nearest open item to `O-H1`, and does not cover it | correct **when sent**, see below |
+| `#8` | adjacent to `O-H2` — about pickup, not accumulation | correct, and the recipient confirmed it |
+
+**One wrong out of seven, and it is the one the recipient found.** The audit's value was in the six it
+cleared: *a spot check is not an audit* was an acceptance criterion because the alternative is
+asserting the rest are fine, which is what produced the error in the first place.
+
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **`#57` is not a fourth error and no correction was made to the row** — 2026-08-15. It closed at
+  `2026-08-14T22:07Z`, during the recipient's triage and after this register was sent, so `O-H1`'s
+  *nearest open items* was true when written and when delivered. **A register that names someone
+  else's open issues goes stale the moment they act on it, and that is not a defect in the register.**
+  Flagged on the thread anyway, because a later reader has no way to tell a stale claim from a wrong
+  one, and it is `O-H7`'s *message with latency* seen from the sending end.
+- **The two wrong-in-the-register corrections were struck rather than rewritten** — 2026-08-15,
+  following §1's own rule and `O-T2`'s precedent. A row corrected invisibly teaches the next reader
+  nothing; `O-T6`'s strike-through is now the clearest statement in either document of why a wrong
+  foreign id is worse than a dangling one.
+- **The wrapper advice was answered rather than adopted, and recorded as a new observation** —
+  2026-08-15. Their fallback resolves the launcher from *the directory the harness names when it
+  serves the skill*; the release gate is a plain `python tools/tasks/lint.py` from any working
+  directory, in a process never served the skill and with no channel to ask. Unranked, per the
+  standing rule, and explicitly allowing that a gate script may simply be outside what they support.
+- **The exit-code exposure was checked and reported as a negative result** — 2026-08-15. They asked.
+  `tools/tasks/query.py` consumes `-h`/`--help` only as the first argument and never passes it
+  through, so the unknown-command path still exits 2. A negative result they asked for is worth the
+  three lines it takes.
+- **The comment was the route, not an edit to the issue body** — the owner's ruling, 2026-08-15.
 
 **Outputs produced**
-- <none yet>
+- Two correction comments: [`handoff-skill#75`](https://github.com/uchimata2/handoff-skill/issues/75)
+  and [`taskmd#1`](https://github.com/uchimata2/taskmd/issues/1)
+- [`../docs/upstream/taskmd.md`](../docs/upstream/taskmd.md) — `O-T2` and `O-T6` corrected at the source
+- [`../docs/upstream/handoff-skill.md`](../docs/upstream/handoff-skill.md) — the handover record carries
+  the correction and the `#57` finding
+- [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §7 — the standing send rule
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `O-T2` states the text sort was found and fixed here, with what fixes it | met | Corrected at the source and on the thread, naming `version_key` and the self-test. The correction says plainly that this is **the reporting project's error, not a change of mind** — the row was wrong when written, and a recipient cannot tell those apart from outside. |
+| `O-T6` cites the right id, or no id, and says which | met | No id: the class was uncovered in their backlog until they raised their `T-146` in response. The struck text stays visible, and the row now states the general rule the error taught — a wrong foreign id resolves to a real task, so it reads as coverage and a reader who trusts it stops looking. |
+| Every remaining foreign id checked, and the count written down | met | **Seven citations, one wrong**, table in §3, each checked against the project it names rather than against memory. |
+| Each thread carries the corrections | met | Two comments, and each carries what only the sender could supply: the missing quote in full, and why the fallback does not reach a gate script. |
+| The O-H4 section reads correctly wherever the recipient looks | met | The committed source was never damaged; the delivered body was, and the comment carries the missing quote verbatim. **The issue body was deliberately not edited** — the owner's ruling, and the thread is the record of the exchange rather than a document to keep tidy. |
+| The transformation cannot silently do it again | met | The rule is in `../docs/CONTEXT-AUDIT.md` §7, next to the standing rules a future send reads — *diff the whole delivered artifact and account for every difference*. It is a rule and not a checker on purpose: the transformation is written fresh each time a register is sent, so there is no durable code for a gate to guard. |
+
+**What the audit was actually worth**
+One of seven citations was wrong, and the recipient had already found that one. On a narrow reading the
+audit returned nothing. **That is the wrong reading**: the deliverable was the six cleared, because the
+alternative to checking them is asserting they are fine — which is exactly the move that produced the
+error. The criterion said *a spot check is not an audit* before the answer was known, and it would have
+read as pedantry if the audit had found a second error.
 
 **Child fix tasks raised**
-- none
+- none. The wrapper-locator observation was recorded on the recipient's thread rather than raised here:
+  it is a fact about their fallback's reach, and this project's own locator works.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | → done | Three corrections posted, both sources corrected, and the audit run: **seven foreign-id citations, one wrong** — the one the recipient found. The open question was ruled by the owner: **comment, do not edit the issue body**, because the thread is the record of an exchange rather than a document to keep tidy. Two things came out that §1 did not anticipate. `#57` closed *during* their triage, so a row can be true when sent and stale on arrival with nobody at fault — flagged rather than corrected. And their advice to delete both wrappers turned out not to reach a release gate, which is an observation about their fallback and went back as one, unranked. |
 | 2026-08-15 | → proposed | Raised from what came back on the two threads T-157 opened. **Three errors, one found by each recipient and one found here**, and two of them are live in someone else's backlog. The one this project found is the worst of the three: `O-T2` reported a defect that had already been repaired, so taskmd's reply tells us to fix something that is fixed. A register that reports a repaired defect as open spends the recipient's attention on nothing, which is the same currency the *no priority* rule was protecting. `s` rather than `xs` because the cross-reference audit is a real pass over two documents, not a lookup. **`PH3` and `admin`**, following T-157: this is not a defect in the published plugin. |

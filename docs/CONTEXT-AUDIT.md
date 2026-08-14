@@ -580,6 +580,16 @@ three, which is that argument coming good rather than a lucky outcome — it hel
 the findings actually bought is the session most likely to add rows.
 [T-157](../tasks/T-157-hand-the-upstream-registers-to-their-owners.md) was the sending act.
 
+**A send transforms the document, so diff the whole delivered artifact against the source and account
+for every difference.** Added 2026-08-15 by
+[T-160](../tasks/T-160-correct-the-three-errors-the-recipients-found-in-the-delivered-registers.md),
+which is what the first send cost. A register is written for here and delivered elsewhere, so it needs
+changing on the way out — links absolute, the sender-facing banner replaced — and **the transformation
+is broader than its intent every time it is written narrowly.** The first one matched every blockquote
+instead of the first and destroyed a quotation. The check that missed it compared the observation rows
+byte for byte, which was the thing feared and not the thing changed: **L-102**. Three expected
+differences and one unexplained is a fifteen-line diff, and it is the whole guard.
+
 **A session that finds something still adds it to the owner's document and stops there.** Sending
 ended the wait, not the filling. **A row added after a document's handover date is unsent, and nothing
 needs to mark it so** — the record carries a date, the row carries a position, and the two answer the

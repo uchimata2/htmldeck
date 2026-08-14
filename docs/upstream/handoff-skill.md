@@ -10,10 +10,16 @@
 > and `O-H7` were raised and shipped. The outcome table and the reasoning are on the thread — this
 > register points at it and does not keep a second copy.
 >
-> **They returned two things this register owes.** A defect in what was delivered: the *O-H4 patch*
-> section's before-quote was overwritten in the issue body, so the quote shows this report's own
+> **They returned two things this register owed.** A defect in what was delivered: the *O-H4 patch*
+> section's before-quote was overwritten in the issue body, so the quote showed this report's own
 > banner instead of the rule it was replacing. And a judgement worth carrying to any future register —
 > **the *audit* / *implementation* stamp changed their verdict on two rows**, so it earned its cost.
+>
+> **Corrected on the thread 2026-08-15**, with the missing quote in full and the cause. The audit that
+> went with it checked every foreign id here — `#53`, `#57` and `#8` — and found none wrong. `#57`
+> closed **during their triage**, hours after this was sent, so `O-H1`'s *nearest open items* was true
+> when written and is now stale by their own action; that is `O-H7` seen from the other end, and it is
+> flagged on the thread so a later reader does not file it as a mistake.
 >
 > Sent by [T-157](../../tasks/T-157-hand-the-upstream-registers-to-their-owners.md) after the hold in
 > [`../CONTEXT-AUDIT.md`](../CONTEXT-AUDIT.md) §7 came off: the closing review landed 2026-08-14 and
