@@ -37,8 +37,13 @@ The three largest are all `F1` splits of documents that are 52%, 61% and 81% app
 [T-145](../tasks/T-145-move-brief-mds-release-phases-to-its-own-document.md) and
 [T-146](../tasks/T-146-one-file-per-lesson-with-a-generated-index.md) — and **neither saved what its
 band promised**. The first moved 92,894 bytes to a document opened on demand; the second moved none
-at all and bought a gate instead. `CE-09` is the third and is still open. A share-of-file figure
-says where the weight is, not what removing it is worth.*
+at all and bought a gate instead. The third, `CE-09`, closed the same day with its shape refused. A
+share-of-file figure says where the weight is, not what removing it is worth.*
+
+***All thirteen findings had closed tasks by the end of 2026-08-14.** The paragraph above is what the
+audit predicted; what it actually bought is
+[T-153](../tasks/T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md)'s subject,
+and `python tools/docs/findings.py` is the current state rather than any count written here.*
 
 ---
 

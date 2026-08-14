@@ -172,8 +172,8 @@ fast**, because the relation has two moving terms (**L-94**).
 **What the second instance taught that the first did not.** T-144 found a rule in five documents and
 split it in two. Here the *survey inherited from that task* named a document that had never stated the
 rule, and missed a copy sitting in the file the rule was being cut out of. **A survey is evidence
-about the day it was taken**, and CE-04's band is per rule precisely because each rule has to be
-re-counted — the count is the work, not the preamble to it.
+about the day it was taken** — **L-96** — and `CE-04`'s band is per rule precisely because each rule
+has to be re-counted: the count is the work, not the preamble to it.
 
 **Child fix tasks raised**
 - none. `CE-04` has no third instance: the surveyed rules are now one-home each.

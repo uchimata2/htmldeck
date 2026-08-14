@@ -98,11 +98,29 @@ order ([T-143](T-143-split-the-release-chronology-out-of-claude-md.md),
 | **Neither finding reduces bytes** | Tier 1 fell 4,214; the destinations gained 1,117 and a new 10 KB document | Say it in the band's definition. `A` and `B` surfaces measure **what is paid per turn**, not repository size, and a reader who checks the total will think the method failed |
 | **A bound that a split cannot satisfy** | Any document split out of tier 1 is smaller than tier 1, so a relation over *the smallest document it defers to* ratchets down with every remedy it prompts, unless the comparison set is fixed | `L-88` chose the second term; this is its missing test. **The relation's set must be closed and stated** — here, tier 2 — or the budget is unsatisfiable by the one action it exists to cause |
 
+**What emptying the ranking said — added 2026-08-14, and it is about the register the method never
+told anyone to keep**
+
+The last three findings closed in one session
+([T-148](T-148-give-a-measured-figure-a-durable-home.md),
+[T-149](T-149-prune-the-memory-index-of-spent-entries.md),
+[T-152](T-152-give-look-at-the-rendered-deck-one-operative-home.md)), preceded by the tooling that
+made the closing legible ([T-151](T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md)).
+
+| | What happened | What it means for the skill |
+| :--- | :--- | :--- |
+| **Nothing joined a finding to its task, and by thirteen findings that cost 325,695 bytes to answer** | *Which finding is which task* had to be assembled from six sources, and the answer was stale at the next closure. The link now lives in one field in the task's front matter and the listing is computed in **1,317 bytes** | The method ranks findings and never says **where the link lives**. Every adopting project will re-derive it, and the shape that works needs no new file: put the link on the *task*, parse the ranking table where it stands, and check the two against each other |
+| **The register and the tracker could disagree with nothing to notice** | A finding's row read closed while its task was open, and vice versa, invisibly. The check fails in **both** directions now, and it caught the session that wrote it — closing the task left it in a live row | `L-74` applied to the audit's own bookkeeping. **The method owes a closure gate, not a closure checklist**: §6.2 lists what a closure owes and a list is what goes unread. Wire it where a closure actually happens, not into the release gate |
+| **A per-item band was already declared and nothing read it** | `CE-04`'s Effort cell had read `xs` **each** since the row was written, while the prose one section away said nothing in the table marked per-item bands. A closed row with open work is legal for exactly those findings | **The rubric needs a per-item band as a first-class value**, because a finding that closes per instance breaks *closed means finished* — the assumption every status check makes. The marker existed; the schema for reading it did not |
+| **An inherited survey was wrong in both directions** | T-144's survey named a document that had never stated the rule, and missed a copy inside the file the rule was being cut from — found only because T-152's criteria forced a re-measure before editing | **A survey is evidence about the day it was taken** (**L-96**). The method's F2 step should carry its own re-measure clause, the way §6.2 carries one for figures; a remainder handed from a closed task inherits its staleness with it |
+| **A finding's remedy was refused and the refusal was the deliverable** | `CE-08` said *give a measured figure a durable home*; the figure now has none, because the decision it drove was coarser than the number (**L-95**). Third refused shape in this audit, and the first where refusing *was* the work | `L-90` says a band cannot price a change. This says the **remedy field is a hypothesis**, and the rubric should mark it as one — an outcome of *shape refused, still worth doing* has now happened four times out of thirteen and has no place to be recorded |
+| **The obligation after the last closure had nothing scheduling it** | Phase 2 existed as a paragraph saying a session should notice. It became [T-153](T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md), blocked on two tasks — and the recorded condition, *blocked behind six*, had counted unrelated backlog | The method gained phase 2 and did not say **who raises it**. A phase that runs once, later, on a trigger nobody watches, is a phase that does not run. It should ship as a task the adopter creates when the ranking is raised, blocked on the audit's own repairs |
+
 **Where the rest of it is.** [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6.2 is the
 operative version of the first four rows — what to check, what to report, where each thing goes —
 written for a session working a finding. **L-85**, **L-86** and **L-87** in
-[`../docs/LESSONS.md`](../docs/LESSONS.md) are the general halves, and **L-89**, **L-90**, **L-91**
-and **L-92** are the 2026-08-14 batch's. The portable half of the last row is already in
+[`../docs/LESSONS.md`](../docs/LESSONS.md) are the general halves, and **L-89** to **L-96** are the
+2026-08-14 batch's. The portable half of the last row is already in
 [`../docs/research/R8-context-economy-for-coding-agents.md`](../docs/research/R8-context-economy-for-coding-agents.md)
 §4.1, as a second F3 guard rail ahead of the first. §7's preamble carries the
 *audit* / *implementation* vintage rule and why it exists.
