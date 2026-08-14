@@ -70,14 +70,20 @@ rather than a difficulty. [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md)
 - [ ] `CLAUDE.md`'s byte cost of this change is stated, and it is zero or argued
 
 **Open questions**
-- **Which rule yields?** Two routes, each blocked by a rule this project has settled: pasting the
-  command's output into `CLAUDE.md` puts new bytes on surface A — the file the audit was cutting —
-  while moving the figures out contradicts *a figure about this file cannot be corrected anywhere
-  else*. **Recommended: neither — teach `figures.py` to run a fenced command whose output is not
-  pasted, and compare against prose in the same document.** That is a change to a tool rather than to
-  a policy, it costs tier 1 nothing, and it leaves both rules standing. The alternative is for the
-  owner to rule that one of the two rules yields, which is cheaper to implement and spends a
-  settled rule. — the owner.
+- ~~**Which rule yields?**~~ **Settled by the owner 2026-08-14: neither.** Teach `figures.py` to run a
+  fenced command whose output is **not** pasted, and compare its result against the prose figures in
+  the same document. **Both settled rules stand and tier 1 gains nothing** — the file already carries
+  the command in a fence, so the change is to the tool's reach rather than to any page.
+
+  *The two routes that were refused, kept because a later session will rediscover them:* pasting the
+  command's output beside the figure lands new bytes on surface A, the file the audit was cutting;
+  moving the figures out contradicts *a figure about this file cannot be corrected anywhere else*,
+  which was itself written because a session recorded the pair elsewhere and left it wrong. Each is
+  cheaper to implement than the chosen route and each spends a rule. **L-100** is the general form.
+
+  **What this makes the task.** A change to `figures.py`'s fence handling, not a change to any policy
+  — which also means the acceptance criteria below are unchanged and criterion 5 is now trivially
+  satisfiable rather than argued.
 
 ## 2. Plan
 
@@ -107,4 +113,5 @@ rather than a difficulty. [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md)
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-14 | (question settled) | **The owner took the third route: neither rule yields.** `figures.py` learns to run a fenced command whose output is not pasted and compare against the prose in the same document. Both settled rules stand, tier 1 gains nothing, and the task becomes a tool change rather than a policy change. The two refused routes are kept in §1 because each is cheaper and each spends a rule, which is the shape a later session will rediscover. |
 | 2026-08-14 | → proposed | Raised at T-153's review against the one acceptance criterion that closed **not met**: `R8` step 16 requires phase 2 to leave something that re-measures unasked, and it could not. **The blocker is a collision, not a difficulty** — every route is cheap and each is forbidden by a different settled rule, which is **L-100**. The evidence is 174 bytes of undetected drift in the number that governs what every session pays, plus a debt statement that has been wrong in both terms twice, plus `figures.py` reading both figures as unanchored among 413. `s`, `PH3` because PH2 has shipped and this is not a defect in the published plugin. |
