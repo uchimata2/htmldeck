@@ -150,6 +150,68 @@ asserting the rest are fine, which is what produced the error in the first place
 - [`../docs/upstream/handoff-skill.md`](../docs/upstream/handoff-skill.md) — the handover record carries
   the correction and the `#57` finding
 - [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §7 — the standing send rule
+- The two handover prompts below
+
+**The handover prompts, second pair.** Same reason as
+[T-157](T-157-hand-the-upstream-registers-to-their-owners.md)'s: a comment notifies a watcher and
+nobody else, and the handoff skill's thread is **closed**, which makes a correction on it easier to
+miss than the report was. Each prompt starts a session in the receiving repository with no access to
+this context. **What they carry that the first pair did not is an instruction to change the
+recipient's own record** — taskmd's disposition lists work that is not theirs — because a correction
+that only reaches a thread leaves the wrong fact where the project actually keeps it.
+
+For the handoff skill:
+
+```text
+A correction landed on https://github.com/uchimata2/handoff-skill/issues/75 — the adopter report
+from htmldeck that we triaged and closed. The issue is closed; the comment is on the thread.
+
+It supplies the thing we asked for: the missing before-text in the report's "O-H4 patch, as
+applied here" section. The quote of the old handoff.core.md §4 bullet is in the comment, in full,
+with the cause — their delivery transform replaced every blockquote in the document instead of the
+first, so our quote became a second copy of their banner. Their committed source was never damaged.
+
+Two things to do, both small. If we keep a copy or a summary of that report anywhere, attach the
+before-text to it, because the version we were working from is the one missing it. And read their
+note about #57 before filing it as an error: O-H1 called #53 and #57 "the nearest open items", and
+#57 closed during our triage, hours after they sent. The row was accurate when written and when
+delivered, and our own action made it stale. It is O-H7 seen from the sending end.
+
+Nothing to re-triage. All seven verdicts stand, nothing new arrived, and no reply is needed.
+```
+
+For taskmd:
+
+```text
+A correction landed on https://github.com/uchimata2/taskmd/issues/1 — the adopter report from
+htmldeck that we triaged. Three corrections, all theirs, and one answer to something we asked them
+to check.
+
+The one that costs us: our disposition comment lists "the version sort goes with them" as theirs
+to act on. It is wrong, and they say so. The text-sort defect was found and fixed on their side
+before that row was ever written — the locator parses the version and a self-test asserts 0.10.0
+beats 0.5.0 — and the row simply never said so. O-T2's surviving clause is unchanged and we
+accepted it correctly; it is evidence that re-deriving a locator is error-prone, not an open
+defect. Correct our record so a later reader does not chase it.
+
+Our O-T6 finding is confirmed. They audited the rest at our suggestion: seven foreign-id citations
+across both their registers, one wrong, the one we found.
+
+One new observation, unranked as everything in that register is. Our SKILL.md fallback resolves the
+launcher from the directory the harness names when it serves the skill. Their release gate is a
+plain `python tools/tasks/lint.py` run from any working directory, in a process that was never
+served the skill and has no channel to ask for that directory — so the documented route does not
+reach it, and the cache glob is not them ignoring it. They explicitly allow that a gate script may
+be outside what this plugin means to support. That is our call to make, and it is worth making
+deliberately rather than by omission, because it is the same shape as O-T2's surviving clause one
+level up: the mechanism is stated as available, and the caller that most needs it cannot reach it.
+
+Also, on T-145: they checked their wrapper for the `--help` exit-code exposure we flagged and are
+not affected — it consumes -h/--help only as the first argument and never passes it through. That
+is a negative result we asked for, so it is worth recording on T-145 rather than losing.
+
+Nothing needs a reply, and no row needs re-triage.
+```
 
 ## 4. Review
 
@@ -177,5 +239,6 @@ read as pedantry if the audit had found a second error.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | (addendum) | **The second pair of handover prompts added to §3**, at the owner's request and for the reason T-157 established: a thread notifies a watcher and nobody else. Sharper here — the handoff skill's issue is **closed**, so a correction on it is easier to miss than the report was. **These prompts differ from the first pair in asking the recipient to change their own record**, because taskmd's disposition lists work that is not theirs, and a correction that only reaches a thread leaves the wrong fact where the project keeps it. |
 | 2026-08-15 | → done | Three corrections posted, both sources corrected, and the audit run: **seven foreign-id citations, one wrong** — the one the recipient found. The open question was ruled by the owner: **comment, do not edit the issue body**, because the thread is the record of an exchange rather than a document to keep tidy. Two things came out that §1 did not anticipate. `#57` closed *during* their triage, so a row can be true when sent and stale on arrival with nobody at fault — flagged rather than corrected. And their advice to delete both wrappers turned out not to reach a release gate, which is an observation about their fallback and went back as one, unranked. |
 | 2026-08-15 | → proposed | Raised from what came back on the two threads T-157 opened. **Three errors, one found by each recipient and one found here**, and two of them are live in someone else's backlog. The one this project found is the worst of the three: `O-T2` reported a defect that had already been repaired, so taskmd's reply tells us to fix something that is fixed. A register that reports a repaired defect as open spends the recipient's attention on nothing, which is the same currency the *no priority* rule was protecting. `s` rather than `xs` because the cross-reference audit is a real pass over two documents, not a lookup. **`PH3` and `admin`**, following T-157: this is not a defect in the published plugin. |
