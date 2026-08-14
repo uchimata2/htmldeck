@@ -39,16 +39,18 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is still over its own bound** — 15,182 bytes against `tasks/TASK-WORKFLOW.md`'s 11,579,
-measured 2026-08-14 with the command above. That day's two cuts took it **19,035 → 14,917, −21.6%**,
+**This file is still over its own bound** — 15,208 bytes against `tasks/TASK-WORKFLOW.md`'s 11,925,
+measured 2026-08-14 with the command above. That day's cuts took it **19,035 → 15,208, −20.1%**,
 closing 57% of the debt before later edits added back: `CE-01` as
 [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and `CE-04` as
 [T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), both ranked in
 [`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6. **Those were the two cuts this bound was written
 to make decidable, and both are spent** — what remains has no ranked finding behind it. That is dated
-debt and not a rule already met. *The statement here read 18,807 against `.taskmd/config.md`'s 14,087
-until 2026-08-14 and was wrong in both terms: the smaller side had changed hands the same day, when
-`TASK-WORKFLOW.md` fell from 23,210. Re-measure both, never one.*
+debt and not a rule already met. *This statement has now been wrong in both terms twice: it read
+18,807 against `.taskmd/config.md`'s 14,087 when the smaller side had changed hands the same day, and
+15,182 against 11,579 after a later session moved both and recorded the new pair in a task record
+instead of here. **Re-measure both, never one**, and write it here in the same edit — a figure about
+this file cannot be corrected anywhere else.*
 
 ## What this is
 

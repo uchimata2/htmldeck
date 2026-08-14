@@ -365,6 +365,7 @@ followed.
 | 17 | T-041 | named in *what PH1 shipped without* |
 | 18 | T-057 | `xl`, and the least certain to be worth it |
 | — | T-153 | **blocked on T-136 and T-138**, the only two rows it depends on, so it takes no position here. The audit grades itself once and the ranking has to have stopped moving first |
+| — | T-154 | **unplaced pending its `specify` pass**, which decides whether it is `m` or larger. It is the only open task holding a *confirmed live defect in a published document* — `examples/README.md` disagrees with the gate and passes — so it outranks most of the numbered rows on arrival, and the owner places it |
 
 **T-143 and T-144 went in at 1–2 on 2026-08-14, by the argument that put T-130 and T-131 to T-134
 there**: a row whose subject is what every other row costs is paid for by every row it precedes.
