@@ -52,7 +52,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-137](T-137-package-the-context-economy-method-as-a-skill.md) | Package the context-economy method as a skill | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-131, T-132, T-133, T-135, T-136, T-138, T-139, T-140, T-151, T-153, T-157 |
 | [T-155](T-155-date-a-record-by-its-own-row-not-by-the-table-it-sits-in.md) | Date a record by its own row, not by the table it sits in | `PH3` | - | `proposed` | `specify` | - | - | T-088, T-129, T-154 |
 | [T-156](T-156-make-the-screening-partition-a-figure-a-checker-can-count.md) | Make the screening partition a figure a checker can count | `PH3` | - | `proposed` | `specify` | - | - | T-130, T-136, T-154 |
-| [T-157](T-157-hand-the-upstream-registers-to-their-owners.md) | Hand the upstream registers to their owners | `PH3` | - | `specified` | `specify` | - | - | T-130, T-137, T-140, T-141, T-153 |
 | [T-158](T-158-measure-the-tier-1-bound-instead-of-remembering-it.md) | Measure the tier-1 bound instead of remembering it | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-134, T-143, T-144, T-152, T-153 |
 | [T-159](T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md) | Gate the text a reader follows and no checker reads | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-146, T-147, T-149, T-153 |
 
@@ -195,7 +194,8 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-150](T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) | Relocate the research prose in the two docstring outliers | `PH3` | `0.2.4` | `cancelled` | `review` | T-130 | - | T-130 |
 | [T-151](T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md) | Generate the finding-to-task listing instead of keeping it by hand | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-137, T-154 |
 | [T-152](T-152-give-look-at-the-rendered-deck-one-operative-home.md) | Give "look at the rendered deck" one operative home | `PH3` | `unreleased` | `done` | `review` | T-130 | - | T-130, T-134, T-143, T-144, T-158 |
-| [T-153](T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md) | Run the audit method's phase 2 over this repository's own audit | `PH3` | - | `done` | `review` | T-130 | - | T-130, T-137, T-157, T-158, T-159 |
+| [T-153](T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md) | Run the audit method's phase 2 over this repository's own audit | `PH3` | `unreleased` | `done` | `review` | T-130 | - | T-130, T-137, T-157, T-158, T-159 |
 | [T-154](T-154-bind-the-measurements-that-five-live-documents-state-in-prose.md) | Bind the measurements that five live documents state in prose | `PH3` | `unreleased` | `done` | `review` | - | - | T-056, T-067, T-068, T-088, T-127, T-130, T-151, T-155, T-156 |
+| [T-157](T-157-hand-the-upstream-registers-to-their-owners.md) | Hand the upstream registers to their owners | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-137, T-140, T-141, T-153 |
 
 <!-- taskmd:end -->

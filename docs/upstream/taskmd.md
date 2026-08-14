@@ -1,9 +1,15 @@
 # Observations for the taskmd plugin
 
-> **Status: the hold is over and this is ready to send.** The reporting project has finished acting on
-> its own audit — the closing review landed 2026-08-14 and **added no rows here**, which is the
-> condition the hold was waiting on rather than a lucky outcome. The sending is its own tracked act, so
-> the date, the route and your reply get recorded rather than lost.
+> **Handover record — sent 2026-08-14.**
+> **Route:** one issue on this project's own repository,
+> [`uchimata2/taskmd#1`](https://github.com/uchimata2/taskmd/issues/1). The body is this document with
+> its links made absolute; the rows are identical.
+> **Response:** *handed over — no answer is being waited on.* A reply belongs on that thread and is the
+> receiving project's call. This register does not stay open for one.
+>
+> Sent by [T-157](../../tasks/T-157-hand-the-upstream-registers-to-their-owners.md) after the hold in
+> [`../CONTEXT-AUDIT.md`](../CONTEXT-AUDIT.md) §7 came off: the closing review landed 2026-08-14 and
+> **added no rows here**, which is the condition the hold was waiting on rather than a lucky outcome.
 
 **From the htmldeck project, which uses it to track 141 tasks.** Six observations, none of them
 ranked and none of them a request. They come from one adopting repository, and they are written down

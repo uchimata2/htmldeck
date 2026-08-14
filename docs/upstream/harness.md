@@ -1,11 +1,17 @@
 # Observations for the agent harness
 
-> **Status: ready, and no route has been identified.** The reporting project has finished acting on its
-> own audit — the closing review landed 2026-08-14 and **added no rows here**. The other two registers
-> go to owners with issue trackers; this one's owner is a vendor, and **no route has been found for
-> sending it.** That is written down rather than left implicit, because *no route found* and *withheld*
-> look identical from outside and only one of them is waiting for something. What would change it: a
-> vendor channel, an issue tracker, or a support path that accepts an observation carrying no priority.
+> **Handover record — not sent, 2026-08-14. This is the document's disposition, not an omission.**
+> **Route:** none identified. The other two registers went as issues on repositories their owners
+> control; this one's owner is a vendor, and no channel was found that accepts an observation carrying
+> no priority.
+> **What would change it:** a vendor channel, an issue tracker, or a support path. Any one of them is
+> enough, and a later session can send this without re-deciding whether it should be sent — that
+> question is settled and the answer is yes.
+> **Response:** none, and none is pending.
+>
+> Written down rather than left implicit because *no route found* and *withheld* look identical from
+> outside, and only one of them is waiting for something. This is the first. Recorded by
+> [T-157](../../tasks/T-157-hand-the-upstream-registers-to-their-owners.md), which sent the other two.
 
 **From the htmldeck project, one machine, two shells.** Two observations, neither ranked and neither
 a request. This document exists because the first of them was originally filed against the wrong

@@ -2,8 +2,8 @@
 id: T-157
 title: Hand the upstream registers to their owners
 type: admin
-status: specified
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-140, T-141, T-130, T-137]
@@ -13,6 +13,7 @@ business_value: medium
 effort: xs
 created: 2026-08-14
 updated: 2026-08-14
+shipped_in: unreleased
 deliverables: []
 ---
 
@@ -84,24 +85,143 @@ they were homeless.**
 
 ## 2. Plan
 
+**The route is settled: one GitHub issue per register, on the owner's own repositories.** Ruled by
+the owner 2026-08-14, from three candidates — an issue, a file committed into the receiving repository,
+or a direct handover with no outward action. The issue wins on the one thing the outcome asks for:
+*what came back* needs somewhere to land, and only a thread has one. The documents were already
+written for it — they cite the receiving projects' issue numbers and invite corrections.
+
+**The response is recorded as handed over rather than waited for.** Also the owner's ruling: the
+sending is done on this side, and a reply is the receiving project's business, not this task's. So
+this task closes on delivery, not on an answer.
+
+**Two things the route changes that sending did not obviously imply.** A register's relative links
+resolve inside this repository and nowhere else, so an issue body needs them absolute or it arrives
+broken. And an issue is a notification only to whoever watches the repository — the owner asked for a
+**copy-paste prompt per project**, so a session started in the receiving repository can pick the work
+up without any of this context.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Build an issue body per register: the document as it stands, with every repository-relative link rewritten to an absolute `github.com/uchimata2/htmldeck` URL. The committed copies keep their relative links | Two issue bodies that resolve from another repository |
+| 2 | Create one issue on `uchimata2/handoff-skill` and one on `uchimata2/taskmd`, titled as an adopter's report rather than as a request, so the title does not smuggle in the priority the rows refuse to carry | Two issue URLs |
+| 3 | Add a **Handover record** to all three documents — route, date, response. `harness.md`'s says *no route identified* and what would change that, in the same shape, so it reads as pending rather than as sent or dropped | Three documents that state their own disposition |
+| 4 | Replace `../docs/CONTEXT-AUDIT.md` §7's *nothing has been sent* with what was sent, and correct §7.1's `O-H1` to `O-H6` — `O-H7` was added after that line was written | §7 true at the moment this task closes |
+| 5 | Write one copy-paste prompt per receiving project, naming the issue and what to do with it, and carrying the *no priority* rule across so it survives the trip | Prompts in §3, and handed to the owner |
+| 6 | Gates and commit | `lint`, `check_all`, one commit |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The issue body is the document with its links made absolute, and nothing else changed** — 2026-08-14.
+  A register's relative links resolve inside this repository and nowhere else, so an issue carrying them
+  arrives broken. The committed copies keep their relative form; the rewrite happens on the way out, by a
+  throwaway script that asserts no `../` survives. The rows are byte-identical either side.
+- **The "ready to send" banner was replaced for the recipient, not deleted** — 2026-08-14. A banner that
+  says *ready to send* is addressed to the sender and reads as pre-delivery once it has arrived. The issue
+  opens instead with what the reader needs: this is a report, nothing is ranked, no answer is being waited
+  on.
+- **The issue titles state the disclaimer** — 2026-08-14. *"Adopter report … no priorities attached"*. A
+  title is the one line every recipient reads, and a title like *observations to address* would smuggle
+  back exactly the priority the rows refuse to carry.
+- **A row added after a document's handover date is unsent, and nothing marks it so** — 2026-08-14, and
+  it is this task's ruling because sending created the question. The handover record carries a date and a
+  row carries a position; the two answer it between them, and a per-row send-state would be a second
+  register to keep in step (**L-13**). Written into `../docs/CONTEXT-AUDIT.md` §7, where the standing rule
+  already lives.
+- **`harness.md`'s record is written in the same shape as the two that went** — 2026-08-14. Route, what
+  would change it, response. A document whose disposition is recorded in a different form from its
+  siblings invites the reader to conclude it was forgotten, which is the exact misreading §1 raised.
 
 **Outputs produced**
-- <none yet>
+- [`uchimata2/handoff-skill#75`](https://github.com/uchimata2/handoff-skill/issues/75) — `O-H1` to `O-H7`
+- [`uchimata2/taskmd#1`](https://github.com/uchimata2/taskmd/issues/1) — `O-T1` to `O-T6`
+- A handover record in each of the three documents under [`../docs/upstream/`](../docs/upstream), two
+  *sent* and one *no route identified*
+- [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §7 — *nothing has been sent* replaced by what was
+  sent; §7.1's row range corrected from `O-H6` to `O-H7`; the spent scheduling argument compressed to one
+  line
+- The two handover prompts below
+
+**The handover prompts.** An issue notifies whoever watches the repository and nobody else, so each
+receiving project gets a prompt that starts a session there with no access to any of this context. They
+carry the *no priority* rule across, because that rule is the one most likely to be lost in transit — a
+report that arrives without it reads as a list of demands.
+
+For the handoff skill:
+
+```text
+Read https://github.com/uchimata2/handoff-skill/issues/75 — an adopter report from the htmldeck
+project. Seven observations about this skill, from about a week of daily use in one repository.
+
+Treat it as evidence, not as a backlog. Nothing in it is ranked and nothing is a request: the
+reporter assigned no priority on purpose, because that would be a guess about this project. What
+each row is worth is our call, and making that call is the job.
+
+Two things that are easy to skim past. Every row is stamped audit or implementation — the audit
+rows were written with our open issues and PROJECT_BOARD.md read first, the implementation rows
+were not. Read an implementation row as "this was observed", never as "this is not already known".
+And any T-nnn in it is htmldeck's id; it will collide with our numbering if quoted bare.
+
+For each row, decide three things: is it real here, does an existing issue already cover it, and
+does this project want to do anything about it. Raise what survives as our own issues, in our own
+words. O-H4 carries a proposed patch to handoff.core.md §4 that the reporter already applied to
+their installed copy — check it against the source before adopting it, since that copy is not ours.
+
+Reply on the thread if anything is worth telling them, including "already knew that". They are not
+waiting on an answer.
+```
+
+For taskmd:
+
+```text
+Read https://github.com/uchimata2/taskmd/issues/1 — an adopter report from the htmldeck project.
+Six observations from a repository tracking 141 tasks, on version 0.5.0.
+
+Treat it as evidence, not as a backlog. Nothing in it is ranked and nothing is a request: the
+reporter assigned no priority on purpose, because that would be a guess about this project. What
+each row is worth is our call, and making that call is the job.
+
+Three things that are easy to skim past. Every row is stamped audit or implementation — the audit
+rows were written with our backlog read first, 138 task files and the 8 then open; the
+implementation rows were not, so read one as "this was observed", never as "this is not already
+known". Ids collide in both directions: a T-nnn marked as ours is ours, one marked as the
+reporting project's is htmldeck's. And O-T2 is a correction of an earlier row that blamed us for a
+defect that turned out to be the harness's — what is left of it is small and specific, so read the
+row rather than its opening clause.
+
+For each row, decide three things: is it real here, does an existing task already cover it, and
+does this project want to do anything about it. O-T1 asks for nothing — it says we settled the
+question first and the adopter should follow us. Raise what survives as our own tasks, in our own
+words.
+
+Reply on the thread if anything is worth telling them, including "already knew that". They are not
+waiting on an answer.
+```
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Each document that is sent records **route, date and response** | met | Both carry a **Handover record** banner: route as the issue it went to, date `2026-08-14`, response as **handed over — no answer is being waited on**. That last form is the owner's ruling and is stronger than the *no response yet* the criterion allowed for: the register is not parked on a reply, so nothing has to come back for this to be complete. |
+| §7's *nothing has been sent* paragraph states what was sent instead | met | Replaced by what went, by what route, and why that route was chosen over the two rivals. `harness.md`'s non-sending is stated in the same paragraph, so §7 is not silently about two documents out of three. |
+| No observation acquired a priority, a severity or a deadline on the way out | met | Measured rather than asserted: the observation rows in each issue body are **byte-identical** to the committed document — 7 rows and 6 rows, `a == c` — and carry none of `urgent`, `severity`, `deadline`, `high priority`, `must fix`, `asap`. The titles disclaim it out loud: *"…no priorities attached"*. |
+| The *audit* / *implementation* stamps survive the handover | met | Counted in the delivered bodies: **3 audit and 4 implementation** for the handoff skill, **3 and 3** for taskmd. Both prompts restate what the stamp means, since the stamp is worthless to a reader who does not know an *implementation* row had no backlog re-read. |
+| `harness.md` records that no route was identified, and **what would change that** | met | Its record names the three things that would change it and adds the part §1 asked for in substance: **the question of whether it should be sent is settled and the answer is yes**, so a later session supplies a route and sends, rather than re-opening the decision. |
+
+**What the criteria did not ask for, and the owner did**
+The owner added one requirement at the route decision: an issue notifies a watcher and nobody else, so
+each receiving project needs **a prompt that starts a session there cold**. Two are in §3. They were
+written to carry the *no priority* rule across, because it is the rule most likely to be lost in
+transit — a report that arrives without it reads as a list of demands, which is precisely what the
+register spent seven months of rows refusing to be.
+
+**One thing worth saying plainly.** This task sent observations to two repositories the owner also
+owns. That made the route cheap, and it makes the *response* half of the outcome softer than it looks:
+the reply will come from the same person who commissioned the report. The rows are still worth
+sending — a written register read in the receiving project's own context is not the same artifact as a
+memory of having noticed something — but *what came back* will not be an independent signal, and
+nothing here should later be cited as though it were.
 
 **Child fix tasks raised**
 - none
@@ -110,6 +230,8 @@ they were homeless.**
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-14 | → done | **Sent.** Two issues, [`handoff-skill#75`](https://github.com/uchimata2/handoff-skill/issues/75) and [`taskmd#1`](https://github.com/uchimata2/taskmd/issues/1); `harness.md` recorded as *no route identified*. All five criteria met, one of them measurably: the observation rows in each issue body are byte-identical to the committed documents, and the *audit* / *implementation* stamps came through 3+4 and 3+3. **Two defects were found by delivering rather than by any gate** — repository-relative links resolve nowhere else, and a *ready to send* banner is addressed to the sender and false on arrival. That is **L-101**, and it is the closing checklist's *look at what rendered* rule earning its keep on a text file. |
+| 2026-08-14 | → planned | **The owner set the route: one GitHub issue per register, on their own repositories**, chosen over committing a file into each receiving repository and over a direct handover with no outward action. The deciding property is that *what came back* needs a home and only a thread has one. **The response is recorded as handed over rather than waited for** — the sending is complete on this side, and a reply is the receiving project's business. Two consequences the route carries that the act did not: relative links must be absolute in an issue body, and an issue notifies only a watcher, so the owner asked for a copy-paste prompt per project. |
 | 2026-08-14 | (unblocked) | **`T-153` closed and phase 2 added no upstream rows**, which is the condition the hold rested on rather than a lucky outcome — the argument was that a review of what the findings bought is the session most likely to add rows. `blocked_by` is empty and this task is runnable. What it sends is unchanged: the three documents under `../docs/upstream/` are as T-141 left them. |
 | 2026-08-14 | → specified | The one open question is settled by the owner: **send the two named, and record for `harness.md` that no route was identified.** The recording is that document's deliverable rather than a consolation — *no route found* and *withheld* are indistinguishable from outside, and only one of them is waiting for something. Struck rather than deleted, per §1. |
 | 2026-08-14 | → proposed | Raised at the owner's direction, settling the open point `CONTEXT-AUDIT.md` §7 recorded the same day. The 2026-08-13 hold had a condition and no moment; the owner supplied the moment — **after phase 2, before T-137** — and a scheduled act with no task file has nowhere to record what it produces. `blocked_by: T-153`, because phase 2 is the session most likely to add rows and sending before it would mean sending twice, which is the argument the hold rests on. `xs`, `PH3` because PH2 has shipped and this is not a defect in the published plugin. |

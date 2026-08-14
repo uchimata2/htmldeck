@@ -141,5 +141,6 @@ comes here.
 | [L-89](lessons/L-89.md) | Split a document by kind; split it by unit only when the unit has an address | Writing |
 | [L-93](lessons/L-93.md) | A rule in five documents is a rule with no home | Writing |
 | [L-100](lessons/L-100.md) | Two rules that are both right can block the same fix; report the collision, do not pick | Writing |
+| [L-101](lessons/L-101.md) | A document written to be sent is wrong at home in exactly the ways nothing here can check | Writing |
 
 <!-- lessons:end -->

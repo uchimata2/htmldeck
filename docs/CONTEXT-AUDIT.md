@@ -558,44 +558,46 @@ observed*, never *this is not already known*.
 repository uses, which quietly assumed every outside defect belongs to one of them; `O-C1` belongs to
 neither, and the missing home is why it was first filed against the wrong project (**L-87**).
 
-**Nothing has been sent — and the condition that held it is now met.** *The hold, ruled by the owner
-2026-08-13:* nothing goes until the audit's findings are worked and their fixes land, because the
-documents were **a register still filling** rather than a report waiting on a courier — every finding
-still to be implemented was a session that might add rows, and four out of four implementations did.
-Sending early would have meant sending three times.
+**Two of the three were sent on 2026-08-14; the third has no route and says so.** *The route, ruled by
+the owner that day:* one issue on the receiving project's own repository —
+[`uchimata2/handoff-skill#75`](https://github.com/uchimata2/handoff-skill/issues/75) and
+[`uchimata2/taskmd#1`](https://github.com/uchimata2/taskmd/issues/1). It was chosen over committing a
+file into each receiving repository and over a direct handover with no outward act, on one property:
+*what came back* needs somewhere to land, and only a thread has one. **The response is recorded as
+handed over rather than waited for** — a reply is the receiving project's business, so the sending
+completed here instead of parking on an answer.
+[`upstream/harness.md`](upstream/harness.md) was **not** sent: its owner is a vendor, no channel was
+found that accepts an observation carrying no priority, and the document records that, plus what would
+change it. Each document carries its own handover record; this paragraph is the summary, not the
+register.
 
-**The registers stopped filling on 2026-08-14.** Phase 2 closed and **added no rows to any of the
-three**, which is the hold's own argument coming good rather than a lucky outcome: it held that a
-review of what the findings actually bought is the session most likely to add rows. The three
-documents' banners say *ready to send*, and
-[T-157](../tasks/T-157-hand-the-upstream-registers-to-their-owners.md) is the sending act — **it owns
-this paragraph's first clause**, and replaces it with what was actually sent, by what route, and what
-came back.
+*The hold, ruled by the owner 2026-08-13 and now spent:* nothing was to go until the audit's findings
+were worked and their fixes landed, because the documents were **a register still filling** rather
+than a report waiting on a courier — every finding still to be implemented was a session that might
+add rows, and four out of four implementations did. Sending early would have meant sending three
+times. **The registers stopped filling on 2026-08-14**: phase 2 closed and added no rows to any of the
+three, which is that argument coming good rather than a lucky outcome — it held that a review of what
+the findings actually bought is the session most likely to add rows.
+[T-157](../tasks/T-157-hand-the-upstream-registers-to-their-owners.md) was the sending act.
 
-**A session that finds something still adds it to the owner's document and stops there.** That rule
-does not end when T-157 closes; what ends is the wait.
+**A session that finds something still adds it to the owner's document and stops there.** Sending
+ended the wait, not the filling. **A row added after a document's handover date is unsent, and nothing
+needs to mark it so** — the record carries a date, the row carries a position, and the two answer the
+question between them. Do not open a second thread and do not chase the first; a register that has
+been sent once can be sent again, by the same one deliberate act, when there is enough to justify it.
 
-**The moment is now set. Ruled by the owner 2026-08-14: the handover happens after phase 2 and before
-[T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md).** The 2026-08-13 condition —
-findings worked, fixes landed — is met, so what was missing was a *when* rather than a *whether*.
-**Phase 2 is deliberately inside the hold rather than after it**:
+*What is spent, kept in one line so the argument is findable and does not have to be re-run:* the
+2026-08-13 hold set a condition and no moment; the owner set the moment on 2026-08-14 — after phase 2,
+before [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) — with phase 2
+deliberately **inside** the hold, because
 [T-153](../tasks/T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md) reviews the
-method against what it actually bought, and a review of that kind is the single most likely session to
-add rows — sending first would mean sending twice, which is the whole argument the hold rests on.
-
-**And it is a task now.** The paragraph above says the handover is *not a step in anyone's task* —
-written when it had no schedule. It has one, and a scheduled act with no task file has no home for what
-it produces: who was told, by what route, and what came back. **The rows were the input and the
-responses were homeless.** Raised at the owner's direction 2026-08-14 as
-[T-157](../tasks/T-157-hand-the-upstream-registers-to-their-owners.md), blocked on `T-153` for the same
-reason the hold exists — phase 2 is the session most likely to add rows.
-
-*The sentence above still stands for a session that merely **finds** something: add it to the owner's
-document and stop. What T-157 owns is the one act of sending, not the filling.*
+method against what it bought and is therefore the session most likely to add rows. The act was given a
+task file because a scheduled act has nowhere to record who was told, by what route, and what came
+back — **the rows were the input and the responses were homeless.** All of it happened.
 
 ### 7.1 The handoff skill
 
-**[`upstream/handoff-skill.md`](upstream/handoff-skill.md)** — `O-H1` to `O-H6`. Backlog read for the
+**[`upstream/handoff-skill.md`](upstream/handoff-skill.md)** — `O-H1` to `O-H7`. Backlog read for the
 *audit* rows: the six open issues on the public repository (`#60`, `#57`, `#55`, `#54`, `#53`, `#8`)
 plus `PROJECT_BOARD.md`. `O-H4` carries the patch applied to the installed copy here, written out so
 it can reach the repository it belongs in.
