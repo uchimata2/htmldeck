@@ -54,6 +54,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-156](T-156-make-the-screening-partition-a-figure-a-checker-can-count.md) | Make the screening partition a figure a checker can count | `PH3` | - | `proposed` | `specify` | - | - | T-130, T-136, T-154 |
 | [T-158](T-158-measure-the-tier-1-bound-instead-of-remembering-it.md) | Measure the tier-1 bound instead of remembering it | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-134, T-143, T-144, T-152, T-153 |
 | [T-159](T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md) | Gate the text a reader follows and no checker reads | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-146, T-147, T-149, T-153 |
+| [T-161](T-161-decide-whether-to-adopt-the-wide-row-gate-now-that-upstream-ships-one.md) | Decide whether to adopt the wide-row gate now that upstream ships one | `PH3` | - | `proposed` | `specify` | - | - | T-139, T-157, T-160 |
 
 ## Closed
 
@@ -180,7 +181,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-135](T-135-cut-the-load-path-this-project-cannot-use.md) | Cut the load path this project cannot use | `PH3` | `unreleased` | `done` | `review` | T-130 | - | T-130, T-134, T-136, T-137, T-138 |
 | [T-136](T-136-re-run-the-external-research-with-a-recorded-search-record.md) | Re-run the external research with a recorded search record | `PH3` | `unreleased` | `done` | `review` | T-130 | - | T-130, T-135, T-137, T-138, T-156 |
 | [T-138](T-138-make-the-portable-half-agent-agnostic.md) | Make the portable half agent-agnostic, and classify the load path by who controls it | `PH3` | `unreleased` | `done` | `review` | T-130 | - | T-130, T-135, T-136, T-137 |
-| [T-139](T-139-two-rows-in-brief-md-carry-a-cell-the-table-cannot-render.md) | Two rows in BRIEF.md carry a cell the table cannot render | `PH3` | `unreleased` | `done` | `review` | - | - | T-131, T-137, T-140 |
+| [T-139](T-139-two-rows-in-brief-md-carry-a-cell-the-table-cannot-render.md) | Two rows in BRIEF.md carry a cell the table cannot render | `PH3` | `unreleased` | `done` | `review` | - | - | T-131, T-137, T-140, T-161 |
 | [T-140](T-140-correct-and-extend-the-upstream-register-from-what-implementing-the-audit-found.md) | Correct and extend the upstream register from what implementing the audit found | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-131, T-137, T-139, T-141, T-142, T-157 |
 | [T-141](T-141-extract-the-upstream-register-into-one-document-per-owner.md) | Extract the upstream register into one document per owner | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-140, T-142, T-145, T-147, T-157, T-160 |
 | [T-142](T-142-fix-o-h4-the-handoff-spine-routes-a-mode-word-with-a-qualifier-to-the-opposite-mode.md) | Fix O-H4 — the handoff spine routes a mode word with a qualifier to the opposite mode | `PH3` | `unreleased` | `done` | `review` | - | - | T-140, T-141 |
@@ -196,7 +197,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-152](T-152-give-look-at-the-rendered-deck-one-operative-home.md) | Give "look at the rendered deck" one operative home | `PH3` | `unreleased` | `done` | `review` | T-130 | - | T-130, T-134, T-143, T-144, T-158 |
 | [T-153](T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md) | Run the audit method's phase 2 over this repository's own audit | `PH3` | `unreleased` | `done` | `review` | T-130 | - | T-130, T-137, T-157, T-158, T-159 |
 | [T-154](T-154-bind-the-measurements-that-five-live-documents-state-in-prose.md) | Bind the measurements that five live documents state in prose | `PH3` | `unreleased` | `done` | `review` | - | - | T-056, T-067, T-068, T-088, T-127, T-130, T-151, T-155, T-156 |
-| [T-157](T-157-hand-the-upstream-registers-to-their-owners.md) | Hand the upstream registers to their owners | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-137, T-140, T-141, T-153, T-160 |
-| [T-160](T-160-correct-the-three-errors-the-recipients-found-in-the-delivered-registers.md) | Correct the three errors the recipients found in the delivered registers | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-141, T-157 |
+| [T-157](T-157-hand-the-upstream-registers-to-their-owners.md) | Hand the upstream registers to their owners | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-137, T-140, T-141, T-153, T-160, T-161 |
+| [T-160](T-160-correct-the-three-errors-the-recipients-found-in-the-delivered-registers.md) | Correct the three errors the recipients found in the delivered registers | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-141, T-157, T-161 |
 
 <!-- taskmd:end -->

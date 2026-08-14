@@ -19,6 +19,11 @@
 > cross-reference audit they asked for is done — seven citations across both registers, one wrong**,
 > the `T-063` they found.
 >
+> **`O-T4` went furthest: they shipped a gate for it, as a problem rather than an advisory**, and
+> predicted this project's first run would be non-zero. **Measured 2026-08-15: 307 files, 0 wide rows,
+> 0 code-span pipes** — T-139 had already swept. Whether this project wants its own instrument for the
+> class is [T-161](../../tasks/T-161-decide-whether-to-adopt-the-wide-row-gate-now-that-upstream-ships-one.md).
+>
 > Sent by [T-157](../../tasks/T-157-hand-the-upstream-registers-to-their-owners.md) after the hold in
 > [`../CONTEXT-AUDIT.md`](../CONTEXT-AUDIT.md) §7 came off: the closing review landed 2026-08-14 and
 > **added no rows here**, which is the condition the hold was waiting on rather than a lucky outcome.
