@@ -560,6 +560,20 @@ and four out of four implementations so far have. Sending early would mean sendi
 **So a session that finds something adds it to the owner's document and stops there** — the handover
 is one deliberate act, later, and not a step in anyone's task.
 
+**The moment is now set. Ruled by the owner 2026-08-14: the handover happens after phase 2 and before
+[T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md).** The 2026-08-13 condition —
+findings worked, fixes landed — is met, so what was missing was a *when* rather than a *whether*.
+**Phase 2 is deliberately inside the hold rather than after it**:
+[T-153](../tasks/T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md) reviews the
+method against what it actually bought, and a review of that kind is the single most likely session to
+add rows — sending first would mean sending twice, which is the whole argument the hold rests on.
+
+**One thing this ruling leaves open, recorded here rather than lost in the ordering.** The paragraph
+above says the handover is *not a step in anyone's task*, which was written when it had no schedule.
+It now has one, and a scheduled act with no task file has no home for what it produces — who was
+told, what they said, and which rows went. **Whether the handover earns a task is the owner's call**,
+and it is `xs` either way; what cannot stand is a scheduled act that is deliberately nobody's.
+
 ### 7.1 The handoff skill
 
 **[`upstream/handoff-skill.md`](upstream/handoff-skill.md)** — `O-H1` to `O-H6`. Backlog read for the

@@ -355,23 +355,31 @@ followed.
 | — | ~~T-154~~ **done 2026-08-14** | the live defect was in four documents rather than one, a third defect fell out of testing the remedy, and the classifier the row assumed was refused on a measurement |
 | — | ~~T-136~~ **done 2026-08-14** | the catalogue went 21 → 35 and it invalidated nothing below it: no finding, and the answer written down as one |
 | — | ~~T-138~~ **done 2026-08-14** | the second repair, and the specification was wrong in one place: two fields, not a fourth value. **Both repairs are in, so T-153 is unblocked** |
-| **next** | T-137 | **nothing blocks it now.** T-136 and T-138 both landed and both left it more to package: §1 gained what the gathering step owes, and the method gained a field |
-| 1 | T-128 | prepared, ruled and surveyed |
-| 2 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
-| 3 | T-114 | the ruler is the one thing still known to bite past 13 slides |
-| 4 | T-109 | the hub of the source cluster; T-110, T-118 and T-121 are rework if it lands after them |
-| 5–7 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
-| 8 | T-115 | needs T-114 and T-109 to have settled what the shell offers |
-| 9 | T-117 | independent |
-| 10 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
-| 11 | T-155 | the same class again, one file along: a guard whose scope is wider than the thing it excuses. Placed beside T-097 because both are cheap corrections to a checker nobody is waiting on |
-| 12 | T-156 | the same class a third time, and T-136 found it: the screening partition is a part-of-whole claim in two documents that no command counts. Beside T-097 and T-155 for the same reason |
-| 13 | T-054 | after T-119, which may change which clauses are worth recording |
-| 14 | T-113 | research, and it decides ground T-112, T-111, T-041 and T-057 build on |
-| 15–16 | T-112, T-111 | the motion cluster, in that order |
-| 17 | T-041 | named in *what PH1 shipped without* |
-| 18 | T-057 | `xl`, and the least certain to be worth it |
-| — | T-153 | **unblocked 2026-08-14** and still taking no position here. Both conditions are met — T-136 raised no finding and T-138 landed — so this is now the owner's call on *when*, not on *whether*. It grades the audit once, and what it grades has grown: a 35-row catalogue and an eleventh field on every finding |
+| **next** | T-153 | **the owner answered the *when* on 2026-08-14: finish the audit first.** Unblocked the same day — T-136 raised no finding and T-138 landed — and what it grades has grown since the condition was written: a 35-row catalogue and an eleventh field on every finding |
+| **then** | *the upstream handover* | **not a task, and it may need to become one** — [`CONTEXT-AUDIT.md`](CONTEXT-AUDIT.md) §7 carries the ruling and the open point. It sits *after* phase 2 on purpose: a review of what the findings actually bought is the session most likely to add rows, and sending first would mean sending twice |
+| 1 | T-137 | **nothing blocks it.** T-136 and T-138 both landed and both left it more to package: §1 gained what the gathering step owes, and the method gained a field. The owner placed it after the handover on 2026-08-14 |
+| 2 | T-128 | prepared, ruled and surveyed |
+| 3 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 4 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 5 | T-109 | the hub of the source cluster; T-110, T-118 and T-121 are rework if it lands after them |
+| 6–8 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 9 | T-115 | needs T-114 and T-109 to have settled what the shell offers |
+| 10 | T-117 | independent |
+| 11 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
+| 12 | T-155 | the same class again, one file along: a guard whose scope is wider than the thing it excuses. Placed beside T-097 because both are cheap corrections to a checker nobody is waiting on |
+| 13 | T-156 | the same class a third time, and T-136 found it: the screening partition is a part-of-whole claim in two documents that no command counts. Beside T-097 and T-155 for the same reason |
+| 14 | T-054 | after T-119, which may change which clauses are worth recording |
+| 15 | T-113 | research, and it decides ground T-112, T-111, T-041 and T-057 build on |
+| 16–17 | T-112, T-111 | the motion cluster, in that order |
+| 18 | T-041 | named in *what PH1 shipped without* |
+| 19 | T-057 | `xl`, and the least certain to be worth it |
+
+**The `then` row carries no number on purpose.** The owner's 2026-08-14 sequence is *audit → hand over
+→ package*, and the middle step is the only one in it with no task file. `findings.py` numbers task
+rows and requires them consecutive, so a numbered row for a thing with no id fails the gate —
+correctly, since the number would be a position in a list of tasks that this is not one of. It is
+listed anyway, because an ordering step kept only in a closed conversation is one the next session
+re-derives.
 
 **T-143 and T-144 went in at 1–2 on 2026-08-14, by the argument that put T-130 and T-131 to T-134
 there**: a row whose subject is what every other row costs is paid for by every row it precedes.
