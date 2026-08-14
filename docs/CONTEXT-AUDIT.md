@@ -71,6 +71,12 @@ T-134 wrote the tier section, so it had drifted 322 bytes in a day, which is why
 their audit figures. The model, the membership rule and the bound now live in `../CLAUDE.md` itself,
 which is also over that bound by 4,555 bytes and says so.*
 
+*Re-measured again 2026-08-14 after T-143 and T-144: `../CLAUDE.md` is **14,917 bytes**, down from
+19,035 — **−21.6%**, and still 3,338 over a bound whose smaller term is now `../tasks/TASK-WORKFLOW.md`
+at 11,579 rather than `.taskmd/config.md`. Tier 1 is **~26,900 bytes**, holding the other two files at
+their audit figures. Three re-measurements of one figure in two days, each one moving it: this is what
+§6.2's first rule is about.*
+
 **Tool schemas are already deferred** — roughly 100 tool names are listed without their schemas, and
 a schema loads on request. That is the single largest saving available on this surface and the
 harness already takes it. No finding.

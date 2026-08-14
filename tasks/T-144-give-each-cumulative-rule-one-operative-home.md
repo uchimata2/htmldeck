@@ -235,7 +235,8 @@ restated the rule; `PUBLISHING.md` §8 — the release sequence, whose own step 
 broke — said *bump the version* and never said to what. The rule had gone to tier 1 in 2026-08-11
 because tier 1 sat *near* the release status, which `L-69` §4 already recorded as a compromise.
 **Restatement spreads where the governing home is missing**, so the first question is not *which
-copies to delete* but *which document should have had it*.
+copies to delete* but *which document should have had it*. **L-93** is the general form and the
+place it is stated; it is cited here rather than repeated.
 
 **Child fix tasks raised**
 - none. *Look at the rendered deck* is a live second instance of `CE-04` and is recorded as the

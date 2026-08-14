@@ -218,7 +218,8 @@ smaller term had changed hands on the morning of the same day and nothing notice
 statement this task was told to correct was already false in a way the task's own record repeated.
 And the comparison set had to be written down, because splitting content out of tier 1 creates a
 document smaller than tier 1 — an unstated rule that, read the other way, makes the bound
-unsatisfiable by the exact remedy it was written to prompt.
+unsatisfiable by the exact remedy it was written to prompt. **L-94** is the general form and the
+place it is stated; it is cited here rather than repeated.
 
 **Child fix tasks raised**
 - none. The remaining 4,009 bytes are
