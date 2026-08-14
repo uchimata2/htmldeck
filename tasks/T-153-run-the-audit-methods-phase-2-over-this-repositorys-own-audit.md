@@ -5,7 +5,7 @@ type: audit
 status: proposed
 phase: specify
 parent: T-130
-blocked_by: [T-138]
+blocked_by: []
 related: [T-130, T-137]
 work_package: PH3
 owner: the project owner
@@ -116,5 +116,6 @@ relation to. *§9 said "blocked behind six" against the old, wider reading; corr
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-14 | (unblocked) | **`T-138` closed. `blocked_by` is empty and this task is now runnable** — both repairs to the method have landed. What phase 2 will grade has changed shape since the condition was written: the catalogue it prices is 35 rather than 21, and the finding record it feeds gained an eleventh field, `Controller`, which is the rubric's first way of saying *nobody here can reach this cost*. `CE-07` is the row to check that against, since it is the reason the field exists. |
 | 2026-08-14 | (blocker cleared) | **`T-136` closed and raised no finding**, so the ranking this task grades has stopped moving — the exact condition §1 named. `blocked_by` is `T-138` alone now. The catalogue it will price is larger than the one that was ranked: 21 → 35, with fourteen techniques screened for the first time, so phase 2 grades a screening whose denominator moved even though no band did. `CONTEXT-AUDIT.md` §4.1 is the argument for the null result. |
 | 2026-08-14 | → proposed | Raised at the owner's direction once the trigger fired: the last three findings closed in one session, so every row in `CONTEXT-AUDIT.md` §6 has a closed task. **Not a finding** — `CE-nn` closed at thirteen and this is the method's own phase, so it takes an ordinary task id. Blocked on `T-136` and `T-138` alone; the wider reading in §9, *blocked behind six*, counted ordinary backlog as the condition and was corrected the same day. It sorts last while blocked, so raising it changes nothing about what to work on next — it stops the obligation depending on a paragraph being re-read. |

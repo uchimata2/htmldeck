@@ -7,8 +7,19 @@ was written in as required reading, and it needs no companion document to be usa
 it was first run on is called *the audited repository* throughout, and its figures appear only as
 worked examples.
 
-**What it is not.** It is not a skill, and it does not implement anything. It ranks, and someone else
-decides. Following it produces a list, not a change.
+**What it is not.** It is not an executable procedure, and it does not implement anything. It ranks,
+and someone else decides. Following it produces a list, not a change.
+
+**It assumes no particular agent.** Where it needs a word for something an agent may or may not have,
+it says what the thing *does* rather than what one product calls it — so a reader maps the term onto
+their own harness instead of translating out of somebody else's. **The method and the findings name no
+product. §7 and §11 do, deliberately, because they are the evidence** — a query is quoted as it was
+run, a source is cited as it is published, and a technique is named where it has a name. Sanitizing
+any of the three would leave a record that could no longer be checked, which is the defect §7.1 exists
+to prevent.
+
+**The line falls between *what you must do* and *what was found*.** If a sentence tells the reader to
+act, it uses no product's vocabulary. If it tells them where something came from, it uses the name.
 
 ---
 
@@ -37,7 +48,7 @@ unknown denominator.
 
 | | Surface | What it holds | Why it is separate |
 | :--- | :--- | :--- | :--- |
-| **A** | **The load path** | What enters context without anyone asking — instruction files at every scope, the memory index and recalled memories, the handoff, the description block of every available skill, tool schemas, system reminders | Paid on **every** turn of **every** session, so a saving here compounds against all the others |
+| **A** | **The load path** | What enters context without anyone asking — instruction files at every scope, any persistent store the agent recalls from, whatever is carried over from the last session, the catalogue of capabilities the agent is offered, the tool interface, and whatever the harness injects on its own | Paid on **every** turn of **every** session, so a saving here compounds against all the others. **Its items differ in who controls them** (§2.2) |
 | **B** | **The read path** | What a session must read to do one unit of work — the specification, the conventions, the lessons, the board, the work item, its neighbours, the source it edits | Paid once per session, and it grows with the project's age |
 | **C** | **Tool output** | What commands print back — gate reports, per-row verdict listings, test suites, search results | Paid per invocation, and the only surface where a tool's own default decides the cost |
 | **D** | **Write volume** | What a session produces — work-item prose, log rows, commit messages, the reconcile edits a closure owes | Paid twice: once written, and again when the next session reads it as surface B |
@@ -55,7 +66,7 @@ that is checkable rather than maintained:
 | Tier | Loaded | Membership rule |
 | :--- | :--- | :--- |
 | 1 | every turn | **What the harness loads without being asked.** A property of the tree, not a list someone updates |
-| 2 | when work of a kind starts | What a skill, plugin or workflow document pulls in on activation |
+| 2 | when work of a kind starts | What a packaged procedure or workflow document pulls in when it activates |
 | 3 | when a phase or mode begins | What tier 2 loads one at a time, for the branch actually taken |
 
 **Only tier 1 gets a budget.** Tiers 2 and 3 are not paid on every turn, so a line limit there
@@ -74,6 +85,38 @@ over budget**, because it makes the budget unfalsifiable and content keeps being
 the strength of a claim. Establish tier 1 by observation. Do not take a file's word for when it
 loads.
 
+### 2.2 Controllers — who can change a load-path item
+
+**A tier says when an item is paid. A controller says who can stop paying it**, and they are
+independent: the most expensive item on the load path can be the one nobody in the repository can
+touch. Every item inventoried in step 1 gets one of three values.
+
+| Controller | Who can change it | What a finding against it means |
+| :--- | :--- | :--- |
+| **project** | anyone who clones the repository | actionable work, rankable as it stands |
+| **user** | the person running the agent, across all their projects | actionable, and **someone present can do it** — but the change lands outside the repository and no clone inherits it. Say so |
+| **harness** | the agent, its vendor, or its account configuration | **may be unreachable, and that is a result rather than a low rank** |
+
+**Why this is a field and not a remark.** Without it an audit converts *I cannot reach this* into
+*this is not worth doing*, and those read identically in a ranking while being different facts. A
+harness cost that is measured, attributed and marked unreachable is a **finding**: it tells a reader
+where the budget goes and who to ask. One dropped to a low band tells them nothing and is never
+revisited.
+
+**Addressability is measured, never assumed — in both directions.** This method's own first run got it
+wrong twice and in opposite directions on the same item: the largest single item on its load path was
+first written off as untouchable by reasoning about where the files came from, then banded on the
+whole of it once a setting was found, and the reachable share turned out to be about a ninth. **Write
+a setting, restart, measure again.** A configuration schema documents what a key *means* and is silent
+about which sources honour it at which scope.
+
+**Two failed attempts is the signal to stop.** What survives is the boundary — which sources the
+mechanism reached and which it did not — recorded so the next reader does not re-run the same tests.
+That boundary is worth more than the tokens it failed to save.
+
+**`user` earns its own value rather than folding into `harness`.** They differ in whether anyone in
+the room can act, which is the entire purpose of the field.
+
 ---
 
 ## 3. The method — sixteen steps in two phases
@@ -86,10 +129,14 @@ steps 12–16, is what turns the audit into standing practice** and is described
 which the first run had already found insufficient from the other side: implementing the findings
 produced material the audit had not seen, and it took a separate task to collect it.*
 
-1. **Inventory the load path (A).** Everything that enters context unasked, with its size: the
-   instruction files at every scope, the memory index, the handoff, the description block of every
-   available skill, and which tool schemas are eager rather than deferred. Establish membership by
-   observation (§2.1).
+1. **Inventory the load path (A).** Everything that enters context unasked, with its size and **its
+   controller** (§2.2). Whatever your agent calls them, look for: instruction or rule files at every
+   scope; any persistent store the agent recalls from by itself; anything carried over from a previous
+   session; **the catalogue of capabilities the agent is offered** — the name-and-description listing
+   of whatever it can invoke, which is paid whether or not the project could use one; and how much of
+   the tool interface is present before a tool is chosen. Establish membership **by observation**
+   (§2.1), and **measure addressability rather than assuming it** (§2.2) — the item you cannot change
+   still belongs in the inventory, marked.
 2. **Inventory the read path (B)** for one representative unit of work, **chosen before the audit
    starts and named in the report**. Record what was opened, how much of it was needed, and how much
    was history rather than operative rule.
@@ -159,7 +206,7 @@ mostly to prevent it.
     the rubric, the checklist and the record format. For each: did it hold, did it stay silent where
     it should have fired, did it fire where nothing was wrong. **The output is a change to the
     method**, not to the project — and the two must not be confused, because a project-specific
-    finding written into the method is how a portable skill acquires one repository's habits.
+    finding written into the method is how a portable method acquires one repository's habits.
 15. **Refresh the technique catalogue for what changed, with a search record.** Techniques in this
     space move faster than any repository does, so the catalogue's date is part of it. **Step 5's
     recorded-search rule applies here unchanged and is restated nowhere** — the queries run, the
@@ -263,8 +310,11 @@ by being cheap.
 
 ## 6. The finding record
 
-Operative or it is decoration. Every finding carries all ten fields, and a reader must be able to act
-on it without the audit's author present.
+Operative or it is decoration. Every finding carries all eleven fields, and a reader must be able to
+act on it without the audit's author present.
+
+*It was ten until 2026-08-14, when `Controller` was added. Records written before that date say ten
+and are correct about themselves.*
 
 | Field | What it holds |
 | :--- | :--- |
@@ -276,8 +326,15 @@ on it without the audit's author present.
 | Gain | a band, with the inventory figure it rests on |
 | Effort | the project's own scale |
 | Risk | what it could cost. **`none` is a legitimate value and must be written** |
-| Applies to | `any`, `this project`, or `upstream: <component>` |
+| Applies to | `any`, `this project`, or `upstream: <component>` — **who implements the change.** `<component>` may be the **harness itself**, when the fix has to be made by the agent's own vendor |
+| Controller | `project`, `user` or `harness` (§2.2) — **who can reach the cost.** A different question from `Applies to`, and the pair is not redundant: a finding can be `any` and `harness` at once — every project pays it and no project can change it |
 | Source | external research, local precedent, or this audit |
+
+**`Applies to` and `Controller` are deliberately two fields.** Merging them was considered and
+rejected: one says who does the work, the other says whether the work is possible from here, and a
+single field forces the answer to one of them to be a guess. **The failure this pair prevents** is a
+real one from this method's first run — an unreachable cost was silently re-read as an unimportant
+one, and a low band is where a finding goes to be forgotten.
 
 ### 6.1 One numbering space, one statement per finding
 
@@ -444,6 +501,7 @@ repository* — the first project this method was run on — and are illustratio
 | **Effort** | `s` for the move; the extraction is the work |
 | **Risk** | A rule that lived only inside a narrative paragraph loses its home. Mitigated by moving rather than deleting, and by reading the section for rules before cutting it |
 | **Applies to** | `any` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | this audit; local precedent (§9, P1) |
 
 ### CE-02 — The generated board is read whole because the tool that answers the query is unreachable
@@ -457,6 +515,7 @@ repository* — the first project this method was run on — and are illustratio
 | **Effort** | `xs` |
 | **Risk** | `none` — the wrapper adds an entry point and changes no data |
 | **Applies to** | `any` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | this audit |
 
 ### CE-03 — A gate prints its whole verdict listing on a green run
@@ -470,6 +529,7 @@ repository* — the first project this method was run on — and are illustratio
 | **Effort** | `xs` |
 | **Risk** | A quiet green run hides a rule that silently stopped being checked. Mitigated by keeping the count of rules evaluated in the summary line |
 | **Applies to** | `any` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | this audit |
 
 ### CE-04 — One cumulative rule, five homes, one of them tier 1
@@ -483,6 +543,7 @@ repository* — the first project this method was run on — and are illustratio
 | **Effort** | `xs` per rule |
 | **Risk** | A pointer is weaker than a statement — a reader who does not follow it acts without the rule. Keep the *rule* in tier 1 and move only the incident |
 | **Applies to** | `any` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | this audit |
 
 ### CE-05 — A large appendix inside the document everyone is told to read first
@@ -496,6 +557,7 @@ repository* — the first project this method was run on — and are illustratio
 | **Effort** | `m` |
 | **Risk** | The per-row rationale is a real decision record and must keep its home. Check what else keys on the document — a duplicate-index check pinned to that file by name will follow the content to its new home and fire there, correctly, unless the rule that excuses it moves too |
 | **Applies to** | `any` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | this audit |
 
 ### CE-06 — A citable unit of knowledge kept in one growing file
@@ -509,58 +571,49 @@ repository* — the first project this method was run on — and are illustratio
 | **Effort** | `m`–`l` — every existing citation must still resolve, and any reference checker must be taught the new shape |
 | **Risk** | Cross-entry reading gets harder: a person browsing for a pattern loses the single scroll. Mitigated by the generated index carrying each entry's one-line hook |
 | **Applies to** | `any` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | this audit |
 
-### CE-07 — The skill-description block is paid every session for skills a project never uses
+### CE-07 — The capability catalogue is paid every session for capabilities a project never uses
 
 | | |
 | :--- | :--- |
 | **Surface / Family** | A / F5 |
-| **Finding** | Every available skill contributes its name and description to every session, whether or not the project could ever use it. Measured on the audited machine: **55 skills, 20,941 bytes of description, ~5,200 estimated tokens per session** — comparable to the whole always-loaded instruction set, and mostly for skills irrelevant to the repository at hand |
-| **Change** | Turn off, per project, the skills a project cannot use. **Find the mechanism that keys on the skill's own name, not on where it came from** — see the correction below |
-| **Gain** | **`S`, corrected from `L` on 2026-08-13 after measurement.** The block is large; the *addressable* part was 11% of it. See the second correction below |
+| **Finding** | Agents are offered a catalogue of what they can invoke, and its name-and-description listing enters context every session whether or not the project could ever use an entry. Measured on the audited machine: **55 entries, 20,941 bytes, ~5,200 estimated tokens per session** — comparable to the whole always-loaded instruction set, and mostly for capabilities irrelevant to the repository at hand |
+| **Change** | Narrow the catalogue to what the project can use. **Look for the mechanism that keys on an entry's own name rather than on where it was served from** — the two are different questions and an audit that reasons from where the files live answers the wrong one |
+| **Gain** | **`S`, corrected from `L` after measurement.** The listing is large; the *addressable* part was about a ninth of it. **Band the reachable share, never the surface** |
 | **Effort** | `xs` to attempt, and it may take more than one attempt |
-| **Risk** | A skill that would have helped is silently absent. Mitigated because the same mechanism adds one back, and because a middle setting that keeps the name and drops the description costs about a tenth and stays discoverable |
+| **Risk** | A capability that would have helped is silently absent. Mitigated because the same mechanism adds one back, and because a setting that keeps the name and drops the description may cost about a tenth while staying discoverable |
 | **Applies to** | `any` |
+| **Controller** | `harness` - The listing is supplied by the harness. Three mechanisms at three scopes reached about a ninth of it and nothing else moved — measured, attributed, and not addressable by the project paying for it |
 | **Source** | external research (T4); this audit |
 
-**A correction worth more than the finding, recorded 2026-08-13.** The audit first reported this as
-untouchable — the reasoning was that the plugins supplying most of the skills were not installed
-anywhere on disk, so no plugin-enable setting could reach them. That was true and irrelevant. **The
-configuration schema turned out to expose a per-skill listing override keyed on the skill's *name*,
-which does not care where the skill is served from**, plus a switch that stops cloud connectors being
-fetched at all, and a budget fraction that caps what the whole listing may cost.
+**This is the finding the controller field was built for**, and it is stated here as a shape rather
+than as one product's settings. *The key names, the scopes tried and the three null results were in
+this document until 2026-08-14; they are evidence about one machine, so they moved to the audited
+repository's own report, where the agent and the machine are known.*
 
-Two general lessons, and the second is the one that generalises:
+**The shape, which any agent's reader can act on.**
 
-- **A skill's delivery mechanism and its listing cost are different questions.** An audit that reasons
-  from *where the files are* answers the wrong one.
-- **Read the configuration schema before concluding a thing cannot be configured.** Three of this
-  audit's conclusions about what was reachable were wrong in the same direction — too pessimistic —
-  and all three were settled by one document that was available the whole time.
-
-**A second correction, from measuring the first one. The band was `L` and the truth was `S`.** Two
-restarts and three measurements produced **~800 tokens of a 7,300-token listing**, and then stopped
-moving. What the numbers established is a boundary rather than a saving: **a per-skill override
-reaches the skills the harness itself and the user provide; skills a plugin supplies are governed by
-whatever enables the plugin** — and where those plugins are not installed locally, no file on the
-machine names them. The connector switch behaved the same way: **accepted at every scope tried and
-inert at all of them**, including the user scope that was supposed to be the decisive test.
-
-**Three mechanisms, three scopes, three null results.** That is the shape of a harness-level cost: it
-is visible in the accounting, attributable to a named source, and not addressable by the project that
-pays it. **An audit must be able to report that**, or it will keep converting *I cannot reach this*
-into *this is not worth doing* — which reads the same in a ranking and is a different fact entirely.
+1. **The listing is paid per session and is usually the largest single item on the load path** that
+   the project did not write.
+2. **Its addressability is harness-dependent and must be measured, not assumed** (§2.2). Two readings
+   of the same item were both wrong here — first *untouchable*, then *all of it* — and the truth was
+   about a ninth.
+3. **The mechanism, where one exists, keys on what an entry is called and not on where it came from.**
+   Reasoning from where the files live is what produced the first wrong answer.
+4. **A configuration schema says what a key means and is silent about which sources honour it at which
+   scope.** Write the setting, restart, measure again.
+5. **After two failed attempts, stop and record the boundary** — which sources the mechanism reached
+   and which it did not. That is the finding when the saving is not.
 
 Three lessons, and the third is the one that costs most to learn late:
 
-- **A schema that documents a setting does not promise it applies at the scope you are writing it in.**
-  The schema was right about what the keys mean and silent about which sources honour them.
-- **Estimate the addressable share, not the surface.** `L` was an honest reading of the block's size
-  and a careless one of what could be changed. A gain band is a claim about *reachable* saving.
-- **Two failed experiments is the signal to stop, not to try a third.** Each attempt here cost a
-  restart of someone else's environment. The finding that survives is the boundary, written down so
-  the next session does not re-run the same two tests — which is worth more than the tokens were.
+- **An entry's delivery mechanism and its listing cost are different questions.**
+- **Estimate the addressable share, not the surface.** A gain band is a claim about *reachable*
+  saving; `L` was an honest reading of the listing's size and a careless one of what could change.
+- **Two failed experiments is the signal to stop, not to try a third.** Each attempt cost a restart of
+  someone else's environment, and the boundary that survives is worth more than the tokens were.
 
 ### CE-08 — A measured figure that lives only in the handover chain
 
@@ -573,6 +626,7 @@ Three lessons, and the third is the one that costs most to learn late:
 | **Effort** | `xs` |
 | **Risk** | `none` |
 | **Applies to** | `any` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | this audit |
 
 ---
@@ -588,7 +642,7 @@ carried over, each stated as a structure rather than as a file.
 | **P2** | **One file per lifecycle phase** | Workflow split into a small file per phase, each with preflight, do, do-not, close | A session in one phase loads that phase. Measured in precedent: 1.2–7 KB per phase against a single document several times larger |
 | **P3** | **Rationale in its own document** | The *why* separated from the operative steps and cited from them | The F3 tension resolves without deleting anything: reasons keep a home the operative path never loads |
 | **P4** | **Evidence quoted forward** | A planning phase records verbatim signatures and `path:line` refs so the audit phase greps instead of re-reading | The expensive re-read never happens. This is T19 |
-| **P5** | **One skill body, thin agent front-ends** | The portable package lives once; each agent gets a ~1–2 KB adapter | No drift between agents, and no duplicated body |
+| **P5** | **One body, thin per-agent front-ends** | The portable package lives once; each agent gets a ~1–2 KB adapter naming only what differs for it | No drift between agents, and no duplicated body |
 | **P6** | **Spine plus one branch, never both** | A core document declares which branch file a mode loads, and a run loads exactly one | Confirmed by observation during this audit: resuming loaded the spine and one flow, and never touched the other flow or the tracker binding — **10 KB present, 7 KB of binding and 6 KB of the other flow not paid** |
 
 **Nothing is copied across.** Patterns, structures and measurements only, and no path, machine name or

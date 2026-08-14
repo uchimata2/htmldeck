@@ -83,6 +83,7 @@ comes here.
 | [L-96](lessons/L-96.md) | A survey inherited from a closed task is evidence about the day it was taken | Evidence and verification |
 | [L-97](lessons/L-97.md) | A check anchored on the value that drifts goes blind exactly when it is needed | Evidence and verification |
 | [L-98](lessons/L-98.md) | A tool that publishes its own measurements is still publishing its own measurements | Evidence and verification |
+| [L-99](lessons/L-99.md) | A portability test that looks for your own names cannot see theirs | Evidence and verification |
 
 ### Tooling
 

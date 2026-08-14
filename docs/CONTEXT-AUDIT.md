@@ -82,9 +82,41 @@ at 11,579 rather than `.taskmd/config.md`. Tier 1 is **~26,900 bytes**, holding 
 their audit figures. Three re-measurements of one figure in two days, each one moving it: this is what
 §6.2's first rule is about.*
 
+*Re-measured a fourth time 2026-08-14, in passing during T-138: [`../CLAUDE.md`](../CLAUDE.md) is
+**15,208 bytes** against [`../tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md)'s **11,925** — so the
+line above is stale in **both** terms, which is the failure `../CLAUDE.md` records having made twice
+itself. Both terms are re-measured together or neither is; the operative statement of the debt is in
+`../CLAUDE.md` and this is a dated observation of it, not a second home for it.*
+
 **Tool schemas are already deferred** — roughly 100 tool names are listed without their schemas, and
 a schema loads on request. That is the single largest saving available on this surface and the
 harness already takes it. No finding.
+
+**The capability-listing mechanism, and the three null results — `CE-07`'s evidence.** *Moved here
+from `R8` §8 on 2026-08-14 by
+[T-138](../tasks/T-138-make-the-portable-half-agent-agnostic.md). It is a measurement of one machine
+and one harness, so the portable half now states the shape and this is where the mechanism lives.*
+
+The audit first reported the listing as untouchable, reasoning that the plugins supplying most entries
+were not installed anywhere on disk, so no plugin-enable setting could reach them. **True and
+irrelevant.** The configuration schema exposes a **per-skill listing override keyed on the skill's
+*name***, which does not care where the skill is served from, plus a switch that stops cloud
+connectors being fetched at all, and a budget fraction capping what the whole listing may cost.
+
+Then measuring the correction produced a second one. **Two restarts and three measurements moved ~800
+tokens of a 7,300-token listing, and then stopped.** What that established is a boundary, not a
+saving:
+
+- **the per-skill override reaches the skills the harness itself and the user provide**; skills a
+  plugin supplies are governed by whatever enables the plugin, and where those plugins are not
+  installed locally, no file on this machine names them;
+- **the connector switch was accepted at every scope tried and inert at all of them**, including the
+  user scope that was supposed to be the decisive test.
+
+**Three mechanisms, three scopes, three null results** — which is why `CE-07`'s controller is
+`harness` rather than a low band. The cost is visible in the accounting, attributable to a named
+source, and not addressable by the project that pays it. T-135 is the task; **L-82** and **L-83** are
+the general halves.
 
 ### 2.2 Surface B — the read path for one unit of work
 
@@ -351,6 +383,7 @@ sessions and saves a whole session's runway on the one that would otherwise open
 | **Effort** | `m` |
 | **Risk** | `§n` citations from a dozen task records, which `refcheck.py` resolves. A split that keeps the numbers keeps the citations; one that does not breaks twelve records at once, and the checker will say so |
 | **Applies to** | `this project` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | local precedent — `R8-context-economy-for-coding-agents.md` §9, P2 |
 
 #### CE-10 — The memory index carries entries that say they are spent
@@ -364,6 +397,7 @@ sessions and saves a whole session's runway on the one that would otherwise open
 | **Effort** | `xs` |
 | **Risk** | Deleting a memory that the repository does not in fact record. Mitigated by checking each against `docs/LESSONS.md` before removal |
 | **Applies to** | `this project` |
+| **Controller** | `user` - The store belongs to the person running the agent, not to the repository. Actionable today, and no clone inherits the result |
 | **Source** | this audit |
 
 #### CE-11 — There is no tier model here, and the project that has one is the owner's
@@ -377,6 +411,7 @@ sessions and saves a whole session's runway on the one that would otherwise open
 | **Effort** | `s` |
 | **Risk** | `none` |
 | **Applies to** | `this project` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | local precedent — `R8-context-economy-for-coding-agents.md` §2.1 |
 
 #### CE-12 — ~~Two files where docstrings are most of the file~~ — **withdrawn, the measurement was of the wrong unit**
@@ -410,6 +445,7 @@ so the change this row proposes would break them.** One true claim survives and 
 | **Effort** | ~~`s`~~ — nothing was built; the measurement that withdrew it was three throwaway scripts |
 | **Risk** | ~~These are the files whose behaviour is least obvious, which is plausibly *why* they carry the most explanation. A relocation that makes a probe's reasoning unfindable costs more than it saves~~ — **this risk was never reached.** It presumes the explanation is there, and it is 1,949 bytes |
 | **Applies to** | `this project` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | this audit |
 
 #### CE-13 — Nothing says a deck is never read whole
@@ -423,6 +459,7 @@ so the change this row proposes would break them.** One true claim survives and 
 | **Effort** | `xs` |
 | **Risk** | `none` |
 | **Applies to** | `this project` |
+| **Controller** | `project` - The repository's own files and tools |
 | **Source** | this audit |
 
 ### 6.2 Working one of these — what to check, what to report, and where each thing goes

@@ -5,7 +5,7 @@ type: deliverable
 status: proposed
 phase: specify
 parent: T-130
-blocked_by: [T-136]
+blocked_by: []
 related: [T-130, T-131, T-132, T-133, T-135, T-136, T-139, T-140]
 work_package: PH3
 owner: the project owner
