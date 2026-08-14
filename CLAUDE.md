@@ -39,9 +39,9 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is still over its own bound** — 14,917 bytes against `tasks/TASK-WORKFLOW.md`'s 11,579,
-measured 2026-08-14 with the command above. It was **19,035** before that day's two cuts, so they took
-**22.1%** and closed 57% of the debt: `CE-01` as
+**This file is still over its own bound** — 15,182 bytes against `tasks/TASK-WORKFLOW.md`'s 11,579,
+measured 2026-08-14 with the command above. That day's two cuts took it **19,035 → 14,917, −21.6%**,
+closing 57% of the debt before later edits added back: `CE-01` as
 [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and `CE-04` as
 [T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), both ranked in
 [`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6. **Those were the two cuts this bound was written
@@ -173,7 +173,10 @@ This repository goes to GitHub. Everything written here must be:
 - **Committed under the publishing identity**, `uchimata2 <112070643+uchimata2@users.noreply.github.com>`,
   set in this repository's local git config. The personal address was rewritten out of all 121
   commits before the first push and **must not come back** — history is public now, so a single
-  commit carrying it cannot be undone the way the first rewrite could.
+  commit carrying it cannot be undone the way the first rewrite could. **No co-author trailer**, on
+  the same reasoning: this history is uniform without one, and a push makes the exception permanent.
+  Ruled by the owner 2026-08-14, after four commits carrying an agent trailer were stripped before
+  they went out.
 - **Out-of-the-box.** Clone and run, no path editing.
 - **Font-licence aware.** If fonts are embedded, only ones whose licence permits redistribution.
   Record the licence next to each.
