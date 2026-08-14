@@ -102,7 +102,7 @@ raised about, and it is measured rather than felt.
 | ~~`docs/BRIEF.md`~~ | ~~*Release phases* — 112 rows, 68 struck through~~ **moved out 2026-08-14 by [T-145](../tasks/T-145-move-brief-mds-release-phases-to-its-own-document.md); it read 92,894 / 69% over 134 rows on the day it went, and `BRIEF.md` is now 42,485 bytes** | ~~66,461~~ | ~~**61%**~~ |
 | ~~`docs/LESSONS.md`~~ | ~~81 entries, mean 1,873 bytes~~ **split out 2026-08-14 by T-146; it read 89 entries, mean 1,859, 167,043 bytes on the day it went** | ~~151,751~~ | ~~**>99%**~~ |
 | ~~`tasks/TASK-WORKFLOW.md`~~ | ~~§6 *The tooling*~~ **split out 2026-08-14 by T-147; it read 12,836 / 55.3% on the day it went** | ~~11,026~~ | ~~**52%**~~ |
-| `CLAUDE.md` | *What this is* — release chronology | 6,980 | **45%** |
+| ~~`CLAUDE.md`~~ | ~~*What this is* — release chronology~~ **moved out 2026-08-14 by [T-143](../tasks/T-143-split-the-release-chronology-out-of-claude-md.md) to `RELEASE-HISTORY.md`; the file went 19,035 → 15,416 bytes and its largest section is now the same heading at 3,760 / 24.4%, holding rules rather than dates** | ~~6,980~~ | ~~**45%**~~ |
 
 ### 2.3 Surface C — tool output on a green run
 
@@ -263,7 +263,7 @@ the finding itself, and four closures showed that none of it is obvious from the
 | ~~2~~ | **CE-03** | C / F5 | A quiet mode for the deck gate's green run — **done; 345 bytes against 17,581, and the default proved unchanged** | `L` | `xs` | stated | R8 §8 |
 | ~~3~~ | **CE-07** | A / F5 | Enable skills per project, not globally — **done, and the band was wrong** | ~~`L`~~ **`S`** | `xs` | stated | R8 §8 |
 | ~~4~~ | **CE-13** | B / F4 | Write down that a deck is never read whole — **done, inside rule 6 rather than as a new rule; the numbers are cited about 130 times** | *bimodal* | `xs` | none | §6.1 |
-| 5 | **CE-01** | A / F1 | Split the release chronology out of `CLAUDE.md` | `L` | `s` | stated | R8 §8 |
+| ~~5~~ | **CE-01** | A / F1 | Split the release chronology out of `CLAUDE.md` — **done; 19,035 → 15,416, and the row's own 6,980 was never the saving.** 3,619 bytes were narrative and the rest was fourteen rules that stayed, which is what *the extraction is the work* means once it is counted | ~~`L`~~ **`M`** | `s` | stated | R8 §8 |
 | ~~6~~ | **CE-11** | A / F1 | Adopt the tier model and a relation-bound tier 1 — **done, and the file is over the bound the day it was set, so it is written as dated debt** | *enabler* | `s` | none | §6.1 |
 | ~~7~~ | **CE-05** | B / F1 | Move `BRIEF.md`'s *Release phases* to its own document — **done; `BRIEF.md` 134,596 → 42,485, and the shape the row proposed was refused with a measurement** | `XL` | `m` | stated | R8 §8 |
 | ~~8~~ | **CE-06** | B / F1 | One file per lesson, plus a generated index — **done, and the band was wrong: no bytes were saved.** What it bought was 983 citations a gate now resolves | ~~`XL`~~ **`S`, plus an unbanded gain the row never named** | `m`–`l` | stated | R8 §8 |
