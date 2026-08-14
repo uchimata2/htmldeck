@@ -2,7 +2,7 @@
 id: T-157
 title: Hand the upstream registers to their owners
 type: admin
-status: proposed
+status: specified
 phase: specify
 parent: null
 blocked_by: [T-153]
@@ -43,8 +43,9 @@ they were homeless.**
 - In: sending [`../docs/upstream/handoff-skill.md`](../docs/upstream/handoff-skill.md) and
   [`../docs/upstream/taskmd.md`](../docs/upstream/taskmd.md) to their owners — the two the owner named.
 - In: **recording the route, the date and the response** against each document.
-- In: a decision on [`../docs/upstream/harness.md`](../docs/upstream/harness.md) — see the open
-  question. It is the third document and it was not named.
+- In: recording, against [`../docs/upstream/harness.md`](../docs/upstream/harness.md), that **no route
+  was identified** and what would change that. **Settled 2026-08-14** — it is not sent, and it is not
+  withheld.
 - In: updating §7 from *nothing has been sent* to what was actually sent, since that paragraph is the
   operative statement and will otherwise be false the moment this task closes.
 - Out: **implementing anything for them.** The register's own rule is that an observation carries no
@@ -67,14 +68,19 @@ they were homeless.**
 - [ ] No observation acquired a priority, a severity or a deadline on the way out
 - [ ] The *audit* / *implementation* stamps survive the handover, so a recipient can tell which rows
       were written with their backlog read
-- [ ] `harness.md` is sent, or its lack of a route is written down as a result
+- [ ] `harness.md` records that no route was identified, and **what would change that** — so it reads
+      as pending rather than as sent or as dropped
 
 **Open questions**
-- **Does `harness.md` go, and by what route?** The owner named the handoff skill and taskmd. The third
-  document's owner is a vendor rather than a person with an issue tracker, and **an observation with no
-  route is not the same as one withheld** — the difference has to be recorded either way. Recommended:
-  send the two named, and record for `harness.md` that no route was identified, which leaves it
-  findable rather than dropped. — the owner.
+- ~~**Does `harness.md` go, and by what route?**~~ **Settled by the owner 2026-08-14: send the two
+  named — the handoff skill and taskmd — and record for
+  [`../docs/upstream/harness.md`](../docs/upstream/harness.md) that no route was identified.**
+
+  **The recording is the deliverable for that document, not a consolation for one.** An observation
+  with no route and an observation withheld look identical from outside, and only one of them is
+  waiting for something. Write which it is, and what would change it — a vendor channel, an issue
+  tracker, a support path — so a later session can send it without re-deciding whether it should be
+  sent. **Do not leave `harness.md` looking sent, and do not leave it looking rejected.**
 
 ## 2. Plan
 
@@ -104,4 +110,5 @@ they were homeless.**
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-14 | → specified | The one open question is settled by the owner: **send the two named, and record for `harness.md` that no route was identified.** The recording is that document's deliverable rather than a consolation — *no route found* and *withheld* are indistinguishable from outside, and only one of them is waiting for something. Struck rather than deleted, per §1. |
 | 2026-08-14 | → proposed | Raised at the owner's direction, settling the open point `CONTEXT-AUDIT.md` §7 recorded the same day. The 2026-08-13 hold had a condition and no moment; the owner supplied the moment — **after phase 2, before T-137** — and a scheduled act with no task file has nowhere to record what it produces. `blocked_by: T-153`, because phase 2 is the session most likely to add rows and sending before it would mean sending twice, which is the argument the hold rests on. `xs`, `PH3` because PH2 has shipped and this is not a defect in the published plugin. |
