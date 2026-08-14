@@ -159,10 +159,10 @@ already gone stale under that instruction, because a rule with nothing behind it
 ([T-060](../tasks/T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)).
 
 **A figure is bound to the field that produced it, not to the run as a whole.** The gate prints
-`checked   82`, so a sentence saying `checks` names that field and one about the judgement half does
+`checked   84`, so a sentence saying `checks` names that field and one about the judgement half does
 not — a correct number moved into the wrong sentence fails, and the report names the field behind
 every figure it compared. **The same rule reaches five documents that paste no output at all**:
-wherever a page states a part of a whole the gate prints — *"82 of the 113 rules a gate owns … the
+wherever a page states a part of a whole the gate prints — *"84 of the 115 rules a gate owns … the
 other 31"* — the part must be a figure of that account and the remainder must be the subtraction.
 That figure lived in five places and drifted to three different values; correcting it by hand is
 [T-045](../tasks/T-045-sweep-the-stale-claims-across-the-live-documents.md)'s work, and this is why
@@ -170,11 +170,19 @@ it does not need doing again
 ([T-068](../tasks/T-068-bind-a-prose-figure-to-a-field-not-to-the-whole-output.md)). A row struck
 through and dated is a record of what was true then, and is skipped.
 
+**The account is declared, so a claim that has drifted still reports.** A sentence naming a declared
+account is held to what that account prints, whatever value it states. Until
+[T-154](../tasks/T-154-bind-the-measurements-that-five-live-documents-state-in-prose.md) the claim
+was found by the *whole's value*, so the day the account moved `113 → 115` the four pages still
+saying `113` left the watched set **because they were wrong** (**L-97**). An account whose label the
+command stops printing fails the run rather than going quiet.
+
 **Two figures the check does not treat alike.** A count of the *ruleset* is `compared` and a drift
-fails the run. A count of the *repository* — `refcheck.py`'s pointer totals — is declared `volatile`
-and is **reported rather than failed**, because it moves on every documentation commit including the
-one that corrects it, so it is stale the moment it is pasted. Re-paste those at release time from
-`--values`; do not chase them between releases.
+fails the run. A count of the *repository* — `refcheck.py`'s pointer totals — is declared a `floor`,
+because it moves on every documentation commit including the one that corrects it. **A floor may be
+exceeded and never reddens; falling below it fails, and a pasted `0` is exact** — zero as a lower
+bound asserts nothing, and `0 broken` and `0 dead` carry all of that block's evidence. Re-paste those
+at release time from `--values`; do not chase them between releases.
 
 **What it still cannot see.** It checks that a pasted figure matches its command. It does not check
 that the sentence around the figure is true — the README's *"all three are fixed"* went false while
@@ -202,7 +210,7 @@ until the person doing it is not the person who did it last. *Step 5 was added o
 | :-- | :--- | :--- |
 | 1 | **`python tools/check_all.py` green** — the whole set, not the routine one. **It takes minutes, so run it in the background**; it prints its own elapsed time | Its own last line: `0 failure(s), 0 unclassified, 0 stale` and the seconds beside them. It replaced a list of sixteen commands on 2026-08-13 ([T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md)) |
 | 2 | **Bump the version** in `.claude-plugin/plugin.json`, `CLAUDE.md` and `README.md` — to the next number on the **published** line, per the rule below the table | Three files carry it; a grep for the outgoing version returns nothing outside `docs/BRIEF.md`'s history |
-| 3 | **Humanize the human-facing set** (§2's test), then re-run `python tools/docs/figures.py` and re-paste the `volatile` block from `--values` | `0 stale figure(s)`. §6 is why: a rewrite that re-derives a number from memory is a defect, not a style improvement |
+| 3 | **Humanize the human-facing set** (§2's test), then re-run `python tools/docs/figures.py` and re-paste the `floor` block from `--values` | `0 stale figure(s)`. §6 is why: a rewrite that re-derives a number from memory is a defect, not a style improvement |
 | 4 | **Read the prose around the figures** | Nothing. **This is the step no gate covers** — `v0.1.4` found a spelled-out fixture count and a defect tally that had both gone false while every pasted figure was correct (**L-05**) |
 | 5 | **Name what stops conforming** — §8.1. If this release adds or tightens a required part, write the row before you tag | A row in §8.1's table, naming the rule ids that will newly fail and the smallest edit that satisfies them |
 | 6 | **Commit, tag `vX.Y.Z`, push both** | `git push origin master --tags`, and the tag on the remote |

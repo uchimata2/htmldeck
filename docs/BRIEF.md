@@ -483,8 +483,8 @@ remain are both about the build and critique modes, not about the deck.***
   reporting `loaded`.
 - ~~The build check demonstrated failing on each class of problem it claims to catch.~~ **Met
   2026-08-09** by [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md).
-  `python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]` decides **82 of the
-  113 rules** the ruleset puts in a gate's jurisdiction and **names the other 31 with a reason and a
+  `python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]` decides **84 of the
+  115 rules** the ruleset puts in a gate's jurisdiction and **names the other 31 with a reason and a
   closing condition**; a rule in neither state fails the run, so silent coverage is now impossible
   rather than merely discouraged. **41 seeded defects across four suites, all caught** — and the
   exercise keeps catching checks that were passing decks they should have failed: two on the day

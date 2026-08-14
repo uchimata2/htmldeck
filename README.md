@@ -148,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 2201 document pointer(s) checked, 0 broken
-     731 section reference(s) resolved, 0 dead; 2011 not bound to a document and skipped.
+OK - 2485 document pointer(s) checked, 0 broken
+     788 section reference(s) resolved, 0 dead; 2143 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every

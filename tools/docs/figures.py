@@ -22,13 +22,18 @@ output and describe the account in their own words, where a gate's labels - `che
 ones. What binds there is the claim's construction: *part* of *whole*, plus the remainder. That
 figure drifted to three different values across those five pages while the README's stayed correct.
 
-**Two kinds of number, and one rule cannot hold both.** A figure that describes a *decision* - 163
-rule rows, 117 hard rules, 25 that need a person - moves when somebody changes the ruleset, which is
+**Two kinds of number, and one rule cannot hold both.** A figure that describes a *decision* - 165
+rule rows, 119 hard rules, 25 that need a person - moves when somebody changes the ruleset, which is
 rare and deliberate. A figure that counts the *repository* moves on every documentation commit,
 **including the commit that corrects it**, which is why re-deriving it has never converged (T-067
-§4). So a figure is `compared` and fails the run on any drift, or it is `volatile`, declared below
-with the reason, and **reported** rather than enforced. Every one of T-056's six was a ruleset
-count, so nothing is weakened by excusing the three that count documents.
+§4). So a figure is `compared` and fails the run on any drift, or it is a `floor`, declared below
+with the reason: **the run may print more and never redden, and a pasted `0` is exact**, because
+zero as a lower bound asserts nothing. Every one of T-056's six was a ruleset count, so nothing is
+weakened by treating the three that count documents as bounds.
+
+*Until T-154 the second kind was `volatile` - masked digit by digit and reported rather than
+enforced. That excused the wrong half: `0 broken` and `0 dead` carry the whole evidence of the block
+they sit in and were the two figures in it nothing could ever fail on.*
 
 Runs its own self-test first and refuses to report if it fails (**L-04**). Pure standard library
 (**L-07**).
@@ -76,6 +81,14 @@ SENTENCE_END = re.compile(r"(?<=[.!?])\s")
 # checked" in two such rows, both correct, both about numbers no command prints today. Skipping
 # them is a rule about the row's own shape - the same reasoning `TASK-WORKFLOW.md` §6 gives for
 # leaving a task record's mention of a retired tool alone.
+#
+# **It stays narrow, and T-154 widened it for a day before measuring what that would suppress.**
+# `pipeline.md` writes `| 6 - per-batch automatic checks | ~~The build check~~ - **built
+# 2026-08-09.** ... gates 84 of the 115 rules ... |`, which matches *strike, then a bolded date* and
+# is **not** a record: that table's columns are `Stage | Owned by | Until then`, the strike is on the
+# name of the **gap**, and the sentence after it describes what an adopter's plugin does now. Marking
+# it would have taken a stale figure out of the watched set inside the shipped skill - defect One
+# again, self-inflicted, by the task written to end it. Read the row before trusting its shape.
 DONE_ROW = re.compile(r"~~.*~~\s*\*\*done \d{4}-\d{2}-\d{2}\*\*")
 
 # Words with no binding force. A label survives this filter or it binds nothing, which is what
@@ -107,12 +120,23 @@ DECLARED_DOCS = {
 # document told it to would execute those the first time somebody edited the README.
 RUNNABLE = re.compile(r"^python tools/[\w/]+\.py(?: [\w.=/-]+)*$")
 
-# Figures whose value counts this repository, so any documentation commit moves them - including
-# the one that corrects them. Reported as drift, never failed on. The reason is the excusal, and
-# what would close it is a figure that does not count its own source.
-VOLATILE = {
+# Blocks whose counts move on every documentation commit - including the one that corrects them -
+# so an exact comparison has never converged (T-067 §4). **They are compared as floors, not
+# excused.**
+#
+# **`volatile` was here until T-154, and it excused the wrong half.** Under it every digit run in
+# the block was masked before comparison, so `0 broken` and `0 dead` - the two figures in it that
+# never drift and carry all of its evidence - were unenforceable alongside the three counts that
+# drift constantly. Seeded and measured: a README announcing `3 broken`, or `9 dead` section
+# references, passed the run and was reported as drift, mixed into the pointer-count drift a reader
+# has been taught to skip. A category that has never failed and never can is not a second opinion,
+# so it is retired rather than kept beside this one.
+#
+# What a floor asserts is in `floor_breaches`. The reason below is still the excusal for not
+# comparing exactly, and what would close it is a figure that does not count its own source.
+FLOOR = {
     "python tools/docs/refcheck.py":
-        "every number counts documents in this repository, so it is stale in the very commit that "
+        "every count is of documents in this repository, so it is stale in the very commit that "
         "corrects it - re-derived three times in one session and wrong again each time (T-067 §4)",
 }
 
@@ -148,6 +172,37 @@ EXCLUDED_PROSE = {}
 CLAIM = re.compile(r"(?<![\w.$-])(\d[\d,]*\d|\d)\*{0,2}\s+of\s+(?:the\s+)?\*{0,2}"
                    r"(\d[\d,]*\d|\d)(?![\w.%-])")
 REMAINDER = re.compile(r"other\s+\*{0,2}(\d[\d,]*\d|\d)(?![\w.%-])")
+
+# ------------------------------------------------------------------- the account a claim is about
+# **The binding was anchored on the value that drifts, so a claim left the watched set precisely
+# because it went wrong** (T-154). `claimed()` found the account by asking which field carried the
+# *whole* as its value; nothing printed `113` any more, so *"82 of the 113 rules a gate owns"* bound
+# to nothing and fell into `unanchored` with 420 numerals that are not figures at all. Three live
+# documents and the shipped skill held that sentence with every gate green. It is `self_test`
+# fixture 9's own rule - *a fixture may assert what the page's wording binds; it may not require the
+# page to be right first* - broken in the production path.
+#
+# So the whole gets a second chance: an **account**, declared here, naming the command and the two
+# labels that carry the part and the whole. A sentence with the *part of whole* shape whose words
+# name the **whole's label** is held to that account, whatever value it states.
+#
+# **This is a hand-kept list and it is allowed on `ARTIFACTS`' condition, not on convenience**: an
+# account whose label no command prints fails the run (`missing_accounts`), so it cannot quietly
+# cover nothing. It names *which account*, never which sentence and never which numeral - what binds
+# stays derived from the page.
+#
+# **Why the sentence still has to earn it.** Binding a whole sentence on one of a gate's words was
+# tried and produced 30 false alarms against 5 true ones (T-068), which is why the shape came first.
+# The shape stays the trigger; the account only decides *which* numbers a triggered sentence is held
+# to. Measured over the six documents this tool reads, the shape fires 8 times and the account
+# claims 4 of them - the four that were the drifted split.
+ACCOUNTS = {
+    "the gate's coverage of the ruleset": {
+        "command": "python tools/deck/check.py examples/reference-deck.html",
+        "part": "checked",
+        "whole": "owned by a gate",
+    },
+}
 
 # ---------------------------------------------------------------- a property of a named artifact
 # **The third binding, and the narrowest of the three** (T-088). `bound()` needs the sentence to name
@@ -309,7 +364,63 @@ def bound(numeral, said, table):
     return hits
 
 
-def claimed(sentence, table, outputs):
+def account_values(table, accounts=None):
+    """`{name: {"part": v, "whole": v, "command": cmd}}` for every account both labels resolve for.
+
+    An account is resolved only from a field printed by **its own declared command**, so a label as
+    ordinary as `checked` cannot pick up another tool's line.
+    """
+    out = {}
+    for name, spec in sorted((ACCOUNTS if accounts is None else accounts).items()):
+        got = {}
+        for value, label, cmd in table:
+            if cmd != spec["command"]:
+                continue
+            for role in ("part", "whole"):
+                if label == spec[role] and role not in got:
+                    got[role] = value
+        if len(got) == 2:
+            got["command"] = spec["command"]
+            out[name] = got
+    return out
+
+
+def missing_accounts(table, accounts=None):
+    """`[(name, role, label, command)]` for every declared label its command does not print.
+
+    **This is what buys `ACCOUNTS` its place**, on exactly the terms `missing_artifacts` won for the
+    artifact manifest: a hand-kept list is acceptable where it cannot cover nothing in silence. A
+    renamed output label would otherwise switch this binding off and leave the count reading as
+    though the split were still watched.
+    """
+    have = account_values(table, accounts)
+    out = []
+    for name, spec in sorted((ACCOUNTS if accounts is None else accounts).items()):
+        if name in have:
+            continue
+        printed = set(l for _v, l, c in table if c == spec["command"])
+        for role in ("part", "whole"):
+            if spec[role] not in printed:
+                out.append((name, role, spec[role], spec["command"]))
+    return out
+
+
+def account_for(said, table, accounts=None):
+    """The account whose **whole** label this sentence names, or `None`.
+
+    The whole is what the shape puts the claim's subject on - *"of the 115 **rules a gate owns**"* -
+    and holding the sentence to the part's label as well would demand the page use the gate's own
+    word for both halves, which is the paraphrase `claimed()` exists to survive.
+    """
+    for name, got in sorted(account_values(table, accounts).items()):
+        spec = (ACCOUNTS if accounts is None else accounts)[name]
+        lw = words(spec["whole"])
+        if lw and (lw & said):
+            return name, got
+    return None
+
+
+def claimed(sentence, table, outputs, accounts=None):
     """`{numeral: (verdict, why)}` for the figures a sentence's own arithmetic accounts for.
 
     **Why a shape and not a label.** Binding by label works on the README, where a figure sits
@@ -330,6 +441,31 @@ def claimed(sentence, table, outputs):
         part, whole = m.group(1), m.group(2)
         hits = bound(whole, said, table)
         if not hits:
+            # **The whole has drifted, or this is not a claim about an account at all.** Only a
+            # declared account can tell those apart, and it does it from the sentence's words
+            # rather than from its numbers - which is the whole repair (T-154).
+            got = account_for(said, table, accounts)
+            if got is None:
+                continue
+            name, acc = got
+            if whole != acc["whole"] or part != acc["part"]:
+                out[whole] = ("STALE", "claimed as the whole of %s, which is %s"
+                                       % (name, acc["whole"]))
+                out[part] = ("STALE", "claimed as %s of %s, and %s prints %s of %s"
+                                      % (part, whole, acc["command"], acc["part"], acc["whole"]))
+                # **The remainder is judged against the account, not against the sentence.** Both
+                # halves of `82 of 113` were stale and `113 - 82` is still 31, which is also
+                # `115 - 84`; calling that numeral stale would put a figure that needs no edit in
+                # the list of figures to fix, in a message saying it is 31.
+                rest = int(acc["whole"]) - int(acc["part"])
+                for r in REMAINDER.finditer(sentence[m.end():]):
+                    got_rest = int(r.group(1).replace(",", ""))
+                    out[r.group(1)] = (
+                        ("compared", "the remainder of %s, %s - %s, which this sentence states"
+                                     % (name, acc["whole"], acc["part"]))
+                        if got_rest == rest else
+                        ("STALE", "stated as the rest of %s after %s, and %s leaves %s"
+                                  % (whole, part, name, rest)))
             continue
         where = "; ".join(sorted(set(c for _l, c in hits)))
         account = "\n".join(outputs[c] for _l, c in hits)
@@ -491,20 +627,58 @@ def deck_facts():
 
 
 def mask(line):
-    """`line` with every run of digits replaced, so a volatile block compares on its shape."""
+    """`line` with every run of digits replaced, so a floor block is paired on its shape."""
     return re.sub(r"\d+", "#", line)
 
 
-def excerpt(pasted, actual, volatile):
+def floor_breaches(pasted, actual):
+    """`[complaint]` - every floor the run has fallen below, for a block compared as one.
+
+    Two rules, and the second is the one the block exists for:
+
+      * **a pasted count is a lower bound.** The run may print more and the page never reddens on
+        growth, which is the only reason a figure counting this repository can be enforced at all;
+      * **a pasted `0` is exact**, because zero as a lower bound asserts nothing. It is the one
+        value where a floor and an exact claim cannot differ, so reading it as a floor is reading it
+        as no claim - and `0 broken` and `0 dead` are the whole evidence of the block they sit in.
+
+    Lines are paired by their masked shape, the way `drifted` pairs them, so a moved count is
+    compared with the line it is a version of rather than with the line at the same index.
+    """
+    have = actual.split("\n")
+    out = []
+    for line in pasted:
+        if not line.strip() or not re.search(r"\d", line):
+            continue
+        cand = next((c for c in have if mask(c).strip() == mask(line).strip()), None)
+        if cand is None:
+            continue
+        was = [int(m.group(1).replace(",", "")) for m in CORPUS_NUMERAL.finditer(line)]
+        now = [int(m.group(1).replace(",", "")) for m in CORPUS_NUMERAL.finditer(cand)]
+        for w, n in zip(was, now):
+            if w == 0 and n != 0:
+                out.append("the page states 0 and the run prints %d - a floor of zero asserts "
+                           "none, so this one is exact: %r" % (n, cand.strip()))
+            elif w and n < w:
+                out.append("the run has fallen below a stated floor, %d -> %d: %r"
+                           % (w, n, cand.strip()))
+    return out
+
+
+def excerpt(pasted, actual, floor):
     """`(ok, [complaint])` - every pasted line must appear in `actual`, in order.
 
     **The blocks are excerpts and have to be compared as such.** `ruleset.py --counts` prints
     twenty-odd lines and the README pastes three of them; a whole-output equality test would fail
     on every block in the page and would prove nothing about any of them.
+
+    For a **floor** block this decides only that the line is still there, in its shape - what the
+    numbers on it are allowed to do is `floor_breaches`. The two were one test until T-154, and the
+    masking that let a count grow also let `0 broken` become `3 broken`.
     """
     want = [l for l in pasted if l.strip()]
     have = actual.split("\n")
-    if volatile:
+    if floor:
         want, have = [mask(l) for l in want], [mask(l) for l in have]
     bad, at = [], 0
     for line in want:
@@ -518,7 +692,7 @@ def excerpt(pasted, actual, volatile):
 
 
 def drifted(pasted, actual):
-    """`[(pasted_line, actual_line)]` for volatile lines whose digits have moved."""
+    """`[(pasted_line, actual_line)]` for floor lines whose digits have moved."""
     have = actual.split("\n")
     out = []
     for line in pasted:
@@ -545,14 +719,17 @@ def audit(text):
             outputs[what] = run(what)
         actual = outputs[what]
         corpus.append(actual)
-        vol = what in VOLATILE
-        ok, bad = excerpt(body, actual, vol)
+        flo = what in FLOOR
+        ok, bad = excerpt(body, actual, flo)
         if not ok:
             rows.append(("FAILING", start, "%s: %d line(s) absent from the run: %s"
                          % (what, len(bad), "; ".join(bad[:2])), None))
-        elif vol:
-            moved = drifted(body, actual)
-            rows.append(("volatile", start, what, moved))
+        elif flo:
+            breach = floor_breaches(body, actual)
+            if breach:
+                rows.append(("FAILING", start, "%s: %s" % (what, "; ".join(breach)), None))
+            else:
+                rows.append(("floor", start, what, drifted(body, actual)))
         else:
             rows.append(("compared", start, what, None))
 
@@ -779,24 +956,31 @@ def self_test():
                  % (bad[1], bad[2]))
     if not [r for r in rows if r[0] == "compared"]:
         sys.exit("SELF-TEST FAILED: no block was compared, so a clean run means nothing")
-    if not [r for r in rows if r[0] == "volatile"]:
-        sys.exit("SELF-TEST FAILED: no block is volatile, so the split this tool exists for is "
-                 "not exercised and the refcheck block must have stopped being bound")
+    if not [r for r in rows if r[0] == "floor"]:
+        sys.exit("SELF-TEST FAILED: no block is compared as a floor, so the split this tool exists "
+                 "for is not exercised and the refcheck block must have stopped being bound")
+    if missing_accounts(table):
+        sys.exit("SELF-TEST FAILED: %s"
+                 % "; ".join("the account %r declares its %s as %r and %s prints no such label"
+                             % row for row in missing_accounts(table)))
 
     # **Both fixtures are derived from the document, never quoted from it.** A hardcoded figure
     # here goes stale exactly like the ones this tool is watching, and a `replace` that matches
     # nothing stales nothing and passes - a fixture that tests nothing, reporting success
     # (**L-54**, **L-55**). So the line is found, its first number is moved, and the fixture
     # refuses to run if it could not find one.
-    def stale_a(kind_wanted):
+    def stale_a(kind_wanted, delta=7, only_nonzero=True):
         for kind, _start, what, body in bind(fences(base)):
             if kind != "output":
                 continue
-            if (what in VOLATILE) != (kind_wanted == "volatile"):
+            if (what in FLOOR) != (kind_wanted == "floor"):
                 continue
             for line in body:
-                if re.search(r"\d", line):
-                    moved = re.sub(r"\d+", lambda m: str(int(m.group(0)) + 7), line, count=1)
+                nums = [m for m in re.finditer(r"\d+", line)
+                        if not only_nonzero or int(m.group(0)) != 0]
+                if nums:
+                    at = nums[0]
+                    moved = line[:at.start()] + str(int(at.group(0)) + delta) + line[at.end():]
                     return line, base.replace(line, moved)
         return None, base
 
@@ -810,18 +994,49 @@ def self_test():
                  "That is exactly the six-stale-figures state this tool exists to end"
                  % line.strip())
 
-    # 2. A stale *volatile* figure must NOT fail - and must still be reported, or it rots quietly.
-    line, vol = stale_a("volatile")
-    if line is None or vol == base:
-        sys.exit("SELF-TEST FAILED: no volatile block carries a number, so the half of the split "
-                 "that must NOT fail is unexercised")
-    rows2 = audit(vol)[0]
+    # 2. **A floor block, in all three of its directions** (T-154). It replaced a `volatile` block
+    # that asserted one thing - *this must not fail* - and therefore could not fail at all, which
+    # is how `0 broken` came to be unenforceable inside the check that exists to enforce figures.
+    #
+    # 2a. Growth is green, and still reported. The half that must NOT fail, or the check is
+    # switched off within a week of the first documentation commit.
+    line, grew = stale_a("floor", delta=-7)
+    if line is None or grew == base:
+        sys.exit("SELF-TEST FAILED: no floor block carries a non-zero number, so the half of the "
+                 "split that must NOT fail is unexercised")
+    rows2 = audit(grew)[0]
     if [r for r in rows2 if r[0] == "FAILING"]:
-        sys.exit("SELF-TEST FAILED: a moved pointer count failed the run. It moves on every "
-                 "documentation commit, so this check would be switched off within a week")
-    if not [r for r in rows2 if r[0] == "volatile" and r[3]]:
+        sys.exit("SELF-TEST FAILED: a pointer count the run has grown past failed the run. It "
+                 "grows on every documentation commit, and that is what the floor is for")
+    if not [r for r in rows2 if r[0] == "floor" and r[3]]:
         sys.exit("SELF-TEST FAILED: a moved pointer count was neither failed nor reported, so "
                  "nothing can tell anyone it drifted")
+
+    # 2b. **Falling below a stated floor is red.** The direction `volatile` could not express: a
+    # count that goes down means documents or references have gone, which is news.
+    line, sank = stale_a("floor", delta=10 ** 6)
+    if line is None or sank == base:
+        sys.exit("SELF-TEST FAILED: no floor line could be raised above the run, so the direction "
+                 "that must fail is unexercised")
+    if not [r for r in audit(sank)[0] if r[0] == "FAILING"]:
+        sys.exit("SELF-TEST FAILED: the page was seeded with a floor the run does not reach (%r) "
+                 "and stayed green. A floor nothing can fall below is the `volatile` category "
+                 "again, under a new name" % line.strip())
+
+    # 2c. **A pasted zero is exact**, asserted on the function rather than through the page,
+    # because the page cannot be made to say the run found broken pointers - only the run can, and
+    # a fixture may not wait for a real regression to prove it works (**L-78**, **L-85**). This is
+    # the seeded defect T-154 measured: under digit-masking, `3 broken` against a pasted `0 broken`
+    # passed and was reported as drift.
+    if not floor_breaches(["OK - 100 pointer(s) checked, 0 broken"],
+                          "OK - 120 pointer(s) checked, 3 broken"):
+        sys.exit("SELF-TEST FAILED: a run reporting 3 broken pointers against a pasted `0 broken` "
+                 "raised nothing. Zero as a lower bound asserts nothing, so it has to be read as "
+                 "exact - that figure is the entire evidence of the block it sits in")
+    if floor_breaches(["OK - 100 pointer(s) checked, 0 broken"],
+                      "OK - 120 pointer(s) checked, 0 broken"):
+        sys.exit("SELF-TEST FAILED: a clean run above a stated floor was reported as a breach, so "
+                 "the rule fires on the ordinary case and would be switched off")
 
     # 3. An undeclared fence is a gap, not a silence.
     added = base + "\n\n```\nsomething nobody bound to anything\n```\n"
@@ -954,7 +1169,9 @@ def self_test():
     # figure onto another correct number and then fail because nothing reported it - which is what
     # the first drifted page tried did: the page said 252, the seed added 8, and 260 is the right
     # answer. **A fixed delta is not a wrong value; not being in this set is** (**L-79**).
-    account_values = set(v for v, _label, _cmd in table)
+    # Renamed from `account_values` by T-154, which added a module function of that name; the local
+    # shadowed it and fixture 12 called a set.
+    printed_values = set(v for v, _label, _cmd in table)
 
     def moved_numeral(text):
         """The same figure, wrong, in the notation the page wrote it in - so the row that reports
@@ -965,13 +1182,13 @@ def self_test():
         for delta in (8, 17, 33, 71, 137):
             n = digits + delta
             out = "{:,}".format(n).replace(",", sep) if sep else str(n)
-            if out != text and out not in account_values:
+            if out != text and out not in printed_values:
                 return out
         return None
 
     def moved_word(text):
         """A different count word, and one no account prints - the same rule as the numerals."""
-        return next((w for w in NUMBER_WORDS if w != text and w not in account_values), None)
+        return next((w for w in NUMBER_WORDS if w != text and w not in printed_values), None)
 
     # **`compared` OR `STALE` - binding is the question, not correctness.** A figure that has
     # drifted reports as `STALE`, which is *proof* it binds; counting only `compared` would drop it
@@ -1036,6 +1253,54 @@ def self_test():
     if missing_artifacts():
         sys.exit("SELF-TEST FAILED: the live manifest names %s, which is not on disk"
                  % ", ".join(rel for rel, _why in missing_artifacts()))
+
+    # 11. **An account whose label no command prints fails**, which is the condition `ACCOUNTS` was
+    # allowed on and the same one `ARTIFACTS` won (fixture 10). A renamed output label would
+    # otherwise switch the coverage binding off and leave the counts reading as though four
+    # documents were still held to it.
+    if not missing_accounts(table, {"a fixture account": {
+            "command": "python tools/deck/check.py examples/reference-deck.html",
+            "part": "no command prints this label",
+            "whole": "nor this one"}}):
+        sys.exit("SELF-TEST FAILED: an account declaring labels no command prints was not "
+                 "reported. A declaration that covers nothing in silence is this tool's own "
+                 "defect, not a property of the documents it reads")
+
+    # 12. **A claim whose whole has drifted off its account reports STALE rather than vanishing.**
+    # This is T-154's defect One, and the fixture has to seed the *whole*: while the part alone
+    # moves, `bound()` still finds the whole and the old path handles it. Derived from whatever a
+    # declared document actually writes, so it cannot go stale when the ruleset grows - and the
+    # replacement is a value no account prints, or the seed would be secretly correct (**L-79**).
+    acc = account_values(table)
+    if not acc:
+        sys.exit("SELF-TEST FAILED: no declared account resolves, so the binding T-154 added is "
+                 "inert and four documents are unwatched again")
+    _name, got = sorted(acc.items())[0]
+    printed = set(v for v, _l, _c in table)
+    wrong = next((str(int(got["whole"]) + d) for d in (7, 19, 41, 83)
+                  if str(int(got["whole"]) + d) not in printed), None)
+    seeded = None
+    for rel in sorted(DECLARED_DOCS):
+        src = io.open(os.path.join(ROOT, rel.replace("/", os.sep)), encoding="utf-8").read()
+        for m in CLAIM.finditer(prose(src)):
+            if m.group(2) != got["whole"] or wrong is None:
+                continue
+            at = src.find(m.group(0))
+            if at < 0:
+                continue
+            moved = (src[:at] + m.group(0).replace(got["whole"], wrong, 1)
+                     + src[at + len(m.group(0)):])
+            if [r for r in declared(table, outputs, {rel: moved})[0]
+                    if r[0] == "STALE" and r[2] == wrong]:
+                seeded = (rel, wrong)
+            break
+        if seeded:
+            break
+    if seeded is None:
+        sys.exit("SELF-TEST FAILED: no declared document states this account as a part of a whole, "
+                 "or moving the whole off the account reported nothing. That is the exact state "
+                 "T-154 was raised from - the claim leaves the watched set BECAUSE it went wrong, "
+                 "and four documents held the stale split with every gate green")
     return True
 
 
@@ -1050,7 +1315,7 @@ def report(values):
         counts[kind] = counts.get(kind, 0) + 1
         if kind in ("FAILING", "UNDECLARED"):
             print("  %-10s line %-4d %s" % (kind, start, what))
-        elif kind == "volatile" and extra:
+        elif kind == "floor" and extra:
             print("  %-10s line %-4d %s" % ("drifted", start, what))
             for was, now in extra:
                 print("               was  %s" % was)
@@ -1073,6 +1338,10 @@ def report(values):
     for rel, why in gone:
         print("  %-10s the artifact manifest names %s and it is not there - %s"
               % ("MISSING", rel, why))
+    unresolved = missing_accounts(table)
+    for name, role, label, cmd in unresolved:
+        print("  %-10s the account %r declares its %s as %r and %s prints no such label"
+              % ("MISSING", name, role, label, cmd))
 
     # **What was compared, not just how many.** A binding nobody can read is a claim to be taken on
     # trust, which is the thing this file was written to stop doing.
@@ -1082,7 +1351,7 @@ def report(values):
             print("    %-6s %s" % (n, why))
 
     print("\n  fenced blocks")
-    for k in ("command", "compared", "volatile", "excluded", "UNDECLARED", "FAILING"):
+    for k in ("command", "compared", "floor", "excluded", "UNDECLARED", "FAILING"):
         if counts.get(k):
             print("    %-12s %3d" % (k, counts[k]))
     print("    %-12s %3d   = every fence, so the account is a partition" % ("total", len(rows)))
@@ -1097,6 +1366,16 @@ def report(values):
             print("    %-12s %3d" % (k, dc[k]))
     print("    %-12s %3d   = in a sentence naming no field and in no block linking an artifact, "
           "so not judged" % ("unanchored", unanchored))
+
+    # **The accounts, and what each resolves to today.** A claim's *whole* is held to these, so a
+    # reader can see which numbers four documents are being measured against without running the
+    # gate - and a `MISSING` row above says the binding is off rather than merely quiet.
+    print("\n  the declared accounts - a part-of-whole claim naming one is held to it")
+    have = account_values(table)
+    for name in sorted(ACCOUNTS):
+        got = have.get(name)
+        print("    %-42s %s" % (name, "UNRESOLVED" if got is None else
+                                "%s of %s, from %s" % (got["part"], got["whole"], got["command"])))
 
     print("\n  the artifact manifest - a property of one of these, in a block that links it, is a "
           "figure")
@@ -1124,7 +1403,7 @@ def report(values):
     print("    %-12s %3d" % ("declared", len(EXCLUDED_FENCES) + len(EXCLUDED_PROSE)))
     print("    %-12s %3d   = an excusal whose subject has left the page" % ("STALE", len(dead)))
 
-    drift = [r for r in rows if r[0] == "volatile" and r[3]]
+    drift = [r for r in rows if r[0] == "floor" and r[3]]
     if values and drift:
         print("\n  paste these:")
         for _k, _s, _w, extra in drift:
@@ -1137,11 +1416,11 @@ def report(values):
     # statement sits in the tool - the state this check was written from (T-077).
     fails = (counts.get("FAILING", 0) + counts.get("UNDECLARED", 0)
              + pc.get("UNDECLARED", 0) + pc.get("STALE", 0) + len(dead) + dc.get("STALE", 0)
-             + len(gone))
+             + len(gone) + len(unresolved))
     print("\n%s" % ("%d figure(s) to fix" % fails if fails else
-                    "0 stale figure(s)%s" % (" - %d volatile block(s) drifted, which is reported "
-                                             "rather than failed (see --values)" % len(drift)
-                                             if drift else "")))
+                    "0 stale figure(s)%s" % (" - %d floor block(s) grew above what is pasted, "
+                                             "which is reported rather than failed (see --values)"
+                                             % len(drift) if drift else "")))
     print("\nThis checks that a pasted figure matches its command. It cannot tell you the sentence\n"
           "around it is still true - the README's \"all three are fixed\" went false with every\n"
           "figure on the page correct, and no gate here would have seen it (L-05).")

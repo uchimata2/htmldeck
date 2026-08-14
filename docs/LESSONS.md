@@ -81,6 +81,7 @@ comes here.
 | [L-94](lessons/L-94.md) | A budget written as a relation must fix its comparison set | Evidence and verification |
 | [L-95](lessons/L-95.md) | Write the decision a figure drives, and let the command print the figure | Evidence and verification |
 | [L-96](lessons/L-96.md) | A survey inherited from a closed task is evidence about the day it was taken | Evidence and verification |
+| [L-97](lessons/L-97.md) | A check anchored on the value that drifts goes blind exactly when it is needed | Evidence and verification |
 
 ### Tooling
 

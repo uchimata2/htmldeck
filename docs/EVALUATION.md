@@ -132,7 +132,7 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]
 ```
 
-It decides **82** of the 113 owned rules and **names the other 31 with a reason each**, derived from
+It decides **84** of the 115 owned rules and **names the other 31 with a reason each**, derived from
 the ruleset when it runs rather than from any list. **A rule in neither state fails the run**, so a
 rule added here with nothing behind it is a red run rather than a discovery two months later — which
 is what happened twice (**L-36**). `--sources` adds the figure ledger and its three reconciliations;
