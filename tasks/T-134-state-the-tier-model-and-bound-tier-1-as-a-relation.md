@@ -8,6 +8,7 @@ parent: T-130
 blocked_by: []
 related: [T-130, T-133]
 work_package: PH3
+shipped_in: 0.2.4
 owner: the project owner
 business_value: high
 effort: s
@@ -166,6 +167,7 @@ and it should land first so those cuts are not chosen to fit a number nobody agr
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-14 | (no change) | `shipped_in` set to `0.2.4`, which it had been missing since it closed — the only closed task in the record without one. Found by [T-144](T-144-give-each-cumulative-rule-one-operative-home.md) while checking the release table it had just written. `60a82bb` is the closing commit and `v0.2.4` is the first tag containing it; `PUBLISHING.md` §8 step 8 owes this and no gate reads it. |
 | 2026-08-13 | → proposed | Raised from [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md)'s ranking at the owner's review, fourth of four and the only one above `xs`. `CE-11`, and **the direction of travel is upstream to here**: the audit went looking for something to send taskmd about context budgeting and found they had settled it first, in more detail, with both alternatives rejected in writing. It saves nothing by itself — it decides what `CE-01` and `CE-04` are allowed to cut, which is why it is ranked with them rather than after them. One question is left open on purpose: taskmd's bound has a natural second term and this project's does not, so which relation to use is a choice rather than a copy. |
 | 2026-08-13 | → specified | §1 arrived written from the owner's review, with the deliverable declared and the one open question named as the implementer's to settle. Nothing re-derived. |
 | 2026-08-13 | → planned | Seven steps, and two of them exist only because §6.2 says so: measure before and after, and write what the *method* learned somewhere that outlives the task. |
