@@ -21,13 +21,11 @@ the current state of it. **Closed tasks keep the `WP1`–`WP3` packages they wer
 those were phases of the research and design work and rewriting them would be rewriting what
 happened.
 
-**A phase is not a version, and the `Shipped In` column is the version.** The three phases were named
-`v0.1`, `v0.2` and `v0.3` until 2026-08-12, which made them unreadable next to the releases they were
-not: `PH3` work shipping in `0.2.1` is the rule working, since a release takes the next patch number
-on the published line whatever phase its tasks belong to. `Shipped In` is the release in which a
-task's work first reached an installed copy, derived from the first tag containing the commit that
-closed it — `unreleased` where that has not happened yet. **T-099**, and **L-69** for what the old
-names cost.
+**A phase is not a version, and the `Shipped In` column is the version** — so a `PH3` row shipping in
+`0.2.1` is the rule working rather than a mistake. `Shipped In` is the release in which a task's work
+first reached an installed copy, derived from the first tag containing the commit that closed it, and
+`unreleased` where that has not happened yet. The rule itself is
+[`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §3; **L-69** is what the old names cost.
 
 <!-- taskmd:index - generated, do not edit by hand -->
 
@@ -54,7 +52,6 @@ names cost.
 | [T-136](T-136-re-run-the-external-research-with-a-recorded-search-record.md) | Re-run the external research with a recorded search record | `PH3` | - | `proposed` | `specify` | T-130 | - | - | T-137 | T-130, T-135, T-137, T-138 |
 | [T-137](T-137-package-the-context-economy-method-as-a-skill.md) | Package the context-economy method as a skill | `PH3` | - | `proposed` | `specify` | T-130 | - | T-136 | - | T-130, T-131, T-132, T-133, T-135, T-136, T-138, T-139, T-140, T-151 |
 | [T-138](T-138-make-the-portable-half-agent-agnostic.md) | Make the portable half agent-agnostic, and classify the load path by who controls it | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-135, T-136, T-137 |
-| [T-144](T-144-give-each-cumulative-rule-one-operative-home.md) | Give each cumulative rule one operative home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134, T-143 |
 | [T-148](T-148-give-a-measured-figure-a-durable-home.md) | Give a measured figure a durable home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130 |
 | [T-149](T-149-prune-the-memory-index-of-spent-entries.md) | Prune the memory index of spent entries | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134 |
 | [T-151](T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md) | Generate the finding-to-task listing instead of keeping it by hand | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-130, T-137 |
@@ -187,6 +184,7 @@ names cost.
 | [T-141](T-141-extract-the-upstream-register-into-one-document-per-owner.md) | Extract the upstream register into one document per owner | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-130, T-140, T-142, T-145, T-147 |
 | [T-142](T-142-fix-o-h4-the-handoff-spine-routes-a-mode-word-with-a-qualifier-to-the-opposite-mode.md) | Fix O-H4 — the handoff spine routes a mode word with a qualifier to the opposite mode | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-140, T-141 |
 | [T-143](T-143-split-the-release-chronology-out-of-claude-md.md) | Split the release chronology out of CLAUDE.md | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134, T-144 |
+| [T-144](T-144-give-each-cumulative-rule-one-operative-home.md) | Give each cumulative rule one operative home | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134, T-143 |
 | [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-098, T-130, T-141, T-146, T-147 |
 | [T-146](T-146-one-file-per-lesson-with-a-generated-index.md) | One file per lesson, with a generated index | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-145, T-147 |
 | [T-147](T-147-one-workflow-file-per-lifecycle-phase.md) | One workflow file per lifecycle phase | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-141, T-145, T-146 |

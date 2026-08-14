@@ -84,12 +84,14 @@ Two things about this project's use of it that the config does not say:
   the split, and which phase a new task takes is `../CLAUDE.md`'s rule: `PH1` only when a defect in
   the published plugin reopens it, `PH3` for anything `l` or `xl`, and — since PH2 shipped — for
   everything else that is not such a defect.
-- **`work_package` is the phase; `shipped_in` is the version.** They are different questions and they
-  give different answers: `PH3` work shipping in `0.2.1` is the rule working, since a patch takes the
-  next number on the published line whatever phase its tasks belong to. The phases were named `v0.1`
-  to `v0.3` until 2026-08-12, which made that sentence unreadable (**L-69**, **T-099**). **Never
-  write a phase with a `v`.** `shipped_in` is set at close, holds a bare version with no `v`, and is
-  the first release tag containing the commit that closed the task — `unreleased` until there is one.
+- **`work_package` is the phase; `shipped_in` is the version. This is the operative statement of that
+  rule** — everywhere else points here, and the incident behind it is **L-69**. They are different
+  questions and they give different answers: `PH3` work shipping in `0.2.1` is the rule working, not
+  a contradiction. **Never write a phase with a `v`**, which is what made the sentence above
+  unreadable while the phases were named `v0.1` to `v0.3` (**T-099**). `shipped_in` is set at close,
+  holds a bare version with no `v`, and is the first release tag containing the commit that closed
+  the task — `unreleased` until there is one. **Which number a *release* takes is a different rule
+  with a different home**: [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8.
 - **`deliverables:` is the only place an unproduced output is written as a path.** Front-matter is not
   prose, so `tools/docs/refcheck.py` does not scan it; in §2 and §3 of a task, name a not-yet-existing
   output rather than pointing at it (`` `R7-printable-mode.md`, under `docs/research/` ``), or the

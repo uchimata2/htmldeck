@@ -39,15 +39,16 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is still over its own bound** — 15,416 bytes against `tasks/TASK-WORKFLOW.md`'s 11,407,
-measured 2026-08-14 with the command above, after `CE-01` was cut. It was 19,035 against the same
-11,407 before that cut, and the statement here read *18,807 against `.taskmd/config.md`'s 14,087*
-until 2026-08-14 — wrong in both terms, because the smaller side changed hands the same day when
-`TASK-WORKFLOW.md` fell from 23,210. That is dated debt and not a rule already met: `CE-04` (one
-operative home per cumulative rule), ranked in
-[`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6, is the cut that remains — raised 2026-08-14 as
-[T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md).
-`CE-01` closed as [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md).
+**This file is still over its own bound** — 14,917 bytes against `tasks/TASK-WORKFLOW.md`'s 11,579,
+measured 2026-08-14 with the command above. It was **19,035** before that day's two cuts, so they took
+**22.1%** and closed 57% of the debt: `CE-01` as
+[T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and `CE-04` as
+[T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), both ranked in
+[`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6. **Those were the two cuts this bound was written
+to make decidable, and both are spent** — what remains has no ranked finding behind it. That is dated
+debt and not a rule already met. *The statement here read 18,807 against `.taskmd/config.md`'s 14,087
+until 2026-08-14 and was wrong in both terms: the smaller side had changed hands the same day, when
+`TASK-WORKFLOW.md` fell from 23,210. Re-measure both, never one.*
 
 ## What this is
 
@@ -70,18 +71,11 @@ reviewed specification into a deck; `skills/htmldeck/references/critique.md` plu
 [`docs/RELEASE-HISTORY.md`](docs/RELEASE-HISTORY.md)** — tier 3, loaded by nothing. It was this
 section until 2026-08-14.
 
-**A phase name is not a version number, and conflating the two nearly shipped a release nobody could
-install.** The backlog calls a defect in the published plugin PH1 work, which is a *phase*; the
-record then wrote the next such release as `v0.1.6`, which as a *version* is lower than the published
-`0.2.0`. Plugin updates compare versions, so that tag would have reached no adopter at all. **Patches
-take the next patch number on the published line** — `0.2.1`, `0.2.2` — whatever phase the tasks in
-them belong to. Settled 2026-08-11, at the release it would have broken.
-
-**The phases were called `v0.1`, `v0.2` and `v0.3` until 2026-08-12 and are now `PH1`, `PH2` and
-`PH3`** — same three phases, renamed because a label shaped like a version gets read as one, which is
-what the paragraph above is about. The rule the rename makes visible: **`work_package` is the phase,
-`shipped_in` is the version**, and a task can hold `PH3` and `0.2.1` at once without contradiction.
-Never write a phase with a `v`. **T-099.**
+**A phase name is not a version number. `work_package` is the phase, `shipped_in` is the version, and
+never write a phase with a `v`** — a task holding `PH3` and `0.2.1` at once is the rule working.
+Conflating them nearly shipped a release no adopter could have installed: **L-69**. Which number a
+*release* takes is [`docs/PUBLISHING.md`](docs/PUBLISHING.md) §8; which field a *task* carries is
+`tasks/TASK-WORKFLOW.md` §3.
 
 **The backlog is three release phases — `PH1`, `PH2` and `PH3`, and PH3 is the main line.**
 [`docs/RELEASE-PHASES.md`](docs/RELEASE-PHASES.md) is the decision: what each phase contains, why the

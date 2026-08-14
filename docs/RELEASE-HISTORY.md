@@ -69,8 +69,8 @@ re-derivable from the record and §1's table is countable, so they were not carr
 
 **PH2 shipped 2026-08-11 as `0.2.0` and the phase stayed open behind it for two days.** T-080 and
 T-036 kept the `PH2` label by the owner's decision, so a shipped release and an open phase were not a
-contradiction here — the phase is `work_package`, the version is `shipped_in`, and they answer
-different questions. T-080 closed 2026-08-12 and
+contradiction here ([`../tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) §3). T-080 closed
+2026-08-12 and
 [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md) closed 2026-08-13, which emptied
 the phase.
 

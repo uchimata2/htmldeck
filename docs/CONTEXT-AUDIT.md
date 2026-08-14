@@ -268,7 +268,7 @@ the finding itself, and four closures showed that none of it is obvious from the
 | ~~7~~ | **CE-05** | B / F1 | Move `BRIEF.md`'s *Release phases* to its own document — **done; `BRIEF.md` 134,596 → 42,485, and the shape the row proposed was refused with a measurement** | `XL` | `m` | stated | R8 §8 |
 | ~~8~~ | **CE-06** | B / F1 | One file per lesson, plus a generated index — **done, and the band was wrong: no bytes were saved.** What it bought was 983 citations a gate now resolves | ~~`XL`~~ **`S`, plus an unbanded gain the row never named** | `m`–`l` | stated | R8 §8 |
 | ~~9~~ | **CE-09** | B / F1 | One workflow file per lifecycle phase — **done, and the shape was refused**: §6 was extracted whole and the rest left alone, because everything but §6 is 10,374 bytes together | `L` | `m` | stated | §6.1 |
-| 10 | **CE-04** | A+B / F2 | One operative home per cumulative rule | `M` | `xs` each | stated | R8 §8 |
+| ~~10~~ | **CE-04** | A+B / F2 | One operative home per cumulative rule — **done, and the band held: 596 bytes off tier 1 for one rule.** The row undercounted its own homes by one, and the sixth was written the same morning by `CE-01`'s task. **The document that governs the behaviour was the only one not stating it** | `M` | `xs` each | stated | R8 §8 |
 | 11 | **CE-08** | A / F2 | A measured figure gets a durable home | `S` | `xs` | none | R8 §8 |
 | 12 | **CE-10** | A / F2 | Prune the memory index of spent entries | `S` | `xs` | stated | §6.1 |
 | ~~13~~ | **CE-12** | B / F3 | ~~Two docstring outliers~~ — **withdrawn 2026-08-14: there are no docstring outliers.** The figures counted triple-quoted string tokens, and in those files the strings are the tools' payloads | ~~`M`~~ **none** | `s` | ~~stated~~ — the stated risk was never reached | §6.1 |
@@ -560,3 +560,18 @@ already keeps out of git. The correction is recorded in
 
 **CE-10 stands as not repository work** — pruning the memory index is the owner's memory, and is
 named here so it is not mistaken for a task.
+
+**Both of the owner's 2026-08-14 additions closed the same day, and neither cost what the row said.**
+T-143 cut `CE-01` and T-144 cut `CE-04`, taking `../CLAUDE.md` from **19,035 to 14,821 bytes, −22.1%**
+— 57% of the debt the bound reports, and it is still over. `CE-01`'s 6,980 was never available: 3,619
+of it was narrative and the rest was rules that had to stay in tier 1, which prices *the extraction is
+the work* for the first time. `CE-04`'s band held, and the row undercounted its own homes by one —
+**the sixth copy was written the same morning by `CE-01`'s task**, in the pass raised to remove
+copies, which is the finding's mechanism rather than anyone's oversight. Both went to
+[T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) §1 as a fourth table.
+
+**What the pair changed about the enabler.** `CE-11`'s bound compares tier 1 against a set that was
+never written down, and the omission matters in one direction: a document split out of tier 1 is
+smaller than tier 1, so counting tier 3 would ratchet the bound down with every remedy it prompts and
+**no split could ever satisfy it**. The set is now stated as tier 2 in `../CLAUDE.md`, which is what
+`RELEASE-PHASES.md`'s exclusion had always assumed.

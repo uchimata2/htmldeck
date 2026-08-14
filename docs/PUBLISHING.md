@@ -201,13 +201,23 @@ until the person doing it is not the person who did it last. *Step 5 was added o
 | # | Step | What proves it |
 | :-- | :--- | :--- |
 | 1 | **`python tools/check_all.py` green** — the whole set, not the routine one | Its own last line: `0 failure(s), 0 unclassified, 0 stale`. It replaced a list of sixteen commands on 2026-08-13 ([T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md)) |
-| 2 | **Bump the version** in `.claude-plugin/plugin.json`, `CLAUDE.md` and `README.md` | Three files carry it; a grep for the outgoing version returns nothing outside `docs/BRIEF.md`'s history |
+| 2 | **Bump the version** in `.claude-plugin/plugin.json`, `CLAUDE.md` and `README.md` — to the next number on the **published** line, per the rule below the table | Three files carry it; a grep for the outgoing version returns nothing outside `docs/BRIEF.md`'s history |
 | 3 | **Humanize the human-facing set** (§2's test), then re-run `python tools/docs/figures.py` and re-paste the `volatile` block from `--values` | `0 stale figure(s)`. §6 is why: a rewrite that re-derives a number from memory is a defect, not a style improvement |
 | 4 | **Read the prose around the figures** | Nothing. **This is the step no gate covers** — `v0.1.4` found a spelled-out fixture count and a defect tally that had both gone false while every pasted figure was correct (**L-05**) |
 | 5 | **Name what stops conforming** — §8.1. If this release adds or tightens a required part, write the row before you tag | A row in §8.1's table, naming the rule ids that will newly fail and the smallest edit that satisfies them |
 | 6 | **Commit, tag `vX.Y.Z`, push both** | `git push origin master --tags`, and the tag on the remote |
 | 7 | **`gh release create`**, with a note written to §2's test, **carrying §8.1's row verbatim** | The published release page. A release note is read before installing, so §2 covers it — it is not an exception to the rule, it is an instance of it |
 | 8 | **Record the shipping version** in each closed task's `shipped_in` and log, and in [`RELEASE-PHASES.md`](RELEASE-PHASES.md) | The version appears in the record without anyone reconstructing it later, which is the failure this whole section exists for. *It said `BRIEF.md` until 2026-08-14; [T-145](../tasks/T-145-move-brief-mds-release-phases-to-its-own-document.md) moved the chronology out that morning and `BRIEF.md` now holds no version string at all, so the step named a file that could not satisfy it* |
+
+**Which number step 2 bumps to: the next one on the published line, whatever phase the tasks in the
+release belong to.** `0.2.0` plus three `PH1`-phase fixes is `0.2.1`. **Read the published version
+before tagging** — `plugin.json` and the newest tag — because the phase label is not evidence about
+either, and a tag below the installed version is offered to nobody. The tell in a record is *awaiting
+`vX.Y.Z`* where `X.Y.Z` is not greater than what is installed; it is worth a grep at release time.
+**L-69** is the release it nearly broke, and why no gate here can see the failure. *Stated here since
+2026-08-14 ([T-144](../tasks/T-144-give-each-cumulative-rule-one-operative-home.md)). It lived in
+`../CLAUDE.md` from 2026-08-11, beside the release status, which `L-69` §4 records as the cheap fix
+that protected this sequence and did nothing for the reading cost.*
 
 **The gate list was an enumeration for three days, and is now one command.**
 
