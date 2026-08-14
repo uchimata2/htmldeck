@@ -152,11 +152,42 @@ which this task unblocks.
 
 ## 3. Implement
 
+### Steps 1–3 — `R8` steps 12 and 13, done 2026-08-14
+
+**Two of thirteen findings held as written.** Four were wrong about magnitude, three about shape, one
+about its premise, two were costs by design, and one undercounted the subject it measured. The table
+is [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §10.1 and is not repeated here.
+
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The pattern is one sentence and it is `T-147`'s, not a new one** — 2026-08-14. *A finding says
+  where the weight is; it does not know what removing it is worth.* It was written after three
+  consecutive shape refusals and it holds across all thirteen: **every row that was wrong was wrong
+  about the value or form of the remedy, never about the location of the cost.** The inventory was
+  sound; the forecasting was not, and it was not close. Writing a second formulation of it would be
+  `CE-04` in the audit's own report.
+- **The corollary is the part with teeth** — 2026-08-14. Four rows were refused by a measurement taken
+  *while implementing them*. A ranking obeyed rather than re-measured would have deleted two tools'
+  payloads, rebuilt `CE-05` on a timer, and split one small document into four smaller ones. **The
+  rank was useful and obeying it would have done damage** — that is a statement about how a ranking
+  should be *used*, and it belongs to the method (step 4).
+- **The tier-1 arc is stated net, and the peak is kept** — 2026-08-14. 15,630 at the audit, **19,035**
+  at its peak, 15,208 now: **−422 bytes, −2.7% net, after a peak 21.8% above where the audit found
+  it.** Reporting only the −4,118 that `CE-01` and `CE-04` cut would be true and would teach the
+  reader that the method is free, which is exactly what step 13 exists to stop.
+- **The audit's own remedies are most of the growth it then had to cut** — 2026-08-14. `CE-11` +2,690
+  and `CE-13` +322 are 3,012 of the 3,405 bytes tier 1 gained. That is `R8` step 16's warning
+  committed **before step 16 existed to name it**, and it is legible only because both records priced
+  it at the time.
+- **The 96-byte disagreement is recorded, not resolved** — 2026-08-14. §9 says the pair took
+  `CLAUDE.md` to 14,821; T-144's record measures 14,917 the same day. Neither is reproducible now.
+  **L-97**'s rule is that a figure nothing owns drifts, and inventing a winner here would be a third
+  unowned figure.
 
 **Outputs produced**
-- <none yet>
+- [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §10 — §10.1 the pairing, §10.2 the pattern and
+  its corollary, §10.3 the cost: the tier-1 arc, the five remedies that grew the repository, the four
+  standing gates, the price of a withdrawal, the `F2` duplicate one remedy manufactured, and the eight
+  defects found in passing that no row could have forecast
 
 ## 4. Review
 

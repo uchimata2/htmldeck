@@ -737,3 +737,111 @@ never written down, and the omission matters in one direction: a document split 
 smaller than tier 1, so counting tier 3 would ratchet the bound down with every remedy it prompts and
 **no split could ever satisfy it**. The set is now stated as tier 2 in `../CLAUDE.md`, which is what
 `RELEASE-PHASES.md`'s exclusion had always assumed.
+
+---
+
+## 10. Phase 2 — what the ranking was worth
+
+`R8` §3.1 steps 12 and 13, run once on 2026-08-14 after the last raised task closed, by
+[T-153](../tasks/T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md). **This
+section grades the audit above it. It raises nothing** — `CE-nn` closed at thirteen, and anything
+found here is an ordinary task. What the *method* learned is in `R8`; what this repository learned is
+here.
+
+Read from §3 and §4 of the fourteen closed records — **80,721 bytes, not the 210,783 those records
+are whole.** `python tools/docs/findings.py` supplies each band and outcome; the *bought* column is
+the part no tool holds.
+
+### 10.1 Every finding, predicted against measured
+
+Bands are as ranked. Where a band was corrected before implementation, both values are shown, because
+a correction that erases its predecessor teaches the next audit nothing.
+
+| Finding | Band | What it measurably bought | Verdict |
+| :--- | :--- | :--- | :--- |
+| `CE-03` | L / xs | green run **17,581 → 345 bytes, 51×**; the failing path byte-identical at 18,253 | **held** |
+| `CE-10` | S / xs | memory index **6,706 → 5,818, −888 bytes, −13.2%**, 38 → 32 entries, paid every turn | **held** |
+| `CE-02` | L / xs | `list --open --limit 1` — the literal *what next* — **94 bytes against a 36,559-byte board, 389×** | **understated ~22×.** The row compared the whole board against a full listing, 17.7×. No session asks that question |
+| `CE-01` | M / s | `CLAUDE.md` **19,035 → 15,416, −3,619, −19.0%** | **48% short.** The row measured the chronology at 6,980 bytes; 3,619 was narrative and the rest was rules that had to stay. *The extraction is the work*, priced |
+| `CE-07` | ~~L~~ → S / xs | skill listing **7.3k → 6.5k, −800 tokens, once**; deferred MCP schemas unmoved at 50.4k through two restarts | **band corrected during implementation.** `L` assumed the whole block was addressable; what is reachable *from a repository* is `S` |
+| `CE-06` | S / m–l | **not a byte.** 167,043 in one file became 169,361 in 89 plus a 12,258-byte index | **the 81× was never claimed** — it assumed a whole-file read nothing here performs. What was bought is a one-call fetch, a question that could not be asked, and 983 citations a gate now resolves |
+| `CE-05` | XL / m | `BRIEF.md` **134,596 → 42,485**; 92,894 bytes moved, none saved | **shape refused on a measurement.** The row proposed extracting only completed rows; PH3 is 52,894 of the section and gains one per closure, so that cuts 40,000 once and rebuilds the finding on a timer |
+| `CE-09` | L / m | `TASK-WORKFLOW.md` **23,210 → 11,407**; 12,829 bytes moved, none saved. `TOOLING.md` is **15,281 — larger than the section it received** | **shape refused on a measurement.** Four files, one per phase, would give a session at `plan` several small files instead of one already small: everything but §6 is 10,374 bytes together |
+| `CE-08` | S / xs | the gate measured at **164 s** against a carried *7–11 minutes* — **300% wrong**, while two real readings differ by 6% | **band held, shape refused.** The row said *give the figure a home*; the work ensured **no document holds it** |
+| `CE-04` | M / xs **each** | `CLAUDE.md` **15,416 → 14,917** (T-144), then **15,182 → 15,034** (T-152); five operative statements to two, then three to one | **held, and undercounted its own subject.** Six homes, not five — **the sixth was written the same morning by `CE-01`'s task**, in the pass raised to remove copies |
+| `CE-11` | enabler / s | `CLAUDE.md` **15,952 → 18,642, +2,690 bytes** on tier 1; over its own new bound by 4,555 on the day it was set | **a cost, correctly predicted as an enabler.** It priced itself in its own record |
+| `CE-13` | bimodal / xs | `CLAUDE.md` **15,630 → 15,952, +322 bytes, +4 lines** on tier 1 | **a cost, and the trade was argued rather than absorbed**: paid every turn against one session saved once |
+| `CE-12` | none / s | nothing, and the premise was false | **withdrawn, and that is a result.** The instrument counted triple-quoted **tokens**, not docstrings: 85% → **3.2%**, 36% → 11.6%, 30% → **16.3%** — wrong by up to 27× |
+
+**Two of thirteen held as written.** Four were wrong about magnitude, three about shape, one about its
+premise, two were costs by design, and one undercounted the subject it was measuring. **This is the
+single most useful table the audit produced**, and none of it was available at ranking time.
+
+### 10.2 The one sentence the pattern reduces to
+
+**A finding says where the weight is. It does not know what removing it is worth.** T-147 wrote that
+after `CE-05`, `CE-06` and `CE-09` each had a shape refused in three consecutive tasks, and it holds
+across all thirteen: every row that was wrong was wrong about the *value or form of the remedy*, never
+about the location of the cost. The audit's inventory was sound. Its forecasting was not, and it was
+not close.
+
+**The corollary, which is why this is not a complaint about estimating.** Four rows were refused by
+the measurement taken *while implementing them* — `CE-12`'s premise, `CE-05`'s and `CE-09`'s shapes,
+`CE-08`'s direction. A ranking that had been believed rather than re-measured would have deleted two
+tools' payloads (`CE-12`), rebuilt `CE-05` on a timer, and split one small document into four smaller
+ones. **The rank was useful; obeying it would have done damage.**
+
+### 10.3 What the remedies cost
+
+**The load path ended 2.7% smaller than the audit found it, after a peak 21.8% above it.**
+
+| `CLAUDE.md` | Bytes | |
+| :--- | ---: | :--- |
+| At the audit, 2026-08-13 | 15,630 | what `CE-01`, `CE-04`, `CE-11` and `CE-13` were ranked against |
+| Peak, before `CE-01`'s task | 19,035 | `CE-11` +2,690 and `CE-13` +322 are 3,012 of the 3,405 |
+| After `CE-01` and `CE-04` | 14,917 | −4,118, −21.6%, closing 57% of the debt |
+| **Now, 2026-08-14** | **15,208** | later edits added back |
+| **Net across the whole audit** | **−422** | **−2.7%** |
+
+**The audit's own remedies are most of the growth it then had to cut.** `CE-11` wrote the tier model
+into the file it governs — 2,690 bytes onto the surface being measured — and `CE-13` added 322 more.
+That is `R8` step 16's warning, *an audit that closes by writing governance into the file it just cut
+has undone itself*, committed by this audit **before step 16 existed to name it**. Both records priced
+it honestly at the time, which is the only reason it is legible now.
+
+**Every structural remedy grew the repository.** The load path is what shrank.
+
+| Remedy | Off the load path | Onto disk |
+| :--- | ---: | :--- |
+| `CE-01` | −3,619 | `RELEASE-HISTORY.md`, **10,012** — new |
+| `CE-04` | −499, then −148 | `PUBLISHING.md` +945, `TASK-WORKFLOW.md` +172, then +346 more |
+| `CE-05` | −92,111 from `BRIEF.md` | `RELEASE-PHASES.md`, **116,655** — new, and it gains a row per closure |
+| `CE-06` | 0 | `docs/lessons/` **197,557** over 99 files, plus a **13,669** index, from 167,043 in one |
+| `CE-09` | −11,803 | `TOOLING.md`, **15,281** — new, and larger than what it received |
+
+**Three remedies left a gate that runs on every release** — `query.py` (`CE-02`), `--quiet`
+(`CE-03`), `lessons.py` (`CE-06`) — plus elapsed-time reporting (`CE-08`). None is free. `lessons.py`
+is the one that pays for itself: it found a defect class **invisible to every gate in the repository**
+before it existed, and caught an unallocated citation quoted into its own task record hours later.
+
+**A withdrawal is not free either.** `CE-12` saved nothing and cost three throwaway instruments, five
+corrections in this document, one in T-130 §3, one in `R8` §4.1, plus `L-92` and a note in T-137. It
+was **rank 13 of 13 — the cheapest row to have got wrong, and the last anyone would have re-measured.**
+
+**One remedy manufactured work of another family, and it did so inside the pass raised to prevent
+it.** `CE-01`'s task wrote a sixth copy of `CE-04`'s rule into `RELEASE-HISTORY.md` while moving the
+chronology — an `F2` duplicate created by the sibling task, hours before the survey that caught it.
+Nobody acted incorrectly; **a rule with no declared home is copied by whoever needs it next** is the
+mechanism, and this is it operating on the audit's own remedies.
+
+**What no row forecast, and no row could have.** Eight defects surfaced in passing, none of them token
+economy: a version comparison sorting `0.10.0` below `0.5.0`; five permission rules naming a rotated
+server id and matching nothing; three dangling links in the memory store, one a typo for an entry that
+exists; dangling `L-nn` citations, unseen by anything; link **labels** that state a wrong path beside
+a working target; bare `§n` cross-references left behind by an extraction; a survey that missed a copy
+in the very file being cut; and an untracked new tool reported as `STALE`. **Six of the eight are the
+same shape — text a reader follows and no checker reads.**
+
+*One figure to reconcile rather than repeat: §9 states the pair took `CLAUDE.md` to **14,821**, and
+T-144's own record measures **14,917** the same day. 96 bytes apart, both dated, neither reproducible
+now. Recorded as a disagreement rather than resolved — which is what `L-97` asks for.*
