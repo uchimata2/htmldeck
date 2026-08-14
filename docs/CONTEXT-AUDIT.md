@@ -88,7 +88,7 @@ harness already takes it. No finding.
 | [`docs/EVALUATION.md`](EVALUATION.md) | 26,784 | 6,696 | Rarely |
 | [`docs/PUBLISHING.md`](PUBLISHING.md) | 23,173 | 5,793 | Releases |
 | [`docs/THEME-CONTRACT.md`](THEME-CONTRACT.md) | 21,663 | 5,416 | Deck work only |
-| [`tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) | 21,374 | 5,344 | Every task — 52% of it is §6 |
+| ~~[`tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md)~~ | ~~21,374~~ | ~~5,344~~ | ~~Every task — 52% of it is §6~~ **§6 moved out 2026-08-14 by [T-147](../tasks/T-147-one-workflow-file-per-lifecycle-phase.md); it read 23,210 with §6 at 55.3% that day, and the file is now 11,407** |
 | The task file itself, median of 130 | 12,528 | 3,132 | Yes |
 | **The mandatory set** (lessons + brief + board + workflow + the task) | **328,185** | **~82,046** | |
 
@@ -101,7 +101,7 @@ raised about, and it is measured rather than felt.
 | :--- | :--- | ---: | ---: |
 | ~~`docs/BRIEF.md`~~ | ~~*Release phases* — 112 rows, 68 struck through~~ **moved out 2026-08-14 by [T-145](../tasks/T-145-move-brief-mds-release-phases-to-its-own-document.md); it read 92,894 / 69% over 134 rows on the day it went, and `BRIEF.md` is now 42,485 bytes** | ~~66,461~~ | ~~**61%**~~ |
 | ~~`docs/LESSONS.md`~~ | ~~81 entries, mean 1,873 bytes~~ **split out 2026-08-14 by T-146; it read 89 entries, mean 1,859, 167,043 bytes on the day it went** | ~~151,751~~ | ~~**>99%**~~ |
-| `tasks/TASK-WORKFLOW.md` | §6 *The tooling* | 11,026 | **52%** |
+| ~~`tasks/TASK-WORKFLOW.md`~~ | ~~§6 *The tooling*~~ **split out 2026-08-14 by T-147; it read 12,836 / 55.3% on the day it went** | ~~11,026~~ | ~~**52%**~~ |
 | `CLAUDE.md` | *What this is* — release chronology | 6,980 | **45%** |
 
 ### 2.3 Surface C — tool output on a green run
@@ -258,7 +258,7 @@ the finding itself, and four closures showed that none of it is obvious from the
 | ~~6~~ | **CE-11** | A / F1 | Adopt the tier model and a relation-bound tier 1 — **done, and the file is over the bound the day it was set, so it is written as dated debt** | *enabler* | `s` | none | §6.1 |
 | ~~7~~ | **CE-05** | B / F1 | Move `BRIEF.md`'s *Release phases* to its own document — **done; `BRIEF.md` 134,596 → 42,485, and the shape the row proposed was refused with a measurement** | `XL` | `m` | stated | R8 §8 |
 | ~~8~~ | **CE-06** | B / F1 | One file per lesson, plus a generated index — **done, and the band was wrong: no bytes were saved.** What it bought was 983 citations a gate now resolves | ~~`XL`~~ **`S`, plus an unbanded gain the row never named** | `m`–`l` | stated | R8 §8 |
-| 9 | **CE-09** | B / F1 | One workflow file per lifecycle phase | `L` | `m` | stated | §6.1 |
+| ~~9~~ | **CE-09** | B / F1 | One workflow file per lifecycle phase — **done, and the shape was refused**: §6 was extracted whole and the rest left alone, because everything but §6 is 10,374 bytes together | `L` | `m` | stated | §6.1 |
 | 10 | **CE-04** | A+B / F2 | One operative home per cumulative rule | `M` | `xs` each | stated | R8 §8 |
 | 11 | **CE-08** | A / F2 | A measured figure gets a durable home | `S` | `xs` | none | R8 §8 |
 | 12 | **CE-10** | A / F2 | Prune the memory index of spent entries | `S` | `xs` | stated | §6.1 |
@@ -501,7 +501,7 @@ into [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) th
 | One file per lesson, with a generated index | CE-06 | `m`–`l` | The largest read-path document in the repository, needed one entry at a time | **[T-146](../tasks/T-146-one-file-per-lesson-with-a-generated-index.md)** |
 
 **CE-05's collision was ruled at the same review: the excusal moves with the content, inside the same
-task.** `tasks/TASK-WORKFLOW.md` §6 excuses the `DUPLICATE INDEX` advisory *by file name*, and the
+task.** [`../tasks/TOOLING.md`](../tasks/TOOLING.md) §1 excuses the `DUPLICATE INDEX` advisory *by file name* — it was `tasks/TASK-WORKFLOW.md` §6 until T-147 moved it — and the
 advisory is believable everywhere else precisely because that excusal is narrow. Splitting the move
 from the excusal would leave the advisory firing correctly against a document no rule covers, in the
 window between two tasks — which is the state the excusal exists to prevent.

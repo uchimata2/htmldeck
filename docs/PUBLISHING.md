@@ -12,7 +12,7 @@ logs until 2026-08-10.
 
 *The section numbers were not renumbered when §8 was added, and will not be: `PUBLISHING.md §2`,
 `§3` and `§6` are cited from two task records, and renumbering silently falsifies every one of them
-(`TASK-WORKFLOW.md` §6.1). §8 goes at the end even though it is the part read first — the pointer
+([`../tasks/TOOLING.md`](../tasks/TOOLING.md) §2). §8 goes at the end even though it is the part read first — the pointer
 above is how that is resolved.*
 
 **This document is agent-facing and is not covered by its own rule** — see §7.
@@ -239,7 +239,7 @@ anything else: `taskmd check` reports `DUPLICATE INDEX` against
 [`RELEASE-PHASES.md`](RELEASE-PHASES.md), because the phase
 tables name a majority of the board's ids. It is a true reading of a document that is not a duplicate
 index, it fires on every run, and the decision behind ignoring it is
-[`../tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) §6. **A `DUPLICATE INDEX` naming any other
+[`../tasks/TOOLING.md`](../tasks/TOOLING.md) §1. **A `DUPLICATE INDEX` naming any other
 document is not covered by it and stops the release.** *It named `docs/BRIEF.md` until 2026-08-14,
 when the tables moved; the advisory followed them, which is what the file-name form of the excusal is
 for.*
