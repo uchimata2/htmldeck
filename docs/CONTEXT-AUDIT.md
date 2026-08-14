@@ -568,11 +568,15 @@ findings worked, fixes landed — is met, so what was missing was a *when* rathe
 method against what it actually bought, and a review of that kind is the single most likely session to
 add rows — sending first would mean sending twice, which is the whole argument the hold rests on.
 
-**One thing this ruling leaves open, recorded here rather than lost in the ordering.** The paragraph
-above says the handover is *not a step in anyone's task*, which was written when it had no schedule.
-It now has one, and a scheduled act with no task file has no home for what it produces — who was
-told, what they said, and which rows went. **Whether the handover earns a task is the owner's call**,
-and it is `xs` either way; what cannot stand is a scheduled act that is deliberately nobody's.
+**And it is a task now.** The paragraph above says the handover is *not a step in anyone's task* —
+written when it had no schedule. It has one, and a scheduled act with no task file has no home for what
+it produces: who was told, by what route, and what came back. **The rows were the input and the
+responses were homeless.** Raised at the owner's direction 2026-08-14 as
+[T-157](../tasks/T-157-hand-the-upstream-registers-to-their-owners.md), blocked on `T-153` for the same
+reason the hold exists — phase 2 is the session most likely to add rows.
+
+*The sentence above still stands for a session that merely **finds** something: add it to the owner's
+document and stop. What T-157 owns is the one act of sending, not the filling.*
 
 ### 7.1 The handoff skill
 
