@@ -116,6 +116,21 @@ made the closing legible ([T-151](T-151-generate-the-finding-to-task-listing-ins
 | **A finding's remedy was refused and the refusal was the deliverable** | `CE-08` said *give a measured figure a durable home*; the figure now has none, because the decision it drove was coarser than the number (**L-95**). Third refused shape in this audit, and the first where refusing *was* the work | `L-90` says a band cannot price a change. This says the **remedy field is a hypothesis**, and the rubric should mark it as one — an outcome of *shape refused, still worth doing* has now happened four times out of thirteen and has no place to be recorded |
 | **The obligation after the last closure had nothing scheduling it** | Phase 2 existed as a paragraph saying a session should notice. It became [T-153](T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md), blocked on two tasks — and the recorded condition, *blocked behind six*, had counted unrelated backlog | The method gained phase 2 and did not say **who raises it**. A phase that runs once, later, on a trigger nobody watches, is a phase that does not run. It should ship as a task the adopter creates when the ranking is raised, blocked on the audit's own repairs |
 
+**What re-running step 5 under its own new rule said — added 2026-08-14, and it is about the
+gathering step rather than the ranking**
+
+The coverage rule written after `T-130` closed was run for the first time by
+[T-136](T-136-re-run-the-external-research-with-a-recorded-search-record.md). It worked, and what it
+cost and found is the input this task wants.
+
+| What happened | Detail | What the method owes |
+| :--- | :--- | :--- |
+| **The first pass had found 54% of the catalogue and the partition read as complete over it** | Nineteen entries, then twenty-one, then **35** under a recorded search record. Every earlier sum was internally correct | **The method should state the expected order of magnitude of step 5**, because *two searches and two articles* did not read as thin at the time. A catalogue that fits on one screen after a survey of a live tool space is the signal, and nothing in the method said so |
+| **Six of fourteen new techniques came only from the by-name axis** | Searching for *ideas* never reaches a technique whose name is a product. The by-name axis also produced the single largest correction in the catalogue | **Step 5's three axes should be named in the method, not left to the auditor**: ideas, named tools, and *the harness's own documented mechanisms* — the third found three techniques and had never been treated as a source at all |
+| **A stopping rule had to be invented, and the useful part was recording the empty rounds** | Declared saturation per axis: an axis stops when a full round adds nothing, and **the round that added nothing is listed**. That row is what lets a reader judge whether the axis stopped early | The method asks for a search record and does not say **when to stop searching**. Without a rule the record documents an arbitrary stop; with one, the negative rounds carry the argument. Ship the rule with the record |
+| **A named tool's own figures were four times its measured effect** | Advertised −54% code / −20% cost; an 80-task independent benchmark measured −15% and −10.3%, concentrated on big builds and zero elsewhere (**L-98**) | **Step 7 should require the source of every figure it screens on.** A verdict resting on a vendor's number is a verdict resting on their best case, and the shape of the effect — where it concentrates — decides more screenings than its size |
+| **Re-running the research changed no finding, and that had to be written down** | `CONTEXT-AUDIT.md` §4.1. Ten of fourteen new techniques were addressed to the harness or the API, and the one real local candidate was unmeasured | **A step that can produce nothing needs a place to say so.** `T-153` was blocked on this answer, and *no new finding* is only an answer if it is recorded as one. The method's step 5 should say that a null result is an output |
+
 **Where the rest of it is.** [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6.2 is the
 operative version of the first four rows — what to check, what to report, where each thing goes —
 written for a session working a finding. **L-85**, **L-86** and **L-87** in

@@ -82,6 +82,7 @@ comes here.
 | [L-95](lessons/L-95.md) | Write the decision a figure drives, and let the command print the figure | Evidence and verification |
 | [L-96](lessons/L-96.md) | A survey inherited from a closed task is evidence about the day it was taken | Evidence and verification |
 | [L-97](lessons/L-97.md) | A check anchored on the value that drifts goes blind exactly when it is needed | Evidence and verification |
+| [L-98](lessons/L-98.md) | A tool that publishes its own measurements is still publishing its own measurements | Evidence and verification |
 
 ### Tooling
 

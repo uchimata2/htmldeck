@@ -188,14 +188,22 @@ work), not assumed.
 ## 4. Screening the technique catalogue
 
 Every technique in `R8-context-economy-for-coding-agents.md` §7, screened against this project. **The
-three verdicts partition the catalogue: 9 adopted, 5 rejected, 7 deferred, summing to 21.**
+three verdicts partition the catalogue: 12 adopted, 10 rejected, 13 deferred, summing to 35.**
 
-**And the partition is not a coverage claim.** It summed correctly at 19 while two techniques were
-missing from the catalogue entirely — T20 and T21, both added 2026-08-13 after a reader asked whether
-one specific tool had been checked. It had not. The gap is the research step's, not the screening's,
-and [T-136](../tasks/T-136-re-run-the-external-research-with-a-recorded-search-record.md) re-runs it
-with a search record. Rows T20 and T21 below are screened on what is known now and are provisional
-until that task lands.
+**Re-screened in full 2026-08-14** by
+[T-136](../tasks/T-136-re-run-the-external-research-with-a-recorded-search-record.md), which re-ran the
+research under the coverage rule and took the catalogue from 21 to 35. **Every row was re-derived, not
+only the new ones** — a row screened against a thin catalogue was screened against a different
+denominator. No verdict on the original 21 changed; four rows gained a measurement, which is a
+different thing and is marked in each.
+
+**And the partition is still not a coverage claim.** It summed correctly at 19 while two techniques
+were missing entirely, and it summed correctly at 21 while fourteen were. Both times the arithmetic
+was right and the catalogue was short. `R8` §7.1 is the search record that replaces the reassurance the
+sum was never giving, and `R8` §10's fifth limit now carries the measured size of the gap.
+
+*The rows below are no longer provisional: T20 and T21 are confirmed, and both are now screened
+against an independent measurement rather than an argument.*
 
 | # | Technique | Verdict | Why |
 | :--- | :--- | :--- | :--- |
@@ -218,8 +226,51 @@ until that task lands.
 | T17 | Planner → implementer → reviewer | **adopted** | Already in force as `specify → plan → implement → review` |
 | T18 | Fresh context per checklist item | **deferred** | Would suit the variant and seeded-defect suites. Closed by deciding whether per-item isolation is worth losing cross-item learning |
 | T19 | Evidence quoted forward | **deferred** | The strongest untaken idea here. Closed by measuring how much of a `review` phase's reading duplicates what `implement` already had — unmeasured, so no band is written |
-| T20 | Generation restraint — a decision ladder | **deferred** | Two constraints pull opposite ways and neither settles it. **For the tooling** it may fit: standard-library-only is already a rung of that ladder (**L-07**). **For the decks it fights the brief** — rule 2 wants richness, interaction, animation and 3D, so a minimalism rule pointed at deck output is aimed at the wrong artifact. And its own instructions are a permanent load-path cost, which an audit ranking by load path has to count against it. Closed by deciding whether it can be scoped to `tools/` alone, and by measuring its own listing cost against the write volume it removes |
-| T21 | Semantic index over the repository | **rejected** | Collides with two rules at once. **L-07** and the out-of-the-box constraint: this repository ships standard library only and must clone and run, so an index service or embedding library is a dependency it does not take. And the index would be a machine-local artifact that no clone receives — the same property that made `taskmd check` refuse a link to the git-ignored settings file. The corpus is also small enough that naming files works: the read path is a dozen documents, not a codebase |
+| T20 | Generation restraint — a decision ladder | **deferred** | Two constraints pull opposite ways and neither settles it. **For the tooling** it may fit: standard-library-only is already a rung of that ladder (**L-07**). **For the decks it fights the brief** — rule 2 wants richness, interaction, animation and 3D, so a minimalism rule pointed at deck output is aimed at the wrong artifact. And its own instructions are a permanent load-path cost, which an audit ranking by load path has to count against it. **The evidence to close this now exists** (`R8` §7): an 80-task benchmark measures −10.3% cost, about four times below the advertised figure, **concentrated on big builds and zero where little was going to be written**. That sharpens the closing condition rather than settling it — scope it to `tools/`, where the ladder's rungs are already rules, and weigh its permanent listing cost against a saving this repository's write volume may not be large enough to earn |
+| T21 | Semantic index over the repository | **rejected** | Collides with two rules at once. **L-07** and the out-of-the-box constraint: this repository ships standard library only and must clone and run, so an index service or embedding library is a dependency it does not take. And the index would be a machine-local artifact that no clone receives — the same property that made `taskmd check` refuse a link to the git-ignored settings file. The corpus is also small enough that naming files works: the read path is a dozen documents, not a codebase. **Measured 2026-08-14 and the rejection holds on its own terms**: the reported gains — about +12.5% accuracy, ~40% fewer tokens — are stated *for large heterogeneous corpora*, and lexical search is reported to win on small plain-text ones. This corpus is the second kind, so the technique is not merely unaffordable here, it is aimed elsewhere |
+| T22 | Code execution over tool calls | **rejected** | Collides with what a repository controls — the same constraint that rejected T11. This project ships documents, a skill and standard-library tools; it does not assemble the agent's tool layer and publishes no MCP server, so there is no surface here to apply it to. Nothing about it is wrong; it is addressed to whoever owns the tool layer |
+| T23 | On-demand tool retrieval | **adopted** | Already in force, harness-side — deferred tool schemas are fetched by query in this very session. No work, and it is listed separately from T5 because they are different mechanisms: T5 defers the *schema* behind a visible name, this one defers the name too |
+| T24 | Token-oriented serialization | **deferred** | The only uniform, tabular payload a session reads here is the board listing, and CE-02's fix already replaced reading it with asking it — so the candidate payload shrank before the format could be applied to it. Closed by a machine-read payload large and uniform enough to pay for a notation no other reader knows |
+| T25 | A compression proxy in the path | **rejected** | Collides with the out-of-the-box constraint, exactly as T21 does: a component between agent and model is not something a clone receives, and this repository cannot ship one. It is also lossy by construction, which the record — the project's memory — is the wrong corpus for |
+| T26 | Server-side context editing | **deferred** | Harness- and API-side. This repository controls file contents, not the API call. Closed by the harness exposing it as a setting, at which point it costs this project nothing to take. It is the one clearing technique that does not collide with T11, which is why it is listed apart from T6 |
+| T27 | Symbol-level retrieval | **rejected** | Collides with **L-07** and out-of-the-box — a language server per language is a dependency this repository does not take — and with the corpus: the read path is Markdown prose, which has no symbol graph. `tools/` is the one place it would apply, and is also the place a standard-library route exists (see T28) |
+| T28 | A ranked repository map on a token budget | **deferred** | **The strongest new candidate.** It would suit `tools/` (921 KB) and `shell/` (115 KB), the same two T13 names, and unlike T27 there is a route that takes no dependency: Python's own `ast` is standard library, so a ranked map of the tool set is buildable within **L-07**. Closed by measuring how much of a session's read path is actually `tools/` — unmeasured, so no band is written, on T19's precedent |
+| T29 | Whole-repository packing with a token report | **rejected** | Collides with the audit's own axis: packing the repository into one file maximizes load, which is the thing being reduced. **The measurement half is already in force** — `R8` §3's *measure with a program* step is a throwaway script that does exactly the token-report part, without the packing |
+| T30 | Deterministic enforcement instead of instruction | **adopted** | Already in force and it is the general statement of the F4 family: `check.py`, `tools/tasks/lint.py` and `check_all.py` are rules that left the prompt for a gate. The reported compliance gap — 70–90% for a prompt rule against 100% for an enforced one — is the argument this project already made from the other direction, and it is why a rule that can be checked belongs in a checker |
+| T31 | Session telemetry as the instrument | **deferred** | It closes `R8` §10's first limit, which until now read as an impossibility. It costs no repository dependency — the collector is the owner's machine, not a clone's — so this is the owner's setting to enable, not this project's to ship. Closed by enabling the export and pointing it somewhere |
+| T32 | Addressable recall | **deferred** | Harness-side, like T6 and T15. Closed by the harness exposing it. Worth the row because it is the one form of clearing that leaves a handle behind, which is the objection to T6 |
+| T33 | A curated entry index for machine readers | **adopted** | Already in force, and it names what this repository was doing without the name: `CLAUDE.md` is the root layer, the tier-2 set is the base layer, and `tasks/README.md` is the index. **The tier discipline in `CLAUDE.md` is stricter than the convention**, because it establishes membership by observation rather than by a file's claim about itself |
+| T34 | A capped reasoning budget | **deferred** | Harness-side, and a session setting rather than a repository one. Closed by the harness exposing a per-task cap. Nothing here can set it |
+| T35 | Version-pinned documentation retrieval | **rejected** | Collides with **L-07** twice over: it is an external service in the loop, and this repository has no third-party dependencies whose documentation it would otherwise carry. The technique solves a problem standard-library-only does not have |
+
+### 4.1 The finding question, answered
+
+**The re-run produced no new `CE-nn`, and that is a result rather than an omission.** It is written
+here because [T-153](../tasks/T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md)
+was blocked on the answer: phase 2 prices a ranking, and a ranking about to change should not be
+priced.
+
+**Why none, stated so it can be argued with.** The findings rest on the inventory — steps 1–4, which
+measure this repository — and not on the catalogue, which is why re-running step 5 can leave the
+ranking untouched without that being suspicious. Fourteen techniques arrived; **ten of them are
+addressed to somebody else** — the harness, the API, or whoever assembles the tool layer — and land as
+deferrals and rejections naming the constraint, which is what those verdicts are for. Of the four that
+could bear on this repository, three are already in force under a different name (T23, T30, T33) and
+the fourth, **T28, is the one real candidate and is unmeasured**. On T19's precedent an unmeasured
+candidate gets a deferral with a closing condition, not a band — a `CE-nn` invented for it would carry
+a gain estimate with nothing behind it.
+
+**What did change is smaller and worth having**: two rejections that rested on argument now rest on a
+measurement (T20, T21), one limit of the method turned out to be a choice rather than an impossibility
+(`R8` §10, first limit), and one candidate got a route that does not break **L-07** (T28).
+
+**One thing the re-run found is about this document rather than about the repository.** The partition
+above — *12 adopted, 10 rejected, 13 deferred, summing to 35* — is a part-of-whole claim in prose, in
+two documents, checked by nobody: `tools/docs/figures.py` binds such claims only through a declared
+`ACCOUNTS` entry, and there is no command that counts these rows. The sum was wrong-by-omission twice
+already and no gate said so. That is
+[T-156](../tasks/T-156-make-the-screening-partition-a-figure-a-checker-can-count.md), raised rather
+than fixed here because building it is not re-running research.
 
 ---
 
@@ -428,7 +479,8 @@ ranking but the two repairs to the method itself,
 [T-136](../tasks/T-136-re-run-the-external-research-with-a-recorded-search-record.md)
 and [T-138](../tasks/T-138-make-the-portable-half-agent-agnostic.md): the first re-runs the external
 research with a recorded search record and can still raise a finding, so phase 2 taken before it would
-price a ranking that is about to change. **The remaining execution order is ordinary backlog and does
+price a ranking that is about to change. **T-136 closed 2026-08-14 and raised none** — §4.1 is the
+answer and the argument for it — so **only T-138 is left between here and phase 2.** **The remaining execution order is ordinary backlog and does
 not gate it** — that was never the condition, and reading it as one
 would park phase 2 behind eighteen tasks it has nothing to do with.
 

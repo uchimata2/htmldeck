@@ -321,6 +321,49 @@ ranking.
 Gathered in step 5. Each row is a *technique*, with what it costs and what it assumes — screening it
 is step 7 and belongs to the project doing the audit, not to this catalogue.
 
+### 7.1 The search record
+
+**Re-run 2026-08-14 under step 5's coverage rule, which this is the first pass to satisfy.** The
+first pass was two searches and two articles; this one is 23 searches and one fetched page, along
+three axes, and **named tools were searched for by name** — that is the statement step 5 requires, and
+the queries below are what makes it checkable rather than assertable.
+
+**The stopping rule is declared saturation, per axis**: an axis stops when a full round of queries on
+it returns no technique the catalogue does not already carry. **The rounds that returned nothing new
+are listed too** — they are the evidence an axis stopped for a reason rather than at a budget. A
+survey cannot be proved complete (§10), so the rule is deliberately of the weaker kind.
+
+| Axis | Round | Queries | New techniques |
+| :--- | :--- | :--- | :---: |
+| **A — ideas, articles, papers** | A1 | `context engineering techniques reduce token usage coding agents 2026` · `agent context window management compaction sub-agent memory research paper` | 3 |
+| | A2 | `code execution with MCP agents write code instead of tool calls token savings` · `MCP server tool schema token bloat reduce number of tools loaded` | 3 |
+| | A3 | `TOON token-oriented object notation compact serialization vs JSON tokens` · `llms.txt AGENTS.md repository map for AI agents convention` | 2 |
+| | A4 | `context rot long context degradation agent accuracy shorter context better` · `semantic code search vs grep for coding agents retrieval effectiveness` | **0 — saturated** |
+| **B — named tools, by name** | B1 | `Repomix gitingest code2prompt pack repository into single file for LLM token count` · `Serena MCP server semantic code tools LSP symbol level editing token efficient` · `Aider repo map tree-sitter token budget Cursor codebase indexing Cline memory bank` | 3 |
+| | B2 | `agent rule before writing code "already in the standard library" decision ladder plugin token reduction measured` · `Claude Code skills plugins subagents context cost ccusage measure token usage per session` · `Cline Roo Code context condensing memory bank token optimization named tool` | 1 |
+| | B3 | *fetched*: the independent Ponytail benchmark · `Amp Sourcegraph Goose OpenHands opencode agent context management token efficiency` · `SpecKit BMAD claude-task-master spec-driven development context files token cost` | 1 |
+| | B4 | `"Claude Context" MCP semantic search codebase Zilliz context7 library docs on demand` · `Continue.dev Windsurf Cascade Augment Code context engine token efficiency named` | **0 — saturated** |
+| **C — the harness's own mechanisms** | C1 | `Claude Code documentation context editing microcompact tool search skills progressive disclosure official` | 1 |
+| | C2 | `Anthropic context editing memory tool API clear tool uses automatic context management` · `Claude Code /usage command attributes usage to skills subagents plugins MCP servers percentage` | 3 |
+| | C3 | `Claude Code OpenTelemetry metrics token usage per session monitoring instrumentation` · `enforce agent rules with deterministic linters hooks instead of prompt instructions token cost` | **0 — saturated** |
+
+**Axis B is the one the first pass never ran at all**, and it is where the two known gaps came from.
+It is also where the largest correction came from: the tool behind `T20` is **Ponytail**, and its own
+figures and an independent benchmark's disagree by about four times — see the row.
+
+**One query returned a negative result, and it is recorded because negatives are results.** C2's
+second query tested a secondary source's claim that the harness attributes recent usage to individual
+skills, subagents, plugins and MCP servers. **It did not confirm against primary documentation.** The
+claim is therefore *unverified* and no row rests on it; what would close it is the harness's own
+documentation or a run of the command. The mechanism that *is* documented by several independent
+sources is `T31`.
+
+**What this record cannot do** is prove the survey complete — only show what it covered, so a reader
+who thinks an axis stopped early can see the queries and judge. That asymmetry is the whole reason
+step 5 asks for a record rather than a coverage claim (§10, fifth limit).
+
+### 7.2 The catalogue
+
 | # | Technique | What it does | What it costs | What it assumes |
 | :--- | :--- | :--- | :--- | :--- |
 | T1 | **Right-altitude system prompts** | Keeps always-loaded instruction specific enough to guide and short enough not to spend the attention budget | Tokens proportional to detail; verbose instruction competes with the task | Clear direct language guides behaviour without enumerating every edge case |
@@ -329,7 +372,7 @@ is step 7 and belongs to the project doing the audit, not to this catalogue.
 | T4 | **Tool-set curation** | Removes tools the project does not use from the turn cost | Judgement about what is needed; a wanted tool may be absent | If a human engineer cannot say which tool applies, the agent cannot either |
 | T5 | **Deferred tool schemas** | Tool *names* load; schemas load on demand | An extra round trip when a schema is needed | The name is enough to decide relevance |
 | T6 | **Tool-result clearing** | Drops tool output from history once it has served its purpose | Minimal; described as the lightest form of compaction | Historical output is not needed for later reasoning |
-| T7 | **Compaction** | Summarizes history at the context limit and reinitializes | Can lose subtle context whose importance appears later | Summarization preserves decisions and open threads |
+| T7 | **Compaction, in tiers** | Summarizes history at the context limit and reinitializes. **Restated 2026-08-14:** production harnesses tier it — clearing stale tool results with *no* model call, a full summarizing call, and a call skipped entirely by reusing notes already extracted | Can lose subtle context whose importance appears later; the cheap tier can only drop, not summarize | Summarization preserves decisions and open threads, and the cheapest tier is tried first |
 | T8 | **Structured note-taking / external memory** | Persistent notes outside the window, retrieved when needed | Discipline to structure notes; they must be consulted | The agent reliably reads its own notes across resets |
 | T9 | **Sub-agent delegation** | Isolated context windows for focused work, returning a condensed summary | Orchestration complexity and latency; the summary is lossy | The work decomposes into independent exploration |
 | T10 | **Scoped requests over broad retrieval** | Naming the files instead of describing the need | The requester must know which files | The relevant set is knowable up front |
@@ -339,20 +382,49 @@ is step 7 and belongs to the project doing the audit, not to this catalogue.
 | T14 | **Code minification for agent input** | Strips non-essential lexical elements, preserving semantics | Breaks line references and human readability | No human reads that copy |
 | T15 | **Adaptive context pruning** | Drops low-relevance context as the session runs | Needs a relevance signal; can drop something needed | Relevance is estimable in flight |
 | T16 | **Model routing** | Cheaper model first, escalate on need | Escalation costs a retry | The cheap model can recognise its own limit |
-| T17 | **Planner → implementer → reviewer** | Splits a task across phases so the expensive model runs briefly | Handover overhead; each phase must record enough for the next | The phases can hand over in writing |
+| T17 | **Planner → implementer → reviewer** | Splits a task across phases so the expensive model runs briefly | Handover overhead; each phase must record enough for the next. **Measured 2026-08-14 and it is not small**: the spec-driven frameworks in this genre re-read spec, plan and task files every turn, and one comparison budgets **20–40% higher spend** than working without them, another ~31,700 tokens per workflow run | The phases can hand over in writing, and the correctness bought exceeds the re-reading paid |
 | T18 | **Fresh context per checklist item** | A loop restarts context for each item | Loses cross-item learning | The items are genuinely independent |
 | T19 | **Evidence quoted forward** | An earlier phase records verbatim quotes and `path:line` refs so a later phase greps instead of re-reading | The earlier phase writes more | The later phase would otherwise re-read whole files |
-| T20 | **Generation restraint — a decision ladder before writing code** | A rule set the agent applies before generating: does this need to exist, is it already in the codebase, in the standard library, a native platform feature, an installed dependency, a one-liner — and only then, write it | Its own instructions are a permanent load-path cost; a minimalism rule pointed at output that is *meant* to be rich fights the brief | The saving is in what the agent does not write, and the domain rewards less code |
-| T21 | **Semantic index over the repository** | A vector or embedding index of the project's own documents and code, queried for the few relevant passages instead of loading files | An index to build, host and keep fresh; a stale index answers confidently and wrongly | A service or library dependency is acceptable, and the corpus is large enough that retrieval beats naming files |
+| T20 | **Generation restraint — a decision ladder before writing code** | A rule set the agent applies before generating: does this need to exist, is it already in the codebase, in the standard library, a native platform feature, an installed dependency, a one-liner — and only then, write it. **Named 2026-08-14: this is Ponytail**, an installable skill with adapters for some fourteen agents | Its own instructions are a permanent load-path cost; a minimalism rule pointed at output that is *meant* to be rich fights the brief. **And the effect is about four times smaller than advertised** — see below | The saving is in what the agent does not write, and the domain rewards less code |
+| T21 | **Semantic index over the repository** | A vector or embedding index of the project's own documents and code, queried for the few relevant passages instead of loading files. Named instances: hybrid BM25-plus-dense-vector code search shipped as an MCP server | An index to build, host and keep fresh; a stale index answers confidently and wrongly. **Measured 2026-08-14**: about **+12.5% answer accuracy** and roughly **40% fewer tokens at equal retrieval quality** — but *on large, heterogeneous corpora*; on a small plain-text corpus lexical search is reported faster and more precise | A service or library dependency is acceptable, and **the corpus is large enough that retrieval beats naming files** — which is the assumption that decides it, not the accuracy figure |
+| T22 | **Code execution over tool calls** | The agent writes code that imports and calls tools in a sandbox; loops, retries and intermediate data stay there, and only the result enters context | A sandbox, a code-generation surface and a security boundary; a failure is now a program's failure | The tools are expressible as an importable API, and the caller controls the tool layer |
+| T23 | **On-demand tool retrieval** | One search tool replaces N schemas: the agent queries for the few tools it needs and their definitions arrive then | An extra round trip, and a relevance miss is a tool the agent never learns exists | Tool descriptions are searchable, and the name alone does not have to carry the decision |
+| T24 | **Token-oriented serialization** | A compact encoding of the same data — indentation and tabular rows instead of braces, brackets and repeated keys | A translation layer, and a format fewer readers know | The payload is uniform enough to tabulate, and no human reads that copy |
+| T25 | **A compression proxy in the path** | A component between agent and model that shrinks tool output, logs and file contents before they arrive | Another component that can drop the one line that mattered; the saving is lossy by construction | A proxy may sit in the path, and the agent's inputs are redundant enough to compress |
+| T26 | **Server-side context editing** | The API clears stale tool results and thinking blocks itself, **after the cache lookup**, so the saving does not cost the cache prefix that `T11` depends on | Beta surface; the decision of what is stale is not the caller's | You control the API call, and a cleared result will not be needed verbatim later |
+| T27 | **Symbol-level retrieval** | A language server answers at symbol granularity: a read returns one function body, an overview returns signatures rather than implementations | A language server per language, and a dependency the project must accept | The artifact has a symbol graph — which prose does not |
+| T28 | **A ranked repository map on a token budget** | A generated map of the repository's public surface, ranked by how often each symbol is referenced elsewhere, serialized to a fixed token budget | A parser and a build step; the ranking is approximate and a wrong map misdirects cheaply | The corpus has a reference graph, and a fixed budget of map is worth more than the same budget of file |
+| T29 | **Whole-repository packing with a token report** | A tool concatenates the filtered repository into one model-ready file and reports the token count per file and in total | It maximizes load rather than reducing it; the report is the part that survives contact with a budget | The corpus fits, or only the measurement is wanted |
+| T30 | **Deterministic enforcement instead of instruction** | A rule that can be checked mechanically moves out of the always-loaded prompt into a hook, linter or gate the harness runs | The rule must be mechanically checkable; a check that needs judgement costs tokens wherever it lives | The harness exposes lifecycle points, and the rule's cost in the prompt is paid every turn |
+| T31 | **Session telemetry as the instrument** | The harness exports per-session tokens, cost and cache hit rate over OpenTelemetry, so what a session *paid* is measured rather than inferred from file sizes | A collector and a backend to run; it measures, it does not reduce | Telemetry may be enabled, and the question worth answering is what was spent, not what was available |
+| T32 | **Addressable recall** | Tool observations go to an append-only, ID-addressable log and are replaced in context by compact citations the agent can dereference | A store and an addressing scheme; the agent must actually re-fetch | The citation carries enough to decide whether the body is needed |
+| T33 | **A curated entry index for machine readers** | One published, hierarchical map of what to read — a root instruction file, a base layer, and a task-active layer — so the reader spends its budget on content rather than on discovery | Keeping the index true; an index that lies costs more than the discovery it saved | Readers honour the index instead of crawling |
+| T34 | **A capped reasoning budget** | The thinking allowance is bounded per turn or per task | Hard problems lose the depth that would have solved them | The budget is settable, and the cap is above what the work needs |
+| T35 | **Version-pinned documentation retrieval** | Library documentation for the exact version in use is fetched on demand instead of carried, vendored or recalled from training | An external service in the loop at authoring time | The project has third-party dependencies whose documentation it would otherwise carry |
 
 **T19 came from local precedent rather than the literature**, and it is the one most easily missed: it
 does not reduce a document, it moves a cost from an expensive phase to a cheap one.
 
-**T20 and T21 were added 2026-08-13, after the first pass missed both.** They are recorded here with
+**T20 and T21 were added 2026-08-13, after the first pass missed both**, and they are no longer
+provisional: the 2026-08-14 re-run confirmed both and restated both. They are recorded here with
 their provenance because *how* they were missed matters more than that they were: T20 is a named,
 installable tool that reports its own measurements, and T21 is a mainstream technique the first pass
 folded into T2 rather than listing. **A reader found both by asking one question.** See §3 step 5's
 coverage rule, which exists because of this, and §10's fourth limit.
+
+**T20's own figures and an independent benchmark's disagree by about four times, and the gap is the
+lesson.** The skill advertises **−54% code, −22% tokens, −20% cost, −27% time**. A paired benchmark
+of **80 tasks**, inside a programme of 251 billed trials, measured **−15% code** (p = 0.088, which is
+not significant), **−10.3% cost** (p = 0.004, which is) and **−11% time**; quality was unchanged on 65
+of 80, slightly worse on 9 and slightly better on 6. **The effect is not spread evenly**: it reaches
+**−31% on big builds** and is **zero where the plain agent already wrote almost nothing**. So the
+technique is real, is smaller than claimed, and pays only where a lot of code was going to be written
+— which is a different question from whether it is worth its permanent load-path cost. **A tool that
+publishes its own measurements is still publishing its own measurements** (**L-98**).
+
+**T22 to T35 were gathered 2026-08-14 by the axes in §7.1.** Six of the fourteen came from the
+by-name axis and would not have been found by searching for ideas: the technique has a product name
+before it has a literature.
 
 ---
 
@@ -529,7 +601,11 @@ personal datum from a precedent repository enters the report.
 Stated so a reader does not mistake the audit's silence for a clean bill.
 
 - **It measures artifacts, not sessions.** File sizes are what a session *could* pay. What it actually
-  paid needs harness instrumentation this method does not require.
+  paid needs harness instrumentation this method does not require. *Restated 2026-08-14: that
+  instrumentation exists and is documented — per-session tokens, cost and cache hit rate over
+  OpenTelemetry (`T31`). **So this limit is now a choice rather than an impossibility**, and a method
+  that keeps it should say why. The reason to keep it is that artifact sizes are the thing a
+  repository can change; a session total mixes them with how the session was driven.*
 - **It cannot separate operative prose from narrative mechanically.** Section sizes are measured; the
   split inside a section is a reader's judgement, and every F1 or F3 finding resting on one says so.
 - **It does not price attention.** A shorter context is assumed better. Where a cut would make the
@@ -542,10 +618,19 @@ Stated so a reader does not mistake the audit's silence for a clean bill.
   correctly over nineteen techniques while two were missing, including a named tool that publishes
   its own measurements. Step 5's coverage rule is the guard, and it is weaker than the partition —
   a search record can be read and judged, but nothing can prove a survey complete.
+  **And the size of the gap is now measured.** The re-run under the coverage rule, 2026-08-14, brought
+  the catalogue to **35**. The partition summed correctly, and read as complete, over **nineteen of
+  them** — *the arithmetic was right about a bit over half a catalogue.* A check that passes at 54%
+  coverage while reading as a coverage claim is not a weak check; it is a check of something else.
 
 ---
 
 ## 11. Sources
+
+**Grouped by the axis that found them (§7.1).** The first eight are the 2026-08-13 pass; everything
+under the axis headings is the 2026-08-14 re-run.
+
+### 11.1 The first pass
 
 - [Effective context engineering for AI agents — Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
 - [Context is a budget: eight levers and three workflow patterns — foojay.io](https://foojay.io/today/context-is-a-budget-eight-levers-and-three-workflow-patterns/)
@@ -557,3 +642,32 @@ Stated so a reader does not mistake the audit's silence for a clean bill.
 - [SWE-Pruner: self-adaptive context pruning for coding agents](https://arxiv.org/pdf/2601.16746)
 - Local precedent: two repositories of the same owner, read for structure under step 6 and
   deliberately unnamed.
+
+### 11.2 Axis A — ideas, articles, papers
+
+- [Code execution with MCP: building more efficient agents — Model Context Protocol discussion](https://github.com/modelcontextprotocol/modelcontextprotocol/discussions/1780)
+- [SEP-1576: mitigating token bloat in MCP — schema redundancy and tool selection](https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1576)
+- [MCP compression: preventing tool bloat in AI agents — Atlassian](https://www.atlassian.com/blog/development/mcp-compression-preventing-tool-bloat-in-ai-agents)
+- [TOON — Token-Oriented Object Notation](https://toonformat.dev/), and its [benchmark against JSON](https://arxiv.org/abs/2603.03306)
+- [Addressable recall compaction for long context-window control](https://arxiv.org/html/2607.25066)
+- [Classifier context rot: performance degrades with context length](https://arxiv.org/html/2605.12366v1)
+- [llms.txt — making a project discoverable to agents](https://www.agentpatterns.ai/standards/llms-txt/) and [the AGENTS.md hierarchical standard](https://agentsstandard.com/)
+- [Improving the agent with semantic search — Cursor](https://cursor.com/blog/semsearch) and [grep vs. RAG for agents — LlamaIndex](https://www.llamaindex.ai/blog/is-grep-all-you-need-lexical-vs-sematic-search-for-agents)
+
+### 11.3 Axis B — named tools, searched by name
+
+- [Ponytail — the decision-ladder skill](https://mcpservers.org/agent-skills/dietrichgebert/ponytail), and **the independent benchmark that measured it**: [Ponytail skill for Claude Code, tested — JetBrains](https://blog.jetbrains.com/ai/2026/07/ponytail-skill-claude-tested/)
+- [Serena — LSP-backed semantic code toolkit](https://github.com/oraios/serena)
+- [Aider's repository map](https://aider.chat/docs/repomap.html)
+- [Repomix — pack a repository into an AI-friendly file](https://repomix.com/)
+- [Claude Context — code search MCP server](https://github.com/zilliztech/claude-context)
+- [Cline's Memory Bank](https://docs.cline.bot/best-practices/memory-bank)
+- [BMAD vs Spec Kit vs OpenSpec — the spend comparison](https://reenbit.com/bmad-vs-spec-kit-vs-openspec-choosing-your-spec-driven-ai-framework/)
+- [A directory of terminal-native coding agents and harnesses](https://github.com/bradAGI/awesome-cli-coding-agents) — where the compression-proxy layer behind `T25` was found
+
+### 11.4 Axis C — the harness's own mechanisms
+
+- [Context editing — Claude Platform Docs](https://platform.claude.com/docs/en/build-with-claude/context-editing) and [Managing context on the Claude Developer Platform](https://claude.com/blog/context-management)
+- [Agent Skills overview — Claude Platform Docs](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)
+- [Steering Claude Code: CLAUDE.md, skills, hooks, subagents](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) and [output styles](https://code.claude.com/docs/en/output-styles)
+- [Claude Code monitoring with OpenTelemetry — SigNoz](https://signoz.io/docs/claude-code-monitoring/) and [the same, via CloudWatch — AWS](https://aws.amazon.com/blogs/mt/analyzing-claude-code-usage-with-cloudwatch-and-opentelemetry/)
