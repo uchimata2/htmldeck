@@ -33,6 +33,13 @@ because the tracker's own query commands do not resolve in an agent shell — th
 question in **1,901 bytes**. The three cheapest fixes are all `xs` and none of them deletes anything.
 The three largest are all `F1` splits of documents that are 52%, 61% and 81% appendix by weight.
 
+*Two of those three landed on 2026-08-14 — `CE-05` and `CE-06`, as
+[T-145](../tasks/T-145-move-brief-mds-release-phases-to-its-own-document.md) and
+[T-146](../tasks/T-146-one-file-per-lesson-with-a-generated-index.md) — and **neither saved what its
+band promised**. The first moved 92,894 bytes to a document opened on demand; the second moved none
+at all and bought a gate instead. `CE-09` is the third and is still open. A share-of-file figure
+says where the weight is, not what removing it is worth.*
+
 ---
 
 ## 2. Subject 1 — this repository's development workflow
@@ -72,7 +79,7 @@ harness already takes it. No finding.
 
 | Document | Bytes | ~tokens | Needed for one task? |
 | :--- | ---: | ---: | :--- |
-| [`docs/LESSONS.md`](LESSONS.md) | 152,444 | 38,111 | One entry of 81, cited as `L-nn` |
+| ~~[`docs/LESSONS.md`](LESSONS.md)~~ | ~~152,444~~ | ~~38,111~~ | ~~One entry of 81, cited as `L-nn`~~ **split 2026-08-14 by [T-146](../tasks/T-146-one-file-per-lesson-with-a-generated-index.md): the entry is its own file and this path is a 12,258-byte index** |
 | [`docs/BRIEF.md`](BRIEF.md) | 108,163 | 27,041 | "Read the brief first" — 61% of it is one appendix |
 | [`docs/DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) | 75,295 | 18,824 | Deck work only |
 | [`docs/DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) | 62,463 | 15,616 | Rarely |
@@ -93,7 +100,7 @@ raised about, and it is measured rather than felt.
 | Document | Largest section | Bytes | Share |
 | :--- | :--- | ---: | ---: |
 | ~~`docs/BRIEF.md`~~ | ~~*Release phases* — 112 rows, 68 struck through~~ **moved out 2026-08-14 by [T-145](../tasks/T-145-move-brief-mds-release-phases-to-its-own-document.md); it read 92,894 / 69% over 134 rows on the day it went, and `BRIEF.md` is now 42,485 bytes** | ~~66,461~~ | ~~**61%**~~ |
-| `docs/LESSONS.md` | 81 entries, mean 1,873 bytes | 151,751 | **>99%** |
+| ~~`docs/LESSONS.md`~~ | ~~81 entries, mean 1,873 bytes~~ **split out 2026-08-14 by T-146; it read 89 entries, mean 1,859, 167,043 bytes on the day it went** | ~~151,751~~ | ~~**>99%**~~ |
 | `tasks/TASK-WORKFLOW.md` | §6 *The tooling* | 11,026 | **52%** |
 | `CLAUDE.md` | *What this is* — release chronology | 6,980 | **45%** |
 
@@ -249,8 +256,8 @@ the finding itself, and four closures showed that none of it is obvious from the
 | ~~4~~ | **CE-13** | B / F4 | Write down that a deck is never read whole — **done, inside rule 6 rather than as a new rule; the numbers are cited about 130 times** | *bimodal* | `xs` | none | §6.1 |
 | 5 | **CE-01** | A / F1 | Split the release chronology out of `CLAUDE.md` | `L` | `s` | stated | R8 §8 |
 | ~~6~~ | **CE-11** | A / F1 | Adopt the tier model and a relation-bound tier 1 — **done, and the file is over the bound the day it was set, so it is written as dated debt** | *enabler* | `s` | none | §6.1 |
-| 7 | **CE-05** | B / F1 | Move `BRIEF.md`'s *Release phases* to its own document | `XL` | `m` | stated | R8 §8 |
-| 8 | **CE-06** | B / F1 | One file per lesson, plus a generated index | `XL` | `m`–`l` | stated | R8 §8 |
+| ~~7~~ | **CE-05** | B / F1 | Move `BRIEF.md`'s *Release phases* to its own document — **done; `BRIEF.md` 134,596 → 42,485, and the shape the row proposed was refused with a measurement** | `XL` | `m` | stated | R8 §8 |
+| ~~8~~ | **CE-06** | B / F1 | One file per lesson, plus a generated index — **done, and the band was wrong: no bytes were saved.** What it bought was 983 citations a gate now resolves | ~~`XL`~~ **`S`, plus an unbanded gain the row never named** | `m`–`l` | stated | R8 §8 |
 | 9 | **CE-09** | B / F1 | One workflow file per lifecycle phase | `L` | `m` | stated | §6.1 |
 | 10 | **CE-04** | A+B / F2 | One operative home per cumulative rule | `M` | `xs` each | stated | R8 §8 |
 | 11 | **CE-08** | A / F2 | A measured figure gets a durable home | `S` | `xs` | none | R8 §8 |

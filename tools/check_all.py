@@ -58,6 +58,7 @@ PY = sys.executable
 # Repository-wide gates: `path -> argv tail`. Run once, in this order.
 WIDE = [
     ("tools/tasks/lint.py", []),
+    ("tools/docs/lessons.py", []),
     ("tools/docs/figures.py", []),
     ("tools/deck/ruleset.py", ["--counts"]),
     ("tools/plugin/check_scaffold.py", []),
