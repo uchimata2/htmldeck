@@ -41,6 +41,15 @@ python tools/tasks/query.py list --open     # what to work on next
 python tools/tasks/query.py context T-NNN   # everything needed to start one task
 ```
 
+**Never run `lint.py` and `tools/check_all.py` at the same time.** `lint.py`'s first step is
+`taskmd index`, which **rewrites `tasks/README.md`**, and the release gate reads that file — so a gate
+started beside the lint reads a board mid-write and fails on it. **Observed 2026-08-15: two failures
+from a concurrent pair, and zero from the same tree run alone**, 172 s against 157 s. The failure names
+were lost to a tail, so the mechanism is inferred from the write rather than proven from the output;
+what is certain is that the two runs disagreed about one tree. The trap is that both commands are slow
+enough to want to overlap and the gate is the one told to run in the background. **Lint first, let it
+finish, then gate.**
+
 `lint.py` is the four checks a task edit owes: it stops at the first failure and exits with that
 failure's code, and it is `tracker_lint` in [`../.handoff/config.md`](../.handoff/config.md).
 **It is also the only name tier 1 gives**: [`../CLAUDE.md`](../CLAUDE.md) enumerated the checkers
