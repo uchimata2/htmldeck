@@ -27,6 +27,21 @@ Keep it even if it ever stops running: taskmd's T-093, whether `check` resolves 
 reference, is still open, and this is the offered reference implementation - adjacency decision and
 all (check 3).
 
+**What this file deliberately does not check: a table row carrying more cells than its header.**
+Markdown drops the excess, so the text is in the file and renders nowhere. Declined 2026-08-15
+(T-161), for the second time and on different evidence: taskmd shipped exactly this rule as a
+**problem that moves `check`'s exit status**, so once that release lands this repository gets it free
+on every task edit, and a second instrument for a class already gated is the
+checker-that-outlives-the-fault argument pointing at itself. Measured when the decision was taken:
+**307 files, 0 wide rows, 0 unescaped pipes inside a code span.**
+
+**What would reverse it, so it is not re-asked from scratch a third time:** `taskmd check` reads tasks
+and the documents it resolves - **not `skills/` or `examples/`**. A wide row there is invisible to both
+tools, and the first one that appears is the reason to build the narrow thing here. If that happens,
+the trap is that GFM splits a row into cells **before** parsing inline spans, so a backtick does not
+protect a pipe: blanking code spans first - which every other text check here does - makes the rule
+silent on a row that is broken twice over.
+
 Run it from the repository root. Task validation is `taskmd check`, not this.
 """
 

@@ -85,6 +85,7 @@ comes here.
 | [L-98](lessons/L-98.md) | A tool that publishes its own measurements is still publishing its own measurements | Evidence and verification |
 | [L-99](lessons/L-99.md) | A portability test that looks for your own names cannot see theirs | Evidence and verification |
 | [L-102](lessons/L-102.md) | Verifying the part you were worried about proves nothing about the part you broke | Evidence and verification |
+| [L-103](lessons/L-103.md) | A check with no negative case in its fixture is unproven where it matters | Evidence and verification |
 
 ### Tooling
 

@@ -2,8 +2,8 @@
 id: T-161
 title: Decide whether to adopt the wide-row gate now that upstream ships one
 type: decision
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-139, T-160, T-157]
@@ -13,6 +13,7 @@ business_value: medium
 effort: s
 created: 2026-08-15
 updated: 2026-08-15
+shipped_in: unreleased
 deliverables: []
 ---
 
@@ -106,24 +107,59 @@ close.
 
 ## 2. Plan
 
+**The owner answered the open question on 2026-08-15: no own checker.** So this task writes a refusal
+down, rather than building anything. The work is entirely in making the refusal survive — a decision
+recorded only in the task that took it gets re-asked, and this one has now been asked twice.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Put the refusal in [`../tools/docs/refcheck.py`](../tools/docs/refcheck.py)'s module docstring, with what would reverse it and the implementation trap | The decision where a session touching the checkers finds it, without this task |
+| 2 | Tell taskmd the measured first-run result against their prediction, and that we are not building our own | The thread carries the negative they warned us about |
+| 3 | Mint the fixture lesson §1 flagged as a candidate | **L-103** |
+| 4 | Gates, commit, push | `lint`, `check_all`, one commit |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **No own checker — the owner's ruling, 2026-08-15.** `taskmd check` runs inside
+  `python tools/tasks/lint.py`, so once their release lands this repository gets the rule on every task
+  edit for nothing. A second instrument for a class already gated is the
+  checker-that-outlives-the-fault argument aimed at itself, which is the same argument `O-T4` used to
+  decline it the first time — **still right, on entirely different evidence.**
+- **The refusal went in a tool docstring, not a document** — 2026-08-15.
+  [`../tools/docs/refcheck.py`](../tools/docs/refcheck.py) already carries the boundary between what
+  taskmd's `check` covers and what this repository checks itself, including the last time upstream
+  ruled and this file survived it. A second home for the same boundary is **L-13**.
+- **The reversing condition is a coverage gap, stated as a trigger rather than a caveat** —
+  2026-08-15. `check` reads tasks and the documents it resolves, not `skills/` or `examples/`. **The
+  first wide row that appears there is the reason to build it**, and the docstring says so, so the
+  third asking of this question starts from an answer.
+- **No register row was added for the scanner's false positives** — 2026-08-15. They are facts about
+  a throwaway instrument written here, not observations about taskmd's tool, and the register is for
+  the latter. They went in the thread, where they are useful, and in **L-103**, where they are ours.
 
 **Outputs produced**
-- <none yet>
+- [`../tools/docs/refcheck.py`](../tools/docs/refcheck.py) — the refusal, the reversing condition, the trap
+- [`../docs/lessons/L-103.md`](../docs/lessons/L-103.md) — a check with no negative case in its fixture
+- The reply on [`uchimata2/taskmd#1`](https://github.com/uchimata2/taskmd/issues/1)
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The decision is written where a later session finds it without reading this task | met | `refcheck.py`'s module docstring — the file that already owns the boundary between upstream's `check` and this repository's own, and the file anyone touching the checkers opens first. |
+| If **no**, the refusal names what would change it | met | The `skills/` and `examples/` coverage gap, written as a trigger: *the first wide row that appears there is the reason to build the narrow thing*. The question has been asked twice; the third asking starts from an answer rather than from the argument. |
+| If **yes**, a fixture with a negative case for every check | n/a | The answer was no. The requirement outlived the branch as **L-103**, which is the general form and applies to every checker here rather than to the one not built. |
+| taskmd is told the measured first-run result against their prediction | met | Posted, with the three false positives, since ours is the mirror of the trap they warned about — they said blanking code spans makes the rule silent; a naive span detector is deafening. |
+| The measurement is reproducible | met | The scanner is thrown away as planned, so the record carries the method rather than the tool: cells split on unescaped pipes with code spans **not** protected, front matter skipped, fenced blocks skipped, backtick **runs** matched pairwise, escaped `\|` inside a span left alone. Anyone can rebuild it; **L-103** says what to prove about it first. |
+
+**On closing a decision task with nothing built**
+Every output here is prose, and the temptation with a `no` is to close it as a non-event. It is not
+one: the cost objection that carried the first refusal — *a checker for two rows would outlive the
+fault* — had been quietly destroyed by upstream shipping the rule, and the refusal now stands on a
+completely different argument. **A decision that reaches the same answer by a new route is not the old
+decision still holding**, and recording it as though it were would leave the next session defending a
+reason that no longer applies.
 
 **Child fix tasks raised**
 - none
@@ -132,4 +168,5 @@ close.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | → done | **The owner ruled: no own checker.** The refusal is in `../tools/docs/refcheck.py`'s docstring with its reversing condition — the `skills/` and `examples/` coverage gap, written as a trigger so the third asking of this question starts from an answer. **The same verdict as `O-T4`'s, reached by a different argument**: the original reason was that a checker for two noticed rows would outlive the fault, and upstream shipping the rule destroyed that reasoning while leaving the answer standing. Recorded as a new decision rather than as the old one holding. The measurement went back to taskmd against their prediction, and the fixture finding is **L-103** — a check with a positive case and no negative case is unproven in the direction that produces noise, which is how a specimen passed while its scanner scored 3,150. |
 | 2026-08-15 | → proposed | Raised from taskmd's second follow-up on the report thread: they built the gate this project declined, as a **problem rather than an advisory**, and warned that our first run would be non-zero. **It is zero — 307 files, 0 wide rows, 0 code-span pipes**, because T-139 already swept. Measured before the task existed, which is the honest record: the question was *does this affect us*, and a task to decide something that turned out not to apply would have been the wrong artifact. `s`, `decision`, `PH3`. |
