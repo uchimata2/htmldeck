@@ -59,8 +59,10 @@ reason each, `skills/htmldeck/references/build.md` plus `shell/` turn a reviewed
 deck, and `skills/htmldeck/references/critique.md` plus `tools/deck/critique.py` are the review.
 **`examples/sort-window/` is the first deck nobody authored by hand.** The humanizer rule landed
 2026-08-09 as `docs/PUBLISHING.md`, and **PH1 shipped the same day as `0.1.0`**: the repository is
-public at `github.com/uchimata2/htmldeck`, released and **now at `0.2.3`** after seven PH1 patches,
-with `master` as the published branch. **PH2 shipped 2026-08-11 as `0.2.0`** carrying
+public at `github.com/uchimata2/htmldeck`, released and **now at `0.2.4`** after seven PH1 patches,
+with `master` as the published branch. **`0.2.4` is the first release that changes nothing an adopter
+loads** — PH3 record work only, and the version moves because the published line takes the next patch
+number rather than because the plugin did. **PH2 shipped 2026-08-11 as `0.2.0`** carrying
 [T-086](tasks/T-086-check-that-every-ledger-row-appears-on-the-slides-its-used-on-names.md) and
 [T-087](tasks/T-087-sweep-the-reference-decks-figure-ledger-for-the-pattern-t-082-found.md), and
 **the phase stayed open behind it for two days**: T-080 and T-036 kept the `PH2` label by the

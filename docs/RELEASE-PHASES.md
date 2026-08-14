@@ -248,6 +248,14 @@ is two columns and GitHub-flavoured markdown drops the excess, which is how two 
 invisible paragraph each until T-139 folded them back in. Nothing checks this; the only instrument is
 counting cells against the header.
 
+**`0.2.4` shipped 2026-08-14 and is the first release here that changes nothing an adopter loads.**
+It carries T-150 alone — a `cancelled` task and its corrections to the record — and no file under
+`skills/`, `shell/` or `tools/` differs from `0.2.3` but the version string. **It is a version bump
+because the published line takes the next patch number**, which is [`../CLAUDE.md`](../CLAUDE.md)'s
+rule and says nothing about what changed; `PUBLISHING.md` §8.1 carries the row that says a deck
+passing `0.2.3` passes this unchanged. The eight steps ran in full, and step 8 was the one that bit:
+it named `BRIEF.md` as the home of the shipping version, which T-145 had emptied that morning.
+
 | | What it adds |
 | :--- | :--- |
 | [T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, a frame-rate figure with its machine, and DS-140's fifth motion. Split out of T-016, and `xl` because it is three deliverables wearing one title. |
@@ -292,7 +300,7 @@ counting cells against the header.
 | ~~[T-147](../tasks/T-147-one-workflow-file-per-lifecycle-phase.md) — one workflow file per lifecycle phase~~ **done 2026-08-14** | **The row's last sentence was answered the other way: the cheaper alternative is the task.** `TASK-WORKFLOW.md` went **23,210 → 11,407** by extracting §6 whole into [`../tasks/TOOLING.md`](../tasks/TOOLING.md), and the four-part shape `CE-09` proposed was refused — everything except §6 is **10,374 bytes together**, so four files cost a planner more openings than the whole document costs now. §6, §6.1 and §6.2 stay as pointer sections because **65 citations use them**; the record's own claim of *a dozen* was 104 in 42 files when counted. `L-89` rule 2 — move the part that grows — is what decided it, the two limbs having pointed opposite ways. *Why it was raised, unchanged from when it was open:* **T-130's `CE-09`, and it describes itself.** §6 *The tooling* is 53% of the file and grew again the day the finding was written; a session at `plan` needs §2, which is 1,291 bytes. `m`, and **section numbers must survive** — a dozen task records cite §2 to §6.2 and a split that renumbers falsifies all of them at once. The cheaper alternative, extracting §6 alone, is what `specify` has to rule out. |
 | [T-148](../tasks/T-148-give-a-measured-figure-a-durable-home.md) — give a measured figure a durable home | **T-130's `CE-08`, and its instance is `BP-2`**: five successive handoffs carried *"the release gate takes 7–11 minutes"* against a measured 154 seconds, and **no committed document was wrong because none stated it at all**. A figure outside the tree is outside every gate here. `xs`, the mechanism already ships as `figures.py`, and that pair is the argument that its specification may cost more than its implementation. |
 | [T-149](../tasks/T-149-prune-the-memory-index-of-spent-entries.md) — prune the memory index of spent entries | **T-130's `CE-10`, and the one row whose deliverable is not in this repository.** The memory index is 6,134 bytes over 39 lines, tier 1 by `../CLAUDE.md`'s own record, and several of its 35 entries mark themselves superseded in their own hook text — so it is paid every turn to tell the reader not to use them. `xs`, the owner's action on the owner's store, with the same shape as the closed T-135. What `specify` owes is a test for *spent* that gives the same answer twice. |
-| [T-150](../tasks/T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) — relocate the research prose in the two docstring outliers | **T-130's `CE-12`, and it is bounded by a rejection.** Docstrings at 30% of `tools/**/*.py` are this project's style and the general sweep is rejected in writing (`CONTEXT-AUDIT.md` §5.1); `build_probes.py` at 85% and `print_variants.py` at 58% are what survived it. `s`, gain `M` on a read path taken rarely, against the finding's own risk — these are the files whose behaviour is least obvious, which is plausibly why they explain themselves most. Deletion is not the change. |
+| ~~[T-150](../tasks/T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) — relocate the research prose in the two docstring outliers~~ **cancelled 2026-08-14** | **The premise was false, and the whole finding was one wrong unit.** `CE-12`'s three shares counted triple-quoted **string tokens** and called them docstrings. By AST role `build_probes.py` is **3.2%**, not 85% — the *lowest* of the 38 files in `tools/` — `print_variants.py` is 15.3% and `audit.py` 11.6%, against a corpus figure of **16.3%** and not 30%. The strings the row was counting are `PROBE_JS`, `PROBE_HTML`, `PROBE_3D_HTML`, `PRINT_PROBE_HTML`, `PAGINATED` and `REFLOW`: **the payloads the tools write out**, so the one relocation the numbers describe would have broken two tools. Four figures agreed with each other and all four were about something else. **The stated risk was never reached** — it presumes the explanation is there, and it is 1,949 bytes. `§5.1`'s rejection of the general sweep stands and is stronger, having lost its only exception and half its denominator; corrections are marked in place at `CONTEXT-AUDIT.md` §5, §5.1, §6, §6.1 and §8, in T-130 §3, and as a second F3 guard rail in `R8-context-economy-for-coding-agents.md` §4.1. **L-92.** *Rank 13 of 13 — the cheapest row on the board to have got wrong and the last anyone would re-measure, which is where an error of this kind survives.* *Why it was raised, unchanged from when it was open:* **T-130's `CE-12`, and it is bounded by a rejection.** Docstrings at 30% of `tools/**/*.py` are this project's style and the general sweep is rejected in writing (`CONTEXT-AUDIT.md` §5.1); `build_probes.py` at 85% and `print_variants.py` at 58% are what survived it. `s`, gain `M` on a read path taken rarely, against the finding's own risk — these are the files whose behaviour is least obvious, which is plausibly why they explain themselves most. Deletion is not the change. |
 | [T-151](../tasks/T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md) — generate the finding-to-task listing instead of keeping it by hand | **Not a finding — the first new capability the audit produced rather than ranked.** Answering *which finding is which task* once meant reading six sources and writing a fourteenth copy of facts that already existed, stale by the next closure. The same defect has a second instance in this document: the execution table numbers its rows, its own notes cite those numbers, and **every insertion is a hand renumbering pass across both** — three of them on 2026-08-13 and 2026-08-14 alone. `s` if the finding-to-task link fits in task front matter, larger if the schema resists. **The local half of a requirement written into T-137 the same day**, and it is here first because everything portable in this method was proven here first. |
 | [T-138](../tasks/T-138-make-the-portable-half-agent-agnostic.md) — make the portable half agent-agnostic, and classify the load path by who controls it | **Part 1 passes its extraction test and fails the spirit of it.** `CE-07` and `R8` §10 carry one harness's mechanism — an override key form, a connector switch, three null results against one product's settings files — which is noise to an agent that has no skills, plugins or connectors and wrong to one whose concepts differ. The audit is meant to be run by other agents on other machines. **The deeper gap is that the method never asked who *controls* each load-path item** — project, user, or harness — and that omission is what let `CE-07` be banded `L` on a cost no project could reach. A controller field turns *unreachable* into a reportable result rather than a low rank; today those two read identically in a ranking and are different facts. `s`, and it lands **before T-137**, because packaging a method that assumes one agent publishes that assumption. |
 | [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) — package the context-economy method as a skill | **T-130's condition is met**: it ruled *no skill here, shaped so one is cheap later, and a second task does it if and when the method survives being used once* — and it has now been used once, end to end, producing findings, a ranking, five child tasks and three corrections to itself. `m`, **blocked on T-136**, because packaging a method whose research half is known to be thin sets that defect in a form other projects copy. §1 records what the one run says about the method rather than only that it ran: steps 1–4 held, step 5 was thin, one band was wrong by four times, and the F3 line held under pressure. Its own load cost is an acceptance criterion — a skill that audits context economy and is expensive to install is the joke that writes itself. |
@@ -331,32 +339,35 @@ followed.
 | — | ~~T-145~~ **done 2026-08-14** | it opened the batch, settled the policy as `L-89`, and moved this document out of `BRIEF.md` — which took the brief from 134,596 bytes to 42,485 |
 | — | ~~T-146~~ **done 2026-08-14** | the by-unit limb of `L-89`, and it closed a gap nobody had raised: 983 lesson citations that no gate resolved |
 | — | ~~T-147~~ **done 2026-08-14** | the third `F1` split, and the third finding whose proposed shape the measurement refused |
-| **next** | T-150 | the last of the batch, **running the whole lifecycle** — the `specify → plan` limit was lifted by the owner on 2026-08-14 |
-| 1–2 | T-143, T-144 | the two cuts T-134 was raised to make decidable, both `s`, and the only rows that reduce what every row below them costs |
-| 3 | T-151 | it makes every later review of this backlog cheaper, and the renumbering pass this table owes is its second instance |
-| 4 | T-149 | `xs`, and tier 1 — the memory index is paid on every turn to say it is spent |
-| 5 | T-148 | `xs`, the instance already measured, the mechanism already shipping |
-| 6 | T-136 | it can invalidate rows below it: a technique the first pass missed may raise a finding that outranks them |
-| 7 | T-138 | the other repair to `R8`, and `s` — both fixes land before the method is packaged |
-| 8 | T-137 | after 6 and 7, which it is blocked on in substance — the one run's evidence is freshest now and decays |
-| 9 | T-128 | prepared, ruled and surveyed |
-| 10 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
-| 11 | T-114 | the ruler is the one thing still known to bite past 13 slides |
-| 12 | T-109 | the hub of the source cluster; 13–15 are rework if it lands after them |
-| 13–15 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
-| 16 | T-115 | needs 11 and 12 to have settled what the shell offers |
-| 17 | T-117 | independent |
-| 18 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
-| 19 | T-054 | after 10, which may change which clauses are worth recording |
-| 23 | T-113 | research, and it decides ground 24–27 build on |
-| 24–25 | T-112, T-111 | the motion cluster, in that order |
-| 26 | T-041 | named in *what PH1 shipped without* |
-| 27 | T-057 | `xl`, and the least certain to be worth it |
+| — | ~~T-150~~ **cancelled 2026-08-14** | the last of the batch, and the only one withdrawn: its finding had measured the wrong unit, so the record gained five corrections and `L-92` instead of an edit |
+| **next** | T-143, T-144 | the two cuts T-134 was raised to make decidable, both `s`, and the only rows that reduce what every row below them costs |
+| 1 | T-151 | it makes every later review of this backlog cheaper, and the renumbering pass this table owes is its second instance |
+| 2 | T-149 | `xs`, and tier 1 — the memory index is paid on every turn to say it is spent |
+| 3 | T-148 | `xs`, the instance already measured, the mechanism already shipping |
+| 4 | T-136 | it can invalidate rows below it: a technique the first pass missed may raise a finding that outranks them |
+| 5 | T-138 | the other repair to `R8`, and `s` — both fixes land before the method is packaged |
+| 6 | T-137 | after 4 and 5, which it is blocked on in substance — the one run's evidence is freshest now and decays |
+| 7 | T-128 | prepared, ruled and surveyed |
+| 8 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 9 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 10 | T-109 | the hub of the source cluster; 11–13 are rework if it lands after them |
+| 11–13 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 14 | T-115 | needs 9 and 10 to have settled what the shell offers |
+| 15 | T-117 | independent |
+| 16 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
+| 17 | T-054 | after 8, which may change which clauses are worth recording |
+| 18 | T-113 | research, and it decides ground 19–22 build on |
+| 19–20 | T-112, T-111 | the motion cluster, in that order |
+| 21 | T-041 | named in *what PH1 shipped without* |
+| 22 | T-057 | `xl`, and the least certain to be worth it |
 
 **T-143 and T-144 went in at 1–2 on 2026-08-14, by the argument that put T-130 and T-131 to T-134
 there**: a row whose subject is what every other row costs is paid for by every row it precedes.
 Both are `s`, both cut a file loaded on every turn, and T-134 — which exists to decide what they may
-remove — has landed. It delays T-136 by two small tasks, and that is the owner's to reverse.
+remove — has landed. It delays T-136 by two small tasks, and that is the owner's to reverse. *They
+took the `next` row on 2026-08-14 when T-150 closed, and the table below them was renumbered by hand
+for the third time in two days — with three of its notes citing the numbers that moved. That is
+**T-151**, sitting at 1 and describing the pass that seats it.*
 
 **The `next` row was a batch and a scope limit, not a position.** On 2026-08-14 the owner raised every
 remaining finding of T-130's thirteen, and scheduled the new ones to `specify → plan` **and no
@@ -373,6 +384,12 @@ the three that remain, and a task that specifies into *not worth it* takes that 
 being implemented because the lifecycle was authorised. **The policy question is answered**: `L-89`
 in [`LESSONS.md`](LESSONS.md), settled by T-145 as the batch's shape required, and T-146 and T-147
 now adopt it or argue against it rather than deciding it again.
+
+**The batch closed 2026-08-14, four for four, and the safeguard was used exactly once.** T-145, T-146
+and T-147 were implemented; **T-150 was `cancelled`**, and not on the *not worth it* the limit was
+written to catch — its finding had counted the wrong unit, so there was nothing to weigh. The limit
+was lifted for all four and cost nothing: the one that should not have been built was stopped by
+measuring it, which is what its lifecycle was for.
 
 **Two left the batch the same day, and the reason is a rule worth keeping.** T-148 and T-149 are `xs`
 with their instances already measured and their mechanisms already present, so a pass written only to

@@ -148,8 +148,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 1605 document pointer(s) checked, 0 broken
-     641 section reference(s) resolved, 0 dead; 1604 not bound to a document and skipped.
+OK - 2201 document pointer(s) checked, 0 broken
+     731 section reference(s) resolved, 0 dead; 2011 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -268,9 +268,12 @@ is split into three phases, and a phase is not a version. **PH1** is what a firs
 needs; it shipped as 0.1.0 and took five patches. **PH2** is the minor and moderate fixes already
 known. It shipped as 0.2.0 with two of its tasks open behind it. One of those has since closed. The
 other is a second printed contents sheet, which only bites on decks far longer than the target case.
-The current release is 0.2.3, which carries three fixes to the published plugin. Two of them came
+0.2.3 carried three fixes to the published plugin. Two of them came
 from looking at a rendered deck rather than from any command, and both turned out to be in this
-repository's own example deck as well as in the deck that reported them. **PH3** is the
+repository's own example deck as well as in the deck that reported them. The current release is
+0.2.4, and it changes nothing you install. It is the project's own record, including a finding this
+repository ranked, published and cited five times, then re-measured and withdrew.
+**PH3** is the
 larger work, including 3D visuals, the frame-rate figure and those seven conditions.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 

@@ -77,6 +77,7 @@ comes here.
 | [L-54](lessons/L-54.md) | A fixture only watches the direction it was asked about, and its model of the subject is part of it | Evidence and verification |
 | [L-55](lessons/L-55.md) | Seeding a defect proves the exit status; only the message proves the assertion | Evidence and verification |
 | [L-90](lessons/L-90.md) | A finding says where the weight is; it cannot say what removing it is worth | Evidence and verification |
+| [L-92](lessons/L-92.md) | A share-of-file figure is a claim about a unit, and the instrument has to count that unit | Evidence and verification |
 
 ### Tooling
 

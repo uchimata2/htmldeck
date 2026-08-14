@@ -78,12 +78,15 @@ produced rather than of who wrote these three.
 | **A byte-identity assertion passed while the references lied** | Both extractions shipped link labels and bare `§n` marks still pointing at the file they had left; both gates were silent and right to be (**L-91**) | The extraction step owes a **read** pass after the mechanical one, and its checklist is the checker's own list of what it declines to resolve |
 | **The verification hid the defect it was written to catch** | A shape report bucketed `../../../` under `startswith("../../")` and called a doubled rewrite clean | Already **L-62**; what is new is that it happened to the session that was citing L-62. The step needs to be in the procedure, not in the reader's memory |
 | **A gate went red because the tool was untracked** | The manifest names every tracked tool exactly once, so a new checker is `STALE` until it is staged | Worth shipping as a shape: the manifest partition turns *clone-and-run* from a principle into a failing test |
+| **The last finding on the board was measuring the wrong unit** | `CE-12` ranked 13 of 13 on three docstring shares that were counts of triple-quoted string tokens. Re-measured by AST role the "85%" file is **3.2%** and the lowest in the tree, and the relocation the row proposed would have deleted two tools' payloads. Withdrawn ([T-150](T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md), **L-92**) | **The step before *does this prose decide anything* is *are these bytes prose*.** The rubric gets a unit field, and the method owes a **known-answer check on the counter** before a share is written down. Note where it landed: **L-90 says a band cannot price a change; this says a band's own subject can be wrong**, and neither is visible from inside a number that is precise and reproducible. The cheap rows are where it survives, because nobody re-measures rank 13 |
 
 **Where the rest of it is.** [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6.2 is the
 operative version of the first four rows — what to check, what to report, where each thing goes —
 written for a session working a finding. **L-85**, **L-86** and **L-87** in
-[`../docs/LESSONS.md`](../docs/LESSONS.md) are the general halves, and **L-89**, **L-90** and
-**L-91** are the 2026-08-14 batch's. §7's preamble carries the
+[`../docs/LESSONS.md`](../docs/LESSONS.md) are the general halves, and **L-89**, **L-90**, **L-91**
+and **L-92** are the 2026-08-14 batch's. The portable half of the last row is already in
+[`../docs/research/R8-context-economy-for-coding-agents.md`](../docs/research/R8-context-economy-for-coding-agents.md)
+§4.1, as a second F3 guard rail ahead of the first. §7's preamble carries the
 *audit* / *implementation* vintage rule and why it exists.
 
 **Scope**

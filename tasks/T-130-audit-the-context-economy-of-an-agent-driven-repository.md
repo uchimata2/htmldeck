@@ -319,10 +319,13 @@ file that has already solved the hard part.
   in part 1 if `any`, in part 2 if `this project`, with part 2's ranked table listing every id
   wherever it is stated. An audit about redundancy that prints its findings twice has answered its
   own question. — 2026-08-13
-- **The general F3 sweep is recorded as rejected, not quietly dropped.** — Tool docstrings are 30% of
-  `tools/**/*.py` and every sample checked carried a reason a future reader needs, so the sweep fails
-  §1's own test. What survives is two outliers at 85% and 58%, and even there the change is
-  relocation. — 2026-08-13
+- **The general F3 sweep is recorded as rejected, not quietly dropped.** — Tool docstrings are ~~30%~~
+  **16.3%** of `tools/**/*.py` and every sample checked carried a reason a future reader needs, so the
+  sweep fails §1's own test. ~~What survives is two outliers at 85% and 58%, and even there the change
+  is relocation.~~ **Nothing survives it: the two outliers were the same measurement error as the 30%
+  — triple-quoted string tokens counted as docstrings — and were withdrawn on 2026-08-14 by
+  [T-150](T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) (**L-92**). The
+  rejection stands and the carve-out is gone.** — 2026-08-13, corrected 2026-08-14
 - **Nothing was proposed upstream before their backlogs were read, and one intended proposal died
   there.** — taskmd's own `T-028` had already established the tier model, the membership rule and
   the budget-as-a-relation, and had rejected both alternatives an outsider would arrive with. The

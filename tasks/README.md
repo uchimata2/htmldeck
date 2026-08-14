@@ -58,7 +58,6 @@ names cost.
 | [T-144](T-144-give-each-cumulative-rule-one-operative-home.md) | Give each cumulative rule one operative home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134, T-143 |
 | [T-148](T-148-give-a-measured-figure-a-durable-home.md) | Give a measured figure a durable home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130 |
 | [T-149](T-149-prune-the-memory-index-of-spent-entries.md) | Prune the memory index of spent entries | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134 |
-| [T-150](T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) | Relocate the research prose in the two docstring outliers | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130 |
 | [T-151](T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md) | Generate the finding-to-task listing instead of keeping it by hand | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-130, T-137 |
 
 ## Closed
@@ -191,5 +190,6 @@ names cost.
 | [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-098, T-130, T-141, T-146, T-147 |
 | [T-146](T-146-one-file-per-lesson-with-a-generated-index.md) | One file per lesson, with a generated index | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-145, T-147 |
 | [T-147](T-147-one-workflow-file-per-lifecycle-phase.md) | One workflow file per lifecycle phase | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-141, T-145, T-146 |
+| [T-150](T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) | Relocate the research prose in the two docstring outliers | `PH3` | `0.2.4` | `cancelled` | `review` | T-130 | - | - | - | T-130 |
 
 <!-- taskmd:end -->

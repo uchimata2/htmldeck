@@ -214,28 +214,37 @@ until that task lands.
 
 ## 5. The family walk
 
-**All five families were walked. Each yielded at least one finding, and each also produced a negative
-worth recording.**
+**All five families were walked. ~~Each yielded at least one finding~~ — four did — and each also
+produced a negative worth recording.** *`F3`'s single finding was withdrawn on 2026-08-14 when it was
+re-measured ([T-150](../tasks/T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md),
+**L-92**), so the family that is hardest to draw a line in produced a rejection and nothing else. That
+is a result about F3, not a gap in the walk.*
 
 | Family | Findings | The negative result |
 | :--- | :--- | :--- |
 | **F1** — what loads, and when | CE-01, CE-05, CE-06, CE-09, CE-11 | `skills/htmldeck/` needs nothing: it is already three-stage (§3) |
 | **F2** — redundancy and contradiction | CE-04, CE-08, CE-10 | **No contradicting pair was found.** The record's cross-references are unusually consistent, which three reference checkers plausibly explain |
-| **F3** — prose not doing work | CE-12 (two outliers only) | **The general sweep is rejected** — see §5.1 |
+| **F3** — prose not doing work | ~~CE-12 (two outliers only)~~ **none** | **The general sweep is rejected** (§5.1), and on 2026-08-14 the one finding that survived it was withdrawn: **its outliers were a measurement error**, not prose (§6.1). F3 yielded nothing here |
 | **F4** — model work that should be deterministic | CE-02, CE-13 | Tool schemas and the gate chain are already deterministic; `lint.py` already solves the locating problem CE-02 reuses |
 | **F5** — tool and workflow economics | CE-03, CE-07 | `check_all.py` already suppresses child output by default, and the per-task/per-release gate split is already correct |
 
 ### 5.1 The F3 rejection, recorded
 
-**Rejected: a sweep over the record's rationale prose — tool docstrings at 30% of `tools/**/*.py`, and
-task log rows.** It cannot name what the prose would stop deciding. Every sample checked carried a
-reason a future reader needs: why a rule exists, what it cost to learn, what was rejected and why,
-what would close an excusal. That is the test in `R8-context-economy-for-coding-agents.md` §4.1, and
-this sweep fails it.
+**Rejected: a sweep over the record's rationale prose — tool docstrings at ~~30%~~ **16.3%** of
+`tools/**/*.py`, and task log rows.** It cannot name what the prose would stop deciding. Every sample
+checked carried a reason a future reader needs: why a rule exists, what it cost to learn, what was
+rejected and why, what would close an excusal. That is the test in
+`R8-context-economy-for-coding-agents.md` §4.1, and this sweep fails it.
 
-**What survives is CE-12**, two files whose docstring share is so far outside the distribution that
+~~**What survives is CE-12**, two files whose docstring share is so far outside the distribution that
 the question is worth asking about them specifically — and even there the change is relocation, not
-deletion.
+deletion.~~
+
+**Nothing survives it. The carve-out was a measurement error and was withdrawn on 2026-08-14**
+([T-150](../tasks/T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md)). The corrected
+figure above is the same correction: **30% counted every triple-quoted string token**, and the two
+"outliers" hold their payloads that way. The rejection is unaffected and is stronger — the sweep it
+declined is half the size it was declined at, and it now has no exception. **L-92.**
 
 ---
 
@@ -262,7 +271,7 @@ the finding itself, and four closures showed that none of it is obvious from the
 | 10 | **CE-04** | A+B / F2 | One operative home per cumulative rule | `M` | `xs` each | stated | R8 §8 |
 | 11 | **CE-08** | A / F2 | A measured figure gets a durable home | `S` | `xs` | none | R8 §8 |
 | 12 | **CE-10** | A / F2 | Prune the memory index of spent entries | `S` | `xs` | stated | §6.1 |
-| 13 | **CE-12** | B / F3 | Two docstring outliers | `M` | `s` | stated | §6.1 |
+| ~~13~~ | **CE-12** | B / F3 | ~~Two docstring outliers~~ — **withdrawn 2026-08-14: there are no docstring outliers.** The figures counted triple-quoted string tokens, and in those files the strings are the tools' payloads | ~~`M`~~ **none** | `s` | ~~stated~~ — the stated risk was never reached | §6.1 |
 
 **CE-13's gain is bimodal, which is why it ranks above larger bands**: it saves nothing on most
 sessions and saves a whole session's runway on the one that would otherwise open a deck.
@@ -308,16 +317,36 @@ sessions and saves a whole session's runway on the one that would otherwise open
 | **Applies to** | `this project` |
 | **Source** | local precedent — `R8-context-economy-for-coding-agents.md` §2.1 |
 
-#### CE-12 — Two files where docstrings are most of the file
+#### CE-12 — ~~Two files where docstrings are most of the file~~ — **withdrawn, the measurement was of the wrong unit**
+
+**Withdrawn 2026-08-14 by
+[T-150](../tasks/T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md), which ran the
+full lifecycle and cancelled on the premise.** The row is kept whole below, struck where it is wrong,
+because a finding that reached five documents is worth being able to trace.
+
+**Every figure in it counts triple-quoted `STRING` tokens, not docstrings.** Measured by AST role
+over the same 38 files:
+
+| File | This row says | **Docstrings by AST role** | Rank of 38 |
+| :--- | ---: | ---: | :--- |
+| `tools/portability/build_probes.py` | 85%, 52,408 B | **3.2%, 1,949 B** | **38th — the lowest in the tree** |
+| `tools/deck/print_variants.py` | 58% | **15.3%, 2,780 B** | 26th |
+| `tools/deck/audit.py` | 36%, 52,230 B | **11.6%, 16,465 B** | 30th |
+| `tools/**/*.py` overall | 30% | **16.3%** | — |
+
+The named files hold their payloads as triple-quoted constants — `PROBE_JS`, `PROBE_HTML`,
+`PROBE_3D_HTML`, `PRINT_PROBE_HTML`, `PAGINATED`, `REFLOW`. **That text is what the tools write out,
+so the change this row proposes would break them.** One true claim survives and is worth nothing:
+`audit.py` does hold the largest single docstring block, at 11.6% of itself. **L-92** is the rule.
 
 | | |
 | :--- | :--- |
 | **Surface / Family** | B / F3 |
-| **Finding** | Docstrings are 30% of `tools/**/*.py`, which is this project's deliberate style and is **not** a finding (§5.1). Two files sit far outside that: `tools/portability/build_probes.py` is **85%** docstring (52,408 of 61,484 bytes) and `tools/deck/print_variants.py` is **58%**. `tools/deck/audit.py` is 36% but is the largest file in the tree at 141,896 bytes, so its 52,230 bytes of docstring is the biggest single block |
-| **Change** | For those files only, ask what the prose decides. Where it is a research record rather than a rule for the next editor, **relocate it to `docs/research/`** and leave a pointer. Deletion is not the change |
-| **Gain** | `M` on the read path when those files are edited, which is rare |
-| **Effort** | `s` |
-| **Risk** | These are the files whose behaviour is least obvious, which is plausibly *why* they carry the most explanation. A relocation that makes a probe's reasoning unfindable costs more than it saves |
+| **Finding** | ~~Docstrings are 30% of `tools/**/*.py`, which is this project's deliberate style and is **not** a finding (§5.1). Two files sit far outside that: `tools/portability/build_probes.py` is **85%** docstring (52,408 of 61,484 bytes) and `tools/deck/print_variants.py` is **58%**. `tools/deck/audit.py` is 36% but is the largest file in the tree at 141,896 bytes, so its 52,230 bytes of docstring is the biggest single block~~ — the clause about §5.1 is right, the figure in it is not, and the outliers are not outliers |
+| **Change** | ~~For those files only, ask what the prose decides. Where it is a research record rather than a rule for the next editor, **relocate it to `docs/research/`** and leave a pointer. Deletion is not the change~~ — there is no prose to relocate |
+| **Gain** | ~~`M` on the read path when those files are edited, which is rare~~ **none** |
+| **Effort** | ~~`s`~~ — nothing was built; the measurement that withdrew it was three throwaway scripts |
+| **Risk** | ~~These are the files whose behaviour is least obvious, which is plausibly *why* they carry the most explanation. A relocation that makes a probe's reasoning unfindable costs more than it saves~~ — **this risk was never reached.** It presumes the explanation is there, and it is 1,949 bytes |
 | **Applies to** | `this project` |
 | **Source** | this audit |
 
@@ -444,7 +473,7 @@ something else.
 | **BP-1** | [`tools/deck/check.py`](../tools/deck/check.py) | Given a directory instead of a deck file it raises an unhandled `PermissionError` traceback (14 lines) rather than printing usage. Reproduced with `python tools/deck/check.py examples/sort-window` |
 | **BP-2** | `.handoff/` (gitignored) | Five successive handoffs carried "the release gate takes 7–11 minutes"; measured 154 seconds. **Nothing tracked in the repository states a run time**, so no committed document is wrong — the figure had no durable home at all, which is CE-08 |
 | **BP-3** | [`docs/RELEASE-PHASES.md`](RELEASE-PHASES.md) | *Release phases* is 112 rows of which **68 are struck through**. Correct by the section's own convention; recorded because it is the weight behind CE-05. **134 rows and 76 struck when CE-05 was worked on 2026-08-14** — the count that grew is the finding, and it moved out of `BRIEF.md` into its own document that day |
-| **BP-4** | `tools/portability/build_probes.py` | 85% docstring — the highest ratio in the tree by a wide margin, and the file is 61,484 bytes. Feeds CE-12 |
+| **BP-4** | [`tools/portability/build_probes.py`](../tools/portability/build_probes.py) | ~~85% docstring — the highest ratio in the tree by a wide margin, and the file is 61,484 bytes. Feeds CE-12~~ **Wrong, and corrected 2026-08-14: 3.2% docstring, the *lowest* ratio in the tree.** 85% is its share of triple-quoted string tokens, which in this file are the four probe payloads. The file is 61,484 bytes and that part was right. **A byproduct that fed a finding, and carried the same error into it** — §6.1, **L-92** |
 | **BP-5** | The plugin cache | Seven copies of this plugin's skill description exist on this machine, one per cached version. A machine-level accumulation, not a repository fact, and `lint.py` already assumes it by globbing for the newest |
 
 ---
@@ -479,6 +508,13 @@ never candidates at all — this list stopped being the record of what is raised
 **The `specify → plan` limit was lifted by the owner on 2026-08-14**, before any of the six was
 worked: they run the full lifecycle. The reason the limit existed still stands and is recorded above
 — it is `cancelled` that the pass makes available, not a smaller amount of work.
+
+**Four of the six closed the same day, and `cancelled` was used once.** T-145, T-146 and T-147 were
+implemented; **T-150 was withdrawn** — and not for the *not worth it* the limit was written to catch.
+`CE-12`'s figures had counted the wrong unit, so there was nothing left to weigh (§6.1, **L-92**).
+**The safeguard was never the thing that saved it: the measurement was.** A pass that had stopped at
+`plan` would have reasoned about the finding's stated risk and, on the row as written, most likely
+approved a change that deletes two tools' payloads.
 
 **T-148 and T-149 left that batch within the hour**, on the argument that a decision pass is for work
 whose worth is in doubt: both are `xs`, both have their instance measured in this document, and both

@@ -149,7 +149,21 @@ future**.
   place; an account of how carefully the author worked.
 
 **An F3 finding that cannot name what the prose would stop deciding is not a finding, and is recorded
-as rejected.** F3 is the family that can damage a record, and this is the whole of its guard rail.
+as rejected.** F3 is the family that can damage a record, and this is the guard rail against
+declining to draw the line.
+
+**There is a second guard rail, and it comes first: prove the bytes you counted are prose.** The test
+above assumes that much, and a share-of-file figure does not establish it. Comment markers, quote
+styles and block delimiters are proxies for *kind*, and each one holds until a file uses that syntax
+for something else — a template, a fixture, an embedded payload. **Count by the structure that
+defines the unit** (a parser's own notion of a docstring or comment, not a regular expression over
+quotes), **name that unit in the sentence reporting the share**, and check the counter against a
+small case whose answer is known by construction before reading its output as a finding. *Written
+2026-08-14, after this method's own F3 finding survived ranking, publication and citation in five
+documents on a count of triple-quoted string tokens: the file it named as 85% prose is 3.2% prose and
+the lowest in its tree, and the relocation it proposed would have deleted a tool's payload. An F3
+finding is the one most likely to be acted on destructively, which is why its measurement gets the
+strictest reading rather than the loosest.*
 
 **Relocation beats deletion.** The strongest F3 result is usually an F1 move: rationale keeps its
 home, in a document the operative path does not load.
