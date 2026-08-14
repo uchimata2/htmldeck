@@ -23,8 +23,8 @@ deliverables: []
 **Outcome**
 The audit method in
 [`../docs/research/R8-context-economy-for-coding-agents.md`](../docs/research/R8-context-economy-for-coding-agents.md)
-becomes something another project invokes rather than reads: a skill that runs the eleven steps, walks
-the `F1`–`F5` checklist, and produces the two documents. **Packaging, not rewriting** — if it turns
+becomes something another project invokes rather than reads: a skill that runs the sixteen steps in
+two phases, walks the `F1`–`F5` checklist, and produces the two documents. **Packaging, not rewriting** — if it turns
 into a rewrite, the shaping rules failed and that is the finding.
 
 **Why now, and why not before**
@@ -108,8 +108,14 @@ and **L-92** are the 2026-08-14 batch's. The portable half of the last row is al
 *audit* / *implementation* vintage rule and why it exists.
 
 **Scope**
-- In: the skill package — the eleven steps, the checklist, the rubric, the ten-field record, the three
-  audiences, the byproduct register.
+- In: the skill package — the sixteen steps in two phases, the checklist, the rubric, the ten-field
+  record, the three audiences, the byproduct register.
+- In: **phase 2, `R8` §3.1 — establish standing operation**, added there 2026-08-14 at the owner's
+  direction and **not restated here**. It is the closing half the method lacked: an audit is a
+  measurement at one moment, and a cleaned repository resumes growing at the rate that produced the
+  findings. **It changes what this skill is** — from an instrument that reports, to one that leaves a
+  discipline behind — and its own step 16 is written mostly to stop the skill becoming a second policy
+  author for a project it is a guest in.
 - In: **progressive disclosure**, on the evidence of this repository's own plugin: a description that
   routes, a body that activates, and references loaded per phase. `skills/htmldeck/` is the shape that
   measured best in the very audit being packaged, and it is the local model to copy.
@@ -142,7 +148,21 @@ and **L-92** are the 2026-08-14 batch's. The portable half of the last row is al
   produced; **L-85**, **L-86** and **L-87** are the three that implementing it produced
 
 **Acceptance criteria**
-- [ ] The skill runs the eleven steps and produces both documents, on a repository that is not this one
+- [ ] The skill runs all sixteen steps and produces both documents, on a repository that is not this one
+- [ ] **Phase 2 runs after the raised work is implemented, and the skill says so** rather than
+      offering it at ranking, where there is nothing yet to measure against
+- [ ] Step 12 pairs every implemented finding's **band against its measured outcome**, keeps the
+      original, and treats a withdrawn finding as a result rather than a gap
+- [ ] Step 13's report states what the remedies **cost** as well as what they saved, including the case
+      where the repository ends larger
+- [ ] Step 14's output changes the **method**, and the skill keeps it separate from anything
+      project-specific — a repository's habit written into a portable skill is the failure this shaping
+      exists to prevent
+- [ ] Step 15 inherits step 5's search-record refusal and is **bounded to the delta** since the audit
+- [ ] Step 16 will not emit a policy without a named governing document, a load-path price, and an
+      **extends / narrows / replaces** verdict against the nearest existing rule
+- [ ] Step 16 reports a collision with a project's own policy rather than resolving it, and leaves at
+      least one check that re-measures on a trigger the project already has — or states why none can
 - [ ] It is three-stage: a routing description, a body on activation, references per phase — and the
       description alone is enough to decide whether to activate
 - [ ] Step 5's search record is a **required output**, and the skill refuses to present a catalogue
@@ -225,5 +245,6 @@ and **L-92** are the 2026-08-14 batch's. The portable half of the last row is al
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-14 | (no change) | **The owner added phase 2 to the method — `R8` §3.1, steps 12–16 — so this task's subject grew a closing half.** The method ended at *raise child work* and the gap was already visible from the other side: the third table's last-but-two row says implementing is a measurement pass and the loop back belongs in the method. Phase 2 is that loop plus four things it does not do — pair every band against what it bought, report what remedies cost, feed the method's own rubric, and write standing policy only into documents that already govern. **It changes what the skill is**, from an instrument that reports to one that leaves a discipline behind. Recorded in `R8` §3.1 as the one operative home and cited from the scope here, not restated. **The `m` band is left alone rather than guessed at**: this task is still `proposed`, its own `specify` pass sizes it, and a band moved without a measurement is what `L-90` is about. |
 | 2026-08-13 | (no change) | **The ship question is answered and it enlarges the task: published on GitHub as a token-saver audit skill, in its own right rather than inside the htmldeck plugin.** Three consequences are written into §1 rather than left to be met at review. The extraction test stops being a discipline and becomes the product test — a skill naming another repository's files is not installable. Its own load cost stops being self-discipline and becomes a promise every adopter pays on every session. And the publishing rules apply in full: no personal, client or machine data, the humanizer pass on what a stranger reads before installing, a licence, and out-of-the-box operation. A new question replaces the closed one: **it needs a repository, and that repository needs its own gate list** — `PUBLISHING.md` §8 is written for this one and does not travel. The effort stays `m` for the packaging; the repository is not sized here. |
 | 2026-08-13 | → proposed | Raised at the owner's request, ahead of a session they have already planned, so the one run's evidence is not lost with the session that produced it. [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md)'s condition — *if and when the method survives being used once* — **is met**: it ran end to end and produced findings, a ranking, five child tasks and three corrections to itself. §1 records what the run says about the method rather than only that it ran, because that is the input a packaging task actually needs: steps 1–4 held, step 5 was thin, one band was wrong by four times, and the F3 line held under pressure. **Blocked on [T-136](T-136-re-run-the-external-research-with-a-recorded-search-record.md)** — packaging a method whose research half is known to be thin would set that defect in a form other projects copy, and T-136 is the fix already scheduled. `m`, and its own load cost is an acceptance criterion. |

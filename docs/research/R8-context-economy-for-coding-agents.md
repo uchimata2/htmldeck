@@ -76,10 +76,15 @@ loads.
 
 ---
 
-## 3. The method — eleven steps
+## 3. The method — sixteen steps in two phases
 
-Numbered because another project follows them verbatim. Steps 1–4 are inventory and are **measured**;
-steps 7–9 are the gain and are **estimated**.
+Numbered because another project follows them verbatim. **Phase 1, steps 1–11, is the audit**: steps
+1–4 are inventory and are **measured**; steps 7–9 are the gain and are **estimated**. **Phase 2,
+steps 12–16, is what turns the audit into standing practice** and is described in §3.1.
+
+*Phase 2 was added 2026-08-14 at the owner's direction. The method stopped at step 11 until then,
+which the first run had already found insufficient from the other side: implementing the findings
+produced material the audit had not seen, and it took a separate task to collect it.*
 
 1. **Inventory the load path (A).** Everything that enters context unasked, with its size: the
    instruction files at every scope, the memory index, the handoff, the description block of every
@@ -121,6 +126,68 @@ measured without printing it. The script is throwaway and belongs outside the re
 **State the token conversion once and apply it uniformly.** Bytes divided by four is close enough for
 English prose and markdown, costs no dependency, and must be labelled as an estimate. Never use it to
 separate two findings that a byte count does not already separate.
+
+### 3.1 Phase 2 — establish standing operation
+
+**An audit is a measurement taken at one moment, and a repository that has been cleaned resumes
+growing at the rate that produced the findings.** Phase 1 ends with work raised and, later, done.
+Nothing in it makes the *next* year cheaper: the rules that would prevent regrowth are still in the
+auditor's head, the bands that turned out wrong still read as right, and the technique catalogue
+starts ageing the day it is written. Phase 2 is what converts one cleanup into an operating
+discipline, and it runs **after the raised work is implemented**, not at ranking.
+
+**Its standing risk, named first.** This is the phase where an audit becomes a **second policy author**
+for a project it is a guest in — one that writes rules beside the project's own, in its own vocabulary,
+with its own priorities. That is the `F2` family at the level of documents rather than sentences, and
+it is committed by a well-meaning closing pass more often than by anything in phase 1. Step 16 exists
+mostly to prevent it.
+
+12. **Close the loop on every finding: predicted against measured.** Not a re-read of the findings —
+    for each one implemented, the band it carried set against what it actually bought, with the
+    original kept and the correction marked. **This is the only evidence that improves the next
+    audit's rubric, and it is rarely a match.** From the first run: one finding understated itself
+    twenty-fold, one was 48% wrong as a forecast of bytes, one saved no bytes at all and bought a
+    gate instead, and one measured a unit that did not exist. **A withdrawn finding is a result and
+    is reported as one**, not as a gap in delivery.
+13. **Report what the remedies cost, not only what they saved.** Every remedy has a bill: a document
+    that did not exist, a gate to run, a rule somebody now reads. Splits move bytes off the load path
+    and usually **increase** the repository — a closing report that shows only savings teaches its
+    reader that the method is free, and the first person to check the total concludes it failed.
+    **Name any remedy that manufactured new work of another family**, such as a split that created
+    duplication by giving content a new home while leaving the old statement in place.
+14. **Reconcile the method's own practices against what this run did to them.** The run is a test of
+    the rubric, the checklist and the record format. For each: did it hold, did it stay silent where
+    it should have fired, did it fire where nothing was wrong. **The output is a change to the
+    method**, not to the project — and the two must not be confused, because a project-specific
+    finding written into the method is how a portable skill acquires one repository's habits.
+15. **Refresh the technique catalogue for what changed, with a search record.** Techniques in this
+    space move faster than any repository does, so the catalogue's date is part of it. **Step 5's
+    recorded-search rule applies here unchanged and is restated nowhere** — the queries run, the
+    sources read, and an explicit statement that named tools were looked for by name. **Bound it to
+    the delta**: this is *what is new since the audit's step 5*, not a second survey. A closing phase
+    that re-runs step 5 in full is another audit wearing a different number.
+16. **Write the standing policy into the documents that already govern, and nowhere else.** The
+    output of phase 2 is a small number of durable rules. Four constraints on writing them, each of
+    which this method has already paid for:
+    - **Decide which document governs each policy before writing it.** A rule with no governing home
+      is copied by whoever needs it next, and the copies are all written by people acting correctly.
+      Where no document governs the act, *that* is the finding, and creating the home is the work.
+    - **Price every policy against the load path the audit just cleaned.** A rule placed where it is
+      read on every turn is paid on every turn — and that surface is usually the one phase 1 emptied.
+      **An audit that closes by writing governance into the file it just cut has undone itself**, and
+      the report will still show a saving.
+    - **Check non-contradiction; do not intend it.** For each proposed policy, name the nearest
+      existing rule and state whether it **extends**, **narrows** or **replaces** it. A replacement
+      names its predecessor and edits it. An unmarked replacement leaves two live rules that disagree,
+      which is precisely the defect the audit was measuring.
+    - **The project's own policies win, and a collision is reported rather than resolved.** The method
+      is a guest. Where a proposed policy collides with a rule the project has already settled, the
+      project's rule stands and the collision goes in the report for its owner to rule on.
+
+    **Leave at least one thing that re-measures without being asked** — a check that runs on an
+    existing trigger the project already has, or an explicit statement that none is possible and why.
+    A standing operation that depends on somebody remembering to look is not standing, and *review
+    this annually* is that dependency with a date attached.
 
 ---
 

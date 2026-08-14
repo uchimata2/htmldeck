@@ -412,6 +412,13 @@ including the ones your own result rests on. There is no cost to a row nobody ac
 | What the *method* taught, for the skill that packages it | [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) §1 — it is the only place that survives the sessions |
 | A correction to a row already written | in the row, marked, with the old value kept. `CE-07`'s band and `O-T2`'s owner are both corrections and both still legible |
 
+**And there is a phase after the last closure.** `R8` §3.1 — the method's phase 2, steps 12–16, added
+2026-08-14 — runs **once, after the raised work is implemented**, and this section is the per-closure
+half of it rather than a substitute. It pairs every band against what it actually bought, prices what
+the remedies cost, feeds the method's own rubric, and writes standing policy into the documents that
+already govern. **It is not due here yet**: §9's listing still has open tasks, and phase 2 measured
+against a half-implemented ranking would report the wrong thing.
+
 **What a closure owes the record.** The task's §3 and §4, a
 [`RELEASE-PHASES.md`](RELEASE-PHASES.md) row folded to two cells (above the PH3 table), the
 execution-order table renumbered, `shipped_in` set, and
@@ -563,6 +570,12 @@ setting could reach them. The configuration schema says otherwise: the listing o
 already keeps out of git. The correction is recorded in
 [`research/R8-context-economy-for-coding-agents.md`](research/R8-context-economy-for-coding-agents.md)
 §8, under CE-07, because the lesson is portable and larger than the finding.
+
+**This repository owes itself a phase 2 when the listing empties.** The method gained one on
+2026-08-14 (`R8` §3.1) and it runs after the raised work is implemented, which here means the open
+tasks in the execution order. **Nothing schedules it**, which is the same shape as the remainder that
+became T-152 — recorded here so the debt is visible, and it becomes a task when the last of those
+closes rather than now, when it would sit blocked behind six.
 
 **CE-10 stands as not repository work** — pruning the memory index is the owner's memory, and is
 named here so it is not mistaken for a task.
