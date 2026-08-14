@@ -5,7 +5,7 @@ type: admin
 status: specified
 phase: specify
 parent: null
-blocked_by: [T-153]
+blocked_by: []
 related: [T-140, T-141, T-130, T-137]
 work_package: PH3
 owner: the project owner
@@ -110,5 +110,6 @@ they were homeless.**
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-14 | (unblocked) | **`T-153` closed and phase 2 added no upstream rows**, which is the condition the hold rested on rather than a lucky outcome — the argument was that a review of what the findings bought is the session most likely to add rows. `blocked_by` is empty and this task is runnable. What it sends is unchanged: the three documents under `../docs/upstream/` are as T-141 left them. |
 | 2026-08-14 | → specified | The one open question is settled by the owner: **send the two named, and record for `harness.md` that no route was identified.** The recording is that document's deliverable rather than a consolation — *no route found* and *withheld* are indistinguishable from outside, and only one of them is waiting for something. Struck rather than deleted, per §1. |
 | 2026-08-14 | → proposed | Raised at the owner's direction, settling the open point `CONTEXT-AUDIT.md` §7 recorded the same day. The 2026-08-13 hold had a condition and no moment; the owner supplied the moment — **after phase 2, before T-137** — and a scheduled act with no task file has nowhere to record what it produces. `blocked_by: T-153`, because phase 2 is the session most likely to add rows and sending before it would mean sending twice, which is the argument the hold rests on. `xs`, `PH3` because PH2 has shipped and this is not a defect in the published plugin. |

@@ -511,7 +511,12 @@ half of it rather than a substitute. It pairs every band against what it actuall
 the remedies cost, feeds the method's own rubric, and writes standing policy into the documents that
 already govern. **It is closer than this said.** *Until 2026-08-14 this read "not due here yet: §9's listing still has
 open tasks", and that sentence expired the same day —* **every finding in §6 now has a closed task**,
-which `python tools/docs/findings.py` reports in 1,317 bytes. What phase 2 still waits on is not the
+which `python tools/docs/findings.py` reports in 1,317 bytes. **Phase 2 has now run — 2026-08-14, by
+[T-153](../tasks/T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md), and §10 is
+its report.** It runs once, so this section is the per-closure half of a phase that is finished rather
+than a phase that is coming. *Everything from here to the end of this paragraph is the account of what
+it was waiting on, kept because it is the argument that set the moment:* what phase 2 still waited on
+was not the
 ranking but the two repairs to the method itself,
 [T-136](../tasks/T-136-re-run-the-external-research-with-a-recorded-search-record.md)
 and [T-138](../tasks/T-138-make-the-portable-half-agent-agnostic.md): the first re-runs the external
@@ -693,6 +698,11 @@ setting could reach them. The configuration schema says otherwise: the listing o
 already keeps out of git. The correction is recorded in
 [`research/R8-context-economy-for-coding-agents.md`](research/R8-context-economy-for-coding-agents.md)
 §8, under CE-07, because the lesson is portable and larger than the finding.
+
+**Phase 2 is done — 2026-08-14, and §10 is its report.** *The rest of this section is the record of
+how it came to be scheduled, kept because the reasoning outlived the wait.* It closed with seven
+acceptance criteria met and one `not met`, which is
+[T-158](../tasks/T-158-measure-the-tier-1-bound-instead-of-remembering-it.md).
 
 **This repository owes itself a phase 2, and the listing emptied on 2026-08-14.** The method gained
 one that day (`R8` §3.1) and it runs after the raised work is implemented. **All thirteen findings now
