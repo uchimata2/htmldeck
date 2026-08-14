@@ -4,8 +4,16 @@
 > **Route:** one issue on this project's own repository,
 > [`uchimata2/handoff-skill#75`](https://github.com/uchimata2/handoff-skill/issues/75). The body is
 > this document with its links made absolute; the rows are identical.
-> **Response:** *handed over — no answer is being waited on.* A reply belongs on that thread and is
-> the receiving project's call. This register does not stay open for one.
+> **Response: triaged and closed the same day, and every row landed.** Six of the seven produced a
+> change or confirmed one already made, and **none turned out to be wrong**. `O-H4` had already been
+> fixed before the report arrived; `O-H3` was recorded as a confirmation; `O-H1`+`O-H5`, `O-H2`, `O-H6`
+> and `O-H7` were raised and shipped. The outcome table and the reasoning are on the thread — this
+> register points at it and does not keep a second copy.
+>
+> **They returned two things this register owes.** A defect in what was delivered: the *O-H4 patch*
+> section's before-quote was overwritten in the issue body, so the quote shows this report's own
+> banner instead of the rule it was replacing. And a judgement worth carrying to any future register —
+> **the *audit* / *implementation* stamp changed their verdict on two rows**, so it earned its cost.
 >
 > Sent by [T-157](../../tasks/T-157-hand-the-upstream-registers-to-their-owners.md) after the hold in
 > [`../CONTEXT-AUDIT.md`](../CONTEXT-AUDIT.md) §7 came off: the closing review landed 2026-08-14 and

@@ -4,8 +4,18 @@
 > **Route:** one issue on this project's own repository,
 > [`uchimata2/taskmd#1`](https://github.com/uchimata2/taskmd/issues/1). The body is this document with
 > its links made absolute; the rows are identical.
-> **Response:** *handed over — no answer is being waited on.* A reply belongs on that thread and is the
-> receiving project's call. This register does not stay open for one.
+> **Response: triaged against a 143-file backlog, and five of the six were real there.** `O-T4` is the
+> row that repaid the report — the scan it prompted found **one row wider than its header in 2,797**,
+> in the very task that answered `O-T2`, and the excess cell had been rendering as nothing since
+> 2026-08-10; it is repaired. `O-T5`'s 2026-08-07 ruling was narrowed on the argument this register
+> supplied. `O-T1` and `O-T3` were agreed with nothing to add. Their tasks and reasoning are on the
+> thread; this register points at it rather than copying it.
+>
+> **Three corrections travel back the other way, and they are this register's to make** — one theirs,
+> two ours. `O-T6` cited the wrong id of theirs; `O-T2`'s text-sort defect is fixed here and was
+> reported as though live; and their advice to delete both wrappers assumes a caller that was served
+> the skill, which the gate is not. [T-160](../../tasks/T-160-correct-the-three-errors-the-recipients-found-in-the-delivered-registers.md)
+> owns them.
 >
 > Sent by [T-157](../../tasks/T-157-hand-the-upstream-registers-to-their-owners.md) after the hold in
 > [`../CONTEXT-AUDIT.md`](../CONTEXT-AUDIT.md) §7 came off: the closing review landed 2026-08-14 and
