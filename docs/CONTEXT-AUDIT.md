@@ -576,6 +576,13 @@ the work* for the first time. `CE-04`'s band held, and the row undercounted its 
 copies, which is the finding's mechanism rather than anyone's oversight. Both went to
 [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) §1 as a fourth table.
 
+**`CE-04` has a second task against it after closing, and that is the band working rather than a
+reopening.** Its band is `xs` **per rule** and T-144 took one rule, so the finding closes while the
+work does not: [T-152](../tasks/T-152-give-look-at-the-rendered-deck-one-operative-home.md) carries
+*look at the rendered deck*, raised 2026-08-14 rather than left as a remainder inside a closed task.
+**A per-item band is the one shape where a closed row is not a finished subject** — worth reading as
+a rule for the ranking, since nothing in the table says which bands are per-item.
+
 **What the pair changed about the enabler.** `CE-11`'s bound compares tier 1 against a set that was
 never written down, and the omission matters in one direction: a document split out of tier 1 is
 smaller than tier 1, so counting tier 3 would ratchet the bound down with every remedy it prompts and

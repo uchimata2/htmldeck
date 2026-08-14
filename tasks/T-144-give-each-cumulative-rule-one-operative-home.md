@@ -239,8 +239,10 @@ copies to delete* but *which document should have had it*. **L-93** is the gener
 place it is stated; it is cited here rather than repeated.
 
 **Child fix tasks raised**
-- none. *Look at the rendered deck* is a live second instance of `CE-04` and is recorded as the
-  stated remainder in §1a rather than raised, per the open question's answer.
+- [T-152](T-152-give-look-at-the-rendered-deck-one-operative-home.md) — *look at the rendered deck*,
+  the second instance §1a surveyed and this task did not take. **Raised at the owner's direction on
+  review**, against this task's own answer of *leave it as a stated remainder*: `CE-04` is closed, so
+  nothing schedules a remainder living inside a closed task. `xs`, and it may correctly take nothing.
 
 ## Log
 
