@@ -8,6 +8,7 @@ parent: T-130
 blocked_by: []
 related: [T-130, T-145, T-147]
 work_package: PH3
+finding: CE-06
 shipped_in: unreleased
 owner: the project owner
 business_value: medium

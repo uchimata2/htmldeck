@@ -143,13 +143,11 @@ enforce it at build time rather than hoping.
 ## Working method
 
 1. **No work without a task file** in `tasks/`, from `tasks/_task-template.md`. Tasks are tracked
-   with the **taskmd** plugin: `taskmd check` validates the record, `taskmd index` regenerates it,
-   and `python tools/docs/refcheck.py` validates every reference in every document.
-   `tasks/TASK-WORKFLOW.md` owns this project's own task conventions and how to invoke all three;
+   with the **taskmd** plugin, and `python tools/tasks/lint.py` is every check a task edit owes.
+   `tasks/TASK-WORKFLOW.md` owns this project's conventions and `tasks/TOOLING.md` the commands;
    `.taskmd/config.md` is the schema and outranks any prose about the fields.
 2. Lifecycle: `specify → plan → implement → review`.
-3. A task is `done` only when its deliverables exist, its log is current, and any deck it
-   produced has been **opened and looked at** — offline.
+3. What closes a task is `tasks/TASK-WORKFLOW.md` §7's checklist, which owns that bar.
 
 ## Publishing constraints
 

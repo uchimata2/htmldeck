@@ -42,6 +42,7 @@ Pure standard library (**L-07**), plus `git`, which decides what a clone receive
 import os
 import subprocess
 import sys
+import time
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -94,6 +95,13 @@ DECK_EXEMPT = {
 NOT_RUN = {
     "tools/docs/refcheck.py":
         "runs inside tools/tasks/lint.py, the first gate, which is where its exit code is read",
+    "tools/docs/findings.py":
+        "runs inside tools/tasks/lint.py, the first gate, as --check. The drift it catches - a "
+        "finding whose row and whose task disagree - is created at a task closure, and lint.py is "
+        "what a closure runs. Catching it here instead would report it at the next release, which "
+        "is days after the edit that caused it. Its listing mode is a question, not a check: it "
+        "answers which finding is which task in 1,317 bytes against the 325,695 the same answer "
+        "cost by hand (T-151)",
     "tools/tasks/query.py":
         "a question, not a check. It asks the tracker what to work on next and what one task "
         "points at, so a session pays 1,901 bytes instead of reading the 33,676-byte board "
@@ -413,6 +421,7 @@ def self_test():
 def main(argv):
     verbose = "--verbose" in argv
     listing = "--list" in argv
+    started = time.time()
     self_test()
 
     tools = tracked("tools/*.py") + tracked("tools/**/*.py")
@@ -473,7 +482,13 @@ def main(argv):
     failed, un, st = report(results, classified, unclassified, stale, tools, decks, NOT_A_DECK)
     failures(results)
 
-    print("\n%d failure(s), %d unclassified, %d stale" % (failed, un, st))
+    # **How long this took, printed rather than written down anywhere** (T-148, `CE-08`). Five
+    # successive handoffs carried a run time for this command that no committed document stated, so
+    # nothing could check it and it drifted freely - it was quoted as 7-11 minutes against a real
+    # 154 seconds (`BP-2`). A figure with no home cannot be stale and cannot be corrected either.
+    # The number belongs to the run, not to a document: **L-95**.
+    print("\n%d failure(s), %d unclassified, %d stale  -  %.0f s"
+          % (failed, un, st, time.time() - started))
     if failed or un or st:
         print("\nThis is step 1 of docs/PUBLISHING.md section 8, and it is red. Nothing after it "
               "runs until it is green.")

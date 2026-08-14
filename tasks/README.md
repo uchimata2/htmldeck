@@ -52,10 +52,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-136](T-136-re-run-the-external-research-with-a-recorded-search-record.md) | Re-run the external research with a recorded search record | `PH3` | - | `proposed` | `specify` | T-130 | - | - | T-137 | T-130, T-135, T-137, T-138 |
 | [T-137](T-137-package-the-context-economy-method-as-a-skill.md) | Package the context-economy method as a skill | `PH3` | - | `proposed` | `specify` | T-130 | - | T-136 | - | T-130, T-131, T-132, T-133, T-135, T-136, T-138, T-139, T-140, T-151 |
 | [T-138](T-138-make-the-portable-half-agent-agnostic.md) | Make the portable half agent-agnostic, and classify the load path by who controls it | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-135, T-136, T-137 |
-| [T-148](T-148-give-a-measured-figure-a-durable-home.md) | Give a measured figure a durable home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130 |
-| [T-149](T-149-prune-the-memory-index-of-spent-entries.md) | Prune the memory index of spent entries | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134 |
-| [T-151](T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md) | Generate the finding-to-task listing instead of keeping it by hand | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-130, T-137 |
-| [T-152](T-152-give-look-at-the-rendered-deck-one-operative-home.md) | Give "look at the rendered deck" one operative home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134, T-143, T-144 |
 
 ## Closed
 
@@ -189,6 +185,10 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-098, T-130, T-141, T-146, T-147 |
 | [T-146](T-146-one-file-per-lesson-with-a-generated-index.md) | One file per lesson, with a generated index | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-145, T-147 |
 | [T-147](T-147-one-workflow-file-per-lifecycle-phase.md) | One workflow file per lifecycle phase | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-141, T-145, T-146 |
+| [T-148](T-148-give-a-measured-figure-a-durable-home.md) | Give a measured figure a durable home | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130 |
+| [T-149](T-149-prune-the-memory-index-of-spent-entries.md) | Prune the memory index of spent entries | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134 |
 | [T-150](T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) | Relocate the research prose in the two docstring outliers | `PH3` | `0.2.4` | `cancelled` | `review` | T-130 | - | - | - | T-130 |
+| [T-151](T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md) | Generate the finding-to-task listing instead of keeping it by hand | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-130, T-137 |
+| [T-152](T-152-give-look-at-the-rendered-deck-one-operative-home.md) | Give "look at the rendered deck" one operative home | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134, T-143, T-144 |
 
 <!-- taskmd:end -->

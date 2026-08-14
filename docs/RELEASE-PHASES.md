@@ -344,25 +344,26 @@ followed.
 | — | ~~T-150~~ **cancelled 2026-08-14** | the last of the batch, and the only one withdrawn: its finding had measured the wrong unit, so the record gained five corrections and `L-92` instead of an edit |
 | — | ~~T-143~~ **done 2026-08-14** | the larger cut, and it priced the extraction: 3,619 bytes of the finding's 6,980 were narrative and the rest was fourteen rules that stayed |
 | — | ~~T-144~~ **done 2026-08-14** | the second cut, and the document that governs the rule was the one not stating it — the pair took `../CLAUDE.md` 19,035 → 14,821, −22.1%, and 57% of the debt |
-| **next** | T-151 | it makes every later review of this backlog cheaper, and the renumbering pass this table owes is its second instance |
-| 1 | T-149 | `xs`, and tier 1 — the memory index is paid on every turn to say it is spent |
-| 2 | T-148, T-152 | both `xs`, both instances already measured, and both tier 1 — **a shared cell rather than a renumbering**, which the `10–12` row below already precedents. Inserting a row costs a pass over this table and the notes that cite its numbers, done four times in two days, which is T-151 sitting one row above |
-| 3 | T-136 | it can invalidate rows below it: a technique the first pass missed may raise a finding that outranks them |
-| 4 | T-138 | the other repair to `R8`, and `s` — both fixes land before the method is packaged |
-| 5 | T-137 | after 3 and 4, which it is blocked on in substance — the one run's evidence is freshest now and decays |
-| 6 | T-128 | prepared, ruled and surveyed |
-| 7 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
-| 8 | T-114 | the ruler is the one thing still known to bite past 13 slides |
-| 9 | T-109 | the hub of the source cluster; 10–12 are rework if it lands after them |
-| 10–12 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
-| 13 | T-115 | needs 8 and 9 to have settled what the shell offers |
-| 14 | T-117 | independent |
-| 15 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
-| 16 | T-054 | after 7, which may change which clauses are worth recording |
-| 17 | T-113 | research, and it decides ground 18–21 build on |
-| 18–19 | T-112, T-111 | the motion cluster, in that order |
-| 20 | T-041 | named in *what PH1 shipped without* |
-| 21 | T-057 | `xl`, and the least certain to be worth it |
+| — | ~~T-151~~ **done 2026-08-14** | it removed the renumbering this table owed, and the pass below is the first one it made cheap: 247× on the listing, and the two tables and the tracker can no longer disagree silently |
+| — | ~~T-149~~ **done 2026-08-14** | the memory index is 13.2% lighter on every turn, and six of the seven entries removed were duplicating tier 1 |
+| — | ~~T-148~~ **done 2026-08-14** | the shape was refused: the figure now has no home in any document, because the decision it drove was coarser than the number (**L-95**) |
+| — | ~~T-152~~ **done 2026-08-14** | `CE-04`'s second instance, and the inherited survey was wrong in both directions — the third copy was inside the file being cut |
+| **next** | T-136 | it can invalidate rows below it: a technique the first pass missed may raise a finding that outranks them |
+| 1 | T-138 | the other repair to `R8`, and `s` — both fixes land before the method is packaged |
+| 2 | T-137 | after T-136 and T-138, which it is blocked on in substance — the one run's evidence is freshest now and decays |
+| 3 | T-128 | prepared, ruled and surveyed |
+| 4 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 5 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 6 | T-109 | the hub of the source cluster; T-110, T-118 and T-121 are rework if it lands after them |
+| 7–9 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 10 | T-115 | needs T-114 and T-109 to have settled what the shell offers |
+| 11 | T-117 | independent |
+| 12 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
+| 13 | T-054 | after T-119, which may change which clauses are worth recording |
+| 14 | T-113 | research, and it decides ground T-112, T-111, T-041 and T-057 build on |
+| 15–16 | T-112, T-111 | the motion cluster, in that order |
+| 17 | T-041 | named in *what PH1 shipped without* |
+| 18 | T-057 | `xl`, and the least certain to be worth it |
 
 **T-143 and T-144 went in at 1–2 on 2026-08-14, by the argument that put T-130 and T-131 to T-134
 there**: a row whose subject is what every other row costs is paid for by every row it precedes.
@@ -370,7 +371,14 @@ Both are `s`, both cut a file loaded on every turn, and T-134 — which exists t
 remove — has landed. It delays T-136 by two small tasks, and that is the owner's to reverse. *They
 took the `next` row on 2026-08-14 when T-150 closed, and the table below them was renumbered by hand
 for the third time in two days — with three of its notes citing the numbers that moved. That is
-**T-151**, sitting at 1 and describing the pass that seats it.*
+**T-151**, which took the `next` row after them and describes the pass that seats it.*
+
+**The notes stopped citing positions on 2026-08-14, and that is T-151's fix rather than a tidy-up.**
+Five of them named row numbers — *after 3 and 4*, *needs 8 and 9*, *10–12 are rework*, *after 7*,
+*ground 18–21* — so every insertion cascaded out of the table into the prose around it, which is what
+made a renumbering a *pass* rather than a column rewrite. They name task ids now, and
+`tools/docs/findings.py` asserts the numbering itself is a consecutive `1..n`. **The numbers are
+position and nothing else**; nothing outside this table's rank column depends on them.
 
 **The `next` row was a batch and a scope limit, not a position.** On 2026-08-14 the owner raised every
 remaining finding of T-130's thirteen, and scheduled the new ones to `specify → plan` **and no

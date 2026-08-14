@@ -21,5 +21,5 @@ had an owner.
 - `tracker_id_prefix`: T-
 - `tracker_template`: tasks/_task-template.md
 - `tracker_closed_dir`: (not set — done tasks stay in `tasks/` so links keep resolving)
-- `tracker_lint`: `python tools/tasks/lint.py` — the three checks a task edit owes, in order,
+- `tracker_lint`: `python tools/tasks/lint.py` — the four checks a task edit owes, in order,
   stopping at the first failure and exiting with its code. Runs from any working directory.

@@ -79,6 +79,7 @@ comes here.
 | [L-90](lessons/L-90.md) | A finding says where the weight is; it cannot say what removing it is worth | Evidence and verification |
 | [L-92](lessons/L-92.md) | A share-of-file figure is a claim about a unit, and the instrument has to count that unit | Evidence and verification |
 | [L-94](lessons/L-94.md) | A budget written as a relation must fix its comparison set | Evidence and verification |
+| [L-95](lessons/L-95.md) | Write the decision a figure drives, and let the command print the figure | Evidence and verification |
 
 ### Tooling
 

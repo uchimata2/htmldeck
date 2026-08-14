@@ -9,6 +9,7 @@ parent: T-130
 blocked_by: []
 related: [T-130, T-134, T-144]
 work_package: PH3
+finding: CE-01
 owner: the project owner
 business_value: high
 effort: s

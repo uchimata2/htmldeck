@@ -200,7 +200,7 @@ until the person doing it is not the person who did it last. *Step 5 was added o
 
 | # | Step | What proves it |
 | :-- | :--- | :--- |
-| 1 | **`python tools/check_all.py` green** — the whole set, not the routine one | Its own last line: `0 failure(s), 0 unclassified, 0 stale`. It replaced a list of sixteen commands on 2026-08-13 ([T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md)) |
+| 1 | **`python tools/check_all.py` green** — the whole set, not the routine one. **It takes minutes, so run it in the background**; it prints its own elapsed time | Its own last line: `0 failure(s), 0 unclassified, 0 stale` and the seconds beside them. It replaced a list of sixteen commands on 2026-08-13 ([T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md)) |
 | 2 | **Bump the version** in `.claude-plugin/plugin.json`, `CLAUDE.md` and `README.md` — to the next number on the **published** line, per the rule below the table | Three files carry it; a grep for the outgoing version returns nothing outside `docs/BRIEF.md`'s history |
 | 3 | **Humanize the human-facing set** (§2's test), then re-run `python tools/docs/figures.py` and re-paste the `volatile` block from `--values` | `0 stale figure(s)`. §6 is why: a rewrite that re-derives a number from memory is a defect, not a style improvement |
 | 4 | **Read the prose around the figures** | Nothing. **This is the step no gate covers** — `v0.1.4` found a spelled-out fixture count and a defect tally that had both gone false while every pasted figure was correct (**L-05**) |

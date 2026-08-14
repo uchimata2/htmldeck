@@ -275,8 +275,8 @@ the finding itself, and four closures showed that none of it is obvious from the
 | ~~8~~ | **CE-06** | B / F1 | One file per lesson, plus a generated index — **done, and the band was wrong: no bytes were saved.** What it bought was 983 citations a gate now resolves | ~~`XL`~~ **`S`, plus an unbanded gain the row never named** | `m`–`l` | stated | R8 §8 |
 | ~~9~~ | **CE-09** | B / F1 | One workflow file per lifecycle phase — **done, and the shape was refused**: §6 was extracted whole and the rest left alone, because everything but §6 is 10,374 bytes together | `L` | `m` | stated | §6.1 |
 | ~~10~~ | **CE-04** | A+B / F2 | One operative home per cumulative rule — **done, and the band held: 596 bytes off tier 1 for one rule.** The row undercounted its own homes by one, and the sixth was written the same morning by `CE-01`'s task. **The document that governs the behaviour was the only one not stating it** | `M` | `xs` each | stated | R8 §8 |
-| 11 | **CE-08** | A / F2 | A measured figure gets a durable home | `S` | `xs` | none | R8 §8 |
-| 12 | **CE-10** | A / F2 | Prune the memory index of spent entries | `S` | `xs` | stated | §6.1 |
+| ~~11~~ | **CE-08** | A / F2 | A measured figure gets a durable home — **done, and the shape was refused**: the figure now has no home at all. The decision it drove was coarser than the number, so `PUBLISHING.md` §8 states *minutes, background it* and `check_all.py` prints its own seconds (**L-95**) | `S` | `xs` | none | R8 §8 |
+| ~~12~~ | **CE-10** | A / F2 | Prune the memory index of spent entries — **done, and the band held: 6,706 → 5,818, −13.2% of a file loaded on every turn.** Six of the seven entries removed were duplicating `../CLAUDE.md`, so the fact was charged twice per turn | `S` | `xs` | stated | §6.1 |
 | ~~13~~ | **CE-12** | B / F3 | ~~Two docstring outliers~~ — **withdrawn 2026-08-14: there are no docstring outliers.** The figures counted triple-quoted string tokens, and in those files the strings are the tools' payloads | ~~`M`~~ **none** | `s` | ~~stated~~ — the stated risk was never reached | §6.1 |
 
 **CE-13's gain is bimodal, which is why it ranks above larger bands**: it saves nothing on most
@@ -416,12 +416,23 @@ including the ones your own result rests on. There is no cost to a row nobody ac
 2026-08-14 — runs **once, after the raised work is implemented**, and this section is the per-closure
 half of it rather than a substitute. It pairs every band against what it actually bought, prices what
 the remedies cost, feeds the method's own rubric, and writes standing policy into the documents that
-already govern. **It is not due here yet**: §9's listing still has open tasks, and phase 2 measured
-against a half-implemented ranking would report the wrong thing.
+already govern. **It is closer than this said.** *Until 2026-08-14 this read "not due here yet: §9's listing still has
+open tasks", and that sentence expired the same day —* **every finding in §6 now has a closed task**,
+which `python tools/docs/findings.py` reports in 1,317 bytes. What phase 2 still waits on is not the
+ranking but the two repairs to the method itself,
+[T-136](../tasks/T-136-re-run-the-external-research-with-a-recorded-search-record.md)
+and [T-138](../tasks/T-138-make-the-portable-half-agent-agnostic.md): the first re-runs the external
+research with a recorded search record and can still raise a finding, so phase 2 taken before it would
+price a ranking that is about to change. **The remaining execution order is ordinary backlog and does
+not gate it** — that was never the condition, and reading it as one
+would park phase 2 behind eighteen tasks it has nothing to do with.
 
 **What a closure owes the record.** The task's §3 and §4, a
 [`RELEASE-PHASES.md`](RELEASE-PHASES.md) row folded to two cells (above the PH3 table), the
-execution-order table renumbered, `shipped_in` set, and
+execution-order table renumbered, `shipped_in` set, **§6's rank cell struck through** — and
+`finding: CE-nn` in the task's front matter, which is what makes the rest of this sentence checkable
+rather than owed. `python tools/tasks/lint.py` fails the closure that skips either, in both
+directions. Also
 any figure this document states that your change moved — `CE-09`'s moved because `CE-02`'s fix added
 to the very section `CE-09` measures. *The row was written into `BRIEF.md` until 2026-08-14, when
 `CE-05` moved that section out; the obligation is unchanged and the file is not.*
@@ -484,7 +495,7 @@ something else.
 | | File | What was seen |
 | :--- | :--- | :--- |
 | **BP-1** | [`tools/deck/check.py`](../tools/deck/check.py) | Given a directory instead of a deck file it raises an unhandled `PermissionError` traceback (14 lines) rather than printing usage. Reproduced with `python tools/deck/check.py examples/sort-window` |
-| **BP-2** | `.handoff/` (gitignored) | Five successive handoffs carried "the release gate takes 7–11 minutes"; measured 154 seconds. **Nothing tracked in the repository states a run time**, so no committed document is wrong — the figure had no durable home at all, which is CE-08 |
+| **BP-2** | `.handoff/` (gitignored) | Five successive handoffs carried "the release gate takes 7–11 minutes"; measured 154 seconds. **Nothing tracked in the repository states a run time**, so no committed document is wrong — the figure had no durable home at all, which is CE-08. **Closed 2026-08-14 by [T-148](../tasks/T-148-give-a-measured-figure-a-durable-home.md), and it still states none**: the run measured 164 s that day, the command prints its own seconds now, and `PUBLISHING.md` §8 carries the decision instead of the number (**L-95**). The 6% between two real readings against the 300% the carried figure was wrong by is the whole argument |
 | **BP-3** | [`docs/RELEASE-PHASES.md`](RELEASE-PHASES.md) | *Release phases* is 112 rows of which **68 are struck through**. Correct by the section's own convention; recorded because it is the weight behind CE-05. **134 rows and 76 struck when CE-05 was worked on 2026-08-14** — the count that grew is the finding, and it moved out of `BRIEF.md` into its own document that day |
 | **BP-4** | [`tools/portability/build_probes.py`](../tools/portability/build_probes.py) | ~~85% docstring — the highest ratio in the tree by a wide margin, and the file is 61,484 bytes. Feeds CE-12~~ **Wrong, and corrected 2026-08-14: 3.2% docstring, the *lowest* ratio in the tree.** 85% is its share of triple-quoted string tokens, which in this file are the four probe payloads. The file is 61,484 bytes and that part was right. **A byproduct that fed a finding, and carried the same error into it** — §6.1, **L-92** |
 | **BP-5** | The plugin cache | Seven copies of this plugin's skill description exist on this machine, one per cached version. A machine-level accumulation, not a repository fact, and `lint.py` already assumes it by globbing for the newest |
@@ -571,11 +582,20 @@ already keeps out of git. The correction is recorded in
 [`research/R8-context-economy-for-coding-agents.md`](research/R8-context-economy-for-coding-agents.md)
 §8, under CE-07, because the lesson is portable and larger than the finding.
 
-**This repository owes itself a phase 2 when the listing empties.** The method gained one on
-2026-08-14 (`R8` §3.1) and it runs after the raised work is implemented, which here means the open
-tasks in the execution order. **Nothing schedules it**, which is the same shape as the remainder that
-became T-152 — recorded here so the debt is visible, and it becomes a task when the last of those
-closes rather than now, when it would sit blocked behind six.
+**This repository owes itself a phase 2, and the listing emptied on 2026-08-14.** The method gained
+one that day (`R8` §3.1) and it runs after the raised work is implemented. **All thirteen findings now
+have closed tasks** — T-148, T-149 and T-152 closed in the same session, and
+`python tools/docs/findings.py` is what says so rather than a count kept here.
+
+*This paragraph said phase 2 waited on "the open tasks in the execution order" and would "sit blocked
+behind six". Both figures are spent, and the first was too wide:* the execution order holds ordinary
+backlog that has nothing to do with the audit. **What phase 2 actually waits on is
+[T-136](../tasks/T-136-re-run-the-external-research-with-a-recorded-search-record.md)
+and [T-138](../tasks/T-138-make-the-portable-half-agent-agnostic.md)** — the two repairs to `R8`, one
+of which can still raise a finding. It is blocked behind **two**, both
+`next` or adjacent to it, and **nothing still schedules it.** Raising it is the owner's, on the same
+cut-off precedent this section records; the condition is now decidable, which it was not when this was
+written.
 
 **CE-10 stands as not repository work** — pruning the memory index is the owner's memory, and is
 named here so it is not mistaken for a task.
@@ -594,7 +614,10 @@ reopening.** Its band is `xs` **per rule** and T-144 took one rule, so the findi
 work does not: [T-152](../tasks/T-152-give-look-at-the-rendered-deck-one-operative-home.md) carries
 *look at the rendered deck*, raised 2026-08-14 rather than left as a remainder inside a closed task.
 **A per-item band is the one shape where a closed row is not a finished subject** — worth reading as
-a rule for the ranking, since nothing in the table says which bands are per-item.
+a rule for the ranking. *This said nothing in the table marked per-item bands, and that was wrong:
+`CE-04`'s Effort cell has read `xs` **each** since the row was written. The marker was there and
+nothing read it.* `tools/docs/findings.py` reads it now, and a closed row with open work is a failure
+for every finding whose band is not per item ([T-151](../tasks/T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md)).
 
 **What the pair changed about the enabler.** `CE-11`'s bound compares tier 1 against a set that was
 never written down, and the omission matters in one direction: a document split out of tier 1 is

@@ -58,9 +58,8 @@ Three rules that are not obvious from the template:
 - **`not met` is a legitimate way to close.** A criterion recorded as unmet, with a reason and a gap
   or child task raised against it, closes a task honestly. A criterion quietly reworded to match the
   output does not.
-- **Verify against the real case, and look at what was produced** (**L-01**, **L-02**). For anything
-  that renders, CLAUDE.md sets the bar: a task is `done` only when its deliverables exist, its log is
-  current, and any deck it produced has been opened and looked at, offline.
+- **Verify against the real case, and look at what was produced** (**L-01**, **L-02**). What *look*
+  means, and what it excludes, is `CLAUDE.md` rule 6; **when** it is owed is §7's closing checklist.
 
 ---
 
@@ -176,7 +175,7 @@ check enforces, the one advisory that is expected forever, and the two rules bel
 its two subsections keep their numbers because 65 citations use them.
 
 **What to run**, so this pointer is not a dead end for the commonest question: `python
-tools/tasks/lint.py` is the three checks a task edit owes. Everything else is one file away.
+tools/tasks/lint.py` is the four checks a task edit owes. Everything else is one file away.
 
 *It was 55% of this document and grew with every tooling change, while the workflow around it did
 not — finding `CE-09`, [T-147](T-147-one-workflow-file-per-lifecycle-phase.md).*
@@ -206,9 +205,14 @@ checked, when it resolves, and why quoting a dead reference must not create one.
 
 1. Every acceptance criterion has a verdict and a note in §4.
 2. Every deliverable exists at the path the front-matter declares; `taskmd check` confirms it.
-3. Anything the task produced that renders has been opened and looked at, offline.
+3. **Anything the task produced that renders has been opened and looked at, offline.** This is the
+   bar, stated here and nowhere else: a task does not reach `done` on a green gate, a screen render,
+   or a description of the output. `CLAUDE.md` rule 6 says what *looking* is and what it excludes;
+   this step is when it is owed and what it blocks.
 4. Findings worth keeping beyond this task are in [`../docs/LESSONS.md`](../docs/LESSONS.md), not only
    in the task file.
 5. `status: done`, `updated:` today, a final log row.
-6. `python tools/tasks/lint.py` — §6's three checks, chained with `&&` rather than `;` (**L-40**)
-   inside the one command, so a failure stops the chain instead of scrolling past.
+6. `python tools/tasks/lint.py` — §6's four checks, chained with `&&` rather than `;` (**L-40**)
+   inside the one command, so a failure stops the chain instead of scrolling past. **The fourth binds
+   an audit finding to the task serving it**, so a closure that leaves the two disagreeing stops here
+   rather than at the next release.

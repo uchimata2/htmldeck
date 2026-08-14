@@ -8,6 +8,7 @@ parent: T-130
 blocked_by: []
 related: [T-130]
 work_package: PH3
+finding: CE-12
 shipped_in: 0.2.4
 owner: the project owner
 business_value: low

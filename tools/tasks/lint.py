@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Run the three checks a task edit owes, in order, stopping at the first failure.
+"""Run the four checks a task edit owes, in order, stopping at the first failure.
 
 `tasks/TASK-WORKFLOW.md` §7 *Closing a task* requires `taskmd index`, then `taskmd check`, then
 `tools/docs/refcheck.py`, chained with `&&` rather than `;` so a failure stops the chain (**L-40**).
 This is that chain as one command.
+
+**`tools/docs/findings.py --check` was added as a fourth step on 2026-08-14 (T-151).** It binds each
+audit finding to the task serving it and fails when the two disagree - and the moment that disagreement
+is *created* is a task closure, which is here. The release gate would catch it days later, which is a
+report rather than a gate; `check_all.py` classifies it `NOT_RUN` for exactly that reason, as it
+already does for `refcheck.py`.
 
 **It exists because the chain could not be written as one.** The bare `taskmd` command does not
 resolve in an agent shell, so every written copy of the chain carried a `PYTHONPATH` incantation to
@@ -94,6 +100,8 @@ def steps():
         ("taskmd check", [sys.executable, "-m", "taskmd", "check"], with_taskmd),
         ("refcheck", [sys.executable, os.path.join("tools", "docs", "refcheck.py")],
          dict(os.environ)),
+        ("findings", [sys.executable, os.path.join("tools", "docs", "findings.py"), "--check"],
+         dict(os.environ)),
     ]
 
 
@@ -131,8 +139,8 @@ def main():
         print("\nFAILED at `%s` (exit %d). The chain stopped there; the steps after it did not "
               "run." % (label, code))
     else:
-        print("\nAll three passed: the task record, its references, and every pointer in every "
-              "document.\n"
+        print("\nAll four passed: the task record, its references, every pointer in every "
+              "document, and\nthe finding-to-task register.\n"
               "This validates structure and references. It cannot tell you a specification is "
               "wrong or a deliverable is bad.")
     return code

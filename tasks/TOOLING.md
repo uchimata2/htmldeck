@@ -24,6 +24,7 @@ taskmd index                     # regenerate the tables in tasks/README.md
 taskmd check                     # validate the task record
 
 python tools/docs/refcheck.py    # validate every reference in every document
+python tools/docs/findings.py    # which audit finding is which task, and what state is it in
 ```
 
 **The bare `taskmd` command does not resolve in an agent shell**, which is a property of how the
@@ -35,13 +36,16 @@ type at a terminal, and not what an agent can run. Two commands here run them, a
 cover all four:
 
 ```
-python tools/tasks/lint.py                  # index, then check, then refcheck.py
+python tools/tasks/lint.py                  # index, check, refcheck.py, then findings.py --check
 python tools/tasks/query.py list --open     # what to work on next
 python tools/tasks/query.py context T-NNN   # everything needed to start one task
 ```
 
-`lint.py` is the three checks a task edit owes: it stops at the first failure and exits with that
+`lint.py` is the four checks a task edit owes: it stops at the first failure and exits with that
 failure's code, and it is `tracker_lint` in [`../.handoff/config.md`](../.handoff/config.md).
+**It is also the only name tier 1 gives**: [`../CLAUDE.md`](../CLAUDE.md) enumerated the checkers
+until 2026-08-14 and the list went stale both times the set changed, so it points here and this
+section carries the count.
 `query.py` is the two questions: everything after the command name goes to taskmd untouched, and it
 refuses `index` and `check` by name because `lint.py` owns those. Both find the installed skill
 through one locator, in `lint.py`, so the incantation has one home rather than one per document
@@ -57,6 +61,18 @@ Reading it whole to find the next task is the finding `CE-02` names and
 markdown-link syntax only: a path written as prose, a path printed by a tool into a fenced block, and
 every `§n` reference are all invisible to it. Measured against seeded defects, not assumed — the
 comparison is in [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) §1.
+
+`findings.py` owns the **join** between the two — which audit finding is which task. The link is a
+`finding: CE-nn` field in task front matter, carried by the schema and never interpreted by it, so
+the finding rows in [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §6 stay where their
+argument is and nothing is copied anywhere. Run bare it prints the listing; `--check` is the gate,
+and it fails in both directions (**L-74**) — a row reading closed while open work names it, a row
+reading open when every task on it is finished, and a task naming a finding that does not exist. It
+also asserts [`../docs/RELEASE-PHASES.md`](../docs/RELEASE-PHASES.md)'s execution order is numbered
+`1..n` with no gap. **Two markers in the documents drive it**: a struck-through rank cell means
+closed, and an Effort cell ending in `each` means the band is per item, so a closed row is not a
+finished subject — `CE-04` is the instance and it kept a task open after its row closed.
+[T-151](T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md).
 
 **`index` rewrites only the block between its generated markers**; hand-written sections of
 `README.md` survive it. `check` reports a stale index and does not fix it, so run `index` after any
