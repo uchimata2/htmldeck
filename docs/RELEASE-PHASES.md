@@ -348,24 +348,24 @@ followed.
 | — | ~~T-149~~ **done 2026-08-14** | the memory index is 13.2% lighter on every turn, and six of the seven entries removed were duplicating tier 1 |
 | — | ~~T-148~~ **done 2026-08-14** | the shape was refused: the figure now has no home in any document, because the decision it drove was coarser than the number (**L-95**) |
 | — | ~~T-152~~ **done 2026-08-14** | `CE-04`'s second instance, and the inherited survey was wrong in both directions — the third copy was inside the file being cut |
-| **next** | T-136 | it can invalidate rows below it: a technique the first pass missed may raise a finding that outranks them |
-| 1 | T-138 | the other repair to `R8`, and `s` — both fixes land before the method is packaged |
-| 2 | T-137 | after T-136 and T-138, which it is blocked on in substance — the one run's evidence is freshest now and decays |
-| 3 | T-128 | prepared, ruled and surveyed |
-| 4 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
-| 5 | T-114 | the ruler is the one thing still known to bite past 13 slides |
-| 6 | T-109 | the hub of the source cluster; T-110, T-118 and T-121 are rework if it lands after them |
-| 7–9 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
-| 10 | T-115 | needs T-114 and T-109 to have settled what the shell offers |
-| 11 | T-117 | independent |
-| 12 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
-| 13 | T-054 | after T-119, which may change which clauses are worth recording |
-| 14 | T-113 | research, and it decides ground T-112, T-111, T-041 and T-057 build on |
-| 15–16 | T-112, T-111 | the motion cluster, in that order |
-| 17 | T-041 | named in *what PH1 shipped without* |
-| 18 | T-057 | `xl`, and the least certain to be worth it |
+| **next** | T-154 | the only open task holding a **confirmed live defect in a published document** — `examples/README.md` disagrees with the gate and passes — and the fix window is before somebody reads it. Placed here by the owner 2026-08-14, ahead of the audit's own repairs |
+| 1 | T-136 | it can invalidate rows below it: a technique the first pass missed may raise a finding that outranks them |
+| 2 | T-138 | the other repair to `R8`, and `s` — both fixes land before the method is packaged |
+| 3 | T-137 | after T-136 and T-138, which it is blocked on in substance — the one run's evidence is freshest now and decays |
+| 4 | T-128 | prepared, ruled and surveyed |
+| 5 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 6 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 7 | T-109 | the hub of the source cluster; T-110, T-118 and T-121 are rework if it lands after them |
+| 8–10 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 11 | T-115 | needs T-114 and T-109 to have settled what the shell offers |
+| 12 | T-117 | independent |
+| 13 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
+| 14 | T-054 | after T-119, which may change which clauses are worth recording |
+| 15 | T-113 | research, and it decides ground T-112, T-111, T-041 and T-057 build on |
+| 16–17 | T-112, T-111 | the motion cluster, in that order |
+| 18 | T-041 | named in *what PH1 shipped without* |
+| 19 | T-057 | `xl`, and the least certain to be worth it |
 | — | T-153 | **blocked on T-136 and T-138**, the only two rows it depends on, so it takes no position here. The audit grades itself once and the ranking has to have stopped moving first |
-| — | T-154 | **unplaced pending its `specify` pass**, which decides whether it is `m` or larger. It is the only open task holding a *confirmed live defect in a published document* — `examples/README.md` disagrees with the gate and passes — so it outranks most of the numbered rows on arrival, and the owner places it |
 
 **T-143 and T-144 went in at 1–2 on 2026-08-14, by the argument that put T-130 and T-131 to T-134
 there**: a row whose subject is what every other row costs is paid for by every row it precedes.
@@ -374,6 +374,11 @@ remove — has landed. It delays T-136 by two small tasks, and that is the owner
 took the `next` row on 2026-08-14 when T-150 closed, and the table below them was renumbered by hand
 for the third time in two days — with three of its notes citing the numbers that moved. That is
 **T-151**, which took the `next` row after them and describes the pass that seats it.*
+
+**The first insertion after that fix cost one column.** T-154 took the `next` row on 2026-08-14 and
+eighteen rows moved by one. **No note changed**, because none cites a number any more, and
+`findings.py` re-checked the numbering rather than a reader doing it. The four passes in two days
+that raised T-151 each spent a re-read of this table and the prose around it.
 
 **The notes stopped citing positions on 2026-08-14, and that is T-151's fix rather than a tidy-up.**
 Five of them named row numbers — *after 3 and 4*, *needs 8 and 9*, *10–12 are rework*, *after 7*,
