@@ -2,8 +2,8 @@
 id: T-153
 title: Run the audit method's phase 2 over this repository's own audit
 type: audit
-status: planned
-phase: implement
+status: done
+phase: review
 parent: T-130
 blocked_by: []
 related: [T-130, T-137, T-157]
@@ -212,6 +212,17 @@ is [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §10.1 and is not repe
   2026-08-14. *Review this annually* is the failure step 16 names; a policy blocked on one decision is
   not an improvement on it. Recorded in `CONTEXT-AUDIT.md` §10.4 rather than softened.
 
+**The closing pass wrote a duplicate lesson, and caught it by checking rather than by remembering.**
+The ranking result was drafted as a new `L-100` — *a ranking is right about where the cost is and
+wrong about what removing it is worth* — which is **`L-90`'s title almost word for word**. `L-90` was
+written by the three tasks whose shapes were refused and already carries *treat the proposed change as
+a hypothesis and the finding as an observation*. **What phase 2 adds is the population, not the
+rule**: 2 of 13 rather than 3 of 3. Deleted, and `L-90` gained the measurement instead. *This is
+`CE-04`'s mechanism — a rule with no declared home is copied by whoever needs it next — operating on
+the audit's own closing pass, which is the second time in this audit a duplicate was created inside a
+pass raised to remove them.* The category set is three and the draft invented a fourth; `lessons.py`
+refused both problems in one run.
+
 **Two observations, neither a finding.** `figures.py` reports the tier-1 figures as **unanchored**,
 among 413 — the number governing what every session pays is checked by nobody. And it reports a live
 drift in `README.md`'s pasted `refcheck` output (2,485 → 2,562 pointers) at **exit 0**, which reads as
@@ -235,15 +246,39 @@ deliberate: those counts move on every commit and failing on them would block ev
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Written at `specify`, from `R8` §3.1 rather than from this section | met | §1's *Settled at `specify`* is built from the five steps and their four homes, and it changed the band |
+| Every finding's band is paired against what it bought, **with the original band kept legible** | met | [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §10.1, thirteen rows. `CE-07` shows ~~L~~ → S, `CE-04` shows `xs` **each** |
+| The remedies' cost is stated, including where the repository grew | met | §10.3 — the tier-1 arc net **−422 bytes after a peak 21.8% above the start**, five remedies that grew the repository with their byte counts, four standing gates, and the price of the one withdrawal |
+| The catalogue refresh is **bounded to the delta** and carries a search record | met | `R8` §7.1. **The window is zero days** — step 5 was re-run to saturation the same day — so the record is a null with its reason and the condition that makes it real next time |
+| Any standing policy names its governing document and carries an extends/narrows/replaces verdict | met | One policy, one governing document (`CLAUDE.md`, *What loads every turn*), verdict **extends**. §10.4 |
+| No standing policy lands on surface A | met | None landed anywhere. The one that would have is the collision, and refusing to write it is the criterion doing its job rather than an omission |
+| **Something re-measures without being asked**, or an explicit statement that none is possible and why | **not met** | The statement that can honestly be written is *blocked on one owner decision*, which is **not** *none is possible*. Recorded unsoftened in §10.4 and raised as [T-158](T-158-measure-the-tier-1-bound-instead-of-remembering-it.md) |
+| What the method learned is in T-137 §1, not only here | met | A sixth row set, six rows — the only one written with every outcome known |
+
+**Seven of eight met, and the eighth is the interesting one.** Phase 2 was supposed to end by leaving
+a check that runs by itself. It could not, and the reason is worth more than the check: **every route
+is cheap and each is forbidden by a different rule this project has already settled** (**L-100**). The
+subject is the one number governing what every session pays, it drifted 174 bytes since the previous
+task closed, and nothing noticed — so the gap is real and the fix is one decision wide.
+
+**What this task did not do, deliberately.** It raised no `CE-nn` — §1's Out scope, and `CE-nn` closed
+at thirteen. It sent nothing upstream, which is
+[T-157](T-157-hand-the-upstream-registers-to-their-owners.md), now unblocked. It did not re-run step 5.
+
+**Rule 6 and the close gate.** Nothing this task produced renders — the outputs are five documents and
+a task record — so [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §7 step 3 has no subject here. Said
+explicitly rather than left unmentioned, because a closure that is silent about it looks like one that
+skipped it.
 
 **Child fix tasks raised**
-- none
+- [T-158](T-158-measure-the-tier-1-bound-instead-of-remembering-it.md) — the standing re-measure this
+  task owed and could not deliver. `s`, and its open question is the collision, which is the owner's.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-14 | → done | **Phase 2 ran once and the audit is closed.** Seven acceptance criteria met, one **not met** and raised as [T-158](T-158-measure-the-tier-1-bound-instead-of-remembering-it.md). The headline is §10.1: **two of thirteen bands held as written**, and every error was in the `Change` cell rather than the `Finding` cell — the inventory was right thirteen times out of thirteen. Four rows were refused by a measurement taken while implementing them, so **the rank was useful and obeying it would have done damage**, which is **L-90**, now carrying the measurement over all thirteen. Step 13 is stated net rather than gross: tier 1 ended **−422 bytes, −2.7%** against a peak **21.8% above** where the audit found it, and `CE-11` and `CE-13` — the audit's own remedies — are 3,012 of the 3,405 bytes it then had to cut. Step 15 found an empty window and recorded it as a result. Step 16 produced one local policy and reported its collision unresolved, which is **L-100**. `T-157` is unblocked and takes `next`. |
 | 2026-08-14 | → planned | **Eight steps, and the ordering constraint is that step 1 feeds two later steps rather than one.** The per-finding table built for the pairing is also the rubric's input, so reading the records twice is the thing the plan is shaped to avoid. Steps 5 and 6–7 are separable from 1–4 and from each other, which matters because this is an `l` and the phase does not have to land in one session. **One consequence of the band move worth recording:** the generated board sorts by value against effort, so `l` puts T-153 below tasks the execution order places behind it. The board is not the execution order — [`../docs/RELEASE-PHASES.md`](../docs/RELEASE-PHASES.md) is — and this is the second time that gap has had to be said out loud. |
 | 2026-08-14 | → specified | **Both questions §1 posed are answered, and one of them changed the band.** The pairing goes in `CONTEXT-AUDIT.md` rather than a new document — it is tier 3, loaded by nothing, so the growth is surface B and paid by whoever opens it; a separate file would be reachable only through a pointer that has to be kept true. **`m` → `l`, on a measurement**: step 12's input is §3 and §4 of the fourteen finding records, **80,721 bytes** against 210,783 for the whole records, and on top of it a live search with a record, three governing documents, and a check that has to re-measure by itself. The deciding comparison is T-154 — an `m` that moved five documents and one tool with no search pass and no new gate. **What `specify` added beyond the band** is that the five steps have four homes and not one: steps 14 and 15 grade the *method*, and writing them into this repository's audit is the exact defect step 14 is about. Three acceptance criteria added — the search record, the *no policy on surface A* constraint, and the standing re-measure — because §1 as raised covered steps 12, 13 and half of 16. One open question left, and it is the implementer's at `plan`: whether step 16 earns a gate or a written reason there can be none. |
 | 2026-08-14 | (unblocked) | **`T-138` closed. `blocked_by` is empty and this task is now runnable** — both repairs to the method have landed. What phase 2 will grade has changed shape since the condition was written: the catalogue it prices is 35 rather than 21, and the finding record it feeds gained an eleventh field, `Controller`, which is the rubric's first way of saying *nobody here can reach this cost*. `CE-07` is the row to check that against, since it is the reason the field exists. |
