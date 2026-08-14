@@ -2,15 +2,15 @@
 id: T-153
 title: Run the audit method's phase 2 over this repository's own audit
 type: audit
-status: proposed
-phase: specify
+status: planned
+phase: implement
 parent: T-130
 blocked_by: []
-related: [T-130, T-137]
+related: [T-130, T-137, T-157]
 work_package: PH3
 owner: the project owner
 business_value: medium
-effort: m
+effort: l
 created: 2026-08-14
 updated: 2026-08-14
 deliverables: []
@@ -69,31 +69,86 @@ relation to. *§9 said "blocked behind six" against the old, wider reading; corr
 - `python tools/docs/findings.py` — the ranking and its outcomes, derived; do not re-assemble it
 - The fourteen closed task records' §3 and §4 — where each band met its measurement
 
-**What specifying must settle**
-- Whether the band-versus-outcome pairing is a table in `CONTEXT-AUDIT.md` or a new document. It is
-  the audit grading itself, so the audit's own document is the obvious home and the obvious way to
-  make that document grow past what anyone reads.
-- Whether the `m` band survives its own `specify` pass. It is a first estimate over sixteen closed
-  records and **a band moved without a measurement is L-90**.
+**Settled at `specify`, 2026-08-14**
+
+**Five outputs, four homes, and step 14 is the reason they are not one home.** The temptation is to
+write the whole phase into `CONTEXT-AUDIT.md` because that is where the audit lives. Steps 14 and 15
+grade the **method**, not this repository, and a method finding written into this repository's audit
+is how a portable method acquires one repository's habits — which is the defect step 14 names in its
+own text.
+
+| Step | Output | Home |
+| :-- | :--- | :--- |
+| 12 | every finding's band against what it bought | `CONTEXT-AUDIT.md` — a new section |
+| 13 | what the remedies cost, including where the repository grew | same section |
+| 14 | what the run taught the rubric, the checklist and the record format | `R8` §3.1/§5/§6, and [T-137](T-137-package-the-context-economy-method-as-a-skill.md) §1 |
+| 15 | the catalogue delta since step 5, with a search record | `R8` §7 and §7.1 |
+| 16 | standing policy | the documents that already govern, and nowhere else |
+
+**Steps 12 and 13 go in `CONTEXT-AUDIT.md`, not in a new document.** A separate file would be reachable
+only through a pointer from §6, which is one more statement to keep true, and the grade belongs beside
+the ranking it grades. The growth objection stands but names the wrong surface: `CONTEXT-AUDIT.md` is
+**tier 3, loaded by nothing** ([`../CLAUDE.md`](../CLAUDE.md), *What loads every turn*), and tier 3
+carries no budget by that document's explicit ruling. The cost is paid by whoever opens it — surface B
+in `R8` §2, not surface A — and that is the trade being made rather than one being overlooked.
+
+**The band is `l`, and it moved on a measurement rather than on a re-reading** (**L-90**).
+
+- Step 12's input is §3 and §4 of the fourteen finding records: **80,721 bytes**, measured 2026-08-14.
+  Reading those records whole would be 210,783 — **the sections are 38% of them, and the whole record
+  is not the unit.**
+- `R8` and `CONTEXT-AUDIT.md` are **64,242** and **64,638** bytes and both are read in part. Step 14
+  adds `T-136` and `T-138`, which are not finding records and are not in the 80,721.
+- Step 15 is a **live search with a recorded search record**, bounded to the delta. Step 16 writes into
+  at least three governing documents and owes **a check that re-measures without being asked**.
+- The comparison that decides it: [T-154](T-154-bind-the-measurements-that-five-live-documents-state-in-prose.md)
+  was `m` and moved five documents and one tool, with no search pass and no new gate. This is that plus
+  a search pass, plus a new gate, plus 80 KB of reading before the first edit.
+
+*`m` was a first estimate from the step count, made when the task was raised. It is kept legible here
+because §6.2's correction rule applies to a band this task carries as much as to one it grades.*
 
 **Acceptance criteria**
 - [ ] Written at `specify`, from `R8` §3.1 rather than from this section
 - [ ] Every finding's band is paired against what it bought, **with the original band kept legible**
       (§6.2's correction rule)
 - [ ] The remedies' cost is stated, including where the repository grew
+- [ ] The catalogue refresh is **bounded to the delta** since step 5 and carries a search record — the
+      queries run, the sources read, and the statement that named tools were looked for by name
 - [ ] Any standing policy names its governing document and carries an extends/narrows/replaces verdict
+- [ ] No standing policy lands on surface A. A rule written into the file phase 1 cut is the audit
+      undoing itself, and the report would still show a saving
+- [ ] **Something re-measures without being asked**, on a trigger the project already has — or an
+      explicit statement that none is possible, and why. *Review this annually* is not one
 - [ ] What the method learned is in T-137 §1, not only here
 
 **Open questions**
-- **Is `m` right?** — the implementer, at `specify`, after reading `R8` §3.1 against the sixteen closed
-  records rather than estimating from the step count.
+- **Does step 16 earn a new gate, or a statement that none is possible?** — the implementer, at
+  `plan`. A gate is a standing cost on every release and this project holds that a check forbidding a
+  design choice is a defect in the check; `R8` §3.1 allows either answer and requires the reason
+  either way.
+- *Answered at `specify`:* the `m` band did not survive — see **Settled at `specify`** above.
 
 ## 2. Plan
 
+**Steps 1–3 are step 12–13, 4 is step 14, 5 is step 15, 6–7 are step 16.** The numbering is this
+task's; `R8` §3.1 keeps its own and is the specification.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Read **§3 and §4 only** of the fourteen finding records — 80,721 bytes, not the 210,783 the whole records are — and record per finding: the band it carried, what it measurably bought, and the correction where they differ. `python tools/docs/findings.py` supplies the band and the outcome; the *bought* column is the part no tool has | a working table, input to steps 2 and 4 |
+| 2 | Write the pairing into `CONTEXT-AUDIT.md` as a new section, **original bands kept legible** and each correction marked. A withdrawn finding is a result, not a gap — `CE-12`/`T-150` is the one | `R8` step 12 |
+| 3 | Price the remedies in the same section: bytes off the load path against bytes added to the repository, plus every gate, document and rule the run created. **Name any remedy that manufactured work of another family** | `R8` step 13 |
+| 4 | Reconcile the method against this run — the rubric, the checklist, the record format — one verdict each: held, stayed silent where it should have fired, or fired where nothing was wrong. Four bands were refused by measurement (`CE-07`, `CE-02`, `CE-06`, `CE-12`) and that is rubric input, not four notes | edits to `R8` §3/§5/§6, and T-137 §1 |
+| 5 | Refresh the catalogue **for the delta since step 5 only**, with the search record step 5's rule requires — queries run, sources read, named tools looked for by name, and the rounds that returned nothing. T-136 set the form on 2026-08-14 and it is the baseline, not a thing to redo | `R8` §7 and §7.1 |
+| 6 | Draft each standing policy with three things attached: the document that governs it, its price on the load path, and an **extends / narrows / replaces** verdict against the nearest existing rule. Collisions go to the owner unresolved | `R8` step 16 |
+| 7 | Answer §1's open question — a check on a trigger the project already has, or the written reason none is possible | a tool, or a recorded refusal |
+| 8 | Close per [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §7: §4 verdicts, the `RELEASE-PHASES.md` row folded to two cells, the execution order renumbered so T-157 takes `next`, lessons as `L-nn`, `lint.py` | closure |
+
+**What is deliberately not a step.** Re-reading `CONTEXT-AUDIT.md` §6 for findings — the ranking is
+closed and step 12 grades it rather than revisiting it. Raising a fourteenth `CE-nn` — §1's Out scope.
+Sending anything upstream — that is [T-157](T-157-hand-the-upstream-registers-to-their-owners.md),
+which this task unblocks.
 
 ## 3. Implement
 
@@ -116,6 +171,8 @@ relation to. *§9 said "blocked behind six" against the old, wider reading; corr
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-14 | → planned | **Eight steps, and the ordering constraint is that step 1 feeds two later steps rather than one.** The per-finding table built for the pairing is also the rubric's input, so reading the records twice is the thing the plan is shaped to avoid. Steps 5 and 6–7 are separable from 1–4 and from each other, which matters because this is an `l` and the phase does not have to land in one session. **One consequence of the band move worth recording:** the generated board sorts by value against effort, so `l` puts T-153 below tasks the execution order places behind it. The board is not the execution order — [`../docs/RELEASE-PHASES.md`](../docs/RELEASE-PHASES.md) is — and this is the second time that gap has had to be said out loud. |
+| 2026-08-14 | → specified | **Both questions §1 posed are answered, and one of them changed the band.** The pairing goes in `CONTEXT-AUDIT.md` rather than a new document — it is tier 3, loaded by nothing, so the growth is surface B and paid by whoever opens it; a separate file would be reachable only through a pointer that has to be kept true. **`m` → `l`, on a measurement**: step 12's input is §3 and §4 of the fourteen finding records, **80,721 bytes** against 210,783 for the whole records, and on top of it a live search with a record, three governing documents, and a check that has to re-measure by itself. The deciding comparison is T-154 — an `m` that moved five documents and one tool with no search pass and no new gate. **What `specify` added beyond the band** is that the five steps have four homes and not one: steps 14 and 15 grade the *method*, and writing them into this repository's audit is the exact defect step 14 is about. Three acceptance criteria added — the search record, the *no policy on surface A* constraint, and the standing re-measure — because §1 as raised covered steps 12, 13 and half of 16. One open question left, and it is the implementer's at `plan`: whether step 16 earns a gate or a written reason there can be none. |
 | 2026-08-14 | (unblocked) | **`T-138` closed. `blocked_by` is empty and this task is now runnable** — both repairs to the method have landed. What phase 2 will grade has changed shape since the condition was written: the catalogue it prices is 35 rather than 21, and the finding record it feeds gained an eleventh field, `Controller`, which is the rubric's first way of saying *nobody here can reach this cost*. `CE-07` is the row to check that against, since it is the reason the field exists. |
 | 2026-08-14 | (blocker cleared) | **`T-136` closed and raised no finding**, so the ranking this task grades has stopped moving — the exact condition §1 named. `blocked_by` is `T-138` alone now. The catalogue it will price is larger than the one that was ranked: 21 → 35, with fourteen techniques screened for the first time, so phase 2 grades a screening whose denominator moved even though no band did. `CONTEXT-AUDIT.md` §4.1 is the argument for the null result. |
 | 2026-08-14 | → proposed | Raised at the owner's direction once the trigger fired: the last three findings closed in one session, so every row in `CONTEXT-AUDIT.md` §6 has a closed task. **Not a finding** — `CE-nn` closed at thirteen and this is the method's own phase, so it takes an ordinary task id. Blocked on `T-136` and `T-138` alone; the wider reading in §9, *blocked behind six*, counted ordinary backlog as the condition and was corrected the same day. It sorts last while blocked, so raising it changes nothing about what to work on next — it stops the obligation depending on a paragraph being re-read. |

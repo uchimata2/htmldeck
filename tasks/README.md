@@ -50,10 +50,10 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-070, T-107, T-110 |
 | [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-085, T-123, T-124, T-125, T-129, T-130 |
 | [T-137](T-137-package-the-context-economy-method-as-a-skill.md) | Package the context-economy method as a skill | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-131, T-132, T-133, T-135, T-136, T-138, T-139, T-140, T-151, T-153, T-157 |
-| [T-153](T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md) | Run the audit method's phase 2 over this repository's own audit | `PH3` | - | `proposed` | `specify` | T-130 | - | - | T-157 | T-130, T-137 |
+| [T-153](T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md) | Run the audit method's phase 2 over this repository's own audit | `PH3` | - | `planned` | `implement` | T-130 | - | - | T-157 | T-130, T-137, T-157 |
 | [T-155](T-155-date-a-record-by-its-own-row-not-by-the-table-it-sits-in.md) | Date a record by its own row, not by the table it sits in | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-088, T-129, T-154 |
 | [T-156](T-156-make-the-screening-partition-a-figure-a-checker-can-count.md) | Make the screening partition a figure a checker can count | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-130, T-136, T-154 |
-| [T-157](T-157-hand-the-upstream-registers-to-their-owners.md) | Hand the upstream registers to their owners | `PH3` | - | `proposed` | `specify` | - | - | T-153 | - | T-130, T-137, T-140, T-141 |
+| [T-157](T-157-hand-the-upstream-registers-to-their-owners.md) | Hand the upstream registers to their owners | `PH3` | - | `specified` | `specify` | - | - | T-153 | - | T-130, T-137, T-140, T-141, T-153 |
 
 ## Closed
 
