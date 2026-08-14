@@ -76,6 +76,7 @@ comes here.
 | [L-53](lessons/L-53.md) | Optional is not untyped, and a presence test reads like a validator | Evidence and verification |
 | [L-54](lessons/L-54.md) | A fixture only watches the direction it was asked about, and its model of the subject is part of it | Evidence and verification |
 | [L-55](lessons/L-55.md) | Seeding a defect proves the exit status; only the message proves the assertion | Evidence and verification |
+| [L-90](lessons/L-90.md) | A finding says where the weight is; it cannot say what removing it is worth | Evidence and verification |
 
 ### Tooling
 
@@ -121,6 +122,7 @@ comes here.
 | [L-85](lessons/L-85.md) | A version directory picked by text sort quietly selects the older install | Tooling |
 | [L-86](lessons/L-86.md) | A throwaway scan is an instrument, and its first output is a claim about its own tuning | Tooling |
 | [L-87](lessons/L-87.md) | Before reporting a tool's defect, prove the tool is the one that failed | Tooling |
+| [L-91](lessons/L-91.md) | After moving text, the defects that survive are the ones no checker binds | Tooling |
 
 ### Writing
 

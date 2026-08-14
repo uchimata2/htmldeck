@@ -12,7 +12,7 @@ had an owner.
 - `handoff_file`: .handoff/HANDOFF.md
 - `tracker`: local-markdown-dir
 - `project_docs`: CLAUDE.md, docs/ (start with `docs/BRIEF.md` — it is the specification)
-- `reconcile_targets`: tasks/, docs/BRIEF.md
+- `reconcile_targets`: tasks/, docs/RELEASE-PHASES.md, docs/CONTEXT-AUDIT.md
 - `language`: (omitted — match the source; this project is English)
 
 ## Tracker keys — `local-markdown-dir`

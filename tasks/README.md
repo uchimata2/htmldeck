@@ -56,7 +56,6 @@ names cost.
 | [T-138](T-138-make-the-portable-half-agent-agnostic.md) | Make the portable half agent-agnostic, and classify the load path by who controls it | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-135, T-136, T-137 |
 | [T-143](T-143-split-the-release-chronology-out-of-claude-md.md) | Split the release chronology out of CLAUDE.md | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134, T-144 |
 | [T-144](T-144-give-each-cumulative-rule-one-operative-home.md) | Give each cumulative rule one operative home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134, T-143 |
-| [T-147](T-147-one-workflow-file-per-lifecycle-phase.md) | One workflow file per lifecycle phase | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-145, T-146 |
 | [T-148](T-148-give-a-measured-figure-a-durable-home.md) | Give a measured figure a durable home | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130 |
 | [T-149](T-149-prune-the-memory-index-of-spent-entries.md) | Prune the memory index of spent entries | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-134 |
 | [T-150](T-150-relocate-the-research-prose-in-the-two-docstring-outliers.md) | Relocate the research prose in the two docstring outliers | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130 |
@@ -187,9 +186,10 @@ names cost.
 | [T-135](T-135-cut-the-load-path-this-project-cannot-use.md) | Cut the load path this project cannot use | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-134, T-136, T-137, T-138 |
 | [T-139](T-139-two-rows-in-brief-md-carry-a-cell-the-table-cannot-render.md) | Two rows in BRIEF.md carry a cell the table cannot render | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-131, T-137, T-140 |
 | [T-140](T-140-correct-and-extend-the-upstream-register-from-what-implementing-the-audit-found.md) | Correct and extend the upstream register from what implementing the audit found | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-130, T-131, T-137, T-139, T-141, T-142 |
-| [T-141](T-141-extract-the-upstream-register-into-one-document-per-owner.md) | Extract the upstream register into one document per owner | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-130, T-140, T-142, T-145 |
+| [T-141](T-141-extract-the-upstream-register-into-one-document-per-owner.md) | Extract the upstream register into one document per owner | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-130, T-140, T-142, T-145, T-147 |
 | [T-142](T-142-fix-o-h4-the-handoff-spine-routes-a-mode-word-with-a-qualifier-to-the-opposite-mode.md) | Fix O-H4 — the handoff spine routes a mode word with a qualifier to the opposite mode | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-140, T-141 |
 | [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-098, T-130, T-141, T-146, T-147 |
 | [T-146](T-146-one-file-per-lesson-with-a-generated-index.md) | One file per lesson, with a generated index | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-145, T-147 |
+| [T-147](T-147-one-workflow-file-per-lifecycle-phase.md) | One workflow file per lifecycle phase | `PH3` | `unreleased` | `done` | `review` | T-130 | - | - | - | T-130, T-141, T-145, T-146 |
 
 <!-- taskmd:end -->
