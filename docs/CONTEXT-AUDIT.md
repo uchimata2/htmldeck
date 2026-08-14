@@ -558,12 +558,22 @@ observed*, never *this is not already known*.
 repository uses, which quietly assumed every outside defect belongs to one of them; `O-C1` belongs to
 neither, and the missing home is why it was first filed against the wrong project (**L-87**).
 
-**Nothing has been sent, and nothing is sent until the audit's findings are worked and their fixes
-land.** Ruled by the owner 2026-08-13. The documents are **a register that is still filling**, not a
-report waiting on a courier: every finding still to be implemented is a session that may add rows,
-and four out of four implementations so far have. Sending early would mean sending three times.
-**So a session that finds something adds it to the owner's document and stops there** — the handover
-is one deliberate act, later, and not a step in anyone's task.
+**Nothing has been sent — and the condition that held it is now met.** *The hold, ruled by the owner
+2026-08-13:* nothing goes until the audit's findings are worked and their fixes land, because the
+documents were **a register still filling** rather than a report waiting on a courier — every finding
+still to be implemented was a session that might add rows, and four out of four implementations did.
+Sending early would have meant sending three times.
+
+**The registers stopped filling on 2026-08-14.** Phase 2 closed and **added no rows to any of the
+three**, which is the hold's own argument coming good rather than a lucky outcome: it held that a
+review of what the findings actually bought is the session most likely to add rows. The three
+documents' banners say *ready to send*, and
+[T-157](../tasks/T-157-hand-the-upstream-registers-to-their-owners.md) is the sending act — **it owns
+this paragraph's first clause**, and replaces it with what was actually sent, by what route, and what
+came back.
+
+**A session that finds something still adds it to the owner's document and stops there.** That rule
+does not end when T-157 closes; what ends is the wait.
 
 **The moment is now set. Ruled by the owner 2026-08-14: the handover happens after phase 2 and before
 [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md).** The 2026-08-13 condition —

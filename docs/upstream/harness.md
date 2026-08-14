@@ -1,10 +1,11 @@
 # Observations for the agent harness
 
-> **Status: not yet sent, and still filling.** The reporting project is part-way through acting on
-> its own audit, and every finding it implements has so far produced something the finding did not
-> predict. This document is handed over once that work is done, so what you eventually receive is
-> one document rather than three revisions of it. If you are reading it before then, it is a draft
-> in the open.
+> **Status: ready, and no route has been identified.** The reporting project has finished acting on its
+> own audit — the closing review landed 2026-08-14 and **added no rows here**. The other two registers
+> go to owners with issue trackers; this one's owner is a vendor, and **no route has been found for
+> sending it.** That is written down rather than left implicit, because *no route found* and *withheld*
+> look identical from outside and only one of them is waiting for something. What would change it: a
+> vendor channel, an issue tracker, or a support path that accepts an observation carrying no priority.
 
 **From the htmldeck project, one machine, two shells.** Two observations, neither ranked and neither
 a request. This document exists because the first of them was originally filed against the wrong
