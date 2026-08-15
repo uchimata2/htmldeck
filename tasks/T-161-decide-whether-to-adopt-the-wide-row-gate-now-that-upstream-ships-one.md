@@ -6,7 +6,7 @@ status: done
 phase: review
 parent: null
 blocked_by: []
-related: [T-139, T-160, T-157]
+related: [T-139, T-160, T-157, T-163]
 work_package: PH3
 owner: the project owner
 business_value: medium
@@ -104,6 +104,11 @@ close.
   resolves, not `skills/` or `examples/`. **Recommend: no own checker, and record the coverage gap as
   the thing that would change it** — if a wide row ever appears in `skills/`, the answer flips. *The
   owner decides; this is the whole decision.*
+  > **Corrected 2026-08-15 by [T-163](T-163-correct-the-coverage-claim-that-carried-the-wide-row-refusal.md).**
+  > There is no coverage gap. `check` reads every Markdown document a clone would receive, both trees
+  > included — taskmd's correction on the thread, reproduced here with a seeded probe in each. **The
+  > answer this question produced is unchanged; the reason offered for it was false.** Left standing
+  > rather than rewritten, because what a closed record said is part of what it decided.
 
 ## 2. Plan
 
@@ -134,6 +139,11 @@ recorded only in the task that took it gets re-asked, and this one has now been 
   2026-08-15. `check` reads tasks and the documents it resolves, not `skills/` or `examples/`. **The
   first wide row that appears there is the reason to build it**, and the docstring says so, so the
   third asking of this question starts from an answer.
+  > **Wrong, and replaced 2026-08-15 by [T-163](T-163-correct-the-coverage-claim-that-carried-the-wide-row-refusal.md).**
+  > The gap does not exist, so the trigger could never fire — which is the failure this decision was
+  > written to prevent, one level up: a trigger nobody can trip reads as a permanent answer. The
+  > docstring now names `python tools/tasks/lint.py` ceasing to run `taskmd check` instead, that being
+  > the whole of this repository's cover for the class.
 - **No register row was added for the scanner's false positives** — 2026-08-15. They are facts about
   a throwaway instrument written here, not observations about taskmd's tool, and the register is for
   the latter. They went in the thread, where they are useful, and in **L-103**, where they are ours.
@@ -148,7 +158,7 @@ recorded only in the task that took it gets re-asked, and this one has now been 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
 | The decision is written where a later session finds it without reading this task | met | `refcheck.py`'s module docstring — the file that already owns the boundary between upstream's `check` and this repository's own, and the file anyone touching the checkers opens first. |
-| If **no**, the refusal names what would change it | met | The `skills/` and `examples/` coverage gap, written as a trigger: *the first wide row that appears there is the reason to build the narrow thing*. The question has been asked twice; the third asking starts from an answer rather than from the argument. |
+| If **no**, the refusal names what would change it | met, then void | The `skills/` and `examples/` coverage gap, written as a trigger: *the first wide row that appears there is the reason to build the narrow thing*. The question has been asked twice; the third asking starts from an answer rather than from the argument. **Corrected 2026-08-15 by [T-163](T-163-correct-the-coverage-claim-that-carried-the-wide-row-refusal.md): the gap does not exist, so this criterion was met by a condition that cannot occur.** The criterion is right and the artifact satisfying it was not; the docstring now names a trigger that can fire. |
 | If **yes**, a fixture with a negative case for every check | n/a | The answer was no. The requirement outlived the branch as **L-103**, which is the general form and applies to every checker here rather than to the one not built. |
 | taskmd is told the measured first-run result against their prediction | met | Posted, with the three false positives, since ours is the mirror of the trap they warned about — they said blanking code spans makes the rule silent; a naive span detector is deafening. |
 | The measurement is reproducible | met | The scanner is thrown away as planned, so the record carries the method rather than the tool: cells split on unescaped pipes with code spans **not** protected, front matter skipped, fenced blocks skipped, backtick **runs** matched pairwise, escaped `\|` inside a span left alone. Anyone can rebuild it; **L-103** says what to prove about it first. |
@@ -168,5 +178,6 @@ reason that no longer applies.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | record corrected, status unchanged | **The reversing condition this task shipped was false, and [T-163](T-163-correct-the-coverage-claim-that-carried-the-wide-row-refusal.md) replaced it the day after.** taskmd corrected the premise on the report thread — `check` reads every Markdown document a clone would receive, `skills/` and `examples/` included — and it was reproduced here with a seeded probe in each tree before being accepted. **The refusal is unchanged and stands on better ground than it was given.** Three places in this record stated the premise; each is annotated where it stands rather than rewritten. |
 | 2026-08-15 | → done | **The owner ruled: no own checker.** The refusal is in `../tools/docs/refcheck.py`'s docstring with its reversing condition — the `skills/` and `examples/` coverage gap, written as a trigger so the third asking of this question starts from an answer. **The same verdict as `O-T4`'s, reached by a different argument**: the original reason was that a checker for two noticed rows would outlive the fault, and upstream shipping the rule destroyed that reasoning while leaving the answer standing. Recorded as a new decision rather than as the old one holding. The measurement went back to taskmd against their prediction, and the fixture finding is **L-103** — a check with a positive case and no negative case is unproven in the direction that produces noise, which is how a specimen passed while its scanner scored 3,150. |
 | 2026-08-15 | → proposed | Raised from taskmd's second follow-up on the report thread: they built the gate this project declined, as a **problem rather than an advisory**, and warned that our first run would be non-zero. **It is zero — 307 files, 0 wide rows, 0 code-span pipes**, because T-139 already swept. Measured before the task existed, which is the honest record: the question was *does this affect us*, and a task to decide something that turned out not to apply would have been the wrong artifact. `s`, `decision`, `PH3`. |

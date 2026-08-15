@@ -30,17 +30,31 @@ all (check 3).
 **What this file deliberately does not check: a table row carrying more cells than its header.**
 Markdown drops the excess, so the text is in the file and renders nowhere. Declined 2026-08-15
 (T-161), for the second time and on different evidence: taskmd shipped exactly this rule as a
-**problem that moves `check`'s exit status**, so once that release lands this repository gets it free
-on every task edit, and a second instrument for a class already gated is the
-checker-that-outlives-the-fault argument pointing at itself. Measured when the decision was taken:
+**problem that moves `check`'s exit status**, and a second instrument for a class that gate covers is
+the checker-that-outlives-the-fault argument pointing at itself. Measured when the decision was taken:
 **307 files, 0 wide rows, 0 unescaped pipes inside a code span.**
 
-**What would reverse it, so it is not re-asked from scratch a third time:** `taskmd check` reads tasks
-and the documents it resolves - **not `skills/` or `examples/`**. A wide row there is invisible to both
-tools, and the first one that appears is the reason to build the narrow thing here. If that happens,
-the trap is that GFM splits a row into cells **before** parsing inline spans, so a backtick does not
-protect a pipe: blanking code spans first - which every other text check here does - makes the rule
-silent on a row that is broken twice over.
+**The cover is not in place yet, and the refusal does not rest on it being.** Their gate is on upstream
+master and unreleased: the installed skill is `0.5.0`, that is their latest release, and a seeded
+three-cell row under a two-column header goes unreported by it - measured 2026-08-15 (T-163). So the
+class is ungated here today, over a tree with nothing in it to catch, because T-139 swept the only two
+rows this repository has ever had.
+
+**What would reverse it, so it is not re-asked from scratch a third time:** `python tools/tasks/lint.py`
+ceasing to run `taskmd check`. That is the whole of this repository's cover for the class, and losing it
+is the reason to build the narrow thing here.
+
+**The coverage gap this file claimed on 2026-08-15 does not exist.** `check` reads every Markdown
+document a clone would receive - `skills/` and `examples/` included, nested taskmd projects and
+untracked-and-ignored files excluded. taskmd corrected it on the report thread and it was reproduced
+here with a seeded probe in each tree (T-163). **A trigger that cannot fire is worse than none**: it
+reads as a decision made permanent rather than one taken on evidence. A wide row appearing in either
+tree is therefore upstream's alarm, not a blind spot in both tools.
+
+If the narrow thing is ever built, the trap is that GFM splits a row into cells **before** parsing
+inline spans, so a backtick does not protect a pipe: blanking code spans first - which every other
+text check here does - makes the rule silent on a row that is broken twice over. What to prove about
+the fixture before believing its zeros is **L-103**.
 
 Run it from the repository root. Task validation is `taskmd check`, not this.
 """

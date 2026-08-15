@@ -2,8 +2,8 @@
 id: T-163
 title: Correct the coverage claim that carried the wide-row refusal
 type: admin
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-161, T-160, T-157, T-139]
@@ -13,6 +13,7 @@ business_value: medium
 effort: xs
 created: 2026-08-15
 updated: 2026-08-15
+shipped_in: unreleased
 deliverables: []
 ---
 
@@ -84,15 +85,15 @@ one being fixed, one tense away.
 - [`../docs/lessons/L-103.md`](../docs/lessons/L-103.md) — the fixture lesson upstream took
 
 **Acceptance criteria**
-- [ ] `refcheck.py` states no condition that cannot occur, and its coverage sentence matches the
+- [x] `refcheck.py` states no condition that cannot occur, and its coverage sentence matches the
       measurement above
-- [ ] The replacement trigger names something that **can** happen, so the decision stays falsifiable
-- [ ] The docstring separates what the installed taskmd does **today** from what upstream's master will
+- [x] The replacement trigger names something that **can** happen, so the decision stays falsifiable
+- [x] The docstring separates what the installed taskmd does **today** from what upstream's master will
       do when released
-- [ ] T-161's three repetitions are annotated rather than rewritten, each dated and pointing here
-- [ ] The measurement is reproducible from this record alone — the probe is thrown away, so the method
+- [x] T-161's three repetitions are annotated rather than rewritten, each dated and pointing here
+- [x] The measurement is reproducible from this record alone — the probe is thrown away, so the method
       is written down, as T-161 did for its scanner
-- [ ] `python tools/tasks/lint.py` green
+- [x] `python tools/tasks/lint.py` green
 
 **Open questions**
 - **What replaces the trigger?** Recommend: **the lint chain stops running `taskmd check`** — then the
@@ -112,16 +113,45 @@ one being fixed, one tense away.
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The replacement trigger is the lint chain, not a file-coverage gap** — 2026-08-15.
+  `python tools/tasks/lint.py` running `taskmd check` is the whole of this repository's cover for the
+  class, so its removal is the only event that leaves the class unwatched. It **can** happen — a chain
+  edit, a plugin uninstall, a retirement of the wrapper — which is exactly what the condition it
+  replaces could not.
+- **The unreleased gate got its own paragraph rather than a clause** — 2026-08-15. The docstring's
+  *once that release lands this repository gets it free* read as cover already in place; the installed
+  `0.5.0` has no wide-row rule and a seeded row goes unreported. Splitting it makes the refusal rest
+  where it actually rests — **307 files, 0 wide rows**, and T-139 having swept the only two — which
+  does not depend on when upstream releases.
+- **T-161 is annotated in place, three times, and not rewritten** — 2026-08-15. Its §1 open question
+  and §3 decision take dated blockquotes; §4's review row takes an inline correction, since a
+  blockquote cannot live in a table cell. **That row's verdict changed from `met` to `met, then
+  void`**: a criterion satisfied by a condition that cannot occur was not satisfied, and the criterion
+  itself was right.
+- **No reply posted on the report thread** — 2026-08-15. Out of scope as raised, and outward-facing.
+  If one is wanted it carries the single thing taskmd does not know from their side: **their gate is
+  unreleased**, so the coverage here was measured against `0.5.0`, and the row they seeded to prove
+  coverage is a class `0.5.0` cannot report. The owner rules.
+- **Nothing added for upstream taking L-103** — 2026-08-15. It is credited on their thread as ours and
+  tracked in their backlog as their `T-151`. A row here would be an observation about their record,
+  which [`../docs/upstream/taskmd.md`](../docs/upstream/taskmd.md) is not for.
 
 **Outputs produced**
-- `...`
+- [`../tools/docs/refcheck.py`](../tools/docs/refcheck.py) — the coverage fact as measured, the split
+  between installed and unreleased, the trigger that can fire, the GFM trap kept, **L-103** named
+- [T-161](T-161-decide-whether-to-adopt-the-wide-row-gate-now-that-upstream-ships-one.md) — three
+  annotations and a Log row recording a correction after close
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `refcheck.py` states no condition that cannot occur | met | The `skills/` and `examples/` claim is gone, replaced by what `check` actually reads — every Markdown document a clone would receive, nested taskmd projects and ignored files excluded. |
+| The replacement trigger can happen | met | The lint chain ceasing to run `taskmd check`. It is one line of `tools/tasks/lint.py`, so the condition is inspectable rather than hypothetical. |
+| Installed behaviour separated from unreleased behaviour | met | Named `0.5.0`, named it as upstream's latest release, and recorded that a seeded three-cell row under a two-column header goes unreported by it. |
+| T-161 annotated rather than rewritten | met | Three sites, each dated and pointing here; the original text is legible in all three. A closed record edited invisibly teaches that closed records are edited invisibly. |
+| The measurement is reproducible from this record | met | §1 states the probe: one document per tree, each with a link to a file that does not exist and a three-cell row under a two-column header, `taskmd check`, then deletion. Paths are deliberately not written — check 2 of `refcheck.py` resolves a repo-relative pointer inside a fenced block, so pasting the run made this task fail its own gate on three dead pointers before the record was reworded. |
+| `python tools/tasks/lint.py` green | met | Four steps: `taskmd index`, `taskmd check` OK, `refcheck` 0 broken, `findings` consecutive. |
 
 **Child fix tasks raised**
 - none
@@ -130,4 +160,5 @@ one being fixed, one tense away.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | → done | **The trigger that could not fire is replaced by one that can**: the lint chain ceasing to run `taskmd check`, which is this repository's whole cover for the class. The docstring also stops implying the cover is already in place — the gate is unreleased and the installed `0.5.0` does not report a seeded wide row, so the refusal now rests on the measurement it always actually rested on. T-161 annotated at its three false statements, with the review row's verdict moved to **met, then void**: a criterion satisfied by an impossible condition was not satisfied. No thread reply and no register row — both recorded in §3 with the reasons. |
 | 2026-08-15 | → proposed | Raised from taskmd's correction on the report thread, commit `5cf121b`: `check` reads **every** Markdown document a clone would receive, not tasks and the documents they resolve. That voids the reversing condition T-161 put in `refcheck.py`'s docstring one day earlier. **Reproduced here before accepting it** — a probe seeded into `skills/` and `examples/` was reported by the installed `0.5.0`, and the same probe's wide row was not, because the gate is still unreleased upstream. The refusal stands; the trigger under it does not. `xs`, `admin`, `PH3`. |
