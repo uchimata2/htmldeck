@@ -571,6 +571,29 @@ found that accepts an observation carrying no priority, and the document records
 change it. Each document carries its own handover record; this paragraph is the summary, not the
 register.
 
+**The route is retired for anything found after 2026-08-15, and the register with it.** Ruled by the
+owner that day, on the cost of the one thread that ran to completion: **34 KB of issue comments here
+and upstream, and 111 KB of task records in this repository, for four local tasks of which none
+changed a line of behaviour.** Three of the four were prose about prose — deliver the register,
+correct the register, correct the correction. What replaces it, for every project the owner holds:
+**a defect found in one of their repositories is fixed in that repository, as a branch with a failing
+test and a three-line pull request**, because all of them are cloned side by side on the owner's
+machine and a diff describes itself. A finding is reported rather than fixed only when it breaks a
+gate or destroys data; a claim about another tool's behaviour travels with the command that proves it,
+which is the same command that usually produces the fix; and a report gets **one** reply, with a
+correction as a one-line comment rather than a section. **The operative statement is the owner's
+global working preferences, which are machine-local and outside this clone** — this paragraph is this
+repository's copy of the ruling, not a second authority, and the practice binds every project rather
+than this one (**L-13** applies to the rule as much as to the rows). Raised and implemented by
+[T-164](../tasks/T-164-retire-the-cross-repo-register-in-favour-of-a-branch.md).
+
+**What the two sent registers become.** History, not a live practice. Their rows were delivered, their
+threads answered, and the documents stay exactly as they are — the correction record they promised is
+still owed on the terms they were sent under. `O-T4`'s value is the reason the retirement is not a
+verdict that the exchange was worthless: it found a defect that had silently destroyed a task record
+for six days. **The rule is not stop reporting; it is report by patch, prove behaviour by running it,
+and cap the prose.**
+
 *The hold, ruled by the owner 2026-08-13 and now spent:* nothing was to go until the audit's findings
 were worked and their fixes landed, because the documents were **a register still filling** rather
 than a report waiting on a courier — every finding still to be implemented was a session that might

@@ -4,6 +4,10 @@
 > **Route:** one issue on this project's own repository,
 > [`uchimata2/taskmd#1`](https://github.com/uchimata2/taskmd/issues/1). The body is this document with
 > its links made absolute; the rows are identical.
+> **The route is retired for anything found after 2026-08-15** ([T-164](../../tasks/T-164-retire-the-cross-repo-register-in-favour-of-a-branch.md)):
+> the next defect this project finds in taskmd arrives as a branch with a failing test and a
+> three-line pull request, not as a row here. This document stays as the record of what was sent, and
+> the correction terms it was sent under still hold.
 > **Response: triaged against a 143-file backlog, and five of the six were real there.** `O-T4` is the
 > row that repaid the report — the scan it prompted found **one row wider than its header in 2,797**,
 > in the very task that answered `O-T2`, and the excess cell had been rendering as nothing since

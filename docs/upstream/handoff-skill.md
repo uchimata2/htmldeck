@@ -4,6 +4,10 @@
 > **Route:** one issue on this project's own repository,
 > [`uchimata2/handoff-skill#75`](https://github.com/uchimata2/handoff-skill/issues/75). The body is
 > this document with its links made absolute; the rows are identical.
+> **The route is retired for anything found after 2026-08-15** ([T-164](../../tasks/T-164-retire-the-cross-repo-register-in-favour-of-a-branch.md)):
+> the next defect this project finds in the handoff skill arrives as a branch with a failing test and
+> a three-line pull request, not as a row here. This document stays as the record of what was sent,
+> and the correction terms it was sent under still hold.
 > **Response: triaged and closed the same day, and every row landed.** Six of the seven produced a
 > change or confirmed one already made, and **none turned out to be wrong**. `O-H4` had already been
 > fixed before the report arrived; `O-H3` was recorded as a confirmation; `O-H1`+`O-H5`, `O-H2`, `O-H6`
