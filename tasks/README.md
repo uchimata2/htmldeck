@@ -51,7 +51,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | - | `proposed` | `specify` | - | - | T-085, T-123, T-124, T-125, T-129, T-130 |
 | [T-155](T-155-date-a-record-by-its-own-row-not-by-the-table-it-sits-in.md) | Date a record by its own row, not by the table it sits in | `PH3` | - | `proposed` | `specify` | - | - | T-088, T-129, T-154 |
 | [T-156](T-156-make-the-screening-partition-a-figure-a-checker-can-count.md) | Make the screening partition a figure a checker can count | `PH3` | - | `proposed` | `specify` | - | - | T-130, T-136, T-154 |
-| [T-158](T-158-measure-the-tier-1-bound-instead-of-remembering-it.md) | Measure the tier-1 bound instead of remembering it | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-134, T-143, T-144, T-152, T-153 |
 | [T-159](T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md) | Gate the text a reader follows and no checker reads | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-146, T-147, T-149, T-153 |
 
 ## Closed
@@ -197,6 +196,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-153](T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md) | Run the audit method's phase 2 over this repository's own audit | `PH3` | `unreleased` | `done` | `review` | T-130 | - | T-130, T-137, T-157, T-158, T-159, T-162 |
 | [T-154](T-154-bind-the-measurements-that-five-live-documents-state-in-prose.md) | Bind the measurements that five live documents state in prose | `PH3` | `unreleased` | `done` | `review` | - | - | T-056, T-067, T-068, T-088, T-127, T-130, T-151, T-155, T-156 |
 | [T-157](T-157-hand-the-upstream-registers-to-their-owners.md) | Hand the upstream registers to their owners | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-137, T-140, T-141, T-153, T-160, T-161, T-163, T-164 |
+| [T-158](T-158-measure-the-tier-1-bound-instead-of-remembering-it.md) | Measure the tier-1 bound instead of remembering it | `PH3` | - | `done` | `review` | T-130 | - | T-130, T-134, T-143, T-144, T-152, T-153 |
 | [T-160](T-160-correct-the-three-errors-the-recipients-found-in-the-delivered-registers.md) | Correct the three errors the recipients found in the delivered registers | `PH3` | `unreleased` | `done` | `review` | - | - | T-130, T-141, T-157, T-161, T-163, T-164 |
 | [T-161](T-161-decide-whether-to-adopt-the-wide-row-gate-now-that-upstream-ships-one.md) | Decide whether to adopt the wide-row gate now that upstream ships one | `PH3` | `unreleased` | `done` | `review` | - | - | T-139, T-157, T-160, T-163, T-164 |
 | [T-162](T-162-run-the-packaged-skill-end-to-end-against-a-third-repository.md) | Run the packaged skill end to end against a third repository | `PH3` | - | `done` | `review` | T-137 | - | T-130, T-136, T-137, T-153 |

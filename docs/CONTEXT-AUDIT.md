@@ -943,3 +943,17 @@ rather than a policy, which is a task and not a ruling.
 recorded rather than papered over.** *Review this annually* is the failure mode step 16 names by name,
 and a policy nobody can implement without the owner picking a side is not better. The obligation is
 open and it is one decision wide.
+
+**Closed 2026-08-15 by [T-158](../tasks/T-158-measure-the-tier-1-bound-instead-of-remembering-it.md),
+and the paragraph above is kept as the state it closed from.** The owner took the third route on
+2026-08-14 — neither settled rule yields — so `figures.py` learned to run a fenced command that pastes
+no output and hold the page to it. Both figures are now compared on every run of `check_all.py`, at a
+cost to `CLAUDE.md` of **zero bytes**: the page already carried the command.
+
+**One thing the collision hid, found only by implementing it.** The mechanism could not simply be
+pointed at this page. `figures.py` binds a figure by making its sentence name the label a command
+printed, and against a document that keeps its own corrections that rule leaves the first term
+unwatched *and* reports the record sentence beside it as stale — one silence and one false alarm, on
+the two sentences the page is most careful about. The comparison had to invert: **every measured term
+must be written**, rather than every written numeral measured. That is **L-104**, and it is the part of
+this section that generalises beyond the one number.

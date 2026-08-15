@@ -42,6 +42,7 @@ Runs its own self-test first and refuses to report if it fails (**L-04**). Pure 
 import io
 import os
 import re
+import shlex
 import subprocess
 import sys
 
@@ -556,7 +557,10 @@ def run(cmd):
     a check nobody waits for (**L-40**).
     """
     if cmd not in _RUNS:
-        argv = cmd.split()
+        # **`shlex`, not `str.split`.** Every command in the README is bare words, so the two agreed
+        # and the weaker one was never wrong. A measurement fence is not: `python -c "import
+        # pathlib;[print(...)]"` is three arguments, and `.split()` shreds the third into fourteen.
+        argv = shlex.split(cmd)
         if argv[0] == "python":
             argv[0] = sys.executable
         p = subprocess.Popen(argv, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -624,6 +628,129 @@ def deck_facts():
         for prop in ("KB", "bytes", "slides", "figures"):
             out.append("%s %d %s" % (rel, props[prop], prop))
     return "\n".join(out)
+
+
+# ------------------------------------------------------- a figure the document measures but pastes
+# **The fourth binding, and the first that runs a command no output is pasted under** (T-158).
+#
+# `CLAUDE.md` states the two figures that govern what every session of this project pays, carries the
+# command that produces them in a fence, and pastes nothing under it. So `bind()` saw a command and
+# never ran it, `fields()` got no labels from it, and both figures sat in `unanchored` among 413.
+# Measured: the pair drifted 15,034 -> 15,208 with nothing reporting it, and the page's own debt note
+# records that the statement *has now been wrong in both terms twice*.
+#
+# **The comparison runs the other way round from every other rule here, and the page is why.**
+# Elsewhere a written numeral must be printed by a command. Held to that, this page fails twice over:
+# its live sentence says *"15,208 bytes against `tasks/TASK-WORKFLOW.md`'s 11,925"* and never writes
+# `CLAUDE.md`, so the first term binds nothing; and the record sentence beside it says *"it read
+# 18,807 against `.taskmd/config.md`'s 14,087"*, which names a label the command does print and would
+# be reported STALE for stating what was true in the past. One term unwatched, one false alarm - T-068's
+# measured result, on a page that deliberately keeps its own history.
+#
+# So: **every measured term must be written**, and a numeral the page states that nothing measures is
+# a record and is not judged. It is the only direction that can be right about this page.
+#
+# **A per-document grant, and `RUNNABLE` is deliberately untouched.** That allowlist refuses to run
+# what a document tells it to; widening its *shape* to admit `python -c` would let any fence in any
+# scanned page run arbitrary code, which is the opposite of what it is for. An entry here authorises
+# one command prefix in one named document instead. Hand-kept, on `ARTIFACTS`' and `ACCOUNTS`'
+# condition: a declared fence the document no longer carries fails the run (`missing_measurements`),
+# so it cannot come to cover nothing in silence.
+MEASURED = {
+    "CLAUDE.md": {
+        "fence": 'python -c "import pathlib;',
+        "subject": "CLAUDE.md",
+        "why": "the tier-1 bound - the size of the file every session loads unasked, against the "
+               "smallest document it defers to. Both figures are stated in prose and the command "
+               "that produces them is fenced directly above with no output under it",
+    },
+}
+
+
+def doc_text(rel, docs=None):
+    """The declared document's text, from the fixture map when one supplies it."""
+    if docs and rel in docs:
+        return docs[rel]
+    return io.open(os.path.join(ROOT, rel.replace("/", os.sep)), encoding="utf-8").read()
+
+
+def measurement_fence(text, prefix):
+    """The one fenced command in `text` that `prefix` authorises, or `None`."""
+    for _start, _lang, body in fences(text):
+        cmd = " ".join(l.strip() for l in body if l.strip())
+        if cmd.startswith(prefix):
+            return cmd
+    return None
+
+
+def missing_measurements(docs=None, entries=None):
+    """`[(rel, prefix, why)]` - every declared measurement whose document no longer carries the fence.
+
+    **This is what buys the entry its place**, the same way `missing_artifacts` buys the manifest its
+    own: the page can be edited from under a declaration, and a grant that quietly stops matching
+    would leave the two figures unwatched with every count in the report reading as though they were
+    judged. That is the state T-158 was raised out of.
+    """
+    out = []
+    for rel, spec in sorted((MEASURED if entries is None else entries).items()):
+        if measurement_fence(doc_text(rel, docs), spec["fence"]) is None:
+            out.append((rel, spec["fence"], spec["why"]))
+    return out
+
+
+def measurement(cmd):
+    """`{path: size}` from a measurement's `<size> <path>` lines, separators normalised.
+
+    `pathlib` renders a path with the platform's separator, so the same fence prints `docs\\BRIEF.md`
+    here and `docs/BRIEF.md` elsewhere. Normalising is what keeps the subject resolvable on both.
+    """
+    out = {}
+    for line in run(cmd).split("\n"):
+        parts = line.split()
+        if len(parts) == 2 and parts[0].isdigit():
+            out[parts[1].replace("\\", "/")] = int(parts[0])
+    return out
+
+
+def measured_pair(sizes, subject):
+    """`[(path, value)]` - the subject's own size, and the smallest of the rest.
+
+    **The page's bound, restated as arithmetic over the same output**: *this file stays smaller than
+    the smallest document it defers to*. Only the subject is declared; which document is the other
+    term is derived, and it has already changed hands twice - which is precisely why naming it
+    anywhere would be a third copy waiting to go wrong.
+
+    Note what this does **not** compute: whether the subject is in fact smaller. The bound is
+    knowingly unmet, and a check that failed on it would block every release until a debt this
+    project has chosen to carry is paid. What is checked is the pair's *figures*.
+    """
+    rest = sorted((v, k) for k, v in sizes.items() if k != subject)
+    if subject not in sizes or not rest:
+        return []
+    return [(subject, sizes[subject]), (rest[0][1], rest[0][0])]
+
+
+def measured_rows(rel, text, spec):
+    """`[(verdict, rel, value, why)]` - each measured term, and whether the document states it."""
+    cmd = measurement_fence(text, spec["fence"])
+    if cmd is None:
+        return []
+    pair = measured_pair(measurement(cmd), spec["subject"])
+    if not pair:
+        return [("STALE", rel, "-", "the fence this page carries printed no size for %r, so the "
+                                    "pair cannot be formed and neither figure is watched"
+                 % spec["subject"])]
+    stated = set(m.group(1).replace(",", "") for m in PROSE_NUMERAL.finditer(prose(text)))
+    rows = []
+    for path, value in pair:
+        if str(value) in stated:
+            rows.append(("compared", rel, str(value),
+                         "%s, measured by the fence this page carries" % path))
+        else:
+            rows.append(("STALE", rel, str(value),
+                         "the fence measures %s at %s and the page states no such figure"
+                         % (path, value)))
+    return rows
 
 
 def mask(line):
@@ -782,10 +909,15 @@ def declared(table, outputs, docs=None, facts=None):
     facts = artifact_facts() if facts is None else facts
     rows, skipped, watched = [], 0, {}
     for rel in sorted(DECLARED_DOCS):
-        if docs and rel in docs:
-            text = docs[rel]
-        else:
-            text = io.open(os.path.join(ROOT, rel.replace("/", os.sep)), encoding="utf-8").read()
+        text = doc_text(rel, docs)
+        # **The document's own measurement runs first, and it is judged in the other direction** -
+        # every term the fence measures must be written here, rather than every numeral written here
+        # being printed by a command. Why that inverts for these pages is on `MEASURED`.
+        judged = set()
+        if rel in MEASURED:
+            got = measured_rows(rel, text, MEASURED[rel])
+            rows.extend(got)
+            judged = set(n for _v, _r, n, _y in got)
         for block, sents in blocks(prose(text)):
             # **The block's own rule runs first, and it takes numerals out of the remainder.** A
             # figure it judged is judged; leaving it in `unanchored` as well would report the same
@@ -805,6 +937,11 @@ def declared(table, outputs, docs=None, facts=None):
                         rows.append((claims[n][0], rel, n, claims[n][1]))
                     elif spoken:
                         spoken -= 1
+                    elif n.replace(",", "") in judged:
+                        # Judged by the measurement above. Counting it as unanchored as well would
+                        # report one numeral in two buckets, which is the rule the block's own claims
+                        # already follow through `spoken`. A figure stated twice is one figure.
+                        continue
                     else:
                         skipped += 1
     return rows, skipped, watched
@@ -959,6 +1096,13 @@ def self_test():
     if not [r for r in rows if r[0] == "floor"]:
         sys.exit("SELF-TEST FAILED: no block is compared as a floor, so the split this tool exists "
                  "for is not exercised and the refcheck block must have stopped being bound")
+    # **The grant has to still match a fence, and that is asserted here rather than only reported.**
+    # Whether the two figures are *current* is `report()`'s to say - a real drift must redden the run,
+    # not crash the self-test. Whether anything is watching them at all is this file's own contract.
+    if missing_measurements():
+        sys.exit("SELF-TEST FAILED: %s"
+                 % "; ".join("%s no longer carries a fence starting %r, so nothing measures %s" % row
+                             for row in missing_measurements()))
     if missing_accounts(table):
         sys.exit("SELF-TEST FAILED: %s"
                  % "; ".join("the account %r declares its %s as %r and %s prints no such label"
@@ -1301,6 +1445,56 @@ def self_test():
                  "or moving the whole off the account reported nothing. That is the exact state "
                  "T-154 was raised from - the claim leaves the watched set BECAUSE it went wrong, "
                  "and four documents held the stale split with every gate green")
+
+    # 13. **A document that measures itself, in both terms and both directions** (T-158).
+    #
+    # **Built out of a synthetic page and a synthetic fence, never the live `CLAUDE.md`** (**L-78**,
+    # **L-85**). That rule matters more than usual here: the subject of this check *is* a tracked
+    # file whose size the task changed, so a fixture reading it would assert today's bytes and go red
+    # on the next edit to the page - the drift it exists to report, reported as a broken test.
+    #
+    # The pair is stated with thousands separators and printed without, because the page this serves
+    # writes `15,208` and the fence prints `15208`, and a check that missed the comma would pass by
+    # never matching anything.
+    fix_cmd = "python -c \"print('  1300  a.md');print('  1100  b.md');print('  2000  c.md')\""
+    fix_spec = {"fence": "python -c \"print(", "subject": "a.md", "why": "a fixture"}
+
+    def fixture(subject, other):
+        return ("# Fixture\n\nA bound, measured by the fence below.\n\n"
+                "```bash\n%s\n```\n\nThis file is %s bytes against `b.md`'s %s, measured today.\n"
+                % (fix_cmd, subject, other))
+
+    clean = measured_rows("fixture.md", fixture("1,300", "1,100"), fix_spec)
+    if len(clean) != 2 or [r for r in clean if r[0] != "compared"]:
+        sys.exit("SELF-TEST FAILED: a page stating both measured terms was not read as two compared "
+                 "figures, it reported %r. The ordinary case has to be green or the check is "
+                 "switched off the week it lands" % (clean, ))
+
+    # Both terms, both directions. **Four seeds rather than two**: a figure goes stale by the file
+    # growing or by the page being edited wrong, and only one of those moves the number downward.
+    for term, subject, other, moved in (("the subject's own size", "1,301", "1,100", "1300"),
+                                        ("the subject's own size", "1,299", "1,100", "1300"),
+                                        ("the smallest of the rest", "1,300", "1,101", "1100"),
+                                        ("the smallest of the rest", "1,300", "1,099", "1100")):
+        got = measured_rows("fixture.md", fixture(subject, other), fix_spec)
+        if not [r for r in got if r[0] == "STALE" and r[2] == moved]:
+            sys.exit("SELF-TEST FAILED: %s was measured at %s and the page was seeded to say "
+                     "something else (%s / %s), and the run reported %r. A pair nothing can fail on "
+                     "is the state T-158 was raised from - 174 bytes drifted with nothing to say so"
+                     % (term, moved, subject, other, got))
+
+    # **A declared fence the page no longer carries fails**, which is the condition this grant is
+    # allowed on at all. Without it the entry stops matching in silence and both figures go back to
+    # being watched by nobody, with every count in the report reading as though they were judged.
+    no_fence = "# Fixture\n\nThis file is 1,300 bytes against `b.md`'s 1,100, measured today.\n"
+    if not missing_measurements({"fixture.md": no_fence}, {"fixture.md": fix_spec}):
+        sys.exit("SELF-TEST FAILED: a declared measurement whose page carries no such fence was "
+                 "accepted. A hand-kept grant is allowed here only because it cannot come to cover "
+                 "nothing quietly, and that is the property just found missing")
+    if missing_measurements({"fixture.md": fixture("1,300", "1,100")}, {"fixture.md": fix_spec}):
+        sys.exit("SELF-TEST FAILED: a page that does carry its declared fence was reported as "
+                 "missing it, so the rule fires on the ordinary case")
+
     return True
 
 
@@ -1342,6 +1536,10 @@ def report(values):
     for name, role, label, cmd in unresolved:
         print("  %-10s the account %r declares its %s as %r and %s prints no such label"
               % ("MISSING", name, role, label, cmd))
+    unfenced = missing_measurements()
+    for rel, prefix, why in unfenced:
+        print("  %-10s %s no longer carries a fence starting %r, so nothing measures %s"
+              % ("MISSING", rel, prefix, why))
 
     # **What was compared, not just how many.** A binding nobody can read is a claim to be taken on
     # trust, which is the thing this file was written to stop doing.
@@ -1376,6 +1574,17 @@ def report(values):
         got = have.get(name)
         print("    %-42s %s" % (name, "UNRESOLVED" if got is None else
                                 "%s of %s, from %s" % (got["part"], got["whole"], got["command"])))
+
+    # **The measured pair, spelled out.** The same reason the accounts are printed above: a reader
+    # can see the two numbers this page is held to without running the fence themselves, and a
+    # `STALE` row says which term moved rather than that something did.
+    print("\n  what a document measures itself - every term must be written on the page")
+    for rel in sorted(MEASURED):
+        pair = [r for r in doc_rows if r[1] == rel and r[3].endswith("this page carries")]
+        stale = [r for r in doc_rows if r[1] == rel and r[0] == "STALE"]
+        print("    %-42s %s" % (rel, "NO FENCE" if (rel, ) in [(m[0], ) for m in unfenced] else
+                                ", ".join("%s %s" % (r[2], r[3].split(",")[0]) for r in pair + stale)
+                                or "nothing measured"))
 
     print("\n  the artifact manifest - a property of one of these, in a block that links it, is a "
           "figure")
@@ -1416,7 +1625,7 @@ def report(values):
     # statement sits in the tool - the state this check was written from (T-077).
     fails = (counts.get("FAILING", 0) + counts.get("UNDECLARED", 0)
              + pc.get("UNDECLARED", 0) + pc.get("STALE", 0) + len(dead) + dc.get("STALE", 0)
-             + len(gone) + len(unresolved))
+             + len(gone) + len(unresolved) + len(unfenced))
     print("\n%s" % ("%d figure(s) to fix" % fails if fails else
                     "0 stale figure(s)%s" % (" - %d floor block(s) grew above what is pasted, "
                                              "which is reported rather than failed (see --values)"
