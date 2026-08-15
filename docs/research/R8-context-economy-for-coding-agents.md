@@ -1,5 +1,17 @@
 # R8 — The context economy of an agent-driven repository
 
+> **The operative method is now the `ecoctx` skill, and this is the research record it came from.**
+> Packaged 2026-08-15 by [T-137](../../tasks/T-137-package-the-context-economy-method-as-a-skill.md)
+> into its own repository, a sibling of this one. **A session that wants to *run* the method invokes
+> the skill; this document is what to read to find out why a step says what it says.** The skill
+> carries the sixteen steps, the rubric, the taxonomy and the eleven-field record; it does not carry
+> §7's catalogue, §8's portable findings or §11's sources, which are evidence and stay here.
+>
+> **Declared rather than left inferred, because this method's own `F2` rule says so**: a rule with no
+> declared home is copied by whoever needs it next, and two documents that both read as the method
+> disagree the first time either changes. Where the two differ, **the skill is the method** and this
+> document is a record of what it was on the day it was packaged.
+
 **This document is portable and stands alone.** It carries the external research, the audit method as
 numbered steps, the ranking rubric, and every finding that applies to any repository worked by a
 coding agent. Copy it into another project and run it there; it names no file of the repository it

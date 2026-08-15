@@ -2,8 +2,9 @@
 id: T-137
 title: Package the context-economy method as a skill
 type: deliverable
-status: in_progress
-phase: implement
+status: done
+phase: review
+shipped_in: unreleased
 parent: T-130
 blocked_by: []
 related: [T-130, T-131, T-132, T-133, T-135, T-136, T-139, T-140]
@@ -375,6 +376,42 @@ between them is `ecoctx`, and none of it is mirrored back — see the scope's la
   remains is deliberate: nobody guesses that *why is my session expensive* routes here, where *make me
   a slide deck* routes itself.
 
+- **Plan steps 3–9 — the package.** A three-stage skill in `ecoctx`: a routing description, a body
+  that routes and never teaches, and three references, one per span of steps, with a run loading
+  exactly one. **The four refusals live on the body rather than in a reference**, because a refusal
+  kept in a file the session may not load is not a refusal. Two tools: a findings register that reads
+  the finding-to-task link off the task's front matter and fails in both directions, and a check-all
+  that partitions into *ran* / *skipped with a stated reason* / *failed*, with a tool on disk and
+  absent from the manifest failing the run. A self-test exists because this repository is the skill
+  and holds no report of its own, so the register would otherwise ship untested.
+- **The known-answer run found a defect in the instrument, not in the target.** Pointed at a
+  repository whose finding-to-task answer was already established by other means, the first scanner
+  reported **twelve disagreements out of thirteen** where there were none: a finding is stated in
+  prose before it is ranked, so the first line naming an id is never the row carrying the closure
+  marker, and a project with three tables naming the same id compounds it. Restricted to table rows
+  and OR-ed across them it reproduces the independent answer exactly — **13 findings, 14 tasks linked,
+  0 disagreeing.** This is the method's own *a scanning step owes a known-good case* rule catching the
+  session that was packaging it.
+- **Plan step 10 — the extraction test, run as a search.** 238 distinctive filenames of this
+  repository, plus its own name, searched across every file of `ecoctx`: **0 hits.** *The first
+  instrument was useless and that is worth keeping*: matching all 451 names produced **89 false
+  alarms** — `faces` inside *surfaces*, plus `tools`, `reference`, `research`, `sources` and `tasks` as
+  ordinary English. Bound on structure instead (a real extension, long enough not to be a word, and
+  not a name `ecoctx` itself uses), it went to zero. Convergent tool names in both trees are not a
+  leak; a pointer at the source tree is.
+- **Plan step 10, second half — phase 1 against a third repository**, `taskmd`, chosen by the owner.
+  Surfaces A, B and C measured: tier 1 is **6,619 bytes**, less than half this repository's; the board
+  is **36,393** on the read path, which is the same shape as the finding this repository closed with a
+  query command, and that tool is already shipped there; the green test run prints **344 bytes** for
+  261 tests, which is a null result for `F5` and is reported as one. **Steps 5–11 were not run and the
+  two documents were not produced** — see §4.
+- **Plan step 11 — the home is declared.** `R8` now opens by saying the operative method is the skill
+  and that it is the research record, with what the skill does and does not carry. That is this
+  method's own `F2` remedy applied to itself.
+- **Plan step 12 — the README went through the humanizer**, and nothing else did. **0 em dashes, 0 en
+  dashes, 0 curly quotes, 0 bold runs**, every figure preserved. The skill's own files stay
+  AI-optimized, which is the rule rather than an omission.
+
 **What steps 1–2 say about the `m` band**
 The owner deferred the re-band to this measurement, so here it is. **Nothing in the first two steps
 argues for moving it.** Both were cheap and neither surprised: the repository skeleton is boilerplate
@@ -387,15 +424,42 @@ and the next measurement that can move it is step 4.
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Runs all sixteen steps and produces both documents, on a repository that is not this one | **not met** | Steps 1–4 ran against `taskmd` and produced real figures; 5–11 did not, and no document was produced. **A full audit of a third repository is itself `l`-sized work and packaging it is not the same act as running it.** Raised as [T-162](T-162-run-the-packaged-skill-end-to-end-against-a-third-repository.md), which is the product test and gates publication |
+| Phase 2 runs after the raised work is implemented, and the skill says so | met | On the body and again at the head of the phase-2 reference, which refuses a run from memory |
+| Step 12 pairs band against measured outcome, keeps the original, treats a withdrawal as a result | met | Including *the refusal was the deliverable* |
+| Step 13 states what remedies cost, including a repository that ends larger | met | With the 4,214 / 1,117 figures and the audit's own 3,012-of-3,405 growth |
+| Step 14 changes the method and keeps it separate from anything project-specific | met | Stated as the failure the step exists to prevent |
+| Step 15 inherits step 5's refusal and is bounded to the delta | met | *A closing phase that re-runs step 5 in full is another audit wearing a different number* |
+| Step 16 refuses a policy without a governing document, a load-path price, and an extends/narrows/replaces verdict | met | All four constraints carried, plus the 2,690-byte worked example of writing a budget into the file it bounds |
+| Step 16 reports a collision rather than resolving it, and leaves a re-measuring check or says why none can exist | met | Both, plus *wire the closure gate where a closure happens* |
+| Three-stage, and the description alone decides activation | met | Measured: 497 / 5,074 / three references loaded one at a time |
+| Step 5's search record is required and a catalogue without one is refused | met | Refusal 1 on the body, so it cannot be missed by a session that never loads the reference |
+| The rubric requires the mechanism named before a gain band | met | And *is this a saving at all* placed ahead of *how big* |
+| §4.1's F3 line is carried verbatim | met | *An F3 finding that cannot name what the prose would stop deciding is not a finding, and is recorded as rejected*, plus the prove-the-bytes-are-prose guard ahead of it |
+| The upstream step keeps *read their backlog first* as a step with its reason | met | With *say in each entry whether their backlog was read* |
+| The byproduct register survives, outside the ranking and with no gain band | met | Including the record-everything rule and the home for an owner you have no section for |
+| It was packaging: what changed is stated, and a rewrite is reported as a shaping defect | met | **Nothing was rewritten.** Three things were *added* and each is a shaping gap rather than a method change: the reference boundaries, the four refusals hoisted onto the body, and the load-one-at-a-time table. The method's prose transferred as written |
+| Its own load cost is measured, per stage | met | The README table, dated |
+| A command answers every finding, its task and its state in one output | met | `findings.py`, and the output is one line per finding |
+| The listing is derived, never maintained | met | Nothing is written down; both sides are parsed where they stand |
+| A finding's link to its task is structured, not prose | met | A front-matter field, read without parsing English |
+| The check fails loudly in both directions | met | **Tested, not asserted**: ten fixture checks, both directions plus the dangling task and the prose-mention regression |
+| The listing does not become a second board | met | Keys on findings, references tasks, mirrors nothing |
+| `ecoctx` is a repository a stranger can clone and run | met | MIT, README, no machine-specific path; the tools take `--root` and discover the repository themselves |
+| No personal, client or machine data; humanizer on the human-facing text only | met | 0 em dashes, 0 en dashes, 0 bold in the README; the skill's files untouched |
+| `ecoctx` has its own step-1 command with a three-way partition | met | `check_all.py`, green at 1 ran / 2 skipped with reasons / 0 failed / 0 unpartitioned |
+| This repository states where the operative method now lives | met | `R8`'s opening block |
+| Nothing in `ecoctx` names a file of this repository | met | Searched, 238 distinctive names, 0 hits |
 
 **Child fix tasks raised**
-- none
+- [T-162](T-162-run-the-packaged-skill-end-to-end-against-a-third-repository.md) — the one unmet
+  criterion, and it is the product test rather than a loose end.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | → done | **Twenty-six criteria, twenty-five met, and the unmet one is the product test rather than a loose end.** The skill exists in its own repository as three stages measured at 497 / 5,074 / three references loaded one at a time, with two tools and a self-test. **It was packaging and nothing was rewritten** — the method's prose transferred as written, and the three things added are shaping gaps rather than method changes: reference boundaries, the four refusals hoisted onto the body where a session cannot miss them, and the load-one-at-a-time table. **The session's own instruments failed twice and both are recorded because they are the method's rules catching the person applying them.** The finding register's first scanner reported twelve disagreements out of thirteen against a known answer, because a finding is stated in prose before it is ranked and the first mention of an id is never the ranked row; restricted to table rows it reproduces the independent answer exactly. The extraction test's first instrument produced 89 false alarms by matching ordinary English inside longer words, and bound on structure it produced zero across 238 distinctive names. **Steps 1–4 ran against a third repository and produced real figures**, which is the half of the method that has never failed; steps 5–11 did not, and that is [T-162](T-162-run-the-packaged-skill-end-to-end-against-a-third-repository.md), `l`, gating publication. A search proves nothing is *named*; only a run proves nothing is *assumed*. **`m` was the right band for what this task turned out to be** and the repository half did not blow it, because the bootstrap was boilerplate and the writing was transfer rather than invention. `shipped_in: unreleased` — the skill is in a different repository and nothing was released here. |
 | 2026-08-15 | → in_progress | **Steps 1 and 2 done, and step 2 caught this project failing its own subject on the first draft.** The repository exists — MIT, publishing identity, no trailer, `eol=lf` pinned because a project that publishes byte counts cannot let them depend on who checked it out. The README leads with the grading table rather than the steps, on the argument that two of thirteen bands holding is the part a stranger cannot get elsewhere. **The description was written alone and before the body**, so that it is a routing decision rather than a summary, and it came out at **610 bytes against a comparable skill's 474**. Trimmed to **497** by deleting two pairs of phrases that each said one thing twice, with every trigger kept: **−18.5%**, and **+4.9%** against the comparison, which the extra trigger surface earns because nobody guesses that *why is my session expensive* routes to an audit. **The remaining width is not slack and the figure is dated in §3, not here.** *On the band:* the owner deferred the re-band to this measurement and the measurement does not move it. Both steps were cheap and neither surprised; the risk was always steps 4 to 8 and step 10, and none of those has been touched. `m` is **untested rather than confirmed**, and step 4 is the next thing that can move it. **The third open question is closed by the owner's ruling** — `tasks/` and Issues, split by who writes, with no triage tool built here because that is taskmd's scheduled work — and a fourth was raised in its place: publication is gated on step 10, since otherwise the first stranger to run this is also its first test. |
 | 2026-08-15 | → planned | **Twelve steps, and the order is built around the one that can fail invisibly.** The extraction test is step 10 rather than step 1: a sentence naming this repository reads perfectly from inside `ecoctx`, so it has to be a search over the finished tree, and it is why no writing step copies prose across. Two steps touch this repository — the bootstrap's sibling and the home declaration — and nothing between them is mirrored back. **The description is written before the body and alone**, because it is the only part charged on every session and a description written afterwards is a summary of the body rather than a routing decision. **One step has a working local original and it does not travel as code**: `tools/docs/findings.py` is bound to this tracker's front-matter, so what moves is the shape — the link on the task, the ranking parsed where it stands, and a check failing in both directions. **The band still reads `m` and the plan says why that is now doubtful**: twelve steps, of which four are the packaging the band was set for and eight are the repository, and the honest re-band waits for the first two steps to be measured rather than being guessed here. |
 | 2026-08-15 | → specified | **The owner supplied the repository and it closed the question that gated everything else.** A sibling folder named `ecoctx`, empty and not yet a git repository — so the skill ships from its own project rather than from here, and *bootstrap* is inside the task instead of behind it. That adds a half nobody had sized: identity, licence, README, a gate list and a release rule, none of which travel, because `PUBLISHING.md` §8 is written against this tree's checkers and decks. What does travel is its **shape** — one command, and a partition with no fourth outcome. **Two of the three open questions closed and one was replaced.** *One skill or two* is settled at one, by the method's own `F1` rule rather than by taste: a second skill is a second description charged to every adopter on every session, and the halves are never wanted apart, since screening has nothing to work on until the measurement has run — so the deterministic half ships as tools the skill calls, which cost nothing until invoked. *Which repository* is answered above. What replaced them is whether `ecoctx` tracks its own work, which is the implementer's at plan and reversible. **One deliverable is declared and it is the small one**: `R8` gains the statement of where the operative method now lives, because a research record that reads as the method is the `F2` defect this method names — *declare the home, in the document that should have had it*. The skill's own files are not declared as paths, and the reason is in the scope: this tracker cannot resolve another tree, and a hand-kept mirror of one is the second copy `L-74` is about. Five acceptance criteria added for the repository half; the twenty for the package are untouched. **The `m` band is left alone and is now probably wrong** — it was set for packaging, and bootstrapping a publishable repository is not packaging. It is not re-banded here because `L-90` is exactly this: a band moved without a measurement, and plan is where the measurement comes from. |
