@@ -2,8 +2,8 @@
 id: T-137
 title: Package the context-economy method as a skill
 type: deliverable
-status: proposed
-phase: specify
+status: planned
+phase: implement
 parent: T-130
 blocked_by: []
 related: [T-130, T-131, T-132, T-133, T-135, T-136, T-139, T-140]
@@ -12,8 +12,8 @@ owner: the project owner
 business_value: medium
 effort: m
 created: 2026-08-13
-updated: 2026-08-13
-deliverables: []
+updated: 2026-08-15
+deliverables: [docs/research/R8-context-economy-for-coding-agents.md]
 ---
 
 # T-137 — Package the context-economy method as a skill
@@ -180,8 +180,23 @@ written for a session working a finding. **L-85**, **L-86** and **L-87** in
   argument in a row is why the row survives. The index is: `id`, one-line title, subject or owner,
   band, effort, the task it became, and that task's status. See the criteria below for what
   *efficient* has to mean.
+- In: **bootstrapping the repository the skill ships from — added 2026-08-15, when the owner supplied
+  it.** It is a sibling of this one, empty, named `ecoctx`, and not yet a git repository. That answers
+  the third open question below and it enlarges the task by a whole half: identity, licence, README,
+  a gate list, and a release rule, none of which travel from here. **`PUBLISHING.md` §8 is written for
+  this repository and is evidence rather than a template** — what carries across is that step 1 is one
+  command which partitions every checker into *ran*, *skipped with a reason*, or *failed*, and the
+  contents of that command are the new repository's to discover.
+- In: **declaring where the operative method now lives.** Once the skill exists, `R8` is a research
+  record and the skill is the method, and nothing in the tree says so. That is the method's own `F2`
+  remedy applied to itself — *declare the home*, in the document that should have had it — and it is
+  this task's only deliverable inside this repository.
 - Out: changing the method. Corrections belong to T-136 and to whoever runs it next; this task moves
   it into a package.
+- Out: **mirroring the skill's source here.** The package ships from `ecoctx` and its files are
+  recorded in §3 rather than declared as paths in the front-matter. A tracker gates what it can see; a
+  declared path that cannot resolve is a red gate forever, and a hand-kept list of another tree's
+  files is the second copy this project's own audit exists to prevent.
 - Out: shipping it in the htmldeck plugin. **This is a different product from a deck builder**, and
   bolting an audit onto a presentation skill would confuse both descriptions — which is itself an
   `F1` cost for every adopter who wanted neither.
@@ -244,6 +259,19 @@ written for a session working a finding. **L-85**, **L-86** and **L-87** in
       exists because a table of task ids outside the tracker's markers is exactly that, and it is
       excused for one file by name — so the skill's index must key on findings and reference tasks,
       never mirror them
+- [ ] **`ecoctx` is a repository a stranger can clone and run**: a licence, a README that says what the
+      skill does before it says how it is built, and no path that only resolves on the machine it was
+      written on
+- [ ] **It carries no personal, client or machine data**, and the human-facing text has been through
+      the humanizer while the skill's own files have not — the same split
+      [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) makes here, for the same reason
+- [ ] **`ecoctx` has its own step-1 command**, and it partitions every checker into *ran*, *skipped
+      with a stated reason*, or *failed*. A checker in none of the three fails the run
+- [ ] **This repository states where the operative method now lives** — in `R8`, the document that
+      would otherwise be read as the method — and `docs/CONTEXT-AUDIT.md` still reads as the worked
+      example rather than as a second copy of the procedure
+- [ ] **Nothing in `ecoctx` names a file of this repository.** The extraction test, run as a search
+      rather than asserted
 
 **Open questions**
 - ~~**Does it ship, and to whom?**~~ **Answered 2026-08-13 — it is published on GitHub as a token-saver
@@ -262,18 +290,45 @@ written for a session working a finding. **L-85**, **L-86** and **L-87** in
     [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) — its §8 gate list is written for this repository
     and a new repository needs its own equivalent, which is work this task should size rather than
     discover.
-- **One skill or two?** The measurement half is deterministic and scriptable; the screening and
-  ranking half is judgement. They may want different shapes. — the implementer, from the rule's own
-  reason.
-- **Which repository does it live in?** Its own, by the answer above — but that is a new repository
-  with its own gates, identity and release process, and none of that exists yet. — the owner, at plan.
+- ~~**One skill or two?**~~ **Answered 2026-08-15 — one skill, two phases.** Settled by the method's
+  own `F1` rule rather than by preference: a second skill is a second description every adopter pays
+  on every session, and the two halves are never wanted apart, because screening has nothing to screen
+  until the measurement has run. The measurement half stays deterministic by being **tools the skill
+  calls**, not a skill of its own — which is also what keeps *its own load cost* answerable, since a
+  script costs nothing until it is run and a description costs on every session.
+- ~~**Which repository does it live in?**~~ **Answered 2026-08-15 — its own, a sibling named
+  `ecoctx`, supplied empty by the owner.** Recorded in the scope above, which is where its
+  consequences are. It is not yet a git repository, so *bootstrap* is part of the work rather than a
+  precondition of it.
+- **Does `ecoctx` track its own work, and if so with what?** This task is htmldeck's and stays here;
+  the skill's own backlog is a different question, and the honest answer may be *nothing yet* until it
+  has a second task. — the implementer, at plan, and reversible.
 
 ## 2. Plan
 
+**Order, and the one thing it is built around.** The extraction test is step 10 and not step 1,
+because it is the only step that can fail for a reason the others cannot see — a sentence naming this
+repository reads perfectly inside `ecoctx` and is wrong there. It runs as a **search over the finished
+tree**, after everything is written, and it is why the writing steps below never copy prose across:
+what moves is the method, and every worked example is rewritten or dropped.
+
+**Where the two halves meet.** Steps 1 and 11 are the only ones that touch this repository. Everything
+between them is `ecoctx`, and none of it is mirrored back — see the scope's last bullet.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | **Bootstrap the repository.** `git init`, the publishing identity, `.gitignore`, a licence, and a README that says what the skill does before it says how it is built. No trailer, on this repository's ruling | `ecoctx` is a git repository with a first commit |
+| 2 | **Write the routing description alone, and stop.** It is the only part every adopter pays on every session, and the criterion is that it is enough to decide whether to activate. Write it before the body so it is not a summary of one | The description block, and its measured byte cost |
+| 3 | **Write the body**: what the method is, the two phases, the three audiences, and where each reference is loaded. It activates; it does not teach | `SKILL.md`, at the root of `ecoctx` |
+| 4 | **Phase 1 reference — the measurement half**, steps 1–4 plus step 5's three axes, its saturation rule and its refusal to present a catalogue without a search record | A phase-1 reference file, under `references/` in `ecoctx` |
+| 5 | **Phase 1 reference — the judgement half**, steps 6–11: the rubric with the mechanism named before a band, the *is this a saving* question ahead of *how big*, `enabler` and `bimodal` as defined values, the `F1`–`F5` checklist with §4.1 verbatim, the eleven-field record, and the byproduct register with a home for an owner it has no subsection for | A second phase-1 reference file, under `references/` |
+| 6 | **Phase 2 reference**, steps 12–16: pair every band against what it bought, report cost as well as saving, treat a withdrawn finding as a result, bound the delta research, and refuse a policy without a governing document, a load-path price and an *extends / narrows / replaces* verdict | A phase-2 reference file, under `references/` |
+| 7 | **The finding-to-task link, and the command that reads it.** Structured on the task, parsed where the ranking stands, and failing in **both** directions. This is the one piece with a working local original — `tools/docs/findings.py` here — and what travels is its shape, not its code, because it is bound to one tracker's front-matter | A findings tool, under `tools/` in `ecoctx`, tracker-agnostic |
+| 8 | **The step-1 command**: discover every checker, run it, and end with a partition of *ran* / *skipped with a stated reason* / *failed*, with no fourth outcome | A check-all tool, under `tools/` in `ecoctx` |
+| 9 | **Measure the skill's own load cost** — description, body, and each reference separately — and write the figures with their date into the README, as the promise they now are | A load-cost section in the README |
+| 10 | **Run the extraction test as a search**, not as a claim: no file, tool or document of this repository named anywhere in `ecoctx`. Then run the skill's phase 1 against a repository that is neither | A recorded search, and one phase-1 run on a third tree |
+| 11 | **Declare the home here.** `R8` states that the operative method is the skill and that it is the research record; `docs/CONTEXT-AUDIT.md` is checked for the same confusion and left as the worked example | The declared deliverable |
+| 12 | **Humanize what a stranger reads before installing** — the README and the repository description, and nothing else. The skill's own files stay AI-optimized | A humanizer pass, README only |
 
 ## 3. Implement
 
@@ -296,6 +351,8 @@ written for a session working a finding. **L-85**, **L-86** and **L-87** in
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | → planned | **Twelve steps, and the order is built around the one that can fail invisibly.** The extraction test is step 10 rather than step 1: a sentence naming this repository reads perfectly from inside `ecoctx`, so it has to be a search over the finished tree, and it is why no writing step copies prose across. Two steps touch this repository — the bootstrap's sibling and the home declaration — and nothing between them is mirrored back. **The description is written before the body and alone**, because it is the only part charged on every session and a description written afterwards is a summary of the body rather than a routing decision. **One step has a working local original and it does not travel as code**: `tools/docs/findings.py` is bound to this tracker's front-matter, so what moves is the shape — the link on the task, the ranking parsed where it stands, and a check failing in both directions. **The band still reads `m` and the plan says why that is now doubtful**: twelve steps, of which four are the packaging the band was set for and eight are the repository, and the honest re-band waits for the first two steps to be measured rather than being guessed here. |
+| 2026-08-15 | → specified | **The owner supplied the repository and it closed the question that gated everything else.** A sibling folder named `ecoctx`, empty and not yet a git repository — so the skill ships from its own project rather than from here, and *bootstrap* is inside the task instead of behind it. That adds a half nobody had sized: identity, licence, README, a gate list and a release rule, none of which travel, because `PUBLISHING.md` §8 is written against this tree's checkers and decks. What does travel is its **shape** — one command, and a partition with no fourth outcome. **Two of the three open questions closed and one was replaced.** *One skill or two* is settled at one, by the method's own `F1` rule rather than by taste: a second skill is a second description charged to every adopter on every session, and the halves are never wanted apart, since screening has nothing to work on until the measurement has run — so the deterministic half ships as tools the skill calls, which cost nothing until invoked. *Which repository* is answered above. What replaced them is whether `ecoctx` tracks its own work, which is the implementer's at plan and reversible. **One deliverable is declared and it is the small one**: `R8` gains the statement of where the operative method now lives, because a research record that reads as the method is the `F2` defect this method names — *declare the home, in the document that should have had it*. The skill's own files are not declared as paths, and the reason is in the scope: this tracker cannot resolve another tree, and a hand-kept mirror of one is the second copy `L-74` is about. Five acceptance criteria added for the repository half; the twenty for the package are untouched. **The `m` band is left alone and is now probably wrong** — it was set for packaging, and bootstrapping a publishable repository is not packaging. It is not re-banded here because `L-90` is exactly this: a band moved without a measurement, and plan is where the measurement comes from. |
 | 2026-08-14 | (no change) | **The owner added phase 2 to the method — `R8` §3.1, steps 12–16 — so this task's subject grew a closing half.** The method ended at *raise child work* and the gap was already visible from the other side: the third table's last-but-two row says implementing is a measurement pass and the loop back belongs in the method. Phase 2 is that loop plus four things it does not do — pair every band against what it bought, report what remedies cost, feed the method's own rubric, and write standing policy only into documents that already govern. **It changes what the skill is**, from an instrument that reports to one that leaves a discipline behind. Recorded in `R8` §3.1 as the one operative home and cited from the scope here, not restated. **The `m` band is left alone rather than guessed at**: this task is still `proposed`, its own `specify` pass sizes it, and a band moved without a measurement is what `L-90` is about. |
 | 2026-08-13 | (no change) | **The ship question is answered and it enlarges the task: published on GitHub as a token-saver audit skill, in its own right rather than inside the htmldeck plugin.** Three consequences are written into §1 rather than left to be met at review. The extraction test stops being a discipline and becomes the product test — a skill naming another repository's files is not installable. Its own load cost stops being self-discipline and becomes a promise every adopter pays on every session. And the publishing rules apply in full: no personal, client or machine data, the humanizer pass on what a stranger reads before installing, a licence, and out-of-the-box operation. A new question replaces the closed one: **it needs a repository, and that repository needs its own gate list** — `PUBLISHING.md` §8 is written for this one and does not travel. The effort stays `m` for the packaging; the repository is not sized here. |
 | 2026-08-13 | → proposed | Raised at the owner's request, ahead of a session they have already planned, so the one run's evidence is not lost with the session that produced it. [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md)'s condition — *if and when the method survives being used once* — **is met**: it ran end to end and produced findings, a ranking, five child tasks and three corrections to itself. §1 records what the run says about the method rather than only that it ran, because that is the input a packaging task actually needs: steps 1–4 held, step 5 was thin, one band was wrong by four times, and the F3 line held under pressure. **Blocked on [T-136](T-136-re-run-the-external-research-with-a-recorded-search-record.md)** — packaging a method whose research half is known to be thin would set that defect in a form other projects copy, and T-136 is the fix already scheduled. `m`, and its own load cost is an acceptance criterion. |
