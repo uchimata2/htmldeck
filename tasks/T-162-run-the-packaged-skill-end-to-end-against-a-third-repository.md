@@ -74,9 +74,13 @@ has been exercised twice and whose estimated half has been exercised once is not
 - [ ] The run's own cost is stated: what was loaded, and how much
 
 **Open questions**
-- **Does the owner want findings raised as work items in `taskmd`, or only reported?** Raising them
-  places a guess about someone else's priorities on their board, which the method warns about in the
-  upstream step. — the owner, at plan.
+- ~~**Does the owner want findings raised as work items in `taskmd`, or only reported?**~~ **Answered
+  2026-08-15 — report only.** The run produces the two documents and stops; nothing is placed on
+  `taskmd`'s board by this task. **The owner owning both projects makes the objection weaker, not
+  absent** — the method's upstream rule is that a handed-over item carries the sender's guess about
+  someone else's priorities, and a first real run that ignores its own rule because the two owners
+  happen to be the same person teaches the skill the wrong habit at the exact moment it is being
+  tested for portability.
 
 ## 2. Plan
 

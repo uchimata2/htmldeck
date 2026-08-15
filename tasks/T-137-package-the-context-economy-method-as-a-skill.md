@@ -301,29 +301,33 @@ written for a session working a finding. **L-85**, **L-86** and **L-87** in
   `ecoctx`, supplied empty by the owner.** Recorded in the scope above, which is where its
   consequences are. It is not yet a git repository, so *bootstrap* is part of the work rather than a
   precondition of it.
-- ~~**Does `ecoctx` track its own work, and if so with what?**~~ **Answered 2026-08-15 by the owner —
-  taskmd, and on GitHub once taskmd can do that. It is scheduled and not ready, so the interim is two
-  homes split by who writes:**
-  - **GitHub Issues is the public inbox**, on from publication. It is the only channel a stranger will
-    use — nobody clones a repository to add a markdown file to `tasks/` — and this owner already runs
-    one that way, as the route for htmldeck's whole upstream register. An issue is a **report**: its
-    phase, type and severity are `ecoctx`'s to derive, on this project's *a task's classification is
-    not its filer's* rule.
-  - **`tasks/` with taskmd in-repo is the backlog**, owner-side, exactly as this repository does it in
-    public today. A task cites the issue it came from.
+- ~~**Does `ecoctx` track its own work, and if so with what?**~~ **Answered twice on 2026-08-15, and
+  the second answer reversed the first. `ecoctx` uses GitHub Issues as a taskmd backend from the
+  first push — one home, not two.**
 
-  **This is not undone when taskmd learns GitHub.** What that feature syncs is `tasks/` against
-  Issues, so having both in the shapes they would take anyway is what gives the sync something to
-  sync. **What must not be built now is the triage or sync tool** — that is the scheduled work, and a
-  local version of it is the trap this task's own §1 names: a workaround that sidesteps a broken
-  mechanism keeps working while the attribution stays wrong, so nothing forces the question. Manual
-  triage until it ships.
+  **The first answer was two homes with manual triage, and it rested on a premise that is only half
+  true.** The premise was that taskmd cannot yet work with GitHub and that support is scheduled.
+  Measured during this task's step-10 run: **taskmd's `T-010`, *write the GitHub Issues binding*, is
+  `done` and dated 2026-08-07** — a complete backend, one task per issue, driven by an agent through
+  `gh`, with no taskmd code touching the network by design. **What is still scheduled is their
+  `T-108`, *support a project moving its tasks from local files to GitHub Issues*, `proposed`.**
+  Starting fresh works today; **migrating an existing local board is the unbuilt part.** `ecoctx` has
+  an empty backlog, so it is exactly the supported case, and choosing local files first would have
+  walked deliberately into the migration that does not exist. **The reversal is the whole point of
+  reading the upstream backlog before proposing** — this method's own step-10 rule, which found the
+  answer while the argument was being written against it.
 
-  **And the loop that actually improves the method is runs, not reports.** Step 14 already says so;
-  what the owner's answer adds is that the tracker is insurance rather than the mechanism, because a
-  graded finding table is the evidence a method improvement needs and an issue is not one. Just-committed
-  is right for the first weeks and wrong permanently: before there are adopters the commit log **is**
-  the record, and the second run is when that stops being true.
+  **Two assumptions the binding makes, and they are adoption gates rather than notes.** GitHub
+  assigns the ids, so nothing may write a task id before the task exists — no id in a document, a
+  branch name or a commit message ahead of the issue. And **nobody closes or reopens an issue in the
+  web UI**, because `state` is rendered from the `status:` label and a click changes the rendering
+  without changing the fact, which no view will flag.
+
+  **What is unchanged from the first answer.** An issue is a **report**: its phase, type and severity
+  are `ecoctx`'s to derive, on this project's *a task's classification is not its filer's* rule. **No
+  triage or sync tool is built** — there is now nothing for one to do. And **the loop that actually
+  improves the method is runs, not reports**: a graded finding table is the evidence a rubric change
+  needs and an issue is not one, so the tracker is the inbox rather than the mechanism.
 - **When may `ecoctx` be published?** Not before step 10 has run the skill against a repository that
   is neither this one nor its own — the acceptance criterion is the product test, and publishing first
   makes the first stranger the first test. Publication itself is out of scope here; this records what
@@ -459,6 +463,7 @@ and the next measurement that can move it is step 4.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | (no change) | **The tracking answer was reversed after this task closed, by a fact this task's own step-10 run had already found.** taskmd's GitHub Issues binding is `done` and has been since 2026-08-07; what is scheduled is *migrating an existing local board*, not *using Issues*. `ecoctx` has an empty backlog, so the interim two-home arrangement would have been a deliberate walk into the one unbuilt case. **Issues from the first push, one home**, with the binding's two assumptions recorded as adoption gates rather than notes. Nothing about the skill changed; §1's third open question did. **This is the method's *read the upstream backlog before proposing* rule paying for itself a third time** — and this time it corrected a decision that had already been ruled, which is the case the rule is weakest at reaching, because the argument was over. |
 | 2026-08-15 | → done | **Twenty-six criteria, twenty-five met, and the unmet one is the product test rather than a loose end.** The skill exists in its own repository as three stages measured at 497 / 5,074 / three references loaded one at a time, with two tools and a self-test. **It was packaging and nothing was rewritten** — the method's prose transferred as written, and the three things added are shaping gaps rather than method changes: reference boundaries, the four refusals hoisted onto the body where a session cannot miss them, and the load-one-at-a-time table. **The session's own instruments failed twice and both are recorded because they are the method's rules catching the person applying them.** The finding register's first scanner reported twelve disagreements out of thirteen against a known answer, because a finding is stated in prose before it is ranked and the first mention of an id is never the ranked row; restricted to table rows it reproduces the independent answer exactly. The extraction test's first instrument produced 89 false alarms by matching ordinary English inside longer words, and bound on structure it produced zero across 238 distinctive names. **Steps 1–4 ran against a third repository and produced real figures**, which is the half of the method that has never failed; steps 5–11 did not, and that is [T-162](T-162-run-the-packaged-skill-end-to-end-against-a-third-repository.md), `l`, gating publication. A search proves nothing is *named*; only a run proves nothing is *assumed*. **`m` was the right band for what this task turned out to be** and the repository half did not blow it, because the bootstrap was boilerplate and the writing was transfer rather than invention. `shipped_in: unreleased` — the skill is in a different repository and nothing was released here. |
 | 2026-08-15 | → in_progress | **Steps 1 and 2 done, and step 2 caught this project failing its own subject on the first draft.** The repository exists — MIT, publishing identity, no trailer, `eol=lf` pinned because a project that publishes byte counts cannot let them depend on who checked it out. The README leads with the grading table rather than the steps, on the argument that two of thirteen bands holding is the part a stranger cannot get elsewhere. **The description was written alone and before the body**, so that it is a routing decision rather than a summary, and it came out at **610 bytes against a comparable skill's 474**. Trimmed to **497** by deleting two pairs of phrases that each said one thing twice, with every trigger kept: **−18.5%**, and **+4.9%** against the comparison, which the extra trigger surface earns because nobody guesses that *why is my session expensive* routes to an audit. **The remaining width is not slack and the figure is dated in §3, not here.** *On the band:* the owner deferred the re-band to this measurement and the measurement does not move it. Both steps were cheap and neither surprised; the risk was always steps 4 to 8 and step 10, and none of those has been touched. `m` is **untested rather than confirmed**, and step 4 is the next thing that can move it. **The third open question is closed by the owner's ruling** — `tasks/` and Issues, split by who writes, with no triage tool built here because that is taskmd's scheduled work — and a fourth was raised in its place: publication is gated on step 10, since otherwise the first stranger to run this is also its first test. |
 | 2026-08-15 | → planned | **Twelve steps, and the order is built around the one that can fail invisibly.** The extraction test is step 10 rather than step 1: a sentence naming this repository reads perfectly from inside `ecoctx`, so it has to be a search over the finished tree, and it is why no writing step copies prose across. Two steps touch this repository — the bootstrap's sibling and the home declaration — and nothing between them is mirrored back. **The description is written before the body and alone**, because it is the only part charged on every session and a description written afterwards is a summary of the body rather than a routing decision. **One step has a working local original and it does not travel as code**: `tools/docs/findings.py` is bound to this tracker's front-matter, so what moves is the shape — the link on the task, the ranking parsed where it stands, and a check failing in both directions. **The band still reads `m` and the plan says why that is now doubtful**: twelve steps, of which four are the packaging the band was set for and eight are the repository, and the honest re-band waits for the first two steps to be measured rather than being guessed here. |
