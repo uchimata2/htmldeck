@@ -2,7 +2,7 @@
 id: T-137
 title: Package the context-economy method as a skill
 type: deliverable
-status: planned
+status: in_progress
 phase: implement
 parent: T-130
 blocked_by: []
@@ -300,9 +300,33 @@ written for a session working a finding. **L-85**, **L-86** and **L-87** in
   `ecoctx`, supplied empty by the owner.** Recorded in the scope above, which is where its
   consequences are. It is not yet a git repository, so *bootstrap* is part of the work rather than a
   precondition of it.
-- **Does `ecoctx` track its own work, and if so with what?** This task is htmldeck's and stays here;
-  the skill's own backlog is a different question, and the honest answer may be *nothing yet* until it
-  has a second task. — the implementer, at plan, and reversible.
+- ~~**Does `ecoctx` track its own work, and if so with what?**~~ **Answered 2026-08-15 by the owner —
+  taskmd, and on GitHub once taskmd can do that. It is scheduled and not ready, so the interim is two
+  homes split by who writes:**
+  - **GitHub Issues is the public inbox**, on from publication. It is the only channel a stranger will
+    use — nobody clones a repository to add a markdown file to `tasks/` — and this owner already runs
+    one that way, as the route for htmldeck's whole upstream register. An issue is a **report**: its
+    phase, type and severity are `ecoctx`'s to derive, on this project's *a task's classification is
+    not its filer's* rule.
+  - **`tasks/` with taskmd in-repo is the backlog**, owner-side, exactly as this repository does it in
+    public today. A task cites the issue it came from.
+
+  **This is not undone when taskmd learns GitHub.** What that feature syncs is `tasks/` against
+  Issues, so having both in the shapes they would take anyway is what gives the sync something to
+  sync. **What must not be built now is the triage or sync tool** — that is the scheduled work, and a
+  local version of it is the trap this task's own §1 names: a workaround that sidesteps a broken
+  mechanism keeps working while the attribution stays wrong, so nothing forces the question. Manual
+  triage until it ships.
+
+  **And the loop that actually improves the method is runs, not reports.** Step 14 already says so;
+  what the owner's answer adds is that the tracker is insurance rather than the mechanism, because a
+  graded finding table is the evidence a method improvement needs and an issue is not one. Just-committed
+  is right for the first weeks and wrong permanently: before there are adopters the commit log **is**
+  the record, and the second run is when that stops being true.
+- **When may `ecoctx` be published?** Not before step 10 has run the skill against a repository that
+  is neither this one nor its own — the acceptance criterion is the product test, and publishing first
+  makes the first stranger the first test. Publication itself is out of scope here; this records what
+  gates it. — the owner, after review.
 
 ## 2. Plan
 
@@ -333,10 +357,31 @@ between them is `ecoctx`, and none of it is mirrored back — see the scope's la
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **`ecoctx` keeps its backlog in `tasks/` and its inbox in GitHub Issues** — the owner, 2026-08-15.
+  Recorded in §1's third open question with the reason and with what it forbids.
+- **`m` is unchanged and is measured, not re-guessed, once steps 1–2 are done** — the owner,
+  2026-08-15, answering the band question directly.
 
 **Outputs produced**
-- <none yet>
+- **Plan step 1 — the repository exists.** `ecoctx` is a git repository under the publishing identity
+  with no trailer, MIT, `eol=lf` pinned because this project publishes measured byte counts, and a
+  README leading with the grading table rather than with the steps. Two commits.
+- **Plan step 2 — the routing description, measured 2026-08-15.** **497 bytes**, front matter block
+  **532**. The comparison is this repository's own deck skill at **474 bytes** of description, measured
+  the same day and the same way, so `ecoctx` costs **+4.9%** of a description to have installed.
+  **The first draft was 610 and that is the finding**: 29% over the comparison, on a skill whose whole
+  argument is that this number matters. What came out was duplication and not trigger surface — two
+  pairs of phrases each saying one thing twice — so **−18.5% with every trigger kept**. The width that
+  remains is deliberate: nobody guesses that *why is my session expensive* routes here, where *make me
+  a slide deck* routes itself.
+
+**What steps 1–2 say about the `m` band**
+The owner deferred the re-band to this measurement, so here it is. **Nothing in the first two steps
+argues for moving it.** Both were cheap and neither surprised: the repository skeleton is boilerplate
+and the description is one paragraph that took one trim pass. **The band's risk was never here** — it
+is steps 4 to 8, three reference files and two tools, and step 10, which is a run against a third
+repository that nothing has sized. The honest statement is that `m` is untested rather than confirmed,
+and the next measurement that can move it is step 4.
 
 ## 4. Review
 
@@ -351,6 +396,7 @@ between them is `ecoctx`, and none of it is mirrored back — see the scope's la
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | → in_progress | **Steps 1 and 2 done, and step 2 caught this project failing its own subject on the first draft.** The repository exists — MIT, publishing identity, no trailer, `eol=lf` pinned because a project that publishes byte counts cannot let them depend on who checked it out. The README leads with the grading table rather than the steps, on the argument that two of thirteen bands holding is the part a stranger cannot get elsewhere. **The description was written alone and before the body**, so that it is a routing decision rather than a summary, and it came out at **610 bytes against a comparable skill's 474**. Trimmed to **497** by deleting two pairs of phrases that each said one thing twice, with every trigger kept: **−18.5%**, and **+4.9%** against the comparison, which the extra trigger surface earns because nobody guesses that *why is my session expensive* routes to an audit. **The remaining width is not slack and the figure is dated in §3, not here.** *On the band:* the owner deferred the re-band to this measurement and the measurement does not move it. Both steps were cheap and neither surprised; the risk was always steps 4 to 8 and step 10, and none of those has been touched. `m` is **untested rather than confirmed**, and step 4 is the next thing that can move it. **The third open question is closed by the owner's ruling** — `tasks/` and Issues, split by who writes, with no triage tool built here because that is taskmd's scheduled work — and a fourth was raised in its place: publication is gated on step 10, since otherwise the first stranger to run this is also its first test. |
 | 2026-08-15 | → planned | **Twelve steps, and the order is built around the one that can fail invisibly.** The extraction test is step 10 rather than step 1: a sentence naming this repository reads perfectly from inside `ecoctx`, so it has to be a search over the finished tree, and it is why no writing step copies prose across. Two steps touch this repository — the bootstrap's sibling and the home declaration — and nothing between them is mirrored back. **The description is written before the body and alone**, because it is the only part charged on every session and a description written afterwards is a summary of the body rather than a routing decision. **One step has a working local original and it does not travel as code**: `tools/docs/findings.py` is bound to this tracker's front-matter, so what moves is the shape — the link on the task, the ranking parsed where it stands, and a check failing in both directions. **The band still reads `m` and the plan says why that is now doubtful**: twelve steps, of which four are the packaging the band was set for and eight are the repository, and the honest re-band waits for the first two steps to be measured rather than being guessed here. |
 | 2026-08-15 | → specified | **The owner supplied the repository and it closed the question that gated everything else.** A sibling folder named `ecoctx`, empty and not yet a git repository — so the skill ships from its own project rather than from here, and *bootstrap* is inside the task instead of behind it. That adds a half nobody had sized: identity, licence, README, a gate list and a release rule, none of which travel, because `PUBLISHING.md` §8 is written against this tree's checkers and decks. What does travel is its **shape** — one command, and a partition with no fourth outcome. **Two of the three open questions closed and one was replaced.** *One skill or two* is settled at one, by the method's own `F1` rule rather than by taste: a second skill is a second description charged to every adopter on every session, and the halves are never wanted apart, since screening has nothing to work on until the measurement has run — so the deterministic half ships as tools the skill calls, which cost nothing until invoked. *Which repository* is answered above. What replaced them is whether `ecoctx` tracks its own work, which is the implementer's at plan and reversible. **One deliverable is declared and it is the small one**: `R8` gains the statement of where the operative method now lives, because a research record that reads as the method is the `F2` defect this method names — *declare the home, in the document that should have had it*. The skill's own files are not declared as paths, and the reason is in the scope: this tracker cannot resolve another tree, and a hand-kept mirror of one is the second copy `L-74` is about. Five acceptance criteria added for the repository half; the twenty for the package are untouched. **The `m` band is left alone and is now probably wrong** — it was set for packaging, and bootstrapping a publishable repository is not packaging. It is not re-banded here because `L-90` is exactly this: a band moved without a measurement, and plan is where the measurement comes from. |
 | 2026-08-14 | (no change) | **The owner added phase 2 to the method — `R8` §3.1, steps 12–16 — so this task's subject grew a closing half.** The method ended at *raise child work* and the gap was already visible from the other side: the third table's last-but-two row says implementing is a measurement pass and the loop back belongs in the method. Phase 2 is that loop plus four things it does not do — pair every band against what it bought, report what remedies cost, feed the method's own rubric, and write standing policy only into documents that already govern. **It changes what the skill is**, from an instrument that reports to one that leaves a discipline behind. Recorded in `R8` §3.1 as the one operative home and cited from the scope here, not restated. **The `m` band is left alone rather than guessed at**: this task is still `proposed`, its own `specify` pass sizes it, and a band moved without a measurement is what `L-90` is about. |
