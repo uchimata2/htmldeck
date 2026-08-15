@@ -55,6 +55,11 @@ they were homeless.**
   rows were not, and each is stamped so the recipient can tell.
 - Out: adding new observations. A session that finds one adds it to the owner's document — that is §7's
   standing rule and it does not stop when this task closes.
+  > **Superseded 2026-08-15 by [T-164](T-164-retire-the-cross-repo-register-in-favour-of-a-branch.md).**
+  > The standing rule this bullet relies on is retired: a session that finds a defect in one of the
+  > owner's other projects now fixes it there, as a branch with a failing test and a three-line pull
+  > request, and adds nothing to any register. The bullet is left standing because it describes what
+  > this task was scoped against.
 
 **Inputs**
 - [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §7 — the rules that travel with the rows, the
