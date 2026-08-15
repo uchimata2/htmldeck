@@ -370,32 +370,32 @@ followed.
 | — | ~~T-137~~ **done 2026-08-15** | the skill shipped to its own repository. **A search proves nothing is named; only a run proves nothing is assumed**, which is why T-162 exists rather than this row closing the question *Why it took the row:* **nothing blocked it.** T-136 and T-138 both landed and both left it more to package: §1 gained what the gathering step owes, and the method gained a field. The owner placed it after the handover on 2026-08-14, and the handover is done |
 | — | ~~T-163~~ **done 2026-08-15** | raised and closed the same day, correcting the refusal T-161 shipped 24 hours earlier. The premise was upstream's to correct and **the measurement was ours to take** — a seeded probe in each tree settled in one command what two comments had argued |
 | — | ~~T-164~~ **done 2026-08-15** | the register route retired on the day the last correction it produced closed. **34 KB of comments and 111 KB of records for no behaviour change**, measured at the owner's request; five rules, one home, five projects, and both live threads told |
-| **next** | T-162 | **the product test, and publication is gated on it.** `l` — a full sixteen-step audit is the size of the audit that produced the method, and T-137 was scoped as packaging. The subject is `taskmd`, chosen by the owner 2026-08-15. What is untested is the estimated half: eleven of thirteen bands missed in the one graded run, and `Controller` has never been reported on by any run at all |
-| 1 | T-158 | **the collision was ruled, so it is placed rather than parked.** `s`, and it guards the one figure every session pays for — which drifts while it waits, so it is the cheapest row that stops getting cheaper. Placed 2026-08-15 |
-| 2 | T-128 | prepared, ruled and surveyed |
-| 3 | T-159 | phase 2's byproduct class, placed after T-128 on 2026-08-15. `m`, and most of it is deciding which of the six defects are arithmetic and which are irreducibly a person's — behind T-128 because that answer is worth having on a board that has stopped moving |
-| 4 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
-| 5 | T-114 | the ruler is the one thing still known to bite past 13 slides |
-| 6 | T-109 | the hub of the source cluster; T-110, T-118 and T-121 are rework if it lands after them |
-| 7–9 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
-| 10 | T-115 | needs T-114 and T-109 to have settled what the shell offers |
-| 11 | T-117 | independent |
-| 12 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
-| 13 | T-155 | the same class again, one file along: a guard whose scope is wider than the thing it excuses. Placed beside T-097 because both are cheap corrections to a checker nobody is waiting on |
-| 14 | T-156 | the same class a third time, and T-136 found it: the screening partition is a part-of-whole claim in two documents that no command counts. Beside T-097 and T-155 for the same reason |
-| 15 | T-054 | after T-119, which may change which clauses are worth recording |
-| 16 | T-113 | research, and it decides ground T-112, T-111, T-041 and T-057 build on |
-| 17–18 | T-112, T-111 | the motion cluster, in that order |
-| 19 | T-041 | named in *what PH1 shipped without* |
-| 20 | T-057 | `xl`, and the least certain to be worth it |
+| — | ~~T-162~~ **done 2026-08-15** | the product test ran, and it ran in `taskmd` rather than here. **Three criteria pass, two partial, two fail** — the portable half names no file of its subject, which is the one a search could not settle, and `Controller` is reported on by a real run for the first time, 14 of 14. **Both failures are about the skill, not the subject**, so they went to `ecoctx`'s own tracker as issues #1–#6 and the skill-building work closed here. The one that decays is #1: the run never said what it had to be told, and the session that knew is gone |
+| **next** | T-158 | **the collision was ruled, so it is placed rather than parked.** `s`, and it guards the one figure every session pays for — which drifts while it waits, so it is the cheapest row that stops getting cheaper. Placed 2026-08-15 |
+| 1 | T-128 | prepared, ruled and surveyed |
+| 2 | T-159 | phase 2's byproduct class, placed after T-128 on 2026-08-15. `m`, and most of it is deciding which of the six defects are arithmetic and which are irreducibly a person's — behind T-128 because that answer is worth having on a board that has stopped moving |
+| 3 | T-119 | an audit that may **remove** rules is cheapest before the six tasks that build to them |
+| 4 | T-114 | the ruler is the one thing still known to bite past 13 slides |
+| 5 | T-109 | the hub of the source cluster; T-110, T-118 and T-121 are rework if it lands after them |
+| 6–8 | T-110, T-118, T-121 | that cluster, downstream of the component decision |
+| 9 | T-115 | needs T-114 and T-109 to have settled what the shell offers |
+| 10 | T-117 | independent |
+| 11 | T-097 | cheap, and the same class as the closed T-095 — an excusal that went stale when its rule got an instrument |
+| 12 | T-155 | the same class again, one file along: a guard whose scope is wider than the thing it excuses. Placed beside T-097 because both are cheap corrections to a checker nobody is waiting on |
+| 13 | T-156 | the same class a third time, and T-136 found it: the screening partition is a part-of-whole claim in two documents that no command counts. Beside T-097 and T-155 for the same reason |
+| 14 | T-054 | after T-119, which may change which clauses are worth recording |
+| 15 | T-113 | research, and it decides ground T-112, T-111, T-041 and T-057 build on |
+| 16–17 | T-112, T-111 | the motion cluster, in that order |
+| 18 | T-041 | named in *what PH1 shipped without* |
+| 19 | T-057 | `xl`, and the least certain to be worth it |
 
 **The owner's 2026-08-14 sequence is *audit → hand over → package*: T-153, then T-157, then T-137.**
-**The first two are done and the third is `next`**, so that sequence is spent and the numbers below
-have moved up one. *The middle step was briefly listed as a numbered row with no id, which
+**All three are done**, so that sequence is spent and the numbers below have moved up for it. *The middle step was briefly listed as a numbered row with no id, which
 `findings.py` rejected — correctly, since the number is a position among tasks and that is what it was
 not; it was T-157 and it is closed.*
 
-**T-158 and T-159 were placed by the owner on 2026-08-15**, at 1 and 3. They had held the `—` since
+**T-158 and T-159 were placed by the owner on 2026-08-15**, at 1 and 3; they are at `next` and 2
+since T-162 closed later the same day. They had held the `—` since
 phase 2 closed — T-158 while it waited on a ruling, T-159 because it was raised the same day — and the
 ruling had arrived without a position attached. **`—` on an open row means *unplaced*, not *blocked*,
 and the distinction cost a reader once**: T-158's row said *blocked on one owner decision* after the

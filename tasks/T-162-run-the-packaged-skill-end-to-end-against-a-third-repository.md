@@ -2,7 +2,7 @@
 id: T-162
 title: Run the packaged skill end to end against a third repository
 type: deliverable
-status: proposed
+status: done
 phase: review
 parent: T-137
 blocked_by: []
@@ -125,7 +125,21 @@ has been exercised twice and whose estimated half has been exercised once is not
 | The run's own cost is stated | partial | *The load path as measured* states what the session was handed, **by observation**, at ~56,600 characters ≈ 14,200 tokens across named items with a controller each. What the audit **itself** then consumed — the skill, the three search axes, the documents read — is not stated. |
 
 **Child fix tasks raised**
-- none yet — the two failures are this task's own remainder, not separate work.
+- **None here. The remainder went to `ecoctx`, which is where it can be worked** — six issues on
+  [`uchimata2/ecoctx`](https://github.com/uchimata2/ecoctx/issues), 2026-08-15, all `status:proposed`
+  / `phase:specify`:
+  [#1](https://github.com/uchimata2/ecoctx/issues/1) the skill-change writeup (criterion 5),
+  [#2](https://github.com/uchimata2/ecoctx/issues/2) `findings.py` needs the subject configured and
+  the skill never says so (criterion 6),
+  [#3](https://github.com/uchimata2/ecoctx/issues/3) emit the sixteen-step partition (criterion 1),
+  [#4](https://github.com/uchimata2/ecoctx/issues/4) define what the run's own cost means
+  (criterion 7),
+  [#5](https://github.com/uchimata2/ecoctx/issues/5) assert the shared numbering space is contiguous
+  (the `E-06` hole),
+  [#6](https://github.com/uchimata2/ecoctx/issues/6) its `.taskmd/` and `.handoff/` configs are
+  untracked.
+- **This closes the skill-building work in this repository.** `ecoctx` is its own public repository
+  with its own tracker; a seventh task here would be the register T-164 retired, in another shape.
 
 ## Log
 
@@ -133,3 +147,4 @@ has been exercised twice and whose estimated half has been exercised once is not
 | :--- | :--- | :--- |
 | 2026-08-15 | → proposed | **T-137's one unmet criterion, raised as its own task because it is the product test rather than a remainder.** A search proved the skill's text names no file of the repository it came from; a run is what proves nothing is *assumed*, and no static check reaches the gap between those two. Steps 1–4 already ran against `taskmd` during T-137 and produced figures, so what is untested is precisely the half that fails: screening, naming a mechanism, and writing a band, where eleven of thirteen missed in the one graded run. `l` rather than `m` because a full sixteen-step audit is the same size as the audit that produced the method, and T-137 was scoped as packaging. **`Controller` has never been reported on by a real run** — it was added on the last day of the first one — which makes this the first test of an eleventh field as well. Publication is gated on it. |
 | 2026-08-15 | specify → review | **The run happened elsewhere and its results have been assessed against the seven criteria: three pass, two partial, two fail.** The portability criterion — the one the task exists for — passes cleanly: the portable half names no file of `taskmd` beyond the cross-reference to its sibling, and a run proves that where the earlier search could not. `Controller` is reported on by a real run for the first time, 14 of 14. **The two failures are both about this side of the boundary, not about `taskmd`.** The skill-change writeup is absent, and its home is `uchimata2/ecoctx`'s issue tracker rather than anything here. `findings.py` was never run: the skill's own tool takes `--root` and `--config` and would have worked, but `taskmd` was never given the `.ecoctx.json` it asks for. Also open: `E-06` is missing from a numbering space both documents declare shared. Phase advanced to `review` because the deliverable exists and is being assessed; status stays `proposed` because two criteria are unmet. |
+| 2026-08-15 | → done | **Closed with two criteria unmet, the way T-137 closed with one — the unmet part is raised where it can be worked, and here it is not this repository.** The owner ruled the skill-building process closed here on 2026-08-15. The six remaining items are `uchimata2/ecoctx` issues [#1](https://github.com/uchimata2/ecoctx/issues/1)–[#6](https://github.com/uchimata2/ecoctx/issues/6), each carrying its own evidence rather than a pointer to this file, so they stand without it. **What this task set out to prove, it proved**: a run, not a search, is what shows nothing is assumed, and the portable half came through naming no file of its subject. **What it could not prove is that the skill teaches its own run** — criterion 5 asked the run to say what it had to be told, and the run said nothing, which is not the same as nothing being wrong. That question is `ecoctx` #1 and it is the one at risk of decay, because the session that hit the friction is gone. |
