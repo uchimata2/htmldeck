@@ -81,9 +81,8 @@ behaviour by running it, and cap the prose*.
 - [x] `python tools/tasks/lint.py` green
 
 **Open questions**
-- **A second comment, on the handoff thread.** `uchimata2/handoff-skill#75` is the other live thread
-  and its owner should not answer the next finding with an essay either. Outward-facing and in a
-  second repository, so the owner rules; the taskmd thread already carries the process line.
+- ~~**A second comment, on the handoff thread.**~~ **Answered by the owner 2026-08-15: post it.** Both
+  live threads now carry the process note, so neither recipient answers the next finding with an essay.
 
 ## 2. Plan
 
@@ -118,9 +117,10 @@ behaviour by running it, and cap the prose*.
 - **The registers stay exactly as delivered** — 2026-08-15. Only the handover records gained a line.
   Their rows were sent under a promise that a wrong row gets corrected rather than quietly dropped, and
   retiring the route does not retire that promise.
-- **One thread got the process note; the second waits for the owner** — 2026-08-15. taskmd's thread
-  carries three sentences saying we are switching to running the tool rather than describing it. The
-  handoff thread is a second repository and a second outward act, which is the owner's to authorise.
+- **Both threads carry the process note** — 2026-08-15. taskmd's says we are switching to running the
+  tool rather than describing it; the handoff skill's says the next finding arrives as a pull request.
+  The second was a separate outward act in a second repository and went out on the owner's word, not
+  on the first authorisation.
 
 **Outputs produced**
 - The owner's global working preferences — *Working across my own repositories*, five rules
@@ -128,7 +128,9 @@ behaviour by running it, and cap the prose*.
   the two sent registers now are
 - [`../docs/upstream/taskmd.md`](../docs/upstream/taskmd.md),
   [`../docs/upstream/handoff-skill.md`](../docs/upstream/handoff-skill.md) — one line each
-- [`uchimata2/taskmd#1`](https://github.com/uchimata2/taskmd/issues/1) — the process note, posted
+- [`uchimata2/taskmd#1`](https://github.com/uchimata2/taskmd/issues/1) and
+  [`uchimata2/handoff-skill#75`](https://github.com/uchimata2/handoff-skill/issues/75) — the process
+  note, posted on both
 
 ## 4. Review
 
