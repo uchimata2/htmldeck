@@ -130,8 +130,14 @@ DEFERRED = {
               "the judgement the 2026-08-08 ruling left with the person who prints.",
 
     # ---- `default` rules, held back by the owner's triage order: the account, then the hard ones
-    "DS-004": "Triage: `default`. *Other engines degrade gracefully* is unobservable from a "
-              "single-engine harness, which the ruleset's own `Reach` cell already says.",
+    "DS-004": "Triage: `default`. **Only the cross-engine half is unobservable** - no Firefox, no "
+              "Safari, no mobile, and a single-engine harness is not evidence about another engine "
+              "(R6 sections 9 and 10). *Degrade gracefully* stopped being unobservable when T-019 "
+              "built DS-009: the degraded state ships switched on and `preflight.py prove` renders "
+              "it four ways against a control that must not degrade, so that clause is checked "
+              "under DS-009 and cited here rather than given a second row - DS-073 guarded by "
+              "DS-070 is the same shape. Narrowed by T-097; the ruleset's `Reach` cell says the "
+              "same, and CLOSES WHEN a second engine is in the harness.",
     "DS-039": "Triage: `default`. `--measure` is declared and its 45-75ch band is a rendered "
               "line-length measurement this stage does not take.",
     "DS-047": "Triage: `default`. *Consistent margins, breathing room* needs a definition of "

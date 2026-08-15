@@ -309,15 +309,22 @@ def blocks(text):
 
     Table cells are their own sentences: a row states one claim per cell, and a wrapped markdown
     paragraph states one across several lines, so newlines join and `|` splits.
+
+    **A record dates its own row and nothing else** (T-155). `dated` was computed once per block, so a
+    single `~~...~~ **done 2026-08-10**` row switched `claimed()` off for every live claim sharing its
+    table - the value that excuses a figure taken from a scope wider than the figure. The split is
+    `claim_scopes()`, which T-088 and T-129 had already settled for the same question about a link's
+    subject; using a second rule here would be two answers to one question (**L-13**).
     """
     out = []
     for block in re.split(r"\n\s*\n", text):
-        dated = bool(DONE_ROW.search(block))
         sents = []
-        for cell in block.split("|"):
-            for s in SENTENCE_END.split(" ".join(cell.split("\n"))):
-                if s.strip():
-                    sents.append((s, dated))
+        for scope in claim_scopes(block):
+            dated = bool(DONE_ROW.search(scope))
+            for cell in scope.split("|"):
+                for s in SENTENCE_END.split(" ".join(cell.split("\n"))):
+                    if s.strip():
+                        sents.append((s, dated))
         out.append((block, sents))
     return out
 
@@ -922,7 +929,7 @@ def declared(table, outputs, docs=None, facts=None):
             # **The block's own rule runs first, and it takes numerals out of the remainder.** A
             # figure it judged is judged; leaving it in `unanchored` as well would report the same
             # numeral in two buckets and make the count mean nothing.
-            art = [] if DONE_ROW.search(block) else artifact_claims(block, rel, facts)
+            art = artifact_claims(block, rel, facts)
             for written, verdict, why, prop, art_rel in art:
                 rows.append((verdict, rel, written, why))
                 watched[(art_rel, prop)] = watched.get((art_rel, prop), 0) + 1
@@ -1006,6 +1013,11 @@ def artifact_claims(block, rel_doc, facts):
     """
     out = []
     for scope in claim_scopes(block):
+        # **The record excuses its own row** (T-155). This guard sat in `declared()` and read the
+        # whole block, so an index table holding one struck-through deck stopped every live row in it
+        # from being judged - and the count read as though they had been.
+        if DONE_ROW.search(scope):
+            continue
         out.extend(scope_claims(scope, rel_doc, facts))
     return out
 
@@ -1446,7 +1458,38 @@ def self_test():
                  "T-154 was raised from - the claim leaves the watched set BECAUSE it went wrong, "
                  "and four documents held the stale split with every gate green")
 
-    # 13. **A document that measures itself, in both terms and both directions** (T-158).
+    # 13. **A record dates its own row, not the table it sits in** (T-155).
+    #
+    # **The defect has no instance in the tree**, which is exactly why it needs a fixture rather than a
+    # code comment: T-154 wrote this fix, measured it as changing no verdict in any of the six
+    # documents, and correctly declined to ship an unmeasured behaviour change. So the fixture builds
+    # its own instance (**L-78**, **L-85**) - a two-row table, one row a dated record and one a live
+    # claim about the same file. Under the block-scoped guard the record's date reaches the live row
+    # and **both** go unjudged, with every count in the report reading as though they had been.
+    fix_facts = {"examples/reference-deck.html":
+                 {"KB": 1, "bytes": 2, "slides": 7, "figures": 3}}
+    two_rows = ("| ~~[the deck](reference-deck.html) had 4 slides~~ **done 2026-08-10** | a record |\n"
+                "| [the deck](reference-deck.html) has 7 slides | a live claim |")
+    judged = artifact_claims(two_rows, "examples/README.md", fix_facts)
+    if not [r for r in judged if r[0] == "7" and r[1] == "compared"]:
+        sys.exit("SELF-TEST FAILED: a live claim sharing a table with a dated record went unjudged, "
+                 "reported %r. That is the block-scoped guard T-155 removed - one struck-through row "
+                 "switches off every live row beside it, and the count says nothing is missing"
+                 % (judged, ))
+    if [r for r in judged if r[0] == "4"]:
+        sys.exit("SELF-TEST FAILED: the dated record itself was judged, reported %r. A record states "
+                 "what was true then; holding it to today's figure reports a true sentence as stale"
+                 % (judged, ))
+
+    # The same split, one layer down, where `claimed()` reads it. `blocks()` marks a sentence dated
+    # from the scope it sits in, so the two rows must disagree - and under block scope they cannot.
+    marks = dict((s.strip(), d) for s, d in sentences(two_rows) if "slides" in s)
+    if sorted(marks.values()) != [False, True]:
+        sys.exit("SELF-TEST FAILED: a dated record and a live claim in one table were marked the "
+                 "same way (%r), so `claimed()` is switched on or off for both together - which is "
+                 "the scope error, whichever way it happens to land" % (marks, ))
+
+    # 14. **A document that measures itself, in both terms and both directions** (T-158).
     #
     # **Built out of a synthetic page and a synthetic fence, never the live `CLAUDE.md`** (**L-78**,
     # **L-85**). That rule matters more than usual here: the subject of this check *is* a tracked

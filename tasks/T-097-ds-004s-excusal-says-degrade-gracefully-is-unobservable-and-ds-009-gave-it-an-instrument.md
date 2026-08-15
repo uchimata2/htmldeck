@@ -2,8 +2,8 @@
 id: T-097
 title: DS-004's excusal says degrading gracefully is unobservable, and DS-009 gave half of it an instrument
 type: analysis
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-019, T-017, T-041]
@@ -12,8 +12,8 @@ owner: maintainer
 business_value: medium
 effort: s
 created: 2026-08-11
-updated: 2026-08-12
-deliverables: []
+updated: 2026-08-15
+deliverables: [docs/DESIGN-SYSTEM.md, tools/deck/check.py]
 ---
 
 # T-097 — DS-004's excusal says degrading gracefully is unobservable, and DS-009 gave half of it an instrument
@@ -94,22 +94,49 @@ wider.
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The degradation clause is cited to DS-009, not made a checked row under DS-004** — 2026-08-15.
+  DS-009 already ships the mechanism `hard`/`auto`, so a second row would be one mechanism with two
+  ids and would drift the first time either moved (**L-13**). It is recorded the way DS-073 is
+  *guarded by* DS-070 in `audit.py`'s `ABSENCE_IS_A_PASS` — the shape §1 named.
+- **The coverage arithmetic is deliberately unchanged.** DS-004 stays deferred and unchecked, so the
+  gate's split stays **84 of 115**, verified after the edit. Had the clause become a checked row the
+  account would have moved, and `figures.py`'s `ACCOUNTS` binds that split across five documents —
+  a ripple this task's `s` estimate never contained.
+- **Both homes were reworded in the same edit**, because they are two statements of one fact and the
+  failure mode is that they stop agreeing (**L-13**). The `Reach` cell keeps the ruleset's voice and
+  the `DEFERRED` entry keeps the gate's; neither quotes the other.
+- **The fifth criterion is answered `no`, and a task carries it.** An excusal cannot be held to its
+  closing condition mechanically — `staleExcusals` fires only when a rule is excused **and** checked,
+  and DS-004 was excused and not checked, so the account was silent by construction rather than
+  wrong. Raised as
+  [T-165](T-165-give-a-deferred-entry-a-closing-condition-a-check-can-read.md).
 
 **Outputs produced**
-- <none yet>
+- [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — DS-004's `Reach` cell.
+- [`tools/deck/check.py`](../tools/deck/check.py) — `DEFERRED["DS-004"]`.
+- [T-165](T-165-give-a-deferred-entry-a-closing-condition-a-check-can-read.md) — the task the fifth
+  criterion asked for.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| DS-004's excusal names the half it excuses, and the half it no longer does | met | `DEFERRED["DS-004"]` now opens *Only the cross-engine half is unobservable* and states what T-019 changed, printed by `check.py` in the deferred list. |
+| The ruleset's `Reach` cell agrees with it, in the ruleset's own words | met | Reworded in the same edit, in the ruleset's voice rather than by quoting the gate — the two are one fact with two homes, and the failure mode is that they stop agreeing (**L-13**). |
+| Whether the degradation clause is checked, or cited to DS-009, is decided and written down | met | **Cited to DS-009.** One mechanism, one home; DS-009 is already `hard`/`auto`, so a second row under DS-004 would duplicate it. Recorded in the shape `audit.py` uses for *DS-073 guarded by DS-070*, which §1 named as the precedent. |
+| The coverage account is unchanged in arithmetic, or its change is stated | met | **Unchanged: 84 of 115**, re-derived after the edit, and `ruleset.py --counts` still reports 115 owned, 89 hard, 4 excused. Deliberate — see §3. |
+| A note on whether an excusal can be held to its own closing condition mechanically, or a task raised saying it cannot | met | **It cannot, and a task carries it**: [T-165](T-165-give-a-deferred-entry-a-closing-condition-a-check-can-read.md). `staleExcusals` fires only on a rule that is excused *and* checked; DS-004 was excused and not checked, so nothing could notice its reason half-dying when T-019 shipped DS-009. The account was silent by construction, not wrong — **L-54**. |
 
 **Child fix tasks raised**
-- none
+- [T-165](T-165-give-a-deferred-entry-a-closing-condition-a-check-can-read.md) — give a deferred entry
+  a closing condition a check can read.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-15 | → done | All five criteria met. **The interesting half is the fifth**: the excusal was not wrong, it was *less true than it was*, and nothing in the account could ever have said so — which is the class T-165 now carries. The two rewordings were the cheap part and the arithmetic was deliberately left alone, since making the clause a checked row would have moved a split five documents state. |
+| 2026-08-15 | → in_progress | Both homes reworded in one edit; the degradation clause cited to DS-009 rather than given a second row. |
+| 2026-08-15 | → planned | §2 was already written when the task was raised on 2026-08-11 and needed no revision — the four steps survived four days and one release. Recorded as its own row because the phase was earned then, not today. |
+| 2026-08-15 | → specified | §1 complete since 2026-08-12; the status was never advanced. |
 | 2026-08-11 | → proposed | Raised from the closed-record sweep after `0.2.1`. The sweep was looking for commitments that escaped the board and found the mirror image: a written-down blindness that had quietly stopped being one. `medium` because nothing is broken and a gate is claiming less than it has; `s` because the work is two rewordings and one decision. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule. |
