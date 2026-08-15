@@ -53,7 +53,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-156](T-156-make-the-screening-partition-a-figure-a-checker-can-count.md) | Make the screening partition a figure a checker can count | `PH3` | - | `proposed` | `specify` | - | - | T-130, T-136, T-154 |
 | [T-158](T-158-measure-the-tier-1-bound-instead-of-remembering-it.md) | Measure the tier-1 bound instead of remembering it | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-134, T-143, T-144, T-152, T-153 |
 | [T-159](T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md) | Gate the text a reader follows and no checker reads | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-146, T-147, T-149, T-153 |
-| [T-162](T-162-run-the-packaged-skill-end-to-end-against-a-third-repository.md) | Run the packaged skill end to end against a third repository | `PH3` | - | `proposed` | `specify` | T-137 | - | T-130, T-136, T-137, T-153 |
+| [T-162](T-162-run-the-packaged-skill-end-to-end-against-a-third-repository.md) | Run the packaged skill end to end against a third repository | `PH3` | - | `proposed` | `review` | T-137 | - | T-130, T-136, T-137, T-153 |
 
 ## Closed
 

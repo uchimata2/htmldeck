@@ -3,7 +3,7 @@ id: T-162
 title: Run the packaged skill end to end against a third repository
 type: deliverable
 status: proposed
-phase: specify
+phase: review
 parent: T-137
 blocked_by: []
 related: [T-130, T-136, T-137, T-153]
@@ -63,10 +63,10 @@ has been exercised twice and whose estimated half has been exercised once is not
 **Acceptance criteria**
 - [ ] All sixteen steps are accounted for: run, or **not run with a stated reason**. A step in
       neither fails this task, which is the skill's own partition rule applied to the skill
-- [ ] Both documents exist in `taskmd`, and the portable half names no file of `taskmd` either
-- [ ] Every finding carries all eleven fields, `Controller` included — **it has never been reported on
+- [x] Both documents exist in `taskmd`, and the portable half names no file of `taskmd` either
+- [x] Every finding carries all eleven fields, `Controller` included — **it has never been reported on
       by a real run**, because it was added on the last day of the first one
-- [ ] The search record covers three axes with saturation declared per axis and the empty rounds listed
+- [x] The search record covers three axes with saturation declared per axis and the empty rounds listed
 - [ ] **Every place the skill had to be explained, worked around or ignored is written down** as a
       change to the skill, separately from anything about `taskmd`
 - [ ] `findings.py` runs green against the result, configured for whatever `taskmd` uses, **with no
@@ -91,22 +91,45 @@ has been exercised twice and whose estimated half has been exercised once is not
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The run was carried out in `taskmd` by its own session, 2026-08-15, report only** — the open
+  question above, answered before it started. This section assesses what it produced; it is not a
+  re-run, and nothing here re-derives a figure the run measured.
+- **Entries without a field table were not held to the eleven fields** — 2026-08-15. E-14, E-15,
+  E-17, E-18, E-19 and *Write volume — surface D* are labelled *result, not a finding*, *family with
+  no finding, reported as one*, or *rejected under F3's guard rail* in the source. Only the 14
+  entries that do carry a field table were checked.
+- **The packaged skill has no source in this repository, and does not need one** — 2026-08-15,
+  confirmed by a full-depth search: `skills/` holds `htmldeck` alone, and the five files naming
+  `ecoctx` are records about it. **It is its own public repository, `uchimata2/ecoctx`**, which
+  tracks its work as GitHub issues under taskmd's issues binding. So the fifth criterion's output has
+  a durable home — it is just not here, which is why this task cannot close it.
 
 **Outputs produced**
-- <none yet>
+- `taskmd`, branch `audit/ecoctx-phase1`, commit `304e52f` (2026-08-15 17:10) — two documents under
+  `docs/audits/`: the portable half at **29,286 characters** (11 findings, technique catalogue,
+  search record) and the project's own report at **25,758** (ranked list, load path, upstream
+  section, 7-row byproduct register).
+- **That branch has no upstream and is not pushed.** This project's note commit `e0a0f57` (17:46)
+  sits on top of it — the one recorded in the handoff before either document had been read.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| All sixteen steps accounted for | partial | Steps 1–11 are each traceable to a section, and steps 12–16 are named collectively as phase 2, *blocked on the repairs*. **No partition names all sixteen** — the word appears in neither document. Substance yes, form no. |
+| Both documents exist in `taskmd`; portable half names no file of it | **pass** | Both are in the tree at `304e52f`. A search of the portable half for `taskmd`, `METHOD.md`, `tasks/README`, `T-1__`, `SKILL.md`, `pytest` and `context T-` returns **two hits, both on lines 4–5, and both the cross-reference to the sibling document**. This is the criterion the task exists for. |
+| Every finding carries all eleven fields, `Controller` included | **pass** | 14 of 14 findings with a field table carry `Controller`, verified by count — 11 in the portable half, 3 here. The tables run Surface, Family, Finding, Change, Gain, Effort, Risk, Applies to, Controller, Source under an id-and-title heading. **One caveat: `E-06` exists in neither document**, though the two declare one shared numbering space; ids run E-01–E-05 and E-07–E-20, and nothing explains the hole. |
+| Search record, three axes, saturation per axis, empty rounds listed | **pass** | A/B/C at 7, 9 and 5 rounds, each with its stopping round quoted. Axis C is recorded as **not fully empty** rather than rounded up, which is the honest form of the claim. |
+| Every place the skill had to be explained is written down as a change to the skill | **fail** | **Absent from both documents.** The byproduct register's 7 rows are about `taskmd`, the harness and the user; none is a change to `ecoctx`. §1 calls this *the output this task exists for*. |
+| `findings.py` runs green against the result, with no change to the tool | **fail — not run** | Named nowhere in either document. The skill ships its own `tools/findings.py`, which takes `--root` and `--config`; pointed at `taskmd` it exits 1 with `report not found at AUDIT.md - set "report" in .ecoctx.json`. **The tool supports the criterion — `taskmd` was simply never configured for it.** No change to the tool is needed, so the escape clause does not apply. *(This project's older [`tools/docs/findings.py`](../tools/docs/findings.py) is a different, repo-bound tool and is not what the criterion means.)* |
+| The run's own cost is stated | partial | *The load path as measured* states what the session was handed, **by observation**, at ~56,600 characters ≈ 14,200 tokens across named items with a controller each. What the audit **itself** then consumed — the skill, the three search axes, the documents read — is not stated. |
 
 **Child fix tasks raised**
-- none
+- none yet — the two failures are this task's own remainder, not separate work.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-15 | → proposed | **T-137's one unmet criterion, raised as its own task because it is the product test rather than a remainder.** A search proved the skill's text names no file of the repository it came from; a run is what proves nothing is *assumed*, and no static check reaches the gap between those two. Steps 1–4 already ran against `taskmd` during T-137 and produced figures, so what is untested is precisely the half that fails: screening, naming a mechanism, and writing a band, where eleven of thirteen missed in the one graded run. `l` rather than `m` because a full sixteen-step audit is the same size as the audit that produced the method, and T-137 was scoped as packaging. **`Controller` has never been reported on by a real run** — it was added on the last day of the first one — which makes this the first test of an eleventh field as well. Publication is gated on it. |
+| 2026-08-15 | specify → review | **The run happened elsewhere and its results have been assessed against the seven criteria: three pass, two partial, two fail.** The portability criterion — the one the task exists for — passes cleanly: the portable half names no file of `taskmd` beyond the cross-reference to its sibling, and a run proves that where the earlier search could not. `Controller` is reported on by a real run for the first time, 14 of 14. **The two failures are both about this side of the boundary, not about `taskmd`.** The skill-change writeup is absent, and its home is `uchimata2/ecoctx`'s issue tracker rather than anything here. `findings.py` was never run: the skill's own tool takes `--root` and `--config` and would have worked, but `taskmd` was never given the `.ecoctx.json` it asks for. Also open: `E-06` is missing from a numbering space both documents declare shared. Phase advanced to `review` because the deliverable exists and is being assessed; status stays `proposed` because two criteria are unmet. |
