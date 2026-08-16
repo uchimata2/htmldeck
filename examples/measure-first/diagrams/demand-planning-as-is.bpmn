@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_demand_planning_as_is" targetNamespace="http://dentalpro/bpmn" exporter="bpmnlay" exporterVersion="1.0">
+  <bpmn:dataStore id="DataStore_1" name="ERP sales history" />
+  <bpmn:dataStore id="DataStore_2" name="Annual revenue budget" />
+  <bpmn:dataStore id="DataStore_3" name="Stock levels" />
+  <bpmn:dataStore id="DataStore_4" name="Actual sales" />
+  <bpmn:collaboration id="Collaboration_1">
+    <bpmn:participant id="Participant_main" name="Larkfield Dental Group" processRef="Process_demand_planning_as_is" />
+    <bpmn:participant id="Participant_practice" name="Dental practices &amp; distributors" />
+    <bpmn:participant id="Participant_supplier" name="Component suppliers" />
+    <bpmn:messageFlow id="MessageFlow_1" name="Orders" sourceRef="Participant_practice" targetRef="Task_history" />
+    <bpmn:messageFlow id="MessageFlow_2" name="Deliveries" sourceRef="Participant_supplier" targetRef="Task_order" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_demand_planning_as_is" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_1" name="Sales">
+        <bpmn:flowNodeRef>Task_regional</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_2" name="Demand Planning">
+        <bpmn:flowNodeRef>StartEvent_cycle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_history</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_merge</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_compare</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_deviation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_meeting</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_accuracy</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_planned</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_3" name="Finance">
+        <bpmn:flowNodeRef>Task_budget_check</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_budget</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_4" name="Supply Chain &amp; Production">
+        <bpmn:flowNodeRef>Task_release</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_order</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_cycle" name="Monthly cycle starts">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_history" name="Calculate draft forecast from sales history">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+      <bpmn:property id="Property_Task_history" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_Data_1">
+        <bpmn:sourceRef>Data_1</bpmn:sourceRef>
+        <bpmn:targetRef>Property_Task_history</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_Data_2">
+        <bpmn:targetRef>Data_2</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:task id="Task_regional" name="Adjust the draft for each market">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_Data_3">
+        <bpmn:targetRef>Data_3</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:task id="Task_merge" name="Merge the sheets into one plan">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_Data_4">
+        <bpmn:targetRef>Data_4</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:task id="Task_compare" name="Compare the combined plan against the draft">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_Data_5">
+        <bpmn:targetRef>Data_5</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_deviation" name="More than 15% away from the draft?">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_meeting" name="Monthly meeting agrees the final numbers">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_Data_6">
+        <bpmn:targetRef>Data_6</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:task id="Task_budget_check" name="Check the plan against the annual budget">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+      <bpmn:property id="Property_Task_budget_check" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_Data_7">
+        <bpmn:sourceRef>Data_7</bpmn:sourceRef>
+        <bpmn:targetRef>Property_Task_budget_check</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_Data_8">
+        <bpmn:targetRef>Data_8</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_budget" name="Fits the annual budget?">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_release" name="Approve and release the plan">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_Data_9">
+        <bpmn:targetRef>Data_9</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:task id="Task_order" name="Order materials and schedule production">
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+      <bpmn:property id="Property_Task_order" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_Data_10">
+        <bpmn:sourceRef>Data_10</bpmn:sourceRef>
+        <bpmn:targetRef>Property_Task_order</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_Data_11">
+        <bpmn:targetRef>Data_11</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:task id="Task_accuracy" name="Compare forecast with what actually sold">
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+      <bpmn:outgoing>Flow_14</bpmn:outgoing>
+      <bpmn:property id="Property_Task_accuracy" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_Data_12">
+        <bpmn:sourceRef>Data_12</bpmn:sourceRef>
+        <bpmn:targetRef>Property_Task_accuracy</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_Data_13">
+        <bpmn:targetRef>Data_13</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_planned" name="Plan in production">
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:dataStoreReference id="Data_1" name="ERP sales history" dataStoreRef="DataStore_1" />
+    <bpmn:dataObject id="DataObject_Data_2" />
+    <bpmn:dataObjectReference id="Data_2" name="Draft forecast" dataObjectRef="DataObject_Data_2" />
+    <bpmn:dataObject id="DataObject_Data_3" />
+    <bpmn:dataObjectReference id="Data_3" name="Eight regional sheets" dataObjectRef="DataObject_Data_3" />
+    <bpmn:dataObject id="DataObject_Data_4" />
+    <bpmn:dataObjectReference id="Data_4" name="Combined forecast" dataObjectRef="DataObject_Data_4" />
+    <bpmn:dataObject id="DataObject_Data_5" />
+    <bpmn:dataObjectReference id="Data_5" name="List of big differences" dataObjectRef="DataObject_Data_5" />
+    <bpmn:dataObject id="DataObject_Data_6" />
+    <bpmn:dataObjectReference id="Data_6" name="Agreed forecast" dataObjectRef="DataObject_Data_6" />
+    <bpmn:dataStoreReference id="Data_7" name="Annual revenue budget" dataStoreRef="DataStore_2" />
+    <bpmn:dataObject id="DataObject_Data_8" />
+    <bpmn:dataObjectReference id="Data_8" name="Budget variance note" dataObjectRef="DataObject_Data_8" />
+    <bpmn:dataObject id="DataObject_Data_9" />
+    <bpmn:dataObjectReference id="Data_9" name="Released demand plan" dataObjectRef="DataObject_Data_9" />
+    <bpmn:dataStoreReference id="Data_10" name="Stock levels" dataStoreRef="DataStore_3" />
+    <bpmn:dataObject id="DataObject_Data_11" />
+    <bpmn:dataObjectReference id="Data_11" name="Purchase orders" dataObjectRef="DataObject_Data_11" />
+    <bpmn:dataStoreReference id="Data_12" name="Actual sales" dataStoreRef="DataStore_4" />
+    <bpmn:dataObject id="DataObject_Data_13" />
+    <bpmn:dataObjectReference id="Data_13" name="Accuracy sheet" dataObjectRef="DataObject_Data_13" />
+    <bpmn:sequenceFlow id="Flow_1" name="" sourceRef="StartEvent_cycle" targetRef="Task_history" />
+    <bpmn:sequenceFlow id="Flow_2" name="" sourceRef="Task_history" targetRef="Task_regional" />
+    <bpmn:sequenceFlow id="Flow_3" name="" sourceRef="Task_regional" targetRef="Task_merge" />
+    <bpmn:sequenceFlow id="Flow_4" name="" sourceRef="Task_merge" targetRef="Task_compare" />
+    <bpmn:sequenceFlow id="Flow_5" name="" sourceRef="Task_compare" targetRef="Gateway_deviation" />
+    <bpmn:sequenceFlow id="Flow_6" name="yes" sourceRef="Gateway_deviation" targetRef="Task_meeting" />
+    <bpmn:sequenceFlow id="Flow_7" name="no" sourceRef="Gateway_deviation" targetRef="Task_budget_check" />
+    <bpmn:sequenceFlow id="Flow_8" name="" sourceRef="Task_meeting" targetRef="Task_budget_check" />
+    <bpmn:sequenceFlow id="Flow_9" name="" sourceRef="Task_budget_check" targetRef="Gateway_budget" />
+    <bpmn:sequenceFlow id="Flow_10" name="yes" sourceRef="Gateway_budget" targetRef="Task_release" />
+    <bpmn:sequenceFlow id="Flow_11" name="no" sourceRef="Gateway_budget" targetRef="Task_meeting" />
+    <bpmn:sequenceFlow id="Flow_12" name="" sourceRef="Task_release" targetRef="Task_order" />
+    <bpmn:sequenceFlow id="Flow_13" name="" sourceRef="Task_order" targetRef="Task_accuracy" />
+    <bpmn:sequenceFlow id="Flow_14" name="" sourceRef="Task_accuracy" targetRef="EndEvent_planned" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Participant_practice_di" bpmnElement="Participant_practice" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="2640" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_supplier_di" bpmnElement="Participant_supplier" isHorizontal="true">
+        <dc:Bounds x="0" y="1270" width="2640" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_main_di" bpmnElement="Participant_main" isHorizontal="true">
+        <dc:Bounds x="0" y="100" width="2640" height="1130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1_di" bpmnElement="Lane_1" isHorizontal="true">
+        <dc:Bounds x="30" y="100" width="2610" height="210" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_2_di" bpmnElement="Lane_2" isHorizontal="true">
+        <dc:Bounds x="30" y="310" width="2610" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_3_di" bpmnElement="Lane_3" isHorizontal="true">
+        <dc:Bounds x="30" y="650" width="2610" height="290" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_4_di" bpmnElement="Lane_4" isHorizontal="true">
+        <dc:Bounds x="30" y="940" width="2610" height="290" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_cycle_di" bpmnElement="StartEvent_cycle">
+        <dc:Bounds x="132" y="487" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_history_di" bpmnElement="Task_history">
+        <dc:Bounds x="300" y="465" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_regional_di" bpmnElement="Task_regional">
+        <dc:Bounds x="500" y="125" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_merge_di" bpmnElement="Task_merge">
+        <dc:Bounds x="700" y="465" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_compare_di" bpmnElement="Task_compare">
+        <dc:Bounds x="900" y="465" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_deviation_di" bpmnElement="Gateway_deviation">
+        <dc:Bounds x="1125" y="480" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_meeting_di" bpmnElement="Task_meeting">
+        <dc:Bounds x="1300" y="465" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_budget_check_di" bpmnElement="Task_budget_check">
+        <dc:Bounds x="1500" y="755" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_budget_di" bpmnElement="Gateway_budget">
+        <dc:Bounds x="1725" y="770" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_release_di" bpmnElement="Task_release">
+        <dc:Bounds x="1900" y="1045" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_order_di" bpmnElement="Task_order">
+        <dc:Bounds x="2100" y="1045" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_accuracy_di" bpmnElement="Task_accuracy">
+        <dc:Bounds x="2300" y="465" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_planned_di" bpmnElement="EndEvent_planned">
+        <dc:Bounds x="2532" y="487" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_1_di" bpmnElement="Data_1">
+        <dc:Bounds x="332" y="385" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_2_di" bpmnElement="Data_2">
+        <dc:Bounds x="332" y="575" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_3_di" bpmnElement="Data_3">
+        <dc:Bounds x="532" y="235" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_4_di" bpmnElement="Data_4">
+        <dc:Bounds x="732" y="575" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_5_di" bpmnElement="Data_5">
+        <dc:Bounds x="932" y="575" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_6_di" bpmnElement="Data_6">
+        <dc:Bounds x="1332" y="575" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_7_di" bpmnElement="Data_7">
+        <dc:Bounds x="1532" y="675" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_8_di" bpmnElement="Data_8">
+        <dc:Bounds x="1532" y="865" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_9_di" bpmnElement="Data_9">
+        <dc:Bounds x="1932" y="1155" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_10_di" bpmnElement="Data_10">
+        <dc:Bounds x="2132" y="965" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_11_di" bpmnElement="Data_11">
+        <dc:Bounds x="2132" y="1155" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_12_di" bpmnElement="Data_12">
+        <dc:Bounds x="2332" y="385" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Data_13_di" bpmnElement="Data_13">
+        <dc:Bounds x="2332" y="575" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="168" y="505" />
+        <di:waypoint x="300" y="505" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="400" y="505" />
+        <di:waypoint x="450" y="505" />
+        <di:waypoint x="450" y="165" />
+        <di:waypoint x="500" y="165" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="600" y="165" />
+        <di:waypoint x="650" y="165" />
+        <di:waypoint x="650" y="505" />
+        <di:waypoint x="700" y="505" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="800" y="505" />
+        <di:waypoint x="900" y="505" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="1000" y="505" />
+        <di:waypoint x="1125" y="505" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="1175" y="505" />
+        <di:waypoint x="1300" y="505" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1183" y="485" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="1150" y="530" />
+        <di:waypoint x="1150" y="795" />
+        <di:waypoint x="1500" y="795" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1158" y="650" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="1400" y="505" />
+        <di:waypoint x="1450" y="505" />
+        <di:waypoint x="1450" y="795" />
+        <di:waypoint x="1500" y="795" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
+        <di:waypoint x="1600" y="795" />
+        <di:waypoint x="1725" y="795" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
+        <di:waypoint x="1750" y="820" />
+        <di:waypoint x="1750" y="1085" />
+        <di:waypoint x="1900" y="1085" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1758" y="940" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11">
+        <di:waypoint x="1762" y="770" />
+        <di:waypoint x="1762" y="360" />
+        <di:waypoint x="1375" y="360" />
+        <di:waypoint x="1375" y="465" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1770" y="553" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12">
+        <di:waypoint x="2000" y="1085" />
+        <di:waypoint x="2100" y="1085" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13_di" bpmnElement="Flow_13">
+        <di:waypoint x="2200" y="1085" />
+        <di:waypoint x="2250" y="1085" />
+        <di:waypoint x="2250" y="505" />
+        <di:waypoint x="2300" y="505" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14_di" bpmnElement="Flow_14">
+        <di:waypoint x="2400" y="505" />
+        <di:waypoint x="2532" y="505" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_Data_1_di" bpmnElement="DataInputAssociation_Data_1">
+        <di:waypoint x="350" y="435" />
+        <di:waypoint x="350" y="465" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_Data_2_di" bpmnElement="DataOutputAssociation_Data_2">
+        <di:waypoint x="350" y="545" />
+        <di:waypoint x="350" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_Data_3_di" bpmnElement="DataOutputAssociation_Data_3">
+        <di:waypoint x="550" y="205" />
+        <di:waypoint x="550" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_Data_4_di" bpmnElement="DataOutputAssociation_Data_4">
+        <di:waypoint x="750" y="545" />
+        <di:waypoint x="750" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_Data_5_di" bpmnElement="DataOutputAssociation_Data_5">
+        <di:waypoint x="950" y="545" />
+        <di:waypoint x="950" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_Data_6_di" bpmnElement="DataOutputAssociation_Data_6">
+        <di:waypoint x="1350" y="545" />
+        <di:waypoint x="1350" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_Data_7_di" bpmnElement="DataInputAssociation_Data_7">
+        <di:waypoint x="1550" y="725" />
+        <di:waypoint x="1550" y="755" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_Data_8_di" bpmnElement="DataOutputAssociation_Data_8">
+        <di:waypoint x="1550" y="835" />
+        <di:waypoint x="1550" y="865" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_Data_9_di" bpmnElement="DataOutputAssociation_Data_9">
+        <di:waypoint x="1950" y="1125" />
+        <di:waypoint x="1950" y="1155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_Data_10_di" bpmnElement="DataInputAssociation_Data_10">
+        <di:waypoint x="2150" y="1015" />
+        <di:waypoint x="2150" y="1045" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_Data_11_di" bpmnElement="DataOutputAssociation_Data_11">
+        <di:waypoint x="2150" y="1125" />
+        <di:waypoint x="2150" y="1155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_Data_12_di" bpmnElement="DataInputAssociation_Data_12">
+        <di:waypoint x="2350" y="435" />
+        <di:waypoint x="2350" y="465" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_Data_13_di" bpmnElement="DataOutputAssociation_Data_13">
+        <di:waypoint x="2350" y="545" />
+        <di:waypoint x="2350" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_1_di" bpmnElement="MessageFlow_1">
+        <di:waypoint x="325" y="60" />
+        <di:waypoint x="325" y="465" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="333" y="161" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_2_di" bpmnElement="MessageFlow_2">
+        <di:waypoint x="2125" y="1270" />
+        <di:waypoint x="2125" y="1125" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2133" y="1217" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

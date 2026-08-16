@@ -1,0 +1,134 @@
+# Larkfield Dental Group - Demand Planning, current process (As-Is)
+#
+# Source: deliverables/D1-current-business-process-analysis.md section 1.1
+# Risks come from D1 section 2 and section 5.1.
+# Generated with: python tools/bpmn/bpmnlay.py build <this> -o deliverables/diagrams --html
+# Never hand-edit the .bpmn or .svg - change this file and rebuild.
+
+id: demand-planning-as-is
+name: Demand Planning (As-Is)
+level: business
+pool: Larkfield Dental Group
+
+lanes: [Sales, Demand Planning, Finance, Supply Chain & Production]
+
+external:
+  - {id: practice, name: Dental practices & distributors}
+  - {id: supplier, name: Component suppliers, side: bottom}
+
+nodes:
+  - {id: StartEvent_cycle, type: startEvent, lane: Demand Planning, name: Monthly cycle starts}
+
+  - id: Task_history
+    type: task
+    lane: Demand Planning
+    name: Calculate draft forecast from sales history
+    inputs:  [{name: ERP sales history, kind: store}]
+    outputs: [Draft forecast]
+
+  - id: Task_regional
+    type: task
+    lane: Sales
+    name: Adjust the draft for each market
+    outputs: [Eight regional sheets]
+
+  - id: Task_merge
+    type: task
+    lane: Demand Planning
+    name: Merge the sheets into one plan
+    outputs: [Combined forecast]
+
+  # The evaluation that produces what the gateway branches on. A gateway routes,
+  # it does not evaluate - so the comparison has to be a step of its own.
+  - id: Task_compare
+    type: task
+    lane: Demand Planning
+    name: Compare the combined plan against the draft
+    outputs: [List of big differences]
+
+  - {id: Gateway_deviation, type: exclusiveGateway, lane: Demand Planning,
+     name: "More than 15% away from the draft?"}
+
+  - id: Task_meeting
+    type: task
+    lane: Demand Planning
+    name: Monthly meeting agrees the final numbers
+    outputs: [Agreed forecast]
+
+  # Same reason: Finance has to actually check the plan against the budget before
+  # there is anything for the gateway to branch on.
+  - id: Task_budget_check
+    type: task
+    lane: Finance
+    name: Check the plan against the annual budget
+    inputs:  [{name: Annual revenue budget, kind: store}]
+    outputs: [Budget variance note]
+
+  - {id: Gateway_budget, type: exclusiveGateway, lane: Finance,
+     name: "Fits the annual budget?"}
+
+  - id: Task_release
+    type: task
+    lane: Supply Chain & Production
+    name: Approve and release the plan
+    outputs: [Released demand plan]
+
+  - id: Task_order
+    type: task
+    lane: Supply Chain & Production
+    name: Order materials and schedule production
+    inputs:  [{name: Stock levels, kind: store}]
+    outputs: [Purchase orders]
+
+  - id: Task_accuracy
+    type: task
+    lane: Demand Planning
+    name: Compare forecast with what actually sold
+    inputs:  [{name: Actual sales, kind: store}]
+    outputs: [Accuracy sheet]
+
+  - {id: EndEvent_planned, type: endEvent, lane: Demand Planning, name: Plan in production}
+
+flows:
+  - {from: StartEvent_cycle,  to: Task_history}
+  - {from: Task_history,      to: Task_regional}
+  - {from: Task_regional,     to: Task_merge}
+  - {from: Task_merge,        to: Task_compare}
+  - {from: Task_compare,      to: Gateway_deviation}
+  # Branch labels are the ANSWER to the gateway's question - never an action. The
+  # action is the node the arrow arrives at.
+  - {from: Gateway_deviation, to: Task_meeting,       name: "yes"}
+  - {from: Gateway_deviation, to: Task_budget_check,  name: "no", kind: alternate}
+  - {from: Task_meeting,      to: Task_budget_check}
+  - {from: Task_budget_check, to: Gateway_budget}
+  - {from: Gateway_budget,    to: Task_release,       name: "yes"}
+  - {from: Gateway_budget,    to: Task_meeting,       name: "no", kind: error}
+  - {from: Task_release,      to: Task_order}
+  - {from: Task_order,        to: Task_accuracy}
+  - {from: Task_accuracy,     to: EndEvent_planned}
+
+messages:
+  - {from: practice, to: Task_history, name: Orders}
+  - {from: supplier, to: Task_order,   name: Deliveries}
+
+# Where the problems from D1 actually occur. Rendered as numbered badges on the
+# step plus a legend; switched on and off as the "risks" layer.
+risks:
+  - at: Task_regional
+    text: Adjustments are pure judgement - no reason recorded, and never checked afterwards
+    severity: high
+  - at: Task_regional
+    text: The eight sheets arrive late and in different formats
+    severity: medium
+  - at: Task_meeting
+    text: The meeting can override the calculation without recording why
+    severity: high
+  - at: Gateway_budget
+    text: A rejection goes back to negotiation, not back to the data
+    severity: high
+  - at: Task_order
+    text: Only about one week of lead time is left by this point
+    severity: medium
+  - at: Task_accuracy
+    text: The accuracy sheet is rarely finished, so nothing is learned
+    severity: high

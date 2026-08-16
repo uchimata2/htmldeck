@@ -1,0 +1,158 @@
+# Larkfield Dental Group - Demand Planning, redesigned process (To-Be)
+#
+# Source: deliverables/D3-future-business-process.md sections 1 and 2.
+# Decision authority follows D-004 (analytics recommends, a human approves).
+# Generated with: python tools/bpmn/bpmnlay.py build <this> -o deliverables/diagrams --html
+# Never hand-edit the .bpmn or .svg - change this file and rebuild.
+#
+# Read against demand-planning-as-is.yaml, three things changed:
+#   1. As-Is steps 1, 3 and 4 (calculate draft / merge eight sheets / compare against the draft)
+#      collapse into one automated analytics pass. The map is SHORTER than the As-Is, not longer.
+#   2. Finance moves from the END of the cycle to the START. In the As-Is it rejected a finished
+#      plan and sent it back to the meeting - a loop that renegotiated instead of recalculating.
+#      Here it sets the budget limits up front, as the bands, so the loop has nothing to form on.
+#   3. The monthly meeting is gone. Humans decide only on exceptions, and every decision writes
+#      its reason to the Decision log, which the forecast reads next month. That store, written
+#      at Task_decide and read at Task_forecast, IS the feedback loop D1 found broken.
+
+id: demand-planning-to-be
+name: Demand Planning (To-Be)
+level: business
+pool: Larkfield Dental Group
+
+# Ordered by the flow, not by the org chart, so the process reads downward as it reads across.
+lanes: [Finance, Analytics platform, Demand Planning, Sales, Supply Chain & Production]
+
+external:
+  - {id: practice, name: Dental practices & distributors}
+  - {id: supplier, name: Component suppliers, side: bottom}
+
+nodes:
+  - {id: StartEvent_cycle, type: startEvent, lane: Finance, name: Monthly cycle starts}
+
+  # Finance first. The budget stops being a veto at the end and becomes a limit up front.
+  - id: Task_bands
+    type: task
+    lane: Finance
+    name: Set the budget limits and bands
+    outputs: [Agreed tolerance bands]
+
+  # --- The four analytics types, one step each, in order. ---
+
+  # Descriptive - what happened?
+  - id: Task_report
+    type: task
+    lane: Analytics platform
+    name: Report last month's accuracy
+    inputs:  [{name: ERP sales history, kind: store}]
+    outputs: [Accuracy and service report]
+
+  # Diagnostic - why did it happen?
+  - {id: Task_explain, type: task, lane: Analytics platform,
+     name: Explain the biggest deviations}
+
+  # Predictive - what will happen? Reads the Decision log: this is where last month's
+  # recorded reasons re-enter the process.
+  - id: Task_forecast
+    type: task
+    lane: Analytics platform
+    name: Forecast demand and supplier risk
+    inputs:  [{name: Decision log, kind: store}]
+    outputs: [Forecast and risk scores]
+
+  # Prescriptive - what should we do?
+  - id: Task_recommend
+    type: task
+    lane: Analytics platform
+    name: Recommend an action per family
+    outputs: [Recommended actions]
+
+  # The evaluation that produces what the gateway branches on. A gateway routes, it does not
+  # evaluate - so the comparison against the bands has to be a step of its own (standard 4).
+  - id: Task_screen
+    type: task
+    lane: Demand Planning
+    name: Check each action against its band
+    outputs: [Exception list]
+
+  - {id: Gateway_band, type: exclusiveGateway, lane: Demand Planning,
+     name: "Inside the agreed band?"}
+
+  # The single human decision point, and the only step Sales still touches. In the As-Is,
+  # Sales edited every number in eight spreadsheets with no reason recorded anywhere.
+  - id: Task_decide
+    type: task
+    lane: Sales
+    name: Approve or change, and record why
+    outputs: [{name: Decision log, kind: store}]
+
+  - id: Task_execute
+    type: task
+    lane: Supply Chain & Production
+    name: Order materials and schedule production
+    inputs:  [{name: Stock levels, kind: store}]
+    outputs: [Purchase orders]
+
+  - {id: EndEvent_released, type: endEvent, lane: Supply Chain & Production,
+     name: Plan released and logged}
+
+flows:
+  - {from: StartEvent_cycle, to: Task_bands}
+  - {from: Task_bands,       to: Task_report}
+  - {from: Task_report,      to: Task_explain}
+  - {from: Task_explain,     to: Task_forecast}
+  - {from: Task_forecast,    to: Task_recommend}
+  - {from: Task_recommend,   to: Task_screen}
+  - {from: Task_screen,      to: Gateway_band}
+  # Branch labels are the ANSWER to the gateway's question - never an action.
+  # "yes" is the happy path: inside the band, the action runs without anyone being asked.
+  - {from: Gateway_band,     to: Task_execute, name: "yes"}
+  - {from: Gateway_band,     to: Task_decide,  name: "no", kind: alternate}
+  - {from: Task_decide,      to: Task_execute}
+  - {from: Task_execute,     to: EndEvent_released}
+
+messages:
+  - {from: practice, to: Task_report,  name: Orders}
+  - {from: supplier, to: Task_execute, name: Deliveries}
+
+# Two switchable highlight layers, both default off.
+#
+# The AI layer names TWO steps, not four, and that is the point rather than an omission.
+# Reporting last month's accuracy and explaining a deviation are automation and discipline -
+# no model is involved. Only the forecast and the recommendation need one. Switching this
+# layer on is the visual answer to the CEO's question: most of the redesign is not AI.
+highlights:
+  - id: ai
+    label: AI-supported activities
+    nodes:
+      Task_forecast: A trained model, not a rule - this is the only place AI is required
+      Task_recommend: Turns the forecast into an action inside the bands Finance agreed
+
+  # The reference framework's own frame, put on the picture. Without this layer the map shows
+  # four analytics steps but never says which is which - that lived only in a table
+  # in D3, so the map alone did not satisfy "show where each analytics type sits".
+  - id: types
+    label: The four analytics types
+    nodes:
+      Task_report: Descriptive - what happened?
+      Task_explain: Diagnostic - why did it happen?
+      Task_forecast: Predictive - what will happen?
+      Task_recommend: Prescriptive - what should we do?
+
+  - id: gains
+    label: Key improvements
+    nodes:
+      Task_bands: Finance sets the limit up front, so no finished plan is ever rejected
+      Task_report: Automated, so the accuracy review can no longer be skipped
+      Task_screen: Only exceptions reach a person; everything in band runs through
+      Task_decide: Nothing can be changed without a recorded reason
+
+  # D1 section 3 found Larkfield measures its results carefully and its forecast not at all.
+  # This layer puts the three missing measurements on the steps that now produce them, so the
+  # gap D1 identified and the place it gets closed can be shown as one picture.
+  - id: measure
+    label: Where the missing measurements get taken
+    nodes:
+      Task_report: Forecast accuracy (MAPE) and bias - both missing today (D1)
+      Task_decide: Override rate and reason mix - not measurable at all before now
+      Task_execute: Stockout rate, and OTIF counted against the released plan

@@ -814,7 +814,13 @@ svg{display:block}
 
 /* The control that opens one, inside the sources box it belongs to. */
 .sources-open{
-  display:block;width:100%;padding:0;border:0;background:none;
+  /* DS-168's floor, taken from the token every other hit target reads rather than from the bare 48
+     du - the ruler's ticks are sized this way for the same reason (T-168). Without it the height is
+     one inherited line box, so whether the control clears 24 CSS px is decided by the surrounding
+     type scale: an adopter's deck rendered it at 23.2 px while both decks written here cleared it,
+     and only a browser-driven measurement could see the difference. */
+  min-height:var(--disc-hit);display:flex;align-items:center;
+  width:100%;padding:0;border:0;background:none;
   color:inherit;font:inherit;text-align:left;text-decoration:underline;
   text-decoration-color:var(--line);
   /* A UA stylesheet sets `text-transform:none` on form controls and `font:` does not carry it, so

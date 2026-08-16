@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2280" height="1896" viewBox="0 0 2280 1896">
+<defs><marker id="seq-demand_planning_to_be" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#22242A"/></marker><marker id="msg-demand_planning_to_be" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#fff" stroke="#22242A"/></marker><marker id="assoc-demand_planning_to_be" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9" fill="none" stroke="#22242A"/></marker></defs>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<g transform="translate(20,20)">
+<g data-layer="external">
+<rect x="0.0" y="0.0" width="2240.0" height="60.0" rx="0" fill="#FFFFFF" stroke="#22242A" stroke-width="3.5"/>
+<text x="1120.0" y="35.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#000">Dental practices &amp; distributors</text>
+<rect x="0.0" y="1350.0" width="2240.0" height="60.0" rx="0" fill="#FFFFFF" stroke="#22242A" stroke-width="3.5"/>
+<text x="1120.0" y="1385.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#000">Component suppliers</text>
+</g>
+<g data-layer="base">
+<rect x="0.0" y="100.0" width="2240.0" height="1210.0" rx="0" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<rect x="0.0" y="100.0" width="30.0" height="1210.0" rx="0" fill="#F4F6F8" stroke="#22242A" stroke-width="2"/>
+<g transform="rotate(-90 15.0 705.0)"><text x="15.0" y="709.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#000">Larkfield Dental Group</text></g>
+<rect x="30.0" y="100.0" width="2210.0" height="210.0" rx="0" fill="#FFFFFF" stroke="#22242A" stroke-width="1.5"/>
+<rect x="30.0" y="100.0" width="30.0" height="210.0" rx="0" fill="#F4F6F8" stroke="#22242A" stroke-width="1.5"/>
+<g transform="rotate(-90 45.0 205.0)"><text x="45.0" y="208.7" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="middle" fill="#000">Finance</text></g>
+<rect x="30.0" y="310.0" width="2210.0" height="290.0" rx="0" fill="#FFFFFF" stroke="#22242A" stroke-width="1.5"/>
+<rect x="30.0" y="310.0" width="30.0" height="290.0" rx="0" fill="#F4F6F8" stroke="#22242A" stroke-width="1.5"/>
+<g transform="rotate(-90 45.0 455.0)"><text x="45.0" y="458.7" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="middle" fill="#000">Analytics platform</text></g>
+<rect x="30.0" y="600.0" width="2210.0" height="210.0" rx="0" fill="#FFFFFF" stroke="#22242A" stroke-width="1.5"/>
+<rect x="30.0" y="600.0" width="30.0" height="210.0" rx="0" fill="#F4F6F8" stroke="#22242A" stroke-width="1.5"/>
+<g transform="rotate(-90 45.0 705.0)"><text x="45.0" y="708.7" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="middle" fill="#000">Demand Planning</text></g>
+<rect x="30.0" y="810.0" width="2210.0" height="210.0" rx="0" fill="#FFFFFF" stroke="#22242A" stroke-width="1.5"/>
+<rect x="30.0" y="810.0" width="30.0" height="210.0" rx="0" fill="#F4F6F8" stroke="#22242A" stroke-width="1.5"/>
+<g transform="rotate(-90 45.0 915.0)"><text x="45.0" y="918.7" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="middle" fill="#000">Sales</text></g>
+<rect x="30.0" y="1020.0" width="2210.0" height="290.0" rx="0" fill="#FFFFFF" stroke="#22242A" stroke-width="1.5"/>
+<rect x="30.0" y="1020.0" width="30.0" height="290.0" rx="0" fill="#F4F6F8" stroke="#22242A" stroke-width="1.5"/>
+<g transform="rotate(-90 45.0 1165.0)"><text x="45.0" y="1168.7" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="middle" fill="#000">Supply Chain &amp; Production</text></g>
+</g>
+<g data-layer="data">
+<path d="M332.0,235.0 h26.0 l10.0,10.0 v40.0 h-36.0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M358.0,235.0 v10.0 h10.0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="350.0" y="301.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">Agreed tolerance bands</text>
+<path d="M532.0,348.0 a18.0,7 0 0,1 36.0,0 v24.0 a18.0,7 0 0,1 -36.0,0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M532.0,348.0 a18.0,7 0 0,0 36.0,0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="550.0" y="330.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">ERP sales history</text>
+<path d="M532.0,525.0 h26.0 l10.0,10.0 v40.0 h-36.0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M558.0,525.0 v10.0 h10.0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="550.0" y="591.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">Accuracy and service report</text>
+<path d="M932.0,348.0 a18.0,7 0 0,1 36.0,0 v24.0 a18.0,7 0 0,1 -36.0,0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M932.0,348.0 a18.0,7 0 0,0 36.0,0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="950.0" y="330.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">Decision log</text>
+<path d="M932.0,525.0 h26.0 l10.0,10.0 v40.0 h-36.0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M958.0,525.0 v10.0 h10.0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="950.0" y="591.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">Forecast and risk scores</text>
+<path d="M1132.0,525.0 h26.0 l10.0,10.0 v40.0 h-36.0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M1158.0,525.0 v10.0 h10.0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="1150.0" y="591.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">Recommended actions</text>
+<path d="M1332.0,735.0 h26.0 l10.0,10.0 v40.0 h-36.0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M1358.0,735.0 v10.0 h10.0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="1350.0" y="801.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">Exception list</text>
+<path d="M1732.0,958.0 a18.0,7 0 0,1 36.0,0 v24.0 a18.0,7 0 0,1 -36.0,0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M1732.0,958.0 a18.0,7 0 0,0 36.0,0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="1750.0" y="1011.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">Decision log</text>
+<path d="M1932.0,1058.0 a18.0,7 0 0,1 36.0,0 v24.0 a18.0,7 0 0,1 -36.0,0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M1932.0,1058.0 a18.0,7 0 0,0 36.0,0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="1950.0" y="1040.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">Stock levels</text>
+<path d="M1932.0,1235.0 h26.0 l10.0,10.0 v40.0 h-36.0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M1958.0,1235.0 v10.0 h10.0" fill="none" stroke="#22242A" stroke-width="2"/>
+<text x="1950.0" y="1301.3" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="middle" fill="#000">Purchase orders</text>
+</g>
+<g data-layer="base">
+<circle cx="150.0" cy="165.0" r="17.0" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<text x="150.0" y="201.7" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="middle" fill="#000">Monthly cycle starts</text>
+<rect x="300.0" y="125.0" width="100.0" height="80.0" rx="10" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<text x="350.0" y="155.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">Set the</text><text x="350.0" y="169.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">budget limits</text><text x="350.0" y="183.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">and bands</text>
+<rect x="500.0" y="415.0" width="100.0" height="80.0" rx="10" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<text x="550.0" y="445.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">Report last</text><text x="550.0" y="459.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">month's</text><text x="550.0" y="473.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">accuracy</text>
+<rect x="700.0" y="415.0" width="100.0" height="80.0" rx="10" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<text x="750.0" y="445.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">Explain the</text><text x="750.0" y="459.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">biggest</text><text x="750.0" y="473.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">deviations</text>
+<rect x="900.0" y="415.0" width="100.0" height="80.0" rx="10" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<text x="950.0" y="445.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">Forecast</text><text x="950.0" y="459.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">demand and</text><text x="950.0" y="473.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">supplier risk</text>
+<rect x="1100.0" y="415.0" width="100.0" height="80.0" rx="10" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<text x="1150.0" y="445.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">Recommend an</text><text x="1150.0" y="459.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">action per</text><text x="1150.0" y="473.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">family</text>
+<rect x="1300.0" y="625.0" width="100.0" height="80.0" rx="10" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<text x="1350.0" y="648.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">Check each</text><text x="1350.0" y="662.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">action</text><text x="1350.0" y="676.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">against its</text><text x="1350.0" y="690.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">band</text>
+<path d="M1550.0,640.0 L1575.0,665.0 L1550.0,690.0 L1525.0,665.0 z" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<path d="M1541.0,656.0 L1559.0,674.0 M1559.0,656.0 L1541.0,674.0" stroke="#22242A" stroke-width="2.5" fill="none"/>
+<text x="1550.0" y="629.7" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="middle" fill="#000">Inside the agreed band?</text>
+<rect x="1700.0" y="835.0" width="100.0" height="80.0" rx="10" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<text x="1750.0" y="865.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">Approve or</text><text x="1750.0" y="879.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">change, and</text><text x="1750.0" y="893.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">record why</text>
+<rect x="1900.0" y="1125.0" width="100.0" height="80.0" rx="10" fill="#FFFFFF" stroke="#22242A" stroke-width="2"/>
+<text x="1950.0" y="1148.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">Order</text><text x="1950.0" y="1162.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">materials and</text><text x="1950.0" y="1176.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">schedule</text><text x="1950.0" y="1190.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#000">production</text>
+<circle cx="2150.0" cy="1165.0" r="17.0" fill="#FFFFFF" stroke="#22242A" stroke-width="4"/>
+<text x="2150.0" y="1201.7" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="middle" fill="#000">Plan released and logged</text>
+<polyline points="168.0,165.0 300.0,165.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<polyline points="400.0,165.0 450.0,165.0 450.0,455.0 500.0,455.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<polyline points="600.0,455.0 700.0,455.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<polyline points="800.0,455.0 900.0,455.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<polyline points="1000.0,455.0 1100.0,455.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<polyline points="1200.0,455.0 1250.0,455.0 1250.0,665.0 1300.0,665.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<polyline points="1400.0,665.0 1525.0,665.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<polyline points="1550.0,690.0 1550.0,1165.0 1900.0,1165.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<text x="1558.0" y="927.5" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">yes</text>
+<polyline points="1575.0,665.0 1638.0,665.0 1638.0,875.0 1700.0,875.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<text x="1583.0" y="657.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">no</text>
+<polyline points="1800.0,875.0 1850.0,875.0 1850.0,1165.0 1900.0,1165.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+<polyline points="2000.0,1165.0 2132.0,1165.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#seq-demand_planning_to_be)"/>
+</g>
+<g data-layer="data">
+<polyline points="350.0,205.0 350.0,235.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+<polyline points="550.0,385.0 550.0,415.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+<polyline points="550.0,495.0 550.0,525.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+<polyline points="950.0,385.0 950.0,415.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+<polyline points="950.0,495.0 950.0,525.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+<polyline points="1150.0,495.0 1150.0,525.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+<polyline points="1350.0,705.0 1350.0,735.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+<polyline points="1750.0,915.0 1750.0,945.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+<polyline points="1950.0,1095.0 1950.0,1125.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+<polyline points="1950.0,1205.0 1950.0,1235.0" fill="none" stroke="#22242A" stroke-width="1.5" marker-end="url(#assoc-demand_planning_to_be)" stroke-dasharray="4,4"/>
+</g>
+<g data-layer="external">
+<polyline points="525.0,60.0 525.0,415.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#msg-demand_planning_to_be)" stroke-dasharray="8,5"/>
+<text x="533.0" y="159.4" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="start" fill="#000">Orders</text>
+<polyline points="1925.0,1350.0 1925.0,1205.0" fill="none" stroke="#22242A" stroke-width="2" marker-end="url(#msg-demand_planning_to_be)" stroke-dasharray="8,5"/>
+<text x="1933.0" y="1309.4" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" text-anchor="start" fill="#000">Deliveries</text>
+</g>
+<g data-layer="hl-ai">
+<rect x="894.0" y="409.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#1A73C8" stroke-width="3.5" stroke-dasharray="7,4"/>
+<rect x="1094.0" y="409.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#1A73C8" stroke-width="3.5" stroke-dasharray="7,4"/>
+<text x="0.0" y="1436.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="start" fill="#000">AI-supported activities</text>
+<rect x="1" y="1445.0" width="16" height="12" rx="3" fill="none" stroke="#1A73C8" stroke-width="2.5"/>
+<text x="26.0" y="1458.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Forecast demand and supplier risk  -  A trained model, not a rule - this is the only place AI is required</text>
+<rect x="1" y="1467.0" width="16" height="12" rx="3" fill="none" stroke="#1A73C8" stroke-width="2.5"/>
+<text x="26.0" y="1480.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Recommend an action per family  -  Turns the forecast into an action inside the bands Finance agreed</text>
+</g>
+<g data-layer="hl-types">
+<rect x="494.0" y="409.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#1E8A5A" stroke-width="3.5" stroke-dasharray="7,4"/>
+<rect x="694.0" y="409.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#1E8A5A" stroke-width="3.5" stroke-dasharray="7,4"/>
+<rect x="894.0" y="409.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#1E8A5A" stroke-width="3.5" stroke-dasharray="7,4"/>
+<rect x="1094.0" y="409.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#1E8A5A" stroke-width="3.5" stroke-dasharray="7,4"/>
+<text x="0.0" y="1520.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="start" fill="#000">The four analytics types</text>
+<rect x="1" y="1529.0" width="16" height="12" rx="3" fill="none" stroke="#1E8A5A" stroke-width="2.5"/>
+<text x="26.0" y="1542.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Report last month's accuracy  -  Descriptive - what happened?</text>
+<rect x="1" y="1551.0" width="16" height="12" rx="3" fill="none" stroke="#1E8A5A" stroke-width="2.5"/>
+<text x="26.0" y="1564.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Explain the biggest deviations  -  Diagnostic - why did it happen?</text>
+<rect x="1" y="1573.0" width="16" height="12" rx="3" fill="none" stroke="#1E8A5A" stroke-width="2.5"/>
+<text x="26.0" y="1586.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Forecast demand and supplier risk  -  Predictive - what will happen?</text>
+<rect x="1" y="1595.0" width="16" height="12" rx="3" fill="none" stroke="#1E8A5A" stroke-width="2.5"/>
+<text x="26.0" y="1608.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Recommend an action per family  -  Prescriptive - what should we do?</text>
+</g>
+<g data-layer="hl-gains">
+<rect x="294.0" y="119.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#7A3FBF" stroke-width="3.5" stroke-dasharray="7,4"/>
+<rect x="494.0" y="409.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#7A3FBF" stroke-width="3.5" stroke-dasharray="7,4"/>
+<rect x="1294.0" y="619.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#7A3FBF" stroke-width="3.5" stroke-dasharray="7,4"/>
+<rect x="1694.0" y="829.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#7A3FBF" stroke-width="3.5" stroke-dasharray="7,4"/>
+<text x="0.0" y="1648.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="start" fill="#000">Key improvements</text>
+<rect x="1" y="1657.0" width="16" height="12" rx="3" fill="none" stroke="#7A3FBF" stroke-width="2.5"/>
+<text x="26.0" y="1670.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Set the budget limits and bands  -  Finance sets the limit up front, so no finished plan is ever rejected</text>
+<rect x="1" y="1679.0" width="16" height="12" rx="3" fill="none" stroke="#7A3FBF" stroke-width="2.5"/>
+<text x="26.0" y="1692.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Report last month's accuracy  -  Automated, so the accuracy review can no longer be skipped</text>
+<rect x="1" y="1701.0" width="16" height="12" rx="3" fill="none" stroke="#7A3FBF" stroke-width="2.5"/>
+<text x="26.0" y="1714.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Check each action against its band  -  Only exceptions reach a person; everything in band runs through</text>
+<rect x="1" y="1723.0" width="16" height="12" rx="3" fill="none" stroke="#7A3FBF" stroke-width="2.5"/>
+<text x="26.0" y="1736.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Approve or change, and record why  -  Nothing can be changed without a recorded reason</text>
+</g>
+<g data-layer="hl-measure">
+<rect x="494.0" y="409.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#B26A00" stroke-width="3.5" stroke-dasharray="7,4"/>
+<rect x="1694.0" y="829.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#B26A00" stroke-width="3.5" stroke-dasharray="7,4"/>
+<rect x="1894.0" y="1119.0" width="112.0" height="92.0" rx="10.0" fill="none" stroke="#B26A00" stroke-width="3.5" stroke-dasharray="7,4"/>
+<text x="0.0" y="1776.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="start" fill="#000">Where the missing measurements get taken</text>
+<rect x="1" y="1785.0" width="16" height="12" rx="3" fill="none" stroke="#B26A00" stroke-width="2.5"/>
+<text x="26.0" y="1798.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Report last month's accuracy  -  Forecast accuracy (MAPE) and bias - both missing today (D1)</text>
+<rect x="1" y="1807.0" width="16" height="12" rx="3" fill="none" stroke="#B26A00" stroke-width="2.5"/>
+<text x="26.0" y="1820.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Approve or change, and record why  -  Override rate and reason mix - not measurable at all before now</text>
+<rect x="1" y="1829.0" width="16" height="12" rx="3" fill="none" stroke="#B26A00" stroke-width="2.5"/>
+<text x="26.0" y="1842.0" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="#000">Order materials and schedule production  -  Stockout rate, and OTIF counted against the released plan</text>
+</g>
+</g></svg>
