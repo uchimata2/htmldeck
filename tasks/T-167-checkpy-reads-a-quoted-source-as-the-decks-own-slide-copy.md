@@ -2,7 +2,7 @@
 id: T-167
 title: check.py's content half reads a quoted source as the deck's own slide copy
 type: fix
-status: review
+status: done
 phase: review
 parent: null
 blocked_by: []
@@ -149,10 +149,15 @@ question and the same banned words twice, once as the deck's own copy and once i
 | Every rule whose wording says *slide copy*, *a slide* or *the deck* is checked, and any left reading the quotation says so | **met, sited differently** | All 36 `STATIC` rows classified; the three deliberate leave-alones are named with reasons. Recorded in the block above the helpers rather than in each row, per §3's third decision |
 | No shipped deck moves | **met** | `check.py` `0 failure(s)` on `reference-deck.html` and `sort-window.html`, both with their sources |
 
-**Outstanding before this can close.** §7 step 3 — nothing this task produced renders, so there is
-no artefact to open and look at. The decks it re-scored are T-128's business and T-128 owes the
-looking. Confirm that reading is right before closing, since it is the one step that cannot be
-inferred from a green run.
+**§7 step 3, settled rather than skipped.** Nothing this task produced renders: it changed two
+checkers and **edited no deck**. The three decks it re-scored are byte-for-byte what they were, so
+there is no output of this task to open and look at, and the looking T-128's deck still owes is
+T-128's. A step recorded as vacuous is not a step waived — the test is whether the task produced an
+artefact, and this one produced two Python modules.
+
+**The finding kept beyond this task** is [L-105](../docs/lessons/L-105.md) — *a feature that widens
+what an artefact holds re-points every rule that reads it whole*. That is the part worth having in
+five years; the two-row diff is not.
 
 **Child fix tasks raised**
 - [T-169](T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md) — `FIG-1`
@@ -162,5 +167,6 @@ inferred from a green run.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-16 | → done | Closed against §7. Every criterion carries a verdict, one of them **met but sited differently** and said so rather than reworded; both deliverables corrected in the front matter, since the title names `check.py` and the change is in `audit.py` and `content.py`. §7 step 3 is vacuous here and is recorded as vacuous, not waived. The finding that outlives the task is [L-105](../docs/lessons/L-105.md). |
 | 2026-08-16 | → review | Fixed the same day. Two rows of `STATIC` and one line of `content.deck_figures`; the work was the classification, as planned, and it returned **two of 36** rows rather than a family. `QUICK_VIEW` moved down into `content.py` instead of being copied, because `audit.py` already imports it and two copies of that regex is the failure the shell exists to prevent. All three decks now score `0 mechanical failure(s)`, and the two written here did not move. **What the fix did not reach is `FIG-1`**, which survived and is now the only failure on T-128's deck — raised as [T-169](T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md), because *recorded and not raised* stopped being adequate the moment it became load-bearing. |
 | 2026-08-16 | → proposed | Found by [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) step 6 on the first deck here whose sources were written outside this repository. Diagnosed by stripping the `qv-src` regions and re-running rather than by reading the checker, so the mechanism is measured and not inferred. |

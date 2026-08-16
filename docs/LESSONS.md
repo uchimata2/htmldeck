@@ -87,6 +87,7 @@ comes here.
 | [L-102](lessons/L-102.md) | Verifying the part you were worried about proves nothing about the part you broke | Evidence and verification |
 | [L-103](lessons/L-103.md) | A check with no negative case in its fixture is unproven where it matters | Evidence and verification |
 | [L-104](lessons/L-104.md) | A page that keeps its own history has to be checked in the opposite direction | Evidence and verification |
+| [L-105](lessons/L-105.md) | A feature that widens what an artefact holds re-points every rule that reads it whole | Evidence and verification |
 
 ### Tooling
 
