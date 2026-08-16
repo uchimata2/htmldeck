@@ -64,12 +64,13 @@ FIGURE = re.compile(
     # `4 stop` - a figure the slide does not state, reported as unsourced rather than as not a
     # figure, sending a reader to look for something nobody wrote (T-169).
     #
-    # **A hyphen and not `(?![-\w])`**, which is what this was first written as and which cost a
-    # real figure: `runs()` deletes an inline tag rather than replacing it, so
-    # `<span>The other 5%</span><span>The 02:30 ...` arrives as `5%The` and the wider guard read
-    # that as a compound. The gluing is a defect of its own and has its own task; the guard must
-    # not be the thing that pays for it.
-    r"\d+\s?(?:" + UNITS + r")(?!-))", re.I)
+    # **A word character and not just a hyphen** (T-171). This was first written `(?![-\w])`,
+    # narrowed to `(?!-)` because it cost a real figure, and restored once the thing it was paying
+    # for was fixed: `runs()` used to DELETE an inline tag, so `<span>The other 5%</span><span>The
+    # 02:30 ...` arrived as `5%The` and the wider guard correctly read that as a compound. It now
+    # arrives as `5% The`. The narrow form let `4 stopover` mint `4 stop` - the same shape of
+    # phantom the compound guard exists to stop, one character to the left.
+    r"\d+\s?(?:" + UNITS + r")(?![-\w]))", re.I)
 
 STOP = set(("the a an of in on for and or to is are was with by at from that this it its as "
             "be but not no than then so under over into per one two").split())
@@ -145,10 +146,21 @@ QUICK_VIEW = re.compile(r'<template class="qv-src"[^>]*>.*?</template>'
 
 
 def runs(fragment):
-    """The text runs of a fragment, split at every non-inline tag."""
+    """The text runs of a fragment, split at every non-inline tag.
+
+    **An inline tag becomes a space, not nothing** (T-171). Deleting it glued the last word of one
+    inline element to the first word of the next, which is exactly how a deck's key/value rows are
+    written: `<span class="k">If it fails</span><span>Service holds ...` arrived as
+    `failsService holds`, and `label_of` keyed it under `failsservice`. A label is a set of
+    significant words and a glued word matches nothing, so two documents describing one figure in
+    the same words failed to bind - invisibly, because a label full of `getnothing` looks like the
+    approximate matching this module documents. The reverse risk is a figure written across a tag,
+    `$<b>5.6M</b>` and `<b>5.6</b>M`; both patterns already allow one `\\s?` and `self_test` holds
+    them to it.
+    """
     frag = re.sub(r"<!--.*?-->", " ", fragment, flags=re.S)
     frag = re.sub(r"<(script|style)\b.*?</\1>", " ", frag, flags=re.S | re.I)
-    frag = INLINE.sub("", frag)
+    frag = INLINE.sub(" ", frag)
     out = []
     for part in re.split(r"<[^>]+>", frag):
         t = re.sub(r"\s+", " ", part).replace("&nbsp;", " ").replace("&amp;", "&").strip()
@@ -432,6 +444,26 @@ def self_test():
             sys.exit("SELF-TEST FAILED: %r and '4 months' are not one figure" % form)
     if kind(normalise("Month 4")) != "month":
         sys.exit("SELF-TEST FAILED: a reversed figure carries no unit, so nothing can rival it")
+
+    # T-171, both directions, on the two shapes the change trades between. Butting inline elements
+    # must leave a word boundary; a figure written ACROSS an inline tag must survive the space that
+    # boundary costs. The second is the risk the first creates, and it is asserted in both the
+    # currency-first and the magnitude-last form.
+    glued = runs('<span class="k">If it fails</span><span>Service holds the slot</span>')
+    if glued != ["If it fails Service holds the slot"]:
+        sys.exit("SELF-TEST FAILED: butting inline elements did not leave a word boundary: %s"
+                 % glued)
+    words = label_of(glued[0], "no-such-figure")
+    if "service" not in words or "fails" not in words:
+        sys.exit("SELF-TEST FAILED: a glued pair survived into a label: %s" % words)
+    for markup, want in (('<p>$<b>5.6M</b> of the grant</p>', "5.6m"),
+                         ('<p>the grant is <b>5.6</b>M in total</p>', "5.6m")):
+        got = [normalise(m.group(1)) for r in runs(markup) for m in FIGURE.finditer(r)]
+        if want not in got:
+            sys.exit("SELF-TEST FAILED: a figure written across an inline tag was lost: %s -> %s"
+                     % (markup, got))
+    if FIGURE.search("4 stopover services"):
+        sys.exit("SELF-TEST FAILED: a unit word running on into a longer word minted a figure")
 
     # FIG-4, both directions. The quoted figure is the case it exists for; the qualified pair is
     # the false positive that set its strictness, and it is a real row out of a real source file.

@@ -52,7 +52,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-165](T-165-give-a-deferred-entry-a-closing-condition-a-check-can-read.md) | Give a deferred entry a closing condition a check can read | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-019, T-051, T-097 |
 | [T-166](T-166-shell-sync-leaves-an-upgraded-deck-failing-the-theme-gate.md) | shell.py sync leaves an upgraded deck failing the theme gate, and says nothing | `PH1` | - | `proposed` | `specify` | - | - | - | - | T-106, T-124, T-128, T-168 |
 | [T-168](T-168-sources-open-ships-with-no-minimum-target-size.md) | .sources-open ships with no minimum target size, so DS-168 holds only by luck of the type scale | `PH1` | - | `review` | `review` | - | - | - | T-128 | T-103, T-128, T-166 |
-| [T-171](T-171-the-ledger-glues-two-words-together-at-every-inline-tag.md) | The ledger glues two words together at every inline tag it deletes | `PH1` | - | `proposed` | `specify` | - | - | - | - | T-169 |
 | [T-172](T-172-the-shell-sync-falsified-four-published-deck-figures.md) | The shell sync falsified four published deck figures and nothing could see it | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-128, T-129, T-154 |
 
 ## Closed
@@ -210,5 +209,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-167](T-167-checkpy-reads-a-quoted-source-as-the-decks-own-slide-copy.md) | check.py's content half reads a quoted source as the deck's own slide copy | `PH1` | - | `done` | `review` | - | - | - | - | T-070, T-106, T-128, T-169 |
 | [T-169](T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md) | The figure binder cannot bind a value whose label sits in another table cell | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-128, T-167, T-170, T-171 |
 | [T-170](T-170-the-reference-deck-states-four-dates-no-source-carries.md) | The reference deck states four evaluation dates no source carries | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-169 |
+| [T-171](T-171-the-ledger-glues-two-words-together-at-every-inline-tag.md) | The ledger glues two words together at every inline tag it deletes | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-169 |
 
 <!-- taskmd:end -->
