@@ -182,6 +182,7 @@ NOT_RUN = {
 DECKS = {
     "examples/reference-deck.html": "examples/sources",
     "examples/sort-window/sort-window.html": "examples/sort-window/sources",
+    "examples/measure-first/measure-first.html": "examples/measure-first/sources",
 }
 
 # Tracked `.html` that is not a deck, and what it is.
