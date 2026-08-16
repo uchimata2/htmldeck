@@ -38,23 +38,68 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 # A figure is a quantity a reader would repeat: money, a count, a percentage, a duration. A bare
 # small integer is not - "3 corridors" is a figure and "3" inside `translate(0,3)` is geometry, so
 # the number has to carry a currency mark, a separator, a decimal, a magnitude or a unit word.
-UNITS = (r"%|per cent|percent|minutes?|mins?|hours?|days?|weeks?|months?|years?|"
+#
+# **A time word may also come BEFORE its numeral, and only a time word** (T-169). `Month 4`,
+# `week 2`, `day 30` is how a plan states a date, and it is ordinary copy on a slide and in the
+# documents a deck is built from - but the pattern read numeral-then-unit and nothing else, so a
+# whole class of figure was never offered for binding, on EITHER side. The measured case: five
+# source documents state a stop-or-go gate at month 4 three times over, and carried not one figure
+# of kind `month` between them. That is a silent under-report, which is the direction the docstring
+# above says these checks do not fail in.
+#
+# It is the time words alone because they are the only ones that stay a QUANTITY when reversed.
+# `Route 3` and `Phase 1` name a thing rather than measure one, and admitting them fills every
+# ledger with identifiers a reader would never repeat as a number.
+TIME_UNITS = r"minutes?|mins?|hours?|days?|weeks?|months?|years?"
+UNITS = (r"%|per cent|percent|" + TIME_UNITS + r"|"
          r"stations?|routes?|riders?|trips?|people|buses|corridors?|stops?|km|m\b")
 FIGURE = re.compile(
-    r"(?<![\w.$])(\$\s?\d[\d,]*(?:\.\d+)?\s?[MKB]?|"          # $5.6M, $1.5M
+    r"(?<![\w.$])((?:" + TIME_UNITS + r")[\s-]\d+(?:,\d{3})*(?:\.\d+)?|"  # month 4, Month 4, month-4
+    r"\$\s?\d[\d,]*(?:\.\d+)?\s?[MKB]?|"                      # $5.6M, $1.5M
     r"\d[\d,]*\.\d+\s?[MKB]?|"                                # 6.8, 4.1M
     r"\d{1,3}(?:,\d{3})+|"                                    # 38,000
     r"\d+\s?[MKB]\b|"                                         # 5M
-    r"\d+\s?(?:" + UNITS + r"))", re.I)
+    # **The unit word must not run on into a hyphenated compound.** Without the guard,
+    # `month-4 stop-or-go gate` bound the numeral to `stop` out of the compound and minted
+    # `4 stop` - a figure the slide does not state, reported as unsourced rather than as not a
+    # figure, sending a reader to look for something nobody wrote (T-169).
+    #
+    # **A hyphen and not `(?![-\w])`**, which is what this was first written as and which cost a
+    # real figure: `runs()` deletes an inline tag rather than replacing it, so
+    # `<span>The other 5%</span><span>The 02:30 ...` arrives as `5%The` and the wider guard read
+    # that as a compound. The gluing is a defect of its own and has its own task; the guard must
+    # not be the thing that pays for it.
+    r"\d+\s?(?:" + UNITS + r")(?!-))", re.I)
 
 STOP = set(("the a an of in on for and or to is are was with by at from that this it its as "
             "be but not no than then so under over into per one two").split())
 
 
+# **The reversed form is turned round in one place, and every reader of a figure uses it** (T-169).
+# `normalise` needs it to key the ledger; `audit.magnitude` needs it to reduce a cited figure to its
+# number, and without it `month 18` reduced to the whole string, matched no number on the slide
+# face, and DS-231 reported the reference deck citing a figure it shows three times. Two copies of
+# this is the failure the `QUICK_VIEW` comment below describes, in the place where it is hardest to
+# see: the second reader is in another module and fails on a different rule.
+REVERSED = re.compile(r"^(" + TIME_UNITS + r")[\s-]+(\d.*)$", re.I)
+
+
+def unreverse(value):
+    """`month-4` and `Month 4` become `4 month`. Anything else is returned unchanged."""
+    m = REVERSED.match(value.strip())
+    return (m.group(2) + " " + m.group(1)) if m else value
+
+
 def normalise(value):
     """`$5.6M`, `$5.6 M` and `5.6M` are one figure. Case, spacing and the currency mark are
-    presentation; the magnitude is the figure."""
-    v = value.lower().replace(",", "").replace("$", "").replace(" ", "")
+    presentation; the magnitude is the figure.
+
+    **Word order is presentation too** (T-169): `month 4`, `Month 4`, `month-4` and `4 months` are
+    one figure, so the reversed form is turned round before anything else. Without this the two
+    orderings normalise to two different values and never meet - and `kind` returns `""` for one of
+    them, so `build_ledger` would filter the pair out before a label was ever compared.
+    """
+    v = unreverse(value).lower().replace(",", "").replace("$", "").replace(" ", "")
     m = re.match(r"^([\d.]+)([mkb])?(.*)$", v)
     if not m:
         return v
@@ -326,9 +371,17 @@ def source_conflicts(src):
 def audit(deck, sources):
     """`(ledger, rows)` in the shape every other stage returns."""
     L = build_ledger(deck, sources)
+    # **Which figures, not how many** (T-169). A count says something failed and gives no way to
+    # judge it without re-running the tool and reading the ledger. The one time that mattered, a
+    # real defect in this module sat unraised for a session because `1 of 30` looked exactly like
+    # the approximate matching the docstring above documents. The values cost one line and make the
+    # next one decidable on sight; the cap keeps a badly-sourced deck from printing a page.
+    named = "; ".join("%s [%s]" % (v, s) for s, v, _c in L["unsourced"][:6])
+    if len(L["unsourced"]) > 6:
+        named += "; +%d more" % (len(L["unsourced"]) - 6)
     rows = [
-        ("FIG-1", "figures on a slide that appear in no source: %d of %d"
-         % (len(L["unsourced"]), L["deckFigures"]),
+        ("FIG-1", "figures on a slide that appear in no source: %d of %d%s"
+         % (len(L["unsourced"]), L["deckFigures"], (" - " + named) if named else ""),
          not L["unsourced"] and L["deckFigures"] > 0),
         ("FIG-2", "figures disagreeing with the source they came from: %d"
          % len(L["disagreeing"]), not L["disagreeing"]),
@@ -364,6 +417,21 @@ def self_test():
     if overlap(label_of("the grant is $5.6M in total", "$5.6M"),
                label_of("a grant of $5.6M", "$5.6M")) < 1:
         sys.exit("SELF-TEST FAILED: two labels about one subject shared no significant word")
+
+    # T-169, both halves in one line: the reversed figure is found, and the unit word inside the
+    # compound beside it does not mint a second one. Before the fix this returned `['4 stop']`.
+    if [m.group(1) for m in FIGURE.finditer("the month-4 stop-or-go gate")] != ["month-4"]:
+        sys.exit("SELF-TEST FAILED: a hyphenated compound minted a figure, or a time word before "
+                 "its numeral was not one")
+    if [m.group(1) for m in FIGURE.finditer("| Set the gate | Month 4 |")] != ["Month 4"]:
+        sys.exit("SELF-TEST FAILED: a time word before its numeral in a table cell is not a figure")
+    if not FIGURE.search("4 stops on the route"):
+        sys.exit("SELF-TEST FAILED: the compound guard rejected a unit word that ends the match")
+    for form in ("month-4", "Month 4", "month 4"):
+        if normalise(form) != normalise("4 months"):
+            sys.exit("SELF-TEST FAILED: %r and '4 months' are not one figure" % form)
+    if kind(normalise("Month 4")) != "month":
+        sys.exit("SELF-TEST FAILED: a reversed figure carries no unit, so nothing can rival it")
 
     # FIG-4, both directions. The quoted figure is the case it exists for; the qualified pair is
     # the false positive that set its strictness, and it is a real row out of a real source file.

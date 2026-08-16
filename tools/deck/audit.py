@@ -675,8 +675,13 @@ def magnitude(value):
     """A figure reduced to what makes it the same figure. `$5.6M` and `5.6 m` are one; `11 minutes`
     and a bare `11` are one, because the unit is how the face happens to be written and not what
     the bottom line is claiming. **The magnitude suffix is only taken when it stands alone** — `M`
-    in `5.6M` is millions, and the `m` in `11 minutes` is the start of a word."""
-    v = value.lower().replace(",", "").replace("$", "").strip()
+    in `5.6M` is millions, and the `m` in `11 minutes` is the start of a word.
+
+    **The reversed form is turned round first** (T-169). `content.FIGURE` reads `Month 18` as a
+    figure, and without `unreverse` this reduced it to the whole string rather than to `18` — so it
+    matched nothing on the slide face and DS-231 reported the reference deck citing behind a click
+    a number the face shows three times."""
+    v = content.unreverse(value).lower().replace(",", "").replace("$", "").strip()
     m = re.match(r"^([\d.]+)\s*([mkb])(?![a-z])", v)
     num, mag = (m.group(1), m.group(2)) if m else (re.match(r"^([\d.]*)", v).group(1), "")
     num = num.rstrip(".")
@@ -2341,6 +2346,12 @@ def self_test():
                  "citing `11 minutes` cannot be cleared by a face that shows `11`")
     if magnitude("$5.6M") == magnitude("5.6 minutes"):
         sys.exit("SELF-TEST FAILED: millions and minutes normalise to one figure")
+    # T-169. `content.FIGURE` reads a time word before its numeral, and a bottom line citing
+    # `month 18` has to be cleared by a face that shows `18`. Without `unreverse` this reduced to
+    # the whole string and DS-231 failed the reference deck on a figure that slide shows.
+    if magnitude("month 18") != magnitude("18") or magnitude("month-4") != magnitude("4"):
+        sys.exit("SELF-TEST FAILED: a time word before its numeral is not the number the face "
+                 "shows, so DS-231 cannot be cleared by a slide that shows it")
 
     # **DS-110's boundary, demonstrated on one document rather than asserted** (T-070). The same
     # raster twice: once as a slide's own figure, once as the source a quick view quotes. A rule
