@@ -84,6 +84,20 @@ def label_of(context, value):
 # borrowed labels - and `Route 3` next to `Route 7` came back as the figure "3 Route".
 INLINE = re.compile(r"</?(?:b|strong|i|em|span|small|sup|sub|a|code|u|mark|tspan)\b[^>]*>", re.I)
 
+# **The quick view is where a quoted source lives** (T-070). The distinction is between what a deck
+# MAKES and what it QUOTES, and it is decidable by position rather than by intent: a raster inside
+# `template.qv-src` or `.qv-body` is a source, and a raster anywhere else is a rasterised diagram -
+# as much a defect after the amendment as before it. Cut narrowly and by container, in the shape
+# DS-001's provenance exemption was cut in T-069: the exemption goes exactly as far as the container
+# that earns it.
+#
+# **It lives here rather than in `audit.py`, which is where it was written**, because T-167 gave it
+# a second caller and `audit.py` already imports this module - so this is the one direction that
+# holds one definition. Two copies of this regex is the failure the shell exists to prevent, in a
+# smaller place.
+QUICK_VIEW = re.compile(r'<template class="qv-src"[^>]*>.*?</template>'
+                        r'|<div class="qv-body"[^>]*>.*?</div>', re.S | re.I)
+
 
 def runs(fragment):
     """The text runs of a fragment, split at every non-inline tag."""
@@ -106,6 +120,14 @@ def deck_figures(deck):
     **A number alone in its own run is a mark on a scale, not a figure**, and it is dropped: an
     axis tick is not something a reader repeats or a board decides on, and requiring a source for
     one would make every chart unsourceable.
+
+    **A figure inside a quick view is not a figure on the slide** (T-167). The quoted sources sit
+    in the provenance mark, which is inside the `<section class="slide">` this reads, so they came
+    in with it: on the first deck here whose sources were written elsewhere, **122 of the 152
+    figures this returned were quotations**, and FIG-3 duly reported the deck contradicting itself
+    every time a source's own table disagreed with the slide citing it. The source half of the
+    ledger already reads those documents; counting them here as well compares a document with
+    itself.
     """
     html = io.open(deck, encoding="utf-8").read()
     out = []
@@ -114,7 +136,7 @@ def deck_figures(deck):
         block = m.group(0)
         name = re.search(r'data-name="([^"]*)"', block)
         name = name.group(1) if name else "?"
-        for run in runs(m.group(1)):
+        for run in runs(QUICK_VIEW.sub(" ", m.group(1))):
             for f in FIGURE.finditer(run):
                 label = label_of(run, f.group(1))
                 if not label:

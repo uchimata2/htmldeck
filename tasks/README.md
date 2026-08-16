@@ -47,12 +47,13 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-118](T-118-a-style-must-mean-the-same-thing-in-the-reading-view.md) | A style that carries meaning on a slide must carry the same meaning in the reading view | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-070, T-109, T-115 |
 | [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) | Audit the ruleset for rules that cost more to satisfy than they return | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-054, T-113, T-114, T-115 |
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-070, T-107, T-110 |
-| [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | - | `in_progress` | `implement` | - | - | T-167, T-168 | - | T-085, T-123, T-124, T-125, T-129, T-130, T-166, T-167, T-168 |
+| [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | - | `in_progress` | `implement` | - | - | T-168, T-169 | - | T-085, T-123, T-124, T-125, T-129, T-130, T-166, T-167, T-168, T-169 |
 | [T-159](T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md) | Gate the text a reader follows and no checker reads | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-146, T-147, T-149, T-153 |
 | [T-165](T-165-give-a-deferred-entry-a-closing-condition-a-check-can-read.md) | Give a deferred entry a closing condition a check can read | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-019, T-051, T-097 |
 | [T-166](T-166-shell-sync-leaves-an-upgraded-deck-failing-the-theme-gate.md) | shell.py sync leaves an upgraded deck failing the theme gate, and says nothing | `PH1` | - | `proposed` | `specify` | - | - | - | - | T-106, T-124, T-128, T-168 |
-| [T-167](T-167-checkpy-reads-a-quoted-source-as-the-decks-own-slide-copy.md) | check.py's content half reads a quoted source as the deck's own slide copy | `PH1` | - | `proposed` | `specify` | - | - | - | T-128 | T-070, T-106, T-128 |
+| [T-167](T-167-checkpy-reads-a-quoted-source-as-the-decks-own-slide-copy.md) | check.py's content half reads a quoted source as the deck's own slide copy | `PH1` | - | `review` | `review` | - | - | - | - | T-070, T-106, T-128, T-169 |
 | [T-168](T-168-sources-open-ships-with-no-minimum-target-size.md) | .sources-open ships with no minimum target size, so DS-168 holds only by luck of the type scale | `PH1` | - | `review` | `review` | - | - | - | T-128 | T-103, T-128, T-166 |
+| [T-169](T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md) | The figure binder cannot bind a value whose label sits in another table cell | `PH1` | - | `proposed` | `specify` | - | - | - | T-128 | T-128, T-167 |
 
 ## Closed
 

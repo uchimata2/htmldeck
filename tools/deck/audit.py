@@ -461,13 +461,9 @@ def ds001_no_external_references(h):
 
 
 # **The quick view is where a quoted source lives, and the only place DS-110 lets a raster be**
-# (T-070). The distinction the amendment draws is between what a deck MAKES and what it QUOTES, and
-# it is decidable by position rather than by intent: a raster inside `template.qv-src` or `.qv-body`
-# is a source, and a raster anywhere else is a rasterised diagram - as much a defect after the
-# amendment as before it. Cut narrowly and by container, in the shape DS-001's provenance exemption
-# was cut in T-069: the exemption goes exactly as far as the container that earns it.
-QUICK_VIEW = re.compile(r'<template class="qv-src"[^>]*>.*?</template>'
-                        r'|<div class="qv-body"[^>]*>.*?</div>', re.S | re.I)
+# (T-070). The cut itself moved to `content.py` when T-167 gave it a second caller there - one
+# definition, in the module this one already imports. The reasoning travels with it.
+QUICK_VIEW = content.QUICK_VIEW
 
 
 def ds110_no_produced_raster(h):
@@ -476,6 +472,36 @@ def ds110_no_produced_raster(h):
     return (not re.search(r"<img\b", outside) and "data:image/png" not in outside
             and "data:image/jpeg" not in outside and "data:image/gif" not in outside
             and "data:image/webp" not in outside)
+
+
+# **The same cut, for the two rules that judge what the deck SAYS** (T-167). DS-110 was given the
+# quoted/produced distinction when T-070 landed and the rest of `STATIC` was not, so these two read
+# the whole file - every rule below is a lambda over `h`, and `h` includes the sources the quick
+# view carries. An adopter's deck was failed by both halves of that: DS-100 fired on section
+# headings inside the quoted analysis (*Where are the delays?*), and the same file would have failed
+# DS-106 the day a source used the word *leverage*.
+#
+# **Which rules this cut applies to is decided by what the rule judges, not by where it looks.**
+# A rule about the deck's CONSTRUCTION keeps the whole file, because a quoted source that reaches
+# the network, ships a second palette or breaks the charset is a real defect wherever it sits -
+# DS-001, DS-002, DS-006 and the whole colour, type and unit family stay as they are. A rule about
+# the deck's COPY takes the cut. Only two rules in `STATIC` are the second kind.
+#
+# Three rows are worth naming as deliberately left alone, because they read like candidates and are
+# not: DS-008 (latin script) must see a quoted source, since the embedded faces are what render it;
+# DS-044 (heading levels reset) and DS-118 (literal colour in fill=) would both be defensible either
+# way, and neither has a case behind it - a rule moved on a hunch is the same defect facing the
+# other direction.
+def ds100_no_rhetorical_questions(h):
+    """DS-100 over slide copy. A question a SOURCE asks is not a question the deck asks."""
+    return not re.search(r"\?\s*<", QUICK_VIEW.sub("", h))
+
+
+def ds106_no_banned_terminology(h):
+    """DS-106 over slide copy, for the same reason. The deck does not choose a source's words."""
+    return not re.search(r"\b(crucial|pivotal|seamless|leverage|synerg\w*|friction|"
+                         r"genuinely|arguably|precisely|delve)\b",
+                         QUICK_VIEW.sub("", h), re.I)
 
 
 # --------------------------------------------------------------------------- DS-009, the preflight
@@ -590,11 +616,9 @@ STATIC = [
     ("DS-122", "no chart library",
      lambda h: not any(x in h.lower() for x in
                        ("chart.js", "d3.min", "plotly", "highcharts", "echarts"))),
-    ("DS-100", "no rhetorical questions in slide copy",
-     lambda h: not re.search(r"\?\s*<", h)),
-    ("DS-106", "no banned terminology",
-     lambda h: not re.search(r"\b(crucial|pivotal|seamless|leverage|synerg\w*|friction|"
-                             r"genuinely|arguably|precisely|delve)\b", h, re.I)),
+    # The two rows that read slide copy rather than the file. See the note above the helpers.
+    ("DS-100", "no rhetorical questions in slide copy", ds100_no_rhetorical_questions),
+    ("DS-106", "no banned terminology", ds106_no_banned_terminology),
     # ---- added by T-005, closing rules that were labelled `auto` and checked by nothing (L-36)
     ("DS-002", "no CDN host referenced - `linked` is not a shipping mode",
      lambda h: not re.search(r"cdn\.|unpkg\.com|jsdelivr|cdnjs|googleapis\.com", h, re.I)),
@@ -2335,6 +2359,33 @@ def self_test():
                  "bought nothing: a screenshot is frequently the only form a source has")
     if ds110_no_produced_raster(produced + quoted) or not ds110_no_produced_raster(quoted + quoted):
         sys.exit("SELF-TEST FAILED: DS-110 cannot tell the two apart in one deck, which is the only "
+                 "case that matters - a deck carries both")
+
+    # **T-167's boundary, on the same pattern and for the same reason.** DS-110 was given the
+    # quoted/produced distinction in T-070 and these two were not, so an adopter's deck was failed
+    # for a question its SOURCE asks and would have been failed for a word its source chose. Both
+    # halves are asserted here: a cut that stops the rule firing on the deck's own copy is not a
+    # narrowing, it is a loss, and the last pair is the only case that matters because a real deck
+    # carries both at once.
+    asks = "<h3>Where are the delays?</h3>"
+    banned = "<p>a seamless and pivotal result</p>"
+    own = '<section class="slide"><div class="body">%s%s</div></section>' % (asks, banned)
+    cited = ('<span class="sources-item"><template class="qv-src" data-qv="D1">%s%s</template>'
+             '</span>' % (asks, banned))
+    if ds100_no_rhetorical_questions(own):
+        sys.exit("SELF-TEST FAILED: a question in the deck's own slide copy passed DS-100. T-167 "
+                 "narrows the rule by scope and does not relax it")
+    if not ds100_no_rhetorical_questions(cited):
+        sys.exit("SELF-TEST FAILED: a question a quoted SOURCE asks failed DS-100, which is the "
+                 "defect T-167 exists to fix - a deck does not write its sources' headings")
+    if ds106_no_banned_terminology(own):
+        sys.exit("SELF-TEST FAILED: banned terminology in the deck's own copy passed DS-106")
+    if not ds106_no_banned_terminology(cited):
+        sys.exit("SELF-TEST FAILED: banned terminology inside a quoted source failed DS-106 - the "
+                 "deck did not choose that word, and DS-106 is a rule about the words it chose")
+    if (ds100_no_rhetorical_questions(own + cited)
+            or not ds100_no_rhetorical_questions(cited + cited)):
+        sys.exit("SELF-TEST FAILED: DS-100 cannot tell the two apart in one deck, which is the only "
                  "case that matters - a deck carries both")
     return True
 

@@ -2,8 +2,8 @@
 id: T-167
 title: check.py's content half reads a quoted source as the deck's own slide copy
 type: fix
-status: proposed
-phase: specify
+status: review
+phase: review
 parent: null
 blocked_by: []
 related: [T-070, T-128, T-106]
@@ -14,7 +14,8 @@ effort: m
 created: 2026-08-16
 updated: 2026-08-16
 deliverables:
-  - tools/deck/check.py
+  - tools/deck/audit.py
+  - tools/deck/content.py
 ---
 
 # T-167 — check.py's content half reads a quoted source as the deck's own slide copy
@@ -114,19 +115,52 @@ passes.
 
 ## 3. Implement
 
-_Not started._
+**Decisions & assumptions**
+- 2026-08-16 — **the title names `check.py` and the change is in `audit.py` and `content.py`.** The
+  title is kept because it is how the defect presents; `deliverables` is corrected to the two files
+  actually touched. `check.py` orchestrates and owns neither half.
+- 2026-08-16 — **`QUICK_VIEW` moved from `audit.py` to `content.py` rather than being copied.**
+  `audit.py` imports `content`, so that is the one direction holding a single definition. The regex
+  and its reasoning travel together; `audit.py` keeps the name as an alias so existing callers are
+  untouched.
+- 2026-08-16 — **the classification is recorded in one block above the two helpers, not per row.**
+  A row's third element is the verdict text a reader sees, and *this rule deliberately reads the
+  quotation* is a note to whoever edits the list, not to whoever runs it.
+- 2026-08-16 — **only two of the 36 `STATIC` rows moved, and three that read like candidates were
+  deliberately left.** DS-008 (latin script) **must** see a quoted source, because the embedded
+  faces are what render it. DS-044 (heading levels reset) and DS-118 (literal colour in `fill=`)
+  are defensible either way and **neither has a case behind it** — moving a rule on a hunch is the
+  same defect facing the other way, and this task exists because a rule was pointed at the wrong
+  text.
+
+**What was done.** `ds100_no_rhetorical_questions` and `ds106_no_banned_terminology` replace the two
+inline lambdas and read `QUICK_VIEW.sub("", h)`. `content.deck_figures` applies the same cut to each
+slide block before it extracts runs. The self-test gained a fixture on DS-110's pattern: the same
+question and the same banned words twice, once as the deck's own copy and once inside a
+`template.qv-src`, asserting **both** halves and the two together.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `check.py` on T-128's deck reports DS-100 and FIG-3 pass, quick views intact | **met** | Both pass. `audit.py` reports `0 mechanical failure(s)` on all three decks |
+| The figure count the gate attributes to the deck counts slide copy only | **met** | 152 → **30** on T-128's deck. The 122 removed were quotations |
+| A fixture proves the old behaviour failed and the new one does not | **met** | In `audit.py`'s self-test, on DS-110's pattern. Asserts the deck's own copy still fails, the quotation does not, and that it can tell them apart in one file — the last being the only case a real deck presents |
+| Every rule whose wording says *slide copy*, *a slide* or *the deck* is checked, and any left reading the quotation says so | **met, sited differently** | All 36 `STATIC` rows classified; the three deliberate leave-alones are named with reasons. Recorded in the block above the helpers rather than in each row, per §3's third decision |
+| No shipped deck moves | **met** | `check.py` `0 failure(s)` on `reference-deck.html` and `sort-window.html`, both with their sources |
+
+**Outstanding before this can close.** §7 step 3 — nothing this task produced renders, so there is
+no artefact to open and look at. The decks it re-scored are T-128's business and T-128 owes the
+looking. Confirm that reading is right before closing, since it is the one step that cannot be
+inferred from a green run.
 
 **Child fix tasks raised**
-- none
+- [T-169](T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md) — `FIG-1`
+  survived this fix and is now the only thing between T-128's deck and a green gate.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-16 | → review | Fixed the same day. Two rows of `STATIC` and one line of `content.deck_figures`; the work was the classification, as planned, and it returned **two of 36** rows rather than a family. `QUICK_VIEW` moved down into `content.py` instead of being copied, because `audit.py` already imports it and two copies of that regex is the failure the shell exists to prevent. All three decks now score `0 mechanical failure(s)`, and the two written here did not move. **What the fix did not reach is `FIG-1`**, which survived and is now the only failure on T-128's deck — raised as [T-169](T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md), because *recorded and not raised* stopped being adequate the moment it became load-bearing. |
 | 2026-08-16 | → proposed | Found by [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) step 6 on the first deck here whose sources were written outside this repository. Diagnosed by stripping the `qv-src` regions and re-running rather than by reading the checker, so the mechanism is measured and not inferred. |

@@ -5,7 +5,7 @@ type: deliverable
 status: in_progress
 phase: implement
 parent: null
-blocked_by: [T-167, T-168]
+blocked_by: [T-168, T-169]
 related: [T-123, T-124, T-125, T-085]
 work_package: PH3
 owner: the project owner
@@ -261,6 +261,8 @@ decks carry. That is the workaround, not the fix;
 
 **All four are now diagnosed, and three are defects in this repository rather than in the deck.**
 
+**Since fixed: `DS-100`, `DS-106`, `DS-168` and `FIG-3` all pass, and only `FIG-1` remains.**
+
 | Failure | Cause | Where it goes |
 | :--- | :--- | :--- |
 | `DS-100` | the gate reads the **quoted sources** as slide copy — the questions are D1's and D2's section headings | [T-167](T-167-checkpy-reads-a-quoted-source-as-the-decks-own-slide-copy.md) |
@@ -274,9 +276,13 @@ hypothesis, that the ruler compresses at 13 sections. Both were settled by measu
 regions were emptied on a scratch copy and the gate re-run, and the browser was asked which element
 was 23.2 px rather than reasoned at. Neither guess would have survived being written into a fix.
 
-**`FIG-1` is a false alarm and is not being raised.** One figure of 30, and the binder is documented
-as approximate. Recorded here so a later run does not re-diagnose it: the month-4 gate **is** sourced,
-in `D5-management-decision-matrix.md`, split across two cells of one table row.
+**`FIG-1` was recorded as a false alarm and is now raised as
+[T-169](T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md).** The judgement
+that it was not worth raising — 1 of 30, and the binder is documented as approximate — was right on
+the evidence at the time. [T-167](T-167-checkpy-reads-a-quoted-source-as-the-decks-own-slide-copy.md)
+then cleared the other three, and it became the **only** failure standing between this deck and a
+green gate. The month-4 gate **is** sourced, in `D5-management-decision-matrix.md`, in a table row
+holding both halves.
 
 **Nothing has been written to the source.** Every scan and read opened it read-only, and the copy was
 one-way.
