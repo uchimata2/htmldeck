@@ -90,6 +90,7 @@ comes here.
 | [L-105](lessons/L-105.md) | A feature that widens what an artefact holds re-points every rule that reads it whole | Evidence and verification |
 | [L-106](lessons/L-106.md) | A verdict cannot verify a change to a matcher; compare the artefact it derives | Evidence and verification |
 | [L-107](lessons/L-107.md) | A corruption defect is usually an omission defect too; write the criterion over the whole population | Evidence and verification |
+| [L-109](lessons/L-109.md) | Making a note machine-readable buys binding first and satisfaction rarely; count which branch covers anything | Evidence and verification |
 
 ### Tooling
 

@@ -67,105 +67,211 @@ ROOT = render.ROOT
 # already excuses never reaches this table.
 DEFERRED = {
     # ---- the rule's subject is a reading of the content, not a fact the file records
-    "DS-041": "Which rows are *correlated* is a reading of the content. The DOM records the "
-              "tracks; it does not record which values a reader expects to line up, so a grid "
-              "can misalign and absolute coordinates can land true. The same limit put DS-042 at "
-              "`Reach: never` in the ruleset. CLOSES WHEN: DS-041's `Reach` is reviewed against "
-              "DS-042's, which is a ruleset edit and not this gate's.",
-    "DS-101": "Bold in a data table is the value, not emphasis. The reference deck's A-04 ledger "
-              "carries twelve bold runs and conforms; any count threshold either forbids the "
-              "archetype or is set high enough to check nothing. CLOSES WHEN: the rule exempts "
-              "tabular values, or the markup distinguishes emphasis from value. Measured: "
-              "`data['boldRuns']`.",
-    "DS-209": "Same subject as DS-101 one altitude up, and the same obstacle: separating the one "
-              "emphasis from a row of bold figures is a reading. Measured and reported: "
-              "`data['emphasisOutsideBottomLine']`.",
-    "DS-117": "*Labelled* is a spatial-association judgement and the rule gives no distance. "
-              "Measured on one conforming deck the connector-to-nearest-label gaps run 18, 32, "
-              "56, 86 and 139 design units, so any threshold would be a number invented to fit "
-              "this deck (**L-38**). CLOSES WHEN: connectors carry a structural association - an "
-              "`aria-describedby`, a `<title>`, a shared group - which is a rule amendment.",
-    "DS-026": "The rule requires a *visible* legend and nothing in the DOM declares one. The "
-              "tripwire slide draws its legend as two SVG swatches with labels and no marker, so "
-              "a class-based check reports it missing; the check exists and finds 1 of 2. CLOSES "
-              "WHEN: DS-026 requires a legend to be identifiable, which would serve a screen "
-              "reader too - but adopting it to make a check work is backwards, so it is the "
-              "owner's.",
-    "DS-120": "An accumulation effect is not a marked construct: nothing in the DOM says *this is "
-              "meant to accumulate*, so the gate cannot find the rule's subject before judging "
-              "it. CLOSES WHEN: a person watches the effect, which is CLAUDE.md rule 6 anyway.",
-    "DS-149": "The defect is a z-order outcome and the rule names its cause. Observing it needs "
-              "two elements that overlap and the wrong one winning, which the gate cannot "
-              "construct from an arbitrary deck. CLOSES WHEN: looked at, or when a deck ships an "
-              "overlap the gate can be pointed at.",
+    "DS-041": ("Which rows are *correlated* is a reading of the content. The DOM records the "
+               "tracks; it does not record which values a reader expects to line up, so a grid "
+               "can misalign and absolute coordinates can land true. The same limit put DS-042 at "
+               "`Reach: never` in the ruleset. CLOSES WHEN: DS-041's `Reach` is reviewed against "
+               "DS-042's, which is a ruleset edit and not this gate's.",
+               ("amendment", "DS-041")),
+    "DS-101": ("Bold in a data table is the value, not emphasis. The reference deck's A-04 ledger "
+               "carries twelve bold runs and conforms; any count threshold either forbids the "
+               "archetype or is set high enough to check nothing. CLOSES WHEN: the rule exempts "
+               "tabular values, or the markup distinguishes emphasis from value. Measured: "
+               "`data['boldRuns']`.",
+               ("amendment", "DS-101")),
+    "DS-209": ("Same subject as DS-101 one altitude up, and the same obstacle: separating the one "
+               "emphasis from a row of bold figures is a reading. Measured and reported: "
+               "`data['emphasisOutsideBottomLine']`.",
+               ("amendment", "DS-209")),
+    "DS-117": ("*Labelled* is a spatial-association judgement and the rule gives no distance. "
+               "Measured on one conforming deck the connector-to-nearest-label gaps run 18, 32, "
+               "56, 86 and 139 design units, so any threshold would be a number invented to fit "
+               "this deck (**L-38**). CLOSES WHEN: connectors carry a structural association - an "
+               "`aria-describedby`, a `<title>`, a shared group - which is a rule amendment.",
+               ("amendment", "DS-117")),
+    "DS-026": ("The rule requires a *visible* legend and nothing in the DOM declares one. The "
+               "tripwire slide draws its legend as two SVG swatches with labels and no marker, so "
+               "a class-based check reports it missing; the check exists and finds 1 of 2. CLOSES "
+               "WHEN: DS-026 requires a legend to be identifiable, which would serve a screen "
+               "reader too - but adopting it to make a check work is backwards, so it is the "
+               "owner's.",
+               ("amendment", "DS-026")),
+    "DS-120": ("An accumulation effect is not a marked construct: nothing in the DOM says *this is "
+               "meant to accumulate*, so the gate cannot find the rule's subject before judging "
+               "it. CLOSES WHEN: a person watches the effect, which is CLAUDE.md rule 6 anyway.",
+               ("look", None)),
+    "DS-149": ("The defect is a z-order outcome and the rule names its cause. Observing it needs "
+               "two elements that overlap and the wrong one winning, which the gate cannot "
+               "construct from an arbitrary deck. CLOSES WHEN: looked at, or when a deck ships an "
+               "overlap the gate can be pointed at.",
+               ("look", None)),
 
     # ---- built elsewhere, or waiting on a task that owns the subject
     # DS-143's excusal was CLOSED by T-016 (2026-08-09): `audit.reduced_motion_data` takes the
     # second render this entry called for, and `reduced_verdicts` reports three rows from it.
     # Kept as a comment rather than deleted, because the entry named its own closing condition and
     # a reader should be able to see that the condition is what happened.
-    "DS-222": "The owner ruled the print row automates the PAGE COUNT and nothing else "
-              "(2026-08-08), and narrowed that on 2026-08-13 to admit printed GEOMETRY as well - "
-              "a collision is arithmetic rather than a judgement (T-123). DS-222 to DS-225 are "
-              "still asserted by a person printing and looking, which CLAUDE.md rule 6 requires "
-              "regardless; `print_variants.py` builds the variants for that. The count is checked "
-              "here under `--print-pages`, and so is DS-226's geometry.",
-    "DS-223": "The same ruling as DS-222. A slide staying a containing block for its own overlays "
-              "is observable only in the printed output, where a panel that escaped its slide "
-              "shows up scattered across a break - which is a look at paper, not a page count.",
-    "DS-224": "The same ruling as DS-222. A slide that printed blank because its entrance "
-              "animation never played still counts as a page, so the count cannot see it; what "
-              "sees it is a person turning the sheet over.",
-    "DS-225": "The same ruling as DS-222. The count does reach half of it: a contents "
-              "page that never rendered shows up as `n` rather than `n` + `k`.",
-    "DS-226": "The most reached of the five, by two instruments measuring different things. "
-              "`contents_bound.py` measures the compression bound the rule states - 16 entries "
-              "with descriptions, 24 without - in a real browser, and exercises the split that "
-              "keeps every sheet inside it; run separately because it sweeps seventeen sheet "
-              "sizes and eight stage shapes rather than reading the deck in front of it. "
-              "**And since T-123 the printed page itself is measured**: PRINT-2 and PRINT-3 above "
-              "read the card rectangles out of the printed PDF and assert that none intersects "
-              "and none reaches the footnote. What is still excused is the rest of the rule - "
-              "whether the compression reads as a compact mode rather than as damage - which is "
-              "the judgement the 2026-08-08 ruling left with the person who prints.",
+    "DS-222": ("The owner ruled the print row automates the PAGE COUNT and nothing else "
+               "(2026-08-08), and narrowed that on 2026-08-13 to admit printed GEOMETRY as well - "
+               "a collision is arithmetic rather than a judgement (T-123). DS-222 to DS-225 are "
+               "still asserted by a person printing and looking, which CLAUDE.md rule 6 requires "
+               "regardless; `print_variants.py` builds the variants for that. The count is checked "
+               "here under `--print-pages`, and so is DS-226's geometry.",
+               ("look", None)),
+    "DS-223": ("The same ruling as DS-222. A slide staying a containing block for its own overlays "
+               "is observable only in the printed output, where a panel that escaped its slide "
+               "shows up scattered across a break - which is a look at paper, not a page count.",
+               ("look", None)),
+    "DS-224": ("The same ruling as DS-222. A slide that printed blank because its entrance "
+               "animation never played still counts as a page, so the count cannot see it; what "
+               "sees it is a person turning the sheet over.",
+               ("look", None)),
+    "DS-225": ("The same ruling as DS-222. The count does reach half of it: a contents "
+               "page that never rendered shows up as `n` rather than `n` + `k`.",
+               ("look", None)),
+    "DS-226": ("The most reached of the five, by two instruments measuring different things. "
+               "`contents_bound.py` measures the compression bound the rule states - 16 entries "
+               "with descriptions, 24 without - in a real browser, and exercises the split that "
+               "keeps every sheet inside it; run separately because it sweeps seventeen sheet "
+               "sizes and eight stage shapes rather than reading the deck in front of it. "
+               "**And since T-123 the printed page itself is measured**: PRINT-2 and PRINT-3 above "
+               "read the card rectangles out of the printed PDF and assert that none intersects "
+               "and none reaches the footnote. What is still excused is the rest of the rule - "
+               "whether the compression reads as a compact mode rather than as damage - which is "
+               "the judgement the 2026-08-08 ruling left with the person who prints.",
+               ("look", None)),
 
     # ---- `default` rules, held back by the owner's triage order: the account, then the hard ones
-    "DS-004": "Triage: `default`. **Only the cross-engine half is unobservable** - no Firefox, no "
-              "Safari, no mobile, and a single-engine harness is not evidence about another engine "
-              "(R6 sections 9 and 10). *Degrade gracefully* stopped being unobservable when T-019 "
-              "built DS-009: the degraded state ships switched on and `preflight.py prove` renders "
-              "it four ways against a control that must not degrade, so that clause is checked "
-              "under DS-009 and cited here rather than given a second row - DS-073 guarded by "
-              "DS-070 is the same shape. Narrowed by T-097; the ruleset's `Reach` cell says the "
-              "same, and CLOSES WHEN a second engine is in the harness.",
-    "DS-039": "Triage: `default`. `--measure` is declared and its 45-75ch band is a rendered "
-              "line-length measurement this stage does not take.",
-    "DS-047": "Triage: `default`. *Consistent margins, breathing room* needs a definition of "
-              "consistent that the rule does not give.",
-    "DS-049": "Triage: `default`. Card radius and shadow are measurable; nothing has needed it.",
-    "DS-050": "Triage: `default`. The stage's field and shadow are measurable; nothing has "
-              "needed it.",
-    "DS-082": "Triage: `default`. The 8-12 band is measured and reported by the DS-081 row's "
-              "count; *past 12 needs a recorded reason* is not in the HTML at all.",
-    "DS-087": "Triage: `default`. No deck in the repository has an appendix, so the check would "
-              "have no subject to run against and would pass on nothing (**L-36**).",
-    "DS-104": "Triage: `default`. Assumption markers are present and their *subtlety* is the "
-              "rule's content.",
-    "DS-131": "Triage: `default`. The navigation set is present; *named targets* is checked in "
-              "substance by DS-217's scale verdict, which requires no per-item label at rest.",
-    "DS-133": "Triage: `default`. The progress indicator's *encodes real position* clause is a "
-              "claim about the mapping, which DS-216 counts and does not verify.",
-    "DS-134": "Triage: `default`. The spine exists and is lit; *the argument's structure is "
-              "visible* is the rule's content.",
-    "DS-139": "Triage: `default`. The assumption marker's edge placement is measurable; nothing "
-              "has needed it.",
-    "DS-145": "Triage: `default`. Reveal motions are DS-140's vocabulary, checked statically "
-              "there; *flows use dashed arrows* is the DS-140 row.",
-    "DS-147": "Triage: `default`. Count-up and the single pulse are present; *one per slide* is "
-              "the DS-101 obstacle in miniature.",
-    "DS-148": "Triage: `default`. No diagram in the repository changes mode, so the check would "
-              "have no subject.",
+    "DS-004": ("Triage: `default`. **Only the cross-engine half is unobservable** - no Firefox, no "
+               "Safari, no mobile, and a single-engine harness is not evidence about another engine "
+               "(R6 sections 9 and 10). *Degrade gracefully* stopped being unobservable when T-019 "
+               "built DS-009: the degraded state ships switched on and `preflight.py prove` renders "
+               "it four ways against a control that must not degrade, so that clause is checked "
+               "under DS-009 and cited here rather than given a second row - DS-073 guarded by "
+               "DS-070 is the same shape. Narrowed by T-097; the ruleset's `Reach` cell says the "
+               "same, and CLOSES WHEN a second engine is in the harness.",
+               ("harness", "a second browser engine in the harness")),
+    "DS-039": ("Triage: `default`. `--measure` is declared and its 45-75ch band is a rendered "
+               "line-length measurement this stage does not take.",
+               ("work", "a rendered line-length measurement of the prose column, in ch")),
+    "DS-047": ("Triage: `default`. *Consistent margins, breathing room* needs a definition of "
+               "consistent that the rule does not give.",
+               ("amendment", "DS-047")),
+    "DS-049": ("Triage: `default`. Card radius and shadow are measurable; nothing has needed it.",
+               ("work", "a card radius and shadow measurement")),
+    "DS-050": ("Triage: `default`. The stage's field and shadow are measurable; nothing has "
+               "needed it.",
+               ("work", "a stage field and shadow measurement")),
+    "DS-082": ("Triage: `default`. The 8-12 band is measured and reported by the DS-081 row's "
+               "count; *past 12 needs a recorded reason* is not in the HTML at all.",
+               ("amendment", "DS-082")),
+    "DS-087": ("Triage: `default`. No deck in the repository has an appendix, so the check would "
+               "have no subject to run against and would pass on nothing (**L-36**).",
+               ("deck", "a deck in this repository ships an appendix")),
+    "DS-104": ("Triage: `default`. Assumption markers are present and their *subtlety* is the "
+               "rule's content.",
+               ("amendment", "DS-104")),
+    "DS-131": ("Triage: `default`. The navigation set is present; *named targets* is checked in "
+               "substance by DS-217's scale verdict, which requires no per-item label at rest.",
+               ("work", "a per-item accessible-name check on the navigation set")),
+    "DS-133": ("Triage: `default`. The progress indicator's *encodes real position* clause is a "
+               "claim about the mapping, which DS-216 counts and does not verify.",
+               ("work", "a check that the progress indicator maps to the slide index")),
+    "DS-134": ("Triage: `default`. The spine exists and is lit; *the argument's structure is "
+               "visible* is the rule's content.",
+               ("amendment", "DS-134")),
+    "DS-139": ("Triage: `default`. The assumption marker's edge placement is measurable; nothing "
+               "has needed it.",
+               ("work", "an assumption-marker edge-placement measurement")),
+    "DS-145": ("Triage: `default`. Reveal motions are DS-140's vocabulary, checked statically "
+               "there; *flows use dashed arrows* is the DS-140 row.",
+               ("work", "a check for dashed arrows on flow connectors")),
+    "DS-147": ("Triage: `default`. Count-up and the single pulse are present; *one per slide* is "
+               "the DS-101 obstacle in miniature.",
+               ("amendment", "DS-147")),
+    "DS-148": ("Triage: `default`. No diagram in the repository changes mode, so the check would "
+               "have no subject.",
+               ("deck", "a deck in this repository ships a diagram that changes mode")),
 }
+
+# **An excusal's closing condition, as a field rather than a sentence** (T-165). Every entry above
+# already ended in prose with what would close it, and prose cannot be evaluated: `staleExcusals`
+# fires only when a rule is excused AND checked, so DS-004's reason could half-die when T-019 shipped
+# DS-009's preflight and the account stayed a clean partition for nine months. Silent by
+# construction, which is the hard case **L-54** names.
+#
+# The vocabulary is closed and every subject has to bind to something, because a condition that
+# points at nothing is the defect this exists to stop - the shape `figures.py`'s `ARTIFACTS` and
+# `audit.py`'s `ABSENCE_IS_A_PASS` already use here: a declaration that comes to cover nothing fails
+# the run.
+CLOSING_KINDS = {
+    "rule": "another rule's CHECK closes it. The subject is that rule's id, and this is the one "
+            "kind a run can decide: when the named rule is checked, the excusal has come true",
+    "amendment": "the rule's own TEXT has to change. The subject is the rule id whose wording is "
+                 "the obstacle - usually its own, sometimes a neighbour's",
+    "deck": "a deck has to ship the subject the rule judges. Nothing here has one, so a check "
+            "would pass on nothing (**L-36**); the subject says what would have to appear",
+    "work": "the check has to be built. The subject names the measurement, so what is owed is a "
+            "sentence somebody can start from rather than a shrug",
+    "harness": "the instrument has to gain a capability that is not ours to write - a second "
+               "engine, a device. The subject names it",
+    "look": "a person, which is CLAUDE.md rule 6 and owed anyway. It never closes mechanically, "
+            "and the subject is None because there is nothing to point at",
+}
+
+# A subject that is not a rule id has to be a phrase somebody could act on. Twelve characters is not
+# a quality bar - it is the floor that separates a sentence from a placeholder, and the reason the
+# number is small is that judging the phrase is the reviewer's job and not this file's.
+CLOSING_PHRASE_MIN = 12
+
+
+def closing_faults(deferred=None, checked=(), owned=None):
+    """`[(rule, what)]` - every closing condition that is broken, or that has come true.
+
+    Two different failures, deliberately in one list because they are one claim: *this excusal is
+    still needed, and here is what would end it.* An entry with no readable condition cannot be
+    held to anything; an entry whose condition is satisfied is an excusal that has stopped being
+    true. `staleExcusals` catches the second one only after somebody has already written the check
+    AND the rule is being counted - this catches it at the moment the closer lands.
+
+    **Only `rule` conditions are decidable, and that is the answer rather than a shortfall**
+    (T-165's open question). A run can read the ruleset and the account; it cannot cheaply run a
+    second browser engine, write a missing measurement, or look at a slide. What every kind gets
+    regardless is BINDING: the subject must resolve to a rule this ruleset owns or be a phrase
+    somebody can act on, so an entry can no longer point at nothing.
+    """
+    deferred = DEFERRED if deferred is None else deferred
+    owned = ruleset.owned() if owned is None else owned
+    checked = set(checked)
+    out = []
+    for rid in sorted(deferred):
+        entry = deferred[rid]
+        if not (isinstance(entry, tuple) and len(entry) == 2
+                and isinstance(entry[1], tuple) and len(entry[1]) == 2):
+            out.append((rid, "carries no closing condition a check can read - the entry is a "
+                             "reason and nothing else, so nothing can ever report it stale"))
+            continue
+        kind, subject = entry[1]
+        if kind not in CLOSING_KINDS:
+            out.append((rid, "closes on %r, which is not one of: %s"
+                        % (kind, ", ".join(sorted(CLOSING_KINDS)))))
+        elif kind in ("rule", "amendment"):
+            if subject not in owned:
+                out.append((rid, "closes on rule %r and the ruleset does not own it, so the "
+                                 "condition binds to nothing" % (subject,)))
+            elif kind == "rule" and subject in checked:
+                out.append((rid, "closes when %s is checked, and %s IS checked now. The excusal "
+                                 "has come true - resolve it or restate why it has not"
+                            % (subject, subject)))
+        elif kind == "look":
+            if subject is not None:
+                out.append((rid, "closes on a look and also names %r; a look has nothing to bind "
+                                 "to, so the subject is None" % (subject,)))
+        elif not (isinstance(subject, str) and len(subject.strip()) >= CLOSING_PHRASE_MIN):
+            out.append((rid, "closes on %r and its subject is %r - too short to act on, which is "
+                             "a placeholder rather than a condition" % (kind, subject)))
+    return out
+
 
 # The five the rubric cannot reach, proven blind against the seeded-defect deck. Named on every
 # run so a clean gate is never read as a good deck (**L-05**, DS-191).
@@ -417,7 +523,9 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
                      "judge, so the rule is undecided rather than passing"
                      % " ".join(acct["silentNoSubject"]))
     coverage_faults = (acct["silent"] + acct["staleExcusals"]
-                       + acct["excusalsForRulesNotOwned"])
+                       + acct["excusalsForRulesNotOwned"]
+                       + ["CLOSING %s - %s" % (rid, what)
+                          for rid, what in closing_faults(checked=acct["checked"])])
     if acct["partitionError"]:
         coverage_faults = coverage_faults + [
             "PARTITION %+d (buckets %d, owned %d)"
@@ -484,9 +592,51 @@ def self_test():
         sys.exit("SELF-TEST FAILED: measuring an excused rule broke the partition (%+d)"
                  % e["partitionError"])
 
-    for rid, why in DEFERRED.items():
+    for rid, (why, _closes) in DEFERRED.items():
         if len(why) < 40:
             sys.exit("SELF-TEST FAILED: %s is excused in a phrase, not in writing" % rid)
+
+    # T-165: the closing condition. **Every fixture below builds its own table** (**L-78**) - an
+    # assertion about the live one is an assertion about the repository's current contents, and the
+    # edit it blocks is the edit this field exists to make cheap.
+    real, other = sorted(own)[0], sorted(own)[1]
+    for label, entry, expect in (
+            ("no condition at all", "a reason forty characters long and no more than that", True),
+            ("an unknown kind", ("a reason forty characters long and nothing else",
+                                 ("someday", real)), True),
+            ("a rule id nothing owns", ("a reason forty characters long and nothing else",
+                                        ("amendment", "DS-999")), True),
+            ("a look that also names a subject", ("a reason forty characters long here",
+                                                  ("look", "somebody")), True),
+            ("a placeholder phrase", ("a reason forty characters long here", ("work", "tbd")), True),
+            ("a sound amendment", ("a reason forty characters long here",
+                                   ("amendment", real)), False),
+            ("a sound look", ("a reason forty characters long here", ("look", None)), False),
+            ("a sound piece of work", ("a reason forty characters long here",
+                                       ("work", "a measurement somebody could take")), False)):
+        got = bool(closing_faults({"DS-000": entry}, checked=(), owned=own))
+        if got != expect:
+            sys.exit("SELF-TEST FAILED: %s was %s - a closing condition that binds to nothing has "
+                     "to fail the run, and a sound one must not" % (label, "accepted" if got
+                                                                    else "rejected"))
+
+    # The case nothing could see before this existed: the excusal's closer has landed. `real` is a
+    # rule the ruleset owns; the fixture says DS-000 waits for it and the account says it is checked.
+    satisfied = {"DS-000": ("a reason forty characters long here", ("rule", real))}
+    if not closing_faults(satisfied, checked={real}, owned=own):
+        sys.exit("SELF-TEST FAILED: an excusal whose closing condition is already satisfied was "
+                 "not reported - that is DS-004's shape and the whole reason for the field")
+    if closing_faults(satisfied, checked={other}, owned=own):
+        sys.exit("SELF-TEST FAILED: an excusal was reported closable because some OTHER rule is "
+                 "checked, which would make the field fire on every run")
+
+    # And the live table binds. This is not an assertion about its CONTENTS - it says every entry
+    # points at something, which is the property, and it stays true through any edit that keeps it.
+    live = closing_faults(checked=())
+    if live:
+        sys.exit("SELF-TEST FAILED: %d deferred entr%s cannot be held to a closing condition: %s"
+                 % (len(live), "y" if len(live) == 1 else "ies",
+                    "; ".join("%s %s" % (r, w) for r, w in live[:3])))
 
     # **`--quiet` must never be able to swallow a red run.** The whole objection to a quiet gate is
     # that it hides something, so the one thing it must not hide is asserted rather than reviewed.
@@ -576,7 +726,18 @@ def report(res, verbose=True, quiet=False):
     if verbose and a["deferred"]:
         print("\n=== excused here, and what would close each")
         for rid in a["deferred"]:
-            print("  %-8s %s" % (rid, DEFERRED[rid]))
+            why, (kind, subject) = DEFERRED[rid]
+            print("  %-8s [%s: %s]\n           %s"
+                  % (rid, kind, subject if subject is not None else "a person, rule 6", why))
+        # **Every kind, including the ones at zero.** A kind that appears only when something is in
+        # it is a kind nobody can see going empty - the same argument that puts a row here for every
+        # rule the ruleset cites rather than for every rule currently broken (**L-36**).
+        print("\n  by what would close it: %s"
+              % "  ".join("%s %d" % (k, sum(1 for r in a["deferred"] if DEFERRED[r][1][0] == k))
+                          for k in sorted(CLOSING_KINDS)))
+        print("  Only `rule` is decidable on a run, and it is the one at zero: no excusal here is\n"
+              "  waiting on another rule's check today. The rest bind to something a person can act\n"
+              "  on, which is what an entry pointing at nothing no longer can (T-165).")
 
     print("\n%d failure(s): %s"
           % (len(res["failures"]), ", ".join(f["rule"] for f in res["failures"]) or "none"))
