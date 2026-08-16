@@ -136,6 +136,7 @@ comes here.
 | [L-86](lessons/L-86.md) | A throwaway scan is an instrument, and its first output is a claim about its own tuning | Tooling |
 | [L-87](lessons/L-87.md) | Before reporting a tool's defect, prove the tool is the one that failed | Tooling |
 | [L-91](lessons/L-91.md) | After moving text, the defects that survive are the ones no checker binds | Tooling |
+| [L-108](lessons/L-108.md) | A tool's safety guarantee defines work it cannot do; name the gap, never weaken the guarantee | Tooling |
 
 ### Writing
 

@@ -157,6 +157,21 @@ applies it. Run the first and read it — a deck one release behind and a deck w
 edited deliberately are the same bytes. `sync` fixes only the shared half: anything `check.py`,
 `component.py` or `spec.py` reports is the deck's own content and stays yours.
 
+**If either command reports `TOKENS`, the upgrade is not finished.** A release can add a theme token
+that the shared block reads and the deck declares — the block is shell and `sync` installs it, the
+declaration is a theme value in a per-deck region `sync` must never touch. So the sync succeeds and
+`theme.py` then fails DS-013 on a token you never had the chance to declare:
+
+```
+python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py tokens <slug>.html
+python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py tokens <slug>.html --write
+```
+
+The first names each token and the value the shipped theme gives it; the second adds exactly those,
+in a marked block at the end of your theme region. It only ever **adds** — a token you already
+declared is a value you chose, and nothing rewrites it. Change any of the written values afterwards
+if this deck wants a different look.
+
 Then score **S3 Encoding · S5 Craft · S6 Motion** on the batch's slides, per
 `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md`. **And look at the shots.** A deck that passes every
 check can still be a deck nobody can read; that is why the render step is in the loop and not at the

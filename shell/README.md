@@ -9,6 +9,7 @@ here, and [`tools/deck/shell.py`](../tools/deck/shell.py) puts it back.
 python tools/deck/shell.py new <out.html> --title "..." --subtitle "..."
 python tools/deck/shell.py preflight <deck> [--check]
 python tools/deck/shell.py sync <deck> [--write]
+python tools/deck/shell.py tokens <deck> [--write]
 python tools/deck/shell.py check <deck>
 python tools/deck/shell.py parts
 ```
@@ -19,6 +20,12 @@ fault of its author; `sync` cuts the deck's eleven regions out and fills the *in
 them, which is the same lossless operation that made `shell.html` in the first place. It reports
 before it writes — a deck one release behind and a deck whose shell someone edited on purpose are
 the same bytes, and nothing in a deck records which release built it. **T-124.**
+
+**`tokens` is the half `sync` cannot carry.** Add a token to `components.css` and the block installs
+cleanly while the *declaration* stays missing, because that lives in the deck's theme region and a
+sync must not touch it — so the upgrade reports success and DS-013 fails afterwards on a token the
+author never saw. `sync` and `check` now name them; `tokens --write` adds exactly the missing ones at
+the shipped theme's values and never rewrites one already declared. **T-166.**
 
 | File | What it is | Contracted by |
 | :--- | :--- | :--- |

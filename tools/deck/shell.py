@@ -11,6 +11,7 @@ this tool is what puts it back.
     python tools/deck/shell.py icons <deck> [--set concept=lucide,...] [--check]
     python tools/deck/shell.py icons --sheet <out.svg>
     python tools/deck/shell.py sync <deck> [--write]
+    python tools/deck/shell.py tokens <deck> [--write]
     python tools/deck/shell.py check <deck>
     python tools/deck/shell.py parts
 
@@ -25,6 +26,12 @@ there was no command to name (T-124). It reports by default and writes on `--wri
 `icons` and `preflight` deliberately: those derive a region from the deck's own content, while this
 one overwrites the deck's shell with a foreign one and cannot tell a version gap from a deliberate
 edit.
+
+**`tokens` is what `sync` cannot do.** A release can add a token to the shared block, and the block
+is shell while the declaration is a theme value in a per-deck region `sync` must not touch - so the
+upgrade succeeds, `check` passes, and DS-013 fails on a token the adopter never had a chance to
+declare (T-166). `sync` and `check` both name them now; `tokens --write` adds exactly the missing
+ones, at the shipped theme's values, and never rewrites one already there.
 
 Runs its own self-test first and refuses to report if it fails (**L-04**). Pure standard
 library (**L-07**).
@@ -350,6 +357,94 @@ def changes(before, after):
     return rows
 
 
+# ------------------------------------------------------------------------------- tokens
+
+
+# **The gap `sync` structurally cannot close** (T-166). A release may add a token to the shared
+# block; the block is shell and gets installed, the declaration is a theme value and lives in the
+# deck's own THEME region - which `sync` must not touch, and asserts it did not. So the upgrade
+# reports success, `shell.py check` passes, and the next gate fails DS-013 on a token the adopter
+# never had a chance to declare. Measured on the first real adopter upgrade this repository ever
+# performed: `--qv-measure`, added by T-106, on a deck built at 0.2.2.
+#
+# `sync` is the one command that holds both halves - the shell it is installing and the deck it is
+# installing into - so it is the one that can see this. It reports; it does not write, because
+# writing here would cost the guarantee that makes `sync` safe to run on a 250 KB file nobody can
+# read. `tokens --write` is the separate, narrower promise: it only ever ADDS what is missing.
+TOKEN_MARK = "/* declared by `shell.py tokens`"
+TOKEN_BLOCK = ("\n\n" + TOKEN_MARK + ": the shipped shell reads these and this deck\n"
+               "   carried no declaration of its own. The values are the shipped theme's - change\n"
+               "   them if this deck wants a different look. Nothing already declared was touched,\n"
+               "   and re-running adds to this block rather than making a second one. */\n"
+               ":root{\n%s}\n")
+
+_CACHE = {}
+
+
+def contract_tokens():
+    """The contract's token table, parsed once. `check` runs this on every fixture."""
+    if "tokens" not in _CACHE:
+        _CACHE["tokens"] = theme_mod.load()[0]
+    return _CACHE["tokens"]
+
+
+def shipped_values(theme_css=DEFAULT_THEME):
+    """`{--name: value}` as the shipped theme declares them - the default a deck gets from `new`."""
+    if theme_css not in _CACHE:
+        _CACHE[theme_css] = theme_mod.declarations(read(theme_css))
+    return _CACHE[theme_css]
+
+
+def undeclared_tokens(html, theme_css=DEFAULT_THEME):
+    """`[(token, the shipped theme's value or None)]` - every token the contract requires that this
+    deck's theme region does not declare.
+
+    Read the same way DS-013 reads it - `theme.extract` then `theme.declarations`, against
+    `theme.load` - so what this reports and what the gate fails on cannot drift apart. A deck with
+    no theme region at all is DS-013's own verdict and not this; it returns nothing rather than
+    naming all 117.
+    """
+    region = theme_mod.extract(html)
+    if region is None:
+        return []
+    here = theme_mod.declarations(region)
+    shipped = shipped_values(theme_css)
+    return [(name, shipped.get(name)) for name in sorted(contract_tokens()) if name not in here]
+
+
+def declare_tokens(html, theme_css=DEFAULT_THEME):
+    """`(html, [(token, value)])` - the deck with every missing declaration added at the shipped
+    theme's value, and what was added.
+
+    **Only ever additive.** A token already declared is a value someone chose, and a version gap is
+    indistinguishable from a deliberate edit (the same reason `sync` reports first) - so nothing
+    already present is read, let alone rewritten. A token the shipped theme has no value for is
+    left for a person: there is nothing to copy and inventing one is how a band gets a number that
+    fits one deck (**L-38**).
+    """
+    missing = [(n, v) for n, v in undeclared_tokens(html, theme_css) if v]
+    if not missing:
+        return html, []
+    region = theme_mod.extract(html)
+    lines = "".join("  %s:%s;\n" % (name, value.strip()) for name, value in missing)
+    if TOKEN_MARK in region:
+        close = region.index("}", region.index(TOKEN_MARK))
+        region = region[:close] + lines + region[close:]
+    else:
+        region = region.rstrip("\n") + TOKEN_BLOCK % lines
+    return theme_mod.swap(html, region), missing
+
+
+def token_report(missing):
+    """The lines `sync` and `check` both owe an adopter. Names the token and a value, never a
+    count: a count sends them back to the tool, and the value is what they have to type."""
+    out = []
+    for name, value in missing:
+        out.append("    %-18s %s" % (name, ("shipped theme declares %s" % value.strip()) if value
+                                     else "no value in the shipped theme - see THEME-CONTRACT.md"))
+    return out
+
+
 # ------------------------------------------------------------------------------- check
 
 
@@ -417,6 +512,15 @@ def check(html, path="the deck"):
         if parts["ICONS"] != want_sprite:
             problems.append("ICONS         %s: the sprite is not the icons this deck uses - "
                             "run `shell.py icons` (DS-113)" % path)
+
+    # The token gap, on a deck that has already been synced (T-166). `sync` names it at the moment
+    # of upgrade; this names it every time afterwards, because an adopter who synced before this
+    # existed got no warning and the deck is still short.
+    missing = undeclared_tokens(html)
+    if missing:
+        problems.append("TOKENS        %s: %d token(s) THEME-CONTRACT.md requires are not declared "
+                        "in this deck's theme, so DS-013 fails - run `shell.py tokens <deck> "
+                        "--write`\n%s" % (path, len(missing), "\n".join(token_report(missing))))
     return problems
 
 
@@ -510,6 +614,35 @@ def self_test():
         ok("and says %s is what moved" % region,
            [r[0] for r in changes(stale, synced)] == [region],
            "reported %r" % ([r[0] for r in changes(stale, synced)],))
+
+    # 3b. The gap sync structurally cannot close (T-166), seeded: a deck one release behind in a
+    # token, which is the shape of the real adopter upgrade that found it. The fixture is the
+    # point - every assertion below reads FAIL if the reporting is removed, and the defect it
+    # stands for shipped precisely because both commands an adopter runs said yes (**L-05**).
+    older = fresh.replace("  --qv-measure:80rem;\n", "", 1)
+    ok("a deck missing a token the shell reads is a different file",
+       older != fresh, "the token line was not where this fixture expects it")
+    ok("and theme.py fails it, which is the defect being reported",
+       any("--qv-measure not declared" in m
+           for _r, m in theme_mod.validate(theme_mod.extract(older))))
+    ok("check names the token", any(p.startswith("TOKENS") and "--qv-measure" in p
+                                    for p in check(older)))
+    ok("and syncing the shell does not close it",
+       [n for n, _v in undeclared_tokens(sync(older))] == ["--qv-measure"],
+       "sync silently changed the theme region, which it must never do")
+
+    declared_deck, added = declare_tokens(older)
+    ok("`tokens --write` declares it at the shipped theme's value",
+       added == [("--qv-measure", "80rem")], "added %r" % (added,))
+    ok("and the deck then passes both", check(declared_deck) == []
+       and not theme_mod.validate(theme_mod.extract(declared_deck)),
+       "; ".join(check(declared_deck))[:70])
+    ok("declaring is idempotent", declare_tokens(declared_deck)[1] == [])
+    moved = [k for k in kept(older) if kept(older)[k] != kept(declared_deck).get(k)]
+    ok("and it moved the theme region and nothing else", moved == ["THEME"],
+       "moved %r" % (moved,))
+    ok("a token already declared is never rewritten",
+       declare_tokens(fresh.replace("--qv-measure:80rem", "--qv-measure:60rem", 1))[1] == [])
 
     # The property the command asserts on the adopter's file, asserted here on a deck that has
     # something in every per-deck region - a fresh skeleton would pass this vacuously.
@@ -744,12 +877,28 @@ def main(argv):
             print("Nothing was written. This is a defect in shell.py, not in %s." % rel)
             return 2
 
+        # What a sync cannot carry, and therefore has to say (T-166). Read off the SYNCED deck,
+        # because the question is what the incoming shell needs, not what the old one did.
+        missing = undeclared_tokens(fresh)
+
         rows = changes(html, fresh)
-        if not rows:
+        if not rows and not missing:
             print("OK - %s already carries the installed shell. Nothing to sync." % rel)
             return 0
         for name, note in rows:
             print("  %-12s %s" % (name, note))
+        if missing:
+            print("  %-12s %d token(s) the installed shell reads and this deck does not declare."
+                  % ("TOKENS", len(missing)))
+            for line in token_report(missing):
+                print(line)
+            print("""    A sync must not touch the theme region - it is the deck's own - so this is
+    reported and never written here. `shell.py tokens %s --write` adds exactly
+    the missing declarations at the values above. Until then DS-013 fails.""" % rel)
+        if not rows:
+            print("\n%s already carries the installed shell; only the declarations above are "
+                  "missing." % rel)
+            return 1
         if "--write" not in rest:
             print("\n%d region(s) would change; %d per-deck region(s) untouched. Nothing written."
                   % (len(rows), len(was)))
@@ -764,6 +913,34 @@ instead: a sync writes the shipped shell over whatever that generator added (L-7
         print("\n%s - %d region(s) synced, %d per-deck region(s) untouched."
               % (rel, len(rows), len(was)))
         print("Next: python tools/deck/shell.py check %s" % rel)
+        return 0
+
+    if cmd == "tokens":
+        if not rest:
+            sys.exit("usage: shell.py tokens <deck> [--write]")
+        deck = rest[0]
+        rel = paths.display_path(deck, ROOT).replace("\\", "/")
+        html = read(deck)
+        missing = undeclared_tokens(html)
+        if not missing:
+            print("OK - %s declares every token THEME-CONTRACT.md requires." % rel)
+            return 0
+        print("%s - %d token(s) required by the contract and not declared here:" % (rel, len(missing)))
+        for line in token_report(missing):
+            print(line)
+        if "--write" not in rest:
+            print("\nNothing written. Run again with --write to add exactly these, at the values\n"
+                  "above. A token already declared is a value someone chose and is never touched.")
+            return 1
+        written, added = declare_tokens(html)
+        if not added:
+            print("\nNothing written: the shipped theme has no value for any of them, so there is\n"
+                  "nothing to copy. Declare them by hand - THEME-CONTRACT.md gives each a band.")
+            return 1
+        write(deck, written)
+        print("\n%s - %d declaration(s) added: %s"
+              % (rel, len(added), ", ".join(n for n, _v in added)))
+        print("Next: python tools/deck/theme.py check %s" % rel)
         return 0
 
     if cmd == "check":
@@ -784,7 +961,8 @@ This checks the **half nobody rewrites**, not the deck. It cannot tell you a sli
 anything - that is tools/deck/check.py, and the five dimensions past it (L-05).""")
         return 0
 
-    sys.exit("unknown command %r - one of: new, icons, preflight, sync, check, parts" % cmd)
+    sys.exit("unknown command %r - one of: new, icons, preflight, sync, tokens, check, parts"
+             % cmd)
 
 
 def pairs(raw):
