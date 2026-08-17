@@ -5,14 +5,14 @@ type: deliverable
 status: in_progress
 phase: implement
 parent: null
-blocked_by: [T-168]
-related: [T-123, T-124, T-125, T-085]
+blocked_by: []
+related: [T-123, T-124, T-125, T-085, T-168]
 work_package: PH3
 owner: the project owner
 business_value: high
 effort: l
 created: 2026-08-13
-updated: 2026-08-16
+updated: 2026-08-17
 deliverables:
   - examples/
   - CLAUDE.md
@@ -300,6 +300,7 @@ one-way.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-17 | (no change) | **Unblocked: `blocked_by` is empty.** [T-168](T-168-sources-open-ships-with-no-minimum-target-size.md) closed once somebody opened the sources box on **this deck** and looked at it, which is also the first time an adopter-built deck was operated rather than measured here. It found one more defect in the doing — [T-174](T-174-the-quick-view-reopens-at-the-previous-documents-scroll-offset.md), the quick view reopening at the last document's scroll offset — raised `PH1` and placed ahead of this task, because it is shipped behaviour and this task ships a deck that demonstrates it. What remains here is unchanged: steps 7–9, less the `DECKS` entry, and step 8 is a print that a person reads. |
 | 2026-08-16 | (no change) | **The authorised `DECKS` entry has landed, and it did not buy the green run it was expected to.** `examples/measure-first/measure-first.html → examples/measure-first/sources` is declared in `tools/check_all.py`, and the run now reaches every deck: all three pass their per-deck gates. It then fails at `figures.py` with **five figures**, and the cause is this task's own step 5 — the shell sync in `745f6b8` moved the reference deck to 269,083 bytes and `sort-window` to 266,324, while `examples/README.md` and `docs/BRIEF.md` still state the old ones. Nothing saw it because the undeclared deck exited the run first. Raised as [T-172](T-172-the-shell-sync-falsified-four-published-deck-figures.md) rather than fixed here, because the authorisation bounded this to the one line. `blocked_by` also corrected: T-169 is done, so only T-168 remains. |
 | 2026-08-16 | (no change) | **The owner authorised step 7's `DECKS` entry to land on its own, ahead of the rest of this task.** Step 6 closed the same day — T-167, T-169 and T-170 between them took the deck to a green per-deck gate — and the undeclared deck is now the only thing failing `python tools/check_all.py`, which is publishing step 1 and stops before it reaches a single deck. Registering a deck is not publishing it, so the step separates cleanly; the rest of step 7 — `examples/README.md` and the figures `figures.py` watches — stays here, because those are the page a stranger reads and they belong with steps 8–9. **This task remains `blocked_by` T-168**, which needs a person to open a sources popover and look at it. |
 | 2026-08-16 | (no change) | **Step 6 diagnosed: three of the four `check.py` failures are this repository's defects, not the deck's.** [T-167](T-167-checkpy-reads-a-quoted-source-as-the-decks-own-slide-copy.md) — the content half charges a deck for what its **quoted sources** say, which failed `DS-100` and `FIG-3` and had 122 of 152 "deck figures" coming out of quotations. [T-168](T-168-sources-open-ships-with-no-minimum-target-size.md) — `.sources-open` ships with no minimum target size and rendered at 23.2 px against DS-168's 24. `FIG-1` is a false alarm, recorded and not raised. **This is the return the task was raised for**: three latent defects in the published plugin, none of which either deck written inside this repository could expose, found by the first deck whose sources somebody else wrote. |
