@@ -4,7 +4,7 @@ title: Give the deck gate a quiet mode for its green run
 type: deliverable
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: T-130
 blocked_by: []
 related: [T-130]

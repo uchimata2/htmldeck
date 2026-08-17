@@ -4,7 +4,7 @@ title: Give each cumulative rule one operative home
 type: deliverable
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: T-130
 blocked_by: []
 related: [T-130, T-134, T-143]

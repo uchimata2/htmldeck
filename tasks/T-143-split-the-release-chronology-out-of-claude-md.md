@@ -4,7 +4,7 @@ title: Split the release chronology out of CLAUDE.md
 type: deliverable
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: T-130
 blocked_by: []
 related: [T-130, T-134, T-144]

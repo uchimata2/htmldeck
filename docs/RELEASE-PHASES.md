@@ -257,6 +257,16 @@ rule and says nothing about what changed; `PUBLISHING.md` §8.1 carries the row 
 passing `0.2.3` passes this unchanged. The eight steps ran in full, and step 8 was the one that bit:
 it named `BRIEF.md` as the home of the shipping version, which T-145 had emptied that morning.
 
+**`0.3.0` shipped 2026-08-17, carrying 53 closed tasks, and it is a minor rather than the next patch
+number.** The rule step 2 states is *the next one on the published line*, which reads `0.2.5`; the
+owner ruled a minor on scale, on `0.2.0`'s precedent — a phase's worth of work, new commands an
+adopter runs, and a deck they can read. **Four of the tasks are `PH1` defects in the published
+plugin, and all four were found by an adopter's deck rather than by anything written here**: T-166,
+T-167, T-168 and T-169. Two more, T-174 and T-175, came out of somebody opening that deck and
+clicking, which is the set no gate reaches. Step 8 stamped 53 records: 47 carrying `unreleased`, and
+**six carrying no `shipped_in` line at all** — including T-167, a `PH1` fix, whose empty field was an
+omission rather than a decision and would have left the release's own record incomplete.
+
 | | What it adds |
 | :--- | :--- |
 | [T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, a frame-rate figure with its machine, and DS-140's fifth motion. Split out of T-016, and `xl` because it is three deliverables wearing one title. |

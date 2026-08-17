@@ -4,7 +4,7 @@ title: Extract the upstream register into one document per owner
 type: deliverable
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-130, T-140]

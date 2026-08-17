@@ -9,7 +9,7 @@ blocked_by: []
 related: [T-130, T-134]
 work_package: PH3
 finding: CE-10
-shipped_in: unreleased
+shipped_in: 0.3.0
 owner: the project owner
 business_value: low
 effort: xs

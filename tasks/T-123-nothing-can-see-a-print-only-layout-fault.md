@@ -4,7 +4,7 @@ title: Nothing can see a print-only layout fault, and one reached two shipped de
 type: decision
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-034, T-036, T-084, T-116]

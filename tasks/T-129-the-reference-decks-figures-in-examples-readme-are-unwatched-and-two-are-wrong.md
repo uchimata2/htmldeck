@@ -4,7 +4,7 @@ title: The reference deck's figures in examples/README.md are bound to nothing, 
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-127, T-088, T-085, T-128]

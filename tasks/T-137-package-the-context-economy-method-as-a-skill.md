@@ -4,7 +4,7 @@ title: Package the context-economy method as a skill
 type: deliverable
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: T-130
 blocked_by: []
 related: [T-130, T-131, T-132, T-133, T-135, T-136, T-139, T-140]

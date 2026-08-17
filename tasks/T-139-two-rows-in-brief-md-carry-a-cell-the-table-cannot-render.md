@@ -4,7 +4,7 @@ title: Two rows in BRIEF.md carry a cell the table cannot render
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-131]

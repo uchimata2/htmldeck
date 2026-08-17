@@ -4,7 +4,7 @@ title: Stop figures.py refusing to report a drifted figure because its own fixtu
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-088, T-126]

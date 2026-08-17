@@ -4,7 +4,7 @@ title: An adopter cannot refresh a deck's shell after an upgrade, so every relea
 type: deliverable
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-085, T-108, T-116, T-036]

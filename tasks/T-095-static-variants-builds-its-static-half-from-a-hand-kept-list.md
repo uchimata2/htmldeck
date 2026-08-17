@@ -4,7 +4,7 @@ title: static_variants builds its static half from a hand-kept list, so a new pr
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-066, T-075, T-093]

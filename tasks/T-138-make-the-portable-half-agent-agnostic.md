@@ -4,7 +4,7 @@ title: Make the portable half agent-agnostic, and classify the load path by who 
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: T-130
 blocked_by: []
 related: [T-130, T-135, T-136, T-137]

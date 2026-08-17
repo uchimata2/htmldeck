@@ -13,7 +13,7 @@ business_value: medium
 effort: s
 created: 2026-08-15
 updated: 2026-08-15
-shipped_in: unreleased
+shipped_in: 0.3.0
 deliverables: []
 ---
 

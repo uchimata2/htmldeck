@@ -4,7 +4,7 @@ title: Stop shell.py refusing every command while a tracked deck is behind the s
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-124, T-125, T-101]

@@ -8,6 +8,7 @@ parent: null
 blocked_by: []
 related: [T-019, T-017, T-041]
 work_package: PH3
+shipped_in: 0.3.0
 owner: maintainer
 business_value: medium
 effort: s

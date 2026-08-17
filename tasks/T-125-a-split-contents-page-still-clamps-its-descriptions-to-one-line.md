@@ -4,7 +4,7 @@ title: Decide whether a split contents page should take a further sheet rather t
 type: decision
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-036, T-034, T-116]

@@ -4,7 +4,7 @@ title: Correct and extend the upstream register from what implementing the audit
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-130, T-131, T-139]

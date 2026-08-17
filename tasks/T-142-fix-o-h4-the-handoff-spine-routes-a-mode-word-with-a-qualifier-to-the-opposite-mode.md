@@ -4,7 +4,7 @@ title: Fix O-H4 — the handoff spine routes a mode word with a qualifier to the
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-140, T-141]

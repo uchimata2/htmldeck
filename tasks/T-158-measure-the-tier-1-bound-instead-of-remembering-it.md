@@ -8,6 +8,7 @@ parent: T-130
 blocked_by: []
 related: [T-130, T-134, T-143, T-144, T-152, T-153]
 work_package: PH3
+shipped_in: 0.3.0
 owner: the project owner
 business_value: medium
 effort: s

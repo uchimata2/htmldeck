@@ -4,7 +4,7 @@ title: Audit the context economy of an agent-driven repository, and rank the sav
 type: audit
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.0
 parent: null
 blocked_by: []
 related: [T-096, T-128]
