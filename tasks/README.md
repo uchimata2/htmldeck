@@ -50,7 +50,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | - | `in_progress` | `implement` | - | - | T-168 | - | T-085, T-123, T-124, T-125, T-129, T-130, T-166, T-167, T-168, T-169, T-172 |
 | [T-159](T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md) | Gate the text a reader follows and no checker reads | `PH3` | - | `proposed` | `specify` | T-130 | - | - | - | T-130, T-146, T-147, T-149, T-153 |
 | [T-168](T-168-sources-open-ships-with-no-minimum-target-size.md) | .sources-open ships with no minimum target size, so DS-168 holds only by luck of the type scale | `PH1` | - | `review` | `review` | - | - | - | T-128 | T-103, T-128, T-166 |
-| [T-172](T-172-the-shell-sync-falsified-four-published-deck-figures.md) | The shell sync falsified four published deck figures and nothing could see it | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-128, T-129, T-154 |
 
 ## Closed
 
@@ -210,5 +209,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-169](T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md) | The figure binder cannot bind a value whose label sits in another table cell | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-128, T-167, T-170, T-171 |
 | [T-170](T-170-the-reference-deck-states-four-dates-no-source-carries.md) | The reference deck states four evaluation dates no source carries | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-169 |
 | [T-171](T-171-the-ledger-glues-two-words-together-at-every-inline-tag.md) | The ledger glues two words together at every inline tag it deletes | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-169 |
+| [T-172](T-172-the-shell-sync-falsified-four-published-deck-figures.md) | The shell sync falsified four published deck figures and nothing could see it | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-128, T-129, T-154 |
 
 <!-- taskmd:end -->

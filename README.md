@@ -185,7 +185,7 @@ and need nothing but Python.
 
 ## The reference deck
 
-[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **262 KB
+[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **263 KB
 in one file, zero external references**, three embedded typefaces, ten icons and eight hand-written
 SVG figures. Download it, disconnect, double-click it. Every measurement behind it, and how to
 reproduce each, is in [`examples/README.md`](examples/README.md).
