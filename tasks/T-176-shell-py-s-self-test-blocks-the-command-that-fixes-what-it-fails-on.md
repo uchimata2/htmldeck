@@ -4,7 +4,7 @@ title: shell.py's self-test asserts repository state, so it blocks the one comma
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.1
 parent: null
 blocked_by: []
 related: [T-109, T-036, T-124]
@@ -120,3 +120,4 @@ commits that change that file.
 | :--- | :--- | :--- |
 | 2026-08-17 | → proposed | Raised from [T-109](T-109-one-source-reference-component-rendered-in-three-places.md)'s implement phase, which it blocks outright: one `<p>` added to `shell/shell.html` and every `shell.py` subcommand exits 2, including the `sync` that propagates it. `PH1` because it is a defect in the published plugin — an adopter who edits the shell meets it on the same command this repository ships them, and `shell.py sync` is what `PUBLISHING.md` §8.1 and `L-77` both point at. |
 | 2026-08-17 | → done | Specified, planned, implemented and reviewed the same hour, because it sat on the critical path of the ranked-first task rather than beside it. **53 of 53 fixtures behave as specified** and the count went up by one: the built skeleton carries both assertions and the real deck keeps the losslessness one. Nothing produced by this task renders, so §7 step 3's look is not owed — the same ground the 2026-08-16 unattended batch was selected on. The reusable half is **L-112**. |
+| 2026-08-18 | (no change) | **Shipped in `0.3.1`**, alongside the [T-109](T-109-one-source-reference-component-rendered-in-three-places.md) whose implement phase it was blocking. It changes `shell.py`'s self-test and nothing a deck must satisfy, which §8.1's row for that version states. |

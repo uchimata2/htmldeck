@@ -267,6 +267,16 @@ clicking, which is the set no gate reaches. Step 8 stamped 53 records: 47 carryi
 **six carrying no `shipped_in` line at all** — including T-167, a `PH1` fix, whose empty field was an
 omission rather than a decision and would have left the release's own record incomplete.
 
+**`0.3.1` shipped 2026-08-18, carrying four closed tasks, and it is the next patch rather than a
+second minor.** The owner ruled it on this project's own precedent rather than on what the tasks
+contain: `0.2.1` and `0.2.2` each added a *required* part that failed decks already built, and
+`0.2.3` moved the shared shell, and all three were patches — `0.3.0` took the minor on **scale**, at
+53 closed tasks against these four. **Only [T-109](../tasks/T-109-one-source-reference-component-rendered-in-three-places.md)
+requires anything of an existing deck**, and §8.1's row now says so of the other three explicitly,
+because an absent statement and a forgotten one read the same. The step that bit this time was
+**step 4**, the one no gate covers: the README named a PH2 task as still open that had shipped in
+`0.3.0`, with every pasted figure on the page correct.
+
 | | What it adds |
 | :--- | :--- |
 | [T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, a frame-rate figure with its machine, and DS-140's fifth motion. Split out of T-016, and `xl` because it is three deliverables wearing one title. |

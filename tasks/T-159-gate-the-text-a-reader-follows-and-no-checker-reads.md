@@ -4,7 +4,7 @@ title: Gate the text a reader follows and no checker reads
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.3.1
 parent: T-130
 blocked_by: []
 related: [T-130, T-146, T-147, T-149, T-153]
@@ -214,6 +214,7 @@ because a step passed in silence is indistinguishable from one not taken.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-18 | (no change) | **Shipped in `0.3.1`.** `refcheck.py`'s fourth check ships with it. It reads this repository's own documents and never an adopter's deck, which is why [`PUBLISHING.md`](../docs/PUBLISHING.md) §8.1's row for that version states this task requires nothing of one. |
 | 2026-08-17 | → done | Six classified, **one gated**. `refcheck.py` gains check 4, `LYING LABEL`; `TOOLING.md` §2.1 gains what it does and the refusal of the bare-`§n` rule with the 1,195-of-2,501 measurement behind it. Every criterion met, including the seeded demonstration through the shipped entry point rather than through the function — which is what would have caught the near-miss: the labels this check reads sit inside code spans, which the tool blanks before reading, so it was one line away from comparing 711 empty strings and printing *0 disagree* forever (**L-114**, new). Two self-test fixtures were live dead pointers on the first attempt and so was the comment explaining them — **L-34** confirmed again, no new lesson. Nothing renders, so §7 step 3 is vacuous and §4 says so. |
 | 2026-08-17 | → in_progress | Implementation followed the plan without deviation. The only unforecast work was the code-span reading and two rounds of fixture collisions. |
 | 2026-08-17 | → planned | Both candidate rules measured before the plan was written, with a throwaway probe rather than with the gates that missed the class. **A: 711 candidates, 0 firing. B: 2,501 bare marks, 1,195 firing.** The second number is the refusal — B buys T-147's 3 instances at the price of ~1,192 alarms over a tree believed clean, and no narrowing survives §1's *Out* on widening adjacency. The open question is answered yes for A. Check 4 goes into `refcheck.py`: the criterion forbids widening check 3's adjacency **rule**, which stays untouched, and asks for a new **check**, which this is — a tool of its own would be a fourth copy of the document walk, the ignore handling and the code-stripping for one rule. |
