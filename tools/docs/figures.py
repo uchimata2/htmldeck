@@ -599,6 +599,11 @@ ARTIFACTS = {
     "examples/sort-window/sort-window.html":
         "the deck nobody authored by hand, which is what README.md points at as the generated "
         "example - and the file both of v0.2.0's stale figures were about",
+    "examples/measure-first/measure-first.html":
+        "the deck an adopter built, published by T-128; examples/README.md states its size and "
+        "slide count, and it is the one deck here whose size moves for a reason nobody in this "
+        "repository decided - an upstream author's edit, arriving through a copy rather than "
+        "through a commit",
 }
 
 _RUNS = {}

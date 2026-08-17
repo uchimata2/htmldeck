@@ -2,12 +2,13 @@
 id: T-128
 title: Publish the adopting project's D6 deck as a third worked example, sanitized on the way in
 type: deliverable
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-123, T-124, T-125, T-085, T-168]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: l
@@ -18,6 +19,7 @@ deliverables:
   - CLAUDE.md
   - examples/README.md
   - tools/check_all.py
+  - tools/docs/figures.py
 ---
 
 # T-128 — Publish the adopting project's D6 deck as a third worked example, sanitized on the way in
@@ -287,11 +289,48 @@ holding both halves.
 **Nothing has been written to the source.** Every scan and read opened it read-only, and the copy was
 one-way.
 
+**Steps 7 to 9, 2026-08-17 — and step 7's own gate caught two things reading would not have.**
+
+| Step | State | Evidence |
+| :-- | :--- | :--- |
+| 7 register | **done** | `DECKS` had landed already. `examples/README.md` gains a table row and a section; `figures.py`'s `ARTIFACTS` gains the deck, so its size and slide count are now watched rather than merely stated |
+| 8 print and look | **done** | `PRINT-1` 14 pages, 13 slides + 1 contents sheet. `PRINT-2` 13 cards on one sheet, none intersecting. `PRINT-3` every card clear of the footnote. Then rasterised and **looked at**: the contents sheet, a diagram page and the colophon |
+| 9 source untouched | **verified** | All **68** files re-hashed against the pre-copy baseline: 0 changed, 0 missing, 0 added |
+
+**`figures.py` refused the first version of the page, twice, and it was right both times.** The
+paragraph stated *369 KB* while linking the **directory**, so nothing could ever report it stale —
+the exact state T-129 was raised from, and the self-test says so by name. Linking the file fixed
+that and produced the second refusal: the page claimed *12 slides* where the tool counts **13**.
+Both are true sentences about this deck — twelve slides plus a colophon — but the binder counts
+sections, so the page now says *13 slides, the last of them a colophon*, which is also what its own
+printed contents sheet counts. **A figure that cannot be checked is worse than one that is wrong**,
+and this page had shipped one of each within five minutes of being written.
+
+**Criterion 2 failed on re-running the scan, which is why it says re-run rather than read.** The
+sanitization pass of 2026-08-16 read rendered text and Markdown. It missed
+`targetNamespace="http://dentalpro/bpmn"` in **both** BPMN models: an XML attribute, in a file type
+nobody reads, carrying the case company's name into a public repository. Corrected to `larkfield`,
+and the scan rewritten to walk **every** file under the example whatever its type. The lesson is
+[**L-111**](../docs/lessons/L-111.md).
+
+**The four hits the scan still returns are all false, and it shows each one rather than counting
+it.** `trainer` twice, as a role in the redesigned process; a `file://` inside a sentence about
+DS-105 forbidding such a link; and `[D-004]`, which resolves to D4 inside the published set. This is
+the 2026-08-13 survey's discipline held: the scan binds on structure and prints the match, so a
+false alarm is visible as one.
+
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The provenance question is answered by the owner before anything is copied | **met** | Answered 2026-08-13; nothing was copied until 2026-08-16 |
+| No occurrence of any ruled class survives, checked by re-running the scan | **met, after a failure the scan found** | Case identity **0** only after the two BPMN `targetNamespace` attributes were corrected — they were live when this criterion was last believed. Training context, place names, e-mail addresses: **0**. Four remaining hits shown and judged false |
+| No identifier from the source project's namespaces survives, checked by resolving | **met** | The dangling and colliding set — `L-25`, `L-17`, `R-612`, `R-619`, `T-001`–`T-007`, `[D-006]`, `[D-007]`, the `T-068` link — returns **0**. The eleven kept identifiers (`DS-085`, `DS-105`, `X-04`, eight `A-nn`) were each **resolved** against `docs/DESIGN-SYSTEM.md`, not pattern-matched |
+| The figures and the analysis are intact | **met** | No figure was re-based; the only edits since the sanitization pass are the two namespace attributes, which no slide renders |
+| Passes every per-deck gate, and `check_all.py` accounts for it | **met** | `0 failure(s), 0 unclassified, 0 stale` across the whole suite |
+| Renders offline, printed and looked at, contents sheet clean at 13 entries | **met** | Contents sheet: 13 cards, four columns, three full rows and one, no collision, all clear of the footnote. Offline confirmed separately under T-168: three requests on load, all `data:` URIs |
+| The source project's folder is byte-for-byte unchanged, verified | **met** | 68 of 68 unchanged, re-verified at close against the pre-copy baseline |
+| `examples/README.md` states what the deck is, where it came from, what it demonstrates | **met** | A table row and a section, including the four defects it exposed. **Its humanizer pass is owed at release**, not here: the page is in `docs/PUBLISHING.md` §2's covered set and this task is not a release. The new prose was written to that pass's finding anyway — one em dash added across 55 lines |
 
 **Child fix tasks raised**
 - none
@@ -300,6 +339,7 @@ one-way.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-17 | → done | **Steps 7, 8 and 9 closed, and the last check before publishing found the thing every earlier check had missed.** The case company's name was still in both BPMN models as a `targetNamespace` attribute, a day after the class was measured at zero — because the sanitization read rendered text and Markdown, and an XML attribute is in neither. Corrected, and the scan rewritten to walk every file whatever its type: **L-111**. `figures.py` then refused the new page twice, both times correctly — a size claim that linked the directory and so could never go stale, and a *12 slides* that the binder counts as 13. Printed: 14 pages, contents sheet clean at 13 entries, `PRINT-2` and `PRINT-3` green, and the sheet, a diagram page and the colophon were looked at. Source re-verified at close: 68 of 68 unchanged. `check_all.py` green. **The deck is published.** Its humanizer pass is owed at release, with the rest of the covered set. |
 | 2026-08-17 | (no change) | **Unblocked: `blocked_by` is empty.** [T-168](T-168-sources-open-ships-with-no-minimum-target-size.md) closed once somebody opened the sources box on **this deck** and looked at it, which is also the first time an adopter-built deck was operated rather than measured here. It found one more defect in the doing — [T-174](T-174-the-quick-view-reopens-at-the-previous-documents-scroll-offset.md), the quick view reopening at the last document's scroll offset — raised `PH1` and placed ahead of this task, because it is shipped behaviour and this task ships a deck that demonstrates it. What remains here is unchanged: steps 7–9, less the `DECKS` entry, and step 8 is a print that a person reads. |
 | 2026-08-16 | (no change) | **The authorised `DECKS` entry has landed, and it did not buy the green run it was expected to.** `examples/measure-first/measure-first.html → examples/measure-first/sources` is declared in `tools/check_all.py`, and the run now reaches every deck: all three pass their per-deck gates. It then fails at `figures.py` with **five figures**, and the cause is this task's own step 5 — the shell sync in `745f6b8` moved the reference deck to 269,083 bytes and `sort-window` to 266,324, while `examples/README.md` and `docs/BRIEF.md` still state the old ones. Nothing saw it because the undeclared deck exited the run first. Raised as [T-172](T-172-the-shell-sync-falsified-four-published-deck-figures.md) rather than fixed here, because the authorisation bounded this to the one line. `blocked_by` also corrected: T-169 is done, so only T-168 remains. |
 | 2026-08-16 | (no change) | **The owner authorised step 7's `DECKS` entry to land on its own, ahead of the rest of this task.** Step 6 closed the same day — T-167, T-169 and T-170 between them took the deck to a green per-deck gate — and the undeclared deck is now the only thing failing `python tools/check_all.py`, which is publishing step 1 and stops before it reaches a single deck. Registering a deck is not publishing it, so the step separates cleanly; the rest of step 7 — `examples/README.md` and the figures `figures.py` watches — stays here, because those are the page a stranger reads and they belong with steps 8–9. **This task remains `blocked_by` T-168**, which needs a person to open a sources popover and look at it. |

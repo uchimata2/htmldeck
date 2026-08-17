@@ -1,6 +1,6 @@
 # examples
 
-Three decks. All are single self-contained `.html` files with **zero external references**; open any
+Four decks. All are single self-contained `.html` files with **zero external references**; open any
 of them by double-clicking, with the network off.
 
 | File | What it is |
@@ -8,15 +8,23 @@ of them by double-clicking, with the network off.
 | [`reference-deck.html`](reference-deck.html) | The reference deck. 12 slides and a colophon, built **by hand** against [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md); the colophon and the source citations are [T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md)'s. |
 | [`reference-deck-seeded-defects.html`](reference-deck-seeded-defects.html) | The same deck with **one deliberate defect per evaluation dimension**. A test fixture, not an example to copy. |
 | [`sort-window/`](sort-window) | *Move the window, not the fleet*, 12 slides, built **through build mode** by [T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md), with its two specification files and its sources beside it. |
+| [`measure-first/`](measure-first) | *Demand Planning: what Business Analytics can do first*, 13 slides, the last of them a colophon. The only deck here **somebody else built**, using the published plugin, in their own project. Copied in and sanitized by [T-128](../tasks/T-128-publish-the-adopter-deck-as-a-worked-example.md), with its two specifications, its five source documents and its two process models. |
 
 **The difference between the first and the third is the whole point of T-002.** One was authored;
 the other was assembled from [`shell/`](../shell) and then authored into, three slides at a time,
 with the gate run per batch. They share a runtime because the shell *is* the first deck with its
 content cut out.
 
-**Riverbend is an illustrative city. It does not exist.** Every figure in either deck is an output
-of the assumptions stated on the slide that uses it. Nothing is attributed to a real agency, study
-or place. See *Provenance*, below.
+**The fourth is different from all of them, and that is why it is here.** Both decks written in this
+repository were written against its own rules, by whoever was also holding the rules. `measure-first`
+was not: it was built somewhere else, by someone reading the published skill, to answer a question
+this repository had never heard of. It is the only honest test of the ruleset in the folder, and it
+behaved like one. Running the gates over it found four defects in the plugin that neither of the
+other two could expose.
+
+**Riverbend and Larkfield are both invented. Neither exists.** Every figure in every deck here is an
+output of the assumptions stated on the slide that uses it. Nothing is attributed to a real agency,
+study, company or place. See *Provenance*, below.
 
 ---
 
@@ -365,3 +373,47 @@ any HTML existed*. After that, three defects came out of looking at rendered sli
 of any check: a figure label set in paper on a `--data-quiet` fill at 2.6:1, exit text clipped by the
 stage edge, and a delta arrow drawn across the time axis instead of along it. **The gate saw the
 first one. Nothing but a person saw the other two.**
+
+---
+
+## The deck somebody else built
+
+[`measure-first/measure-first.html`](measure-first/measure-first.html) is *Demand Planning: what
+Business Analytics can do first*. 13 slides, the last of them a colophon, **369 KB in one file**,
+377 693 bytes, zero external references. It argues
+that measurement and discipline fix demand planning before any AI is bought, for an invented dental
+group deciding what to do first.
+
+It is the only deck in this folder that was not written here. Someone built it in their own project,
+using the published plugin, against a brief this repository had no part in. It arrived with its two
+specifications, five analysis documents and two process models, and it is published with all of them:
+
+```bash
+python tools/deck/check.py examples/measure-first/measure-first.html --sources examples/measure-first/sources
+```
+
+**Larkfield Dental Group does not exist**, and neither does the case. The scenario, the company and
+every figure were invented for a training exercise; they are published here with the author's
+permission, renamed, with the training context taken out. The analysis is untouched — the deck still
+argues exactly what it argued.
+
+### What it cost to run our own rules against somebody else's deck
+
+Four defects in this plugin, none of which either deck above could have exposed:
+
+| | |
+| :--- | :--- |
+| [T-166](../tasks/T-166-shell-sync-leaves-an-upgraded-deck-failing-the-theme-gate.md) | the upgrade path reported success and left the deck failing a gate |
+| [T-167](../tasks/T-167-checkpy-reads-a-quoted-source-as-the-decks-own-slide-copy.md) | the content gate charged the deck for what its **quoted sources** said |
+| [T-168](../tasks/T-168-sources-open-ships-with-no-minimum-target-size.md) | a control shipped with no minimum target size, and rendered under the accessibility floor |
+| [T-169](../tasks/T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md) | the figure binder could not bind a value split across two table cells |
+
+Every one of them is a rule this repository wrote, running against markup this repository ships, in a
+deck whose author did nothing wrong. Two decks written by the people holding the rules had passed the
+same gates for months. **That is the argument for keeping this deck**: a ruleset only tested by its
+authors is tested against what its authors already knew.
+
+The deck was built on 0.2.2 and brought up to date here with `shell.py sync`, which crossed two
+releases. That was the first time this repository ran its own published upgrade path on a real
+adopter's file, and where
+[T-166](../tasks/T-166-shell-sync-leaves-an-upgraded-deck-failing-the-theme-gate.md) came from.

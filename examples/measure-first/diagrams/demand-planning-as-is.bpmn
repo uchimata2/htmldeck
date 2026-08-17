@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_demand_planning_as_is" targetNamespace="http://dentalpro/bpmn" exporter="bpmnlay" exporterVersion="1.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_demand_planning_as_is" targetNamespace="http://larkfield/bpmn" exporter="bpmnlay" exporterVersion="1.0">
   <bpmn:dataStore id="DataStore_1" name="ERP sales history" />
   <bpmn:dataStore id="DataStore_2" name="Annual revenue budget" />
   <bpmn:dataStore id="DataStore_3" name="Stock levels" />
