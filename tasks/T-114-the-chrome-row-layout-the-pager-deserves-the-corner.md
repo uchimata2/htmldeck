@@ -84,8 +84,26 @@ test of whether option 1 is a principle or an excuse.
 
 **The owner chose Y on 2026-08-12**, for flexibility and future room: a `More` control takes a third
 and a fourth item without redesigning the row, where X's second section grows by getting wider until
-it is competing with the pager again. **So the DS-138 work is no longer conditional — it is step one
-of this task, and no chrome code is written before it lands.**
+it is competing with the pager again. ~~**So the DS-138 work is no longer conditional — it is step one
+of this task, and no chrome code is written before it lands.**~~
+
+> **Step one was paid on 2026-08-17 by
+> [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md), and it took option 1
+> above.** DS-138 now reads *every panel opens fully inside the stage* as the general obligation, and
+> binds the **below** direction to a tier-two disclosure panel only, with chrome explicitly outside
+> it. The audit reached this rule from the other end — a scope test asking whether a rule's wording
+> reaches as far as its reason — and cited this task's blocked menu as the instance. **So Y is
+> buildable, the exemption lives in the rule rather than in this task, and no argument is owed before
+> the code.**
+>
+> **But the boundary landed one step wider than option 1 promised, and that is a live question rather
+> than a settled one.** Option 1's own test was that *the multi-source mark is content and stays
+> bound*. DS-138 is now bound to a **tier-two disclosure panel**, and **DS-105 puts the multi-source
+> mark outside tier two by name** — its own component, deliberately not a `.disc`, outside DS-230's
+> closed vocabulary. Read literally, the narrowing frees the mark as well, which is the thing option
+> 1 said it must not do. **Check this before building Y**: either the mark is demonstrably still
+> bound by the general obligation alone, or DS-138's direction clause needs the mark named beside
+> tier two. It is a one-clause question and it belongs to this task now, not to another audit.
 
 **The second, non-obvious payoff**
 [`shell/deck.js`](../shell/deck.js) sizes the ruler from what the controls leave it:
@@ -165,10 +183,15 @@ container was the problem.
 - [ ] Opened and looked at, offline, on a deck long enough to exercise the ruler's capacity bound.
 
 **Open questions**
-- **Does DS-138 bind a chrome control menu?** Live, and now unconditional — the owner chose Y. Answered
-  before building, not during. A `no` needs the exemption written into DS-138 itself with its boundary
-  stated, because an exemption that lives only in this task is one the next control will not find. The
-  boundary's test: the multi-source mark is content and must stay bound.
+- *Settled 2026-08-17 by [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md):*
+  **Does DS-138 bind a chrome control menu? — no.** The rule now binds the *below* direction to a
+  tier-two disclosure panel and states the general obligation separately, so chrome is bound to open
+  fully inside the stage and to nothing about direction. The exemption is in the rule, which is where
+  this question required it to be.
+- **Does the narrowing also free the multi-source mark? — live, and it is this task's to answer.**
+  The boundary's own test was that the mark is content and stays bound; **DS-105 puts it outside tier
+  two by name**, so the narrowing reads as freeing it. One clause either way, decided before Y is
+  built.
 - *Settled 2026-08-12:* X or Y — **Y**.
 
 ## 2. Plan
@@ -179,7 +202,7 @@ container was the problem.
 | 2 | Measure the capacity X and Y would each leave | two numbers |
 | 3 | Draw X and Y at stage proportions, against today's row | the sketch, revision 2 |
 | 4 | ~~Owner rules~~ — **done 2026-08-12: Y** | decision, logged |
-| 5 | **Settle DS-138 before any code** | the exemption and its boundary, in the rule |
+| ~~5~~ | ~~**Settle DS-138 before any code**~~ **done 2026-08-17 by T-119** — what is left is one clause: whether the narrowing frees the multi-source mark | the boundary, re-tested against DS-105 |
 | 6 | Write the navigation container's contract row | contract |
 | 7 | Build the chosen layout | shell |
 | 8 | Keyboard-only pass on a looping deck | DS-218 verdict |

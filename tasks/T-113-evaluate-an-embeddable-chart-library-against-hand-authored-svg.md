@@ -34,9 +34,18 @@ grep -i  "chart" docs/COMPONENT-CONTRACT.md    →  1 hit, incidental prose insi
 ```
 
 **DS-146** and **DS-147** both legislate chart behaviour — draw in once, never re-animate on
-back-navigation, count up on headline statistics, one emphasis pulse. The component they govern was
-never built. So the comparison cannot be run as asked, and the honest shape of the question is *what
-should we build charts out of*, asked before anything exists rather than after.
+back-navigation, count up on headline statistics, one emphasis pulse. ~~The component they govern was
+never built.~~ **Corrected 2026-08-17 by
+[T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md), which was raised on
+this same reading and withdrew it.** Both rules are implemented by name in `shell/deck.js` — 410 for
+DS-146, 825 for DS-147 — and `examples/reference-deck.html` draws a line chart in hand-authored SVG.
+The greps above are right and they are pointed at a stylesheet and a contract, where behaviour is
+not (**L-115**). **What is true is that no chart *component* exists, and DS-122 already says one
+must not**: *no chart library, hand-written SVG, borrowing scale arithmetic as a few lines.* So the
+comparison is not blocked for want of a subject — **it is mostly already decided, against the
+library**, and the live remainder is narrower than this task was scoped for: whether *borrowing
+scale arithmetic* has a form worth writing down, and what the reference deck's chart already shows
+about it. **Re-specify before planning; the honest shape of the question has moved twice.**
 
 **The owner's steer, recorded 2026-08-12**
 *"In the recent days I spent too much time on implementing htmldeck's new features, and I learned how

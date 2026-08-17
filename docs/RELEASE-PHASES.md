@@ -405,7 +405,7 @@ followed.
 | 8 | T-115 | needs T-114 and T-109 to have settled what the shell offers |
 | 9 | T-117 | independent |
 | ~~10~~ | ~~T-165~~ **done 2026-08-16** | raised by T-097's review and the same class as the three it follows: a checker correction nobody is waiting on. **It is the one of the four that generalises** -- DS-004 is an instance, and the account cannot see the class. `s`. Placed 2026-08-15. **Pulled forward 2026-08-16 into the unattended batch at the head of this table**, on the property the ranks below cannot offer: it touches a checker and renders nothing. The rank is struck rather than removed, and 11 and 12 keep their numbers, because renumbering would falsify every citation of them |
-| 11 | T-054 | after T-119, which may change which clauses are worth recording |
+| 11 | T-054 | ~~after T-119, which may change which clauses are worth recording~~ — **T-119 closed 2026-08-17 and the wait is spent.** It changed four rules and gave fourteen an instrument, so which clauses are worth recording is settled; the rank is now an effort placement (`l`) and nothing gates it |
 | 12 | T-113 | research, and it decides ground T-112, T-111, T-041 and T-057 build on |
 | 13–14 | T-112, T-111 | the motion cluster, in that order |
 | 15 | T-041 | named in *what PH1 shipped without* |
@@ -475,6 +475,14 @@ the phases, which stay mandatory however small.
 **Two placements were argued and kept.** T-095 sits above a `high` task because it is `s` and guards
 what follows; T-119 delays T-114 by a real amount and is still first of the two, because a rule
 deleted after the work is built to it is the expensive order.
+
+> **That second placement was right for a reason nobody argued, and the record should say which.**
+> T-119 closed on 2026-08-17 having **deleted nothing** — so the stated reason, *a rule deleted after
+> the work is built to it*, never came due. What it did instead was **narrow DS-138**, which was
+> T-114's step one and the thing T-114 could not start without. The audit did not delay T-114 by a
+> real amount; **it paid for T-114's first plan step and struck it.** The placement was correct and
+> the argument for it was not the one that cashed. *Kept rather than rewritten, because a placement
+> argument that turned out right for the wrong reason is worth more on the record than a tidy one.*
 
 **Three rows closed on 2026-08-13, and the live rows were renumbered rather than left with holes.** A
 closed row keeps its place and loses its number; the order is not re-derived by either. The notes
