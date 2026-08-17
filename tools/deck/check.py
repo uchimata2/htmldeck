@@ -69,9 +69,13 @@ DEFERRED = {
     # ---- the rule's subject is a reading of the content, not a fact the file records
     "DS-041": ("Which rows are *correlated* is a reading of the content. The DOM records the "
                "tracks; it does not record which values a reader expects to line up, so a grid "
-               "can misalign and absolute coordinates can land true. The same limit put DS-042 at "
-               "`Reach: never` in the ruleset. CLOSES WHEN: DS-041's `Reach` is reviewed against "
-               "DS-042's, which is a ruleset edit and not this gate's.",
+               "can misalign and absolute coordinates can land true. **That review happened "
+               "(T-119, 2026-08-17) and it moved the line rather than the rule's `Reach`**: the "
+               "reading half is DS-042's, which is `judge` now, and DS-041 keeps the half a check "
+               "can see - alignment produced by a shared grid or flex track rather than by "
+               "absolute offsets. There is no `Reach: never` in the ruleset to cite any more. "
+               "CLOSES WHEN: this gate measures the narrowed clause, which is a check to write "
+               "and not a ruleset question.",
                ("amendment", "DS-041")),
     "DS-101": ("Bold in a data table is the value, not emphasis. The reference deck's A-04 ledger "
                "carries twelve bold runs and conforms; any count threshold either forbids the "

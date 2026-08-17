@@ -107,6 +107,12 @@ quietly breaks.
 **Out:** findings as `ID · Severity · Slide · Finding · Fix`, with Major/Minor/Note, then
 **"Open — needs a decision"**, then counts.
 
+**Reviewed slide by slide, before any HTML exists, and the findings fixed one at a time** (DS-213) —
+for missing points, unnecessary detail, inconsistency and inefficiency. *Named here from 2026-08-17:
+[T-119](../../../tasks/T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) found
+DS-213 was the one rule in this stage that no instrument mentioned, while its own pair DS-212 was
+named at stage 4. This stage **is** DS-213's instrument, so it says so.*
+
 **This is critique mode's first format**, not a mode of its own — load
 `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/critique.md`. It scores what a specification can
 carry: **S1 Claim · S2 Evidence · D1 Spine · D2 Pacing · D3 Close · D4 source-reconciliation.**
@@ -187,5 +193,5 @@ lands. Stated so a run is not mistaken for a finished plugin:
 | :--- | :--- | :--- |
 | 5 · spec review, 7 · build review | ~~Critique mode~~ — **built 2026-08-09.** `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/critique.md` fixes both report formats, and `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/critique.py <deck>` assembles the half a program can. | — |
 | 6 · build | ~~Build mode~~ — **built 2026-08-09.** `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/build.md` is the stage, and `${CLAUDE_PLUGIN_ROOT}/shell/` plus `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py` are what a deck is assembled from. | — |
-| 6 · per-batch automatic checks | ~~The build check~~ — **built 2026-08-09.** `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json] [--quiet]` gates 84 of the 115 rules the ruleset puts in its jurisdiction and **names every one of the other 31, with a reason**. | — |
+| 6 · per-batch automatic checks | ~~The build check~~ — **built 2026-08-09.** `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json] [--quiet]` gates 84 of the 114 rules the ruleset puts in its jurisdiction and **names every one of the other 30, with a reason**. | — |
 | 6 · tokens, components, motion | The theme and interaction layers | `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` carries a working first instance of both, and `${CLAUDE_PLUGIN_ROOT}/shell/` is that instance with the content cut out. |

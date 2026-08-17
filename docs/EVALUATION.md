@@ -58,8 +58,11 @@ python tools/deck/ruleset.py --gates
 | `Check: —` | Nobody. These bind whoever builds a check, not the deck |
 
 **The checklist exists because twenty-five `hard` rules were declared gates and gated by nothing.**
-*Twenty-five now — DS-107 moved to `Check: —` on 2026-08-09, its subject being the checker rather
-than the deck, and DS-230 arrived with T-016's editorial split rule ([T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md)).*
+*Twenty-six now — DS-107 moved to `Check: —` on 2026-08-09, its subject being the checker rather
+than the deck; DS-230 arrived with T-016's editorial split rule ([T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md)); and DS-042 joined on 2026-08-17, when
+[T-119](../tasks/T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) found it
+declared a gate's and undecidable by any gate — which is this checklist's own founding case, arriving
+once more.*
 Stages 3 and 4 produce 0–4 dimension scores, and this section says `hard` rules are never scored —
 so those were simultaneously declared gates and excluded from the only machinery that
 touched them. Eleven were named nowhere in this document at all, four of them §3.4's deliverable
@@ -132,7 +135,7 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]
 ```
 
-It decides **84** of the 115 owned rules and **names the other 31 with a reason each**, derived from
+It decides **84** of the 114 owned rules and **names the other 30 with a reason each**, derived from
 the ruleset when it runs rather than from any list. **A rule in neither state fails the run**, so a
 rule added here with nothing behind it is a red run rather than a discovery two months later — which
 is what happened twice (**L-36**). `--sources` adds the figure ledger and its three reconciliations;
@@ -155,7 +158,21 @@ Six dimensions, **0–4 each, maximum 24.** Anchors are given at 0, 2 and 4 beca
 scored by the agent that wrote the deck drifts to the middle. **1 and 3 are between the anchors, not
 separately defined.**
 
-### S1 — Claim · *DS-090, DS-085, X-01, X-02*
+> **The rule list beside each dimension is the rule's instrument, so a rule missing from every list
+> is a rule nothing applies.** A `hard` rule falls through to §1.1's checklist, and a gated rule to
+> `check.py`; a `default` or `guidance` rule that is `judge` has **only** these lists, and if no list
+> names it, nothing in this project ever will.
+> [T-119](../tasks/T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) found
+> **thirteen** in that state on 2026-08-17 and added them above — DS-022, DS-025, DS-029 and DS-038 to
+> S5, DS-083 and DS-094 to DS-098 to S1, DS-169, DS-170 and DS-206 to S4, and DS-213 to the pipeline
+> beside DS-212. **The way they got there is worth more than the list**: these dimensions name rules
+> in ranges, and a range has two ends. `DS-034 to DS-037` stopped one short of `DS-041 to DS-049`, so
+> DS-038, DS-039 and DS-040 sat in the gap — two of them gated and safe, DS-038 `judge` and invisible.
+> **A rule goes missing by being numbered between two ranges, which no reading of that rule can
+> catch.** Prefer naming an id over widening a range: a range also sweeps in the `hard` rules §1
+> forbids this rubric to score.
+
+### S1 — Claim · *DS-083, DS-085, DS-090, DS-094, DS-095, DS-096, DS-098, X-01, X-02*
 
 | | |
 | :--- | :--- |
@@ -179,7 +196,7 @@ separately defined.**
 | **2** | Correct diagram type, but connectors unlabelled, or a weaker encoding than the data permits. |
 | **4** | The visual carries the claim by itself; the encoding is the strongest the data allows; every connector meets its target and says what it means. |
 
-### S4 — Density · *DS-091, DS-160, DS-161, DS-162, DS-167, DS-230, X-06, X-08, X-09*
+### S4 — Density · *DS-091, DS-160, DS-161, DS-162, DS-167, DS-169, DS-170, DS-206, DS-230, X-06, X-08, X-09*
 
 | | |
 | :--- | :--- |
@@ -187,7 +204,7 @@ separately defined.**
 | **2** | Closed, it makes its point — but tier two holds something a first-time reader needs. |
 | **4** | Closed, the argument is complete. Tier two is genuinely optional and earns its place — and **the kind each panel declares in `data-disc` is the kind its rows actually carry** (DS-230), which is the question to ask rather than *is this panel any good*. |
 
-### S5 — Craft · *DS-034 to DS-037, DS-041 to DS-049, DS-101, X-12*
+### S5 — Craft · *DS-022, DS-025, DS-029, DS-034 to DS-038, DS-041 to DS-049, DS-101, X-12*
 
 | | |
 | :--- | :--- |

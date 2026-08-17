@@ -94,6 +94,8 @@ comes here.
 | [L-110](lessons/L-110.md) | An interactive control cannot be looked at in a snapshot, and the snapshot reports zero rather than failing | Evidence and verification |
 | [L-111](lessons/L-111.md) | A sanitization scan must walk every file type, because the one nobody reads is the one nobody sanitized | Evidence and verification |
 | [L-113](lessons/L-113.md) | A check scoped to a place stops seeing the thing when the thing gets a second home | Evidence and verification |
+| [L-115](lessons/L-115.md) | Probe the mechanism a rule names, never the noun the rule contains | Evidence and verification |
+| [L-116](lessons/L-116.md) | A document that recomputes its finding after fixing it reports the remedy, not the finding | Evidence and verification |
 
 ### Tooling
 

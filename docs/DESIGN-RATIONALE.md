@@ -726,6 +726,68 @@ trusted from this line.
 
 ## 6. Drops and amendments worth knowing
 
+### 6.0 The 2026-08-17 audit — four changes, and nothing deleted
+
+**Every rule was tested against one question — does satisfying it make a deck better, or only
+different — and the examination is [`RULESET-AUDIT.md`](RULESET-AUDIT.md).** This section is the
+record of what moved. **165 examined, 161 untouched, 4 changed, 0 deleted.** The audit was raised
+expecting to remove rules and removed none; what it found instead was rules nothing could apply,
+which is a different defect with a cheaper fix.
+
+**DS-042 — reclassified `auto` / `never` → `judge` / `—`. Cost: the gate owns one rule fewer.
+Bought: the rule can be applied at all.** It was the ruleset's only `Reach: never` — a `hard` rule
+assigned to a mechanism that could not decide it *in principle*, not merely today. That pair had
+been defended in the `Reach` preamble as coherent, and it is: a program could test *boxes that read
+as a set are siblings* if something told it which boxes read as a set, and nothing can. **Coherent
+was doing the work that useful should have been doing.** `judge` puts it on
+[`EVALUATION.md`](EVALUATION.md) §1.1's hard-judge checklist, where a person answers it — the first
+instrument the rule has had since it was written. `check.py`'s deferral of DS-041 had asked for this
+review by name and stated it as its own closing condition.
+
+**DS-041 — split. Cost: the rule is two sentences where it was one. Bought: the gate stops deferring
+a clause it can decide.** It carried a technique a check can see (*align by construction, not by
+coordinates*) and a reading no program can produce input for (*correlated rows share a grid track*),
+and the gate deferred the whole rule on the second. The reading half is DS-042's, which is now
+`judge`; DS-041 keeps the half a check can reach. **The check itself is not written** — that is
+`check.py`'s work and its deferral now says so.
+
+**DS-138 — narrowed to tier two. Cost: chrome loses a rule that was protecting it by accident.
+Bought: a rule that no longer forbids the only placement that fits.** *Popovers drop below the
+element* has a stated reason — content a reader stops and reads must fit on the stage — and a scope
+that reached every popover in the deck, so it blocked a two-item control menu on the chrome row,
+which sits at the foot of the stage where *below* is the one direction with no room.
+[T-114](../tasks/T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) had to argue an
+exemption before writing a line of code. **The rule was right and its scope was wrong, which is the
+expensive combination: it does not look like a defect, so it gets obeyed.** The obligation it exists
+for — every panel opens fully inside the stage — is now stated generally and binds chrome too, so
+narrowing the *direction* clause loses nothing.
+
+**DS-007 — moved from §1.1 to §8. Cost: nothing; the ID is permanent and every citation still
+resolves. Bought: §8's claim about itself is true.** *The `file://` console warning is benign, do not
+chase it* binds whoever is debugging a deck, which is exactly the class §8 declares and holds — and
+filed among the portability rules it read as something a deck must satisfy. §8 said there were four
+such rules and there were five.
+
+**Thirteen rules had no instrument at all, and none of them moved.** Not gated, not `hard` so not on
+the hard-judge checklist, named by no rubric dimension and by no skill: DS-022, DS-025, DS-029,
+DS-038, DS-083, DS-094 to DS-096, DS-098, DS-169, DS-170, DS-206 and DS-213. §1's remedy for a rule
+that has never fired is *give it an instrument or demote it to `guidance`*, and an instrument was
+available for every one, so the fix is five edits naming them — four to `EVALUATION.md`'s dimension
+lists and one to the pipeline's stage 5. **How they got there is the part worth keeping**: those
+lists name rules in ranges, `DS-034 to DS-037` stops one short of `DS-041 to DS-049`, and DS-038 fell
+in the gap. **A rule goes missing by being numbered between two ranges**, which no reading of that
+rule can catch and no gate can see.
+
+**What was examined and deliberately left alone.** DS-115 — *particles, connectors and custom
+diagrams may be drawn freely* — is a permission, cannot be violated, and duplicates DS-111. It was
+**not** merged: the ID column promises a retired rule keeps its number and is marked retired,
+`ruleset.py` has no notion of a retired row and would keep counting it, so the merge buys one
+`guidance` row and costs a tooling convention. **That is the audit's own cost test turned on the
+audit.** The near-duplicate emphasis rules — DS-046, DS-048, DS-101, DS-209, all saying *one
+emphasis, not three* at four scales — were kept for the same reason plus one more: DS-209 states its
+relationship to DS-101 in its own text rather than hiding it, and a ruleset that repeats itself and
+says so is not the failure this audit was looking for.
+
 **DS-011 — one palette per deck was dropped.** The corpus rule (C7) is `dominant`; it describes what
 the decks actually do. It lost to CLAUDE.md rule 4, **not to evidence** — a standing decision
 overriding an observed habit. R4 also grades C7 inherited (the source skill's four presets adapted

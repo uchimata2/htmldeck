@@ -41,7 +41,7 @@ python ${CLAUDE_PLUGIN_ROOT}/tools/deck/critique.py <deck> --worksheet > sheet.t
 python ${CLAUDE_PLUGIN_ROOT}/tools/deck/critique.py --answers sheet.txt
 ```
 
-25 `hard` rules that no mechanical gate can reach. **One line each: `pass`, `fail` with what and
+26 `hard` rules that no mechanical gate can reach. **One line each: `pass`, `fail` with what and
 where, or `excused` with why and what would close the excusal.** A rule in none of those three
 states fails the run — `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §1.1, and the tool enforces it.
 

@@ -62,8 +62,8 @@ Grounded in a corpus of real decks, prompts and written style guides from a trai
 prompt — **one 1.2 KB file, and it is a prompt rather than a codebase**: nothing in it is code to
 copy or behaviour to verify.
 
-**What exists.** `python tools/deck/check.py <deck>` decides 84 of the 115 rules a gate owns and
-names the other 31 with a reason each; `skills/htmldeck/references/build.md` plus `shell/` turn a
+**What exists.** `python tools/deck/check.py <deck>` decides 84 of the 114 rules a gate owns and
+names the other 30 with a reason each; `skills/htmldeck/references/build.md` plus `shell/` turn a
 reviewed specification into a deck; `skills/htmldeck/references/critique.md` plus
 `tools/deck/critique.py` are the review. **The repository is public at
 `github.com/uchimata2/htmldeck`, `master` is the published branch, and the current version is

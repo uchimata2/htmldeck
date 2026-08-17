@@ -90,21 +90,21 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 ```
-  owned by a gate      115
+  owned by a gate      114
   checked               84
   failing                0
-  excused in the rules   4   DS-042 DS-072 DS-210 DS-211
+  excused in the rules   3   DS-072 DS-210 DS-211
   excused here          27
   undecided, no subject  0
   SILENT                 0
   ------------------------
-  buckets sum to       115   = owned, so the account is a partition
+  buckets sum to       114   = owned, so the account is a partition
 
 0 failure(s): none
 ```
 
-**Read the account, not just the failure count.** A gate that checks 84 of 115 rules and says nothing
-about the other 31 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each
+**Read the account, not just the failure count.** A gate that checks 84 of 114 rules and says nothing
+about the other 30 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each
 run **checked**, **excused in writing** (with what would close the excusal), or **failing**, and a
 rule in none of those three states *fails the run*. So a rule added to the ruleset with nothing behind
 it is a red run the same afternoon, not a discovery two months later.
@@ -135,8 +135,8 @@ python tools/deck/ruleset.py --gates
 
 ```
   hard rules                        119
-  gated mechanically (auto|render)   89   tools/deck/check.py
-  gated by judgement (judge)         25   EVALUATION.md 1.1, the hard-judge checklist
+  gated mechanically (auto|render)   88   tools/deck/check.py
+  gated by judgement (judge)         26   EVALUATION.md 1.1, the hard-judge checklist
   bind the checker, not the deck      5   DS-107 DS-190 DS-191 DS-220 DS-221
   ------------------------
   119 = hard, so every hard rule has an owner
@@ -233,7 +233,7 @@ spends their attention on the second. It says which passes ran, what the gate al
 figure ledger, and the five dimensions (Claim, Evidence, Density, Spine, Consistency) that no check
 in this repository reaches.
 
-The judgement half is 25 `hard` rules that need a person. The worksheet is generated, not recalled,
+The judgement half is 26 `hard` rules that need a person. The worksheet is generated, not recalled,
 and **a rule left unanswered fails the run**:
 
 ```bash
