@@ -149,8 +149,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 2784 document pointer(s) checked, 0 broken
-     840 section reference(s) resolved, 0 dead; 2544 not bound to a document and skipped.
+OK - 2879 document pointer(s) checked, 0 broken
+     855 section reference(s) resolved, 0 dead; 2618 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -272,21 +272,28 @@ describe a plan.
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
 is split into three phases, and a phase is not a version. **PH1** is what a first working plugin
 needs; it shipped as 0.1.0 and took five patches. **PH2** is the minor and moderate fixes already
-known. It shipped as 0.2.0 with two of its tasks open behind it. One of those has since closed. The
-other is a second printed contents sheet, which only bites on decks far longer than the target case.
-0.2.3 carried three fixes to the published plugin. Two of them came
+known. It shipped as 0.2.0 with two of its tasks open behind it. Both have since closed. The
+second was the printed contents page, which now continues onto another sheet for decks past the
+length one sheet holds. 0.2.3 carried three fixes to the published plugin. Two of them came
 from looking at a rendered deck rather than from any command, and both turned out to be in this
 repository's own example deck as well as in the deck that reported them. 0.2.4 changed nothing you
-install; it was the project's own record. **PH3** is the
+install; it was the project's own record. 0.3.0 was the first release shaped by a deck somebody else
+built. **PH3** is the
 larger work, including 3D visuals, the frame-rate figure and those seven conditions.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
-The current release is 0.3.0, and it is the first one shaped by somebody else's deck. A third
-example arrived here built elsewhere, by someone reading the published skill. Running the gates over
-it found four defects nothing written in this repository could have exposed. The release also
-carries the commands an upgrade always needed: `shell.py sync` refreshes a deck's shared shell after
-a release, `shell.py tokens` declares what the new shell reads, and one command now runs every check
-there is.
+The current release is 0.3.1. It makes a source reference one component wherever it appears: the
+mark in a slide's corner, the list behind a mark that cites more than one document, and the colophon
+at the back. Those three used to be written separately, and it showed. A colophon would name the
+documents a deck rested on, link to none of them, and send the reader back through the slides to
+find the links. That was true of the decks here as well as of the one that reported it.
+
+The ruleset was audited too, all 165 rules. Four changed. Thirteen turned out to be rules that no
+tool and no reviewer could apply, which is a different fault from a rule being wrong, and they are
+now named instead of left looking enforced.
+
+A deck built on an earlier version will fail the shell check until you run `shell.py sync`. The
+release notes say what fails and what fixes it.
 
 **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
 half's first run and were settled the same day in
