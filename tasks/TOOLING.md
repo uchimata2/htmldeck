@@ -50,6 +50,17 @@ what is certain is that the two runs disagreed about one tree. The trap is that 
 enough to want to overlap and the gate is the one told to run in the background. **Lint first, let it
 finish, then gate.**
 
+**And do not edit anything while the gate runs — including a document.** It reads each file when its
+step reaches it, not when the command starts, and its task-lint step runs first. So an edit landing
+mid-run produces a green that covers **a tree which never existed**: the checkers before it saw the
+old file and the ones after saw the new one, and the exit code cannot say so. **Observed 2026-08-17
+during T-159: two runs returned 0 with prose edits in flight, and both were discarded as evidence
+rather than quoted.** The rule is the same shape as the one above and has a different cause — that
+one is two commands contending, this one is one command racing the author. When the gate is the
+closing evidence, finish every edit first, start it last, and touch nothing until it returns; if an
+edit turns out to be necessary, the run is void, and re-running is cheaper than reasoning about which
+steps were affected.
+
 `lint.py` is the four checks a task edit owes: it stops at the first failure and exits with that
 failure's code, and it is `tracker_lint` in [`../.handoff/config.md`](../.handoff/config.md).
 **It is also the only name tier 1 gives**: [`../CLAUDE.md`](../CLAUDE.md) enumerated the checkers
