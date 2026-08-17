@@ -69,6 +69,7 @@ the installed plugin a few minutes after each session starts.
 | [`docs/EVALUATION.md`](docs/EVALUATION.md) | How a deck is scored, and **when it is good enough to stop** |
 | [`tools/deck/check.py`](tools/deck/check.py) | The build check. A pass/fail per rule ID, **and an account of every rule it did not check, with a reason each** |
 | [`examples/reference-deck.html`](examples/reference-deck.html) | A 12-slide deck built by hand against the ruleset. Open it offline |
+| [`examples/`](examples/README.md) | Every shipped deck, with what was measured on each: the hand-built one above, one assembled through build mode, one an adopter built elsewhere, and a fixture carrying a deliberate defect per evaluation dimension |
 | [`docs/research/`](docs/research/) | Seven notes the rules are derived from: a corpus study, external principles, exemplar decks, prior art, asset licences, a `file://` capability matrix, printing |
 | [`skills/htmldeck/`](skills/htmldeck/) | The plugin skill: the pipeline, the artifacts it passes between stages, and the two questions it asks |
 
@@ -148,8 +149,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 2485 document pointer(s) checked, 0 broken
-     788 section reference(s) resolved, 0 dead; 2143 not bound to a document and skipped.
+OK - 2784 document pointer(s) checked, 0 broken
+     840 section reference(s) resolved, 0 dead; 2544 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -260,6 +261,11 @@ describe a plan.
   took three goes. The first fix searched for other instances with a throwaway script that read only
   part of what it claimed to have read; the second replaced that script with a fixture, and the
   fixture could see one file of the eight that needed it. The sample is one project.
+- **That project's deck is now the third example here, and running the gates over it found four more
+  defects**, none of which either deck written in this repository could have exposed. Two further
+  faults came out of somebody opening the deck and clicking: a control that reopened at the previous
+  document's scroll position, and a colophon filed as an argument slide. The pattern is the point.
+  A ruleset tested only by its authors is tested against what its authors already knew.
 - **The gate names seven glitch-free conditions it does not check**, and there is no frame-rate
   figure. Both are PH3, not oversights.
 
@@ -270,12 +276,17 @@ known. It shipped as 0.2.0 with two of its tasks open behind it. One of those ha
 other is a second printed contents sheet, which only bites on decks far longer than the target case.
 0.2.3 carried three fixes to the published plugin. Two of them came
 from looking at a rendered deck rather than from any command, and both turned out to be in this
-repository's own example deck as well as in the deck that reported them. The current release is
-0.2.4, and it changes nothing you install. It is the project's own record, including a finding this
-repository ranked, published and cited five times, then re-measured and withdrew.
-**PH3** is the
+repository's own example deck as well as in the deck that reported them. 0.2.4 changed nothing you
+install; it was the project's own record. **PH3** is the
 larger work, including 3D visuals, the frame-rate figure and those seven conditions.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
+
+The current release is 0.3.0, and it is the first one shaped by somebody else's deck. A third
+example arrived here built elsewhere, by someone reading the published skill. Running the gates over
+it found four defects nothing written in this repository could have exposed. The release also
+carries the commands an upgrade always needed: `shell.py sync` refreshes a deck's shared shell after
+a release, `shell.py tokens` declares what the new shell reads, and one command now runs every check
+there is.
 
 **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
 half's first run and were settled the same day in

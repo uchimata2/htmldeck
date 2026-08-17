@@ -67,7 +67,7 @@ names the other 31 with a reason each; `skills/htmldeck/references/build.md` plu
 reviewed specification into a deck; `skills/htmldeck/references/critique.md` plus
 `tools/deck/critique.py` are the review. **The repository is public at
 `github.com/uchimata2/htmldeck`, `master` is the published branch, and the current version is
-`0.2.4`.**
+`0.3.0`.**
 
 **When each of those landed, which release carried which fix, and which task found which defect are
 [`docs/RELEASE-HISTORY.md`](docs/RELEASE-HISTORY.md)** — tier 3, loaded by nothing. It was this

@@ -379,10 +379,10 @@ first one. Nothing but a person saw the other two.**
 ## The deck somebody else built
 
 [`measure-first/measure-first.html`](measure-first/measure-first.html) is *Demand Planning: what
-Business Analytics can do first*. 13 slides, the last of them a colophon, **369 KB in one file**,
-377 630 bytes, zero external references. It argues
-that measurement and discipline fix demand planning before any AI is bought, for an invented dental
-group deciding what to do first.
+Business Analytics can do first*, and it runs to 13 slides, the last of them a colophon. It is
+**369 KB in one file**, 377 630 bytes, zero external references. It argues that measurement and
+discipline fix demand planning before any AI is bought, for an invented dental group deciding what
+to do first.
 
 It is the only deck in this folder that was not written here. Someone built it in their own project,
 using the published plugin, against a brief this repository had no part in. It arrived with its two
@@ -394,8 +394,8 @@ python tools/deck/check.py examples/measure-first/measure-first.html --sources e
 
 **Larkfield Dental Group does not exist**, and neither does the case. The scenario, the company and
 every figure were invented for a training exercise; they are published here with the author's
-permission, renamed, with the training context taken out. The analysis is untouched — the deck still
-argues exactly what it argued.
+permission, renamed, with the training context taken out. The analysis is untouched, so the deck
+still argues exactly what it argued.
 
 ### What it cost to run our own rules against somebody else's deck
 
