@@ -46,7 +46,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-118](T-118-a-style-must-mean-the-same-thing-in-the-reading-view.md) | A style that carries meaning on a slide must carry the same meaning in the reading view | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-109, T-115 |
 | [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) | Audit the ruleset for rules that cost more to satisfy than they return | `PH3` | - | `proposed` | `specify` | - | - | T-054, T-113, T-114, T-115 |
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-107, T-110 |
-| [T-159](T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md) | Gate the text a reader follows and no checker reads | `PH3` | - | `proposed` | `specify` | T-130 | - | T-130, T-146, T-147, T-149, T-153 |
 
 ## Closed
 
@@ -197,6 +196,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-156](T-156-make-the-screening-partition-a-figure-a-checker-can-count.md) | Make the screening partition a figure a checker can count | `PH3` | `0.3.0` | `done` | `review` | - | - | T-130, T-136, T-154 |
 | [T-157](T-157-hand-the-upstream-registers-to-their-owners.md) | Hand the upstream registers to their owners | `PH3` | `0.3.0` | `done` | `review` | - | - | T-130, T-137, T-140, T-141, T-153, T-160, T-161, T-163, T-164 |
 | [T-158](T-158-measure-the-tier-1-bound-instead-of-remembering-it.md) | Measure the tier-1 bound instead of remembering it | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | T-130, T-134, T-143, T-144, T-152, T-153 |
+| [T-159](T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md) | Gate the text a reader follows and no checker reads | `PH3` | `unreleased` | `done` | `review` | T-130 | - | T-130, T-146, T-147, T-149, T-153 |
 | [T-160](T-160-correct-the-three-errors-the-recipients-found-in-the-delivered-registers.md) | Correct the three errors the recipients found in the delivered registers | `PH3` | `0.3.0` | `done` | `review` | - | - | T-130, T-141, T-157, T-161, T-163, T-164 |
 | [T-161](T-161-decide-whether-to-adopt-the-wide-row-gate-now-that-upstream-ships-one.md) | Decide whether to adopt the wide-row gate now that upstream ships one | `PH3` | `0.3.0` | `done` | `review` | - | - | T-139, T-157, T-160, T-163, T-164 |
 | [T-162](T-162-run-the-packaged-skill-end-to-end-against-a-third-repository.md) | Run the packaged skill end to end against a third repository | `PH3` | `0.3.0` | `done` | `review` | T-137 | - | T-130, T-136, T-137, T-153 |

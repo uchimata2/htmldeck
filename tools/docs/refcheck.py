@@ -3,12 +3,22 @@
 
     python tools/docs/refcheck.py
 
-Three checks, all mechanical:
+Four checks, all mechanical:
 
   1. **BROKEN LINK** - a markdown `[text](target)` whose target does not exist.
   2. **DEAD POINTER** - a repo-relative `.md` path written in **prose**, or printed by a tool into
      a fenced block. As much a promise as a link, and nothing else checks it.
   3. **DEAD SECTION** - a `<named document> §n` whose number is not a heading in that document.
+  4. **LYING LABEL** - a link whose **label** names one `.md` file and whose target opens another.
+     Checks 1 to 3 all resolve a *target*; this is the first that reads what the reader is told.
+
+**Check 4 is the one defect class no pointer-resolver can reach.** A link whose target is right and
+whose words are wrong passes every other check here and every check taskmd has, because all of them
+ask *does this file exist* and none asks *is the sentence beside it true*. It was found twice, both
+times by a person, and the second time inside a pass raised to catch exactly this (T-146, T-159).
+The label and the target sit in one string, which is what makes this member of the class arithmetic
+while the rest of it is not - the refusal to gate the others, and the numbers behind it, are
+`tasks/TOOLING.md` §2.
 
 **Why this file exists.** It is the reference half of the retired `task.py`, kept when taskmd
 replaced the task half (T-062). taskmd's own `check` validates markdown links and is the
@@ -81,6 +91,10 @@ PROJECT_DOCS = {
 
 LINK = re.compile(r"\[[^\]]*\]\(([^)#\s]+)(?:#[^)\s]*)?\)")
 
+# Check 4 needs the label as well as the target; check 1 discards it, because resolving a target
+# never had a use for it.
+LABELLED_LINK = re.compile(r"\[([^\]]*)\]\(([^)#\s]+)(?:#[^)\s]*)?\)")
+
 # A pointer written as prose - `docs/LESSONS.md` in a sentence, in a template comment, or in a
 # string a tool prints - is as much a promise as a markdown link, and nothing checked those.
 # Requires a slash, so a bare "README.md" in prose is not mistaken for a path to somewhere;
@@ -134,6 +148,50 @@ def links_in(text):
     disagree about **bare paths** on purpose - see `pointers_in`.
     """
     return LINK.finditer(strip_code(text))
+
+
+def labelled_links_in(text):
+    """Every link check 4 may read, as `(label, target)` - the label taken from the **raw** text.
+
+    Two rules meet here and they pull opposite ways. A link inside code is a picture of a link and
+    check 1 does not resolve it, so `strip_code` still decides which links are read at all. But the
+    house convention writes the path in a label **inside a code span** - ``[`docs/BRIEF.md`](…)`` -
+    and stripping code blanks the very string this check compares. Reading the label from the
+    stripped text would leave check 4 silent on nearly every link it exists for, while reporting a
+    confident zero.
+
+    So the stripped copy is used only to ask *is this link followable*, and the label is then read
+    where it was written.
+    """
+    stripped = strip_code(text)
+    for m in LABELLED_LINK.finditer(text):
+        if not stripped[m.start():m.end()].strip():
+            continue                        # the whole link is inside code - see `links_in`
+        yield m.group(1), m.group(2)
+
+
+def label_disagrees(label, target, base):
+    """`(what the label claims, what the link opens)` when they are not the same file, else `None`.
+
+    **Both conventions in this repository are honest**, and accepting only one would turn a house
+    style into 700 failures: a label may be written from the citing document's own directory, the
+    way the target is, or from the repository root, the way a tool prints one. Either resolving to
+    the target is a label that tells the truth. A third answer is a label that does not - which is
+    exactly the shape found twice: a one-level path beside a target carrying the new two-level one.
+
+    `POINTER` decides what counts as path-shaped, so check 2 and check 4 cannot drift apart about
+    what a path is (**L-13**). A label with no path in it makes no claim and is not this check's
+    business.
+    """
+    m = POINTER.search(label)
+    if not m:
+        return None
+    claim = m.group(1)
+    norm = lambda p: os.path.normpath(p).replace("\\", "/")     # noqa: E731
+    opens = norm(os.path.join(base, target))
+    if any(norm(c) == opens for c in (os.path.join(base, claim), claim)):
+        return None
+    return claim, opens
 
 
 def pointers_in(text):
@@ -278,16 +336,32 @@ def cmd_check():
     # `.gitignore` governs here too: an archived, machine-local handoff was once link-checked as
     # though a fresh clone contained it, which is the opposite of the question both scans answer.
     ignore = gitignore_patterns()
+    labels = 0
     for md in sorted(markdown_files()):
         if is_ignored(os.path.relpath(md, "."), ignore):
             continue
         base = os.path.dirname(md)
-        for m in links_in(read(md)):
+        text = read(md)
+        for m in links_in(text):
             target = m.group(1)
             if target.startswith(("http://", "https://", "mailto:")):
                 continue
             if not os.path.exists(os.path.normpath(os.path.join(base, target))):
                 problems.append("BROKEN LINK  %s -> %s" % (md, target))
+
+        # Check 4. Same documents, same links, and the one question the three others cannot ask:
+        # not whether the target is there, but whether the words beside it are true.
+        for label, target in labelled_links_in(text):
+            if target.startswith(("http://", "https://", "mailto:")):
+                continue
+            lie = label_disagrees(label, target, base)
+            if lie is None:
+                if POINTER.search(label):
+                    labels += 1
+                continue
+            labels += 1
+            problems.append("LYING LABEL  %s -> the label says %s, the link opens %s"
+                            % (md, lie[0], lie[1]))
 
     for doc in sorted(PROJECT_DOCS):
         if not os.path.exists(os.path.normpath(doc)):
@@ -369,6 +443,7 @@ def cmd_check():
     print("OK - %d document pointer(s) checked, 0 broken" % pointers)
     print("     %d section reference(s) resolved, 0 dead; %d not bound to a document and skipped."
           % (sections, sec_skipped))
+    print("     %d link label(s) name a path, 0 disagree with the file the link opens." % labels)
     print("     %d document(s) not scanned (.gitignore); front-matter is not scanned."
           % skipped)
     print("     references only - it cannot tell you a document is any good. Tasks are `taskmd`.")
@@ -449,6 +524,47 @@ def self_test():
                            "glitch-free-conditions.md - 8 active\n```\n")):
         sys.exit("SELF-TEST FAILED: a bare path printed into a fence was skipped - that is a "
                  "tool's own output and check 2 exists to hold it")
+
+    # ---- check 4, the label beside the target (T-159)
+    # Every fixture names `no-such-dir/`, for the reason two paragraphs up: a path-shaped string
+    # anywhere in this file is a promise check 2 reads, and test data must not make one. **And not
+    # one of them opens with a parent-directory hop**, which is the same trap one step further in:
+    # `points_into_repo` answers yes to a relative path unconditionally, so no `no-such-dir` can
+    # excuse it. Two of these did, and check 2 reported both - then reported the comment written to
+    # explain it, because check 2 reads code spans in prose on purpose (`pointers_in`). Check 3 can
+    # quote a dead reference and this check cannot, which is the boundary between them.
+    #
+    # They compare strings and touch no filesystem, so the directory never needs to exist.
+    #
+    # The honest set comes first and is not decoration: a rule that fires on the house style would
+    # report 700 failures on this tree, and only the negative cases can show that it does not.
+    if label_disagrees("no-such-dir/a.md", "no-such-dir/a.md", ""):
+        sys.exit("SELF-TEST FAILED: a label written from the repository root, beside the target it "
+                 "names, was called a lie")
+    if label_disagrees("sub/a.md", "sub/a.md", "no-such-dir"):
+        sys.exit("SELF-TEST FAILED: a label written the same way as its target was called a lie")
+    if label_disagrees("no-such-dir/sub/a.md", "sub/a.md", "no-such-dir"):
+        sys.exit("SELF-TEST FAILED: the two conventions were required to be the same one - a "
+                 "root-written label beside a file-relative target opens the same file")
+    if label_disagrees("the brief", "no-such-dir/a.md", ""):
+        sys.exit("SELF-TEST FAILED: a label naming no path was treated as claiming one")
+
+    # The defect itself, in the shape it was found in twice: a one-level label left beside a target
+    # that gained a level. Without this the four above are satisfied by a check that never fires.
+    if not label_disagrees("no-such-dir/a.md", "no-such-dir/deep/a.md", ""):
+        sys.exit("SELF-TEST FAILED: a label one directory level out of date was not reported, "
+                 "which is the whole reason check 4 exists")
+
+    # The trap that would disable check 4 while it reported a confident zero. This repository
+    # writes the path inside a code span, so a label read from the stripped text is blank - and a
+    # blank label claims nothing and can never lie.
+    labelled = list(labelled_links_in("see [`no-such-dir/a.md`](no-such-dir/b.md) for the rest"))
+    if not labelled or "no-such-dir/a.md" not in labelled[0][0]:
+        sys.exit("SELF-TEST FAILED: a label written inside a code span was not read - check 4 "
+                 "would then be silent on the convention this repository actually uses")
+    if any(labelled_links_in("```\n[`no-such-dir/a.md`](no-such-dir/b.md)\n```\n")):
+        sys.exit("SELF-TEST FAILED: a link inside a fence was read by check 4 - it renders as the "
+                 "characters typed, so its label tells nobody anything")
     return True
 
 

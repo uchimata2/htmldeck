@@ -132,7 +132,8 @@ rule that survived a tool swap unnoticed is the thing to recognise faster next t
   started. **Still one named file, so T-098's reopening condition — a *second* document legitimately
   tripping the advisory — is still not met** and no upstream exclusion is due.
 - `refcheck.py` — every markdown link, **every repo-relative `.md` path written in prose or printed by
-  a tool**, and **every `<named document> §n` reference** (§2 below). Two things are skipped and it prints
+  a tool**, **every `<named document> §n` reference** (§2 below), and **every link *label* that names a
+  `.md` file the link does not open** (§2.1). Two things are skipped and it prints
   how many: documents `.gitignore` excludes, which are machine-local by design and absent from a fresh
   clone; and front-matter, which is a structured record rather than prose.
 - **A bare path that is not `.md` is checked by nothing, and now never will be.** `refcheck.py` matches
@@ -198,6 +199,44 @@ was counted on 2026-08-14**, which is the same argument with the real number in 
 a silent falsification
 of all of them, and the check would have caught it — which is the rule working on the document that
 defines it.
+
+### 2.1 The label beside the pointer — and the mark that stays ungated
+
+**Check 4 reads what the reader is told, not what the link opens.** Every other check in this
+repository, and every check taskmd has, asks *does this file exist*; none asks whether the words
+beside it are true. A link whose target is right and whose label names a different file passes all of
+them. It was found twice by a person, the second time inside a pass raised to catch exactly that
+class — the six instances, and what they share, are
+[T-159](T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md) §1.
+
+The rule accepts **both** conventions in use here: a label written from the citing document's own
+directory, and one written from the repository root. Either resolving to the target is honest. A
+third answer is not. Accepting only one convention would turn a house style into hundreds of
+failures, which is why the honest shapes are asserted in the self-test beside the defect one.
+
+**Every run prints how many labels name a path, not only how many disagree, and the first number is
+the check's liveness signal.** It is in the hundreds and it climbs with the documents; if it ever
+drops to near zero the check has gone blind rather than the tree having gone clean. Read it from the
+run rather than from here — a count written into prose is stale the next time anyone adds a link
+(**L-114** is the failure it guards against, and **L-96** is why the number is not quoted).
+
+**A bare `§n` that is not a heading in its own document is *not* gated, and this is the refusal
+rather than an omission.** The obvious companion rule — resolve an unbound mark against the document
+it sits in — was written and measured before it was rejected: **2,501 bare marks in the tree, 1,195
+of which it would report.** The three real instances that raised the question are inside that 1,195,
+so the rule buys **three true hits at the price of roughly 1,192 alarms**, over a tree its owners
+believe is clean.
+
+Almost every alarm is a correct reference to *another* document that §2's adjacency rule declined to
+bind — `R8 §3.1`, a second mark in a sentence whose first mark named the document, a comparison of
+two sections of a third file. **Adjacency is not the defect; it is the only thing keeping those 1,195
+quiet.** Resolving a mark against its host instead is the *nearest document* heuristic §2 already
+records having tried and rejected, applied to a different candidate, and it picks the wrong target at
+the same scale.
+
+**What would reverse it:** a convention that marks a self-reference as one, so the rule has something
+to bind to other than proximity. Until then the class is a reader's, and saying so is worth more than
+a check nobody can leave switched on.
 
 ## 3. What an open task owes the deliverables report
 

@@ -897,6 +897,15 @@ a working target; bare `§n` cross-references left behind by an extraction; a su
 in the very file being cut; and an untracked new tool reported as `STALE`. **Six of the eight are the
 same shape — text a reader follows and no checker reads.**
 
+*Worked as [T-159](../tasks/T-159-gate-the-text-a-reader-follows-and-no-checker-reads.md), closed
+2026-08-17, and **one of the six turned out to be arithmetic**: a link label naming a file the link
+does not open is now `refcheck.py`'s check 4. One was already gated by `lessons.py` by the time the
+classification reached it, three are irreducibly a reader's, and the sixth is refused on a
+measurement — the obvious rule would fire 1,195 times to catch three instances
+([`../tasks/TOOLING.md`](../tasks/TOOLING.md) §2.1). The sentence above still stands as what phase 2
+found; what it could not say is how much of the class a checker can take, and the answer is one
+sixth.*
+
 *One figure to reconcile rather than repeat: §9 states the pair took `CLAUDE.md` to **14,821**, and
 T-144's own record measures **14,917** the same day. 96 bytes apart, both dated, neither reproducible
 now. Recorded as a disagreement rather than resolved — which is what `L-97` asks for.*
