@@ -372,6 +372,55 @@ def bound(numeral, said, table):
     return hits
 
 
+def near_miss(numeral, said, table):
+    """`[(value, label, command)]` - fields this sentence NAMES that carry a different value,
+    nearest first.
+
+    **This is a message, not a verdict** (T-173). `bound` needs the value and the label to agree, so
+    a figure that has gone stale fails both halves at once and the report could only reach for the
+    weaker sentence: *no command prints it under a label this sentence names*. True, and it describes
+    a numeral nothing watches - where what happened is that a watched numeral went wrong. The same
+    drift on the same property of the same file reads `STALE ... which is 263` two lines below, on
+    the path that binds through a link.
+
+    **The cost was measured.** [T-172] was specified against that message and planned to bind a
+    figure that was already bound; correcting the value was the whole fix. A report that names the
+    wrong failure buys a wrong plan from whoever reads it.
+
+    It stays out of the verdict on purpose. Nothing here knows the sentence means this field rather
+    than an unrelated number sitting near it, and a kind that claimed to would be the
+    coincidence-matching **L-36** and **L-44** refused - which is why `bound` needs both halves in
+    the first place.
+    """
+    hits = []
+    for value, label, cmd in table:
+        if value == numeral:
+            continue
+        lw = words(label)
+        if lw and (lw & said):
+            hits.append((value, label, cmd))
+
+    def distance(hit):
+        try:
+            return abs(int(hit[0].replace(" ", "").replace(",", ""))
+                       - int(numeral.replace(" ", "").replace(",", "")))
+        except ValueError:
+            return float("inf")
+
+    return sorted(hits, key=distance)
+
+
+def unbound_why(numeral, said, table):
+    """The one line an `UNDECLARED` prose numeral carries - the near miss when there is one."""
+    near = near_miss(numeral, said, table)
+    if not near:
+        return ("no command prints it under a label this sentence names, and it is excused nowhere")
+    value, label, cmd = near[0]
+    return ("no command prints %s under a label this sentence names. The sentence DOES name %r, "
+            "whose nearest value is %s, printed by %s - if that is this figure it is STALE rather "
+            "than unwatched, and correcting it binds it" % (numeral, label, value, cmd))
+
+
 def account_values(table, accounts=None):
     """`{name: {"part": v, "whole": v, "command": cmd}}` for every account both labels resolve for.
 
@@ -895,8 +944,7 @@ def audit(text):
             elif n in claims:
                 prose_rows.append((claims[n][0], n, claims[n][1]))
             else:
-                prose_rows.append(("UNDECLARED", n, "no command prints it under a label this "
-                                                    "sentence names, and it is excused nowhere"))
+                prose_rows.append(("UNDECLARED", n, unbound_why(n, said, table)))
     return rows, prose_rows, seen, table, outputs
 
 
@@ -1204,6 +1252,27 @@ def self_test():
     added = base + "\n\nThe gate owns 4242 rules.\n"
     if not [r for r in audit(added)[1] if r[0] == "UNDECLARED"]:
         sys.exit("SELF-TEST FAILED: a prose numeral no command prints was accepted")
+
+    # 4a. **And the two reasons a numeral can be undeclared read differently** (T-173). Both rows
+    # stay `UNDECLARED` - the verdict is right and only the sentence was wrong - but a figure whose
+    # own subject is measured has to say so, because the message that could not led T-172 to plan a
+    # binding the figure already had. Fixtures build their own table rather than reading the live
+    # one (**L-78**).
+    deck_table = [("263", "examples/reference-deck.html", "the deck files themselves"),
+                  ("269083", "examples/reference-deck.html", "the deck files themselves")]
+    named = words("the reference deck at examples/reference-deck.html is 262 KB")
+    stale_line = unbound_why("262", named, deck_table)
+    if "263" not in stale_line or "STALE" not in stale_line:
+        sys.exit("SELF-TEST FAILED: a prose numeral whose own subject is measured did not say which "
+                 "value that subject carries, so a stale figure still reads as an unwatched one: %s"
+                 % stale_line)
+    unwatched = unbound_why("4242", words("the gate owns 4242 rules"), deck_table)
+    if "STALE" in unwatched or "263" in unwatched:
+        sys.exit("SELF-TEST FAILED: a numeral nothing measures was offered a near miss, which is "
+                 "the sharper message fired on the case it is not about: %s" % unwatched)
+    if near_miss("262", named, deck_table)[0][0] != "263":
+        sys.exit("SELF-TEST FAILED: the near miss is not ordered by distance, so a byte count can "
+                 "be offered ahead of the rounded size the sentence actually got wrong")
 
     # 5. **A numeral that appears only inside a rule ID is not covered by it.** `107` occurs in the
     # gate's output solely as `DS-107`. Reported as `compared` it would be a false pass, which is
