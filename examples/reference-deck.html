@@ -394,9 +394,21 @@ svg{display:block}
   text-transform:none;text-align:left;color:var(--ink-soft);
 }
 .sources-box[hidden]{display:none}
-.sources-item{display:block;white-space:nowrap}
+/* One row, three columns, and only the third is always there: identifier, kind glyph, title.
+   This is the component T-109 unified - the same row renders in the one-source mark, inside a
+   multi-source box, and as the colophon's body, so the three cannot drift apart the way the
+   colophon did while it was authored separately. */
+.sources-item{display:grid;grid-template-columns:auto auto 1fr;align-items:center;
+  gap:var(--sp-1);white-space:nowrap}
 .sources-item + .sources-item{margin-top:var(--sp-1);padding-top:var(--sp-1);
   border-top:var(--hair) solid var(--line)}
+/* Mono and quiet: it is a label the reader matches against the source, not a word in the title.
+   The contract bounds it at six characters and drops anything longer, so it never needs a width. */
+.sources-id{font-family:var(--font-mono);font-size:var(--fs-mono);
+  letter-spacing:var(--track-mono);color:var(--ink-faint)}
+/* Sized and coloured like the mark it stands in for, because it answers the same question one row
+   down: what kind of thing is this. Absent at .sources--one, where the mark already said. */
+.sources-icon{flex:none;width:var(--fs-mono);height:var(--fs-mono);color:var(--accent)}
 /* One source is not a disclosure: there is nothing to choose between, so there is no button and
    no panel - the mark sits on the line and the title beside it. It reads as provenance because of
    the glyph, which is the whole of T-103: a bare title in the corner reads as a subtitle, and the
@@ -409,8 +421,45 @@ svg{display:block}
 .sources--one .sources-box{
   position:static;z-index:auto;min-width:0;padding:0;
   border:0;border-radius:0;background:none;box-shadow:none;
-  font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:inherit;color:inherit;
+  /* T-109's case treatment, and it is the identifier bound's job that this is NOT doing. A title
+     inheriting .provenance renders uppercase, mono and letterspaced, which took roughly a quarter
+     of the stage row for one document - the length was never the problem, the case was. Sentence
+     case in the text face buys the room back without truncating anything, and .sources-id stays
+     mono beside it, which is what keeps the row reading as provenance rather than as a subtitle. */
+  font-family:var(--font-text);font-size:var(--fs-mono);letter-spacing:normal;
+  text-transform:none;text-align:inherit;color:inherit;
 }
+
+/* ------------------------------------------------- the colophon's list (DS-105, T-109) */
+/* The same component as the mark, laid out as the slide's body instead of as its corner. It has
+   no mark and no control: nothing is disclosed here, because the list IS the slide. Before this
+   existed the colophon authored its own `.colo` rows inside the deck's own <style> - bare titles,
+   no glyph, no route - and drifted from the mark it was meant to agree with, on the one slide
+   where every source is reachable. */
+.sources--list{display:block;max-width:var(--measure)}
+.sources--list .sources-box{
+  position:static;z-index:auto;min-width:0;padding:0;
+  border:0;border-radius:0;background:none;box-shadow:none;
+  display:grid;gap:var(--sp-2);
+  font-family:var(--font-text);font-size:var(--fs-body);letter-spacing:normal;
+  text-transform:none;text-align:left;color:var(--ink);
+}
+/* No rule between rows: the gap does that work here, where the box's tinted panel is gone.
+   Baseline, not centre and not start. Centre floats the identifier between the lines of a title
+   that wraps; start pushes it above the title's cap line, where it reads as a superscript rather
+   than as a label - which is what the first render of this list actually showed. Baseline is the
+   one that holds for both, because it binds to the FIRST line whatever the row does after it. */
+.sources--list .sources-item{white-space:normal;align-items:baseline}
+.sources--list .sources-item + .sources-item{margin-top:0;padding-top:0;border-top:0}
+/* At mono size the glyph reads as a speck beside body-size titles; at the row's own size it reads
+   as the row's mark. The mark in a corner has the opposite problem, which is why this is set here. */
+.sources--list .sources-icon{width:var(--fs-small);height:var(--fs-small)}
+/* The title column is 1fr and `.sources-open` sets `width:100%`, so without both halves of this
+   the control stretches the width of the list and a click on empty space several hundred pixels
+   right of a title opens that document. Measured at 970 px against titles a third of that, and
+   `justify-self` alone did not move it - an explicit width outranks it. DS-168's `min-height`
+   stays, because the target has to be the label without being thinner than a finger. */
+.sources--list .sources-open{width:auto;justify-self:start}
 /* DS-105's link half, where the source is reachable from where the deck is presented. Underlined
    in the line colour rather than the accent: it is a route to the source, not a call to take it. */
 .sources-link{color:inherit;text-decoration:underline;text-decoration-color:var(--line)}
@@ -704,6 +753,14 @@ svg{display:block}
    list rather than as a box, and is what looking at the reading view showed. */
 .doc .sources-box{position:static;display:block;min-width:0;margin-top:var(--doc-sp-xs);
   box-shadow:none;font-size:var(--doc-fs-sm);white-space:normal}
+/* The item's own parts are sized in DESIGN UNITS, which the reading view is not (DS-074). Left
+   alone they arrive at stage scale inside document type: measured at a 14.5 px title with an 18 px
+   identifier and a 23 px glyph beside it, and a control 93 px tall from `--disc-hit`. The label
+   and the glyph take the document's own mono scale; the target floor goes, because a document is
+   read rather than presented and DS-168 is about a control on a stage (T-109). */
+.doc .sources-id{font-size:var(--doc-fs-mono);letter-spacing:var(--doc-track-mono)}
+.doc .sources-icon{width:var(--doc-fs-mono);height:var(--doc-fs-mono)}
+.doc .sources-open{min-height:0}
 /* The stage panel is absolutely positioned at a fixed design-unit width. The reading view is a
    document, not a scaled stage (DS-074), so both have to be undone or it cannot reflow. */
 .doc .disc-panel{position:static;width:auto;max-width:none;font-size:var(--doc-fs-sm);margin-top:0;
@@ -764,6 +821,15 @@ svg{display:block}
 .qv-title{font-family:var(--font-display);font-size:var(--fs-lead);line-height:1.2}
 /* The fidelity claim is on the surface, not in documentation - a reader who never opens a task
    record still learns that this is a rendering. It spans both columns so it survives a long title. */
+/* The file name, under the title and above the fidelity claim: the title is what the deck calls
+   this source, the file is what the reader types to find the original outside the deck. Empty
+   where the source has no file, and an empty <p> in a grid row takes no height (T-109). */
+.qv-file{
+  grid-column:1 / -1;
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  color:var(--ink-soft);word-break:break-all;
+}
+.qv-file:empty{display:none}
 .qv-note{
   grid-column:1 / -1;
   font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
@@ -983,6 +1049,19 @@ svg{display:block}
     font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
     text-transform:uppercase;text-align:right;color:var(--ink-faint)}
   .slide .sources-item + .sources-item{margin-top:0;padding-top:0;border:0}
+  /* The colophon is the exception the rule above would otherwise flatten: its list is the slide's
+     body, not a mark in the corner, so it keeps the text face, the left edge and the row gap. It
+     is also the only place a source reference is the point on paper, where every route is dead -
+     which is why the rows print at full size and the glyphs print with them (T-109). */
+  .slide .sources--list .sources-box{
+    display:grid!important;gap:var(--sp-2);
+    font-family:var(--font-text);font-size:var(--fs-body);letter-spacing:normal;
+    text-transform:none;text-align:left;color:var(--ink)}
+  /* Baseline, for the reason the screen rule gives - and it has to be repeated here because the
+     rule above it resets the whole box for paper. Printed with `start` the identifier and the
+     glyph sat above the title's cap line and read as superscripts, which only the paper showed. */
+  .slide .sources--list .sources-item{white-space:normal;align-items:baseline}
+  .slide .sources--list .sources-icon{width:var(--fs-small);height:var(--fs-small)}
 
   /* ---------------------------------------------------------------- the contents page (T-034)
      Twelve pages of slides arrive with no map: the ruler carries the structure on screen
@@ -1168,6 +1247,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
  <defs>
   <g id="lucide" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
  </defs>
+ <symbol id="i-sources" data-icon="library" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></symbol>
  <symbol id="i-source" data-icon="file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
  <symbol id="i-wait" data-icon="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
  <symbol id="i-bike" data-icon="bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
@@ -1260,7 +1340,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The 12 March budget vote is the only meeting
     that can commit the grant before 31 March 2027.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src2"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src2" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src2"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src2" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span></span></span></p>
 </section>
 
 <!-- ============================================================ 3 — single number (A-03) -->
@@ -1409,7 +1489,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Operating cost decides it: the grant pays for no
     staff in either column.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src5"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src5" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src5"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src5" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Ridership model</span></span></span></p>
 </section>
 
 <!-- ============================================================ 6 — small multiple (A-06) -->
@@ -1688,7 +1768,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Nothing before month 18 is irreversible, and the
     $1.5M reserve buys 16 Old Quarter stations if the gate fails.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src9"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src9" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src9"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src9" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span></span></span></p>
 </section>
 
 <!-- ============================================================ 10 — uncomfortable truth (A-12) -->
@@ -1731,7 +1811,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:6"><b>Three corridors wait until month 18, and the general
     fund carries $6.8M every year after.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src10"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src10" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src10"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src10" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Ridership model</span></span></span></p>
 </section>
 
 <!-- ============================================================ 11 — risk retirement (A-02) -->
@@ -1801,7 +1881,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Three thresholds are fixed before approval, and each
     is measured on a stated date by someone outside this team.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src11"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src11" hidden><span class="sources-item">Cost model</span><span class="sources-item">Programme timetable</span><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src11"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src11" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Ridership model</span></span></span></p>
 </section>
 
 <!-- ============================================================ 12 — close (A-14) -->
@@ -1908,6 +1988,10 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   <div class="qv-sheet">
     <header class="qv-head">
       <p class="qv-title" id="qvTitle"></p>
+      <!-- the source file, filled by the script from the control's data-file. The title above is
+           what the deck calls this source; this is what the reader types to find the original
+           outside it. Empty where the source has no file, and empty means no row (T-109). -->
+      <p class="qv-file" id="qvFile"></p>
       <p class="qv-note">Quick view — rendered from the source and carried in this deck. Not the
         original file.</p>
       <button class="qv-close" id="qvClose" aria-label="Close the quick view">Close</button>
@@ -2317,6 +2401,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   var qv = document.getElementById('qv');
   var qvBody = document.getElementById('qvBody');
   var qvTitle = document.getElementById('qvTitle');
+  var qvFile = document.getElementById('qvFile');
   var qvOpener = null;
 
   /* One document, however many slides cite it: the control is on every mark, the <template> is on
@@ -2336,13 +2421,18 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     if (!btn) return;
     var tpl = qvSrc[btn.getAttribute('data-qv')];
     if (!tpl) return;
-    openQuick(btn, btn.textContent, tpl);
+    /* Whitespace-collapsed, because the title comes out of MARKUP: an author who wraps a long
+       source title across two lines gets the newline and its indentation inside textContent, and
+       the header then paints a line break and ten spaces where the deck's own name for the source
+       should be. HTML already collapses it on the slide, so nothing looked wrong there (T-109). */
+    openQuick(btn, btn.textContent.replace(/\s+/g, ' ').trim(), tpl,
+              btn.getAttribute('data-file') || '');
   });
   document.getElementById('qvClose').addEventListener('click', function(){ closeQuick(); });
   /* The scrim dismisses; the sheet does not, or every scroll inside it would close the view. */
   qv.addEventListener('click', function(e){ if (e.target === qv) closeQuick(); });
 
-  function openQuick(btn, title, tpl){
+  function openQuick(btn, title, tpl, file){
     closeAllDiscs(null);
     closeAllSources(null);
     qvBody.textContent = '';
@@ -2355,6 +2445,10 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     article.appendChild(tpl.content.cloneNode(true));
     qvBody.appendChild(article);
     qvTitle.textContent = title;
+    /* The title is the deck's name for the source; this is the file it was rendered from, so a
+       reader who wants the original knows what to look for. Cleared rather than left behind: the
+       surface is shared, and a stale file name under a new title is worse than none (T-109). */
+    qvFile.textContent = file || '';
     qv.hidden = false;
     /* Every opening starts at the top of ITS document, and the clear in closeQuick() is not enough
        to get that - it was measured doing its job and the offset came back anyway. Emptying the
@@ -2374,6 +2468,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   function closeQuick(){
     if (qv.hidden) return;
     qv.hidden = true;
+    qvFile.textContent = '';
     qvBody.textContent = '';       /* the surface holds nothing between openings - but see the
                                       reset in openQuick(): emptying it does not decide where the
                                       NEXT document starts (T-174) */

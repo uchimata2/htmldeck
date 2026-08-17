@@ -391,9 +391,21 @@ svg{display:block}
   text-transform:none;text-align:left;color:var(--ink-soft);
 }
 .sources-box[hidden]{display:none}
-.sources-item{display:block;white-space:nowrap}
+/* One row, three columns, and only the third is always there: identifier, kind glyph, title.
+   This is the component T-109 unified - the same row renders in the one-source mark, inside a
+   multi-source box, and as the colophon's body, so the three cannot drift apart the way the
+   colophon did while it was authored separately. */
+.sources-item{display:grid;grid-template-columns:auto auto 1fr;align-items:center;
+  gap:var(--sp-1);white-space:nowrap}
 .sources-item + .sources-item{margin-top:var(--sp-1);padding-top:var(--sp-1);
   border-top:var(--hair) solid var(--line)}
+/* Mono and quiet: it is a label the reader matches against the source, not a word in the title.
+   The contract bounds it at six characters and drops anything longer, so it never needs a width. */
+.sources-id{font-family:var(--font-mono);font-size:var(--fs-mono);
+  letter-spacing:var(--track-mono);color:var(--ink-faint)}
+/* Sized and coloured like the mark it stands in for, because it answers the same question one row
+   down: what kind of thing is this. Absent at .sources--one, where the mark already said. */
+.sources-icon{flex:none;width:var(--fs-mono);height:var(--fs-mono);color:var(--accent)}
 /* One source is not a disclosure: there is nothing to choose between, so there is no button and
    no panel - the mark sits on the line and the title beside it. It reads as provenance because of
    the glyph, which is the whole of T-103: a bare title in the corner reads as a subtitle, and the
@@ -406,8 +418,45 @@ svg{display:block}
 .sources--one .sources-box{
   position:static;z-index:auto;min-width:0;padding:0;
   border:0;border-radius:0;background:none;box-shadow:none;
-  font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:inherit;color:inherit;
+  /* T-109's case treatment, and it is the identifier bound's job that this is NOT doing. A title
+     inheriting .provenance renders uppercase, mono and letterspaced, which took roughly a quarter
+     of the stage row for one document - the length was never the problem, the case was. Sentence
+     case in the text face buys the room back without truncating anything, and .sources-id stays
+     mono beside it, which is what keeps the row reading as provenance rather than as a subtitle. */
+  font-family:var(--font-text);font-size:var(--fs-mono);letter-spacing:normal;
+  text-transform:none;text-align:inherit;color:inherit;
 }
+
+/* ------------------------------------------------- the colophon's list (DS-105, T-109) */
+/* The same component as the mark, laid out as the slide's body instead of as its corner. It has
+   no mark and no control: nothing is disclosed here, because the list IS the slide. Before this
+   existed the colophon authored its own `.colo` rows inside the deck's own <style> - bare titles,
+   no glyph, no route - and drifted from the mark it was meant to agree with, on the one slide
+   where every source is reachable. */
+.sources--list{display:block;max-width:var(--measure)}
+.sources--list .sources-box{
+  position:static;z-index:auto;min-width:0;padding:0;
+  border:0;border-radius:0;background:none;box-shadow:none;
+  display:grid;gap:var(--sp-2);
+  font-family:var(--font-text);font-size:var(--fs-body);letter-spacing:normal;
+  text-transform:none;text-align:left;color:var(--ink);
+}
+/* No rule between rows: the gap does that work here, where the box's tinted panel is gone.
+   Baseline, not centre and not start. Centre floats the identifier between the lines of a title
+   that wraps; start pushes it above the title's cap line, where it reads as a superscript rather
+   than as a label - which is what the first render of this list actually showed. Baseline is the
+   one that holds for both, because it binds to the FIRST line whatever the row does after it. */
+.sources--list .sources-item{white-space:normal;align-items:baseline}
+.sources--list .sources-item + .sources-item{margin-top:0;padding-top:0;border-top:0}
+/* At mono size the glyph reads as a speck beside body-size titles; at the row's own size it reads
+   as the row's mark. The mark in a corner has the opposite problem, which is why this is set here. */
+.sources--list .sources-icon{width:var(--fs-small);height:var(--fs-small)}
+/* The title column is 1fr and `.sources-open` sets `width:100%`, so without both halves of this
+   the control stretches the width of the list and a click on empty space several hundred pixels
+   right of a title opens that document. Measured at 970 px against titles a third of that, and
+   `justify-self` alone did not move it - an explicit width outranks it. DS-168's `min-height`
+   stays, because the target has to be the label without being thinner than a finger. */
+.sources--list .sources-open{width:auto;justify-self:start}
 /* DS-105's link half, where the source is reachable from where the deck is presented. Underlined
    in the line colour rather than the accent: it is a route to the source, not a call to take it. */
 .sources-link{color:inherit;text-decoration:underline;text-decoration-color:var(--line)}
@@ -701,6 +750,14 @@ svg{display:block}
    list rather than as a box, and is what looking at the reading view showed. */
 .doc .sources-box{position:static;display:block;min-width:0;margin-top:var(--doc-sp-xs);
   box-shadow:none;font-size:var(--doc-fs-sm);white-space:normal}
+/* The item's own parts are sized in DESIGN UNITS, which the reading view is not (DS-074). Left
+   alone they arrive at stage scale inside document type: measured at a 14.5 px title with an 18 px
+   identifier and a 23 px glyph beside it, and a control 93 px tall from `--disc-hit`. The label
+   and the glyph take the document's own mono scale; the target floor goes, because a document is
+   read rather than presented and DS-168 is about a control on a stage (T-109). */
+.doc .sources-id{font-size:var(--doc-fs-mono);letter-spacing:var(--doc-track-mono)}
+.doc .sources-icon{width:var(--doc-fs-mono);height:var(--doc-fs-mono)}
+.doc .sources-open{min-height:0}
 /* The stage panel is absolutely positioned at a fixed design-unit width. The reading view is a
    document, not a scaled stage (DS-074), so both have to be undone or it cannot reflow. */
 .doc .disc-panel{position:static;width:auto;max-width:none;font-size:var(--doc-fs-sm);margin-top:0;
@@ -761,6 +818,15 @@ svg{display:block}
 .qv-title{font-family:var(--font-display);font-size:var(--fs-lead);line-height:1.2}
 /* The fidelity claim is on the surface, not in documentation - a reader who never opens a task
    record still learns that this is a rendering. It spans both columns so it survives a long title. */
+/* The file name, under the title and above the fidelity claim: the title is what the deck calls
+   this source, the file is what the reader types to find the original outside the deck. Empty
+   where the source has no file, and an empty <p> in a grid row takes no height (T-109). */
+.qv-file{
+  grid-column:1 / -1;
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  color:var(--ink-soft);word-break:break-all;
+}
+.qv-file:empty{display:none}
 .qv-note{
   grid-column:1 / -1;
   font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
@@ -980,6 +1046,19 @@ svg{display:block}
     font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
     text-transform:uppercase;text-align:right;color:var(--ink-faint)}
   .slide .sources-item + .sources-item{margin-top:0;padding-top:0;border:0}
+  /* The colophon is the exception the rule above would otherwise flatten: its list is the slide's
+     body, not a mark in the corner, so it keeps the text face, the left edge and the row gap. It
+     is also the only place a source reference is the point on paper, where every route is dead -
+     which is why the rows print at full size and the glyphs print with them (T-109). */
+  .slide .sources--list .sources-box{
+    display:grid!important;gap:var(--sp-2);
+    font-family:var(--font-text);font-size:var(--fs-body);letter-spacing:normal;
+    text-transform:none;text-align:left;color:var(--ink)}
+  /* Baseline, for the reason the screen rule gives - and it has to be repeated here because the
+     rule above it resets the whole box for paper. Printed with `start` the identifier and the
+     glyph sat above the title's cap line and read as superscripts, which only the paper showed. */
+  .slide .sources--list .sources-item{white-space:normal;align-items:baseline}
+  .slide .sources--list .sources-icon{width:var(--fs-small);height:var(--fs-small)}
 
   /* ---------------------------------------------------------------- the contents page (T-034)
      Twelve pages of slides arrive with no map: the ruler carries the structure on screen
@@ -1168,6 +1247,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
  </defs>
  <symbol id="i-source" data-icon="file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
  <symbol id="i-late" data-icon="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+ <symbol id="i-sources" data-icon="library" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></symbol>
  <symbol id="i-after" data-icon="trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17h6v-6"/><path d="m22 17-8.5-8.5-5 5L2 7"/></symbol>
  <symbol id="i-fleet" data-icon="truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
  <symbol id="i-when" data-icon="calendar-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 14v2.2l1.6 1"/><path d="M16 2v3"/><path d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338"/><path d="M3 9h5.859"/><path d="M8 2v3"/><circle cx="16" cy="16" r="6"/></symbol>
@@ -1255,7 +1335,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Eight weeks' notice before the 14 November review means
     this is decided in a fortnight or not this season.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src13"><span class="sources-item"><button class="sources-open" type="button" data-qv="Service calendar">Service calendar</button></span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src13"><span class="sources-item"><button class="sources-open" type="button" data-qv="Service calendar" data-file="service-calendar.md">Service calendar</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 3 — single number (A-03) -->
@@ -1288,7 +1368,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>At peak we move 27,600 parcels a day and 12.4% of them
     arrive late.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src14"><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src14"><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model" data-file="throughput-model.md">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 4 — animated trajectory (A-05) -->
@@ -1343,7 +1423,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Four months sit at or under 3.4%, then November reaches
     9.8% and December 15.2%.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src4"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src4" hidden><span class="sources-item"><button class="sources-open" type="button" data-qv="Service calendar">Service calendar</button><template class="qv-src" data-qv="Service calendar"><h1>Marnfield depot — service calendar and thresholds</h1><p><b>Marnfield is an illustrative parcel network. It does not exist.</b></p><h2>Dates</h2><table><tr><th></th><th></th></tr><tr><td>Peak season</td><td>18 November to 23 December</td></tr><tr><td>Network contract review</td><td>14 November</td></tr><tr><td>Linehaul slot request notice</td><td>8 weeks before the slot changes</td></tr><tr><td>Latest decision date</td><td>19 September</td></tr><tr><td>Operations board</td><td>4 September</td></tr><tr><td>January review</td><td>the first working week of January</td></tr><tr><td>Twilight crew hire lead</td><td>6 weeks</td></tr></table><p>The 19 September date is 8 weeks before the contract review and is not a preference: a slot requested later than that cannot be in place for the first week of peak, which is the week the miss rate has climbed in for three consecutive years.</p><h2>Thresholds</h2><table><tr><th></th><th></th></tr><tr><td>Next-day service level, contractual</td><td>96%</td></tr><tr><td>Equivalent miss rate</td><td>4%</td></tr><tr><td>Peak miss rate, this year</td><td>12.4%</td></tr><tr><td>January review trigger</td><td>peak miss rate at or above 4%</td></tr></table><h2>The shift pattern</h2><p>Sorting runs 20:00 to 01:00 on a single line. The proposed second cut-off at 02:30 extends the outbound window by 90 minutes and needs a six-person crew; it does not extend the sort shift, which is why it costs a crew and not a line.</p></template></span><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button><template class="qv-src" data-qv="Throughput model"><h1>Marnfield depot — throughput model</h1><p><b>Marnfield is an illustrative parcel network. It does not exist.</b> Every figure below is an output of the assumptions stated with it, and none of it is attributed to any real operator, study or place.</p><h2>Volume</h2><table><tr><th></th><th>Parcels per day</th><th>Basis</th></tr><tr><td>October baseline</td><td>18,400</td><td>mean of 22 working days</td></tr><tr><td>Peak, 18 November to 23 December</td><td>27,600</td><td>mean of 31 working days</td></tr><tr><td>Busiest single day, 5 December</td><td>31,900</td><td>observed maximum</td></tr></table><p>Peak volume runs <b>50%</b> above the October baseline. The sorter, the fleet and the shift pattern do not change with it.</p><h2>The sort</h2><p>One sorter line. Rated at <b>3,100</b> parcels per hour and it holds that rate to within 4% across a full shift, so the model treats it as constant.</p><p>Inbound arrives on two trunk services:</p><table><tr><th>Trunk</th><th>Arrives</th><th>Parcels, peak</th><th>Sort finishes</th></tr><tr><td>First</td><td>19:40</td><td>20,400</td><td>00:14</td></tr><tr><td>Second</td><td>23:40</td><td>7,200</td><td>01:59</td></tr></table><p>The second trunk's 7,200 parcels take <b>2h 19m</b> at 3,100 per hour. Sorting cannot start before the trunk is unloaded, so the finish time is arrival plus sort time and nothing compresses it.</p><p><b>The outbound cut-off is 01:00.</b> A parcel sorted after it waits a day. The second trunk therefore clears <b>59 minutes</b> past the cut-off.</p><h2>Failure</h2><p>Next-day delivery missed:</p><table><tr><th></th><th>Missed</th><th>Basis</th></tr><tr><td>Off-peak</td><td>3.1%</td><td>October, 22 working days</td></tr><tr><td>Peak</td><td>12.4%</td><td>18 November to 23 December</td></tr></table><p>Where the peak failures happen, sampled over 14 nights:</p><table><tr><th></th><th>Share of misses</th></tr><tr><td>Still unsorted at the 01:00 cut-off</td><td>84%</td></tr><tr><td>Sorted, not loaded before the round left</td><td>16%</td></tr></table><p>Monthly miss rate, next-day: July 2.9%, August 3.0%, September 3.4%, October 3.1%, November 9.8%, December 15.2%.</p><p>By district, peak:</p><table><tr><th>District</th><th>Missed</th><th>Position in the loading sequence</th><th>Depot to district centre</th><th>Rounds</th><th>First away</th></tr><tr><td>Ashgrove</td><td>4.1%</td><td>first</td><td>9 miles</td><td>6</td><td>04:10</td></tr><tr><td>Cranleigh</td><td>11.2%</td><td>second</td><td>14 miles</td><td>5</td><td>04:35</td></tr><tr><td>Dellow</td><td>15.9%</td><td>third</td><td>6 miles</td><td>4</td><td>05:05</td></tr><tr><td>Beacon Hill</td><td>18.7%</td><td>last</td><td>11 miles</td><td>7</td><td>05:30</td></tr></table><p>Distance does not order this column and loading position does. The worst-served district is <b>11 miles</b> from the depot and the best-served is 9; the district 14 miles out sits third.</p><p>The sequence is stable enough to argue from. Over the 31 peak nights sampled, Ashgrove was loaded first on every one, and Beacon Hill last on <b>27 of 31</b>.</p><p><b>Excluded from every figure above:</b> returns, same-day services, and the two weeks either side of the depot's August resurfacing, when volume was diverted.</p></template></span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src4"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src4" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Service calendar" data-file="service-calendar.md">Service calendar</button><template class="qv-src" data-qv="Service calendar"><h1>Marnfield depot — service calendar and thresholds</h1><p><b>Marnfield is an illustrative parcel network. It does not exist.</b></p><h2>Dates</h2><table><tr><th></th><th></th></tr><tr><td>Peak season</td><td>18 November to 23 December</td></tr><tr><td>Network contract review</td><td>14 November</td></tr><tr><td>Linehaul slot request notice</td><td>8 weeks before the slot changes</td></tr><tr><td>Latest decision date</td><td>19 September</td></tr><tr><td>Operations board</td><td>4 September</td></tr><tr><td>January review</td><td>the first working week of January</td></tr><tr><td>Twilight crew hire lead</td><td>6 weeks</td></tr></table><p>The 19 September date is 8 weeks before the contract review and is not a preference: a slot requested later than that cannot be in place for the first week of peak, which is the week the miss rate has climbed in for three consecutive years.</p><h2>Thresholds</h2><table><tr><th></th><th></th></tr><tr><td>Next-day service level, contractual</td><td>96%</td></tr><tr><td>Equivalent miss rate</td><td>4%</td></tr><tr><td>Peak miss rate, this year</td><td>12.4%</td></tr><tr><td>January review trigger</td><td>peak miss rate at or above 4%</td></tr></table><h2>The shift pattern</h2><p>Sorting runs 20:00 to 01:00 on a single line. The proposed second cut-off at 02:30 extends the outbound window by 90 minutes and needs a six-person crew; it does not extend the sort shift, which is why it costs a crew and not a line.</p></template></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Throughput model" data-file="throughput-model.md">Throughput model</button><template class="qv-src" data-qv="Throughput model"><h1>Marnfield depot — throughput model</h1><p><b>Marnfield is an illustrative parcel network. It does not exist.</b> Every figure below is an output of the assumptions stated with it, and none of it is attributed to any real operator, study or place.</p><h2>Volume</h2><table><tr><th></th><th>Parcels per day</th><th>Basis</th></tr><tr><td>October baseline</td><td>18,400</td><td>mean of 22 working days</td></tr><tr><td>Peak, 18 November to 23 December</td><td>27,600</td><td>mean of 31 working days</td></tr><tr><td>Busiest single day, 5 December</td><td>31,900</td><td>observed maximum</td></tr></table><p>Peak volume runs <b>50%</b> above the October baseline. The sorter, the fleet and the shift pattern do not change with it.</p><h2>The sort</h2><p>One sorter line. Rated at <b>3,100</b> parcels per hour and it holds that rate to within 4% across a full shift, so the model treats it as constant.</p><p>Inbound arrives on two trunk services:</p><table><tr><th>Trunk</th><th>Arrives</th><th>Parcels, peak</th><th>Sort finishes</th></tr><tr><td>First</td><td>19:40</td><td>20,400</td><td>00:14</td></tr><tr><td>Second</td><td>23:40</td><td>7,200</td><td>01:59</td></tr></table><p>The second trunk's 7,200 parcels take <b>2h 19m</b> at 3,100 per hour. Sorting cannot start before the trunk is unloaded, so the finish time is arrival plus sort time and nothing compresses it.</p><p><b>The outbound cut-off is 01:00.</b> A parcel sorted after it waits a day. The second trunk therefore clears <b>59 minutes</b> past the cut-off.</p><h2>Failure</h2><p>Next-day delivery missed:</p><table><tr><th></th><th>Missed</th><th>Basis</th></tr><tr><td>Off-peak</td><td>3.1%</td><td>October, 22 working days</td></tr><tr><td>Peak</td><td>12.4%</td><td>18 November to 23 December</td></tr></table><p>Where the peak failures happen, sampled over 14 nights:</p><table><tr><th></th><th>Share of misses</th></tr><tr><td>Still unsorted at the 01:00 cut-off</td><td>84%</td></tr><tr><td>Sorted, not loaded before the round left</td><td>16%</td></tr></table><p>Monthly miss rate, next-day: July 2.9%, August 3.0%, September 3.4%, October 3.1%, November 9.8%, December 15.2%.</p><p>By district, peak:</p><table><tr><th>District</th><th>Missed</th><th>Position in the loading sequence</th><th>Depot to district centre</th><th>Rounds</th><th>First away</th></tr><tr><td>Ashgrove</td><td>4.1%</td><td>first</td><td>9 miles</td><td>6</td><td>04:10</td></tr><tr><td>Cranleigh</td><td>11.2%</td><td>second</td><td>14 miles</td><td>5</td><td>04:35</td></tr><tr><td>Dellow</td><td>15.9%</td><td>third</td><td>6 miles</td><td>4</td><td>05:05</td></tr><tr><td>Beacon Hill</td><td>18.7%</td><td>last</td><td>11 miles</td><td>7</td><td>05:30</td></tr></table><p>Distance does not order this column and loading position does. The worst-served district is <b>11 miles</b> from the depot and the best-served is 9; the district 14 miles out sits third.</p><p>The sequence is stable enough to argue from. Over the 31 peak nights sampled, Ashgrove was loaded first on every one, and Beacon Hill last on <b>27 of 31</b>.</p><p><b>Excluded from every figure above:</b> returns, same-day services, and the two weeks either side of the depot's August resurfacing, when volume was diverted.</p></template></span></span></span></p>
 </section>
 
 <!-- ============================================================ 5 — process / flow (A-08), the hinge -->
@@ -1404,7 +1484,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>7,200 parcels land at 23:40 and clear the sorter at
     01:59, an hour past the 01:00 cut-off.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src15"><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src15"><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model" data-file="throughput-model.md">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 6 — small multiple (A-06) -->
@@ -1458,7 +1538,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The last district loaded misses 18.7%, and the district
     furthest away is loaded second and misses 11.2%.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src16"><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src16"><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model" data-file="throughput-model.md">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 7 — before / after (A-07) -->
@@ -1518,7 +1598,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Landing the second trunk 110 minutes earlier clears it
     at 00:09, inside the existing cut-off.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src7"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src7" hidden><span class="sources-item"><button class="sources-open" type="button" data-qv="Fleet and cost model">Fleet and cost model</button><template class="qv-src" data-qv="Fleet and cost model"><h1>Marnfield depot — fleet and cost model</h1><p><b>Marnfield is an illustrative parcel network. It does not exist.</b> Costs are illustrative and derive from the assumptions stated with them.</p><h2>The fleet as it stands</h2><table><tr><th></th><th></th></tr><tr><td>Vans in service</td><td>34</td></tr><tr><td>Mean round utilisation, off-peak</td><td>71%</td></tr><tr><td>Mean round utilisation, peak</td><td>88%</td></tr></table><p>Utilisation is measured as parcels loaded against the van's rated capacity at departure. A round that leaves 12% empty in the busiest month is not a round short of space.</p><h2>Option A — nine more vans</h2><table><tr><th></th><th></th></tr><tr><td>Vans</td><td>9</td></tr><tr><td>Capital</td><td>$522k</td></tr><tr><td>Drivers and running cost, annual</td><td>$468k</td></tr><tr><td>First benefit</td><td>5 months — procurement, livery and driver recruitment</td></tr></table><p>Reaches only the parcels that were <b>sorted and not loaded</b>, which is 16% of peak misses. A van cannot carry a parcel the sorter has not released.</p><h2>Option B — move the window</h2><table><tr><th></th><th></th></tr><tr><td>Linehaul slot premium, annual</td><td>$140k</td></tr><tr><td>Twilight loading crew, six people, annual</td><td>$170k</td></tr><tr><td>Crew shift, five nights a week through peak</td><td>22:00 to 02:30</td></tr><tr><td>Total, annual</td><td>$310k</td></tr><tr><td>Capital</td><td>none</td></tr><tr><td>First benefit</td><td>6 weeks — a schedule change and a shift pattern</td></tr></table><p>Two changes together: the second trunk arrives at <b>21:50</b> instead of 23:40, and a second outbound cut-off runs at <b>02:30</b>.</p><p>The earlier slot moves the trunk <b>110 minutes</b>. Sorting still takes 2h 19m, so it finishes at <b>00:09</b> — inside the existing 01:00 cut-off, with 51 minutes to spare. The second cut-off at 02:30 is what covers the nights the slot is missed — the remaining <b>5%</b>.</p><p>Projected peak miss rate after the change: <b>2.4%</b>. The projection holds the sort rate, the volume and the district sequence constant, and assumes the earlier slot is met on 95% of nights — the carrier's own contractual floor.</p><h2>What is held back</h2><p><b>$120k of the $310k is held to the January review.</b> If the peak miss rate has not fallen below <b>4%</b>, the fleet case is reopened with a season of evidence behind it rather than ahead of it.</p></template></span><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src7"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src7" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Fleet and cost model" data-file="fleet-and-cost-model.md">Fleet and cost model</button><template class="qv-src" data-qv="Fleet and cost model"><h1>Marnfield depot — fleet and cost model</h1><p><b>Marnfield is an illustrative parcel network. It does not exist.</b> Costs are illustrative and derive from the assumptions stated with them.</p><h2>The fleet as it stands</h2><table><tr><th></th><th></th></tr><tr><td>Vans in service</td><td>34</td></tr><tr><td>Mean round utilisation, off-peak</td><td>71%</td></tr><tr><td>Mean round utilisation, peak</td><td>88%</td></tr></table><p>Utilisation is measured as parcels loaded against the van's rated capacity at departure. A round that leaves 12% empty in the busiest month is not a round short of space.</p><h2>Option A — nine more vans</h2><table><tr><th></th><th></th></tr><tr><td>Vans</td><td>9</td></tr><tr><td>Capital</td><td>$522k</td></tr><tr><td>Drivers and running cost, annual</td><td>$468k</td></tr><tr><td>First benefit</td><td>5 months — procurement, livery and driver recruitment</td></tr></table><p>Reaches only the parcels that were <b>sorted and not loaded</b>, which is 16% of peak misses. A van cannot carry a parcel the sorter has not released.</p><h2>Option B — move the window</h2><table><tr><th></th><th></th></tr><tr><td>Linehaul slot premium, annual</td><td>$140k</td></tr><tr><td>Twilight loading crew, six people, annual</td><td>$170k</td></tr><tr><td>Crew shift, five nights a week through peak</td><td>22:00 to 02:30</td></tr><tr><td>Total, annual</td><td>$310k</td></tr><tr><td>Capital</td><td>none</td></tr><tr><td>First benefit</td><td>6 weeks — a schedule change and a shift pattern</td></tr></table><p>Two changes together: the second trunk arrives at <b>21:50</b> instead of 23:40, and a second outbound cut-off runs at <b>02:30</b>.</p><p>The earlier slot moves the trunk <b>110 minutes</b>. Sorting still takes 2h 19m, so it finishes at <b>00:09</b> — inside the existing 01:00 cut-off, with 51 minutes to spare. The second cut-off at 02:30 is what covers the nights the slot is missed — the remaining <b>5%</b>.</p><p>Projected peak miss rate after the change: <b>2.4%</b>. The projection holds the sort rate, the volume and the district sequence constant, and assumes the earlier slot is met on 95% of nights — the carrier's own contractual floor.</p><h2>What is held back</h2><p><b>$120k of the $310k is held to the January review.</b> If the peak miss rate has not fallen below <b>4%</b>, the fleet case is reopened with a season of evidence behind it rather than ahead of it.</p></template></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Throughput model" data-file="throughput-model.md">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 8 — single number (A-03), the pair to slide 3 -->
@@ -1552,7 +1632,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Moving the window reaches the 84% of misses a van
     cannot, and takes 12.4% to 2.4%.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src8"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src8" hidden><span class="sources-item"><button class="sources-open" type="button" data-qv="Fleet and cost model">Fleet and cost model</button></span><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src8"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src8" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Fleet and cost model" data-file="fleet-and-cost-model.md">Fleet and cost model</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Throughput model" data-file="throughput-model.md">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 9 — two-column ledger (A-04) -->
@@ -1597,7 +1677,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The fleet costs $522k of capital to reach a sixth; the
     window costs $310k a year and reaches the rest.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src9"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src9" hidden><span class="sources-item"><button class="sources-open" type="button" data-qv="Fleet and cost model">Fleet and cost model</button></span><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src9"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src9" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Fleet and cost model" data-file="fleet-and-cost-model.md">Fleet and cost model</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Throughput model" data-file="throughput-model.md">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 10 — uncomfortable truth (A-12) -->
@@ -1640,7 +1720,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The window costs less because six people work at 02:30,
     and it needs the carrier to meet 95% of slots.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src10"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src10" hidden><span class="sources-item"><button class="sources-open" type="button" data-qv="Fleet and cost model">Fleet and cost model</button></span><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src10"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src10" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Fleet and cost model" data-file="fleet-and-cost-model.md">Fleet and cost model</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Throughput model" data-file="throughput-model.md">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 11 — timeline with a gate (A-09) -->
@@ -1693,7 +1773,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>We hold $120k until January, and the fleet case reopens
     if peak misses stay above 4%.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src11"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src11" hidden><span class="sources-item"><button class="sources-open" type="button" data-qv="Fleet and cost model">Fleet and cost model</button></span><span class="sources-item"><button class="sources-open" type="button" data-qv="Service calendar">Service calendar</button></span><span class="sources-item"><button class="sources-open" type="button" data-qv="Throughput model">Throughput model</button></span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src11"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src11" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Fleet and cost model" data-file="fleet-and-cost-model.md">Fleet and cost model</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Service calendar" data-file="service-calendar.md">Service calendar</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Throughput model" data-file="throughput-model.md">Throughput model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 12 — verdict / close (A-14) -->
@@ -1712,7 +1792,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line bottom-line--center rise" style="--i:3"><b>Approve the 21:50 slot and the 02:30
     cut-off at $310k a year, and hold $120k for January.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src12"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src12" hidden><span class="sources-item"><button class="sources-open" type="button" data-qv="Fleet and cost model">Fleet and cost model</button></span><span class="sources-item"><button class="sources-open" type="button" data-qv="Service calendar">Service calendar</button></span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src12"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src12" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Fleet and cost model" data-file="fleet-and-cost-model.md">Fleet and cost model</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Service calendar" data-file="service-calendar.md">Service calendar</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ chrome -->
@@ -1759,6 +1839,10 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   <div class="qv-sheet">
     <header class="qv-head">
       <p class="qv-title" id="qvTitle"></p>
+      <!-- the source file, filled by the script from the control's data-file. The title above is
+           what the deck calls this source; this is what the reader types to find the original
+           outside it. Empty where the source has no file, and empty means no row (T-109). -->
+      <p class="qv-file" id="qvFile"></p>
       <p class="qv-note">Quick view — rendered from the source and carried in this deck. Not the
         original file.</p>
       <button class="qv-close" id="qvClose" aria-label="Close the quick view">Close</button>
@@ -2178,6 +2262,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   var qv = document.getElementById('qv');
   var qvBody = document.getElementById('qvBody');
   var qvTitle = document.getElementById('qvTitle');
+  var qvFile = document.getElementById('qvFile');
   var qvOpener = null;
 
   /* One document, however many slides cite it: the control is on every mark, the <template> is on
@@ -2197,13 +2282,18 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     if (!btn) return;
     var tpl = qvSrc[btn.getAttribute('data-qv')];
     if (!tpl) return;
-    openQuick(btn, btn.textContent, tpl);
+    /* Whitespace-collapsed, because the title comes out of MARKUP: an author who wraps a long
+       source title across two lines gets the newline and its indentation inside textContent, and
+       the header then paints a line break and ten spaces where the deck's own name for the source
+       should be. HTML already collapses it on the slide, so nothing looked wrong there (T-109). */
+    openQuick(btn, btn.textContent.replace(/\s+/g, ' ').trim(), tpl,
+              btn.getAttribute('data-file') || '');
   });
   document.getElementById('qvClose').addEventListener('click', function(){ closeQuick(); });
   /* The scrim dismisses; the sheet does not, or every scroll inside it would close the view. */
   qv.addEventListener('click', function(e){ if (e.target === qv) closeQuick(); });
 
-  function openQuick(btn, title, tpl){
+  function openQuick(btn, title, tpl, file){
     closeAllDiscs(null);
     closeAllSources(null);
     qvBody.textContent = '';
@@ -2216,6 +2306,10 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     article.appendChild(tpl.content.cloneNode(true));
     qvBody.appendChild(article);
     qvTitle.textContent = title;
+    /* The title is the deck's name for the source; this is the file it was rendered from, so a
+       reader who wants the original knows what to look for. Cleared rather than left behind: the
+       surface is shared, and a stale file name under a new title is worse than none (T-109). */
+    qvFile.textContent = file || '';
     qv.hidden = false;
     /* Every opening starts at the top of ITS document, and the clear in closeQuick() is not enough
        to get that - it was measured doing its job and the offset came back anyway. Emptying the
@@ -2235,6 +2329,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   function closeQuick(){
     if (qv.hidden) return;
     qv.hidden = true;
+    qvFile.textContent = '';
     qvBody.textContent = '';       /* the surface holds nothing between openings - but see the
                                       reset in openQuick(): emptying it does not decide where the
                                       NEXT document starts (T-174) */

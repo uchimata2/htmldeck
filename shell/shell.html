@@ -99,6 +99,10 @@
   <div class="qv-sheet">
     <header class="qv-head">
       <p class="qv-title" id="qvTitle"></p>
+      <!-- the source file, filled by the script from the control's data-file. The title above is
+           what the deck calls this source; this is what the reader types to find the original
+           outside it. Empty where the source has no file, and empty means no row (T-109). -->
+      <p class="qv-file" id="qvFile"></p>
       <p class="qv-note">Quick view — rendered from the source and carried in this deck. Not the
         original file.</p>
       <button class="qv-close" id="qvClose" aria-label="Close the quick view">Close</button>

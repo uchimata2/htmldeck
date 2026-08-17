@@ -126,9 +126,21 @@ svg{display:block}
   text-transform:none;text-align:left;color:var(--ink-soft);
 }
 .sources-box[hidden]{display:none}
-.sources-item{display:block;white-space:nowrap}
+/* One row, three columns, and only the third is always there: identifier, kind glyph, title.
+   This is the component T-109 unified - the same row renders in the one-source mark, inside a
+   multi-source box, and as the colophon's body, so the three cannot drift apart the way the
+   colophon did while it was authored separately. */
+.sources-item{display:grid;grid-template-columns:auto auto 1fr;align-items:center;
+  gap:var(--sp-1);white-space:nowrap}
 .sources-item + .sources-item{margin-top:var(--sp-1);padding-top:var(--sp-1);
   border-top:var(--hair) solid var(--line)}
+/* Mono and quiet: it is a label the reader matches against the source, not a word in the title.
+   The contract bounds it at six characters and drops anything longer, so it never needs a width. */
+.sources-id{font-family:var(--font-mono);font-size:var(--fs-mono);
+  letter-spacing:var(--track-mono);color:var(--ink-faint)}
+/* Sized and coloured like the mark it stands in for, because it answers the same question one row
+   down: what kind of thing is this. Absent at .sources--one, where the mark already said. */
+.sources-icon{flex:none;width:var(--fs-mono);height:var(--fs-mono);color:var(--accent)}
 /* One source is not a disclosure: there is nothing to choose between, so there is no button and
    no panel - the mark sits on the line and the title beside it. It reads as provenance because of
    the glyph, which is the whole of T-103: a bare title in the corner reads as a subtitle, and the
@@ -141,8 +153,45 @@ svg{display:block}
 .sources--one .sources-box{
   position:static;z-index:auto;min-width:0;padding:0;
   border:0;border-radius:0;background:none;box-shadow:none;
-  font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:inherit;color:inherit;
+  /* T-109's case treatment, and it is the identifier bound's job that this is NOT doing. A title
+     inheriting .provenance renders uppercase, mono and letterspaced, which took roughly a quarter
+     of the stage row for one document - the length was never the problem, the case was. Sentence
+     case in the text face buys the room back without truncating anything, and .sources-id stays
+     mono beside it, which is what keeps the row reading as provenance rather than as a subtitle. */
+  font-family:var(--font-text);font-size:var(--fs-mono);letter-spacing:normal;
+  text-transform:none;text-align:inherit;color:inherit;
 }
+
+/* ------------------------------------------------- the colophon's list (DS-105, T-109) */
+/* The same component as the mark, laid out as the slide's body instead of as its corner. It has
+   no mark and no control: nothing is disclosed here, because the list IS the slide. Before this
+   existed the colophon authored its own `.colo` rows inside the deck's own <style> - bare titles,
+   no glyph, no route - and drifted from the mark it was meant to agree with, on the one slide
+   where every source is reachable. */
+.sources--list{display:block;max-width:var(--measure)}
+.sources--list .sources-box{
+  position:static;z-index:auto;min-width:0;padding:0;
+  border:0;border-radius:0;background:none;box-shadow:none;
+  display:grid;gap:var(--sp-2);
+  font-family:var(--font-text);font-size:var(--fs-body);letter-spacing:normal;
+  text-transform:none;text-align:left;color:var(--ink);
+}
+/* No rule between rows: the gap does that work here, where the box's tinted panel is gone.
+   Baseline, not centre and not start. Centre floats the identifier between the lines of a title
+   that wraps; start pushes it above the title's cap line, where it reads as a superscript rather
+   than as a label - which is what the first render of this list actually showed. Baseline is the
+   one that holds for both, because it binds to the FIRST line whatever the row does after it. */
+.sources--list .sources-item{white-space:normal;align-items:baseline}
+.sources--list .sources-item + .sources-item{margin-top:0;padding-top:0;border-top:0}
+/* At mono size the glyph reads as a speck beside body-size titles; at the row's own size it reads
+   as the row's mark. The mark in a corner has the opposite problem, which is why this is set here. */
+.sources--list .sources-icon{width:var(--fs-small);height:var(--fs-small)}
+/* The title column is 1fr and `.sources-open` sets `width:100%`, so without both halves of this
+   the control stretches the width of the list and a click on empty space several hundred pixels
+   right of a title opens that document. Measured at 970 px against titles a third of that, and
+   `justify-self` alone did not move it - an explicit width outranks it. DS-168's `min-height`
+   stays, because the target has to be the label without being thinner than a finger. */
+.sources--list .sources-open{width:auto;justify-self:start}
 /* DS-105's link half, where the source is reachable from where the deck is presented. Underlined
    in the line colour rather than the accent: it is a route to the source, not a call to take it. */
 .sources-link{color:inherit;text-decoration:underline;text-decoration-color:var(--line)}
@@ -436,6 +485,14 @@ svg{display:block}
    list rather than as a box, and is what looking at the reading view showed. */
 .doc .sources-box{position:static;display:block;min-width:0;margin-top:var(--doc-sp-xs);
   box-shadow:none;font-size:var(--doc-fs-sm);white-space:normal}
+/* The item's own parts are sized in DESIGN UNITS, which the reading view is not (DS-074). Left
+   alone they arrive at stage scale inside document type: measured at a 14.5 px title with an 18 px
+   identifier and a 23 px glyph beside it, and a control 93 px tall from `--disc-hit`. The label
+   and the glyph take the document's own mono scale; the target floor goes, because a document is
+   read rather than presented and DS-168 is about a control on a stage (T-109). */
+.doc .sources-id{font-size:var(--doc-fs-mono);letter-spacing:var(--doc-track-mono)}
+.doc .sources-icon{width:var(--doc-fs-mono);height:var(--doc-fs-mono)}
+.doc .sources-open{min-height:0}
 /* The stage panel is absolutely positioned at a fixed design-unit width. The reading view is a
    document, not a scaled stage (DS-074), so both have to be undone or it cannot reflow. */
 .doc .disc-panel{position:static;width:auto;max-width:none;font-size:var(--doc-fs-sm);margin-top:0;
@@ -496,6 +553,15 @@ svg{display:block}
 .qv-title{font-family:var(--font-display);font-size:var(--fs-lead);line-height:1.2}
 /* The fidelity claim is on the surface, not in documentation - a reader who never opens a task
    record still learns that this is a rendering. It spans both columns so it survives a long title. */
+/* The file name, under the title and above the fidelity claim: the title is what the deck calls
+   this source, the file is what the reader types to find the original outside the deck. Empty
+   where the source has no file, and an empty <p> in a grid row takes no height (T-109). */
+.qv-file{
+  grid-column:1 / -1;
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  color:var(--ink-soft);word-break:break-all;
+}
+.qv-file:empty{display:none}
 .qv-note{
   grid-column:1 / -1;
   font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
@@ -715,6 +781,19 @@ svg{display:block}
     font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
     text-transform:uppercase;text-align:right;color:var(--ink-faint)}
   .slide .sources-item + .sources-item{margin-top:0;padding-top:0;border:0}
+  /* The colophon is the exception the rule above would otherwise flatten: its list is the slide's
+     body, not a mark in the corner, so it keeps the text face, the left edge and the row gap. It
+     is also the only place a source reference is the point on paper, where every route is dead -
+     which is why the rows print at full size and the glyphs print with them (T-109). */
+  .slide .sources--list .sources-box{
+    display:grid!important;gap:var(--sp-2);
+    font-family:var(--font-text);font-size:var(--fs-body);letter-spacing:normal;
+    text-transform:none;text-align:left;color:var(--ink)}
+  /* Baseline, for the reason the screen rule gives - and it has to be repeated here because the
+     rule above it resets the whole box for paper. Printed with `start` the identifier and the
+     glyph sat above the title's cap line and read as superscripts, which only the paper showed. */
+  .slide .sources--list .sources-item{white-space:normal;align-items:baseline}
+  .slide .sources--list .sources-icon{width:var(--fs-small);height:var(--fs-small)}
 
   /* ---------------------------------------------------------------- the contents page (T-034)
      Twelve pages of slides arrive with no map: the ruler carries the structure on screen

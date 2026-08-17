@@ -559,17 +559,32 @@ def self_test():
             return True
         return False
 
-    # 1. The cut is lossless. Everything else rests on this.
+    # 1. The cut is lossless, and what it leaves is the shell. Everything else rests on this.
+    #
+    # Both assertions are made against a deck this function BUILDS, and that is the whole of T-176.
+    # They used to be made against the tracked reference deck, where the second one - `what is left
+    # is shell/shell.html` - is a statement about the repository rather than about this tool: it
+    # goes false the moment anyone edits `shell/shell.html`, which is the one moment `sync` exists
+    # for. `main()` runs this before every subcommand, so the tool locked the door on the command
+    # behind it, and the message said `anything below means nothing` while nothing was wrong.
+    #
+    # Drift between a deck and the shell is not un-checked by this: `check()` reports it by name as
+    # SKELETON, the fixture for that is below, and `sync` repairs it. The defect was restating a
+    # serviceable finding somewhere it could only be fatal (**L-77** is the same file's other case).
+    built = new("Fixture", "Subtitle")
+    skeleton, parts = cut(built)
+    ok("the cut round-trips", fill(skeleton, parts) == built)
+    ok("and what it leaves is shell/shell.html", skeleton == read(SHELL_HTML),
+       first_difference(skeleton, read(SHELL_HTML))[:90])
+
+    # And on a real deck, which is the input the two above cannot stand in for: 270 KB of authored
+    # slides, three embedded faces and a sprite. Losslessness only, because everything this deck
+    # can say about `shell/shell.html` is the repository's business and `check` already says it.
     reference = os.path.join(ROOT, "examples", "reference-deck.html")
     if os.path.exists(reference):
         original = read(reference)
-        skeleton, parts = cut(original)
-        ok("the cut round-trips on the reference deck", fill(skeleton, parts) == original)
-        ok("and what is left is shell/shell.html", skeleton == read(SHELL_HTML),
-           first_difference(skeleton, read(SHELL_HTML))[:90])
-    else:
-        ok("the reference deck exists to cut", False, "examples/reference-deck.html is missing")
-        return failures
+        real_skeleton, real_parts = cut(original)
+        ok("and it round-trips on a real deck", fill(real_skeleton, real_parts) == original)
 
     # 2. A deck built by `new` is a deck this tool recognises.
     fresh = new("Title", "Subtitle")

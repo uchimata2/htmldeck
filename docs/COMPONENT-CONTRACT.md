@@ -149,20 +149,24 @@ with a mark that referenced nothing.
 | `.bottom-line` | `p` | `.slide` | `1` | — | author |
 | `.bottom-line--center` | — | `on .bottom-line` | `0+` | — | author |
 | `.provenance` | `p` | `.slide` | `1` | — | author |
-| `.sources` | `span` | `.provenance` | `0-1` | — | author |
+| `.sources` | `span` | `.slide` | `0-1` | — | author |
 | `.sources--one` | — | `on .sources` | `0+` | — | author |
+| `.sources--list` | — | `on .sources` | `0+` | — | author |
 | `.sources-btn` | `button` | `.sources` | `0-1` | `aria-expanded` `aria-controls` | author |
-| `.sources-mark` | `svg` | `.sources` | `1` | `aria-hidden` | author |
+| `.sources-mark` | `svg` | `.sources` | `0-1` | `aria-hidden` | author |
 | `.sources-label` | `span` | `.sources-btn` | `1` | — | author |
 | `.sources-box` | `span` | `.sources` | `1` | `id` | author |
 | `.sources-item` | `span` | `.sources-box` | `1+` | — | author |
+| `.sources-id` | `span` | `.sources-item` | `0-1` | — | author |
+| `.sources-icon` | `svg` | `.sources-item` | `0-1` | `aria-hidden` | author |
 | `.sources-link` | `a` | `.sources-item` | `0-1` | `href` | author |
-| `.sources-open` | `button` | `.sources-item` | `0-1` | `type` `data-qv` | author |
+| `.sources-open` | `button` | `.sources-item` | `0-1` | `type` `data-qv` `data-file` | author |
 | `.qv-src` | `template` | `.sources-item` | `0-1` | `data-qv` | author |
 | `.qv` | `div` | — | `1` | `id` `hidden` `role` `aria-modal` `aria-labelledby` | author |
 | `.qv-sheet` | `div` | `.qv` | `1` | — | author |
 | `.qv-head` | `header` | `.qv-sheet` | `1` | — | author |
 | `.qv-title` | `p` | `.qv-head` | `1` | `id` | author |
+| `.qv-file` | `p` | `.qv-head` | `1` | `id` | author |
 | `.qv-note` | `p` | `.qv-head` | `1` | — | author |
 | `.qv-close` | `button` | `.qv-head` | `1` | `id` `aria-label` | author |
 | `.qv-body` | `div` | `.qv-sheet` | `1` | `id` | author |
@@ -177,12 +181,13 @@ keeps that row at `1`: a slide has one provenance mark, and what changed is what
 contain.
 
 **`.sources-item` is `1+`, and since 2026-08-12 a one-item box is the point rather than a
-pointless design.** The mark has two shapes and `.sources--one` names which:
+pointless design.** The mark has three shapes and the two modifiers name which:
 
-| | `.sources-btn` | `.sources-box` | Reads as |
-| :--- | :--- | :--- | :--- |
-| Two or more sources | the control, labelled | shut at load, opens below the mark | a disclosure (DS-138) |
-| One source, `.sources--one` | **absent** | always open, on the line | the provenance line itself |
+| | `.sources-btn` | `.sources-mark` | `.sources-box` | Reads as |
+| :--- | :--- | :--- | :--- | :--- |
+| Two or more sources | the control, labelled | the knowledgebase glyph | shut at load, opens below the mark | a disclosure (DS-138) |
+| One source, `.sources--one` | **absent** | that source's kind glyph | always open, on the line | the provenance line itself |
+| The colophon, `.sources--list` | **absent** | **absent** | always open, one row per line | the slide's whole body |
 
 So `.sources-btn` is `0-1` and `.sources-mark` sits in `.sources` rather than in the button: **the
 glyph is what a reader recognises, and at one source it is the whole affordance.** A slide resting
@@ -191,10 +196,56 @@ adopting deck read as a subtitle and said so (T-103). The box survives at one so
 where `.sources-link` and `.sources-open` live — a single **local** source keeps its route to the
 quick view, which it had no way to reach while the route ran through a control it did not get.
 
+### 3.2.1 What kind of thing a source is, and the route that follows
+
+**Four kinds, closed.** A source reference is one component wherever it appears, and the kind decides
+both the glyph and the only route the reference may offer:
+
+| Kind | `.sources-icon` glyph | The route in `.sources-item` | Which part carries it |
+| :--- | :--- | :--- | :--- |
+| External URL | `link` | opens in a new tab | `.sources-link` with an `https://` href |
+| Renderable local document | `file-text` | opens the quick view this deck carries | `.sources-open` |
+| Local document the quick view cannot admit | `file-text` | none | plain text in the `.sources-item` |
+| More than one source on the slide | `library` | opens the box, each row typed as above | `.sources-btn`, and the rows below it |
+
+**The fourth kind is the mark's, not an item's** — it types the slide rather than a document, so it
+appears on `.sources-mark` and never on `.sources-icon`. A slide citing two documents shows the
+knowledgebase glyph in the corner and a file glyph on each row inside. Showing the single-source
+glyph on a multi-source mark is the defect this row closes: it read as one document and gave a count
+where the reader wanted to know which two.
+
+**`.sources-icon` is `0-1` because a one-source mark already carries the kind.** At `.sources--one`
+the `.sources-mark` *is* the item's glyph, and a second copy of it on the same line says nothing
+twice. The item carries its own glyph exactly where the mark cannot speak for it — inside a
+multi-source box, and in the colophon.
+
 **`.sources-link` is DS-105's link clause, and the clause is about reachability rather than
 count.** A source reachable from where the deck is presented is a working link at any number of
 sources; one that is not is plain text, or a `.sources-open` where a quick view can carry it.
-Never a dead link, and a `file://` href is an authoring form rather than a shipping one.
+Never a dead link, and a `file://` href is an authoring form rather than a shipping one. **A local
+file is therefore never row one**, however tempting: the recipient double-clicks the deck on a
+machine that has never seen the author's paths, so the href is dead on arrival (rule 2, DS-105).
+
+**`.sources-id` is `0-1` and the bound is six characters.** An identifier helps a reader only while
+it is short enough to read as a label rather than as text — `D1`, `WP3`, `R5`, `T-109`, `§3.2` are
+all six or fewer. **Above six it is dropped rather than truncated**, and the title keeps the room: a
+truncated identifier is worse than none, because it looks like a reference the reader could resolve.
+The number lives here rather than in the build, because a bound decided per deck is not a bound.
+
+**`.sources` sits in `.slide` at `0-1`, and that is wider than it looks.** It reads as *a slide
+declares its sources once* — in its provenance mark on an argument slide, in its body on the
+colophon. It was `.provenance` until 2026-08-17, which is what forced the colophon to author a
+private list of bare titles with no icon and no route
+([T-109](../tasks/T-109-one-source-reference-component-rendered-in-three-places.md)); the slide whose
+whole purpose was the sources was the one slide that routed to none of them, and its bottom line sent
+the reader back through twelve slides to find marks it could have carried itself. **`.sources--list`
+is that fix and nothing more** — the same items, the same routes, laid out as the body instead of as
+a corner.
+
+**A colophon row carries `.sources-open` and no `.qv-src` of its own.** The script keys its template
+map off `data-qv` across the whole stage, so the row resolves to the template the citing slide
+already carries. Five documents quoted twice would be the size cost this feature has to justify,
+spent on nothing.
 
 **The quick view is two components' worth of rows for one reason: the surface is the shell's and
 the content is the deck's.** `.qv` and everything under it ship empty in `shell/shell.html`, like the
@@ -209,6 +260,12 @@ inert to the parser: nothing inside it loads, renders or executes until the scri
 is what makes T-070's second admission test — *a source executes no script into the deck* — a
 property of where the source sits rather than a promise about what a sanitiser caught. A `<div
 hidden>` would look equivalent and would load every image in it.
+
+**`.qv-file` names the source file and `.qv-title` names the document**, which are two different
+answers to *what am I reading*. The title is the deck's own name for the source and is what the
+reader recognises; the file name is what they type to find the original outside the deck. It ships
+in `shell.html` as an empty `<p>` the script fills from the control's `data-file`, and stays empty
+where the source has no file — a deck citing an external URL has nothing to put there.
 
 **`.qv-doc` is `script` and not `build`**, because the article is created when a quick view is
 opened. What the build writes is the template's *contents*; the container the reader sees is the

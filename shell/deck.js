@@ -318,6 +318,7 @@
   var qv = document.getElementById('qv');
   var qvBody = document.getElementById('qvBody');
   var qvTitle = document.getElementById('qvTitle');
+  var qvFile = document.getElementById('qvFile');
   var qvOpener = null;
 
   /* One document, however many slides cite it: the control is on every mark, the <template> is on
@@ -337,13 +338,18 @@
     if (!btn) return;
     var tpl = qvSrc[btn.getAttribute('data-qv')];
     if (!tpl) return;
-    openQuick(btn, btn.textContent, tpl);
+    /* Whitespace-collapsed, because the title comes out of MARKUP: an author who wraps a long
+       source title across two lines gets the newline and its indentation inside textContent, and
+       the header then paints a line break and ten spaces where the deck's own name for the source
+       should be. HTML already collapses it on the slide, so nothing looked wrong there (T-109). */
+    openQuick(btn, btn.textContent.replace(/\s+/g, ' ').trim(), tpl,
+              btn.getAttribute('data-file') || '');
   });
   document.getElementById('qvClose').addEventListener('click', function(){ closeQuick(); });
   /* The scrim dismisses; the sheet does not, or every scroll inside it would close the view. */
   qv.addEventListener('click', function(e){ if (e.target === qv) closeQuick(); });
 
-  function openQuick(btn, title, tpl){
+  function openQuick(btn, title, tpl, file){
     closeAllDiscs(null);
     closeAllSources(null);
     qvBody.textContent = '';
@@ -356,6 +362,10 @@
     article.appendChild(tpl.content.cloneNode(true));
     qvBody.appendChild(article);
     qvTitle.textContent = title;
+    /* The title is the deck's name for the source; this is the file it was rendered from, so a
+       reader who wants the original knows what to look for. Cleared rather than left behind: the
+       surface is shared, and a stale file name under a new title is worse than none (T-109). */
+    qvFile.textContent = file || '';
     qv.hidden = false;
     /* Every opening starts at the top of ITS document, and the clear in closeQuick() is not enough
        to get that - it was measured doing its job and the offset came back anyway. Emptying the
@@ -375,6 +385,7 @@
   function closeQuick(){
     if (qv.hidden) return;
     qv.hidden = true;
+    qvFile.textContent = '';
     qvBody.textContent = '';       /* the surface holds nothing between openings - but see the
                                       reset in openQuick(): emptying it does not decide where the
                                       NEXT document starts (T-174) */

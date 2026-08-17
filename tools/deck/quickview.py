@@ -311,8 +311,17 @@ def render(path):
     return admit(path, "<pre>%s</pre>" % esc(text)), "text", []
 
 
+# What may sit in front of the title inside a `.sources-item`, and be carried through unchanged:
+# the short identifier and the kind glyph (T-109). Both are the component's, not the route's, so
+# wiring a quick view must preserve them rather than rebuild them - a `D1` this tool dropped would
+# be a defect in the mark that only shows up on the slides a source happens to be wired into.
+ITEM_HEAD = (r'(?:<span class="sources-id">[^<]*</span>)?'
+             r'(?:<svg class="sources-icon"[^>]*>.*?</svg>)?')
+
+
 def item_pattern(title):
-    return re.compile(r'<span class="sources-item">%s</span>' % re.escape(title))
+    return re.compile(r'<span class="sources-item">(%s)%s</span>' % (ITEM_HEAD, re.escape(title)),
+                      re.S)
 
 
 def carried(html):
@@ -322,13 +331,17 @@ def carried(html):
                                  html, re.S)]
 
 
-def wire(html, title, body):
+def wire(html, title, body, file=""):
     """The deck with a control on **every** mark citing `title`, and **one** copy of the rendering.
 
     A source cited by six slides is one document, not six. The control goes on all six because a
     reader opens the source from the slide they are looking at; the `<template>` goes on the first,
     and the script finds it by `data-qv` rather than by position - six copies of one document would
     be the size cost this feature has to justify, spent on nothing.
+
+    `file` is the source's **base name and nothing above it** (T-109). The quick view names it so a
+    reader can find the original outside the deck, and a directory would describe the author's
+    machine rather than the document - which the handoff rules and DS-105's reasoning both refuse.
     """
     pat = item_pattern(title)
     hits = len(pat.findall(html))
@@ -336,16 +349,18 @@ def wire(html, title, body):
         raise Refused("no provenance item reads %r in this deck. A quick view is attached to a "
                       "source a slide already cites - if the slide does not cite it, that is a "
                       "specification question and not this tool's (T-069)" % title)
-    control = ('<span class="sources-item"><button class="sources-open" type="button" '
-               'data-qv="%s">%s</button>%%s</span>' % (esc(title), title))
+    control = ('<span class="sources-item">%%s<button class="sources-open" type="button" '
+               'data-qv="%s" data-file="%s">%s</button>%%s</span>'
+               % (esc(title), esc(os.path.basename(file)), title))
     first = [True]
 
-    def swap(_m):
+    def swap(m):
+        head = m.group(1) or ""
         if first[0]:
             first[0] = False
-            return control % ('<template class="qv-src" data-qv="%s">%s</template>'
-                              % (esc(title), body))
-        return control % ""
+            return control % (head, '<template class="qv-src" data-qv="%s">%s</template>'
+                                    % (esc(title), body))
+        return control % (head, "")
 
     return pat.sub(swap, html)
 
@@ -361,7 +376,7 @@ def plan(deck, sources, write=False, out=None):
     for title, path in sources:
         try:
             body, kind, removed = render(path)
-            html = wire(html, title, body)
+            html = wire(html, title, body, path)
         except Refused as exc:
             refused.append((title, str(exc)))
             print("  REFUSED  %-28s %s" % (title, exc))
@@ -488,6 +503,22 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a quick view was attached to a source no slide cites")
     except Refused:
         pass
+
+    # T-109. The identifier and the kind glyph belong to the component, not to the route, so wiring
+    # carries them through untouched; the file name is a base name, because a directory would
+    # describe the author's machine. Both are asserted by breaking them, like everything above.
+    typed = ('<span class="sources-box"><span class="sources-item">'
+             '<span class="sources-id">D1</span>'
+             '<svg class="sources-icon" aria-hidden="true"><use href="#i-src-doc"/></svg>'
+             'Cost model</span></span>')
+    wired = wire(typed, "Cost model", "<p>x</p>", os.path.join("some", "where", "cost-model.md"))
+    if 'class="sources-id">D1<' not in wired:
+        sys.exit("SELF-TEST FAILED: wiring dropped the source's identifier - %r" % wired)
+    if 'class="sources-icon"' not in wired:
+        sys.exit("SELF-TEST FAILED: wiring dropped the source's kind glyph - %r" % wired)
+    if 'data-file="cost-model.md"' not in wired:
+        sys.exit("SELF-TEST FAILED: the quick view control names no file, or names a path rather "
+                 "than a base name - %r" % wired)
     return True
 
 

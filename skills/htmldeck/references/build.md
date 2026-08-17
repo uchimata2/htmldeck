@@ -91,15 +91,37 @@ one-source slide a bare title in the corner that its first reader took for a sub
 | One | `.sources.sources--one` — the glyph and the title, no button, the box open on the line |
 | Two or more | the `.sources` control — glyph, label, and a box that opens below it |
 
-| The source is | The title is |
-| :--- | :--- |
-| Reachable where the deck is presented | an `<a class="sources-link">` — at one source as much as at three |
-| A local document you are shipping | a `.sources-open` beside its `.qv-src` template, so the quick view carries it |
-| Neither | plain text |
+**Type each source before you write its row.** Four kinds, closed, and the kind decides the glyph
+and the only route the row may offer. Ask the questions in this order and stop at the first yes:
 
-The markup for all of it is `${CLAUDE_PLUGIN_ROOT}/docs/COMPONENT-CONTRACT.md` §3.2, and
-`component.py check` decides it. **A `file://` href is an authoring form and a defect in a
-delivered deck**, on the same footing as `linked` mode: ship the quick view instead.
+| Ask | Kind | The row is |
+| :--- | :--- | :--- |
+| Is it an `https://` URL? | external URL | `.sources-icon` on `link`, and an `<a class="sources-link">` |
+| Is it a local document `quickview.py` admits? | renderable local document | `.sources-icon` on `file-text`, and a `.sources-open` beside its `.qv-src` template |
+| Is it a local document it cannot admit? | unrenderable local document | `.sources-icon` on `file-text`, and **plain text — no route** |
+| Does the slide rest on more than one? | multi-source | the *mark* takes `library`; every row inside is still typed by the three above |
+
+**When you cannot decide, the row is plain text.** A guess costs the reader a control that does
+nothing, or worse a link that resolves nowhere — and *never a dead link* is DS-105's hard half. The
+three admission tests that settle rows two and three are `quickview.py`'s own, so the honest way to
+ask is to run it: what it refuses is row three.
+
+**A local file never becomes a link, however convenient.** The recipient double-clicks the deck on a
+machine that has never seen your paths, so a `file://` href is dead on arrival — an authoring form
+and a defect in a delivered deck, on the same footing as `linked` mode. Ship the quick view instead.
+
+**The identifier is optional and bounded at six characters.** `D1`, `WP3`, `R5` help a reader match
+a row to a document; anything longer is dropped rather than truncated, and the title keeps the room.
+It goes in its own `.sources-id`, never inside the title — a title reading `D1 · Something` is one
+string the colophon and the mark then have to agree about by hand.
+
+**A deck with a colophon renders the same component there**, `.sources.sources--list` in the slide's
+body, one row per source, each row typed and routed exactly as above. **It carries no instruction to
+find the links on earlier slides**: that sentence is merely unhelpful on the stage and untrue in the
+reading view and on paper, where there are no corners and nothing to open.
+
+The markup for all of it is `${CLAUDE_PLUGIN_ROOT}/docs/COMPONENT-CONTRACT.md` §3.2 and §3.2.1, and
+`component.py check` decides it.
 
 **A batch that introduces a `<template>`, a `<canvas>` or a `getContext` changes what the deck's
 capability preflight has to test** (DS-009), so re-derive it — the block is only correct for the

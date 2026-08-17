@@ -32,7 +32,7 @@ the shipped theme's values and never rewrites one already declared. **T-166.**
 | `shell.html` | The structure — head, sprite, stage, chrome, reading view — with `{{SLOT}}` where a deck differs | [`../docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) |
 | `components.css` | The shared component block: every element more than one slide can use | the same |
 | `deck.js` | The deck script — scaling, navigation, disclosure, the ruler, the reading view | the same, §4 |
-| `icons.svg` | 38 Lucide glyphs, ids by Lucide name. **DS-112 forbids hand-drawn icons and this is what makes that satisfiable** | DS-112, DS-113 |
+| `icons.svg` | 40 Lucide glyphs, ids by Lucide name. **DS-112 forbids hand-drawn icons and this is what makes that satisfiable** | DS-112, DS-113 |
 
 The theme is not here. It has its own home in [`../themes/`](../themes) and its own contract, and
 `shell.py new` resolves it in exactly as `theme.py swap` does.

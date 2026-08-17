@@ -93,6 +93,7 @@ comes here.
 | [L-109](lessons/L-109.md) | Making a note machine-readable buys binding first and satisfaction rarely; count which branch covers anything | Evidence and verification |
 | [L-110](lessons/L-110.md) | An interactive control cannot be looked at in a snapshot, and the snapshot reports zero rather than failing | Evidence and verification |
 | [L-111](lessons/L-111.md) | A sanitization scan must walk every file type, because the one nobody reads is the one nobody sanitized | Evidence and verification |
+| [L-113](lessons/L-113.md) | A check scoped to a place stops seeing the thing when the thing gets a second home | Evidence and verification |
 
 ### Tooling
 
@@ -140,6 +141,7 @@ comes here.
 | [L-87](lessons/L-87.md) | Before reporting a tool's defect, prove the tool is the one that failed | Tooling |
 | [L-91](lessons/L-91.md) | After moving text, the defects that survive are the ones no checker binds | Tooling |
 | [L-108](lessons/L-108.md) | A tool's safety guarantee defines work it cannot do; name the gap, never weaken the guarantee | Tooling |
+| [L-112](lessons/L-112.md) | A self-test that asserts repository state fails on exactly the commits that change it | Tooling |
 
 ### Writing
 

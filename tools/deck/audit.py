@@ -449,12 +449,17 @@ def ds001_no_external_references(h):
     the gate's own account excused the dead-link half on the ground that *DS-001 had banned links*.
     It had not; this check had, and only by reading wider than the rule it implements (T-069).
 
-    **Cut narrowly, and the narrowness is the point.** Only anchors inside a provenance mark are
-    exempt, because that is the one place another rule takes over: DS-105 judges those, and
+    **Cut narrowly, and the narrowness is the point.** Only `.sources-link` anchors are exempt,
+    because that is the one class another rule takes over: DS-105 judges those, and
     `provenance_verdicts` fails a dead one. An `<a href>` anywhere else in a deck still fails here,
     so nothing has been let through - the exemption goes exactly as far as the rule that covers it.
+    **It cuts by class rather than by place since T-109**, when the component gained a second home:
+    the colophon's rows are the same component in `.body`, and a cut scoped to `<p class=
+    "provenance">` failed an external URL DS-105 admits, on a fixture built to carry one.
     """
-    swept = PROVENANCE_MARK.sub("", h)
+    swept = h
+    for tag in source_link_tags(h):
+        swept = swept.replace(tag, "<a>")
     return not [u for u in re.findall(
         r'(?:src|href|xlink:href)\s*=\s*["\']([^"\']+)["\']', swept)
         if not u.startswith(("data:", "#", "blob:"))]
@@ -811,13 +816,34 @@ PROVENANCE_MARK = re.compile(
 # denominator this row exists to make honest, made dishonest by the instrument.
 MARK_HREF = re.compile(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']*)["\']', re.I)
 
+# **The class, not the place, and T-109 is why.** These two used to sweep the region inside
+# `<p class="provenance">`, which was the only place the component could sit. It sits in `.body`
+# too now - the colophon renders the same rows - and a region sweep silently stopped seeing them:
+# the four-kind fixture reported `0 of 0 examined` with an external URL in it, and DS-001 failed
+# the same URL because the exemption did not reach it either. Binding to `.sources-link` is also
+# tighter than what it replaces: an `<a>` inside a provenance mark that is not part of the
+# component was never DS-105's to judge, and is not exempt from DS-001 now.
+ANCHOR = re.compile(r'<a\b[^>]*>', re.I)
+HREF_ATTR = re.compile(r'\bhref\s*=\s*["\']([^"\']*)["\']', re.I)
+CLASS_ATTR = re.compile(r'\bclass\s*=\s*["\']([^"\']*)["\']', re.I)
+
+
+def source_link_tags(html):
+    """Every `<a class="sources-link">` opening tag in the deck, wherever the component sits."""
+    out = []
+    for m in ANCHOR.finditer(html):
+        cls = CLASS_ATTR.search(m.group(0))
+        if cls and "sources-link" in cls.group(1).split():
+            out.append(m.group(0))
+    return out
+
 
 def provenance_links(html):
-    """`(examined, dead, unfollowed)` — every href inside a provenance mark, judged."""
+    """`(examined, dead, unfollowed)` — every href on a `.sources-link`, judged."""
     ids = set(re.findall(r'\bid\s*=\s*["\']([^"\']+)["\']', html))
     examined, dead, unfollowed = 0, [], 0
-    for mark in PROVENANCE_MARK.findall(html):
-        for href in MARK_HREF.findall(mark):
+    for tag in source_link_tags(html):
+        for href in HREF_ATTR.findall(tag):
             examined += 1
             u = href.strip()
             if u.lower().startswith(("http://", "https://")):
@@ -830,15 +856,82 @@ def provenance_links(html):
     return examined, dead, unfollowed
 
 
+# The identifier bound, and the glyph the multi-source mark must wear. Both are the contract's
+# (COMPONENT-CONTRACT.md 3.2.1) rather than this file's - it reads them, it does not set them.
+SOURCE_ID_MAX = 6
+KNOWLEDGEBASE_GLYPH = "library"
+
+SOURCE_ID = re.compile(r'<span class="sources-id">([^<]*)</span>')
+SPRITE_SYMBOL = re.compile(r'<symbol id="(i-[^"]+)"[^>]*\bdata-icon="([^"]*)"')
+SOURCES_WRAPPER = re.compile(r'<span class="sources((?: sources--\w+)*)">(.*?)</span></span></span>',
+                             re.S)
+MARK_USE = re.compile(r'<svg class="sources-mark"[^>]*><use href="#([^"]+)"')
+OPEN_KEY = re.compile(r'<button class="sources-open"[^>]*\bdata-qv="([^"]*)"')
+TEMPLATE_KEY = re.compile(r'<template class="qv-src" data-qv="([^"]*)"')
+
+
+def source_component(html):
+    """T-109's decidable clauses of DS-105: `(long_ids, wrong_glyphs, unresolved, counts)`.
+
+    Three prohibitions, each over something the file records rather than something a reader judges:
+    an identifier past the contract's bound, a many-source mark wearing a one-source glyph, and a
+    control that opens nothing. What this cannot reach is written at the call site.
+    """
+    glyph = dict(SPRITE_SYMBOL.findall(html))
+    long_ids = [i.strip() for i in SOURCE_ID.findall(html)
+                if len(i.strip()) > SOURCE_ID_MAX]
+
+    wrong_glyphs, marks = [], 0
+    for m in SOURCES_WRAPPER.finditer(html):
+        body = m.group(2)
+        many = 'class="sources-btn"' in body
+        use = MARK_USE.search(body)
+        if not use:
+            continue                       # `.sources--list` carries no mark, by the contract
+        marks += 1
+        drawn = glyph.get(use.group(1))
+        if drawn is None:
+            continue                       # a sprite entry with no provenance is DS-112's, not this
+        if many and drawn != KNOWLEDGEBASE_GLYPH:
+            wrong_glyphs.append("%s marks %d sources" % (use.group(1), body.count("sources-item")))
+        elif not many and drawn == KNOWLEDGEBASE_GLYPH:
+            wrong_glyphs.append("%s marks one source" % use.group(1))
+
+    carried = set(TEMPLATE_KEY.findall(html))
+    keys = OPEN_KEY.findall(html)
+    unresolved = sorted({k for k in keys if k not in carried})
+    return long_ids, wrong_glyphs, unresolved, (len(SOURCE_ID.findall(html)), marks, len(keys))
+
+
 def provenance_verdicts(html):
-    """DS-105's link half. A prohibition over the deck's marks — see `ABSENCE_IS_A_PASS`."""
+    """DS-105, in four rows: the link half and T-109's three.
+
+    **What none of these can decide is the colophon's prose.** *This deck carries no instruction to
+    find its sources on earlier slides* is a reading of a sentence, and the sentence that provoked
+    the clause - *open any of the five from the mark in the corner of the slide that cites it* -
+    contains no word a pattern could bind to without also failing honest copy. It is a person's,
+    like DS-105's *reachable from where the deck is presented* beside it: whether a URL resolves
+    for the audience is not a fact the file records either.
+    """
     examined, dead, unfollowed = provenance_links(html)
     what = "dead links in a provenance mark: %d of %d examined" % (len(dead), examined)
     if unfollowed:
         what += "; %d external URL(s) present and not followed" % unfollowed
     if dead:
         what += " - " + "; ".join(dead[:3])
-    return [("DS-105", what, not dead)]
+    rows = [("DS-105", what, not dead)]
+
+    long_ids, wrong_glyphs, unresolved, (ids, marks, keys) = source_component(html)
+    rows.append(("DS-105", "source identifiers past the contract's %d-character bound: %d of %d"
+                 % (SOURCE_ID_MAX, len(long_ids), ids)
+                 + (" - " + "; ".join(long_ids[:3]) if long_ids else ""), not long_ids))
+    rows.append(("DS-105", "marks wearing the wrong kind's glyph: %d of %d"
+                 % (len(wrong_glyphs), marks)
+                 + (" - " + "; ".join(wrong_glyphs[:3]) if wrong_glyphs else ""), not wrong_glyphs))
+    rows.append(("DS-105", "source controls that open nothing: %d of %d"
+                 % (len(unresolved), keys)
+                 + (" - " + "; ".join(unresolved[:3]) if unresolved else ""), not unresolved))
+    return rows
 
 
 # ---------------------------------------------------------------------------- stage 2: rendered
