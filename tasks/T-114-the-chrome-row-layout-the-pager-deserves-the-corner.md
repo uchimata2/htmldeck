@@ -2,8 +2,8 @@
 id: T-114
 title: The chrome row layout — give the pager the corner, and decide what happens to Read and Motion
 type: deliverable
-status: proposed
-phase: specify
+status: planned
+phase: implement
 parent: null
 blocked_by: []
 related: [T-035, T-036, T-112]
@@ -12,7 +12,7 @@ owner: the project owner
 business_value: high
 effort: m
 created: 2026-08-12
-updated: 2026-08-12
+updated: 2026-08-18
 deliverables:
   - docs/sketches/chrome-row-candidates.svg
   - shell/shell.html
@@ -96,14 +96,36 @@ of this task, and no chrome code is written before it lands.**~~
 > buildable, the exemption lives in the rule rather than in this task, and no argument is owed before
 > the code.**
 >
-> **But the boundary landed one step wider than option 1 promised, and that is a live question rather
-> than a settled one.** Option 1's own test was that *the multi-source mark is content and stays
-> bound*. DS-138 is now bound to a **tier-two disclosure panel**, and **DS-105 puts the multi-source
-> mark outside tier two by name** — its own component, deliberately not a `.disc`, outside DS-230's
-> closed vocabulary. Read literally, the narrowing frees the mark as well, which is the thing option
-> 1 said it must not do. **Check this before building Y**: either the mark is demonstrably still
-> bound by the general obligation alone, or DS-138's direction clause needs the mark named beside
-> tier two. It is a one-clause question and it belongs to this task now, not to another audit.
+> **But the boundary landed one step wider than option 1 promised.** Option 1's own test was that
+> *the multi-source mark is content and stays bound*. DS-138 is now bound to a **tier-two disclosure
+> panel**, and **DS-105 puts the multi-source mark outside tier two by name** — its own component,
+> deliberately not a `.disc`, outside DS-230's closed vocabulary. Read literally, the narrowing frees
+> the mark as well, which is the thing option 1 said it must not do.
+>
+> **Settled 2026-08-18, before any chrome code: it does free it, and the repair is to name the mark
+> beside tier two in the direction clause.** Three findings decide it.
+>
+> 1. **No second route binds it.** DS-105 lists the disclosure rules the mark obeys regardless —
+>    DS-164, DS-163, DS-227, DS-137 — and **DS-138 is not among them.** That list is about *what may
+>    be open*; direction was never in it, because until 2026-08-17 DS-138 bound every popover and no
+>    list had to name it.
+> 2. **The freeing is not hypothetical — it falsified two shipped citations.**
+>    [`shell/components.css`](../shell/components.css)'s `.sources-box` rule carries the comment
+>    *opens below the mark (DS-138)* beside the `top:calc(100% + …)` that implements it, and
+>    [`COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) §3.2's behaviour table reads *shut at
+>    load, opens below the mark — a disclosure (DS-138)*. Both name a clause that, since the
+>    narrowing, no longer reaches their subject.
+> 3. **The alternative is true for the wrong reason.** *Bound by the general obligation alone* does
+>    hold today: DS-105 fixes the mark **upper-right**, so a downward panel fits inside the stage and
+>    an upward one leaves it. But the general obligation is about **fitting**, not about opening away
+>    from the reading line — so it makes the direction an accident of where the mark sits, says
+>    nothing if the mark ever moves, and leaves both citations above false, since neither is about
+>    fitting.
+>
+> **Naming the mark costs nothing in behaviour**: the shell already opens below, the contract already
+> says below, and DS-105's fixed row is where below always fits. The amendment restates what ships
+> and restores two citations, which makes it the cheapest way to keep option 1's promise. It is plan
+> step 5, and it lands before the first line of chrome code.
 
 **The second, non-obvious payoff**
 [`shell/deck.js`](../shell/deck.js) sizes the ruler from what the controls leave it:
@@ -188,25 +210,62 @@ container was the problem.
   tier-two disclosure panel and states the general obligation separately, so chrome is bound to open
   fully inside the stage and to nothing about direction. The exemption is in the rule, which is where
   this question required it to be.
-- **Does the narrowing also free the multi-source mark? — live, and it is this task's to answer.**
-  The boundary's own test was that the mark is content and stays bound; **DS-105 puts it outside tier
-  two by name**, so the narrowing reads as freeing it. One clause either way, decided before Y is
-  built.
+- *Settled 2026-08-18 by this task:* **Does the narrowing also free the multi-source mark? — yes, so
+  DS-138's direction clause takes the mark beside tier two.** DS-105's list of disclosure rules the
+  mark obeys regardless does not include DS-138, so nothing else binds it; two shipped citations
+  already name DS-138 for the mark's direction and the narrowing falsified both. The amendment
+  restates behaviour that already ships, so it costs nothing. Reasoning in §1 above; the edit is plan
+  step 5.
 - *Settled 2026-08-12:* X or Y — **Y**.
 
 ## 2. Plan
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Measure the current controls width and the ruler capacity it leaves | the baseline number |
-| 2 | Measure the capacity X and Y would each leave | two numbers |
-| 3 | Draw X and Y at stage proportions, against today's row | the sketch, revision 2 |
+| 1 | ~~Measure the current controls width and the ruler capacity it leaves~~ — **done 2026-08-18**, `chrome_row.py` on the reference deck in real Chrome, offline: row **1726.0 du**, controls block **505.6**, gap **43.1**, so **548.8 du taken — 32% of the row** — **1177.2 left** and **17 targets as built** | the baseline number |
+| 2 | Measure the capacity **Y** leaves, **after step 7** — see the sequencing note below | Y's number, against 17 |
+| 3 | ~~Draw X and Y at stage proportions, against today's row~~ — **done**, [`docs/sketches/chrome-row-candidates.svg`](../docs/sketches/chrome-row-candidates.svg), revision 2 | the sketch |
 | 4 | ~~Owner rules~~ — **done 2026-08-12: Y** | decision, logged |
-| ~~5~~ | ~~**Settle DS-138 before any code**~~ **done 2026-08-17 by T-119** — what is left is one clause: whether the narrowing frees the multi-source mark | the boundary, re-tested against DS-105 |
-| 6 | Write the navigation container's contract row | contract |
-| 7 | Build the chosen layout | shell |
-| 8 | Keyboard-only pass on a looping deck | DS-218 verdict |
-| 9 | Render on a long deck and look at it offline | verdict |
+| 5 | ~~**Settle DS-138 before any code**~~ **done 2026-08-17 by T-119**; the remaining clause was **decided 2026-08-18** (§1). What is left is the edit itself: name the multi-source mark beside tier two in DS-138's direction clause | DS-138 amended, and the two citations that already name it resolve again |
+| 6 | Write the navigation container's contract row — what may sit inside it and what may not | contract |
+| 7 | Build Y: a `.navbox` holding the ruler, the counter and the filled pager; a standalone `More` **outside** it whose menu opens upward; `rulerAvailableDu()` measuring the navbox rather than the whole chrome row | shell, css, js |
+| 7a | **Motion leaves the menu whenever the deck loops.** DS-218 wants a persistent stop control and one behind a click is not persistent, so the placement is conditional — decided at **build** time, because a control JavaScript relocates at load is one a static gate cannot decide | the conditional control, and the rule that decides it |
+| 8 | Re-derive every published figure the new row moves. **DS-217 quotes 546 du and 17 targets by name**; `tools/docs/figures.py` finds the others | figures corrected |
+| 9 | Keyboard-only pass on a looping deck | DS-218 verdict |
+| 10 | Render on a long deck and look at it offline | verdict |
+
+**Sequencing note, and it costs an acceptance criterion.** Step 2 was written to run *before* the
+ruling, and criterion 3 says so. It cannot: the capacity a layout leaves is a property of the
+rendered row, `chrome_row.py` measures a real deck in real Chrome, and Y's row does not exist until
+step 7 builds it. Deriving it on paper instead is the exact move the comment on `rulerAvailableDu()`
+records as having gone wrong once already. **The owner ruled on 2026-08-12 without the number**, and
+said what they ruled on — flexibility and future room, not width — so the measurement never was the
+input criterion 3 assumed. **Criterion 3 therefore closes `not met`, with this as the reason.** The
+measurement is still taken at step 2, because it is a real input to DS-217's bound and to whether the
+ruler still clears the slide counts this project now targets; it is simply evidence about the built
+row rather than a decision input. *Rewording the criterion to match would be the dishonest close
+`TASK-WORKFLOW.md` §2 names.*
+
+**Step 7's blast radius, found while planning it and larger than the step implies.** The chrome row
+is not this task's to edit locally — it lives in [`shell/`](../shell/), and
+[`shell/README.md`](../shell/README.md) states that **`shell.py check` compares byte for byte**, so
+any edit to `shell.html`, `components.css` or `deck.js` fails **every deck already built**, through no
+fault of its author. So step 7 is not one edit but a sequence, and it must run in one uninterrupted
+pass with the tree frozen:
+
+1. edit the three shell files;
+2. `shell.py sync` each shipped deck — **except
+   `examples/reference-deck-seeded-defects.html`, which is generated and is regenerated instead**
+   ([`docs/lessons/L-77.md`](../docs/lessons/L-77.md));
+3. `shell.py tokens` for any token the new components declare, since a sync cannot carry a theme
+   declaration and the deck fails DS-013 afterwards on a token the author never saw;
+4. re-run the gates, then `tools/docs/figures.py` — **a shell change moves every deck's byte size**,
+   and those sizes are quoted across the documentation.
+
+**Step 7a needs a mechanism that does not exist yet.** `shell.html` carries `{{SLOT}}`s where a deck
+differs, and *Motion*'s conditional placement is exactly such a difference — so a build-time decision
+means `shell.py` learns it, not just the markup. Settle whether that is a new slot or a `shell.py
+new` flag **before** touching the row, because it changes what the row's markup has to look like.
 
 ## 3. Implement
 
@@ -221,8 +280,18 @@ container was the problem.
 - 2026-08-12 — owner: in Y, the menu **opens upward**, knowingly against DS-138. Recorded as a
   deliberate choice with a cost, not as an oversight.
 
+- 2026-08-18 — **DS-138's direction clause now names the multi-source provenance box beside tier
+  two** (plan step 5, and the last thing gating chrome code). The argument is §1; what the rule
+  gained is the clause plus a dated note recording why the narrowing needed it. It constrains
+  nothing new — `.sources-box` already opens below and DS-105 fixes the mark upper-right — so the
+  two citations that name DS-138 for that direction resolve again rather than being edited.
+
 **Outputs produced**
--
+- [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — DS-138 extended, 2026-08-18. Plan step 5
+  closed.
+- The baseline measurement, plan step 1: `chrome_row.py`, real Chrome, offline, reference deck —
+  row 1726.0 du, controls block 505.6, gap 43.1, **548.8 du taken (32%)**, 1177.2 left,
+  **17 targets as built**, 13 ticks drawn, dense mode off.
 
 ## 4. Review
 
@@ -241,3 +310,6 @@ container was the problem.
 | 2026-08-12 | (no change) | Drawing the sketch found DS-138 against candidate B: the chrome row is at the foot of the stage, so its menu can only open upward, which is the arrangement DS-138 names in its own reasoning. B cannot be built as drawn. Recorded in §1 with the three ways out, and as an open question the owner answers only if they pick B. |
 | 2026-08-12 | (no change) | **Owner rejected all three candidates on their premise, not their arrangement** — every one kept *Read* and *Motion* inside the navigation container. Replaced by the navigation-only principle and two new candidates, X and Y. Y takes the DS-138 collision on purpose, so the question that was conditional on B is now conditional on Y and has to be settled before code rather than argued after. Sketch to be redrawn. |
 | 2026-08-12 | (no change) | **Owner chose Y**, from the second sketch, on flexibility: a `More` control absorbs a third and fourth item without a redesign, where X's section grows by widening until it competes with the pager again. The DS-138 question is therefore no longer conditional — it is step one and gates every line of chrome code in this task. |
+| 2026-08-18 | → specified | The one clause T-119's narrowing left live is settled, before any code: **DS-138's direction clause takes the multi-source mark beside tier two.** The narrowing did free the mark — DS-105's list of the disclosure rules the mark obeys regardless omits DS-138, so nothing else reached it — and the freeing was not hypothetical, because it falsified two shipped citations that name DS-138 for the mark's direction, in `shell/components.css` and `COMPONENT-CONTRACT.md` §3.2. The competing reading, *bound by the general obligation alone*, is true only as an accident of DS-105's fixed upper-right row and leaves both citations false, since neither is about fitting. Naming the mark restates behaviour that already ships, so the repair costs nothing. §1 carries the argument; plan step 5 is now an edit rather than a question. |
+| 2026-08-18 | → planned | The baseline is **measured rather than quoted**: `chrome_row.py`, real Chrome, offline, puts the controls and their gap at **548.8 du — 32% of the row** — leaving 1177.2 and **17 targets as built**. **DS-217 quotes 546 for that same figure**, so a published number is 2.8 du adrift *before* this task moves it; step 8 re-derives it and everything `figures.py` finds with it. Step 2 moved after step 7, and **criterion 3 is booked `not met` now rather than at review**: the capacity a layout leaves is a property of a rendered row, Y's does not exist until it is built, and the owner ruled on 2026-08-12 on flexibility having said so — the number was never the input the criterion assumed. Step 7a added: DS-218's conditional promotion of *Motion* is a **build-time** placement, because a control JavaScript relocates at load is one a static gate cannot decide. |
+| 2026-08-18 | (no change) | **Plan step 5 landed** — DS-138 names the multi-source box, so nothing now gates chrome code. **Stopped deliberately before step 7**, at a boundary where no shell file is touched and no shipped deck is out of sync. Reading `shell/README.md` to plan the build found the step's real size: **`shell.py check` is byte for byte**, so editing the three shell files fails every deck already built until each is `sync`ed — the generated seeded-defects deck regenerated instead (**L-77**) — with `tokens` after it, the gates after that, and `figures.py` last, because a shell change moves every deck's byte size. That is one uninterrupted pass with the tree frozen, not an edit. **Step 7a is also short a mechanism**: `Motion`'s conditional placement is a build-time difference, and `shell.py` has no slot or flag for it, so which of the two it becomes has to be settled before the row's markup is written. Both recorded in §2 rather than discovered mid-build. |
