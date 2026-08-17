@@ -2,8 +2,8 @@
 id: T-109
 title: One source-reference component, typed by what the source is, rendered in three places
 type: deliverable
-status: proposed
-phase: specify
+status: planned
+phase: implement
 parent: null
 blocked_by: []
 related: [T-069, T-070, T-103, T-106, T-108, T-110]
@@ -12,13 +12,17 @@ owner: the project owner
 business_value: high
 effort: l
 created: 2026-08-12
-updated: 2026-08-12
+updated: 2026-08-17
 deliverables:
   - shell/components.css
   - shell/icons.svg
+  - shell/shell.html
+  - shell/deck.js
   - docs/COMPONENT-CONTRACT.md
   - docs/DESIGN-SYSTEM.md
   - skills/htmldeck/references/build.md
+  - tools/deck/quickview.py
+  - tools/deck/check.py
 ---
 
 # T-109 — One source-reference component, typed by what the source is, rendered in three places
@@ -150,15 +154,41 @@ the wrong instrument for that — **the case treatment is**. Sentence case on th
 
 ## 2. Plan
 
+**What "one component" is, concretely, because the shell and the deck own different halves.** The
+shell owns the CSS and the script; the deck owns the markup. So the component is **`.sources-item`
+and its interior** — the identifier, the kind glyph, and the one route the kind allows — contracted
+once, styled once, and driven by one delegated handler. The three places are the one-source mark, the
+multi-source box, and the colophon, and they differ only in which wrapper the items sit in.
+
+**The colophon's list is `.sources` too, which is what makes the criterion demonstrable.** Today the
+colophon is `.colo` / `.colo-row` / `.colo-id` / `.colo-name` — **four CSS rules authored inside the
+deck's own `<style>`, with no shell rule, no icon, no route and no contract row.** That is the whole
+mechanism of the drift §1 found: nothing shared could have kept the two in step, because nothing was
+shared. Deleting those four rules in favour of the shell's component is the change that makes
+*"changing the component changes both"* a fact rather than a claim.
+
+**Where `.sources` may sit has to widen, and `.slide` is the honest bound.** The contract's parser
+takes one parent per part and checks it as an **ancestor**, so `.provenance` becomes `.slide` at
+`0-1`: a slide declares its sources once, in its provenance mark or — on the colophon — in its body.
+
+**Six copies of one source is a cost this design does not pay.** `deck.js` keys `qvSrc` off
+`data-qv` across the whole stage, so the colophon's rows carry `.sources-open` controls and no
+`.qv-src` templates of their own; they resolve to the templates the citing slides already carry.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Write the four-kind vocabulary and the identifier bound into the contract | contract rows |
-| 2 | Draw the missing icons | `icons.svg` |
-| 3 | Build the component once; render it in the mark, the list and the colophon | `components.css`, shell |
-| 4 | Teach `build.md` how to type a source and what to do when it cannot | `build.md` |
-| 5 | Build a 12-slide deck carrying all four kinds | test deck |
-| 6 | Follow every route by hand, offline | verdict |
-| 7 | Extend `check.py`; write the reason for each undecidable clause | `check.py`, ruleset |
+| 1 | Add the two Lucide glyphs the ladder needs and nothing has — an external-link mark and a knowledgebase mark — with their licence line | `shell/icons.svg` |
+| 2 | Contract the four kinds, the per-item parts, the identifier bound as a number, and `.sources` at `.slide` | `docs/COMPONENT-CONTRACT.md` |
+| 3 | Extend DS-105 to carry the ladder and the colophon's obligation in all three renderings | `docs/DESIGN-SYSTEM.md` |
+| 4 | Style the item once — identifier, glyph, route — give `.sources--list` the colophon's block form, and fix the mark's case treatment | `shell/components.css` |
+| 5 | Name the source file in the quick-view header | `shell/shell.html`, `shell/deck.js` |
+| 6 | Teach the build to type a source and emit its row; teach `quickview.py` to carry the file name through | `build.md`, `tools/deck/quickview.py` |
+| 7 | Rebuild the published colophon on the component and sync the shell into every shipped deck | `examples/`, `shell.py sync` |
+| 8 | Extend `check.py`; write the reason for each DS-105 clause it cannot decide | `check.py`, ruleset |
+| 9 | Build a 12-slide deck carrying all four kinds; follow every route by hand, offline; print it | verdict |
+
+**Order is forced from step 2.** The contract is the input `component.py` reads, so every later step
+is checked against it — writing the CSS first would be checking the shell against the old table.
 
 ## 3. Implement
 
@@ -184,3 +214,5 @@ the wrong instrument for that — **the case treatment is**. Sentence case on th
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. Scoped as one component rendered three times rather than as two separate improvements to the mark and the colophon, because authoring them separately is what let the colophon drift. |
 | 2026-08-12 | (no change) | **Deck rendered offline and looked at**, per CLAUDE.md rule 6. Findings in §1: the colophon routes to none of the five sources it lists although all five are embedded and reachable; the `D1`–`D5` identifiers already exist there without icon or route; a two-source mark carries the one-source glyph. Also added the mark's **case treatment** to scope — the uppercased title, not its length, is what costs the corner its room, and the identifier bound would not have fixed it. |
+| 2026-08-17 | → specified | §1 needed no change to close `specify`: the ladder, the local-file ruling and the acceptance criteria were settled on 2026-08-12 and the owner's 2026-08-17 move to rank 1 did not touch scope. Baseline recorded before any edit — `python tools/check_all.py` green, 0 failures, 0 unclassified, 0 stale, 304 s. |
+| 2026-08-17 | → planned | §2 rewritten from seven steps to nine, and the two additions are the ones that decide the shape. **The colophon's list is deck-local `.colo` markup with no shell rule and no contract row**, which is the mechanism behind §1's drift rather than another symptom of it — so the plan deletes it instead of decorating it. **`.sources` moves from `.provenance` to `.slide` at `0-1`** because `component.py` takes one parent per part and tests it as an ancestor, and the colophon's copy lives in `.body`. Also settled without cost: the colophon carries `.sources-open` controls and no second copy of each `.qv-src`, because `deck.js` keys `qvSrc` off `data-qv` across the whole stage. |
