@@ -264,8 +264,28 @@ pass with the tree frozen:
 
 **Step 7a needs a mechanism that does not exist yet.** `shell.html` carries `{{SLOT}}`s where a deck
 differs, and *Motion*'s conditional placement is exactly such a difference — so a build-time decision
-means `shell.py` learns it, not just the markup. Settle whether that is a new slot or a `shell.py
-new` flag **before** touching the row, because it changes what the row's markup has to look like.
+means `shell.py` learns it, not just the markup.
+
+> **Settled 2026-08-18 by the owner: a slot, not a `shell.py new` flag.** The decision keeps the
+> difference in the markup contract, where [`COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md)
+> can hold it; a flag would make the caller declare something the deck's own content already says.
+>
+> **The slot cannot be bounded to *Motion* itself, and that is the design.** `SLOTS` in
+> [`tools/deck/shell.py`](../tools/deck/shell.py) is a tuple of *(slot, opening delimiter, closing
+> delimiter, what it is)*, and `cut()` replaces what lies **between two literal delimiters** — the
+> delimiters are literals rather than patterns deliberately, so a deck whose anchor has drifted fails
+> instead of being re-anchored around. *Motion* has no varying **content**; it has a varying
+> **parent** — inside `.more-menu` where the deck has nothing looping, a sibling of `.more` where it
+> does. **No slot bounded to one element can express a move between two parents**, so the slot is the
+> smallest region containing both positions: the chrome row's tail, from the end of the navigation
+> container to the close of the `<nav>`. One slot, named for the region rather than for the control
+> that moves inside it.
+>
+> **What decides the form is the deck's own content**, not the caller: any motion that loops or runs
+> past 5 s puts *Motion* outside the menu (DS-218), and `shell.py new` writes the menu form as the
+> default because a fresh deck has no motion yet. **The gate decides correctness rather than the
+> builder** — `#motion` inside `.more-menu` in a deck that loops is a static fact about the built
+> markup, which is exactly why step 7a insisted on build-time placement in the first place.
 
 ## 3. Implement
 
@@ -280,6 +300,11 @@ new` flag **before** touching the row, because it changes what the row's markup 
 - 2026-08-12 — owner: in Y, the menu **opens upward**, knowingly against DS-138. Recorded as a
   deliberate choice with a cost, not as an oversight.
 
+- 2026-08-18 — owner: ***Motion*'s conditional placement is a slot**, not a `shell.py new` flag —
+  the difference belongs in the markup contract rather than in the caller's hands. The slot spans
+  the **chrome row's tail** rather than *Motion* itself, because `cut()` swaps what sits between two
+  literal delimiters and *Motion* varies by parent, not by content; the region holding both parents
+  is the smallest one a slot can express. Design in §2 above.
 - 2026-08-18 — **DS-138's direction clause now names the multi-source provenance box beside tier
   two** (plan step 5, and the last thing gating chrome code). The argument is §1; what the rule
   gained is the clause plus a dated note recording why the narrowing needed it. It constrains
@@ -313,3 +338,4 @@ new` flag **before** touching the row, because it changes what the row's markup 
 | 2026-08-18 | → specified | The one clause T-119's narrowing left live is settled, before any code: **DS-138's direction clause takes the multi-source mark beside tier two.** The narrowing did free the mark — DS-105's list of the disclosure rules the mark obeys regardless omits DS-138, so nothing else reached it — and the freeing was not hypothetical, because it falsified two shipped citations that name DS-138 for the mark's direction, in `shell/components.css` and `COMPONENT-CONTRACT.md` §3.2. The competing reading, *bound by the general obligation alone*, is true only as an accident of DS-105's fixed upper-right row and leaves both citations false, since neither is about fitting. Naming the mark restates behaviour that already ships, so the repair costs nothing. §1 carries the argument; plan step 5 is now an edit rather than a question. |
 | 2026-08-18 | → planned | The baseline is **measured rather than quoted**: `chrome_row.py`, real Chrome, offline, puts the controls and their gap at **548.8 du — 32% of the row** — leaving 1177.2 and **17 targets as built**. **DS-217 quotes 546 for that same figure**, so a published number is 2.8 du adrift *before* this task moves it; step 8 re-derives it and everything `figures.py` finds with it. Step 2 moved after step 7, and **criterion 3 is booked `not met` now rather than at review**: the capacity a layout leaves is a property of a rendered row, Y's does not exist until it is built, and the owner ruled on 2026-08-12 on flexibility having said so — the number was never the input the criterion assumed. Step 7a added: DS-218's conditional promotion of *Motion* is a **build-time** placement, because a control JavaScript relocates at load is one a static gate cannot decide. |
 | 2026-08-18 | (no change) | **Plan step 5 landed** — DS-138 names the multi-source box, so nothing now gates chrome code. **Stopped deliberately before step 7**, at a boundary where no shell file is touched and no shipped deck is out of sync. Reading `shell/README.md` to plan the build found the step's real size: **`shell.py check` is byte for byte**, so editing the three shell files fails every deck already built until each is `sync`ed — the generated seeded-defects deck regenerated instead (**L-77**) — with `tokens` after it, the gates after that, and `figures.py` last, because a shell change moves every deck's byte size. That is one uninterrupted pass with the tree frozen, not an edit. **Step 7a is also short a mechanism**: `Motion`'s conditional placement is a build-time difference, and `shell.py` has no slot or flag for it, so which of the two it becomes has to be settled before the row's markup is written. Both recorded in §2 rather than discovered mid-build. |
+| 2026-08-18 | (no change) | **Owner settled step 7a's mechanism: a slot.** Designing it against `shell.py`'s `SLOTS` found the constraint that decides its shape — `cut()` replaces what lies between two *literal* delimiters, and *Motion* varies by **parent** rather than by content, so no slot bounded to the control can express it. The slot is therefore the **chrome row's tail**, the smallest region containing both of *Motion*'s positions, named for the region rather than for the control. `shell.py new` writes the menu form as the default and the gate decides correctness, which is what build-time placement was for. Nothing in `shell/` touched: the edit is step 7's frozen-tree pass, and this is the design it runs from. |
