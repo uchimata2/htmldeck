@@ -25,7 +25,7 @@ or place. See *Provenance*, below.
 *Buy frequency before bikes*, a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-[`reference-deck.html`](reference-deck.html) is **263 KB in one file**, 269 083 bytes. Three embedded
+[`reference-deck.html`](reference-deck.html) is **264 KB in one file**, 270 230 bytes. Three embedded
 typefaces (97 KB of it as base64), ten Lucide icons in one sprite, eight hand-written SVG figures,
 and the deck shell. No libraries, no build step, no network.
 
@@ -316,7 +316,7 @@ edited without regenerating is a red run rather than a discovery two audits late
 
 [`sort-window/`](sort-window) holds all four artifacts a build run leaves behind: the deck, the
 foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
-reconciled against. It is **260 KB in one file**, 266 324 bytes, 12 slides, six hand-written SVG
+reconciled against. It is **261 KB in one file**, 267 471 bytes, 12 slides, six hand-written SVG
 figures, ten disclosure panels, zero external references.
 
 ```bash

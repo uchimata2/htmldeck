@@ -357,13 +357,27 @@
     qvBody.appendChild(article);
     qvTitle.textContent = title;
     qv.hidden = false;
+    /* Every opening starts at the top of ITS document, and the clear in closeQuick() is not enough
+       to get that - it was measured doing its job and the offset came back anyway. Emptying the
+       container really does take scrollTop to 0, because there is nothing left to scroll; the
+       browser then RESTORES the offset the moment this function puts content back into the same
+       element, which is a feature everywhere except here. So the reset belongs on the way in,
+       after the content and after `hidden` clears, because a hidden element has no scroll height
+       to assign against. Without it a reader who scrolled through one source and asked for the
+       next one landed 82% of the way down a document they had never seen (T-174).
+
+       Nothing here fights the focus call below: `qvClose` is in the header, a sibling of this
+       container rather than a descendant, so focusing it cannot scroll the body. */
+    qvBody.scrollTop = 0;
     qvOpener = btn;
     document.getElementById('qvClose').focus();
   }
   function closeQuick(){
     if (qv.hidden) return;
     qv.hidden = true;
-    qvBody.textContent = '';       /* the surface holds nothing between openings */
+    qvBody.textContent = '';       /* the surface holds nothing between openings - but see the
+                                      reset in openQuick(): emptying it does not decide where the
+                                      NEXT document starts (T-174) */
     if (qvOpener) qvOpener.focus();
     qvOpener = null;
   }
