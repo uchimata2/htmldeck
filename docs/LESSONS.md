@@ -92,6 +92,7 @@ comes here.
 | [L-107](lessons/L-107.md) | A corruption defect is usually an omission defect too; write the criterion over the whole population | Evidence and verification |
 | [L-109](lessons/L-109.md) | Making a note machine-readable buys binding first and satisfaction rarely; count which branch covers anything | Evidence and verification |
 | [L-110](lessons/L-110.md) | An interactive control cannot be looked at in a snapshot, and the snapshot reports zero rather than failing | Evidence and verification |
+| [L-117](lessons/L-117.md) | A control that is `display:none` when shut is invisible to every gate, so a green run says nothing about how it looks open | Evidence and verification |
 | [L-111](lessons/L-111.md) | A sanitization scan must walk every file type, because the one nobody reads is the one nobody sanitized | Evidence and verification |
 | [L-113](lessons/L-113.md) | A check scoped to a place stops seeing the thing when the thing gets a second home | Evidence and verification |
 | [L-115](lessons/L-115.md) | Probe the mechanism a rule names, never the noun the rule contains | Evidence and verification |

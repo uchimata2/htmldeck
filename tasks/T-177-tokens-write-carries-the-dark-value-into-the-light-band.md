@@ -2,8 +2,9 @@
 id: T-177
 title: shell.py tokens carries a dual-band token's dark value into the light band
 type: fix
-status: review
+status: done
 phase: review
+shipped_in: 0.4.0
 parent: null
 blocked_by: []
 related: [T-166, T-114]
@@ -121,3 +122,4 @@ before one arrives.
 | :--- | :--- | :--- |
 | 2026-08-18 | → proposed | Filed by [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md), which met the defect and sidestepped it by bordering on `--line`. Recommendation recorded: refuse first, carry both if an adopter meets it. |
 | 2026-08-18 | proposed → review | **Owner ruled both, and both are built.** `theme.bands()` splits the two bands; `declare_tokens()` carries each into the deck's own and declines what the deck has no band for, naming the token and the reason. **The old path was reconstructed and shown to fail the new fixtures** — it writes the dark value into the light band and leaves dark empty — so the eleven fixtures have been seen red as well as green. Two incidental finds: stripping comments before scanning selectors is load-bearing (both themes' banners had swallowed `:root`), and the light mark was a prefix of the dark one. `check_all.py` 0 failures in 198 s; no deck changed, because all three already declare every contracted token. |
+| 2026-08-18 | review → done | **Shipped in `0.4.0`.** Repository tooling only; it requires nothing of a deck and §8.1's row says so rather than leaving it inferred. |

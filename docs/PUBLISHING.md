@@ -242,12 +242,17 @@ The test is §8.1's *What it newly required* column, which is already written by
 runs: a row naming a new or deleted part is minor, a row whose whole content is *the shared shell
 moved* is patch, and **`Nothing`** is patch.
 
-**This rule is prospective, and the precedent it replaces disagrees with it in both directions.**
-Measured against the table below: `0.2.1` added a required part and shipped as a patch, `0.3.1`
-added four contracted parts and shipped as a patch, while `0.3.0` moved only the shared shell and
-shipped as a minor. So the digit has tracked neither shape nor size — which is the argument for
-writing a rule rather than extracting one, and why no row above is being restated to match. What
-shipped, shipped.
+**This rule is prospective, and it replaces a criterion that was stated rather than absent.**
+`0.3.0` took its minor on **scale** — 53 closed tasks — and `0.3.1` took its patch by following
+that precedent, both recorded in
+[`RELEASE-PHASES.md`](RELEASE-PHASES.md). Scale is the wrong subject, and the table below is the
+demonstration: `0.3.0` was the larger release and required **nothing** of an existing deck, while
+`0.2.1`, `0.2.2` and `0.3.1` were each smaller and each added a required part that failed decks
+already built. All three shipped as patches. **The digit is read by the adopter deciding whether to
+upgrade, so it has to encode their cost, not this project's effort** — which is what moves the
+subject from how much was done to whether the contract changed shape.
+
+No row above is restated to match. What shipped, shipped, and the rule starts here.
 
 **The gate list was an enumeration for three days, and is now one command.**
 
