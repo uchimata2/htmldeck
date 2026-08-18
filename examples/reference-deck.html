@@ -743,6 +743,24 @@ svg{display:block}
 .fig .accent-s{stroke:var(--accent);fill:none}
 .fig .quiet{fill:var(--data-quiet)}
 .fig .quiet-s{stroke:var(--data-quiet);fill:none}
+/* T-117. The decision node, as one thing rather than a shape and a caption near it. The
+   rhombus had no label slot, so every build put the label outside and the reader bound the two
+   by proximity - on one slide beside two branch labels already, three texts competing for one
+   node. `.decision-label` centres on the shape's own centre, so the group moves as a unit.
+
+   **The size is the build's arithmetic, not this rule's.** SVG cannot grow a path to fit text,
+   so `build.md` computes the half-width from the label and writes the `d`; what CSS can
+   guarantee is that the label sits at the centre the shape was sized around, which is the half
+   that was silently wrong before. */
+.fig .decision-shape{fill:none;stroke:var(--data-quiet);stroke-width:2}
+.fig .decision-label{text-anchor:middle;dominant-baseline:central;font-size:var(--fs-small);
+  fill:var(--ink)}
+/* A branch label is a `.lab` that belongs to an edge leaving a decision, so it matches one
+   exactly - including the uppercase, which is how the other edge labels on the same diagram
+   read. Caught by looking: the first cut left `yes` in lower case beside DRAFT, SHEETS and
+   NUMBER, and no gate here can see a text-transform. */
+.fig .decision-branch{font-family:var(--font-mono);letter-spacing:var(--track-mono);
+  fill:var(--ink-faint);text-transform:uppercase;font-size:var(--fs-mono)}
 .fig .pos{fill:var(--pos)}
 .fig .neg{fill:var(--neg)}
 .fig .caution{fill:var(--caution)}

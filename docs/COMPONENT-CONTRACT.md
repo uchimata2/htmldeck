@@ -423,9 +423,22 @@ figure's business.
 | `.t-paper` | `text` | `.fig` | `0+` | — | author |
 | `.t-caution` | `text` | `.fig` | `0+` | — | author |
 | `.t-ink` | `text` | `.fig` | `0+` | — | author |
+| `.decision` | `g` | `.fig` | `0+` | — | author |
+| `.decision-shape` | `path` | `.decision` | `1` | `d` | author |
+| `.decision-label` | `text` | `.decision` | `1+` | — | author |
+| `.decision-branch` | `text` | `.fig` | `0+` | — | author |
 | `.pos` | — | `.fig` | `0+` | — | author |
 | `.neg` | — | `.fig` | `0+` | — | author |
 | `.caution` | — | `.fig` | `0+` | — | author |
+
+**The decision node is one group, and that is the whole of T-117's first half.** `.decision-shape`
+carries the rhombus and `.decision-label` the text inside it; the branch labels stay outside as
+`.decision-branch`, because they belong to the edges leaving the node rather than to the node. Before
+this there was no slot, so a build that wanted a labelled decision had to put the caption underneath
+and hope the reader bound them — which two slides of a carefully built deck did, one of them next to
+two branch labels already. **The shape's size is the build's arithmetic** (`build.md`), because SVG
+cannot grow a path to fit text; what the contract fixes is that the label is *inside the group whose
+centre it is placed on*, so the two cannot drift apart again.
 
 **The three role classes were `vocabulary` until 2026-08-12, and the deck they were waiting for
 arrived.** DS-026 fixes the positive, negative and caution roles deck-wide, and the reference deck

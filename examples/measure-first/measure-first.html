@@ -740,6 +740,24 @@ svg{display:block}
 .fig .accent-s{stroke:var(--accent);fill:none}
 .fig .quiet{fill:var(--data-quiet)}
 .fig .quiet-s{stroke:var(--data-quiet);fill:none}
+/* T-117. The decision node, as one thing rather than a shape and a caption near it. The
+   rhombus had no label slot, so every build put the label outside and the reader bound the two
+   by proximity - on one slide beside two branch labels already, three texts competing for one
+   node. `.decision-label` centres on the shape's own centre, so the group moves as a unit.
+
+   **The size is the build's arithmetic, not this rule's.** SVG cannot grow a path to fit text,
+   so `build.md` computes the half-width from the label and writes the `d`; what CSS can
+   guarantee is that the label sits at the centre the shape was sized around, which is the half
+   that was silently wrong before. */
+.fig .decision-shape{fill:none;stroke:var(--data-quiet);stroke-width:2}
+.fig .decision-label{text-anchor:middle;dominant-baseline:central;font-size:var(--fs-small);
+  fill:var(--ink)}
+/* A branch label is a `.lab` that belongs to an edge leaving a decision, so it matches one
+   exactly - including the uppercase, which is how the other edge labels on the same diagram
+   read. Caught by looking: the first cut left `yes` in lower case beside DRAFT, SHEETS and
+   NUMBER, and no gate here can see a text-transform. */
+.fig .decision-branch{font-family:var(--font-mono);letter-spacing:var(--track-mono);
+  fill:var(--ink-faint);text-transform:uppercase;font-size:var(--fs-mono)}
 .fig .pos{fill:var(--pos)}
 .fig .neg{fill:var(--neg)}
 .fig .caution{fill:var(--caution)}
@@ -1381,7 +1399,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
            budget, and a plan that does not fit goes back to the meeting rather than to the data.">
         <!-- the rejection loop, drawn first so the boxes paint over its ends -->
         <path class="accent-s current" stroke-width="3" fill="none" marker-end="url(#ah-a1)"
-              d="M1200 138 L1200 62 L695 62 L695 150"></path>
+              d="M1225 116 L1225 62 L695 62 L695 150"></path>
         <text class="lab t-accent" x="947" y="46" text-anchor="middle">no — renegotiate</text>
 
         <line class="quiet-s" x1="192" y1="212" x2="296" y2="212" stroke-width="3"
@@ -1390,15 +1408,15 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
               marker-end="url(#ah-q1)"></line>
         <line class="quiet-s" x1="792" y1="212" x2="896" y2="212" stroke-width="3"
               marker-end="url(#ah-q1)"></line>
-        <line class="quiet-s" x1="1092" y1="212" x2="1126" y2="212" stroke-width="3"
+        <line class="quiet-s" x1="1092" y1="212" x2="1119" y2="212" stroke-width="3"
               marker-end="url(#ah-q1)"></line>
-        <line class="quiet-s" x1="1274" y1="212" x2="1356" y2="212" stroke-width="3"
+        <line class="quiet-s" x1="1331" y1="212" x2="1396" y2="212" stroke-width="3"
               marker-end="url(#ah-q1)"></line>
 
         <text class="lab" x="244" y="196" text-anchor="middle">draft</text>
         <text class="lab" x="544" y="196" text-anchor="middle">sheets</text>
         <text class="lab" x="844" y="196" text-anchor="middle">number</text>
-        <text class="lab" x="1315" y="196" text-anchor="middle">yes</text>
+        <text class="decision-branch" x="1364" y="196" text-anchor="middle">yes</text>
 
         <rect class="quiet-s" x="2" y="156" width="190" height="112" rx="14"
               stroke-width="2"></rect>
@@ -1420,14 +1438,17 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
         <text class="name" x="997" y="205" text-anchor="middle">Finance checks</text>
         <text class="name" x="997" y="235" text-anchor="middle">the budget</text>
 
-        <!-- the label sits above the diamond, never inside it -->
-        <path class="quiet-s" stroke-width="2" d="M1200 138 L1274 212 L1200 286 L1126 212 Z"></path>
-        <text class="lab" x="1200" y="316" text-anchor="middle">within budget</text>
+        <!-- the decision node carries its own label, sized from it (T-117) -->
+        <g class="decision">
+          <path class="decision-shape" d="M1225 116 L1331 212 L1225 308 L1119 212 Z"></path>
+          <text class="decision-label" x="1225" y="196">within</text>
+          <text class="decision-label" x="1225" y="228">budget</text>
+        </g>
 
-        <rect class="quiet-s" x="1358" y="156" width="190" height="112" rx="14"
+        <rect class="quiet-s" x="1398" y="156" width="190" height="112" rx="14"
               stroke-width="2"></rect>
-        <text class="name" x="1453" y="205" text-anchor="middle">Release</text>
-        <text class="name" x="1453" y="235" text-anchor="middle">the plan</text>      <defs><marker id="ah-q1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="quiet" d="M0 0 L10 5 L0 10 z"></path></marker><marker id="ah-a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="accent" d="M0 0 L10 5 L0 10 z"></path></marker></defs></svg>
+        <text class="name" x="1493" y="205" text-anchor="middle">Release</text>
+        <text class="name" x="1493" y="235" text-anchor="middle">the plan</text>      <defs><marker id="ah-q1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="quiet" d="M0 0 L10 5 L0 10 z"></path></marker><marker id="ah-a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="accent" d="M0 0 L10 5 L0 10 z"></path></marker></defs></svg>
       <div class="frags">
         <p class="frag rise" style="--i:0">Three of every four weeks go into producing the
           plan.</p>

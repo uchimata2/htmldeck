@@ -67,6 +67,22 @@ will not tell you, because they are this stage's judgement:
   a layout written for this one.
 - **Every value that could differ between themes is a token.** No colour, length, duration or easing
   curve outside the theme region; `theme.py check` fails one and names it under DS-010.
+- **A diagram's ink starts where the slide's text starts.** The `<svg>` is already on the
+  column — the shell puts it there — but the element is scaled to the content column, so the
+  drawing lands wherever the viewBox puts it. **Set the viewBox so the leftmost drawn thing sits
+  at its left edge**, and the diagram shares the grid the headline, the fragments and the bottom
+  line are on. Getting this wrong is invisible until a row of text sits directly under the
+  diagram, and then it reads as a step rather than a margin. `python tools/deck/figgrid.py <deck>`
+  measures it; it reports rather than gates, because the decks written before this rule do not
+  pass it yet (T-184).
+- **A decision node carries its label inside itself.** Use `.decision` — a `<g>` holding one
+  `.decision-shape` path and its `.decision-label` text — and **size the rhombus from the label**,
+  which is arithmetic only the build can do because SVG cannot grow a path to fit text. An
+  axis-aligned text block of half-width `w` and half-height `h` fits half-diagonals `A`, `B` when
+  `w/A + h/B <= 1`; leave margin rather than landing on 1.0. Branch labels stay outside on their
+  edges as `.decision-branch`. **Never put the label under the shape and hope**: that was the only
+  option before T-117 and it left the reader binding a caption to a rhombus by proximity, on one
+  slide beside two branch labels already.
 - **A `<marker>`, gradient or filter belongs in the slide that uses it** (DS-232). Every slide but
   the current one is `visibility:hidden`, and a hidden subtree paints nothing for a visible one to
   reference — so a marker defined once and reused across slides draws on exactly one of them,
