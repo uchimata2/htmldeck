@@ -62,31 +62,63 @@ PROBE = r"""
        what the left-hand block costs and what the row has left - so the numbers stay comparable
        across the replacement rather than restarting at it. */
     var ribbon   = document.getElementById('rulerTicks') || document.getElementById('ribbon');
-    var controls = document.querySelector('.controls');
+    /* T-114 split the row. The ruler no longer competes with every control for the whole row - it
+       competes with the counter and the pager inside `.navbox`, while `Motion` and `More` sit
+       outside it. So the box the capacity is a property of is the navigation container, and that
+       is what the deck's own `rulerAvailableDu()` measures. Measuring the row here would report
+       width the ruler cannot have. */
+    var navbox   = document.querySelector('.navbox');
+    var ruler    = document.getElementById('ruler');
     var out = { k:+k.toFixed(6), vw:window.innerWidth, vh:window.innerHeight };
-    if (!chrome || !ribbon || !controls){
+    if (!chrome || !ribbon || !navbox || !ruler){
       out.error = 'chrome row not found - the deck has changed shape';
     } else {
       out.chrome   = du(chrome);
+      out.navbox   = du(navbox);
       out.ribbon   = du(ribbon);
-      out.controls = du(controls);
-      /* every child of the controls block, priced individually - T-035 says there are five and
-         that the ruler must share the row with them, but never measured what they cost */
+      /* Every chrome control that is not the ruler, priced individually. In the row T-035
+         specified these were five children of one `.controls` box; T-114 split them between the
+         navigation container and the row's tail, and there are still five - which is what makes
+         the count assertion a real comparison across the change rather than a restatement. */
       out.controlItems = [];
-      Array.prototype.forEach.call(controls.children, function(c){
+      Array.prototype.forEach.call(navbox.children, function(c){
+        if (c === ruler) return;
         var d = du(c);
         out.controlItems.push({ id:c.id || c.className || c.tagName.toLowerCase(),
-                                w:d.w, h:d.h });
+                                w:d.w, h:d.h, box:'navbox' });
       });
-      /* The gap is read from the ROW's own `gap`, not inferred from the distance between the two
-         boxes. Those agreed while the ribbon filled its space, and stopped agreeing the moment the
-         ruler's flexible label took the slack instead - at which point the inferred figure was
-         596 du of "gap" and the free space collapsed to the ticks' own width. Correct by accident
-         is not correct. */
-      var gapCss = parseFloat(getComputedStyle(chrome).gap) / k;
-      out.gapDu = +(isFinite(gapCss) ? gapCss : 0).toFixed(2);
-      /* what the indicator actually gets: the row minus the controls minus that gap */
-      out.freeDu = +(out.chrome.w - out.controls.w - out.gapDu).toFixed(2);
+      Array.prototype.forEach.call(chrome.children, function(c){
+        if (c === navbox) return;
+        var d = du(c);
+        out.controlItems.push({ id:c.id || c.className || c.tagName.toLowerCase(),
+                                w:d.w, h:d.h, box:'tail' });
+      });
+      /* Both gaps are read from the boxes' own `gap`, never inferred from the distance between
+         two rectangles. Those agreed while the ribbon filled its space, and stopped agreeing the
+         moment the ruler's flexible label took the slack instead - at which point the inferred
+         figure was 596 du of "gap" and the free space collapsed to the ticks' own width. Correct
+         by accident is not correct. */
+      var rowGap = parseFloat(getComputedStyle(chrome).gap) / k;
+      var boxGap = parseFloat(getComputedStyle(navbox).gap) / k;
+      out.gapDu    = +(isFinite(rowGap) ? rowGap : 0).toFixed(2);
+      out.boxGapDu = +(isFinite(boxGap) ? boxGap : 0).toFixed(2);
+      /* What the ruler actually gets, computed the way the DECK computes it (L-08): the
+         navigation container, less its other children, less the gaps between them. */
+      var takenInBox = 0, boxKids = navbox.children.length;
+      Array.prototype.forEach.call(navbox.children, function(c){
+        if (c !== ruler) takenInBox += c.getBoundingClientRect().width / k;
+      });
+      /* The container's CONTENT box. It is drawn since T-114, and its hairline and pad are width
+         the ruler cannot have - the deck subtracts them in `rulerAvailableDu()` and this must
+         subtract the same ones, or the instrument and the shipped rule disagree (L-08). */
+      var ncs = getComputedStyle(navbox);
+      function npx(v){ var n = parseFloat(v); return isFinite(n) ? n / k : 0; }
+      out.navboxPadDu = +(npx(ncs.paddingLeft) + npx(ncs.paddingRight)
+                          + npx(ncs.borderLeftWidth) + npx(ncs.borderRightWidth)).toFixed(2);
+      out.freeDu = +(out.navbox.w - out.navboxPadDu - takenInBox
+                     - out.boxGapDu * (boxKids - 1)).toFixed(2);
+      /* Everything the ruler does not get, whichever box it sits in - the figure DS-217 quotes. */
+      out.controls = { w: +(out.chrome.w - out.freeDu).toFixed(2) };
       /* the current ribbon's real footprint, against the number quoted from the source comment */
       out.ribbonPct = +((out.ribbon.w / out.chrome.w) * 100).toFixed(1);
       /* The ribbon's BOX is not its CONTENT. It is a flex child that stretches to the space it is
@@ -182,9 +214,11 @@ def self_test(wide, floor):
                         "be the stage border, so the row has been re-laid out and T-035's "
                         "arithmetic is stale" % (wide["chrome"]["w"], ROW_DU))
     # T-035 states the controls block holds five elements and prices the ruler against that.
+    # T-114 split them across two boxes and kept the count at five, so the comparison survives the
+    # change - which is the point of asserting it rather than dropping it.
     if len(wide["controlItems"]) != 5:
-        failures.append("controls block holds %d element(s), T-035 says five - the row this task "
-                        "was specified against has changed"
+        failures.append("the chrome carries %d control(s) beside the ruler, T-035 says five - the "
+                        "row this task was specified against has changed"
                         % len(wide["controlItems"]))
     # Design units must not depend on the stage scale. Measuring the same row at two scales and
     # getting two answers would mean the du conversion is wrong, and every bound with it.
@@ -263,10 +297,15 @@ def main():
     if wide.get("itemHeightDu") and wide.get("ribbonHeightDu", 0) > wide["itemHeightDu"] * 1.4:
         print("      WRAPPED - %.1f du tall against a %.1f du item"
               % (wide["ribbonHeightDu"], wide["itemHeightDu"]))
-    print("  gap between the blocks   %8.1f du" % wide["gapDu"])
-    print("  controls block           %8.1f du" % wide["controls"]["w"])
+    print("  navigation container     %8.1f du   the box the ruler competes inside (T-114),"
+          % wide["navbox"]["w"])
+    print("                                        less %.1f du of its own border and pad"
+          % wide.get("navboxPadDu", 0))
+    print("  gap: row %.1f du, box %.1f du" % (wide["gapDu"], wide["boxGapDu"]))
+    print("  controls beside the ruler %7.1f du   %d, across both boxes"
+          % (wide["controls"]["w"], len(wide["controlItems"])))
     for c in wide["controlItems"]:
-        print("      %-10s %10.1f du" % (c["id"], c["w"]))
+        print("      %-10s %10.1f du   in the %s" % (c["id"], c["w"], c["box"]))
     print("  " + "-" * 44)
     print("  LEFT FOR THE RULER       %8.1f du" % wide["freeDu"])
 

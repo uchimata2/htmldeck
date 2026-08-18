@@ -153,6 +153,7 @@ fit one deck is worse than no threshold (**L-38**).
 | `--disc-panel-w` | geometry | primitive | A disclosure panel's width (DS-138 places it below its control). | — |
 | `--disc-key-w` | geometry | primitive | The key column inside a disclosure panel. | — |
 | `--sources-box-w` | geometry | primitive | The multi-source box's minimum width (DS-105). Narrower than a disclosure panel on purpose: it holds titles, not an argument. | — |
+| `--more-menu-w` | geometry | primitive | The chrome menu's minimum width (T-114). Narrower again: it holds two control labels, and the labels are what set it. | — |
 | `--doc-sp` | geometry | primitive | The reading view's base gap, in `rem`. | — |
 | `--doc-sp-2xs` | geometry | derived | Four spacing steps down: the gap under a label. | — |
 | `--doc-sp-xs` | geometry | derived | Two steps down. | — |

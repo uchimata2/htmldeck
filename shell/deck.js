@@ -37,6 +37,8 @@
   var toDoc = document.getElementById('toDoc');
   var toStage = document.getElementById('toStage');
   var motionBtn = document.getElementById('motion');
+  var moreBtn = document.getElementById('moreBtn');
+  var moreMenu = document.getElementById('moreMenu');
   var DECK = '{{DECK_NAME}}';
 
   /* the deck's argument, lit stage by stage (DS-134) */
@@ -125,18 +127,34 @@
      rather than a copy kept in step by hand (L-08) */
   window.htmldeckRulerLayout = rulerLayout;
 
-  /* What the ruler actually has: the row, less the controls, less the gap between them. Measured
-     rather than derived, because the controls cost 32% of the row and that was the number T-035's
-     paper estimate of "~30 targets" got wrong. */
+  /* What the ruler actually has: the NAVIGATION CONTAINER, less its other children and the gaps
+     between them. Measured rather than derived, because the controls cost 32% of the row and that
+     was the number T-035's paper estimate of "~30 targets" got wrong.
+     The subject moved from the row to the box in T-114, and the change is not cosmetic: `More` and
+     `Motion` now sit outside the container, so a row-wide measurement would hand the ruler width
+     that belongs to controls it does not share a box with. Every non-ruler child is subtracted by
+     measurement rather than by name, so a deck whose tail form differs - `Motion` in the menu or
+     beside it - does not change what this function has to know. */
   function rulerAvailableDu(){
     var kk = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 1;
-    var chromeEl = document.querySelector('.chrome');
-    var ctrlEl = document.querySelector('.controls');
-    if (!chromeEl || !ctrlEl || !kk) return 0;
-    var cw = chromeEl.getBoundingClientRect().width / kk;
-    var ow = ctrlEl.getBoundingClientRect().width / kk;
-    var gap = parseFloat(getComputedStyle(chromeEl).gap) / kk || 0;
-    return cw - ow - gap;
+    var boxEl = document.querySelector('.navbox');
+    if (!boxEl || !rulerEl || !kk) return 0;
+    /* The CONTENT box, not the border box. The container is drawn (T-114) - a hairline and a
+       horizontal pad - and those are width the ruler cannot have. Measuring the outer rectangle
+       reported 34 du the ticks were never going to get, which is the same shape of error as the
+       paper estimate this function replaced. */
+    var cs = getComputedStyle(boxEl);
+    function px(v){ var n = parseFloat(v); return isFinite(n) ? n / kk : 0; }
+    var bw = boxEl.getBoundingClientRect().width / kk
+             - px(cs.paddingLeft) - px(cs.paddingRight)
+             - px(cs.borderLeftWidth) - px(cs.borderRightWidth);
+    var gap = px(cs.gap);
+    var taken = 0, n = 0;
+    Array.prototype.forEach.call(boxEl.children, function(el){
+      n++;
+      if (el !== rulerEl) taken += el.getBoundingClientRect().width / kk;
+    });
+    return bw - taken - gap * (n - 1);
   }
 
   var MAN = manifest();
@@ -267,6 +285,7 @@
     var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(d);
     closeAllSources(null);
+    closeMore();
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     panel.hidden = !open;
     if (open) panel.classList.add('opening');
@@ -301,6 +320,7 @@
     var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(null);
     closeAllSources(s);
+    closeMore();
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     box.hidden = !open;
     if (open) box.classList.add('opening');
@@ -352,6 +372,7 @@
   function openQuick(btn, title, tpl, file){
     closeAllDiscs(null);
     closeAllSources(null);
+    closeMore();
     qvBody.textContent = '';
     /* The contracted container, not a wrapper for its own sake: COMPONENT-CONTRACT.md gives
        `.qv-doc` as an <article> this script creates inside `.qv-body`, and every rule that styles
@@ -400,6 +421,7 @@
     closeQuick();
     closeAllDiscs(null);
     closeAllSources(null);
+    closeMore();
     slides.forEach(function(s, n){
       var cur = n === i;
       if (cur) { s.setAttribute('data-current',''); } else { s.removeAttribute('data-current'); }
@@ -456,7 +478,7 @@
       var d = slides[idx].querySelector('[data-disc]');
       if (d) { toggleDisc(d, null); e.preventDefault(); }
     }
-    else if (k === 'Escape')     { closeQuick(); closeAllDiscs(null); closeAllSources(null); }
+    else if (k === 'Escape')     { closeQuick(); closeAllDiscs(null); closeAllSources(null); closeMore(); }
     else if (k === 'r' || k === 'R')                              { setView(true); e.preventDefault(); }
     else if (k === 'm' || k === 'M')                              { setMotion(root.dataset.motion === 'off'); }
     else if (k === 't' || k === 'T')                              { setTheme(root.dataset.theme === 'light' ? 'dark' : 'light'); }
@@ -496,6 +518,51 @@
   motionBtn.addEventListener('click', function(){ setMotion(root.dataset.motion === 'off'); });
   function setTheme(t){ root.dataset.theme = t; }
   setMotion(!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ---------------------------------------------------------- the More menu (T-114) */
+  /* Chrome, not tier two. DS-230's four-kind vocabulary is closed and this is not content the
+     face provokes a question about, so `More` is its own component rather than a `.disc` - the
+     same footing DS-105 gives `.sources`. It obeys the disclosure INTERACTION rules regardless,
+     because a reader has one attention whatever the content is: a real label (DS-164), click
+     rather than hover (DS-163), shut at load (DS-227), and one thing open at a time (DS-137) -
+     which is why `closeMore()` is called at each of the four sites that already close the other
+     two, and why opening the menu closes them.
+     WHAT IS IN THE MENU IS NOT THIS SCRIPT'S BUSINESS. `Motion` leaves it when the deck loops
+     (DS-218, step 7a) and the markup decides that at build time, so nothing here addresses a menu
+     item by name - `motionBtn` is found by id and works from either parent. */
+  function closeMore(){
+    if (!moreMenu) return;
+    moreMenu.hidden = true;
+    moreBtn.setAttribute('aria-expanded', 'false');
+  }
+  function toggleMore(force){
+    if (!moreMenu) return;
+    var open = force === null || force === undefined
+      ? moreBtn.getAttribute('aria-expanded') !== 'true' : force;
+    closeAllDiscs(null);
+    closeAllSources(null);
+    moreMenu.hidden = !open;
+    moreBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    /* Opening moves focus into the menu, because the control that opened it is the last thing a
+       keyboard reader touched and the menu is what they asked for. Escape puts it back: a menu
+       dismissed while still holding focus leaves the keyboard nowhere. */
+    if (open){ var first = moreMenu.querySelector('.btn'); if (first) first.focus(); }
+  }
+  if (moreBtn && moreMenu){
+    moreBtn.addEventListener('click', function(){ toggleMore(null); });
+    moreMenu.addEventListener('keydown', function(e){
+      if (e.key === 'Escape'){ closeMore(); moreBtn.focus(); e.preventDefault(); e.stopPropagation(); }
+    });
+    /* Choosing an item shuts the menu. `Read` switches view and hides the chrome anyway; `Motion`
+       does not, and a menu left standing open over the deck after a toggle is the state DS-227
+       exists to prevent. */
+    moreMenu.addEventListener('click', function(){ closeMore(); });
+    /* A click anywhere else dismisses. Bound on the document rather than on a scrim, because a
+       two-item chrome menu that laid a scrim over the deck would block the stage to close itself. */
+    document.addEventListener('click', function(e){
+      if (!e.target.closest || !e.target.closest('.more')) closeMore();
+    });
+  }
 
   /* ---------------------------------------------------------- the reflow view (DS-070..076) */
   function buildDoc(){

@@ -266,7 +266,7 @@ svg{display:block}
    compressed to absorb 69.5 du it did not have - so one more stage, or one longer name, wrapped it
    into the second row DS-217 exists to prevent. Tick marks have a fixed width, so the element's
    size stops depending on the words. */
-.ruler{position:relative;display:flex;align-items:center;gap:var(--sp-3);min-width:0;margin-right:auto;flex:1}
+.ruler{position:relative;display:flex;align-items:center;gap:var(--sp-3);min-width:0;flex:1}
 .ruler-ticks{display:flex;align-items:center;flex:none}
 /* The cell IS the hit area and the mark is what you see, so the target size is the pitch rather
    than a minimum applied afterwards. `--disc-hit` is 52 du - the same target token the disclosure
@@ -360,7 +360,36 @@ svg{display:block}
 }
 .ruler-label[data-preview]{color:var(--ink)}
 
-.controls{display:flex;align-items:center;gap:var(--sp-2);flex:none}
+/* THE NAVIGATION CONTAINER (T-114). The ruler, the counter and the pager answer one question -
+   where am I and how do I move - so they share a box and read as one control; `Read` and `Motion`
+   answer different ones and sit outside it. The container carries the row's flexible width, which
+   the ruler used to carry alone, and it is what `rulerAvailableDu()` now measures: capacity is a
+   property of the box the ruler competes inside, not of the whole row. */
+.navbox{
+  display:flex;align-items:center;gap:var(--sp-2);min-width:0;margin-right:auto;flex:1;
+  padding:var(--sp-1) var(--sp-2);
+  border:var(--hair) solid var(--line);border-radius:var(--radius);
+}
+
+/* `More`, and it is CHROME rather than tier two: DS-230's four-kind vocabulary is closed and this
+   is not content the face provokes a question about, so it is its own component and deliberately
+   not a `.disc` - the same footing DS-105 gives `.sources`. It obeys the disclosure INTERACTION
+   rules regardless (DS-164 a real label, DS-163 never hover-only, DS-227 shut at load, DS-137 one
+   thing open at a time), because a reader has one attention whatever the content is.
+   The menu opens UPWARD, and that is DS-138 satisfied rather than excused: the rule's first
+   sentence binds every panel to open fully inside the stage, and its second fixes `below` for
+   tier two and the provenance box only. At the foot of a 1080-unit stage, up is the direction
+   that satisfies the first. */
+.more{position:relative;flex:none}
+.more-menu{
+  position:absolute;right:0;bottom:calc(100% + var(--sp-2));z-index:9;
+  display:flex;flex-direction:column;gap:var(--sp-1);min-width:var(--more-menu-w);
+  padding:var(--sp-2);border:var(--hair) solid var(--line);border-radius:var(--radius);
+  background:var(--paper-sunk);
+  box-shadow:0 var(--shadow-y-sm) var(--shadow-blur-sm) var(--shadow-soft);
+}
+.more-menu[hidden]{display:none}
+.more-menu .btn{width:100%;justify-content:flex-start}
 /* the second encoding DS-216 permits, and it encodes a different fact: the ribbon says which
    stage, this says how far through the deck. Numerals, not twelve targets. */
 .count{
@@ -377,6 +406,13 @@ svg{display:block}
   letter-spacing:var(--track-mono);text-transform:uppercase;
 }
 .btn:hover{border-color:var(--accent);color:var(--ink)}
+/* THE PAGER, filled (T-114). The complaint that opened the task was that prev/next read as an
+   afterthought, and the diagnosis was company rather than weight - but the two are the same fix
+   seen from either end: moved into the navigation box AND given the row's only filled surface,
+   the pager is the one control that looks like the thing you press to move. Everything else on
+   the row is outlined, so `filled` is a rank the row states once and nothing else claims. */
+.btn.btn--pager{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn.btn--pager:hover{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .btn svg{width:var(--icon-ui);height:var(--icon-ui)}
 .btn .chev{width:var(--chev);height:var(--chev);border-right:var(--chev-stroke) solid currentColor;
   border-bottom:var(--chev-stroke) solid currentColor}
@@ -718,7 +754,7 @@ svg{display:block}
   @page{ size:1920px 1080px; margin:0 }
 
   html,body{background:#fff;overflow:visible;height:auto}
-  .viewswitch,.chrome,.controls{display:none!important}
+  .viewswitch,.chrome{display:none!important}
   .doc{display:none!important}
 
   /* THE RULE THIS RENDERING LIVES OR DIES BY, and the one whose absence printed blank pages twice

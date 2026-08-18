@@ -169,6 +169,61 @@ def declarations(css_text):
     return dict(re.findall(r"(--[a-z0-9-]+)\s*:\s*([^;{}]+);", css_text))
 
 
+LIGHT_BAND = ":root"
+DARK_BAND = ':root[data-theme="dark"]'
+
+
+def blocks(css_text):
+    """`[(selector, body)]` for every TOP-LEVEL rule, in source order, with braces matched.
+
+    A regex cannot do this and the difference is not academic: `@media` and `@supports` nest, so
+    the first `}` inside one closes nothing. The theme regions this reads are flat today, and the
+    scanner is here so that stays a fact about the files rather than an assumption in the parser.
+    """
+    # Comments come out first, and that is not tidiness: everything between the previous `}` and
+    # the next `{` is the selector, so a licence header or a section banner ends up inside it and
+    # `:root` stops matching `:root`. Both theme files open with one.
+    css_text = re.sub(r"/\*.*?\*/", "", css_text, flags=re.S)
+    out, i, n = [], 0, len(css_text)
+    while i < n:
+        j = css_text.find("{", i)
+        if j < 0:
+            break
+        sel = " ".join(css_text[i:j].split())
+        depth, k = 1, j + 1
+        while k < n and depth:
+            if css_text[k] == "{":
+                depth += 1
+            elif css_text[k] == "}":
+                depth -= 1
+            k += 1
+        out.append((sel, css_text[j + 1:k - 1]))
+        i = k
+    return out
+
+
+def bands(css_text):
+    """`{band: {--name: value}}` for the two theme bands, keyed `light` and `dark`.
+
+    **`declarations()` flattens the file and the last declaration wins, which is right for READING
+    a value and wrong for CARRYING one.** A colour declared in both bands collapses to the dark
+    one, and a tool that copies that single value into a deck's light band writes a near-black
+    border onto paper. That is **T-177**, found when T-114 added the first new dual-band token
+    since `shell.py tokens` shipped - every older one was already declared in every deck, so the
+    flattening had never been asked to carry anything.
+
+    A selector that is neither band is ignored rather than guessed at: `@font-face` declares no
+    tokens, and a band this does not recognise is not one anything should be copied into.
+    """
+    out = {}
+    for sel, body in blocks(css_text):
+        key = {LIGHT_BAND: "light", DARK_BAND: "dark"}.get(sel)
+        if key is None:
+            continue
+        out.setdefault(key, {}).update(declarations(body))
+    return out
+
+
 def expand(value, decls, depth=8):
     for _ in range(depth):
         if "var(" not in value:

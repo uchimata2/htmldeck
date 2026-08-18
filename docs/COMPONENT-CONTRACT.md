@@ -323,16 +323,60 @@ are DS-131's and DS-217's, measured in the render gate rather than read out of t
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `.chrome` | `nav` | `.stage` | `1` | `aria-label` | author |
-| `.ruler` | `div` | `.chrome` | `1` | `id` `data-ticks` | author |
+| `.navbox` | `div` | `.chrome` | `1` | — | author |
+| `.ruler` | `div` | `.navbox` | `1` | `id` `data-ticks` | author |
 | `.ruler-ticks` | `ul` | `.ruler` | `1` | `id` `data-scale` | author |
 | `.ruler-ring` | `i` | `.ruler` | `1` | `id` `aria-hidden` | author |
 | `.ruler-label` | `p` | `.ruler` | `1` | `id` `aria-hidden` | author |
-| `.controls` | `div` | `.chrome` | `1` | — | author |
-| `.count` | `p` | `.controls` | `1` | `id` `aria-hidden` | author |
-| `.btn` | `button` | `.controls` | `1+` | `id` | author |
+| `.count` | `p` | `.navbox` | `1` | `id` `aria-hidden` | author |
+| `.more` | `div` | `.chrome` | `1` | `id` | author |
+| `.more-menu` | `div` | `.more` | `1` | `id` `hidden` | author |
+| `.btn` | `button` | `.chrome` | `1+` | `id` | author |
+| `.btn--pager` | — | `on .btn` | `1+` | — | author |
 | `.chev` | `span` | `.btn` | `0-1` | — | author |
 | `.l` | — | `on .chev` | `0+` | — | author |
 | `.r` | — | `on .chev` | `0+` | — | author |
+
+**What may sit in the navigation container, and what may not (T-114).** `.navbox` holds the
+controls that answer *where am I, and how do I move*: the ruler, the counter, and the two pager
+buttons. Nothing else may go in it. `Read` switches rendering and `Motion` switches playback —
+neither is navigation, and both sit outside. The rule is not tidiness: the complaint that opened
+T-114 was that the pager read as an afterthought, and the pager was not under-styled, it was in the
+wrong company. A container that admits *the other chrome controls too* is the container that caused
+it, so the boundary is stated as a closed list rather than as a principle to interpret.
+
+`.navbox` is also what `rulerAvailableDu()` measures. Capacity is a property of the box the ruler
+competes for width inside, and admitting one more control to the container silently spends the
+ruler's targets — which is DS-217's bound moving without anyone editing DS-217.
+
+**`.more`, and why it is not a `.disc`.** DS-230's tier-two vocabulary is closed at four kinds, and
+a chrome menu is not content the face provokes a question about — so `More` is its own component,
+on the footing DS-105 gives `.sources`. It obeys the disclosure *interaction* rules regardless: a
+real label (DS-164), click rather than hover (DS-163), shut at load (DS-227), and one thing open at
+a time (DS-137). Its menu opens **upward**, which satisfies DS-138 rather than excusing it: that
+rule's first sentence binds every panel to open fully inside the stage, and its second fixes
+*below* for tier two and the provenance box only. At the foot of a 1080-unit stage, up is the
+direction that satisfies the first.
+
+**Where `Motion` sits is decided at build time, and the gate reads it (DS-218, T-114 step 7a).** A
+persistent stop control is what DS-218 asks for, and a control one click inside a shut menu is not
+reachable while the motion runs. So `#motion` sits **inside `.more-menu`** in a deck with nothing
+looping, and **as a sibling of `.more`** in a deck that loops. That is the `CHROME_TAIL` slot in
+[`../shell/README.md`](../shell/README.md), and `audit.py` fails a looping deck whose control is in
+the menu — the placement is a static fact about the built markup, which is the whole reason it is
+decided at build time and not by the script.
+
+**The pager is exactly two, and the table says `1+` because the count vocabulary has no `2`.** `.btn--pager` is the row's only filled surface — the weight half of T-114's fix, where `.navbox` is the company half. Both were in the ruled sketch; the container is a drawn box and the pager is filled, and neither reads as the change on its own.
+
+**`.btn` is bound to `.chrome`, not to its box, and that is a limit of this table rather than a
+looser rule.** A chrome button has three possible parents now — `.navbox`, `.more` and
+`.more-menu` — and the `Sits in` column holds one. The closed list above is the rule; what the
+gate can currently decide is that a `.btn` is somewhere in the chrome.
+
+**One consequence, stated because it is a cost rather than a feature.** The tail is a per-deck
+region now, so `shell.py check`'s byte comparison no longer owns the `More`, `Read` and `Motion`
+labels — a deck may reword them and the shell check stays green. What guards them instead is this
+table, through `component.py`. The one-slot design was ruled on 2026-08-18; this is what it spends.
 
 `data-scale` is a claim, not decoration: DS-217 counts a regular repeating scale as **one** item
 rather than *n*, and the gate verifies the claim — uniform mark, uniform pitch, no per-item label

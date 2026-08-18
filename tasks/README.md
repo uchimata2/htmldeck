@@ -40,11 +40,12 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) | A named slide transition, chosen per deck, with slide and immediate as the shipping pair | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-041, T-057, T-112 |
 | [T-112](T-112-motion-density-and-the-split-between-content-and-affordance-motion.md) | Motion density, and the split between content motion and affordance motion | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-041, T-057, T-111, T-113, T-114 |
 | [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | - | `proposed` | `specify` | - | - | T-057, T-112, T-119 |
-| [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | The chrome row layout — give the pager the corner, and decide what happens to Read and Motion | `PH3` | - | `planned` | `implement` | - | - | T-035, T-036, T-112, T-115, T-119 |
+| [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | The chrome row layout — give the pager the corner, and decide what happens to Read and Motion | `PH3` | - | `review` | `review` | - | - | T-035, T-036, T-112, T-115, T-119, T-177 |
 | [T-115](T-115-the-specification-can-assert-a-layout-the-shell-cannot-honour.md) | A specification can assert a layout the shell cannot honour, and nothing reads the two together | `PH3` | - | `proposed` | `specify` | - | - | T-109, T-114, T-117, T-118, T-119 |
 | [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md) | The decision diamond has no label slot, and diagrams sit off the text grid | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-109, T-115 |
 | [T-118](T-118-a-style-must-mean-the-same-thing-in-the-reading-view.md) | A style that carries meaning on a slide must carry the same meaning in the reading view | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-109, T-115 |
 | [T-121](T-121-the-quick-view-renderer-flattens-nested-lists-and-drops-indented-code.md) | The quick-view renderer flattens nested lists and renders indented code as paragraphs | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-107, T-110 |
+| [T-177](T-177-tokens-write-carries-the-dark-value-into-the-light-band.md) | shell.py tokens carries a dual-band token's dark value into the light band | `PH3` | - | `review` | `review` | - | - | T-114, T-166 |
 
 ## Closed
 
@@ -203,7 +204,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-163](T-163-correct-the-coverage-claim-that-carried-the-wide-row-refusal.md) | Correct the coverage claim that carried the wide-row refusal | `PH3` | `0.3.0` | `done` | `review` | - | - | T-139, T-157, T-160, T-161, T-164 |
 | [T-164](T-164-retire-the-cross-repo-register-in-favour-of-a-branch.md) | Retire the cross-repo register in favour of a branch against the repository that has the defect | `PH3` | `0.3.0` | `done` | `review` | - | - | T-130, T-141, T-157, T-160, T-161, T-163 |
 | [T-165](T-165-give-a-deferred-entry-a-closing-condition-a-check-can-read.md) | Give a deferred entry a closing condition a check can read | `PH3` | `0.3.0` | `done` | `review` | - | - | T-019, T-051, T-097 |
-| [T-166](T-166-shell-sync-leaves-an-upgraded-deck-failing-the-theme-gate.md) | shell.py sync leaves an upgraded deck failing the theme gate, and says nothing | `PH1` | `0.3.0` | `done` | `review` | - | - | T-106, T-124, T-128, T-168 |
+| [T-166](T-166-shell-sync-leaves-an-upgraded-deck-failing-the-theme-gate.md) | shell.py sync leaves an upgraded deck failing the theme gate, and says nothing | `PH1` | `0.3.0` | `done` | `review` | - | - | T-106, T-124, T-128, T-168, T-177 |
 | [T-167](T-167-checkpy-reads-a-quoted-source-as-the-decks-own-slide-copy.md) | check.py's content half reads a quoted source as the deck's own slide copy | `PH1` | `0.3.0` | `done` | `review` | - | - | T-070, T-106, T-128, T-169 |
 | [T-168](T-168-sources-open-ships-with-no-minimum-target-size.md) | .sources-open ships with no minimum target size, so DS-168 holds only by luck of the type scale | `PH1` | `0.3.0` | `done` | `review` | - | - | T-103, T-128, T-166, T-174 |
 | [T-169](T-169-the-figure-binder-cannot-bind-a-value-split-across-table-cells.md) | The figure binder cannot bind a value whose label sits in another table cell | `PH1` | `0.3.0` | `done` | `review` | - | - | T-128, T-167, T-170, T-171 |

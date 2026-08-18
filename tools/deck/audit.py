@@ -1002,7 +1002,14 @@ PROBE = r"""
       out.infinite.push(row);
       if (!all[j].classList.contains('current')) out.ambient.push(row);
     }
-    out.motionControl = !!document.getElementById('motion');
+    // DS-218 asks for a PERSISTENT control, and T-114 put a `More` menu on the chrome row -
+    // so existence stopped being the test. A stop button one click inside a shut menu is not
+    // reachable while the motion runs, which is the thing the rule is for. Placement is a static
+    // fact about the built markup, decided by `shell.py`'s CHROME_TAIL slot at build time, which
+    // is exactly why this can be read here rather than inferred.
+    var motionEl = document.getElementById('motion');
+    out.motionControl = !!motionEl;
+    out.motionPersistent = !!motionEl && !motionEl.closest('.more-menu');
 
     // DS-091 - **one** headline of six words or fewer. DS-085 - the last slide is a close.
     // The count is measured as well as the length, because the rule's first clause is that the
@@ -1836,6 +1843,9 @@ ALWAYS_MEASURED = {
     "infinite": [],
     "ambient": [],
     "motionControl": False,          # `!!getElementById('motion')`
+    # Placement, not existence: the shell builds the control into every deck, so what a
+    # looping deck owes is a control NOT shut inside `.more-menu` (DS-218, T-114).
+    "motionPersistent": False,
     # ---- chrome, targets and position
     "chromeLabelled": 0,
     "chromeHeightDu": 0,             # `chromeRect ? … : 0` - no chrome measures zero, not 999
@@ -2044,9 +2054,12 @@ def render_verdicts(data):
          else data["panelBelowControl"] is True),
         ("DS-142", "looping motion on static content: %d" % len(data.get("ambient", [])),
          not data.get("ambient")),
-        ("DS-218", "control for motion over 5s: %s (%d looping)"
-         % (data["motionControl"], len(data["infinite"])),
-         len(data["infinite"]) == 0 or data["motionControl"]),
+        # `persistent` rather than `present`: the control exists in every deck the shell builds,
+        # so existence decided nothing. What a looping deck owes is a control not shut inside the
+        # chrome menu (T-114 step 7a).
+        ("DS-218", "persistent control for motion over 5s: %s (present: %s, %d looping)"
+         % (data["motionPersistent"], data["motionControl"], len(data["infinite"])),
+         len(data["infinite"]) == 0 or data["motionPersistent"]),
         # **The instance T-051 was raised for.** `.current` is the only subject this row has, the
         # probe emits the key only when it finds one, and `None != "none"` is `True` - so the rule
         # passed on its own absence, and the seeded fixture that deletes the deck's only dashed flow

@@ -27,6 +27,14 @@ sync must not touch it — so the upgrade reports success and DS-013 fails after
 author never saw. `sync` and `check` now name them; `tokens --write` adds exactly the missing ones at
 the shipped theme's values and never rewrites one already declared. **T-166.**
 
+**It carries each band separately, and declines what it cannot carry. T-177.** A colour is
+declared twice — once light, once dark — and reading the theme as one flat map kept whichever came
+last, so the first new dual-band token since `tokens` shipped put the **dark** value in a deck's
+light band and nothing in its dark one. `theme.py` passed it, because DS-013 asks whether a token
+is declared and not whether it is declared at the right value in the right band. Both values are
+written now, into this deck's own bands; a deck with no dark band to receive the second is told
+which token was declined and why, rather than given half of it.
+
 | File | What it is | Contracted by |
 | :--- | :--- | :--- |
 | `shell.html` | The structure — head, sprite, stage, chrome, reading view — with `{{SLOT}}` where a deck differs | [`../docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) |
@@ -54,10 +62,17 @@ because a component block with one extra rule breaks no rule.
 
 ## The slots
 
-Eleven, and nowhere else may a deck differ:
+Twelve, and nowhere else may a deck differ:
 
-`TITLE` · `NOTE` · `THEME` · `COMPONENTS` · `PREFLIGHT` · `ICONS` · `SLIDES` · `DOC_TITLE` ·
-`DOC_SUB` · `COMPOSITION` · `SCRIPT`
+`TITLE` · `NOTE` · `THEME` · `COMPONENTS` · `PREFLIGHT` · `ICONS` · `SLIDES` · `CHROME_TAIL` ·
+`DOC_TITLE` · `DOC_SUB` · `COMPOSITION` · `SCRIPT`
+
+**`CHROME_TAIL` is the twelfth and the odd one (T-114).** The others hold what a deck *says*; this
+one holds where one control *sits*. DS-218 wants a persistent stop for motion that loops and a
+control behind a click is not persistent, so `Motion` is inside the `More` menu in a deck with
+nothing looping and beside it in a deck that loops. That is a varying **parent**, not varying
+content, and a slot bounded to one element cannot express it — so the slot is the region holding
+both positions.
 
 **Three of them nest inside `SCRIPT`**, and finding them is what this cut was worth: `DECK_NAME`,
 `STAGES` and `STAGE_ICON` are per-deck facts that had been sitting in the middle of 560 invariant

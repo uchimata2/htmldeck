@@ -92,6 +92,7 @@
   --disc-panel-w:calc(820*var(--du));
   --disc-key-w:calc(180*var(--du));
   --sources-box-w:calc(340*var(--du));
+  --more-menu-w:calc(200*var(--du));
 
   /* ---- shape: square. The corner radius goes to zero and the shadow flattens, which is the
      single most visible non-colour change in the set. */

@@ -2,8 +2,8 @@
 id: T-114
 title: The chrome row layout — give the pager the corner, and decide what happens to Read and Motion
 type: deliverable
-status: planned
-phase: implement
+status: review
+phase: review
 parent: null
 blocked_by: []
 related: [T-035, T-036, T-112]
@@ -190,19 +190,19 @@ container was the problem.
   **DS-138**, **DS-168**, **DS-131**.
 
 **Acceptance criteria**
-- [ ] `docs/sketches/chrome-row-candidates.svg` shows X and Y against today's row at one scale, and
+- [x] `docs/sketches/chrome-row-candidates.svg` shows X and Y against today's row at one scale, and
       the owner has ruled on it.
-- [ ] The navigation container has a contract row saying what may be inside it and what may not.
+- [x] The navigation container has a contract row saying what may be inside it and what may not.
 - [ ] The measured ruler capacity of each candidate is recorded before the ruling, not after.
-- [ ] The chosen layout is built, with contract rows for anything new.
-- [ ] The pager is filled, and is the last control inside the navigation container.
-- [ ] On a deck containing looping motion, a persistent keyboard-operable stop control is present —
+- [x] The chosen layout is built, with contract rows for anything new.
+- [x] The pager is filled, and is the last control inside the navigation container.
+- [x] On a deck containing looping motion, a persistent keyboard-operable stop control is present —
       verified by keyboard alone, with no mouse.
-- [ ] Tab order follows visual prominence.
-- [ ] If Y: DS-138 carries the exemption and its boundary, and the multi-source mark is demonstrably
+- [x] Tab order follows visual prominence.
+- [x] If Y: DS-138 carries the exemption and its boundary, and the multi-source mark is demonstrably
       still bound by it.
-- [ ] `chrome_row.py` green; `check.py` green; `contrast.py` green on any new weight.
-- [ ] Opened and looked at, offline, on a deck long enough to exercise the ruler's capacity bound.
+- [x] `chrome_row.py` green; `check.py` green; `contrast.py` green on any new weight.
+- [x] Opened and looked at, offline, on a deck long enough to exercise the ruler's capacity bound.
 
 **Open questions**
 - *Settled 2026-08-17 by [T-119](T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md):*
@@ -223,16 +223,16 @@ container was the problem.
 | # | Step | Output |
 | :-- | :--- | :--- |
 | 1 | ~~Measure the current controls width and the ruler capacity it leaves~~ — **done 2026-08-18**, `chrome_row.py` on the reference deck in real Chrome, offline: row **1726.0 du**, controls block **505.6**, gap **43.1**, so **548.8 du taken — 32% of the row** — **1177.2 left** and **17 targets as built** | the baseline number |
-| 2 | Measure the capacity **Y** leaves, **after step 7** — see the sequencing note below | Y's number, against 17 |
+| 2 | ~~Measure the capacity **Y** leaves, after step 7~~ — **done 2026-08-18**, `chrome_row.py` on the built row in real Chrome, offline: row **1726.0 du**, the five controls still **548.5**, the container's own border and pad **35.8**, so **584.2 taken**, **1141.8 left** and **16 targets as built**. **Y costs one target, and all of it is the drawn box** | Y's number: 16, against 17 |
 | 3 | ~~Draw X and Y at stage proportions, against today's row~~ — **done**, [`docs/sketches/chrome-row-candidates.svg`](../docs/sketches/chrome-row-candidates.svg), revision 2 | the sketch |
 | 4 | ~~Owner rules~~ — **done 2026-08-12: Y** | decision, logged |
-| 5 | ~~**Settle DS-138 before any code**~~ **done 2026-08-17 by T-119**; the remaining clause was **decided 2026-08-18** (§1). What is left is the edit itself: name the multi-source mark beside tier two in DS-138's direction clause | DS-138 amended, and the two citations that already name it resolve again |
-| 6 | Write the navigation container's contract row — what may sit inside it and what may not | contract |
-| 7 | Build Y: a `.navbox` holding the ruler, the counter and the filled pager; a standalone `More` **outside** it whose menu opens upward; `rulerAvailableDu()` measuring the navbox rather than the whole chrome row | shell, css, js |
-| 7a | **Motion leaves the menu whenever the deck loops.** DS-218 wants a persistent stop control and one behind a click is not persistent, so the placement is conditional — decided at **build** time, because a control JavaScript relocates at load is one a static gate cannot decide | the conditional control, and the rule that decides it |
-| 8 | Re-derive every published figure the new row moves. **DS-217 now names 548.8 du and 17 targets** — corrected from 546 on 2026-08-18, *before* the row moves, and both change again once it does; `tools/docs/figures.py` finds the others | figures corrected |
-| 9 | Keyboard-only pass on a looping deck | DS-218 verdict |
-| 10 | Render on a long deck and look at it offline | verdict |
+| 5 | ~~**Settle DS-138 before any code**~~ **done 2026-08-17 by T-119**; the remaining clause was **decided 2026-08-18** (§1) ~~and the edit is what is left~~ — **written the same day**: DS-138's direction clause now names the multi-source provenance box beside tier two | DS-138 amended, and the two citations that already name it resolve again |
+| 6 | ~~Write the navigation container's contract row~~ — **done 2026-08-18, pulled forward into step 7** because `component.py` reads the contract and a gate cannot be left failing across the pass. §3.4 gains `.navbox`, `.more`, `.more-menu`, `.btn--pager`, the closed list of what may sit in the container, and the cost the one-slot design spends | contract |
+| 7 | ~~Build Y~~ — **done 2026-08-18**. `.navbox` drawn (hairline on `--line`, `--sp-1`/`--sp-2` pad), the pager filled via `.btn--pager`, `More` standalone with an upward menu, `rulerAvailableDu()` on the navbox's **content** box | shell, css, js |
+| 7a | ~~**Motion leaves the menu whenever the deck loops**~~ — **done 2026-08-18**. `CHROME_TAIL` is the twelfth slot; `shell.py tail <deck> --loops` or `--still` sets the form; `audit.py` reads `motionPersistent` off the built markup and fails a looping deck whose control is in the menu. All three shipped decks loop and all three carry the sibling form | the conditional control, and the rule that decides it |
+| 8 | ~~Re-derive every published figure the new row moves~~ — **done 2026-08-18**. **DS-217 now names 584.2 du and 16 targets**; `figures.py` found nine more and then seven, across two shell changes — every deck's byte size and the `refcheck` counts. `0 stale figure(s)` | figures corrected |
+| 9 | ~~Keyboard-only pass on a looping deck~~ — **done 2026-08-18, DS-218 satisfied**. Exercised **through the shipped handlers in real headless Chrome, offline**, not by a person pressing keys — L-110's distinction, stated because it is the claim's limit | DS-218 verdict |
+| 10 | ~~Render on a long deck and look at it offline~~ — **done 2026-08-18**, 25 slides, 1920×1080, network mapped to NOTFOUND. Dense mode engages, the row stays one line at 52 du, no overlap, the tail inside the row. **Looking is what found the two missing halves** — see §3 | verdict |
 
 **Sequencing note, and it costs an acceptance criterion.** Step 2 was written to run *before* the
 ruling, and criterion 3 says so. It cannot: the capacity a layout leaves is a property of the
@@ -290,6 +290,44 @@ means `shell.py` learns it, not just the markup.
 ## 3. Implement
 
 **Decisions & assumptions**
+- 2026-08-18 — **the drawn box and the filled pager were nearly not built, and only rule 6 caught
+  it.** Step 7's line reads *a `.navbox` holding the ruler, the counter and the filled pager*, and
+  the first build produced a `.navbox` that was a flex container with no border and a pager styled
+  like every other control. Every gate passed. The screenshot did not: the row read exactly as it
+  had before, because the ruler's `flex:1` pushes the counter and pager to the container's right
+  edge, where they sit beside *Motion* and *More* with nothing to say they are not the same group.
+  **A container that draws nothing groups nothing.** The ruled sketch had said so all along —
+  `.box` is `fill:none; stroke:#d9dde3` and `.btnp` is a solid fill — and the sketch was read for
+  its *arrangement* and not for its *weight*. What this cost is one extra shell change and one
+  extra re-sync of every deck; what it bought is the finding, which is that this task's own
+  complaint (*the pager reads as an afterthought*) is answered by two changes and neither one is
+  sufficient alone: company without weight leaves the pager invisible, weight without company
+  leaves it loud and still in the wrong group.
+- 2026-08-18 — **the drawn box costs exactly one ruler target, and the first measurement hid it.**
+  `rulerAvailableDu()` measured the container's border box, so it reported 1177.5 du and 17
+  targets while the ticks actually had 1141.8 and 16. The tell was the ruler *label* shrinking by
+  34 du between two runs with no other change — the padding came out of the flexible element,
+  which is exactly where a wrong measurement is least visible. Both the deck and `chrome_row.py`
+  now subtract padding and border, and they must keep agreeing (**L-08**).
+- 2026-08-18 — **`shell.py check` no longer owns the `More`, `Read` and `Motion` labels.** The tail
+  is a per-deck region now, so a deck may reword them and the byte comparison stays green. This is
+  the cost of the one-slot design ruled on 2026-08-18, it is stated in
+  [`../docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) §3.4, and what guards them
+  instead is `component.py` against that table. The shell self-test asserts **both** directions now
+  — an edited pager label is caught, an edited menu label is deliberately not.
+- 2026-08-18 — **adding a slot broke the command that repairs decks, and T-176's fix had to be
+  applied again in a new shape.** `cut` finds a slot by a literal delimiter, so the release that
+  *adds* one leaves every existing deck with no anchor: `check` said NOT A SHELL and `sync` could
+  not read the deck in order to repair it. The self-test then blocked `sync` outright by cutting
+  the reference deck as it stood on disk. Rather than loosen `cut` — which would spend the property
+  the literals exist for — `shell.py` gained a `MIGRATIONS` table that *installs* the anchor by an
+  exact, checked replacement, announced in the report. **A migration is the one edit `sync` makes
+  that is not "the shell you already had, one release newer",** so it says so.
+- 2026-08-18 — **a new token exposed a real defect in `tokens --write`,** which carried a dual-band
+  colour's **dark** value into the deck's light band. Sidestepped here by bordering the box on
+  `--line`, which every deck already declares, so no deck needed a new token at all. The defect is
+  filed as [T-177](T-177-tokens-write-carries-the-dark-value-into-the-light-band.md); it is not
+  T-114's to fix and the next dual-band token meets it.
 - 2026-08-12 — owner: **the navigation container holds navigation only.** The ruler, the counter and
   the pager belong together; *Read* and *Motion* leave the box. This supersedes the first three
   candidates, which all argued about arrangement inside a container whose membership was the actual
@@ -322,7 +360,16 @@ means `shell.py` learns it, not just the markup.
 
 | Acceptance criterion | Result | Note |
 | :--- | :--- | :--- |
-|  |  |  |
+| Sketch shows X and Y, owner ruled | met | `docs/sketches/chrome-row-candidates.svg` rev 2; Y ruled 2026-08-12 |
+| Navigation container has a contract row | met | `COMPONENT-CONTRACT.md` §3.4, with the closed list of what may sit in it |
+| **Capacity of each candidate recorded before the ruling** | **not met** | **Booked at planning, not discovered here.** The capacity a layout leaves is a property of a *rendered* row, and Y's did not exist until step 7 built it. The owner ruled on 2026-08-12 on flexibility and future room, having said so — the number was never the input this criterion assumed. Rewording it to match would be the dishonest close `TASK-WORKFLOW.md` §2 names |
+| Chosen layout built, contract rows for anything new | met | `.navbox`, `.more`, `.more-menu`, `.btn--pager`; `CHROME_TAIL` is the twelfth slot |
+| Pager filled, last control in the container | met | `.btn--pager`, ink fill, `--paper` label; last child of `.navbox` |
+| Persistent keyboard stop on a looping deck | met | Step 9. **Exercised through the shipped handlers in real headless Chrome, offline** — not a person at a keyboard, which is L-110's distinction and the limit of the claim |
+| Tab order follows visual prominence | met | Measured with the menu shut: current tick, `prev`, `next`, `motion`, `moreBtn` — the filled pager precedes the outlined tail |
+| DS-138 carries the exemption and still binds the mark | met | Narrowed by T-119, extended here 2026-08-18 to name the provenance box beside tier two |
+| `chrome_row.py`, `check.py`, `contrast.py` green | met | `check_all.py`: 0 failures, 184 s. `contrast.py` gained the reversed pair the filled pager introduced |
+| Opened and looked at, offline, past the capacity bound | met | Step 10, 25 slides at 1920×1080, network mapped to NOTFOUND. **Looking is what found the undrawn box and the unfilled pager**, both of which every gate had passed |
 
 **Child fix tasks raised**
 - none
@@ -340,3 +387,4 @@ means `shell.py` learns it, not just the markup.
 | 2026-08-18 | (no change) | **Plan step 5 landed** — DS-138 names the multi-source box, so nothing now gates chrome code. **Stopped deliberately before step 7**, at a boundary where no shell file is touched and no shipped deck is out of sync. Reading `shell/README.md` to plan the build found the step's real size: **`shell.py check` is byte for byte**, so editing the three shell files fails every deck already built until each is `sync`ed — the generated seeded-defects deck regenerated instead (**L-77**) — with `tokens` after it, the gates after that, and `figures.py` last, because a shell change moves every deck's byte size. That is one uninterrupted pass with the tree frozen, not an edit. **Step 7a is also short a mechanism**: `Motion`'s conditional placement is a build-time difference, and `shell.py` has no slot or flag for it, so which of the two it becomes has to be settled before the row's markup is written. Both recorded in §2 rather than discovered mid-build. |
 | 2026-08-18 | (no change) | **Owner settled step 7a's mechanism: a slot.** Designing it against `shell.py`'s `SLOTS` found the constraint that decides its shape — `cut()` replaces what lies between two *literal* delimiters, and *Motion* varies by **parent** rather than by content, so no slot bounded to the control can express it. The slot is therefore the **chrome row's tail**, the smallest region containing both of *Motion*'s positions, named for the region rather than for the control. `shell.py new` writes the menu form as the default and the gate decides correctness, which is what build-time placement was for. Nothing in `shell/` touched: the edit is step 7's frozen-tree pass, and this is the design it runs from. |
 | 2026-08-18 | (no change) | **Reconcile sweep** for what this task's own findings falsified. `RELEASE-PHASES.md`'s T-114 row still read *DS-138 is step one and gates every line of chrome code*, contradicting the T-119 row four lines below it on the same table — corrected, with the outcome and why the boundary needed re-testing. `RULESET-AUDIT.md`'s two DS-138 rows both stated the rule as *bound to tier two*, which stopped being its scope on 2026-08-18; each gained a dated extension note rather than a rewrite, so the audit's own verdict stays readable as history. **DS-217's 546 corrected to the measured 548.8** — the number came from T-035, and the row grew under it without the rule being told. `figures.py` reports 0 stale, so nothing else quoted it; T-035's own record keeps 546 as the dated measurement it was. |
+| 2026-08-18 | planned → review | **Y is built, and looking at it is what finished it.** Steps 7, 7a, 2, 6, 8, 9 and 10 all ran in one pass. The row is a drawn `.navbox` holding the ruler, the counter and the filled pager, with `Motion` and `More` outside it; the tail is the twelfth slot, `shell.py tail` sets its form, and `audit.py` reads `motionPersistent` off the built markup so a looping deck cannot satisfy DS-218 with a control shut inside a menu. All three shipped decks loop and all three carry the sibling form. **Two halves of the ruled sketch were nearly missed and no gate could have said so**: the first build's container drew nothing and its pager was outlined, every check passed, and the row read exactly as before — company without weight is invisible and weight without company is loud in the wrong group, which is the finding rather than the fix. **The drawn box costs exactly one ruler target**, 17 → 16, and the first measurement hid it by reading the border box: the tell was the flexible label shrinking 34 du between two otherwise identical runs. Adding a slot broke `sync` for every existing deck, so `shell.py` gained a checked `MIGRATIONS` table rather than a looser `cut`, and **T-176's self-test defect had to be fixed again in a new shape**. A new token exposed `tokens --write` carrying a dual-band colour's dark value into the light band — sidestepped by bordering on `--line`, filed as [T-177](T-177-tokens-write-carries-the-dark-value-into-the-light-band.md). `check_all.py` 0 failures in 184 s; `figures.py` 0 stale after sixteen corrections across two shell changes. **Criterion 3 closes `not met` with the reason booked at planning**, unchanged. |

@@ -116,6 +116,10 @@ def read_tokens(html):
 # carry meaning, not separators. `--line` is a separator; `--ui-line` and `--data-quiet` are not.
 PAIRS = [
     ("body text on the ground",        "ink",        "paper",       4.5, "1.4.3 text"),
+    # The filled pager (T-114), which is the row's only reversed surface. The ratio is symmetric
+    # with the row above, so this can only pass while that one does - and it is listed anyway,
+    # because a pair that holds by arithmetic somebody did in their head is not covered.
+    ("reversed label on a filled control", "paper",  "ink",         4.5, "1.4.3 text"),
     ("secondary text on the ground",   "ink-soft",   "paper",       4.5, "1.4.3 text"),
     ("mono labels on the ground",      "ink-faint",  "paper",       4.5, "1.4.3 text"),
     ("mono labels on a sunk panel",    "ink-faint",  "paper-sunk",  4.5, "1.4.3 text"),

@@ -58,7 +58,7 @@ DECK_JS = os.path.join(SHELL, "deck.js")
 ICONS = os.path.join(SHELL, "icons.svg")
 DEFAULT_THEME = os.path.join(ROOT, "themes", "quarto.css")
 
-# The eleven regions a deck varies in. Everything else is the shell.
+# The twelve regions a deck varies in. Everything else is the shell.
 #
 # The delimiters are literals rather than patterns on purpose: they are compared, not merely
 # found, so a deck whose chrome comment has drifted has to fail rather than be re-anchored around.
@@ -76,6 +76,15 @@ SLOTS = (
     ("SLIDES", '<main class="stage" id="stage" aria-label="Presentation">\n',
      "\n<!-- ============================================================ chrome -->",
      "every <section class=\"slide\">"),
+    # Twelfth, added by T-114. `Motion` has no varying CONTENT - it has a varying PARENT: inside
+    # `.more-menu` where the deck has nothing looping, a sibling of `.more` where it does (DS-218,
+    # which wants a persistent control and does not get one behind a click). `cut()` replaces what
+    # lies between two literal delimiters, so no slot bounded to one element can express a move
+    # between two parents. The slot is therefore the smallest region containing both positions -
+    # the chrome row's tail - and it is named for the region rather than for the control that
+    # moves inside it.
+    ("CHROME_TAIL", "<!-- chrome-tail -->\n", "\n</nav>",
+     "the chrome row's tail: `More`, and `Motion` when the deck loops (DS-218)"),
     ("DOC_TITLE", '<h1 class="t">', "</h1>", "the reading view's heading"),
     ("DOC_SUB", '<p class="s">', "</p>", "the reading view's standfirst"),
     ("COMPOSITION", '<style id="slides">', "</style>", "this deck's own layout"),
@@ -159,6 +168,46 @@ NOTE_DEFAULT = """  Built by htmldeck. One self-contained file: every font, icon
   inlined, and it renders with the network disabled (DS-001)."""
 
 
+# The tail a fresh deck gets: `Motion` INSIDE the menu, because a new deck has no motion yet and
+# DS-218 owes a persistent control only where something loops. A deck that grows looping motion
+# moves `Motion` out to sit beside `.more`; `audit.py` fails it until it does, which is the whole
+# reason the placement is a build-time fact rather than something the script decides at run time
+# (T-114 step 7a).
+CHROME_TAIL_MENU = """  <div class="more" id="more">
+    <button class="btn" id="moreBtn" aria-expanded="false" aria-controls="moreMenu">More</button>
+    <div class="more-menu" id="moreMenu" hidden>
+      <button class="btn" id="toDoc">Read</button>
+      <button class="btn" id="motion" aria-pressed="false">Motion on</button>
+    </div>
+  </div>"""
+
+
+# The other form, for a deck that loops. DS-218 wants a control the reader can reach WHILE the
+# motion runs, and one inside a shut menu is not that - so `Motion` comes out and sits beside
+# `More`, which stays last because it is the overflow. `audit.py` decides which form a deck owes;
+# this file only holds the two, so that the shell, the `tail` command and the contract cannot
+# drift into three descriptions of the same markup (T-114 step 7a).
+CHROME_TAIL_LOOPING = """  <button class="btn" id="motion" aria-pressed="false">Motion on</button>
+  <div class="more" id="more">
+    <button class="btn" id="moreBtn" aria-expanded="false" aria-controls="moreMenu">More</button>
+    <div class="more-menu" id="moreMenu" hidden>
+      <button class="btn" id="toDoc">Read</button>
+    </div>
+  </div>"""
+
+
+def tail(html, looping):
+    """The deck, with the chrome tail in the form its own motion earns (DS-218).
+
+    `looping` is the caller's answer to *does anything in this deck loop or run past 5 s* - which
+    `audit.py` measures and this tool cannot, because it reads bytes and the question is about
+    rendered animation. Idempotent: a deck already in the asked-for form is returned unchanged.
+    """
+    skeleton, parts = cut(migrate(html))
+    parts["CHROME_TAIL"] = CHROME_TAIL_LOOPING if looping else CHROME_TAIL_MENU
+    return fill(skeleton, parts)
+
+
 def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_icons=None):
     """A deck with the shell in place and no slides yet."""
     resolved = theme_mod.resolve(read(theme_css))
@@ -185,6 +234,11 @@ def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_
         # wrote, and DS-090 wants a claim there.
         "SLIDES": "\n<!-- slides go here, one <section class=\"slide\"> each "
                   "(COMPONENT-CONTRACT.md 3.2) -->\n",
+        # The menu form, because a fresh deck has no motion yet and DS-218 owes a persistent
+        # control only where something loops. A deck that grows looping motion moves `Motion` out
+        # of the menu; `audit.py` fails it until it does, which is the whole point of deciding
+        # this in the markup rather than at run time (T-114 step 7a).
+        "CHROME_TAIL": CHROME_TAIL_MENU,
         "DOC_TITLE": escape(title),
         "DOC_SUB": escape(subtitle),
         "COMPOSITION": "\n/* this deck's own layout. The look is the theme region's; "
@@ -305,8 +359,55 @@ def sheet(lib=None):
 # ------------------------------------------------------------------------------- sync
 
 
+# **What `sync` cannot carry on its own, and why this is a table rather than a looser `cut`.**
+# `cut` finds a slot by a literal delimiter, so the release that ADDS a slot leaves every existing
+# deck with no anchor for it: `check` reports NOT A SHELL, and `sync` - the one command that
+# repairs a deck - cannot read the deck in order to repair it. The tempting fix is to let a missing
+# anchor default silently, and that spends the property the literals were chosen for: a deck whose
+# markup had drifted would stop failing.
+#
+# So the anchor is INSTALLED instead, by an exact replacement that is itself checked. Each entry is
+# `(what the previous shell shipped, what replaces it, the task that needed it)`. A deck already
+# carrying the anchor matches nothing and is untouched; a deck carrying neither still fails `cut`,
+# loudly, which is the case the literals exist for.
+MIGRATIONS = (
+    ("""    <button class="btn" id="toDoc">Read</button>
+    <button class="btn" id="motion" aria-pressed="false">Motion on</button>
+  </div>
+</nav>""",
+     """  </div>
+  <!-- chrome-tail -->
+%s
+</nav>""",
+     "T-114: the chrome row's tail became a slot, and `Read` and `Motion` left the "
+     "navigation container"),
+)
+
+
+def migrate(html):
+    """The deck, with any anchor a later release added installed at its literal old position.
+
+    Ordered and idempotent: an entry whose old text is absent - because the deck is already
+    current, or because it never had that shell - is skipped, and nothing else is touched. `sync`
+    runs this before `cut`; `check` does NOT, so an un-migrated deck still reports rather than
+    being quietly read as current.
+
+    **The migrated tail is the default form, and that is a decision rather than a fallback**:
+    `Read` and `Motion` both move into the menu. A deck with looping motion then fails DS-218 in
+    `audit.py` until someone moves `Motion` back out beside `.more` - which is the correct
+    outcome, because this tool cannot see the deck's motion and the gate can.
+    """
+    for old, new, _why in MIGRATIONS:
+        if "%s" in new:
+            new = new % CHROME_TAIL_MENU
+        if old in html:
+            html = html.replace(old, new, 1)
+    return html
+
+
+
 def sync(html):
-    """The deck, with the **installed** shell under its own eleven regions (T-124).
+    """The deck, with the **installed** shell under its own twelve regions (T-124).
 
     `cut` gives the deck's parts and throws its shell away; filling `shell/shell.html` with those
     parts is the same operation in the other direction, and that is the whole upgrade. The script
@@ -318,6 +419,7 @@ def sync(html):
     command there was nothing to run: `new` builds an empty deck, and pointing it at a deck with
     slides in it is not an upgrade path. Three releases in a row could not name a smallest edit.
     """
+    html = migrate(html)
     _skeleton, parts = cut(html)
     _script_skeleton, script_parts = cut(parts["SCRIPT"], SCRIPT_SLOTS)
     parts["SCRIPT"] = fill(read(DECK_JS), script_parts)
@@ -371,12 +473,21 @@ def changes(before, after):
 # installing into - so it is the one that can see this. It reports; it does not write, because
 # writing here would cost the guarantee that makes `sync` safe to run on a 250 KB file nobody can
 # read. `tokens --write` is the separate, narrower promise: it only ever ADDS what is missing.
-TOKEN_MARK = "/* declared by `shell.py tokens`"
-TOKEN_BLOCK = ("\n\n" + TOKEN_MARK + ": the shipped shell reads these and this deck\n"
+TOKEN_MARK = "/* declared by `shell.py tokens`:"
+TOKEN_BLOCK = ("\n\n" + TOKEN_MARK + " the shipped shell reads these and this deck\n"
                "   carried no declaration of its own. The values are the shipped theme's - change\n"
                "   them if this deck wants a different look. Nothing already declared was touched,\n"
                "   and re-running adds to this block rather than making a second one. */\n"
                ":root{\n%s}\n")
+
+# The dark band's own marked block (T-177). Appended after the deck's own bands, where the higher
+# specificity of `:root[data-theme="dark"]` over `:root` is what makes the dark value win in dark
+# mode rather than the light one written a few lines above it.
+TOKEN_MARK_DARK = "/* declared by `shell.py tokens`, dark band:"
+TOKEN_BLOCK_DARK = ("\n\n" + TOKEN_MARK_DARK + " the same tokens at the shipped\n"
+                    "   theme's DARK values. A separate block because they are separate values -\n"
+                    "   carrying one of the two into both bands is the defect this replaced. */\n"
+                    ':root[data-theme="dark"]{\n%s}\n')
 
 _CACHE = {}
 
@@ -389,60 +500,130 @@ def contract_tokens():
 
 
 def shipped_values(theme_css=DEFAULT_THEME):
-    """`{--name: value}` as the shipped theme declares them - the default a deck gets from `new`."""
+    """`{--name: value}` as the shipped theme declares them, flattened - what a value IS.
+
+    Flattened is right for reading and wrong for carrying; `shipped_bands` is the other question.
+    """
     if theme_css not in _CACHE:
         _CACHE[theme_css] = theme_mod.declarations(read(theme_css))
     return _CACHE[theme_css]
 
 
+def shipped_bands(theme_css=DEFAULT_THEME):
+    """`{band: {--name: value}}` for the shipped theme - what a value is IN EACH BAND (T-177)."""
+    key = ("bands", theme_css)
+    if key not in _CACHE:
+        _CACHE[key] = theme_mod.bands(read(theme_css))
+    return _CACHE[key]
+
+
 def undeclared_tokens(html, theme_css=DEFAULT_THEME):
-    """`[(token, the shipped theme's value or None)]` - every token the contract requires that this
-    deck's theme region does not declare.
+    """`[(token, {band: the shipped theme's value})]` - every token the contract requires that this
+    deck's theme region does not declare, with a value per band the shipped theme declares it in.
 
     Read the same way DS-013 reads it - `theme.extract` then `theme.declarations`, against
     `theme.load` - so what this reports and what the gate fails on cannot drift apart. A deck with
     no theme region at all is DS-013's own verdict and not this; it returns nothing rather than
     naming all 117.
+
+    **The value is a map rather than a string since T-177.** A colour is declared in both bands and
+    the two are different values; returning one of them was how the dark value reached a light
+    band. An empty map means the shipped theme has no value at all, which is a different answer
+    from *one value* and is reported differently.
     """
     region = theme_mod.extract(html)
     if region is None:
         return []
     here = theme_mod.declarations(region)
-    shipped = shipped_values(theme_css)
-    return [(name, shipped.get(name)) for name in sorted(contract_tokens()) if name not in here]
+    bands = shipped_bands(theme_css)
+    out = []
+    for name in sorted(contract_tokens()):
+        if name in here:
+            continue
+        out.append((name, {b: v[name] for b, v in bands.items() if name in v}))
+    return out
 
 
 def declare_tokens(html, theme_css=DEFAULT_THEME):
-    """`(html, [(token, value)])` - the deck with every missing declaration added at the shipped
-    theme's value, and what was added.
+    """`(html, added, refused)` - the deck with every missing declaration added **in each band the
+    shipped theme declares it in**, what was added as `[(token, band, value)]`, and what was
+    declined as `[(token, why)]`.
 
     **Only ever additive.** A token already declared is a value someone chose, and a version gap is
     indistinguishable from a deliberate edit (the same reason `sync` reports first) - so nothing
     already present is read, let alone rewritten. A token the shipped theme has no value for is
     left for a person: there is nothing to copy and inventing one is how a band gets a number that
     fits one deck (**L-38**).
+
+    **Carry both bands, and refuse rather than guess (T-177).** A token the shipped theme declares
+    twice is written twice, into this deck's own light and dark bands. Where the deck has no band
+    to receive one of them, the token is **declined with the reason** instead of being written at
+    whichever value happened to be read last - which is the defect this function was fixed for. A
+    wrong value is silent; a declined one is a sentence an adopter can act on.
     """
-    missing = [(n, v) for n, v in undeclared_tokens(html, theme_css) if v]
-    if not missing:
-        return html, []
+    missing = undeclared_tokens(html, theme_css)
     region = theme_mod.extract(html)
-    lines = "".join("  %s:%s;\n" % (name, value.strip()) for name, value in missing)
-    if TOKEN_MARK in region:
-        close = region.index("}", region.index(TOKEN_MARK))
-        region = region[:close] + lines + region[close:]
-    else:
-        region = region.rstrip("\n") + TOKEN_BLOCK % lines
-    return theme_mod.swap(html, region), missing
+    if region is None:
+        return html, [], []
+    deck_bands = theme_mod.bands(region)
+
+    plan, added, refused = {}, [], []
+    for name, vals in missing:
+        if not vals:
+            continue                       # nothing to copy; the report already says so
+        absent = sorted(b for b in vals if b not in deck_bands)
+        if absent:
+            refused.append((name, "the shipped theme gives it a %s value and this deck has no %s "
+                                  "band to put %s in"
+                            % (" and a ".join(sorted(vals)), " or ".join(absent),
+                               "it" if len(absent) == 1 else "them")))
+            continue
+        for band in sorted(vals):
+            plan.setdefault(band, []).append((name, vals[band]))
+            added.append((name, band, vals[band]))
+    if not plan:
+        return html, [], refused
+
+    for band, mark, block in (("light", TOKEN_MARK, TOKEN_BLOCK),
+                              ("dark", TOKEN_MARK_DARK, TOKEN_BLOCK_DARK)):
+        rows = plan.get(band)
+        if not rows:
+            continue
+        lines = "".join("  %s:%s;\n" % (name, value.strip()) for name, value in rows)
+        if mark in region:
+            close = region.index("}", region.index(mark))
+            region = region[:close] + lines + region[close:]
+        else:
+            region = region.rstrip("\n") + block % lines
+    return theme_mod.swap(html, region), added, refused
 
 
 def token_report(missing):
     """The lines `sync` and `check` both owe an adopter. Names the token and a value, never a
-    count: a count sends them back to the tool, and the value is what they have to type."""
+    count: a count sends them back to the tool, and the value is what they have to type.
+
+    A dual-band token prints both values, because both are what has to be typed and printing one
+    is the shape of the defect T-177 fixed.
+    """
     out = []
-    for name, value in missing:
-        out.append("    %-18s %s" % (name, ("shipped theme declares %s" % value.strip()) if value
-                                     else "no value in the shipped theme - see THEME-CONTRACT.md"))
+    for name, vals in missing:
+        if not vals:
+            said = "no value in the shipped theme - see THEME-CONTRACT.md"
+        else:
+            said = "shipped theme declares " + ", ".join(
+                "%s %s" % (band, vals[band].strip()) for band in sorted(vals))
+        out.append("    %-18s %s" % (name, said))
     return out
+
+
+def refusal_report(refused):
+    """What `--write` declined and why, in the shape `token_report` uses. Empty when nothing was.
+
+    Separate from `token_report` because they answer different questions - *what is missing* and
+    *what this tool will not do about it* - and an adopter reading the first should not have to
+    infer the second from a count that came up short.
+    """
+    return ["    %-18s DECLINED - %s" % (name, why) for name, why in refused]
 
 
 # ------------------------------------------------------------------------------- check
@@ -582,7 +763,11 @@ def self_test():
     # can say about `shell/shell.html` is the repository's business and `check` already says it.
     reference = os.path.join(ROOT, "examples", "reference-deck.html")
     if os.path.exists(reference):
-        original = read(reference)
+        # `migrate` first, and this is **T-176 in a new shape**: the deck on disk is whatever
+        # the last release left, so a self-test that reads it as current blocks `sync` - the one
+        # command that makes it current. What is under test is losslessness of the cut on a real
+        # 270 KB deck, which is a property of `cut` rather than a claim about the repository.
+        original = migrate(read(reference))
         real_skeleton, real_parts = cut(original)
         ok("and it round-trips on a real deck", fill(real_skeleton, real_parts) == original)
 
@@ -606,9 +791,22 @@ def self_test():
     ok("an icon table shorter than the stages is caught",
        any(p.startswith("STAGE TABLE") for p in check(shorter)))
 
-    broken = fresh.replace('<button class="btn" id="toDoc">Read</button>',
-                           '<button class="btn" id="toDoc">Document</button>', 1)
+    # The pager's label, and it MOVED here in T-114. `Read` was the seeded defect until the chrome
+    # row's tail became a slot, at which point editing it stopped being a skeleton change and
+    # became a per-deck one - so the fixture passed by testing nothing. The seed has to sit in
+    # markup the byte comparison still owns, and the navigation container is where that now is.
+    broken = fresh.replace('<button class="btn btn--pager" id="prev" aria-label="Previous slide">',
+                           '<button class="btn" id="prev" aria-label="Back">', 1)
     ok("edited chrome is caught", any(p.startswith("SKELETON") for p in check(broken)))
+
+    # The other edge of the same move, asserted rather than assumed: what went into the slot is
+    # now the DECK's, and `check` must not report it. What guards those labels instead is
+    # `component.py` against COMPONENT-CONTRACT.md 3.4, which is where the cost of the one-slot
+    # design is paid (T-114 step 7a).
+    retitled = fresh.replace('<button class="btn" id="toDoc">Read</button>',
+                             '<button class="btn" id="toDoc">Document</button>', 1)
+    ok("and the tail is the deck's, so a relabelled menu item is not",
+       not any(p.startswith("SKELETON") for p in check(retitled)))
 
     broken = fresh.replace('<main class="stage" id="stage" aria-label="Presentation">', "<main>", 1)
     ok("a file without the shell's structure is caught",
@@ -619,8 +817,8 @@ def self_test():
     stale_parts = {
         "COMPONENTS": fresh.replace("\n<style>", "\n<style>\n.from-an-older-release{color:red}", 1),
         "SCRIPT": fresh.replace("<script>", "<script>\nvoid 0;  /* an older release */", 1),
-        "SKELETON": fresh.replace('<button class="btn" id="toDoc">Read</button>',
-                                  '<button class="btn" id="toDoc">Document</button>', 1),
+        "SKELETON": fresh.replace('<button class="btn btn--pager" id="prev" aria-label="Previous slide">',
+                                  '<button class="btn" id="prev" aria-label="Back">', 1),
     }
     for region, stale in sorted(stale_parts.items()):
         ok("a deck behind in %s fails check" % region, check(stale) != [])
@@ -646,9 +844,65 @@ def self_test():
        [n for n, _v in undeclared_tokens(sync(older))] == ["--qv-measure"],
        "sync silently changed the theme region, which it must never do")
 
-    declared_deck, added = declare_tokens(older)
+    declared_deck, added, refused = declare_tokens(older)
     ok("`tokens --write` declares it at the shipped theme's value",
-       added == [("--qv-measure", "80rem")], "added %r" % (added,))
+       added == [("--qv-measure", "light", "80rem")], "added %r" % (added,))
+    ok("and a single-band token is written once, not into both",
+       [b for _n, b, _v in added] == ["light"], "bands %r" % ([b for _n, b, _v in added],))
+    ok("and nothing was refused, because this deck has the band it needed",
+       refused == [], "refused %r" % (refused,))
+
+    # ---------------------------------------------------------------- T-177
+    # **The defect, seeded.** A colour is declared in BOTH bands at two different values, and the
+    # flat `{name: value}` map the old code used kept whichever was read last - the dark one. The
+    # deck then got a near-black border on paper and nothing at all in dark mode, and `theme.py`
+    # passed it, because DS-013 asks whether a token is DECLARED and not whether it is declared at
+    # the right value in the right band. Found by T-114, which added the first new dual-band token
+    # since this command shipped; every older one was already in every deck, so the flattening had
+    # never been asked to carry anything.
+    lightv = shipped_bands()["light"]["--line"]
+    darkv = shipped_bands()["dark"]["--line"]
+    ok("the fixture's token really is declared twice, at two values", lightv != darkv,
+       "--line is %r in both bands, so this fixture proves nothing" % lightv)
+
+    both = fresh.replace("--line:%s;" % lightv, "", 1).replace("--line:%s;" % darkv, "", 1)
+    ok("a deck missing a dual-band token is seen to be missing it",
+       "--line" in [n for n, _v in undeclared_tokens(both)],
+       "the fixture did not remove both declarations")
+    ok("and both values are reported, not one",
+       dict(undeclared_tokens(both))["--line"] == {"light": lightv, "dark": darkv},
+       "reported %r" % (dict(undeclared_tokens(both)).get("--line"),))
+
+    carried, added2, refused2 = declare_tokens(both)
+    ok("`--write` carries a dual-band token into BOTH bands",
+       sorted((b, v) for n, b, v in added2 if n == "--line")
+       == sorted([("dark", darkv), ("light", lightv)]),
+       "added %r" % ([r for r in added2 if r[0] == "--line"],))
+    ok("and neither band gets the other's value",
+       theme_mod.bands(theme_mod.extract(carried))["light"]["--line"] == lightv
+       and theme_mod.bands(theme_mod.extract(carried))["dark"]["--line"] == darkv,
+       "light %r dark %r" % (theme_mod.bands(theme_mod.extract(carried))["light"].get("--line"),
+                             theme_mod.bands(theme_mod.extract(carried))["dark"].get("--line")))
+    ok("the carried deck passes theme.py", not theme_mod.validate(theme_mod.extract(carried)))
+    ok("and carrying is idempotent", declare_tokens(carried)[1] == [])
+
+    # **The other half: refuse rather than guess.** A deck with no dark band has nowhere to put the
+    # second value, and writing only the first is exactly the silent wrong answer this replaced.
+    no_dark_region = "\n".join(
+        ln for ln in theme_mod.extract(both).split("\n") if "--line:" not in ln)
+    a = no_dark_region.index(':root[data-theme="dark"]{')
+    b = no_dark_region.index("}", a) + 1
+    bandless = theme_mod.swap(both, no_dark_region[:a] + no_dark_region[b:])
+    _out, added3, refused3 = declare_tokens(bandless)
+    ok("a deck with no dark band is REFUSED the dual-band token, not given half of it",
+       "--line" in [n for n, _w in refused3] and "--line" not in [n for n, _b, _v in added3],
+       "added %r refused %r" % (added3, refused3))
+    ok("and the refusal says which band is missing and why",
+       any("dark" in w and "no dark band" in w for n, w in refused3 if n == "--line"),
+       "said %r" % ([w for n, w in refused3 if n == "--line"],))
+    ok("a single-band token is still written to that same deck",
+       "--qv-measure" not in [n for n, _w in refused3])
+
     ok("and the deck then passes both", check(declared_deck) == []
        and not theme_mod.validate(theme_mod.extract(declared_deck)),
        "; ".join(check(declared_deck))[:70])
@@ -661,7 +915,11 @@ def self_test():
 
     # The property the command asserts on the adopter's file, asserted here on a deck that has
     # something in every per-deck region - a fresh skeleton would pass this vacuously.
-    original = read(reference)
+    # Compared against the MIGRATED deck, because `migrate` is the first thing `sync` does: a slot
+    # a later release added has no value in an older deck, and installing it is the one region
+    # sync is entitled to write. Comparing against the un-migrated file would assert that sync
+    # never adds a region, which is the opposite of what the migration table is for.
+    original = migrate(read(reference))
     ok("sync leaves every per-deck region of the reference deck untouched",
        kept(sync(original)) == kept(original),
        "moved: %r" % sorted(k for k in kept(original)
@@ -877,6 +1135,16 @@ def main(argv):
         deck = rest[0]
         rel = paths.display_path(deck, ROOT).replace("\\", "/")
         html = read(deck)
+        # A slot a later release ADDED has no anchor in this deck, and `sync` installs it (see
+        # MIGRATIONS). Installing it here as well is not redundant: everything below compares this
+        # deck with the synced one, and comparing the un-migrated file would read the newly
+        # installed region as a per-deck region that went missing, and refuse the write. It is
+        # announced rather than done quietly, because it is the one edit `sync` makes that is not
+        # "the shell you already had, one release newer".
+        for _old, _new, why in MIGRATIONS:
+            if _old in html:
+                print("MIGRATING     %s: %s" % (rel, why))
+        html = migrate(html)
         try:
             fresh = sync(html)
         except NotAShell as exc:
@@ -930,6 +1198,31 @@ instead: a sync writes the shipped shell over whatever that generator added (L-7
         print("Next: python tools/deck/shell.py check %s" % rel)
         return 0
 
+    if cmd == "tail":
+        if not rest:
+            sys.exit("usage: shell.py tail <deck> --loops|--still [--write]")
+        deck = rest[0]
+        rel = paths.display_path(deck, ROOT).replace("\\", "/")
+        if ("--loops" in rest) == ("--still" in rest):
+            sys.exit("%s: say --loops or --still, exactly one. It is `audit.py`'s DS-218 row "
+                     "that answers it: this tool reads bytes, and the question is about "
+                     "rendered animation." % rel)
+        looping = "--loops" in rest
+        html = read(deck)
+        fresh = tail(html, looping)
+        want = "beside `More`" if looping else "inside the menu"
+        if fresh == html:
+            print("OK - %s already carries `Motion` %s." % (rel, want))
+            return 0
+        if "--write" not in rest:
+            print("%s - `Motion` would move %s (DS-218)." % (rel, want))
+            print("Nothing written. Run again with --write.")
+            return 1
+        write(deck, fresh)
+        print("%s - `Motion` now sits %s." % (rel, want))
+        print("Next: python tools/deck/audit.py %s - the DS-218 row is what settles it." % rel)
+        return 0
+
     if cmd == "tokens":
         if not rest:
             sys.exit("usage: shell.py tokens <deck> [--write]")
@@ -947,16 +1240,23 @@ instead: a sync writes the shipped shell over whatever that generator added (L-7
             print("\nNothing written. Run again with --write to add exactly these, at the values\n"
                   "above. A token already declared is a value someone chose and is never touched.")
             return 1
-        written, added = declare_tokens(html)
+        written, added, refused = declare_tokens(html)
+        if refused:
+            print("")
+            for line in refusal_report(refused):
+                print(line)
         if not added:
-            print("\nNothing written: the shipped theme has no value for any of them, so there is\n"
-                  "nothing to copy. Declare them by hand - THEME-CONTRACT.md gives each a band.")
+            print("\nNothing written: there was no value to copy for any of them, or this deck has\n"
+                  "no band to copy it into. Declare them by hand - THEME-CONTRACT.md gives each\n"
+                  "a band.")
             return 1
         write(deck, written)
-        print("\n%s - %d declaration(s) added: %s"
-              % (rel, len(added), ", ".join(n for n, _v in added)))
+        bands = sorted(set(b for _n, b, _v in added))
+        print("\n%s - %d declaration(s) added across the %s band(s): %s"
+              % (rel, len(added), " and ".join(bands),
+                 ", ".join(sorted(set(n for n, _b, _v in added)))))
         print("Next: python tools/deck/theme.py check %s" % rel)
-        return 0
+        return 1 if refused else 0
 
     if cmd == "check":
         if not rest:
