@@ -128,31 +128,43 @@ def front_matter(lines):
 def markdown(text):
     """Enough Markdown to read a source document, and nothing that needs a dependency (**L-07**).
 
-    Front matter, headings, paragraphs, ordered and unordered lists, thematic breaks, tables,
-    quotes and fences - the shapes source documents are actually written in, audited against the
-    355-document corpus by T-107 rather than assumed. Anything unrecognised stays as its own
-    paragraph, which is the safe direction: a source renders as plainer than it was, never as
-    something it is not.
+    Front matter, headings, paragraphs, ordered and unordered lists to any depth, indented and
+    fenced code, thematic breaks, tables and quotes - the shapes source documents are actually
+    written in, audited against the source corpus by T-107 rather than assumed. Anything
+    unrecognised stays as its own paragraph, which is the safe direction: a source renders as
+    plainer than it was, never as something it is not.
 
-    **Two constructs are known to be missing and are counted rather than forgotten**: a nested list
-    is flattened to one level (995 lines in 125 corpus documents) and an indented code block becomes
-    paragraphs (958 lines in 124). Both change how the renderer holds state rather than adding a
-    branch to it, so both are T-121. Setext headings are not missing: the corpus uses `===` zero
-    times and `---`-under-text once in 355 documents, so `---` is read as a thematic break with no
-    ambiguity worth resolving.
+    **An indented line is not evidence of code, and the corpus is what says so.** T-107 counted an
+    upper bound and labelled it one; T-121 split it over the same tree, reading 357 documents where
+    T-107 read 355. Of 810 lines matching the indented pattern, 146 sit inside a fence, and of the
+    664 left, **229 - 34% - are wrapped continuations of a list item rather than code**. So the
+    branch is guarded by how deep the line sits inside the open item, not by the indent alone: a fix
+    that rendered every indented line as `<pre>` would have been wrong about a third of the
+    population it was written for. Nesting is held on a stack for the same kind of reason - the
+    corpus nests four levels deep, and two levels used to render as one.
+
+    Setext headings are still not missing: the corpus uses `===` zero times and `---`-under-text
+    once, so `---` is read as a thematic break with no ambiguity worth resolving.
     """
     lines = text.split("\n")
     fm, lines = front_matter(lines)
     text = "\n".join(lines)
-    out, para, rows, lst, fence = [], [], [], None, None
+    out, para, rows, fence, code, pending = [], [], [], None, [], False
     if fm:
         out.append("<table>%s</table>"
                    % "".join("<tr><th>%s</th><td>%s</td></tr>" % (inline(k), inline(v))
                              for k, v in fm))
+    # One frame per open list level: [marker indent, content indent, tag, [item html, ...]]. A
+    # stack rather than the single flat list this held until T-121, which rendered two levels as
+    # one in 125 of 355 corpus documents. `code` is empty, or [dedent column, line, ...]; both are
+    # held as lists rather than rebound, matching how `para` and `rows` already avoid `nonlocal`.
+    stack = []
+
     def flush_para():
         if para:
             out.append("<p>%s</p>" % inline(" ".join(para)))
             del para[:]
+
     def flush_rows():
         if rows:
             body = []
@@ -162,18 +174,35 @@ def markdown(text):
                                                     for c in cells))
             out.append("<table>%s</table>" % "".join(body))
             del rows[:]
-    # `ol` or `ul`. A one-element list rather than `nonlocal`, matching how `para` and `rows` are
-    # already held. An ordered list rendered as `<ul>` loses the numbering a source used to order
-    # its steps - 1994 lines in 161 corpus documents were losing it.
-    kind = ["ul"]
-    def flush_list():
-        if lst is not None and lst:
-            out.append("<%s>%s</%s>" % (kind[0],
-                                        "".join("<li>%s</li>" % inline(i) for i in lst),
-                                        kind[0]))
+
+    def emit(html):
+        """Into the innermost open list item, or into the document when no list is open."""
+        if stack:
+            stack[-1][3][-1] += html
+        else:
+            out.append(html)
+
+    def close_lists(depth=0):
+        """Close open levels until `depth` remain, nesting each into the item that contains it."""
+        while len(stack) > depth:
+            tag, items = stack.pop()[2:]
+            emit("<%s>%s</%s>" % (tag, "".join("<li>%s</li>" % i for i in items), tag))
+
+    def flush_code():
+        if code:
+            body = code[1:]
+            # Blank lines inside an indented block are part of it; the ones at the end belong to
+            # whatever comes next, and a block that is only blank lines was never a block.
+            while body and not body[-1].strip():
+                body.pop()
+            if body:
+                emit("<pre>%s</pre>" % esc("\n".join(body)))
+            del code[:]
 
     for raw in text.split("\n"):
         line = raw.rstrip()
+        lead = line[:len(line) - len(line.lstrip())]
+        indent = len(lead.expandtabs(4))
         if fence is not None:
             if line.strip().startswith("```"):
                 out.append("<pre>%s</pre>" % esc("\n".join(fence)))
@@ -181,29 +210,40 @@ def markdown(text):
             else:
                 fence.append(line)
             continue
+        if code:
+            if not line.strip():
+                code.append("")
+                continue
+            if indent >= code[0]:
+                code.append(line.expandtabs(4)[code[0]:])
+                continue
+            flush_code()
+        if pending:
+            # **A blank line does not end a list - the line after it does.** Closing on the blank
+            # itself put indented code inside a list item out of reach, because the item it belonged
+            # to was already shut by the time the code arrived; it also split every loose list into
+            # one `<ul>` per item. Deferring the close is also what makes the docstring's 34% a
+            # statement about this renderer rather than about the script that counted it.
+            pending = False
+            if not (stack and (indent >= stack[-1][1]
+                               or re.match(r"\s*(?:[-*+]|\d+[.)])\s+", line))):
+                close_lists()
         if line.strip().startswith("```"):
-            flush_para(); flush_rows()
-            if lst: flush_list()
-            lst = None
+            flush_para(); flush_rows(); close_lists()
             fence = []
             continue
         if not line.strip():
             flush_para(); flush_rows()
-            if lst: flush_list()
-            lst = None
+            pending = True
             continue
         head = re.match(r"(#{1,6})\s+(.*)", line)
         if head:
-            flush_para(); flush_rows()
-            if lst: flush_list()
-            lst = None
+            flush_para(); flush_rows(); close_lists()
             level = min(3, len(head.group(1)))
             out.append("<h%d>%s</h%d>" % (level, inline(head.group(2)), level))
             continue
         if line.lstrip().startswith("|") and line.rstrip().endswith("|"):
-            flush_para()
-            if lst: flush_list()
-            lst = None
+            flush_para(); close_lists()
             cells = [c.strip() for c in line.strip().strip("|").split("|")]
             if not all(re.match(r"^:?-{2,}:?$", c) for c in cells):
                 rows.append(cells)
@@ -211,32 +251,50 @@ def markdown(text):
         # A thematic break, before the list branch: `- - -` is not a list item, and `---` under a
         # line of text is a setext heading exactly once in 355 corpus documents (T-107).
         if re.match(r"^(?:-{3,}|\*{3,}|_{3,}|(?:[-*_] ){2,}[-*_])\s*$", line.strip()):
-            flush_para(); flush_rows()
-            if lst: flush_list()
-            lst = None
+            flush_para(); flush_rows(); close_lists()
             out.append("<hr>")
             continue
-        item = re.match(r"\s*(?:[-*+]|(\d+)[.)])\s+(.*)", line)
+        item = re.match(r"(\s*)((?:[-*+]|\d+[.)])\s+)(.*)", line)
         if item:
             flush_para(); flush_rows()
-            if lst is None:
-                lst = []
-                kind[0] = "ol" if item.group(1) else "ul"
-            lst.append(item.group(2))
+            mark = indent
+            content = mark + len(item.group(2).expandtabs(4))
+            tag = "ol" if item.group(2)[0].isdigit() else "ul"
+            while len(stack) > 1 and mark < stack[-1][0]:
+                close_lists(len(stack) - 1)
+            if stack and mark > stack[-1][0]:
+                stack.append([mark, content, tag, []])
+            elif stack and stack[-1][2] != tag:
+                # A changed marker at the same level starts a new list rather than continuing one.
+                close_lists(len(stack) - 1)
+                stack.append([mark, content, tag, []])
+            elif not stack:
+                stack.append([mark, content, tag, []])
+            else:
+                stack[-1][0], stack[-1][1] = mark, content
+            stack[-1][3].append(inline(item.group(3)))
             continue
         if line.lstrip().startswith(">"):
-            flush_para(); flush_rows()
-            if lst: flush_list()
-            lst = None
+            flush_para(); flush_rows(); close_lists()
             out.append("<blockquote>%s</blockquote>" % inline(line.lstrip().lstrip(">").strip()))
             continue
-        if lst is not None:
-            flush_list()
-            lst = None
+        # An indented line that is not an item: a code block, or the wrapped rest of the item above
+        # it. Depth decides, not the indent - the docstring carries the count that made that the
+        # rule. Code needs a clean start, so a line indented under an open paragraph continues it.
+        if indent >= 4 or stack:
+            base = (stack[-1][1] + 4) if stack else 4
+            if indent >= base and not para:
+                flush_rows()
+                code.extend([base, line.expandtabs(4)[base:]])
+                continue
+            if stack and indent:
+                flush_rows()
+                stack[-1][3][-1] += " " + inline(line.strip())
+                continue
+        close_lists()
         rows and flush_rows()
         para.append(line.strip())
-    flush_para(); flush_rows()
-    if lst: flush_list()
+    flush_code(); flush_para(); flush_rows(); close_lists()
     return "".join(out)
 
 
@@ -432,6 +490,36 @@ def self_test():
     if "<p>---</p>" in md:
         sys.exit("SELF-TEST FAILED: a thematic break shipped as a paragraph of hyphens, which is "
                  "the T-107 defect exactly: 7 of them reached a presented deck")
+
+    # T-121's two constructs, in one fixture each, and each written so that removing its branch
+    # fails here rather than degrading quietly. The pair that has to be tested *together* is code
+    # and continuation: they match the same pattern, and the corpus says a third of the matches are
+    # continuations, so a fixture holding only code would pass a renderer that got them all wrong.
+    nested = markdown("- one\n    - a\n        - deep\n    - b\n- two\n\n1. first\n    1. inner\n")
+    for want, construct in (
+            ("<ul><li>one<ul><li>a<ul><li>deep</li></ul></li><li>b</li></ul></li><li>two</li></ul>",
+             "a three-level unordered list, which the corpus nests four deep"),
+            ("<ol><li>first<ol><li>inner</li></ol></li></ol>",
+             "an ordered list nested in an ordered list")):
+        if want not in nested:
+            sys.exit("SELF-TEST FAILED: the Markdown renderer flattened %s - wanted %r, got %r. "
+                     "Two levels rendering as one is the T-121 defect, in 125 of 355 corpus "
+                     "documents" % (construct, want, nested))
+
+    blocks = markdown("intro\n\n    code one\n    code two\n\n- an item that wraps\n"
+                      "    onto the next line\n- an item with code\n\n      indented under it\n")
+    if "<pre>code one\ncode two</pre>" not in blocks:
+        sys.exit("SELF-TEST FAILED: an indented code block rendered as prose, which is the other "
+                 "half of T-121 - 435 lines in 81 corpus documents. Got %r" % blocks)
+    if "<li>an item that wraps onto the next line</li>" not in blocks:
+        sys.exit("SELF-TEST FAILED: a wrapped list continuation was not joined to its item. If it "
+                 "became a <pre> the indented-code branch is unguarded, and the corpus says that "
+                 "is wrong 229 times in 27 documents - 34%% of everything the pattern matches. "
+                 "Got %r" % blocks)
+    if "<li>an item with code<pre>indented under it</pre></li>" not in blocks:
+        sys.exit("SELF-TEST FAILED: code indented inside a list item did not stay inside it. A "
+                 "blank line must not end the item, or the block it introduces has nowhere to go. "
+                 "Got %r" % blocks)
 
     hostile = ('<p>real content</p><script>document.body.innerHTML="";</script>'
                '<style>.slide{display:none}</style><div id="stage" onclick="go(99)">x</div>'
