@@ -229,6 +229,114 @@ CLOSING_KINDS = {
 CLOSING_PHRASE_MIN = 12
 
 
+# **The account is per rule, and several rules are conjunctions** (T-054). One satisfied row
+# moves a rule into `checked`, so a clause nothing reaches disappears inside a rule the run
+# reports as covered - which is **L-43** one level down, and the device that guarantees rule-level
+# coverage is what stopped the clause-level question being asked.
+#
+# A clause is `True` when some check decides it, or an excusal in `DEFERRED`'s exact shape:
+# `(why, (kind, subject))`. The shape is shared rather than copied so `closing_faults` validates
+# both, and a clause excusal is held to the standard a rule excusal is - a reason somebody can
+# read, and a condition that would end it.
+#
+# **This table declares only rules whose statement is a conjunction of separately checkable
+# clauses.** A second sentence restating the first (DS-081's *under 6 is a memo*) is rationale,
+# not a clause, and listing it would inflate the account rather than sharpen it. The sweep that
+# produced this list read all 120 `hard` rules, 2026-08-18.
+CLAUSES = {
+    "DS-020": (("neutral ground", True),
+               ("exactly one accent", True)),
+    "DS-034": (("body 24-28 du at line-height 1.40-1.70", True),
+               ("display ~67 du",
+                "The band is stated for the display role and nothing resolves it. `ds034_body_type` "
+                "reads `--fs-body` and `--lh-body` only, so a deck can set a display face far off "
+                "the stated size and the rule still reports checked. CLOSES WHEN: the check "
+                "resolves `--fs-display` the way it already resolves `--fs-body`.",
+                ("work", "resolve --fs-display against the stated ~67 du band")),
+               ("subhead ~34 du",
+                "Same shape as the display clause and the same gap: no token is resolved for the "
+                "subhead role, so the third of the three bands this rule states is unmeasured. "
+                "CLOSES WHEN: the check resolves the subhead size token against the stated band.",
+                ("work", "resolve the subhead size token against the stated ~34 du band"))),
+    "DS-091": (("one headline per slide", True),
+               ("the headline is at most six words", True),
+               ("at most three supporting fragments",
+                "Nothing in the DOM marks a run as a supporting fragment. Counting tier-one runs "
+                "instead puts three slides of the *conforming* deck over budget at 4, 5 and 9 - on "
+                "the eyebrow, a stat figure and its label (one thing, not two), the assumption "
+                "marker and the provenance mark. Those are required by DS-104 and DS-105, so the "
+                "count would set three rules against each other, and any threshold sparing them "
+                "would be a number chosen to fit one deck (**L-38**). This is the clause T-053 "
+                "could not close and had nowhere to record. CLOSES WHEN: a supporting fragment is "
+                "structurally identifiable - a class, a container, a list - which is a rule "
+                "amendment and the owner's. Adopting markup to make a check work is backwards, "
+                "which is the DS-026 precedent.",
+                ("amendment", "DS-091"))),
+    "DS-092": (("sentence under 20 words", True),
+               ("paragraph 3-4 sentences", True),
+               ("table cell one line",
+                "*One line* is a rendered fact, not a markup one: a cell wraps or does not wrap "
+                "depending on the column width the table resolves to, so the static half cannot "
+                "decide it and the rendered half does not measure it. CLOSES WHEN: the render "
+                "pass reports per-cell line boxes, which is a measurement to add rather than a "
+                "rule to change.",
+                ("work", "report per-cell line box counts from the real render"))),
+    "DS-100": (("active voice",
+                "Voice is a reading of the sentence, not a pattern in it. Every proxy tried on the "
+                "corpus - forms of *to be* beside a past participle - fires on ordinary "
+                "descriptive copy, and the rule is about how the deck argues rather than about "
+                "which auxiliaries it uses. CLOSES WHEN: this becomes a `judge` clause the "
+                "critique pass owns, or the rule names a structure.",
+                ("amendment", "DS-100")),
+               ("one dash per paragraph at most",
+                "Countable, and nothing counts it. The obstacle is only that *dash* has to mean "
+                "the em dash the house style uses and not the hyphen inside a compound, which is "
+                "a decision this file should not take alone. CLOSES WHEN: the check counts em "
+                "dashes per paragraph in slide copy, on the same subject `ds100` already reads.",
+                ("work", "count em dashes per paragraph over the deck's own slide copy")),
+               ("no rhetorical questions", True)),
+}
+
+
+def clause_account(clauses=None, checked=(), owned=None):
+    """`dict` - what the clause table says about coverage, and every fault in it.
+
+    **Reported on every run, including at zero** (**L-36**): a number that appears only when
+    something is in it is a number nobody can see go empty, which is the same argument that puts
+    a row here for every rule the ruleset cites rather than for every rule currently broken.
+
+    It deliberately does **not** touch `account()`'s partition. Rule-level coverage answers *did
+    any check decide this rule*, and that stays true of a partly-decided rule; this answers the
+    narrower question the other one cannot express.
+    """
+    clauses = CLAUSES if clauses is None else clauses
+    owned = ruleset.owned() if owned is None else owned
+    total = decided = 0
+    partly, faults, unowned = [], [], []
+    for rid in sorted(clauses):
+        if rid not in owned:
+            unowned.append(rid)
+        open_here = []
+        for text, state in ((c[0], c[1:]) for c in clauses[rid]):
+            total += 1
+            if state and state[0] is True:
+                decided += 1
+                continue
+            entry = (state[0], state[1]) if len(state) == 2 else state[0]
+            open_here.append(text)
+            # **The same validator, not a second one.** A clause excusal is an excusal, so it is
+            # held to what `closing_faults` already enforces on a rule's (L-08).
+            for _rid, what in closing_faults({rid: entry}, checked=checked, owned=owned):
+                faults.append("%s clause %r %s" % (rid, text, what))
+        if open_here:
+            partly.append(rid)
+    return {"rulesWithClauses": sorted(clauses), "partlyDecided": partly,
+            "clausesTotal": total, "clausesDecided": decided,
+            "clausesUnreached": total - decided,
+            "clauseExcusalFaults": faults,
+            "clausesForRulesNotOwned": unowned}
+
+
 def closing_faults(deferred=None, checked=(), owned=None):
     """`[(rule, what)]` - every closing condition that is broken, or that has come true.
 
@@ -519,6 +627,7 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
 
     rows, data, notes, ledger = gather(deck, sources, print_pages, skip_contract)
     acct = account(rows)
+    clauses = clause_account(checked=acct["checked"])
     # `is False`, not `not ok`: a row that decided nothing is not a defect in the deck, and folding
     # it into the failure list would report a missing subject as a broken one (T-051).
     failures = [(r, w) for r, w, ok in rows if ok is False]
@@ -529,7 +638,10 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
     coverage_faults = (acct["silent"] + acct["staleExcusals"]
                        + acct["excusalsForRulesNotOwned"]
                        + ["CLOSING %s - %s" % (rid, what)
-                          for rid, what in closing_faults(checked=acct["checked"])])
+                          for rid, what in closing_faults(checked=acct["checked"])]
+                       + ["CLAUSE %s" % what for what in clauses["clauseExcusalFaults"]]
+                       + ["CLAUSE TABLE %s - the ruleset does not own it" % rid
+                          for rid in clauses["clausesForRulesNotOwned"]])
     if acct["partitionError"]:
         coverage_faults = coverage_faults + [
             "PARTITION %+d (buckets %d, owned %d)"
@@ -538,6 +650,7 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
         "deck": paths.display_path(deck, ROOT).replace("\\", "/"),
         "rows": [{"rule": r, "what": w, "ok": ok} for r, w, ok in rows],
         "account": acct,
+        "clauses": clauses,
         "ledger": ledger,
         "notes": notes,
         "failures": [{"rule": r, "what": w} for r, w in failures],
@@ -599,6 +712,44 @@ def self_test():
     for rid, (why, _closes) in DEFERRED.items():
         if len(why) < 40:
             sys.exit("SELF-TEST FAILED: %s is excused in a phrase, not in writing" % rid)
+
+    # T-054. The clause table is held to exactly what the rule table is held to, and the failures
+    # are watched rather than reasoned about - each fixture below is built here rather than
+    # asserted against the live table (**L-78**, **L-112**).
+    live = clause_account()
+    if live["clauseExcusalFaults"] or live["clausesForRulesNotOwned"]:
+        sys.exit("SELF-TEST FAILED: the live clause table is broken: %s"
+                 % "; ".join(live["clauseExcusalFaults"] + live["clausesForRulesNotOwned"]))
+    if live["clausesTotal"] <= live["clausesDecided"]:
+        sys.exit("SELF-TEST FAILED: the clause table reports every clause decided, which is the "
+                 "state it was written to disprove - DS-091's third clause is the instance")
+    for rid, (why, _c) in ((r, e[1:]) for r in CLAUSES for e in CLAUSES[r]
+                           if len(e) == 3):
+        if len(why) < 40:
+            sys.exit("SELF-TEST FAILED: a clause of %s is excused in a phrase, not in writing" % rid)
+        if "CLOSES WHEN" not in why:
+            sys.exit("SELF-TEST FAILED: a clause of %s is excused with no closing condition in "
+                     "its reason" % rid)
+    own_one = sorted(ruleset.owned())[0]
+    for label, table, expect in (
+            ("an excusal with no closing condition",
+             {own_one: (("a clause", "a reason forty characters long and no more than that"),)}, True),
+            ("a closing kind nothing defines",
+             {own_one: (("a clause", "a reason forty characters long and nothing else",
+                         ("someday", own_one)),)}, True),
+            ("a placeholder subject",
+             {own_one: (("a clause", "a reason forty characters long and nothing else",
+                         ("work", "tbd")),)}, True),
+            ("a sound entry",
+             {own_one: (("a clause", "a reason forty characters long and nothing else",
+                         ("work", "a measurement somebody can start from")),)}, False)):
+        got = bool(clause_account(table)["clauseExcusalFaults"])
+        if got != expect:
+            sys.exit("SELF-TEST FAILED: the clause table accepted or refused the wrong thing - %s "
+                     "should have %s and did not" % (label, "faulted" if expect else "passed"))
+    if not clause_account({"DS-999": (("a clause", True),)})["clausesForRulesNotOwned"]:
+        sys.exit("SELF-TEST FAILED: a clause table naming a rule the ruleset does not own was "
+                 "accepted, so the table can point at nothing")
 
     # T-165: the closing condition. **Every fixture below builds its own table** (**L-78**) - an
     # assertion about the live one is an assertion about the repository's current contents, and the
@@ -721,6 +872,32 @@ def report(res, verbose=True, quiet=False):
         print("      A stage measured these and the ruleset says no check of its kind reaches "
               "them, so they are\n      excused rather than checked - the measurement is a note "
               "under the excusal, and it still\n      fails the run if it comes out false.")
+    # **The clause account, printed whether or not anything is in it** (T-054). `checked` is a
+    # per-rule verdict, and several rules are conjunctions: one satisfied row carries the whole
+    # rule into the bucket above, so without these three lines a clause nothing reaches is
+    # invisible inside a rule the run calls covered.
+    c = res.get("clauses")
+    if c:
+        print("\n  clause-level, for the %d rule(s) whose statement is a conjunction"
+              % len(c["rulesWithClauses"]))
+        print("    clauses declared   %3d" % c["clausesTotal"])
+        print("    decided            %3d" % c["clausesDecided"])
+        print("    UNREACHED          %3d" % c["clausesUnreached"])
+        print("    partly decided     %3d   %s"
+              % (len(c["partlyDecided"]), " ".join(c["partlyDecided"])))
+        if verbose:
+            for rid in c["rulesWithClauses"]:
+                print("    %s" % rid)
+                for entry in CLAUSES[rid]:
+                    text, state = entry[0], entry[1:]
+                    if state and state[0] is True:
+                        print("      decided    %s" % text)
+                    else:
+                        kind, subject = state[1]
+                        print("      UNREACHED  %s  [%s: %s]" % (text, kind, subject))
+                        print("                 %s" % state[0])
+        print("      A rule here is `checked` above and still incomplete. The two answer different\n"
+              "      questions: whether any check decided the rule, and how much of it they left.")
     if a["staleExcusals"]:
         print("  STALE EXCUSAL        %3d   %s" % (len(a["staleExcusals"]),
                                                    " ".join(a["staleExcusals"])))

@@ -1994,16 +1994,10 @@ def render_verdicts(data):
         # exists** - checked here since T-053, because until then a slide carrying none satisfied
         # the word bound over an empty set and nothing else objected.
         #
-        # **The third, `<= 3 supporting fragments`, is excused and this is the argument.** Nothing
-        # in the DOM marks a run as a supporting fragment, and counting tier-one runs instead puts
-        # three slides of the conforming deck over budget at 4, 5 and 9 - on the eyebrow
-        # (`03 · The problem`), a stat figure and its label (`11` / `minutes, average wait`, which
-        # is one thing and not two), the assumption marker and the provenance mark. Those are
-        # required by DS-104 and DS-105, so the count would set three rules against each other, and
-        # any threshold that spared them would be a number chosen to fit this deck (**L-38**).
-        # CLOSES WHEN: a supporting fragment is structurally identifiable - a class, a container, a
-        # list - which is a rule amendment and the owner's. Adopting markup to make a check work is
-        # backwards, which is the DS-026 precedent.
+        # **The third, `<= 3 supporting fragments`, is excused in `check.py`'s `CLAUSES`**, with
+        # the argument and the closing condition. It lived here as a comment until T-054, which is
+        # the one place `check.py`'s own rule says an excusal must not live: a comment cannot be
+        # reported, so the account called DS-091 `checked` while a third of it went unmeasured.
         ("DS-091", "slides without exactly one headline: %d%s"
          % (len(data.get("headlineCounts", [])),
             "" if not data.get("headlineCounts")

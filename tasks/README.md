@@ -34,7 +34,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | - | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112 |
-| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `PH3` | - | `proposed` | `specify` | T-053 | - | T-005, T-037, T-043, T-051, T-119 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113 |
 | [T-110](T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md) | The quick view styles a source as deck copy, not as a document | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-106, T-107, T-109, T-121, T-122 |
 | [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) | A named slide transition, chosen per deck, with slide and immediate as the shipping pair | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-041, T-057, T-112 |
@@ -101,6 +100,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | - | `0.1.0` | `done` | `review` | T-044 | - | T-005, T-038, T-043, T-053, T-054, T-065, T-066, T-075, T-090, T-165, T-180 |
 | [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | Settle the two hard-judge failures the checklist's first run found in the reference deck | - | `0.1.0` | `done` | `review` | T-048 | - | T-024, T-028, T-040, T-044, T-056 |
 | [T-053](T-053-enforce-the-headline-ds-091-requires.md) | Enforce the headline DS-091 requires, and excuse the fragment count no check can reach | - | `0.1.0` | `done` | `review` | - | T-054, T-055 | T-005, T-037, T-038, T-051 |
+| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `PH3` | `unreleased` | `done` | `review` | T-053 | - | T-005, T-037, T-043, T-051, T-119 |
 | [T-055](T-055-a-variant-that-leaves-malformed-markup.md) | Close the slide-is-not-a-section variant's open tag, so it tests the tag and not parser repair | `PH2` | `0.1.5` | `done` | `review` | T-053 | - | T-005, T-038 |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `PH1` | `0.1.0` | `done` | `review` | - | - | T-042, T-050, T-052, T-060, T-067, T-078, T-154 |
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `PH2` | `0.1.5` | `done` | `review` | - | - | T-005, T-016 |
