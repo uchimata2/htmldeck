@@ -2,10 +2,10 @@
 id: T-111
 title: A named slide transition, chosen per deck, with slide and immediate as the shipping pair
 type: deliverable
-status: in_progress
+status: blocked
 phase: implement
 parent: null
-blocked_by: []
+blocked_by: [T-185]
 related: [T-016, T-041, T-057, T-112]
 work_package: PH3
 owner: the project owner
@@ -192,3 +192,4 @@ does not. [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) carri
 | 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. Four transitions were requested; the owner cut it to two the same day and deferred the other two to a brainstorm. The DS-144 and DS-150 collisions are recorded in §1 so the brainstorm starts from them. |
 | 2026-08-18 | proposed → in_progress | Built. The transition is the outgoing slide's alone — the incoming cross-fade that had been there since the beginning is gone, because §1 says the incoming slide is *revealed* and keeping the fade would have shipped half the rule. The choice moved from an attribute on `<html>` to a pair of theme tokens once it was clear `<html>` is shell and `sync` carries it byte for byte, so no deck could have chosen. Direction and interrupt behaviour are measured and correct, including a ruler jump backwards. Three defects came out of measuring rather than reading: the `animation` shorthand parsing `forwards` as the animation name when the token is `none`, a shadow literal failing DS-011, and the component contract still claiming `.slide` reads the transition tokens. |
 | 2026-08-18 | (no change) | **Held open on the instrument, not on the work.** Nothing available here has a running document timeline — the preview pane reports `document.timeline.currentTime === 0` and will not composite, `render.py` pins motion off before capturing, and Claude in Chrome is not connected. So the deck cannot be *looked at* moving, and `CLAUDE.md` rule 6 is the bar. Raised [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md); this closes behind it. |
+| 2026-08-18 | in_progress → blocked | The implementation is finished and the gate is green; what is missing is a look, and no instrument here can give one. `blocked` rather than `in_progress` because nothing further can be done on this task until [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) lands — which is what that status is for, and the dependency propagates so nothing downstream reads this as available. |

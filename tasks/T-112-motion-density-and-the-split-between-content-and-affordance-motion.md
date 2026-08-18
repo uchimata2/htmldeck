@@ -5,14 +5,14 @@ type: deliverable
 status: proposed
 phase: specify
 parent: null
-blocked_by: []
+blocked_by: [T-185]
 related: [T-016, T-041, T-057, T-111]
 work_package: PH3
 owner: the project owner
 business_value: high
 effort: l
 created: 2026-08-12
-updated: 2026-08-12
+updated: 2026-08-18
 deliverables:
   - shell/deck.js
   - shell/components.css
@@ -174,3 +174,4 @@ separately, not something density smuggles in.
 | 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. Scoped around the content/affordance split rather than as "more animation", because the exemptions the owner listed are all affordances and that is what makes one parameter coherent. |
 | 2026-08-12 | (no change) | Density questioned and kept. The owner read the note about what density must not do as a recommendation to drop it; it was the opposite. Reasons for keeping it written into §1 so the question does not have to be re-asked: a knob the owner owns, a reproducible artifact, and two builds of one specification that match. |
 | 2026-08-12 | (no change) | The pager's hover and press motions are the one part of this that waits on [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md). Building them before the pager's shape is settled is building them twice. Not `blocked_by` — everything else here can start. |
+| 2026-08-18 | (no change) | **Not started, and the reason is a gate rather than a preference.** Six of the eight acceptance criteria are readings of motion over time — *density 0 leaves every affordance motion running and every content motion still*, *each is looked at*, *nothing moves under reduced motion at density 100*, and the demonstration at three densities. Nothing in this environment has a running document timeline ([T-185](T-185-no-instrument-here-can-watch-an-animation-play.md)), so building this now would put a second large unverifiable change on the shared shell and leave it exactly where [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) is. `blocked_by` set rather than a note, because this is a real gate and it should propagate. |
