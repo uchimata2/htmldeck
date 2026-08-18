@@ -153,8 +153,13 @@
   --pulse-dur:1.2s;
   --pulse-ease:ease-in-out;
   --pulse-delay:600ms;
-  --slide-dur:420ms;
-  --slide-ease:ease-in-out;
+  --slide-dur:500ms;
+  --slide-ease:cubic-bezier(.4,0,.2,1);
+  --slide-leave-fwd:slide-leave-fwd;
+  --slide-leave-back:slide-leave-back;
+  --slide-shift:6%;
+  --slide-scale:.94;
+  --slide-leave-shadow:0 var(--shadow-y) var(--shadow-blur) var(--shadow);
 
   /* ---- the reading view (DS-074). A document rendering, so its lengths are in `rem` and
      honour the reader's font size — but the ratios are the stage's, so a theme that changes

@@ -222,6 +222,11 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--pulse-delay` | motion | primitive | How long Pulse-once waits for the slide to settle. | — |
 | `--slide-dur` | motion | primitive | The inter-slide transition, which DS-141 puts at 400–500 ms. | ms 400-500 |
 | `--slide-ease` | motion | primitive | The inter-slide transition's easing. | — |
+| `--slide-leave-fwd` | motion | primitive | Which transition the deck uses, going forward. `slide-leave-fwd` or `none`; `none` is `immediate` (DS-235). | — |
+| `--slide-leave-back` | motion | primitive | The same, going back. It must name the same transition as its pair. | — |
+| `--slide-shift` | motion | primitive | How far the outgoing slide travels, as a percentage of the stage (T-111). | — |
+| `--slide-scale` | motion | primitive | What the outgoing slide shrinks to. Below 1, or it grows. | — |
+| `--slide-leave-shadow` | motion | primitive | The drop shadow the outgoing slide gains, which is what makes it read as lifting away rather than fading. | — |
 
 ---
 

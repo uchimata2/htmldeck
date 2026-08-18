@@ -483,7 +483,11 @@ remembered to tokenise.
 
 | Rule | Motion | Reads |
 | :--- | :--- | :--- |
-| `.slide` | the inter-slide transition (DS-141) | `--slide-dur` `--slide-ease` |
+| `.slide[data-leaving]` | the inter-slide transition (DS-141, DS-235) | `--slide-dur` `--slide-ease` |
+| `.slide[data-leaving="fwd"]` | which transition, going forward (DS-235) | `--slide-leave-fwd` |
+| `.slide[data-leaving="back"]` | the same, going back | `--slide-leave-back` |
+| `@keyframes slide-leave-fwd` | the `slide` transition's travel | `--slide-shift` `--slide-scale` `--slide-leave-shadow` |
+| `@keyframes slide-leave-back` | the same, mirrored | `--slide-shift` `--slide-scale` `--slide-leave-shadow` |
 | `.rise` | Rise's rest state (DS-140) | `--rise-dist` |
 | `.slide[data-played] .rise` | Rise | `--rise-dur` `--rise-ease` `--rise-stagger` |
 | `@keyframes rise` | Rise | `--rise-dist` |

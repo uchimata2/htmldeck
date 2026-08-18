@@ -64,7 +64,7 @@ the installed plugin a few minutes after each session starts.
 
 | | |
 | :--- | :--- |
-| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset.** 167 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
+| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset.** 168 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
 | [`docs/DESIGN-RATIONALE.md`](docs/DESIGN-RATIONALE.md) | Why each rule is what it is: what was measured, what was inherited, what was overruled, and the conflicts resolved by name |
 | [`docs/EVALUATION.md`](docs/EVALUATION.md) | How a deck is scored, and **when it is good enough to stop** |
 | [`tools/deck/check.py`](tools/deck/check.py) | The build check. A pass/fail per rule ID, **and an account of every rule it did not check, with a reason each** |
@@ -122,9 +122,9 @@ python tools/deck/ruleset.py --counts
 ```
 
 ```
-  rule rows in the table            167
+  rule rows in the table            168
   + declared in prose, not a row      1   DS-000 (guidance)
-  = rule IDs the document declares  168   <- the figure that counts DS-000
+  = rule IDs the document declares  169   <- the figure that counts DS-000
 ```
 
 **Which gate owns each `hard` rule.**
@@ -134,12 +134,12 @@ python tools/deck/ruleset.py --gates
 ```
 
 ```
-  hard rules                        120
+  hard rules                        121
   gated mechanically (auto|render)   88   tools/deck/check.py
-  gated by judgement (judge)         27   EVALUATION.md 1.1, the hard-judge checklist
+  gated by judgement (judge)         28   EVALUATION.md 1.1, the hard-judge checklist
   bind the checker, not the deck      5   DS-107 DS-190 DS-191 DS-220 DS-221
   ------------------------
-  120 = hard, so every hard rule has an owner
+  121 = hard, so every hard rule has an owner
 ```
 
 **Every reference in every document.**
@@ -186,7 +186,7 @@ and need nothing but Python.
 
 ## The reference deck
 
-[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **283 KB
+[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **289 KB
 in one file, zero external references**, three embedded typefaces, eleven icons and eight hand-written
 SVG figures. Download it, disconnect, double-click it. Every measurement behind it, and how to
 reproduce each, is in [`examples/README.md`](examples/README.md).
@@ -203,7 +203,7 @@ names every one it misses.
 ## The deck nobody authored by hand
 
 [`examples/sort-window/`](examples/sort-window) holds *Move the window, not the fleet*: 12 slides,
-**281 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
+**287 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
 panels. It was built through the pipeline rather than written, assembled from
 [`shell/`](shell), which is the reference deck with its content cut out, then authored three slides
 at a time with the gate run per batch.
@@ -233,7 +233,7 @@ spends their attention on the second. It says which passes ran, what the gate al
 figure ledger, and the five dimensions (Claim, Evidence, Density, Spine, Consistency) that no check
 in this repository reaches.
 
-The judgement half is 27 `hard` rules that need a person. The worksheet is generated, not recalled,
+The judgement half is 28 `hard` rules that need a person. The worksheet is generated, not recalled,
 and **a rule left unanswered fails the run**:
 
 ```bash

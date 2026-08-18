@@ -268,6 +268,11 @@
    and re-running adds to this block rather than making a second one. */
 :root{
   --more-menu-w:calc(230*var(--du));
+  --slide-leave-back:slide-leave-back;
+  --slide-leave-fwd:slide-leave-fwd;
+  --slide-leave-shadow:0 var(--shadow-y) var(--shadow-blur) var(--shadow);
+  --slide-scale:.94;
+  --slide-shift:6%;
 }
 </style>
 
@@ -309,9 +314,55 @@ svg{display:block}
   display:grid;grid-template-rows:auto auto 1fr auto;
   padding:var(--pad-y) var(--pad-x) var(--pad-bottom);
   opacity:0;visibility:hidden;
-  transition:opacity var(--slide-dur) var(--slide-ease),visibility 0s linear var(--slide-dur);
 }
-.slide[data-current]{opacity:1;visibility:visible;transition-delay:0s,0s}
+/* **The incoming slide is revealed, not animated** (T-111). It was a cross-fade until then, which
+   is two slides moving at once - the mush that makes presentation-software transitions read as
+   cheap. What moves is the outgoing slide and nothing else, so this is instant on purpose. */
+.slide[data-current]{opacity:1;visibility:visible}
+
+/* T-111. **The transition is the OUTGOING slide's, and only its.** Two slides moving at once is
+   the mush that makes presentation-software transitions read as cheap, and animating one halves
+   the cost on a dense slide - so the incoming slide is revealed, as though it had been there all
+   along. `data-leaving` carries the direction, which `go()` takes from the navigation rather than
+   from the slide numbers, so a ruler jump backwards by six slides is still backwards.
+
+   **A keyframe, not a transition**, and that is not a style preference: a transition needs a start
+   state painted in one frame and the end state in the next, so it needs a forced reflow between
+   them and it does nothing at all if the two land in the same frame. An animation carries its own
+   `from`, so it cannot silently no-op - which is the failure mode L-110 describes. */
+@keyframes slide-leave-fwd{
+  from{visibility:visible;opacity:1;transform:none;box-shadow:var(--slide-leave-shadow)}
+  to{visibility:visible;opacity:0;box-shadow:var(--slide-leave-shadow);
+     transform:translateX(calc(-1*var(--slide-shift))) scale(var(--slide-scale))}
+}
+@keyframes slide-leave-back{
+  from{visibility:visible;opacity:1;transform:none;box-shadow:var(--slide-leave-shadow)}
+  to{visibility:visible;opacity:0;box-shadow:var(--slide-leave-shadow);
+     transform:translateX(var(--slide-shift)) scale(var(--slide-scale))}
+}
+/* **The keyframes paint it, not a static rule, and that is what makes `immediate` free.** A rule
+   setting `visibility:visible` on `[data-leaving]` would match whatever the token says, so a deck
+   choosing `immediate` would strand the outgoing slide painted until the next navigation - two
+   slides visible, which is the glitch this feature is most able to cause. With the paint inside
+   the animation, `animation-name:none` leaves the base rule's `opacity:0;visibility:hidden`
+   standing and the leaving slide is simply never shown. */
+.slide[data-leaving]{z-index:1}
+/* **The choice lives in the theme, because the theme is the per-deck region.** `<html>` is
+   shell: `sync` carries it byte for byte, so an attribute there would be every deck's and no
+   deck's own. The token names the keyframe, and `immediate` names `none` - which is why the
+   vocabulary is closed at two and why adding a third is an amendment rather than a value
+   somebody invents in a theme. */
+/* **Longhands, because the shorthand is ambiguous when the token is `none`.** Measured
+   2026-08-18: `animation:none 420ms ease forwards` parses `forwards` as the animation NAME - the
+   parser takes `none` for a fill-mode - so `immediate` worked only because no `@keyframes
+   forwards` exists. It would have broken the day somebody wrote one, and nothing would have said
+   why. `animation-name` cannot be read as anything else. */
+.slide[data-leaving]{
+  animation-duration:var(--slide-dur);
+  animation-timing-function:var(--slide-ease);
+  animation-fill-mode:forwards}
+.slide[data-leaving="fwd"]{animation-name:var(--slide-leave-fwd)}
+.slide[data-leaving="back"]{animation-name:var(--slide-leave-back)}
 
 /* The printed contents page (T-034) exists only on paper. It is generated into the stage so it
    inherits the theme and the page box, and this is the single rule that keeps it off the screen -
@@ -777,11 +828,19 @@ svg{display:block}
 :root[data-motion="off"] .current{animation:none}
 :root[data-motion="off"] .rise,:root[data-motion="off"] .pulse,
 :root[data-motion="off"] .opening{animation:none;opacity:1;transform:none}
+/* The motion control turns the transition off with everything else (DS-221), which is also what a
+   headless capture leans on: `render.py` pins motion off before it shoots, so a capture can never
+   catch a slide mid-leave. */
+:root[data-motion="off"] .slide[data-leaving]{
+  animation:none;visibility:hidden;opacity:0;box-shadow:none}
 /* reduced motion keeps the semantics: the dashed arrows stay dashed (DS-143) */
 @media (prefers-reduced-motion:reduce){
   .current{animation:none}
   .rise,.pulse,.opening{animation:none;opacity:1;transform:none}
   .slide{transition:none}
+  /* DS-143. A transition is motion, so reduced motion collapses it to `immediate` - and the deck
+     still navigates, which is the half of the rule that a `display:none` would have broken. */
+  .slide[data-leaving]{animation:none;visibility:hidden;opacity:0;box-shadow:none}
   /* was `.ribbon button::before` until T-035 replaced the ribbon with the ruler - a stale selector
      here fails silently, since a rule that matches nothing looks exactly like a rule that passed */
   .ruler-ticks button::before,.ruler-ring{transition:none}
@@ -2462,6 +2521,20 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   /* ---------------------------------------------------------- navigation */
   function go(i, opts){
     i = Math.max(0, Math.min(slides.length - 1, i));
+    /* T-111. **The direction is the navigation's, not the slide numbers'** - the two agree for a
+       key press and disagree for nothing, but the ruler can jump six slides at once and a jump
+       backwards is still backwards. Taken here because `go()` is the one funnel all three
+       navigation paths pass through.
+
+       **Every leaving mark is cleared before a new one is set**, which is the whole of the
+       interrupt answer: advance twice inside one transition and the first slide stops leaving the
+       moment the second starts, so exactly one slide is ever mid-leave and exactly one is
+       current. A queue would have left two painted. */
+    var prev = idx;
+    slides.forEach(function(s){ s.removeAttribute('data-leaving'); });
+    if (prev !== i && slides[prev]) {
+      slides[prev].setAttribute('data-leaving', i > prev ? 'fwd' : 'back');
+    }
     idx = i;
     closeQuick();
     closeAllDiscs(null);
@@ -2501,6 +2574,18 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     document.title = (name === DECK) ? DECK : name + ' — ' + DECK;
     if (opts && opts.focus) slides[i].focus();
   }
+
+  /* The mark comes off when the effect finishes, so a slide is never left painted by an animation
+     that has already run. `animationend` rather than a timer: the timer would have to know the
+     token's value, and a deck may set `--slide-dur` to anything the contract allows. Where the
+     transition is `immediate`, reduced motion, or motion off, no animation runs and no event
+     fires - so the mark is also cleared by the next `go()`, which is the line above. */
+  document.addEventListener('animationend', function(e){
+    if (e.target.classList && e.target.classList.contains('slide') &&
+        e.target.hasAttribute('data-leaving') && !e.target.hasAttribute('data-current')) {
+      e.target.removeAttribute('data-leaving');
+    }
+  });
 
   document.addEventListener('keydown', function(e){
     if (e.target.matches('input,textarea')) return;

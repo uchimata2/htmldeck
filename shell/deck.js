@@ -417,6 +417,20 @@
   /* ---------------------------------------------------------- navigation */
   function go(i, opts){
     i = Math.max(0, Math.min(slides.length - 1, i));
+    /* T-111. **The direction is the navigation's, not the slide numbers'** - the two agree for a
+       key press and disagree for nothing, but the ruler can jump six slides at once and a jump
+       backwards is still backwards. Taken here because `go()` is the one funnel all three
+       navigation paths pass through.
+
+       **Every leaving mark is cleared before a new one is set**, which is the whole of the
+       interrupt answer: advance twice inside one transition and the first slide stops leaving the
+       moment the second starts, so exactly one slide is ever mid-leave and exactly one is
+       current. A queue would have left two painted. */
+    var prev = idx;
+    slides.forEach(function(s){ s.removeAttribute('data-leaving'); });
+    if (prev !== i && slides[prev]) {
+      slides[prev].setAttribute('data-leaving', i > prev ? 'fwd' : 'back');
+    }
     idx = i;
     closeQuick();
     closeAllDiscs(null);
@@ -456,6 +470,18 @@
     document.title = (name === DECK) ? DECK : name + ' — ' + DECK;
     if (opts && opts.focus) slides[i].focus();
   }
+
+  /* The mark comes off when the effect finishes, so a slide is never left painted by an animation
+     that has already run. `animationend` rather than a timer: the timer would have to know the
+     token's value, and a deck may set `--slide-dur` to anything the contract allows. Where the
+     transition is `immediate`, reduced motion, or motion off, no animation runs and no event
+     fires - so the mark is also cleared by the next `go()`, which is the line above. */
+  document.addEventListener('animationend', function(e){
+    if (e.target.classList && e.target.classList.contains('slide') &&
+        e.target.hasAttribute('data-leaving') && !e.target.hasAttribute('data-current')) {
+      e.target.removeAttribute('data-leaving');
+    }
+  });
 
   document.addEventListener('keydown', function(e){
     if (e.target.matches('input,textarea')) return;
