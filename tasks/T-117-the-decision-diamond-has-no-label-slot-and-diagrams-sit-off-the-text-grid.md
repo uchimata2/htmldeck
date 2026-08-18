@@ -2,7 +2,7 @@
 id: T-117
 title: The decision diamond has no label slot, and diagrams sit off the text grid
 type: deliverable
-status: proposed
+status: specified
 phase: specify
 parent: null
 blocked_by: []
@@ -12,7 +12,7 @@ owner: the project owner
 business_value: medium
 effort: m
 created: 2026-08-13
-updated: 2026-08-13
+updated: 2026-08-18
 deliverables:
   - docs/COMPONENT-CONTRACT.md
   - shell/components.css
@@ -46,10 +46,31 @@ weaker. The two tasks are the same gap seen from opposite sides — one adds the
 closes an instance.*
 
 **2. Diagrams are inset from the text grid.** On slides 4, 6 and 7 the diagram's left edge and the
-slide's text left edge disagree — by roughly 190, 220 and 60 units respectively — because the diagram
-is centred in the body rather than placed on the column grid the header, the fragments and the bottom
-line all share. Every one of those slides puts a row of text *directly beneath* the diagram, so the
-misalignment is visible as a step rather than as a margin.
+slide's text left edge disagree — by roughly 190, 220 and 60 units respectively. Every one of those
+slides puts a row of text *directly beneath* the diagram, so the misalignment is visible as a step
+rather than as a margin.
+
+*Measured 2026-08-18, real Chrome at 1920×1234, offline — and it corrects the sentence above.* The
+original reading was that *the diagram is centred in the body rather than placed on the column grid*.
+**That is not what happens.** The `<svg>` element's left edge is at 96 du on every slide of every
+deck, which is exactly where the headline, the bottom line and the body sit. The grid is already
+shared. What is inset is **the ink inside the viewBox**: each diagram declares its own viewBox
+(`0 0 1900 430`, `0 0 1800 420`, `0 0 1700 380` on the three slides above), the element is scaled to
+the 1726 du column, and the leftmost drawn thing starts wherever the author happened to put it.
+
+| Deck | Slides with a diagram | ink − text, per slide |
+| :--- | :---: | :--- |
+| `measure-first` | 7 | +2, **+186**, +1, **+218**, **+61**, **+165**, **+76** |
+| `reference-deck` | 8 | +49, +113, +55, +120, +23, +50, +106, +0 |
+| `sort-window` | 6 | +49, +120, +121, +60, +121, +90 |
+
+**So this is not the adopter's deck being careless — it is every deck this repository ships**, the
+hand-built reference deck included, and the two slides that come out at +2 and +1 are the accident
+rather than the rule. The fix therefore is not a CSS change to where the `<svg>` sits, which is
+already right. It is a rule about **what a viewBox may contain**: the leftmost ink sits at the
+viewBox's own left edge, so that scaling the element to the column puts the drawing on the column.
+That rule is authoring guidance plus a measurement, and the measurement is cheap — the numbers above
+came from one probe.
 
 **Scope**
 - In: a **label slot on the decision node**, sized from the label the way the specification already
@@ -78,8 +99,8 @@ misalignment is visible as a step rather than as a margin.
 **Acceptance criteria**
 - [ ] A decision node renders its label inside itself, sized so the outline never crosses the text,
       with branch labels still on the edges.
-- [ ] A diagram's left edge sits on the same column as the slide's text, demonstrated on a slide that
-      puts text directly beneath a diagram.
+- [ ] A diagram's **ink** — not its `<svg>` element, which is already aligned — sits on the same
+      column as the slide's text, demonstrated on a slide that puts text directly beneath a diagram.
 - [ ] Both have contract rows.
 - [ ] `build.md` no longer produces the workaround.
 - [ ] Demonstrated on a real 12-slide deck with at least two diagrams, opened and looked at, offline.
@@ -89,6 +110,13 @@ misalignment is visible as a step rather than as a margin.
 - What a diagram wider than the text measure does. Decided during implementation from the grid's own
   reason: the column grid is what makes a slide read as one object, so a wide diagram spans whole
   columns rather than ignoring them.
+- **Whether the three shipped decks are re-cut, or only the rule and the gate land.** The measurement
+  above turns this from *one deck's diagrams* into 21 diagrams across three decks, one of which §1's
+  scope explicitly excludes from rebuilding. Shifting every `x` in a viewBox is mechanical, but each
+  re-cut diagram is then owed a look (rule 6), which is the real cost and is not `m`. **The
+  recommendation is to land the component, the contract rows, the build rule and the gate, take the
+  gate's first run as a recorded finding rather than a failure, and raise the re-cut as its own
+  task** — the same split T-054 used for the checks it made visible without building.
 
 ## 2. Plan
 
@@ -123,3 +151,4 @@ misalignment is visible as a step rather than as a margin.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-13 | → proposed | Both found by looking at the rendered deck, neither reported. Opened as one task because both are contract gaps in the same layer and both were worked around silently by a careful build — the diamond's label moved outside, the diagram centred instead of placed. A gap a good build routes around is a gap that never gets reported. |
+| 2026-08-18 | proposed → specified | Both halves re-derived by measurement rather than read off the render. The diamond half stands exactly as written: slides 2 and 8 draw a bare `<path>` rhombus — `M1200 138 L1274 212 L1200 286 L1126 212 Z` and `M870 223 L928 281 L870 339 L812 281 Z` — with the label a separate `<text>` at the shape's centre x and below it, and on slide 8 the branch labels `inside` and `outside` beside it, so three texts do compete for one node. **The grid half is corrected**: the `<svg>` is at 96 du on every slide of every deck and is already on the column, so nothing is centred in the body; what is inset is the ink inside the viewBox. It is also not the adopter's deck alone — all three shipped decks show it, the reference deck by +23 to +120. That changes the fix from a CSS placement to a rule about viewBox content, and it raises a scoping question §1 could not have known to ask, now recorded as the second open question. |

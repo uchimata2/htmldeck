@@ -39,10 +39,11 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) | A named slide transition, chosen per deck, with slide and immediate as the shipping pair | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-041, T-057, T-112 |
 | [T-112](T-112-motion-density-and-the-split-between-content-and-affordance-motion.md) | Motion density, and the split between content motion and affordance motion | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-041, T-057, T-111, T-113, T-114 |
 | [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | - | `proposed` | `specify` | - | - | T-057, T-112, T-119 |
-| [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md) | The decision diamond has no label slot, and diagrams sit off the text grid | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-109, T-115, T-182 |
+| [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md) | The decision diamond has no label slot, and diagrams sit off the text grid | `PH3` | - | `specified` | `specify` | - | - | T-016, T-109, T-115, T-182 |
 | [T-178](T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md) | In dense mode the current-position mark is half the size of the section marks, and the ring is gone | `PH3` | - | `proposed` | `specify` | - | - | T-035, T-114 |
 | [T-181](T-181-nothing-detects-that-a-decks-embedded-quick-view-has-drifted-from-its-source.md) | Nothing detects that a deck's embedded quick view has drifted from its source | `PH3` | - | `proposed` | `specify` | - | - | T-069, T-070, T-107, T-121, T-179 |
 | [T-182](T-182-the-shipped-example-decks-specification-carries-three-false-claims-about-the-deck.md) | The shipped example deck's specification carries three false claims about the deck it briefed | `PH3` | - | `proposed` | `specify` | - | - | T-115, T-117, T-128 |
+| [T-183](T-183-ds-063-failed-once-in-four-full-gate-runs-on-an-unchanged-tree.md) | DS-063 failed once in four full-gate runs on a tree no code change touched | `PH3` | - | `proposed` | `specify` | - | - | T-054, T-179 |
 
 ## Closed
 
@@ -100,7 +101,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | - | `0.1.0` | `done` | `review` | T-044 | - | T-005, T-038, T-043, T-053, T-054, T-065, T-066, T-075, T-090, T-165, T-180 |
 | [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | Settle the two hard-judge failures the checklist's first run found in the reference deck | - | `0.1.0` | `done` | `review` | T-048 | - | T-024, T-028, T-040, T-044, T-056 |
 | [T-053](T-053-enforce-the-headline-ds-091-requires.md) | Enforce the headline DS-091 requires, and excuse the fragment count no check can reach | - | `0.1.0` | `done` | `review` | - | T-054, T-055 | T-005, T-037, T-038, T-051 |
-| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `PH3` | `unreleased` | `done` | `review` | T-053 | - | T-005, T-037, T-043, T-051, T-119 |
+| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `PH3` | `unreleased` | `done` | `review` | T-053 | - | T-005, T-037, T-043, T-051, T-119, T-183 |
 | [T-055](T-055-a-variant-that-leaves-malformed-markup.md) | Close the slide-is-not-a-section variant's open tag, so it tests the tag and not parser repair | `PH2` | `0.1.5` | `done` | `review` | T-053 | - | T-005, T-038 |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `PH1` | `0.1.0` | `done` | `review` | - | - | T-042, T-050, T-052, T-060, T-067, T-078, T-154 |
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `PH2` | `0.1.5` | `done` | `review` | - | - | T-005, T-016 |
@@ -218,7 +219,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-175](T-175-the-published-example-colophon-is-not-back-matter.md) | The published example's colophon is filed as an argument slide, so it takes a stage's kicker, mark and census | `PH1` | `0.3.0` | `done` | `review` | - | - | T-068, T-108, T-123, T-128 |
 | [T-176](T-176-shell-py-s-self-test-blocks-the-command-that-fixes-what-it-fails-on.md) | shell.py's self-test asserts repository state, so it blocks the one command that fixes it | `PH1` | `0.3.1` | `done` | `review` | - | - | T-036, T-109, T-124 |
 | [T-177](T-177-tokens-write-carries-the-dark-value-into-the-light-band.md) | shell.py tokens carries a dual-band token's dark value into the light band | `PH3` | `0.4.0` | `done` | `review` | - | - | T-114, T-166 |
-| [T-179](T-179-a-quick-view-cannot-be-refreshed-after-the-renderer-changes.md) | A quick view cannot be refreshed after the renderer changes, so a renderer fix never reaches a deck that already carries one | `PH3` | `unreleased` | `done` | `review` | - | - | T-070, T-107, T-121, T-181 |
+| [T-179](T-179-a-quick-view-cannot-be-refreshed-after-the-renderer-changes.md) | A quick view cannot be refreshed after the renderer changes, so a renderer fix never reaches a deck that already carries one | `PH3` | `unreleased` | `done` | `review` | - | - | T-070, T-107, T-121, T-181, T-183 |
 | [T-180](T-180-seed-ds-218s-failing-branch-so-the-persistent-control-check-is-watched-failing.md) | Seed DS-218's failing branch, so the persistent-control check has been watched failing | `PH3` | `unreleased` | `done` | `review` | - | - | T-005, T-051, T-114 |
 
 <!-- taskmd:end -->
