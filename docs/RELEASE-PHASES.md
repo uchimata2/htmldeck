@@ -445,6 +445,7 @@ followed.
 | 13–14 | T-112, T-111 | the motion cluster, in that order |
 | 15 | T-041 | named in *what PH1 shipped without* |
 | 16 | T-057 | `xl`, and the least certain to be worth it |
+| — | ~~T-180~~ **done 2026-08-18** | raised and closed inside an hour, out of a question about why the motion control sits outside the `More` menu. The answer was DS-218 and the gate decides it — `checked`, not excused — but checking *that* turned up the narrower fact: **the rule had only ever been seen to pass**, and its predicate is `no looping motion OR the control is persistent`, so the obvious seed satisfies the first disjunct and passes. The fixture moves the control instead of deleting the motion, and both directions are run rather than argued: it trips DS-218 and nothing else, and with DS-218's branch neutralised the same render trips nothing. **L-36** in a new place |
 | 17 | T-179 | raised by T-121 on 2026-08-18 and placed last only because the ranks above are spoken for — **it is `s` and it is the only way T-121's fix reaches a reader**, so it is a candidate to pull forward the way T-165 was, rather than a task that belongs behind an `xl`. It renders nothing new; it re-renders two decks that already ship |
 
 **The owner's 2026-08-14 sequence is *audit → hand over → package*: T-153, then T-157, then T-137.**
