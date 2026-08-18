@@ -790,6 +790,15 @@ svg{display:block}
 .doc .headline{font-size:var(--doc-fs-head);margin-top:var(--doc-sp-xs);letter-spacing:normal}
 .doc .standfirst{font-size:var(--doc-fs);margin-top:var(--doc-sp-sm);max-width:none}
 .doc .body{margin-top:var(--doc-sp)}
+/* DS-233. On the stage this is the closing gesture: twelve bottom lines anchored left and the
+   thirteenth centred, so the centring *is* the ending. The reading view is one continuous column
+   and those twelve neighbours are gone, so the same declaration reads as one stray centred
+   paragraph - the treatment crosses over and its meaning does not. Reverted here rather than
+   deleted from the stage, because alignment carries no information and DS-070-076 promise a
+   conforming alternate, not an identical one: the document ends by ending. All three shipped
+   decks use the class exactly once, on their closing slide, so this is the shell's idiom and not
+   one deck's habit. T-118. */
+.doc .bottom-line--center{justify-items:start;text-align:left;justify-self:start}
 .doc .figwrap{height:auto}
 .doc .fig{height:auto}
 .doc .provenance{position:static;text-align:left;font-size:var(--doc-fs-mono);margin-top:var(--doc-sp-lg);letter-spacing:var(--doc-track-mono)}
@@ -2151,7 +2160,6 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
 .doc .bottom-line{margin-top:var(--doc-sp);max-width:none;gap:var(--doc-sp-sm)}
 .doc .bottom-line::before{width:var(--doc-fs-figure);height:var(--doc-hair)}
 .doc .bottom-line b{font-size:var(--doc-fs-lead)}
-.doc .bottom-line--center{justify-items:start;text-align:left;justify-self:start}
 .doc .stat-unit{font-size:var(--doc-fs-sm)}
 .doc .est{font-size:var(--doc-fs-mono)}
 </style>

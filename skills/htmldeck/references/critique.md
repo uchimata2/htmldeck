@@ -105,6 +105,14 @@ Two tests worth running by hand because nothing else does:
   takes the vector form wherever the source offers one. **No check can see that**: the gate reads the
   deck and cannot know what sat beside the source on disk. A quick view showing a screenshot of a
   document that exists as text is a DS-110 finding, and this is the only pass that can raise it.
+- **List the treatments used on one slide only, then read each one in the reading view.** That is
+  DS-233, and the listing is arithmetic even though the verdict is not: take every modifier class
+  (`block--modifier`) on the stage, keep the ones appearing on a single slide, and **drop the ones
+  whose base component appears three or more times on that slide** — those contrast with siblings
+  that travel with them when `buildDoc()` clones the slide. What is left borrows its meaning from
+  the *other* slides, and the reading view is one continuous column where those neighbours are gone.
+  Ask of each: does it still say the same thing? On the three shipped decks that leaves **one
+  treatment per deck** and no false alarms, so this costs a minute and is not a nag.
 
 ## 5. The four outcomes are not interchangeable
 

@@ -170,6 +170,7 @@ brave to depart when a different idea communicates better.* Licenses departure f
 | DS-074 | A document rendering, not a responsive stage: one column, normal flow, type in `rem`, honouring user font size. | hard | auto | yes |
 | DS-075 | No two-dimensional scrolling at 320 CSS px equivalent. | hard | render | yes |
 | DS-076 | Switching views preserves position in both directions. | default | render | yes |
+| DS-233 | **A treatment whose meaning comes from contrast with the *other slides* must carry that meaning in the reading view too, or it is not used.** `buildDoc()` clones every slide, so each treatment crosses over whether or not its meaning does: the stage is separate frames, the reading view is one continuous column, and **contrast that is local on the stage becomes global in the document**. A centred line among left-anchored ones reads as an ending on slide 13 and as one stray paragraph among twelve in the document. The rule is `judge` because meaning is, but **its trigger is countable and the count is what makes it usable**: a modifier used on **one** slide, whose base component appears at most twice per slide, is borrowing meaning from the slides around it. Measured 2026-08-18 across the three shipped decks — 9 modifier classes, 6 used on a single slide, and that second test splits them 3/3 with **no false alarms**: the three it keeps are all `bottom-line--center`, the three it drops (`disc--edge`, `listi--out`, `sources--list`) contrast with siblings *on their own slide*, which the clone carries over intact. | hard | judge | — |
 
 ---
 

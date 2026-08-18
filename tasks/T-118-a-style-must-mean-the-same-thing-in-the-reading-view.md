@@ -2,8 +2,8 @@
 id: T-118
 title: A style that carries meaning on a slide must carry the same meaning in the reading view
 type: deliverable
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-070, T-109, T-115]
@@ -12,10 +12,12 @@ owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-13
-updated: 2026-08-13
+updated: 2026-08-18
+shipped_in: unreleased
 deliverables:
   - docs/DESIGN-SYSTEM.md
   - skills/htmldeck/references/critique.md
+  - shell/components.css
 ---
 
 # T-118 — A style that carries meaning on a slide must carry the same meaning in the reading view
@@ -93,17 +95,79 @@ one continuous column. Contrast that is local on the stage becomes global in the
 
 ## 3. Implement
 
+**Step 1's answer: the candidate set, and the false-alarm rate**
+Measured 2026-08-18 over the three shipped decks. A *treatment* is a modifier class
+(`block--modifier`), because that is what a deck applies to say **this one is different**; a base
+class is the component and says nothing by contrast.
+
+| | reference-deck | sort-window | measure-first | total |
+| :--- | ---: | ---: | ---: | ---: |
+| slides | 13 | 12 | 13 | 38 |
+| modifier classes | 3 | 2 | 4 | 9 |
+| used on one slide | 2 | 1 | 3 | **6** |
+| …of those, contrast **across** slides | 1 | 1 | 1 | **3** |
+
+**Rarity alone was not good enough, and the second test costs nothing.** Six rare treatments split
+exactly three/three. The three kept are all `bottom-line--center`, one per deck. The three dropped —
+`disc--edge`, `listi--out`, `sources--list` — contrast with siblings **on their own slide**, and
+`buildDoc()` clones the slide whole, so those neighbours travel with them. The discriminator is
+countable: a modifier whose base component appears at most twice per slide is borrowing meaning from
+the *other* slides. **False alarms after it: zero.** That is criterion 5, answered with a number
+rather than an impression.
+
+*The first run of the counter reported nine, including `btn--pager` in all three decks. Slicing each
+slide from its own start to the next slide's start swept the chrome row into the last one, so a
+**control** was being reported as a rare treatment. The artifact was in the instrument; slides are
+cut at their own `</section>` now.*
+
 **Decisions & assumptions**
--
+- **`.bottom-line--center` is kept on the stage and reverted in the reading view** — 2026-08-18.
+  Alignment carries no information, and DS-070–076 promise a *conforming alternate*, not an
+  identical one: the document ends by ending, and it does not need to reproduce a stage gesture. All
+  three decks use the class exactly once, on their closing slide, so it is the shell's idiom rather
+  than one deck's habit and deleting it would cost every deck its ending.
+- **The rule's home is the shared shell, and that is the finding this task did not expect** —
+  2026-08-18. `reference-deck` and `sort-window` **already carried a hand-copied per-deck
+  `.doc .bottom-line--center` override**, in a per-deck region; `shell/components.css` had none, and
+  `measure-first` had no reading-view bottom-line styling at all. So the fix existed twice by hand
+  and was missing from the third deck — **which is exactly why the defect was observed on the
+  adopter's deck and nowhere else**. The rule now lives once, in the shell, and the two per-deck
+  copies are deleted (**L-08**: a stored copy of a derivable fact drifts). Had they been left, a
+  later change to the shell's rule would have been silently overridden in two decks.
+- **Print waits for an instance**, as §1 recommended — 2026-08-18. A rule with no observed failure
+  cannot be calibrated, and DS-233 says what to look for if one turns up.
+- **DS-233 is `hard` / `judge` / `—`.** Same shape as DS-021: the meaning is a person's call, so no
+  gate may imply it decides this. It joins the hard-judge checklist, 26 → 27.
 
 **Outputs produced**
--
+- [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — DS-233, in §2.5 *The reflow view*.
+- [`skills/htmldeck/references/critique.md`](../skills/htmldeck/references/critique.md) — the
+  fourth by-hand test in §4, with the two-step count.
+- [`shell/components.css`](../shell/components.css) — `.doc .bottom-line--center`, one home.
+- The three shipped decks, re-synced; the seeded-defects deck regenerated (**L-77**); and the
+  figures a shell sync always moves — `README.md`, `docs/BRIEF.md`, `examples/README.md`.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
-| :--- | :--- | :--- |
-|  |  |  |
+| :--- | :---: | :--- |
+| A ruleset row exists, with the mechanism stated | met | DS-233. The mechanism is the row's first sentence: `buildDoc()` clones every slide, so local contrast becomes global |
+| The critique pass reports treatments used once or rarely and asks the question of each | met | `critique.md` §4, and it carries the second test — without it the pass would raise three false alarms out of six |
+| `.bottom-line--center` is decided, and the decision is recorded with its reason | met | Kept on the stage, reverted in the document; §3 has the reason and what it would have cost to delete instead |
+| Run against the adopting project's deck, the pass finds the centred bottom line. Regression case | met | `measure-first` is that deck. The pass flags one treatment on it, and it is the right one |
+| False alarms counted against true hits on the two reference decks before the frequency check ships | met | 6 rare, 3 true, 3 false on rarity alone; **0 false** once the second test is applied. Counted before the step was written, not after |
+
+**Looked at, offline** — `CLAUDE.md` rule 6, `TASK-WORKFLOW.md` §7 step 3. The adopter's deck, before
+and after, in a pane that runs page script: the reading view opened through the deck's own `toDoc`
+control, scrolled to the closing section. **Before**: 13 bottom lines, twelve computing `start` and
+one `center` — and it reads as a mistake in a continuous column, exactly as §1 says. **After**: all
+thirteen align, the accent rule above the closing line still marks it, and the stage's copy still
+computes `center`. Both states were read back from the DOM as well as looked at.
+
+*The first attempt captured through `render.py` and produced the same picture of slide 11 whichever
+slide was asked for — the probe was inert and my injected opener never fired. That picture would have
+been the instrument's answer dressed as the deck's, which is **L-110** exactly; the tell was that the
+image did not change when the input did.*
 
 **Child fix tasks raised**
 - none
@@ -112,4 +176,5 @@ one continuous column. Contrast that is local on the stage becomes global in the
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-18 | → done | Specified, planned, implemented and reviewed in one sitting. The scope held: rarity is the countable half, and the count decided the shape — six rare treatments, but **half of them contrast within their own slide**, which the clone preserves, so the check needed a second test to be worth shipping. It went from zero to a `shell/` edit for a reason §1 could not have known: the fix already existed as a **hand-copied per-deck override in two of the three decks**, with nothing in the shared shell, which is precisely why only the adopter's deck showed the defect. One home now, two copies deleted. Print waits for an instance, as recommended. |
 | 2026-08-13 | → proposed | Raised by the owner from a finding made while looking at the reading view. Scoped around *rarity* rather than around alignment, because what makes a treatment fragile across the two renderings is that its meaning comes from contrast with its neighbours, and rarity is the countable half of that. |
