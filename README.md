@@ -64,7 +64,7 @@ the installed plugin a few minutes after each session starts.
 
 | | |
 | :--- | :--- |
-| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset.** 166 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
+| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset.** 167 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
 | [`docs/DESIGN-RATIONALE.md`](docs/DESIGN-RATIONALE.md) | Why each rule is what it is: what was measured, what was inherited, what was overruled, and the conflicts resolved by name |
 | [`docs/EVALUATION.md`](docs/EVALUATION.md) | How a deck is scored, and **when it is good enough to stop** |
 | [`tools/deck/check.py`](tools/deck/check.py) | The build check. A pass/fail per rule ID, **and an account of every rule it did not check, with a reason each** |
@@ -122,9 +122,9 @@ python tools/deck/ruleset.py --counts
 ```
 
 ```
-  rule rows in the table            166
+  rule rows in the table            167
   + declared in prose, not a row      1   DS-000 (guidance)
-  = rule IDs the document declares  167   <- the figure that counts DS-000
+  = rule IDs the document declares  168   <- the figure that counts DS-000
 ```
 
 **Which gate owns each `hard` rule.**

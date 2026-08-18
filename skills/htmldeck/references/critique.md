@@ -52,7 +52,7 @@ finding to raise**, not a row quietly skipped.
 Run it in **one read of the whole deck, before scoring anything** — these are judgements about the
 deck a reader actually meets, not twelve separate judgements.
 
-## 3. Two formats
+## 3. Three formats
 
 ### 3.1 Specification review — stage 5, before any HTML exists
 
@@ -87,6 +87,42 @@ section exists to prevent.
 4. **An explicit keep-versus-rebuild split.** Which slides stand, which need work, which should not
    exist. This is the part a reader acts on, and leaving it implicit is how a review becomes a list
    of complaints.
+
+### 3.3 Specification conformance — the deck against the specification that briefed it
+
+**Runs only when a specification is supplied**, and it takes two inputs where every other pass takes
+one. With no specification, say the step was skipped and that a deck can arrive without one; do not
+infer a specification from the deck, which would compare the deck against itself.
+
+A specification is **a plan being read as a description**. Every sentence asserting a property of
+the built deck — *spans the full width*, *three figures at display weight*, *the diagram occupies
+the upper two thirds* — was written before the artifact existed. Nothing downstream of a false one
+breaks, so nothing catches it: the claim that found this rule survived a build, four gates, a
+render, a presentation, and two readings of the markup (DS-234).
+
+Go **claim by claim** through each slide's `Structure` and `Visuals` fields, and for each one report
+the slide, the sentence, what the deck does, and **which of the two things to repair**. Both repairs
+are live. The claim that found this rule is *fix the specification*: the deck is right and a review
+that assumed otherwise would have argued for removing a measure doing its job.
+
+**The calibration, which is the whole of the technique.** Judge a size claim against **the container
+the element sits in**, never against the stage. The content column is the stage less its horizontal
+padding, and every full-bleed element fills that column exactly — so a diagram measuring 90% of the
+stage is at full width, not short of it. Measured on both shipped decks 2026-08-18: judged against
+the stage, *full width* reads false three times and is truly false once. **Two false alarms against
+one hit** is why this pass is judgement and no checker ships for it.
+
+**The one shape that is decidable without looking**, and worth knowing by heart: an element the
+theme caps *below* its container cannot fill it, on any slide of any deck. `.bottom-line` is the
+case — `max-width:var(--bottom-measure)` at 1500 du inside a 1726 du column — so *the bottom line
+spans the full width* is false wherever it appears, and it is false in the shipped
+`measure-first` specification. Any other claim of this shape is a token comparison and needs no
+render either.
+
+Everything else here is judgement, and the fractional claims are the trap: *upper two thirds* against
+a diagram filling 83% of its container is an approximation a reader accepts and a checker would
+flag. Report a fraction only when the deck contradicts the claim's **intent** — the diagram is not
+where the sentence puts it, or the thing beneath it is not beneath it.
 
 ## 4. What to look for that no check can
 
