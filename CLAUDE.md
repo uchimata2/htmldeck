@@ -39,8 +39,8 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is still over its own bound** — 15,208 bytes against `tasks/TASK-WORKFLOW.md`'s 11,925,
-measured 2026-08-14 with the command above. That day's cuts took it **19,035 → 15,208, −20.1%**,
+**This file is still over its own bound** — 15,226 bytes against `tasks/TASK-WORKFLOW.md`'s 11,925,
+measured 2026-08-18 with the command above. That day's cuts took it **19,035 → 15,208, −20.1%**,
 closing 57% of the debt before later edits added back: `CE-01` as
 [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and `CE-04` as
 [T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), both ranked in
@@ -199,8 +199,8 @@ results as what was actually produced, not as "works".
 
 **12 is the floor, not the target.** Only the contents page has been built and printed above 13 —
 at 17, 25 and 43 — and what is still known to bite above it is the ruler, which degrades to dense
-mode once the slide count passes a capacity the controls' width decides
-([T-114](tasks/T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md)). Treat a long deck as
+mode past 16 and then marks where you are more quietly than it marks anything else
+([T-178](tasks/T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md)). Treat a long deck as
 **untested territory** rather than as a longer version of a tested one, and say which length a
 result was measured at. How the target moved, and off what evidence, is
 [`docs/RELEASE-HISTORY.md`](docs/RELEASE-HISTORY.md) §4.
