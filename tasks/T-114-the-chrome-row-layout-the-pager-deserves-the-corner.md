@@ -370,9 +370,47 @@ means `shell.py` learns it, not just the markup.
 | DS-138 carries the exemption and still binds the mark | met | Narrowed by T-119, extended here 2026-08-18 to name the provenance box beside tier two |
 | `chrome_row.py`, `check.py`, `contrast.py` green | met | `check_all.py`: 0 failures, 184 s. `contrast.py` gained the reversed pair the filled pager introduced |
 | Opened and looked at, offline, past the capacity bound | met | Step 10, 25 slides at 1920×1080, network mapped to NOTFOUND. **Looking is what found the undrawn box and the unfilled pager**, both of which every gate had passed |
+| **The menu rendered OPEN, both themes** | **met 2026-08-18** | The last thing about this task nobody had done. It had been verified by measurement and by keyboard state and **never drawn**, because a shut menu is `display:none` and measures nothing — see below |
+| **The whole chrome row in dark, at 13 and at 25** | **met 2026-08-18** | 13 reads as intended. 25 does not, for a reason that predates this task: [T-178](T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md) |
+
+### What the two looks found
+
+Rendered in real Chrome, offline, at 1920×1234, by injecting an opener into a **throwaway copy**
+that re-arms until the target slide is current (**L-110**'s recipe, and its warning about a synthetic
+click was worth heeding — both the focused and the unfocused states were captured, because
+`:focus-visible` may not match after a real mouse click).
+
+**Fixed here — the menu drew a button inside a box.** `.more-menu` carries a hairline and a radius;
+`.btn` carries the same pair; `.more-menu .btn` overrode only the width and the alignment, so the
+frame arrived with `.btn` and every opening showed **two concentric rounded rectangles a `--sp-2`
+apart**. Opening from the keyboard focuses the first item, which added the focus ring for a **third**.
+It reads as a rendering fault rather than as a menu. Nobody chose it: the one deliberate decision
+about this panel's edges was bordering it on `--line` to sidestep
+[T-177](T-177-tokens-write-carries-the-dark-value-into-the-light-band.md). The fix is
+`border-color:transparent` on the menu item — the border **keeps its place in the box model**, so
+`:hover` and `:focus-visible` re-draw it where it already sits with no reflow, and the frame becomes
+the selection. Re-rendered after the fix in both themes and both focus states: a panel holding one
+row, and one accent ring when the keyboard put it there. Three decks synced.
+
+**Looked at and accepted, with the numbers, so the next reader does not re-open them:**
+
+- **The panel is over half empty.** `--more-menu-w` is `230 du` and `READ` occupies about 90 px of
+  227. It is sized for the two-item form, and all three shipped decks loop, so *Motion* is a sibling
+  and the menu will always hold one item here. Kept: a menu that changed width between the two tail
+  forms would be worse than one that reserves the room.
+- **The panel separates from the page at 1.10:1 in light and 1.09:1 in dark**, sampled from the
+  captures either side of its edge. The hairline does the work; the declared shadow measures 3/255
+  and is effectively invisible. Legible in both themes, and the weaker of the two is light.
+
+**Not fixed here — [T-178](T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md).**
+At 25 slides the ruler goes dense, the ring switches off, and the current-slide mark renders at
+**7 px beside 14 px section marks** — against **30 px** for the ring at 13. Both rules that produce
+it predate this task and neither moved, so it does not block the release; but this task lowers the
+capacity bound 17 → 16, so one more length falls into dense mode than before.
 
 **Child fix tasks raised**
-- none
+- [T-178](T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md) — dense mode drops
+  the position mark below the section marks.
 
 ## Log
 
@@ -388,3 +426,4 @@ means `shell.py` learns it, not just the markup.
 | 2026-08-18 | (no change) | **Owner settled step 7a's mechanism: a slot.** Designing it against `shell.py`'s `SLOTS` found the constraint that decides its shape — `cut()` replaces what lies between two *literal* delimiters, and *Motion* varies by **parent** rather than by content, so no slot bounded to the control can express it. The slot is therefore the **chrome row's tail**, the smallest region containing both of *Motion*'s positions, named for the region rather than for the control. `shell.py new` writes the menu form as the default and the gate decides correctness, which is what build-time placement was for. Nothing in `shell/` touched: the edit is step 7's frozen-tree pass, and this is the design it runs from. |
 | 2026-08-18 | (no change) | **Reconcile sweep** for what this task's own findings falsified. `RELEASE-PHASES.md`'s T-114 row still read *DS-138 is step one and gates every line of chrome code*, contradicting the T-119 row four lines below it on the same table — corrected, with the outcome and why the boundary needed re-testing. `RULESET-AUDIT.md`'s two DS-138 rows both stated the rule as *bound to tier two*, which stopped being its scope on 2026-08-18; each gained a dated extension note rather than a rewrite, so the audit's own verdict stays readable as history. **DS-217's 546 corrected to the measured 548.8** — the number came from T-035, and the row grew under it without the rule being told. `figures.py` reports 0 stale, so nothing else quoted it; T-035's own record keeps 546 as the dated measurement it was. |
 | 2026-08-18 | planned → review | **Y is built, and looking at it is what finished it.** Steps 7, 7a, 2, 6, 8, 9 and 10 all ran in one pass. The row is a drawn `.navbox` holding the ruler, the counter and the filled pager, with `Motion` and `More` outside it; the tail is the twelfth slot, `shell.py tail` sets its form, and `audit.py` reads `motionPersistent` off the built markup so a looping deck cannot satisfy DS-218 with a control shut inside a menu. All three shipped decks loop and all three carry the sibling form. **Two halves of the ruled sketch were nearly missed and no gate could have said so**: the first build's container drew nothing and its pager was outlined, every check passed, and the row read exactly as before — company without weight is invisible and weight without company is loud in the wrong group, which is the finding rather than the fix. **The drawn box costs exactly one ruler target**, 17 → 16, and the first measurement hid it by reading the border box: the tell was the flexible label shrinking 34 du between two otherwise identical runs. Adding a slot broke `sync` for every existing deck, so `shell.py` gained a checked `MIGRATIONS` table rather than a looser `cut`, and **T-176's self-test defect had to be fixed again in a new shape**. A new token exposed `tokens --write` carrying a dual-band colour's dark value into the light band — sidestepped by bordering on `--line`, filed as [T-177](T-177-tokens-write-carries-the-dark-value-into-the-light-band.md). `check_all.py` 0 failures in 184 s; `figures.py` 0 stale after sixteen corrections across two shell changes. **Criterion 3 closes `not met` with the reason booked at planning**, unchanged. |
+| 2026-08-18 | (no change) | **The two looks the record still owed, done.** The menu had never been rendered OPEN and the row had never been rendered in dark; the first found a defect and the second found one that is not this task's. **A shut menu is `display:none`**, so every gate that passed this release passed a panel it could not see — the nested frame is not a rule anything here owns, it is a thing that had to be drawn. Fixed in `shell/components.css` with `border-color:transparent` on the menu item, three decks synced, seeded-defects deck regenerated (**L-77**). The dark row at 25 slides is [T-178](T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md), filed rather than fixed: the two rules behind it both predate this task. |

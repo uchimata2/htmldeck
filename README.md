@@ -150,7 +150,7 @@ python tools/docs/refcheck.py
 
 ```
 OK - 2902 document pointer(s) checked, 0 broken
-     861 section reference(s) resolved, 0 dead; 2624 not bound to a document and skipped.
+     861 section reference(s) resolved, 0 dead; 2628 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -282,15 +282,18 @@ built. **PH3** is the
 larger work, including 3D visuals, the frame-rate figure and those seven conditions.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
-The current release is 0.3.1. It makes a source reference one component wherever it appears: the
-mark in a slide's corner, the list behind a mark that cites more than one document, and the colophon
-at the back. Those three used to be written separately, and it showed. A colophon would name the
-documents a deck rested on, link to none of them, and send the reader back through the slides to
-find the links. That was true of the decks here as well as of the one that reported it.
+The current release is 0.4.0, and it rebuilds the row of controls along the bottom of a deck.
+Someone using 0.2.2 said the back and forward arrows read as an afterthought, and they were right.
+The arrows sat between a slide counter and two wide labelled buttons, so the one control you
+actually press was the quietest thing in the row.
 
-The ruleset was audited too, all 165 rules. Four changed. Thirteen turned out to be rules that no
-tool and no reviewer could apply, which is a different fault from a rule being wrong, and they are
-now named instead of left looking enforced.
+The ruler, the counter and the arrows now share a drawn box, because between them they answer one
+question: where am I, and how do I move. The arrows are filled and nothing else in the row is, so
+they are easy to find. Everything else moved out to the right, behind a `More` button.
+
+`Motion` is the exception. A deck with looping motion has to keep a visible way to stop it, so that
+button stays outside the menu, and moves inside it only in decks with nothing running. The build
+decides which, and a check enforces it.
 
 A deck built on an earlier version will fail the shell check until you run `shell.py sync`. The
 release notes say what fails and what fixes it.

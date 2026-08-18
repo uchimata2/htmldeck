@@ -665,7 +665,16 @@ svg{display:block}
   box-shadow:0 var(--shadow-y-sm) var(--shadow-blur-sm) var(--shadow-soft);
 }
 .more-menu[hidden]{display:none}
-.more-menu .btn{width:100%;justify-content:flex-start}
+/* A MENU ITEM IS A ROW, NOT A BUTTON IN A BOX. `.btn` carries its own hairline and radius and the
+   panel carries the same pair, so an item drawn with both put two concentric rounded rectangles a
+   `--sp-2` apart - and opening the menu from the keyboard focuses the first item, which adds the
+   focus ring for a third. Nobody chose that: this rule overrode the width and the alignment, and
+   the frame arrived with `.btn`. The border keeps its place in the box model rather than being
+   removed, so `:hover` and `:focus-visible` re-draw it where it already sits with no reflow - the
+   frame becomes the selection, which is the only thing a menu row's edge has to say.
+   Found 2026-08-18 by rendering the menu OPEN for the first time (L-110); every gate had passed
+   it shut, because a shut menu is `display:none` and measures nothing. */
+.more-menu .btn{width:100%;justify-content:flex-start;border-color:transparent}
 /* the second encoding DS-216 permits, and it encodes a different fact: the ribbon says which
    stage, this says how far through the deck. Numerals, not twelve targets. */
 .count{
