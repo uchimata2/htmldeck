@@ -147,6 +147,7 @@ comes here.
 | [L-112](lessons/L-112.md) | A self-test that asserts repository state fails on exactly the commits that change it | Tooling |
 | [L-114](lessons/L-114.md) | A new check inheriting the tool's normalisation can be silent and green at once | Tooling |
 | [L-118](lessons/L-118.md) | Embedding a rendering forks the input, and nothing downstream can tell it drifted | Tooling |
+| [L-119](lessons/L-119.md) | Pairing two independent measurements by position turns a rare dropped sample into a false verdict | Tooling |
 
 ### Writing
 

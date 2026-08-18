@@ -183,13 +183,30 @@ def geometry(results):
     a, b = results.get("3840x2000", []), results.get("1280x634", [])
     if not (a and b):
         return None
+    # **Paired by slide, never by position** (T-183). `zip` pairs the two runs by index, and the
+    # two runs are two independent sets of Chrome launches: `render.measure` prints `!! no result`
+    # and CONTINUES when one comes back empty, so a single dropped render shifts every pair after
+    # it and the comparison silently reads slide n against slide n+1.
+    #
+    # **That does not degrade the measurement, it inverts it.** Measured on a real four-slide
+    # sample, 2026-08-18: intact, 120 values and a worst disagreement of 0.00 du non-text and
+    # 1.70 du of text. Drop one row from the smaller run and the same deck reports **314.14 du**
+    # and **479.26 device px** against a 2.0 px bound - a catastrophic failure invented entirely
+    # by the pairing. That is a red gate on a deck with nothing wrong with it, and re-running
+    # clears it, which is the shape that teaches a reader to re-run until green.
+    names_a, names_b = [r["slide"] for r in a], [r["slide"] for r in b]
+    duplicated = sorted({n for n in names_a if names_a.count(n) > 1}
+                        | {n for n in names_b if names_b.count(n) > 1})
+    by_b = {r["slide"]: r for r in b}
+    pairs = [(ra, by_b[ra["slide"]]) for ra in a if ra["slide"] in by_b]
+    unpaired = sorted(set(names_a) ^ set(names_b))
     # Split by ELEMENT KIND, not by axis. Measured 2026-08-07 over the full 12-slide deck: a text
     # run's whole rect is glyph-derived, not only its width. `y` reached 0.62 du and `h` 0.42 on
     # SVG labels, against a worst width of 1.17 - so holding a text run's placement to the
     # non-text tolerance fails a deck whose layout is provably identical.
     worst = {"geom": (0.0, ""), "text": (0.0, "")}
     counted = {"geom": 0, "text": 0}
-    for ra, rb in zip(a, b):
+    for ra, rb in pairs:
         for key in sorted(set(ra["geom"]) & set(rb["geom"])):
             bucket = "text" if key in TEXT_KEYS else "geom"
             for i, axis in enumerate("x y w h".split()):
@@ -203,6 +220,11 @@ def geometry(results):
     return {"counted": counted["geom"] + counted["text"],
             "n_geom": counted["geom"], "n_text": counted["text"],
             "geom": worst["geom"], "text": worst["text"],
+            # **The pairing is a fact about the run, not about the deck**, so it is reported
+            # beside the verdict rather than folded into it. `aligned` false means this run
+            # measured two different sets of slides and no verdict it produced is about the deck.
+            "paired": len(pairs), "unpaired": unpaired, "duplicated": duplicated,
+            "aligned": not unpaired and not duplicated,
             "k_ratio": a[0]["k"] / b[0]["k"],
             "text_tol_du": text_tol_du,
             "text_px": worst["text"][0] * b[0]["k"],
@@ -330,6 +352,22 @@ def scale_verdicts_from(results):
     g = geometry(results)
     if not g:
         out.append(("DS-063", "the two-resolution comparison produced no result", False))
+    elif not g["aligned"]:
+        # **An unstable reading is reported as unstable** (T-183) - `None`, which this file already
+        # means by *undecided, not failed*, and which the account keeps out of `checked` rather
+        # than counting as a pass. Failing here would be the same wrong answer the misalignment
+        # produced; passing would hide a run that measured nothing it claims to have measured.
+        what = []
+        if g["unpaired"]:
+            what.append("only one run measured %s" % ", ".join(repr(s[:28]) for s in g["unpaired"]))
+        if g["duplicated"]:
+            what.append("a run measured %s twice"
+                        % ", ".join(repr(s[:28]) for s in g["duplicated"]))
+        out.append(("DS-063", "the two renderings measured different slides, so the comparison is "
+                              "undecided rather than failed: %s. %d slide(s) paired. Re-run; if it "
+                              "recurs the probe is dropping or repeating a slide, which is the "
+                              "measurement to fix and not this deck"
+                    % ("; ".join(what), g["paired"]), None))
     else:
         # `counted == 0` is the comparison finding nothing to compare, not the two renderings
         # disagreeing. It read as a failure until T-075: the same rule, judged against an empty
@@ -419,6 +457,53 @@ def self_test():
             sys.exit("SELF-TEST FAILED: %dx%d expects engage=%s against k=%.4f" % (w, h, engage, k))
     if "click()" in PROBE:
         sys.exit("SELF-TEST FAILED: the probe drives the deck; auto-engage must be observed")
+
+    # T-183. **The pairing, watched failing.** Two runs of one two-slide deck, identical except
+    # that the second run is missing a slide - which is exactly what `render.measure` leaves behind
+    # when a read comes back empty and it continues. Built here rather than read off a real
+    # measurement (**L-78**): a fixture that needs a browser is a fixture nothing runs.
+    def _row(name, x):
+        return {"slide": name, "k": 0.5, "geom": {"headline": [x, 0.0, 100.0, 20.0],
+                                                  "rule": [x, 40.0, 200.0, 2.0]}}
+
+    good = {"3840x2000": [_row("one", 10.0), _row("two", 900.0)],
+            "1280x634": [_row("one", 10.0), _row("two", 900.0)]}
+    g = geometry(good)
+    if not g["aligned"] or g["paired"] != 2:
+        sys.exit("SELF-TEST FAILED: two identical runs did not pair - %r" % g)
+    if g["geom"][0] != 0.0:
+        sys.exit("SELF-TEST FAILED: two identical runs disagreed by %.2f du" % g["geom"][0])
+
+    dropped = {"3840x2000": good["3840x2000"], "1280x634": [_row("two", 900.0)]}
+    g = geometry(dropped)
+    if g["aligned"]:
+        sys.exit("SELF-TEST FAILED: a run missing a slide was reported as aligned. Positional "
+                 "pairing then compares slide n against slide n+1, and T-183 measured that "
+                 "turning 0.00 du into 314.14 du on a deck with nothing wrong with it")
+    if g["unpaired"] != ["one"]:
+        sys.exit("SELF-TEST FAILED: the unpaired slide was not named - %r" % g["unpaired"])
+    # and the pairing it DID make is still by name, so the surviving comparison is honest
+    if g["paired"] != 1 or g["geom"][0] != 0.0:
+        sys.exit("SELF-TEST FAILED: the surviving pair was mismatched - %d pair(s), worst %.2f du"
+                 % (g["paired"], g["geom"][0]))
+
+    twice = {"3840x2000": [_row("one", 10.0), _row("one", 10.0)],
+             "1280x634": [_row("one", 10.0), _row("one", 10.0)]}
+    if geometry(twice)["aligned"]:
+        sys.exit("SELF-TEST FAILED: a run measuring one slide twice was reported as aligned - "
+                 "that is the probe failing to advance, and it pairs cleanly by name while "
+                 "measuring half of what it claims")
+
+    # The verdict a broken pairing produces is `None`, not False: undecided, not failed.
+    rows = [r for r in scale_verdicts_from(dropped) if r[0] == "DS-063"]
+    if not rows or any(r[2] is not None for r in rows):
+        sys.exit("SELF-TEST FAILED: a misaligned comparison did not report undecided - %r" % rows)
+    if not any("different slides" in r[1] for r in rows):
+        sys.exit("SELF-TEST FAILED: the undecided row does not say why - %r" % rows)
+    # and an aligned one still decides
+    rows = [r for r in scale_verdicts_from(good) if r[0] == "DS-063"]
+    if not rows or any(r[2] is not True for r in rows):
+        sys.exit("SELF-TEST FAILED: an aligned comparison stopped deciding - %r" % rows)
     return True
 
 
