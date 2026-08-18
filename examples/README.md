@@ -380,7 +380,7 @@ first one. Nothing but a person saw the other two.**
 
 [`measure-first/measure-first.html`](measure-first/measure-first.html) is *Demand Planning: what
 Business Analytics can do first*, and it runs to 13 slides, the last of them a colophon. It is
-**390 KB in one file**, 399 607 bytes, zero external references. It argues that measurement and
+**390 KB in one file**, 398 940 bytes, zero external references. It argues that measurement and
 discipline fix demand planning before any AI is bought, for an invented dental group deciding what
 to do first.
 

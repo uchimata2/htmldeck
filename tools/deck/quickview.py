@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 """Carry a source document inside the deck, so a provenance mark can be opened rather than read.
 
-    python tools/deck/quickview.py plan <deck> --source <title>=<path> [--source ...]
-    python tools/deck/quickview.py add  <deck> --source <title>=<path> [--source ...] [-o out.html]
-    python tools/deck/quickview.py list <deck>
+    python tools/deck/quickview.py plan    <deck> --source <title>=<path> [--source ...]
+    python tools/deck/quickview.py add     <deck> --source <title>=<path> [--source ...] [-o out.html]
+    python tools/deck/quickview.py refresh <deck> --source <title>=<path> [--write] [-o out.html]
+    python tools/deck/quickview.py list    <deck>
 
 **`plan` is the default posture and `add` is the exception**, because the failure this feature can
 cause is not a broken deck - it is a client's internal document arriving in everyone's inbox
 (T-070 §1). Embedding is opt-in per source, `plan` says exactly what would be carried and what it
 costs, and nothing is written without `add`. `add` refuses a source `plan` would have refused.
+
+**`refresh` re-renders what a deck already carries** (T-179). It is a third verb rather than a flag
+because it answers a different question from `add`, and refuses on different grounds: `add` asks
+whether a slide cites the source at all, `refresh` asks whether the deck already carries a quick
+view for it. It exists because a renderer fix cannot otherwise reach a deck that has already
+shipped - once wired, the item `add` looks for is gone. Same posture as `plan`: it writes nothing
+without `--write`.
 
 **Admission is three tests, not a list of file types** (T-070, settled by the owner 2026-08-10):
 
@@ -382,6 +390,48 @@ def item_pattern(title):
                       re.S)
 
 
+# **One sentence, two callers.** `wire` refuses a source no slide cites; so does `refresh`, and
+# T-179 required the wording to be unchanged between them. Written once so that is mechanical
+# rather than careful - a copy would have drifted the first time either was edited.
+UNCITED = ("no provenance item reads %r in this deck. A quick view is attached to a "
+           "source a slide already cites - if the slide does not cite it, that is a "
+           "specification question and not this tool's (T-069)")
+
+
+def wired_pattern(title):
+    """Matches the `<template>` an already-wired quick view carries: open tag, body, close tag.
+
+    This is the swap target for `refresh`, and it is deliberately **not** `item_pattern`. The
+    template is what `carried()` already locates and what the script finds by `data-qv`, so
+    replacing its body reaches the rendering and nothing else - the control beside it, and the
+    identifier and kind glyph `ITEM_HEAD` carries through, are never inside the substitution.
+    """
+    return re.compile(r'(<template class="qv-src" data-qv="%s">)(.*?)(</template>)'
+                      % re.escape(esc(title)), re.S)
+
+
+def rewire(html, title, body):
+    """`(html, old_body)` - the deck with this quick view's rendering replaced, and what it was.
+
+    Pure, and separated from `refresh` for the reason `wire` is separate from `plan`: the two
+    refusals below are the whole of this verb's guard, and a branch reachable only through a file
+    on disk is a branch the self-test cannot watch fail (**L-04**).
+    """
+    pat = wired_pattern(title)
+    match = pat.search(html)
+    if not match:
+        # **Which refusal applies is the deck's answer, not the caller's.** A title the deck cites
+        # but has not wired is an `add` job and says so; a title no slide cites at all is the
+        # T-069 guard, in T-069's words - `refresh` relaxes nothing.
+        if item_pattern(title).search(html):
+            raise Refused("this deck cites %r but carries no quick view for it. `add` attaches "
+                          "one; `refresh` re-renders one that is already there" % title)
+        raise Refused(UNCITED % title)
+    # A function, not a string: a rendered source carries backslashes, and `sub` would read them
+    # as group escapes.
+    return pat.sub(lambda m: m.group(1) + body + m.group(3), html, count=1), match.group(2)
+
+
 def carried(html):
     """`[(title, bytes)]` - the quick views a deck already carries, one row per source."""
     return [(m.group(1), len(m.group(2).encode("utf-8")))
@@ -404,9 +454,7 @@ def wire(html, title, body, file=""):
     pat = item_pattern(title)
     hits = len(pat.findall(html))
     if not hits:
-        raise Refused("no provenance item reads %r in this deck. A quick view is attached to a "
-                      "source a slide already cites - if the slide does not cite it, that is a "
-                      "specification question and not this tool's (T-069)" % title)
+        raise Refused(UNCITED % title)
     control = ('<span class="sources-item">%%s<button class="sources-open" type="button" '
                'data-qv="%s" data-file="%s">%s</button>%%s</span>'
                % (esc(title), esc(os.path.basename(file)), title))
@@ -457,6 +505,67 @@ def plan(deck, sources, write=False, out=None):
         return 1
     if not write:
         print("\nNothing written. Re-run with `add` to embed exactly what is listed above.")
+        return 1 if refused else 0
+    target = out or deck
+    shell_mod.write(target, html)
+    print("\nwrote %s - %d bytes" % (paths.display_path(target, ROOT), after))
+    return 0
+
+
+def refresh(deck, sources, write=False, out=None):
+    """Re-render the quick views a deck already carries, from the sources named, in place.
+
+    **The verb exists because `add` cannot answer this question** (T-179). Once wired, a
+    `.sources-item` holds a control and a template, so `item_pattern` no longer matches it and
+    `add` refuses - correctly, for its own question, which is whether a slide cites the source at
+    all. Refreshing is a different question, and until this verb there was no way to put a fixed
+    renderer's output into a deck that had already shipped: T-121 fixed `markdown()` and could not
+    reach the two decks carrying the defect it fixed.
+
+    Writes nothing without `--write`, and reports bytes per source either way, because a refresh
+    silently rewriting a shipped deck is this feature's failure mode rather than a broken deck.
+    """
+    html = shell_mod.read(deck)
+    before = len(html.encode("utf-8"))
+    print("deck: %s - %d bytes, %d quick view(s) already carried"
+          % (paths.display_path(deck, ROOT), before, len(carried(html))))
+    print("\n**What this would replace inside the deck.** Every recipient of the file gets every "
+          "line of it.\n")
+    refused, moved, same = [], 0, 0
+    for title, path in sources:
+        try:
+            body, kind, removed = render(path)
+            html, was = rewire(html, title, body)
+        except Refused as exc:
+            refused.append((title, str(exc)))
+            print("  REFUSED  %-28s %s" % (title, exc))
+            continue
+        old_bytes = len(was.encode("utf-8"))
+        new_bytes = len(body.encode("utf-8"))
+        if body == was:
+            same += 1
+            print("  %-8s %-28s %s -> %d bytes, unchanged"
+                  % (kind, title, paths.display_path(path, ROOT), new_bytes))
+        else:
+            moved += 1
+            print("  %-8s %-28s %s -> %d bytes (was %d, %+d)"
+                  % (kind, title, paths.display_path(path, ROOT), new_bytes, old_bytes,
+                     new_bytes - old_bytes))
+        for what in removed:
+            print("           neutralised %s" % what)
+    after = len(html.encode("utf-8"))
+    print("\n  deck %d -> %d bytes (%+d), bound %d; %d changed, %d unchanged"
+          % (before, after, after - before, SIZE_BOUND, moved, same))
+    if after > SIZE_BOUND:
+        print("\nREFUSED test 3 (size): the deck would be %d bytes, past the %d bound. Nothing "
+              "written." % (after, SIZE_BOUND))
+        return 1
+    if refused and write:
+        print("\nNothing written: %d source(s) were refused, and a partial write would leave a "
+              "deck whose provenance says less than the run reported." % len(refused))
+        return 1
+    if not write:
+        print("\nNothing written. Re-run with `--write` to replace exactly what is listed above.")
         return 1 if refused else 0
     target = out or deck
     shell_mod.write(target, html)
@@ -607,6 +716,51 @@ def self_test():
     if 'data-file="cost-model.md"' not in wired:
         sys.exit("SELF-TEST FAILED: the quick view control names no file, or names a path rather "
                  "than a base name - %r" % wired)
+
+    # T-179. Refreshing, and its two refusals. `wired` above is a deck that already carries a quick
+    # view for "Cost model" - which is exactly the state `add` cannot act on, so it is the right
+    # fixture for the verb that can.
+    again, was = rewire(wired, "Cost model", "<p>y</p>")
+    if was != "<p>x</p>":
+        sys.exit("SELF-TEST FAILED: refreshing did not report what the quick view held before - "
+                 "%r. The byte delta is the only thing standing between this verb and a shipped "
+                 "deck rewritten silently" % was)
+    if carried(again) != [("Cost model", len("<p>y</p>"))]:
+        sys.exit("SELF-TEST FAILED: refreshing did not replace the rendering - %r" % carried(again))
+    if "<p>x</p>" in again:
+        sys.exit("SELF-TEST FAILED: refreshing left the old rendering in the deck beside the new "
+                 "one - %r" % again)
+    # The control, the identifier and the kind glyph are outside the substitution by construction.
+    # Asserted anyway, because "by construction" is what T-109 was before it was a fixture.
+    for keep, what in (('class="sources-open"', "the control"),
+                       ('class="sources-id">D1<', "the source's identifier"),
+                       ('class="sources-icon"', "the kind glyph"),
+                       ('data-file="cost-model.md"', "the file name")):
+        if keep not in again:
+            sys.exit("SELF-TEST FAILED: refreshing dropped %s. Only the rendering inside the "
+                     "<template> is this verb's to touch - %r" % (what, again))
+    # **A refresh that agrees with what is embedded must be a no-op, byte for byte.** This is the
+    # control case T-179 named: without it, "refreshed" and "rewritten" are indistinguishable.
+    noop, _ = rewire(again, "Cost model", "<p>y</p>")
+    if noop != again:
+        sys.exit("SELF-TEST FAILED: refreshing with an identical rendering changed the deck. A "
+                 "no-op that writes bytes cannot be told from a defect")
+    try:
+        rewire(again, "Nobody cites this", "<p>x</p>")
+        sys.exit("SELF-TEST FAILED: a quick view was refreshed for a source no slide cites")
+    except Refused as exc:
+        if "T-069" not in str(exc):
+            sys.exit("SELF-TEST FAILED: an uncited source was refused by `refresh` in different "
+                     "words from `add`. The guard is one guard: %s" % exc)
+    # Cited, never wired: a different answer, and the one that must not read as the guard above.
+    try:
+        rewire(deck, "Cost model", "<p>x</p>")
+        sys.exit("SELF-TEST FAILED: a source with no quick view at all was 'refreshed'")
+    except Refused as exc:
+        if "T-069" in str(exc) or "add" not in str(exc):
+            sys.exit("SELF-TEST FAILED: a cited-but-unwired source was refused as though no slide "
+                     "cited it. The reader is one `add` away and the message has to say so: %s"
+                     % exc)
     return True
 
 
@@ -629,8 +783,8 @@ def main(argv):
         if not rows:
             print("  none. `quickview.py plan <deck> --source <title>=<path>` says what one costs.")
         return 0
-    if cmd not in ("plan", "add"):
-        sys.exit("usage: quickview.py plan|add|list <deck> [--source <title>=<path>]")
+    if cmd not in ("plan", "add", "refresh"):
+        sys.exit("usage: quickview.py plan|add|refresh|list <deck> [--source <title>=<path>]")
     if not rest:
         sys.exit("usage: quickview.py %s <deck> --source <title>=<path>" % cmd)
     deck = rest[0]
@@ -647,6 +801,8 @@ def main(argv):
     out = None
     if "-o" in rest:
         out = rest[rest.index("-o") + 1]
+    if cmd == "refresh":
+        return refresh(deck, sources, write=("--write" in rest), out=out)
     return plan(deck, sources, write=(cmd == "add"), out=out)
 
 
