@@ -680,8 +680,40 @@ svg{display:block}
 /* first paint must not fly in from the left */
 .ruler[data-noanim] .ruler-ring{transition:none}
 /* Past the bound the cells stop being uniform and a 30-unit ring would cover its neighbours, so
-   the degraded mode keeps the enlarged accent mark and drops the ring. */
-.ruler[data-dense] .ruler-ring{display:none}
+   the degraded mode RESHAPES the ring rather than dropping it (T-178). Dropping it left dense mode
+   with no size channel for position at all: the ring carried it, and the rule two blocks up sets
+   the lit mark's colour and deliberately not its size, so the mark that CHANGES rendered at 7 du
+   against the seven section marks' 14 - half the width of the marks that do not move, with hue the
+   only property still telling them apart. Both rules were right on their own, which is why no
+   review caught the pair.
+   The cell is 8 du wide and 26 tall here, so the ring becomes a capsule of the cell's proportion
+   instead of a circle of the undegraded cell's: 10 du reaches 1 du short of the neighbouring dot's
+   edge, and 30 du of height is the channel the dot is not allowed to use. Size on the ruler still
+   means section-versus-slide (DS-216) - nothing about the marks changes, and what a reader gains is
+   an outline around the one that is current.
+   NOT scoped to a tick style, unlike the ring rule above it: `bar` never received the ring at all,
+   so a dense rule written the same way would leave half the component with the defect (CLAUDE.md
+   rule 4). Equal specificity to the `[data-ticks="dot"]` rule and later in source order, which is
+   what lets one declaration serve both.
+   Chosen by the project owner 2026-08-19 from a rendered strip of three candidates against the
+   baseline, at 1920x1234 and at the 0.5 hand-over, both themes, both tick styles - reproduce it
+   with `python tools/deck/rulerstrip.py`. It is the only candidate that survives the floor: 30 du
+   is 15.2 CSS px there, where the caret's 7 du is 3.5 and the underline's 3 is 1.5. */
+.ruler[data-dense] .ruler-ring{
+  display:block;position:absolute;left:0;top:50%;
+  width:calc(10*var(--du));height:calc(30*var(--du));
+  margin-top:calc(-15*var(--du));
+  border:var(--rule) solid var(--accent);border-radius:var(--radius);
+  background:none;
+  transform:translateX(calc(var(--rx,0px) - 5*var(--du)));
+  transition:transform var(--scale-dur) var(--scale-ease);
+  --motion-kind:affordance;
+  pointer-events:none;
+}
+/* `--radius` rather than the 5 du the capsule actually needs, and the shape is identical: 14 du of
+   corner on a 10 du box overflows, so CSS scales every radius by width/(r+r) = 10/28 and lands on
+   exactly 5. Writing the 5 was a theme-varying length outside the token region and DS-010 failed it
+   - correctly, since a theme that changed its corners would leave this one behind. */
 :root[data-motion="off"] .ruler-ring{transition:none}
 
 /* The label names the tick under the cursor or the focus, and at rest names where you are. It is

@@ -166,6 +166,13 @@ NOT_RUN = {
     "tools/deck/chrome_row.py":
         "a measurement for T-035, taken once against a real browser. It answers whether the ruler "
         "fits the chrome row; it has no pass or fail to report on a shipped deck",
+    "tools/deck/longdeck.py":
+        "a fixture builder for T-178 - it splices a deck to any slide count so a long-deck question "
+        "can be asked twice. It produces a deck to look at, and decides nothing about one",
+    "tools/deck/rulerstrip.py":
+        "an instrument for T-178. It renders candidate treatments for the dense-mode position mark "
+        "side by side, for a person to choose between; which one reads best is the judgement it "
+        "exists to put in front of the eye rather than to make",
 
     "tools/assets/measure.py":
         "a research instrument for T-013 - what one embeddable asset costs inside one HTML file",

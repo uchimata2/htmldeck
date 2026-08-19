@@ -33,7 +33,7 @@ study, company or place. See *Provenance*, below.
 *Buy frequency before bikes*, a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-[`reference-deck.html`](reference-deck.html) is **299 KB in one file**, 306 344 bytes. Three embedded
+[`reference-deck.html`](reference-deck.html) is **301 KB in one file**, 308 721 bytes. Three embedded
 typefaces (97 KB of it as base64), eleven Lucide icons in one sprite, eight hand-written SVG figures,
 and the deck shell. No libraries, no build step, no network.
 
@@ -342,7 +342,7 @@ edited without regenerating is a red run rather than a discovery two audits late
 
 [`sort-window/`](sort-window) holds all four artifacts a build run leaves behind: the deck, the
 foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
-reconciled against. It is **297 KB in one file**, 304 285 bytes, 12 slides, six hand-written SVG
+reconciled against. It is **299 KB in one file**, 306 662 bytes, 12 slides, six hand-written SVG
 figures, ten disclosure panels, zero external references.
 
 ```bash
@@ -405,7 +405,7 @@ first one. Nothing but a person saw the other two.**
 
 [`measure-first/measure-first.html`](measure-first/measure-first.html) is *Demand Planning: what
 Business Analytics can do first*, and it runs to 13 slides, the last of them a colophon. It is
-**408 KB in one file**, 417 438 bytes, zero external references. It argues that measurement and
+**410 KB in one file**, 419 815 bytes, zero external references. It argues that measurement and
 discipline fix demand planning before any AI is bought, for an invented dental group deciding what
 to do first.
 
