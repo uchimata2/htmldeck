@@ -4,6 +4,7 @@
     python tools/deck/quickview.py plan    <deck> --source <title>=<path> [--source ...]
     python tools/deck/quickview.py add     <deck> --source <title>=<path> [--source ...] [-o out.html]
     python tools/deck/quickview.py refresh <deck> --source <title>=<path> [--write] [-o out.html]
+    python tools/deck/quickview.py check   <deck> --source <title>=<path> [--source ...]
     python tools/deck/quickview.py list    <deck>
 
 **`plan` is the default posture and `add` is the exception**, because the failure this feature can
@@ -17,6 +18,13 @@ whether a slide cites the source at all, `refresh` asks whether the deck already
 view for it. It exists because a renderer fix cannot otherwise reach a deck that has already
 shipped - once wired, the item `add` looks for is gone. Same posture as `plan`: it writes nothing
 without `--write`.
+
+**`check` is the half a refresh verb cannot cover** (T-181). `refresh` made the drift
+*reachable*; nothing made it *detectable*, so the three corrections T-179 found stranded inside
+one deck had sat there through every green gate this repository runs. `check` asks `refresh`'s
+question, writes nothing under any flag, and exits non-zero when a rendering has moved. What it
+prints separates the two causes: a **tag histogram difference** is a renderer that changed, a
+**differing word** is a source document that was edited, and a byte count is neither (**L-118**).
 
 **Admission is three tests, not a list of file types** (T-070, settled by the owner 2026-08-10):
 
@@ -573,6 +581,101 @@ def refresh(deck, sources, write=False, out=None):
     return 0
 
 
+def profile(html):
+    """`(tag counts, the text with every tag stripped)` - the two axes a drift moves along."""
+    tags = {}
+    for name in re.findall(r"<(\w+)", html):
+        tags[name] = tags.get(name, 0) + 1
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html)).strip()
+    return tags, text
+
+
+def differences(was, now):
+    """What changed between two renderings, in the terms that name the CAUSE.
+
+    **A byte count cannot tell a reader which repair is owed** (T-181), and the three drifts T-179
+    found in one deck were two of one kind and one of the other:
+
+      * a **tag count that moved** is the renderer - `<p> 42 -> 0` and `<ol> 0 -> 7` are exactly
+        T-107's thematic break and T-121's list continuation, and the repair is `refresh --write`;
+      * a **word that differs** is the source document, edited since the deck captured it, and the
+        repair is a decision about whether the deck should carry the new text at all.
+
+    Both can be true at once, so both are reported. Where the tags and the text are identical and
+    the strings are not, the difference is in attributes or whitespace and the row says so - a
+    comparison that failed must never print nothing.
+    """
+    out = []
+    tw, xw = profile(was)
+    tn, xn = profile(now)
+    for name in sorted(set(tw) | set(tn)):
+        a, b = tw.get(name, 0), tn.get(name, 0)
+        if a != b:
+            out.append("<%s> %d -> %d" % (name, a, b))
+    if xw != xn:
+        a, b = xw.split(" "), xn.split(" ")
+        n = 0
+        while n < min(len(a), len(b)) and a[n] == b[n]:
+            n += 1
+        out.append("text differs at word %d: %r -> %r"
+                   % (n + 1, " ".join(a[n:n + 7])[:70], " ".join(b[n:n + 7])[:70]))
+    if not out:
+        out.append("same tags and same text - the difference is attributes or whitespace")
+    return out
+
+
+def check(deck, sources):
+    """Report whether each quick view still matches a fresh render of its source. Writes nothing.
+
+    Returns a shell exit code: non-zero if any named source drifted, was refused, or is not carried
+    by this deck at all.
+
+    **The denominator is in the line** (**L-36**). A deck holds *n* quick views and a run names *m*
+    sources; *compared 2 of 5* and *compared 5 of 5* are the same verdict and not the same fact, and
+    a partial run reading as clean would be this check's own version of the failure it exists to
+    find. Anything carried and not named is printed by name.
+    """
+    html = shell_mod.read(deck)
+    held = [title for title, _cost in carried(html)]
+    print("deck: %s - %d quick view(s) carried, %d named here"
+          % (paths.display_path(deck, ROOT), len(held), len(sources)))
+    drifted = refused = missing = same = 0
+    named = set()
+    for title, path in sources:
+        named.add(title)
+        if title not in held:
+            missing += 1
+            print("  MISSING  %-32s this deck carries no quick view for that title" % title[:32])
+            continue
+        try:
+            body, _kind, _removed = render(path)
+        except Refused as exc:
+            refused += 1
+            print("  REFUSED  %-32s %s" % (title[:32], exc))
+            continue
+        was = wired_pattern(title).search(html).group(2)
+        if body == was:
+            same += 1
+            print("  match    %-32s %s" % (title[:32], paths.display_path(path, ROOT)))
+        else:
+            drifted += 1
+            print("  DRIFTED  %-32s %s" % (title[:32], paths.display_path(path, ROOT)))
+            for line in differences(was, body):
+                print("             %s" % line)
+    uncompared = [tit for tit in held if tit not in named]
+    print("")
+    print("  compared %d of %d carried: %d match, %d drifted, %d refused, %d not carried"
+          % (same + drifted, len(held), same, drifted, refused, missing))
+    for tit in uncompared:
+        print("  NOT COMPARED  %-32s no --source named it, so nothing here checked it" % tit[:32])
+    if drifted or refused or missing:
+        print("")
+        print("A drifted quick view is repaired by `quickview.py refresh <deck> --source ... "
+              "--write` where the renderer moved, and by a decision where the source document did.")
+        return 1
+    return 0
+
+
 def self_test():
     """One fixture per refusal this tool claims to make, and one for the shape it produces."""
     # **One fixture per construct the corpus uses**, not per construct someone remembered. T-107
@@ -761,6 +864,27 @@ def self_test():
             sys.exit("SELF-TEST FAILED: a cited-but-unwired source was refused as though no slide "
                      "cited it. The reader is one `add` away and the message has to say so: %s"
                      % exc)
+
+    # ---- `check`'s own fixtures (T-181) -------------------------------------------------------
+    # **The row has to name the cause, not the fact.** A byte count says a rendering moved; it does
+    # not say whether the repair is `refresh --write` or a decision about the source document, and
+    # those were 2 and 1 of the three drifts T-179 found inside one deck.
+    renderer = differences("<p>a</p><p>---</p>", "<p>a</p><hr>")
+    if not any(d.startswith("<hr> 0 -> 1") for d in renderer):
+        sys.exit("SELF-TEST FAILED: a renderer-shaped drift did not report the tag whose count "
+                 "moved. `<p>---</p>` to `<hr>` is T-107 exactly, and the count is the evidence: %s"
+                 % renderer)
+    edited = differences("<p>hello there world</p>", "<p>hello brave world</p>")
+    if len(edited) != 1 or "word 2" not in edited[0]:
+        sys.exit("SELF-TEST FAILED: a source document edited under a stable renderer must report "
+                 "the differing word and no tag movement at all: %s" % edited)
+    if differences("<p>x</p>", "<p>x</p>") == []:
+        sys.exit("SELF-TEST FAILED: `differences` returned nothing. It is only ever called on two "
+                 "strings that are not equal, so an empty list is a comparison reporting silence")
+    quiet = differences('<p a="1">x</p>', '<p a="2">x</p>')
+    if len(quiet) != 1 or "attributes" not in quiet[0]:
+        sys.exit("SELF-TEST FAILED: a difference in attributes alone reported %s. Same tags and "
+                 "same text is a real drift and the row must say what is left" % quiet)
     return True
 
 
@@ -783,8 +907,8 @@ def main(argv):
         if not rows:
             print("  none. `quickview.py plan <deck> --source <title>=<path>` says what one costs.")
         return 0
-    if cmd not in ("plan", "add", "refresh"):
-        sys.exit("usage: quickview.py plan|add|refresh|list <deck> [--source <title>=<path>]")
+    if cmd not in ("plan", "add", "refresh", "check"):
+        sys.exit("usage: quickview.py plan|add|refresh|check|list <deck> [--source <title>=<path>]")
     if not rest:
         sys.exit("usage: quickview.py %s <deck> --source <title>=<path>" % cmd)
     deck = rest[0]
@@ -801,6 +925,8 @@ def main(argv):
     out = None
     if "-o" in rest:
         out = rest[rest.index("-o") + 1]
+    if cmd == "check":
+        return check(deck, sources)
     if cmd == "refresh":
         return refresh(deck, sources, write=("--write" in rest), out=out)
     return plan(deck, sources, write=(cmd == "add"), out=out)

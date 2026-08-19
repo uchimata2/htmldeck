@@ -363,6 +363,13 @@ add and what the deck would weigh, and writes nothing at all. The version that w
 deck built from a client's internal document would carry that document to everyone who receives the
 deck, and no amount of convenience is worth making that the default.
 
+Because a quick view is a **rendering** rather than a reference, the deck holds an answer that can
+go out of date — the renderer improves, or the source document is edited, and the copy inside the
+deck knows neither. `quickview.py check` re-renders each source and reports whether the embedded
+copy still matches, and it says which of the two happened: a tag count that moved is the renderer,
+a differing word is the document. It writes nothing, and the release gate runs it on every deck that
+carries a quick view.
+
 Each quick view says what it is in its own header: a rendering carried in the deck, not the original
 file. A source that arrives as HTML has its scripts, styles and ids taken out before it goes in, and
 the run tells you how many of each it removed.

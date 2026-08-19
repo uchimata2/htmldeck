@@ -39,7 +39,9 @@ Runs from anywhere: the project root is derived from this file, not from the wor
 Pure standard library (**L-07**), plus `git`, which decides what a clone receives.
 """
 
+import io
 import os
+import re
 import subprocess
 import sys
 import time
@@ -80,6 +82,7 @@ PER_DECK = [
     ("tools/deck/theme.py", lambda deck, src: ["check", deck]),
     ("tools/deck/check.py", lambda deck, src: [deck, "--sources", src, "--print-pages"]),
     ("tools/deck/spec.py", lambda deck, src: _spec_args(deck)),
+    ("tools/deck/quickview.py", lambda deck, src: _quickview_args(deck, src)),
 ]
 
 # A per-deck gate that does not apply to one deck, and why. `(tool, deck) -> reason`.
@@ -152,8 +155,6 @@ NOT_RUN = {
         "out; the gates that need a render call it",
     "tools/deck/preflight.py":
         "a builder. It writes the capability preflight into a deck; shell.py check gates the result",
-    "tools/deck/quickview.py":
-        "a builder. It carries a source document into a deck so a provenance mark can be opened",
     "tools/deck/print_variants.py":
         "a builder. It emits the two print variants T-018 measures, for a person to print and look "
         "at - CLAUDE.md rule 5 keeps printing optional and rule 6 keeps the looking manual",
@@ -215,6 +216,42 @@ def _spec_args(deck):
                 "A deck built by this plugin has one; declare the exemption or produce the pair"
                 % ", ".join(missing))
     return [foundation, slides, deck]
+
+
+def _quickview_args(deck, sources):
+    """`quickview.py check`'s arguments, or a refusal. T-181.
+
+    **The tool takes `--source <title>=<path>` and this is what derives the list.** The owner ruled
+    on 2026-08-19 that the check stays per-deck on the argument shape every other verb here uses,
+    rather than teaching the build to record a source path in the deck - which would have reached
+    every deck this plugin ever emits, for a detection that can ship without it. What makes the
+    derivation possible is already in the markup: a wired control carries `data-qv`, the title, and
+    `data-file`, the source's base name (T-109), and `DECKS` above maps the deck to the directory
+    those base names sit in.
+
+    A deck carrying no quick view is refused with that as its reason. It is not a gap in coverage:
+    there is nothing embedded, so there is nothing that can have drifted.
+    """
+    html = io.open(os.path.join(ROOT, deck), encoding="utf-8").read()
+    pairs, seen = [], set()
+    for m in re.finditer(r'data-qv="([^"]*)" data-file="([^"]*)"', html):
+        title, base = m.group(1), m.group(2)
+        if title in seen or not base:
+            continue
+        seen.add(title)
+        pairs.append((title, "%s/%s" % (sources, base)))
+    if not pairs:
+        return ("the deck carries no quick view, so there is no embedded rendering that can have "
+                "drifted from a source. `quickview.py list %s` says so in one line" % deck)
+    missing = [p for _t, p in pairs if not os.path.exists(os.path.join(ROOT, p))]
+    if missing:
+        return ("the deck names %d source file(s) that are not in %s (%s). A quick view whose "
+                "source is gone cannot be compared, and that is a defect rather than an exemption"
+                % (len(missing), sources, ", ".join(missing)))
+    args = ["check", deck]
+    for title, path in pairs:
+        args += ["--source", "%s=%s" % (title, path)]
+    return args
 
 
 # --- discovery ------------------------------------------------------------------------------
