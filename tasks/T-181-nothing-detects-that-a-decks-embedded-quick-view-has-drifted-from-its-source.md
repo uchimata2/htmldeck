@@ -72,6 +72,14 @@ globally. The second is cheap and honest; the first is better and costs a build 
 **Open questions**
 - How the check locates a source from a title — the paragraph above frames it and does not settle
   it. It is the one decision worth taking before any code.
+  **Recommended 2026-08-18: take the second — the check accepts the same
+  `--source <title>=<path>` list the other verbs already take, and is therefore run per deck.**
+  It needs no build change, so it ships without touching what every future deck emits, and it keeps
+  every verb in this tool taking one argument shape. The first option is better in the long run and
+  costs a build change; raise it as its own task rather than folding it in, so detection lands now
+  and recording provenance paths in the deck is argued on its own merits. **The owner may overturn
+  this** — it is written as a recommendation and not a decision, because it is the one place this
+  task widens if taken the other way.
 
 ## 2. Plan
 

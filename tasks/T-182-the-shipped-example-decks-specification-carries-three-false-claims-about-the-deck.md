@@ -34,13 +34,13 @@ new specification-conformance pass against the deck it was written for. Measured
 | :-- | :--- | :--- | :--- |
 | 1 | 1, `Structure` | the bottom line *sits below both, spanning the full width* | 1500 du inside a 1726 du content column. `--bottom-measure` caps it, so it cannot span on **any** slide of any deck |
 | 2 | 1, `Visuals` | *the three figures set at display weight* | two per side reach display size (84 px): `€18.6m` and `45%` left, `87%` and `310` right. `1.4×` and `58%` do not |
-| 3 | 2, `Visuals` | *The diamond is sized from its own label so the outline never crosses the text* | there is no label slot on the diamond at all — which is [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md)'s subject |
+| 3 | 2, `Visuals` | *The diamond is sized from its own label so the outline never crosses the text* | ~~there is no label slot on the diamond at all~~ — **resolved 2026-08-18 by [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md)**, which built `.decision` and re-cut this exact node. The label is inside the outline and the shape is sized from it at `w/A + h/B = 0.74`, so **the sentence is now true** and this row has nothing to correct |
 
 **The direction of repair differs per row, and that is the point.** Rows 1 and 2 are *fix the
 specification*: the deck is right, and the measure capping the bottom line is doing its job — a
-review that assumed the deck was wrong would have argued for removing it. Row 3 is *fix the deck*,
-and T-117 is already open to do it, so this task corrects the sentence only if T-117 does not land
-first; if it does, the sentence becomes true and this row closes with nothing to do.
+review that assumed the deck was wrong would have argued for removing it. Row 3 was *fix the deck*,
+and T-117 landed first — **so row 3 is already spent and this task is now two sentences, not
+three.** That is the branch this paragraph anticipated, taken.
 
 **Why it is worth a record.** This specification is **published as a worked example**
 ([T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md)), so its sentences are a template
@@ -62,7 +62,8 @@ different artifact.
 - [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — DS-234, the obligation.
 
 **Acceptance criteria**
-- [ ] Each of the three sentences is either corrected or recorded as waiting on T-117, with a reason
+- [ ] Each of the three sentences is either corrected, or recorded as already true, with a reason
+      — row 3 is the second case and needs verifying rather than editing
 - [ ] The corrected sentences describe what the deck measurably does, at the container the element
       sits in
 - [ ] T-115's pass, re-run on the pair, reports no remaining mismatch it can decide
@@ -97,3 +98,4 @@ different artifact.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-18 | → proposed | Raised by [T-115](T-115-the-specification-can-assert-a-layout-the-shell-cannot-honour.md), whose scope books fixing a reference deck's own specification as a child rather than as part of building the pass. Three claims, each measured rather than read; two are the specification's fault and one is the deck's. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule — a wrong sentence in an example specification does not break the published plugin, so it does not reopen `PH1`. |
+| 2026-08-18 | (no change) | **Row 3 is spent before the task starts.** [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md) closed the same day and re-cut slide 2's decision node as its demonstration, so the sentence *the diamond is sized from its own label so the outline never crosses the text* is now a true description of the deck — verified against the rebuilt node: label inside the outline, `w/A + h/B = 0.74`. Two sentences remain, both *fix the specification*. Recorded here rather than left for the next session to rediscover. |

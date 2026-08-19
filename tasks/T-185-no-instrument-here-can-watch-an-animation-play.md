@@ -86,6 +86,13 @@ motion has never run is exactly the shape of **L-05**, and four open tasks depen
   screenshot on a timer) or a different instrument entirely. The first is cheap to try and should be
   tried first.
 
+**One fallback is not an agent's to take, and it is worth knowing before the attempt.** If the
+Chrome-invocation route fails, the remaining instrument is the real browser named in the table
+above, and connecting it is the **owner's** action rather than this task's: the extension has to be
+installed and signed in under the same account. So a run can legitimately reach the end of the cheap
+path and stop with nothing left to try. **That is a clean stopping point, not a failure**, and it
+should be reported as one rather than worked around with a weaker instrument.
+
 ## 2. Plan
 
 <not started>
