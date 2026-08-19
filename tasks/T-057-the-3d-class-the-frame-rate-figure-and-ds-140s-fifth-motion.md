@@ -79,7 +79,14 @@ holds itself back for them is slower for no reader's benefit.
   motion that satisfies §9.2's *motion must encode something* — and records that this is a
   **ruleset change to raise, not a licence to take quietly**, on
   [T-033](T-033-reconcile-ds-131-with-the-chrome-budget.md)'s precedent. Owner, with the rendering
-  in hand.
+  in hand. **Answered 2026-08-19, by rejecting the question rather than by choosing a side.** Put to
+  the owner, they declined both options and the frame under them: *"please don't limit the animation
+  to a specific 'allow list'."* DS-140 becomes a suggested set plus principles, which makes the
+  wobble neither a fifth name nor an exemption — it is admissible if it follows the principles. The
+  amendment and its blast radius are
+  [T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md); **this task's acceptance criterion
+  *DS-140 has a named side* is therefore satisfied elsewhere and must be restated when this is
+  planned**, because as written it asks for a ruling that no longer exists to take.
 
 ## 2. Plan
 
@@ -123,5 +130,6 @@ holds itself back for them is slower for no reader's benefit.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-19 | (no change) | **The DS-140 question is settled, and not by either answer this task offered.** Asked to choose between a fifth motion and an exemption, the owner rejected the allow-list itself and ruled that DS-140 becomes a suggested set plus principles, with the rules protecting observable behaviour left `hard`. Raised as [T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md), because the closure is cited by six rules and one `audit.py` self-test and cannot be edited in one row. **What this changes here**: the ordering constraint the 2026-08-09 row called the part worth carrying over is gone — the ruleset no longer has to take a side before the figure ships — so the 3D visual and the frame-rate figure are now separable from the rule change. `blocked_by` deliberately not set: T-187 is not a gate on building the visual, and the visual is T-187's first consumer rather than its input. |
 | 2026-08-10 | (specify) | **Estimated `medium`/`xl`, and moved to `PH3`.** `medium` because all three are wanted and none is a shipping requirement — that is precisely why T-016 split them out rather than holding PH1; `xl` because it is three deliverables and not one: a functional 3D visual with a chosen static projection as its reduced-motion and print fallback, a frame-rate figure with the machine stated beside it, and the DS-140 amendment the first forces. `PH3` under the release split set by the owner 2026-08-10, as the largest new capability on the board. |
 | 2026-08-09 | → proposed | **Split out of [T-016](T-016-the-interaction-and-motion-layer.md) so that PH1 ships.** T-016 replanned into eight steps on 2026-08-09 and completed four: the reduced-motion render, the component contract, the gate that holds a deck to it, and the editorial split rule. The remaining four are **capabilities the interaction layer does not reach**, not defects in what it does — the deck has no 3D at all, and no deck here has ever had its frame rate measured. Holding a release for them buys no reader anything, and each is wanted, so they move rather than being dropped. **The order inside the task is the part worth carrying over**: the wobble is a fifth motion or an exemption, DS-140 is a closed vocabulary of four, and shipping the figure before the ruleset has a named side produces a deck that fails its own gate. |

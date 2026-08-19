@@ -57,6 +57,40 @@ That is a two-part instruction and both parts are the deliverable: **default to 
 and **name the threshold below which SVG wins**. A recommendation that answers only the first half
 would leave every future chart an argument.
 
+**The owner's steer, restated 2026-08-19 — and the two halves swap places**
+Put to the owner as a straight conflict between the 2026-08-12 steer and DS-122, the answer keeps
+both and reorders them:
+
+> *"To be researched. There's no chart intensive deck been created so far. Need one, with full of
+> financial figures, meaningful charts and visualization. I believe a dedicated chart-only library
+> could boost the content with animations and interactions adapted for the best visualization. The
+> current presentations are awesome, I have no intention to replace their content, but if you have a
+> glance at some lightweight library (I mentioned one in the tasks), that could be a great
+> future-proof feature for financial reports, trading / investment presentations, scientific
+> explanations, UI demos and many more. Only free, reliable, robust, simple, recently and
+> continuously updated libs can be considered. By default, simple SVGs do a great job. This feature
+> is not crucial, but keep it scheduled."*
+
+Four things changed, and each moves the task rather than confirming it:
+
+1. **SVG is the default and DS-122 stands for the ordinary chart.** *"By default, simple SVGs do a
+   great job."* The 2026-08-12 reading — default to a library — was about the cost of building
+   features from scratch, not about charts specifically, and the owner has now scoped it.
+2. **A library is wanted for a case this repository has never built.** Chart-heavy decks: financial
+   reports, trading and investment, scientific explanation, UI demos. That is the threshold, stated
+   as a class of deck rather than as a property of one chart — which is a **better** threshold than
+   the one this task set out to write, and the acceptance criteria should say so.
+3. **The evaluation has no subject yet.** *"There's no chart intensive deck been created so far. Need
+   one."* Comparing candidates against the reference deck's single line chart measures the easy case,
+   which is exactly the case SVG already wins. **A chart-intensive deck is now an input to this task,
+   not an output of it**, and it is the first thing to build.
+4. **A seventh gate, and it is about the project rather than the code:** *free, reliable, robust,
+   simple, recently and continuously updated*. Maintenance health is a gate the six below do not
+   cover — a dead library passes every one of them.
+
+**Priority, in the owner's words: *"not crucial, but keep it scheduled."*** So this is neither
+withdrawn nor next.
+
 **The gates a candidate has to clear**
 Not preferences — each is an existing rule of this project, and a candidate failing any one is out
 with a reason rather than a score:
@@ -72,6 +106,9 @@ with a reason rather than a score:
    chart that themes itself is a second design system inside the deck.
 5. **Can be pinned off for capture and honours reduced motion** — DS-221, DS-224, DS-143.
 6. **Executes nothing it was not given.** Same posture as T-070's admission tests.
+7. **Maintained.** Free, and released recently and continuously — the owner's gate of 2026-08-19, and
+   the only one here that is about the project rather than the code. A dead library passes all six
+   above. Read it off the release history and the commit record, with dates, not off a badge.
 
 **Scope**
 - In: **TanStack Charts**, named in the request. Its documentation, its own comparison page and its
@@ -100,10 +137,16 @@ with a reason rather than a score:
   diffs."* The threshold rule is that sentence made operable.
 
 **Acceptance criteria**
-- [ ] Every candidate has a verdict against all six gates, with the failing gate named where it fails.
-- [ ] A measured inlined size for each surviving candidate, against the same real chart.
+- [ ] **A chart-intensive deck exists first** — real financial figures, several meaningful charts, and
+      the interactions a reader of such a deck expects. It is the evaluation's subject; without it
+      every candidate is measured on the case SVG already wins.
+- [ ] Every candidate has a verdict against all seven gates, with the failing gate named where it
+      fails.
+- [ ] A measured inlined size for each surviving candidate, against the same real chart **from that
+      deck**, not against the reference deck's single line chart.
 - [ ] A recommendation, and the threshold rule stated so a future chart can be decided without
-      reopening this.
+      reopening this — expressed as the owner expressed it, a class of deck rather than a property of
+      one chart.
 - [ ] The false premise is recorded as a finding, not silently corrected.
 - [ ] Nothing about any candidate is stated without a source that was actually fetched.
 - [ ] Written to a new research note under `docs/research/` — **R8**, the next free number — and
@@ -151,3 +194,4 @@ with a reason rather than a score:
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. The request assumed a built-in chart capability to compare against; there is none, and the correction is scoped as the first finding rather than as a footnote. |
+| 2026-08-19 | (no change) | **Re-specified from the owner's restated steer**, recorded in §1. The task keeps both halves of the 2026-08-12 instruction and swaps which is the default: hand-authored SVG wins the ordinary chart and DS-122 stands, while a library is wanted for chart-heavy decks the repository has never built — financial, trading, scientific, UI demo. Three consequences: the threshold is now a **class of deck** rather than a property of one chart; **a chart-intensive deck becomes an input** to this task rather than its child, because evaluating candidates against the reference deck's one line chart measures the case SVG already wins; and a **seventh gate** is added for maintenance health, which the six existing gates do not cover. Priority set by the owner: *"not crucial, but keep it scheduled."* |
