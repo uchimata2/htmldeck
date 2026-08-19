@@ -254,6 +254,8 @@ overshoot and an 8 ms dot gap are the *right* values is taste, and a still frame
 for it — the instrument can show that the motion is there and where it gets to, not whether it feels
 gentle. They are theme tokens precisely so that answer can be changed without touching a rule.
 
+**And one question this task shipped an answer to without being asked: is 10 the right default?** It is the figure §1 proposed and nothing since has tested it. What it now means concretely, which §1 could not have known, is that a deck shows **exactly one moment** — rank 1 and nothing else — because a deck carries so few content motions that the second is already at rank 34 or 51. So the default is closer to *one easter egg per deck* than to *a tenth of the motion*, and whether that is the intent is the owner's. `python tools/deck/density.py list <deck>` shows what any other value would turn on, and changing it is one token.
+
 **Child fix tasks raised**
 - none.
 
