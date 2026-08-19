@@ -87,6 +87,25 @@ will not tell you, because they are this stage's judgement:
   **Never put the label under the shape and hope**: that was the only
   option before T-117 and it left the reader binding a caption to a rhombus by proximity, on one
   slide beside two branch labels already.
+- **Every motion you write declares which of two kinds it is, and only one of them is yours to
+  ration.** `--motion-kind:affordance` on the rule if it answers *is this interactive, did I just
+  touch it, did the deck just move* — those always run. `--motion-kind:content` if it answers a
+  question about the argument and the slide would still make its point without it. `check.py` fails
+  a motion rule that declares neither (DS-237), and the shell's own motions are already declared, so
+  in practice this reaches a motion you add.
+- **A content motion carries a rank, and the rank is derived rather than chosen.** Run
+  `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/density.py write <slug>.html` and it writes them; run
+  `check` and it recomputes the whole set and tells you whether the deck's numbers are the ones the
+  rule gives (DS-239). **Do not write `--m-rank` by hand** — two builds of one specification have to
+  animate the same elements, and a number somebody picked is the one thing that cannot be
+  re-derived. The rule, so you can read what it did: order every element carrying a content motion
+  by `(tier, slide, document order)` and give the *i*th of *n* the rank `floor((i-1)/n*100)+1`. Tier
+  is the table at the top of `density.py`, and it is the argument's key figure before its decoration
+  — so at the shipped density of 10 a deck shows its one emphasis pulse and nothing else, which is
+  the intent: **mostly still, with the occasional moment.**
+- **A whole figure is one content motion, not one per mark.** `.arrow-pop` and `.dot-pop` go on the
+  `<svg class="fig">`. Ranking each arrowhead separately would pop three of a diagram's five, and a
+  diagram half in motion reads as broken rather than as restrained.
 - **A `<marker>`, gradient or filter belongs in the slide that uses it** (DS-232). Every slide but
   the current one is `visibility:hidden`, and a hidden subtree paints nothing for a visible one to
   reference — so a marker defined once and reused across slides draws on exactly one of them,

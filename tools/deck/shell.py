@@ -795,8 +795,12 @@ def self_test():
     # row's tail became a slot, at which point editing it stopped being a skeleton change and
     # became a per-deck one - so the fixture passed by testing nothing. The seed has to sit in
     # markup the byte comparison still owns, and the navigation container is where that now is.
-    broken = fresh.replace('<button class="btn btn--pager" id="prev" aria-label="Previous slide">',
-                           '<button class="btn" id="prev" aria-label="Back">', 1)
+    # T-112 added `.is-back` to the Previous pager, so the seed carries it: the defect being
+    # seeded is an edited chrome row, and a seed that no longer matches tests nothing at all - which
+    # is the state this fixture was already found in once, above.
+    broken = fresh.replace(
+        '<button class="btn btn--pager is-back" id="prev" aria-label="Previous slide">',
+        '<button class="btn" id="prev" aria-label="Back">', 1)
     ok("edited chrome is caught", any(p.startswith("SKELETON") for p in check(broken)))
 
     # The other edge of the same move, asserted rather than assumed: what went into the slot is
@@ -817,7 +821,7 @@ def self_test():
     stale_parts = {
         "COMPONENTS": fresh.replace("\n<style>", "\n<style>\n.from-an-older-release{color:red}", 1),
         "SCRIPT": fresh.replace("<script>", "<script>\nvoid 0;  /* an older release */", 1),
-        "SKELETON": fresh.replace('<button class="btn btn--pager" id="prev" aria-label="Previous slide">',
+        "SKELETON": fresh.replace('<button class="btn btn--pager is-back" id="prev" aria-label="Previous slide">',
                                   '<button class="btn" id="prev" aria-label="Back">', 1),
     }
     for region, stale in sorted(stale_parts.items()):

@@ -277,6 +277,11 @@
   --slide-scale:.94;
   --slide-shift:6%;
   --motion-density:10;
+  --arrow-pop-delay:120ms;
+  --dot-overshoot:1.18;
+  --dot-stagger:8ms;
+  --pager-pinch:.94;
+  --pager-tilt:3deg;
 }
 </style>
 
@@ -744,6 +749,16 @@ svg{display:block}
   color:var(--ink-soft);font-family:var(--font-mono);font-size:var(--fs-mono);
   letter-spacing:var(--track-mono);text-transform:uppercase;
 }
+/* **The highlight fades in rather than snapping.** T-112's first affordance motion: a control
+   that changes colour between two frames answers *is this interactive?* with a flicker, and one
+   that takes 180 ms answers it with a gesture. It borrows Scale's pair because it is the same
+   question the ruler's ring answers - *this is the thing you are pointing at* - and a second
+   duration token for one more hover state would be a value nobody could tell from this one. */
+.btn{transition:border-color var(--scale-dur) var(--scale-ease),
+                color var(--scale-dur) var(--scale-ease),
+                background var(--scale-dur) var(--scale-ease),
+                transform var(--turn-dur) var(--turn-ease);
+     --motion-kind:affordance}
 .btn:hover{border-color:var(--accent);color:var(--ink)}
 /* THE PAGER, filled (T-114). The complaint that opened the task was that prev/next read as an
    afterthought, and the diagnosis was company rather than weight - but the two are the same fix
@@ -752,6 +767,16 @@ svg{display:block}
    the row is outlined, so `filled` is a rank the row states once and nothing else claims. */
 .btn.btn--pager{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .btn.btn--pager:hover{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+/* **The pager leans the way it goes, and pinches when pressed.** T-112's second affordance motion,
+   and it encodes rather than decorates (DS-150): the tilt is *toward the direction of travel*, so
+   Next leans forward and Previous leans back, and a reader who has not read the glyph still has an
+   answer. The pinch is the press itself - the one moment a control has to say *I got that* before
+   anything on the slide changes. Both are Turn's pair; a rotation and a scale on a control is what
+   Turn is. `--pager-tilt` and `--pager-pinch` are the two dials, because how far a control leans is
+   exactly the kind of value a second theme would set differently. */
+.btn.btn--pager:hover{transform:rotate(var(--pager-tilt))}
+.btn.btn--pager.is-back:hover{transform:rotate(calc(-1 * var(--pager-tilt)))}
+.btn.btn--pager:active{transform:scale(var(--pager-pinch))}
 .btn svg{width:var(--icon-ui);height:var(--icon-ui)}
 .btn .chev{width:var(--chev);height:var(--chev);border-right:var(--chev-stroke) solid currentColor;
   border-bottom:var(--chev-stroke) solid currentColor}
@@ -874,7 +899,51 @@ svg{display:block}
 /* The fallback is in the `var()` and not in a `:root` block, which would be a second theme region
    and is what DS-011 counts. 101 outranks every density, so an element the build did not rank does
    not move - a content motion nobody placed is not a content motion the deck chose. */
-.pulse{--m-on:max(0,min(1,calc(var(--motion-density) - var(--m-rank,101) + 1)))}
+.pulse,.arrow-pop,.dot-pop{--m-on:max(0,min(1,calc(var(--motion-density) - var(--m-rank,101) + 1)))}
+
+/* **The arrowhead scales out of its line.** T-112's first content motion, and it is DS-140's Scale
+   rather than a fifth motion: a reveal, applied to the mark that says *this way*. It sits on the
+   figure and not on the marker, because a `<marker>` renders in its own context and inherits from
+   where it is DEFINED - so `--m-rank` on the figure carrying `.arrow-pop` reaches the marker's
+   path, and one figure's arrowheads are one content motion with one rank. Ranking each arrowhead
+   separately would pop three of a diagram's five, which is the incoherence DS-237 rejected for
+   `rise`.
+   `transform-box:fill-box` is what makes the origin the arrowhead's own box rather than the SVG's,
+   and without it the head flies in from the top-left corner of the figure. */
+.arrow-pop marker path{
+  transform-box:fill-box;transform-origin:left center;
+  animation:arrowpop var(--scale-dur) var(--scale-ease) both;
+  animation-duration:calc(var(--m-on,0) * var(--scale-dur));
+  /* **The delay is gated too, and finding out why cost a render.** A zero-duration animation still
+     honours its delay, and `fill:both` paints the FROM keyframe for the whole of it - so a matrix
+     switched off by density went blank for 280 ms and then appeared, and an arrowhead for 120 ms.
+     Density 0 has to mean no motion, not a late one. Multiplying the delay by the same 0 collapses
+     the animation to a single instant at t=0, where the fill lands on the end state. */
+  animation-delay:calc(var(--m-on,0) * var(--arrow-pop-delay));
+  --motion-kind:content}
+@keyframes arrowpop{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* **The matrix's dots arrive one at a time, and the last one lands inside DS-141's cap.** T-112's
+   second content motion. The overshoot is the wobble the reporter asked for - a dot that stops
+   dead reads as a state, one that goes slightly past and settles reads as an arrival - and it is
+   inside Scale rather than beside it, because a reveal that overshoots is still a reveal.
+   **The order is scrambled and the scramble is derived**, written as `--dp` per dot: a
+   left-to-right sweep reads as a progress bar, and `random()` is not a thing a deck may contain
+   (DS-239). The permutation is `(i * 7) % n` over the figure's own dots - reproducible, checkable,
+   and coprime with the counts a matrix comes in, so it is a permutation rather than a partial one.
+   The class sits on the **figure**, not on a group: a matrix's dots interleave with its row labels
+   and cannot be wrapped in one element without moving the labels. The whole figure is one content
+   motion with one rank, for the same reason the arrowheads are. */
+.dot-pop circle{
+  transform-box:fill-box;transform-origin:center;
+  animation:dotpop var(--scale-dur) var(--scale-ease) both;
+  animation-duration:calc(var(--m-on,0) * var(--scale-dur));
+  animation-delay:calc(var(--m-on,0) * var(--dp,0) * var(--dot-stagger));   /* see the arrowhead */
+  --motion-kind:content}
+@keyframes dotpop{
+  from{transform:scale(0)}
+  62%{transform:scale(var(--dot-overshoot))}
+  to{transform:scale(1)}}
 
 .slide[data-played] .rise{animation:rise var(--rise-dur) var(--rise-ease) both;
   animation-delay:calc(var(--i,0) * var(--rise-stagger));
@@ -891,6 +960,11 @@ svg{display:block}
 @keyframes pulse{0%,100%{transform:scale(1)}45%{transform:scale(1.035)}}
 
 :root[data-motion="off"] .current{animation:none}
+/* T-112's two content motions collapse with everything else. `animation:none` drops the fill, so
+   each mark falls back to its own untransformed state - which is where the animation would have
+   left it anyway, and is the only state that is right when nothing ran. */
+:root[data-motion="off"] .arrow-pop marker path,
+:root[data-motion="off"] .dot-pop circle{animation:none;transform:none}
 :root[data-motion="off"] .rise,:root[data-motion="off"] .pulse,
 :root[data-motion="off"] .opening{animation:none;opacity:1;transform:none}
 /* The motion control turns the transition off with everything else (DS-221), which is also what a
@@ -902,6 +976,10 @@ svg{display:block}
 @media (prefers-reduced-motion:reduce){
   .current{animation:none}
   .rise,.pulse,.opening{animation:none;opacity:1;transform:none}
+  /* DS-143 outranks density, which is T-112's own rule: at 100 with the preference set, nothing
+     moves. Caught by the gate rather than by reading - the two new motions were written into the
+     motion-control collapse and not into this one, and every other check passed. */
+  .arrow-pop marker path,.dot-pop circle{animation:none;transform:none}
   .slide{transition:none}
   /* DS-143. A transition is motion, so reduced motion collapses it to `immediate` - and the deck
      still navigates, which is the half of the rule that a `display:none` would have broken. */
@@ -2022,8 +2100,8 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     <p class="standfirst rise" style="--i:2">Three steps, then a gate the transport committee reads in public.</p>
   </header>
   <div class="body figwrap rise" style="--i:3">
-    <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="28 0 1728 500" role="img"
-         aria-label="A 24-month timeline. Approval at month zero, first schedule change at month four, six routes at twelve-minute headway by month nine, and a gate at month eighteen that branches: if trunk ridership has risen 18 percent the package completes, otherwise 1.5 million dollars buys 16 stations in the Old Quarter.">
+    <svg class="fig arrow-pop" preserveAspectRatio="xMinYMid meet" viewBox="28 0 1728 500" role="img"
+         aria-label="A 24-month timeline. Approval at month zero, first schedule change at month four, six routes at twelve-minute headway by month nine, and a gate at month eighteen that branches: if trunk ridership has risen 18 percent the package completes, otherwise 1.5 million dollars buys 16 stations in the Old Quarter." style="--m-rank:51">
       <defs>
         <marker id="ar9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
           orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent)"/></marker>
@@ -2265,7 +2343,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       <p class="ruler-label" id="rulerLabel" aria-hidden="true"></p>
     </div>
     <p class="count" id="count" aria-hidden="true"></p>
-    <button class="btn btn--pager" id="prev" aria-label="Previous slide"><span class="chev l"></span></button>
+    <button class="btn btn--pager is-back" id="prev" aria-label="Previous slide"><span class="chev l"></span></button>
     <button class="btn btn--pager" id="next" aria-label="Next slide"><span class="chev r"></span></button>
   </div>
   <!-- The chrome row's TAIL, and a SLOT because what sits here varies by deck (T-114 step 7a).

@@ -333,9 +333,12 @@ are DS-131's and DS-217's, measured in the render gate rather than read out of t
 | `.more-menu` | `div` | `.more` | `1` | `id` `hidden` | author |
 | `.btn` | `button` | `.chrome` | `1+` | `id` | author |
 | `.btn--pager` | — | `on .btn` | `1+` | — | author |
+| `.is-back` | — | `on .btn--pager` | `0-1` | — | author |
 | `.chev` | `span` | `.btn` | `0-1` | — | author |
 | `.l` | — | `on .chev` | `0+` | — | author |
 | `.r` | — | `on .chev` | `0+` | — | author |
+
+**`.arrow-pop` and `.dot-pop` are content motions, and they sit on the figure rather than on what moves (T-112).** A `<marker>` renders in its own context and inherits from where it is *defined*, so a rank on the referencing line never reaches the arrowhead — and a matrix's dots interleave with its row labels, so they cannot be wrapped in one element without moving the labels. Both are therefore one motion per figure with one `--m-rank`, which is also the right unit: ranking each arrowhead separately would pop three of a diagram's five, and that is the incoherence DS-237 rejected for `rise`. A `.dot-pop` figure's dots each carry `--dp`, their place in the arrival order, derived by `tools/deck/density.py` and checked by it.
 
 **What may sit in the navigation container, and what may not (T-114).** `.navbox` holds the
 controls that answer *where am I, and how do I move*: the ruler, the counter, and the two pager
@@ -365,6 +368,8 @@ looping, and **as a sibling of `.more`** in a deck that loops. That is the `CHRO
 [`../shell/README.md`](../shell/README.md), and `audit.py` fails a looping deck whose control is in
 the menu — the placement is a static fact about the built markup, which is the whole reason it is
 decided at build time and not by the script.
+
+**`.is-back` is on the Previous pager and nowhere else, and it exists so a motion can carry a direction.** T-112's pager tilt leans the control toward where it goes; without a class saying which of the two this is, both would lean the same way and the tilt would encode nothing, which is DS-150's test failed by a motion that looks fine. It is a modifier on `.btn--pager` rather than a match on `#prev`, because an id is a handle for the script and a class is what a stylesheet is allowed to know.
 
 **The pager is exactly two, and the table says `1+` because the count vocabulary has no `2`.** `.btn--pager` is the row's only filled surface — the weight half of T-114's fix, where `.navbox` is the company half. Both were in the ruled sketch; the container is a drawn box and the pager is filled, and neither reads as the change on its own.
 
@@ -408,6 +413,8 @@ figure's business.
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `.fig` | `svg` | `.slide` | `0+` | `viewBox` `role` `aria-label` | author |
+| `.arrow-pop` | — | `on .fig` | `0+` | — | author |
+| `.dot-pop` | — | `on .fig` | `0+` | — | author |
 | `.lab` | `text` | `.fig` | `0+` | — | author |
 | `.val` | `text` | `.fig` | `0+` | — | author |
 | `.name` | `text` | `.fig` | `0+` | — | author |

@@ -158,6 +158,11 @@
      every value. The default is deliberately low: a deck should be mostly still, with the occasional
      moment, rather than a continuously moving surface. */
   --motion-density:10;
+  --pager-tilt:3deg;            /* how far the pager leans toward where it is going (T-112) */
+  --pager-pinch:.94;            /* what it shrinks to while held */
+  --dot-stagger:8ms;            /* the gap between two dots arriving; 30 of them stay inside DS-141 */
+  --dot-overshoot:1.18;         /* how far past its size a dot goes before it settles */
+  --arrow-pop-delay:120ms;      /* the arrowhead lands after the line it terminates has drawn */
   --slide-dur:500ms;
   --slide-ease:cubic-bezier(.4,0,.2,1);
   --slide-leave-fwd:slide-leave-fwd;

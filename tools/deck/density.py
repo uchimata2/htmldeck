@@ -52,6 +52,10 @@ RULE = "DS-239"
 CONTENT_CLASSES = [
     ("pulse", 1, "DS-147's one emphasis pulse on the number the slide is about - the argument's "
                  "key figure, so it outranks everything decorative"),
+    ("arrow-pop", 2, "the arrowheads of one figure, scaling out of their lines. About the diagram's "
+                     "direction, which is the argument's shape rather than its headline number"),
+    ("dot-pop", 3, "a matrix of marks arriving one at a time. The most decorative of the three, so "
+                   "it is the first to go as density falls"),
 ]
 
 AFFORDANCE_CLASSES = ["rise", "current", "opening"]
@@ -59,6 +63,16 @@ AFFORDANCE_CLASSES = ["rise", "current", "opening"]
 SLIDE = re.compile(r'<section[^>]*\bclass="[^"]*\bslide\b[^"]*"[^>]*>', re.I)
 TAG = re.compile(r'<(\w+)([^>]*\bclass="([^"]*)"[^>]*)>')
 RANK_ATTR = re.compile(r'--m-rank:\s*(\d+)')
+DP_ATTR = re.compile(r'--dp:\s*(\d+)')
+CIRCLE = re.compile(r'<circle\b[^>]*>')
+FIG_OPEN = re.compile(r'<svg\b[^>]*\bclass="[^"]*\bdot-pop\b[^"]*"[^>]*>')
+
+# **The scramble, and why a number rather than a shuffle.** A matrix whose dots arrive left
+# to right reads as a progress bar; one that arrives in no order reads as arrival. `random()`
+# is not a thing a deck may contain (DS-239), so the order is a permutation anyone can
+# recompute: 7 is coprime with the counts a matrix comes in, so `(i * 7) % n` visits every
+# position exactly once rather than most of them.
+DOT_STEP = 7
 
 
 def slide_bounds(html):
@@ -106,6 +120,24 @@ def eligible(html):
     return found
 
 
+def dot_place(i, n):
+    """Where the `i`th dot of `n` sits in the arrival order. 0-based both ends."""
+    return (i * DOT_STEP) % n if n else 0
+
+
+def dot_figures(html):
+    """`[(fig_start, fig_end, [(circle_start, circle_end)])]` for every `dot-pop` figure."""
+    out = []
+    for m in FIG_OPEN.finditer(html):
+        end = html.find("</svg>", m.end())
+        if end < 0:
+            continue
+        body = html[m.end():end]
+        circles = [(m.end() + c.start(), m.end() + c.end()) for c in CIRCLE.finditer(body)]
+        out.append((m.start(), end, circles))
+    return out
+
+
 def rank_for(pos, total):
     """The rank of the `pos`th of `total`. The first is always 1, so a deck's leading moment runs
     at any density above 0; the last is at most 100, so density 100 runs everything."""
@@ -126,16 +158,27 @@ def declared(html, start, end):
     return int(m.group(1)) if m else None
 
 
-def set_rank(tag, rank):
-    """The tag with `--m-rank` set, merged into an existing `style=` or added as a new one."""
-    if RANK_ATTR.search(tag):
-        return RANK_ATTR.sub("--m-rank:%d" % rank, tag, count=1)
+def set_var(tag, name, value):
+    """The tag with one custom property set, merged into an existing `style=` or added as a new one.
+
+    Merging rather than replacing is the whole of it: a risen element already carries `--i`, its
+    stagger index, and a writer that replaced the attribute would drop it - silently, because the
+    element still animates and only its timing is wrong.
+    """
+    pat = re.compile(re.escape(name) + r":\s*[^;\"]*")
+    if pat.search(tag):
+        return pat.sub("%s:%s" % (name, value), tag, count=1)
     m = re.search(r'style="([^"]*)"', tag)
     if m:
         val = m.group(1).rstrip().rstrip(";")
-        joined = ("%s;--m-rank:%d" % (val, rank)) if val else "--m-rank:%d" % rank
+        joined = ("%s;%s:%s" % (val, name, value)) if val else "%s:%s" % (name, value)
         return tag[:m.start(1)] + joined + tag[m.end(1):]
-    return tag[:-1] + ' style="--m-rank:%d"' % rank + tag[-1]
+    return tag[:-1] + ' style="%s:%s"' % (name, value) + tag[-1]
+
+
+def set_rank(tag, rank):
+    """The tag with `--m-rank` set."""
+    return set_var(tag, "--m-rank", rank)
 
 
 def stray_ranks(html):
@@ -166,6 +209,16 @@ def report(deck):
         elif got != want:
             problems.append("slide %d %s: --m-rank is %d, the rule gives %d"
                             % (r[5] + 1, r[6][:30], got, want))
+    for _fs, _fe, circles in dot_figures(html):
+        n = len(circles)
+        for i, (cs, ce) in enumerate(circles):
+            want = dot_place(i, n)
+            m = DP_ATTR.search(html[cs:ce])
+            got = int(m.group(1)) if m else None
+            if got != want:
+                problems.append("a dot-pop dot carries --dp %s where the derivation gives %d; the "
+                                "arrival order is not reproducible" % (got, want))
+                break
     for tag, cls in stray_ranks(html):
         problems.append("<%s class=\"%s\"> carries --m-rank and no content motion, so the rank "
                         "governs nothing" % (tag, cls))
@@ -316,6 +369,20 @@ def self_test():
     if kind_verdicts("")[0][2] is not True or "of 0" not in kind_verdicts("")[0][1]:
         sys.exit("SELF-TEST FAILED: a document with no stylesheet either failed DS-237 or reported "
                  "no denominator - and *0 of 0* must not read like *0 of 8* (**L-36**)")
+
+    # ---- the dot order --------------------------------------------------------------------------
+    places = sorted(dot_place(i, 36) for i in range(36))
+    if places != list(range(36)):
+        sys.exit("SELF-TEST FAILED: the dot order is not a permutation of 36 - it visits %d of them. "
+                 "A step that shares a factor with the count lands twice on some dots and never on "
+                 "others, and the matrix would arrive with holes in it" % len(set(places)))
+    if dot_place(1, 36) == 1:
+        sys.exit("SELF-TEST FAILED: dot 1 arrives first, so the matrix sweeps in document order and "
+                 "reads as a progress bar rather than as arrival")
+    if set_var('<circle class="quiet-s" cx="1">', "--dp", 4) != '<circle class="quiet-s" cx="1" style="--dp:4">':
+        sys.exit("SELF-TEST FAILED: --dp was not added to a circle with no style attribute")
+    if set_var('<p style="--i:1;--m-rank:3">', "--m-rank", 9) != '<p style="--i:1;--m-rank:9">':
+        sys.exit("SELF-TEST FAILED: setting one custom property disturbed another beside it")
     return True
 
 
@@ -350,6 +417,11 @@ def main(argv):
         for r in sorted(rows, key=lambda x: -x[1]):
             tag = html[r[1]:r[2]]
             html = html[:r[1]] + set_rank(tag, ranks[r[1]]) + html[r[2]:]
+        for _fs, _fe, circles in sorted(dot_figures(html), key=lambda f: -f[0]):
+            n = len(circles)
+            for i, (cs, ce) in reversed(list(enumerate(circles))):
+                tag = html[cs:ce]
+                html = html[:cs] + set_var(tag, "--dp", dot_place(i, n)) + html[ce:]
         out = deck
         if "-o" in argv:
             out = argv[argv.index("-o") + 1]

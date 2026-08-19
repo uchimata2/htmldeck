@@ -221,6 +221,11 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--pulse-ease` | motion | primitive | Pulse-once's easing. | — |
 | `--pulse-delay` | motion | primitive | How long Pulse-once waits for the slide to settle. | — |
 | `--motion-density` | motion | primitive | **How much of the deck's content motion runs** (DS-238), and the band is DS-238's. A content motion runs when this is at or above its element's `--m-rank`, so 0 is none, 100 is all of them, and the default is a deck that is mostly still with the occasional moment. Affordance motion is not governed by it and runs at every value — DS-237. | n 0-100 |
+| `--pager-tilt` | motion | primitive | How far the pager leans toward the direction it travels on hover (DS-237, affordance). Next leans forward, Previous back — the tilt encodes the direction (DS-150). | — |
+| `--pager-pinch` | motion | primitive | What the pager shrinks to while it is held. The press saying *I got that* before the slide changes. | — |
+| `--dot-stagger` | motion | primitive | The gap between two dots of a matrix arriving. The band is DS-141's, divided: times the dot count it has to stay inside the 500 ms cap, which is what keeps a thirty-dot matrix from becoming a progress bar. | ms 0-40 |
+| `--dot-overshoot` | motion | primitive | How far past its final size a dot goes before it settles. The wobble; 1 is no wobble at all. | — |
+| `--arrow-pop-delay` | motion | primitive | How long an arrowhead waits for the line it terminates. The band is DS-141's: the wait plus the scale is an entry animation, and the whole of it lands inside the cap. | ms 0-500 |
 | `--slide-dur` | motion | primitive | The inter-slide transition, which DS-141 puts at 400–500 ms. | ms 400-500 |
 | `--slide-ease` | motion | primitive | The inter-slide transition's easing. | — |
 | `--slide-leave-fwd` | motion | primitive | Which transition the deck uses, going forward. `slide-leave-fwd` or `none`; `none` is `immediate` (DS-235). | — |
