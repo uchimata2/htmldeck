@@ -64,7 +64,7 @@ the installed plugin a few minutes after each session starts.
 
 | | |
 | :--- | :--- |
-| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset.** 169 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
+| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset.** 172 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
 | [`docs/DESIGN-RATIONALE.md`](docs/DESIGN-RATIONALE.md) | Why each rule is what it is: what was measured, what was inherited, what was overruled, and the conflicts resolved by name |
 | [`docs/EVALUATION.md`](docs/EVALUATION.md) | How a deck is scored, and **when it is good enough to stop** |
 | [`tools/deck/check.py`](tools/deck/check.py) | The build check. A pass/fail per rule ID, **and an account of every rule it did not check, with a reason each** |
@@ -90,20 +90,20 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 ```
-  owned by a gate      115
-  checked               85
+  owned by a gate      118
+  checked               88
   failing                0
   excused in the rules   3   DS-072 DS-210 DS-211
   excused here          27
   undecided, no subject  0
   SILENT                 0
   ------------------------
-  buckets sum to       115   = owned, so the account is a partition
+  buckets sum to       118   = owned, so the account is a partition
 
 0 failure(s): none
 ```
 
-**Read the account, not just the failure count.** A gate that checks 85 of 115 rules and says nothing
+**Read the account, not just the failure count.** A gate that checks 88 of 118 rules and says nothing
 about the other 30 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each
 run **checked**, **excused in writing** (with what would close the excusal), or **failing**, and a
 rule in none of those three states *fails the run*. So a rule added to the ruleset with nothing behind
@@ -122,9 +122,9 @@ python tools/deck/ruleset.py --counts
 ```
 
 ```
-  rule rows in the table            169
+  rule rows in the table            172
   + declared in prose, not a row      1   DS-000 (guidance)
-  = rule IDs the document declares  170   <- the figure that counts DS-000
+  = rule IDs the document declares  173   <- the figure that counts DS-000
 ```
 
 **Which gate owns each `hard` rule.**
@@ -134,12 +134,12 @@ python tools/deck/ruleset.py --gates
 ```
 
 ```
-  hard rules                        122
-  gated mechanically (auto|render)   89   tools/deck/check.py
+  hard rules                        125
+  gated mechanically (auto|render)   92   tools/deck/check.py
   gated by judgement (judge)         28   EVALUATION.md 1.1, the hard-judge checklist
   bind the checker, not the deck      5   DS-107 DS-190 DS-191 DS-220 DS-221
   ------------------------
-  122 = hard, so every hard rule has an owner
+  125 = hard, so every hard rule has an owner
 ```
 
 **Every reference in every document.**
@@ -186,7 +186,7 @@ and need nothing but Python.
 
 ## The reference deck
 
-[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **289 KB
+[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **294 KB
 in one file, zero external references**, three embedded typefaces, eleven icons and eight hand-written
 SVG figures. Download it, disconnect, double-click it. Every measurement behind it, and how to
 reproduce each, is in [`examples/README.md`](examples/README.md).
@@ -203,7 +203,7 @@ names every one it misses.
 ## The deck nobody authored by hand
 
 [`examples/sort-window/`](examples/sort-window) holds *Move the window, not the fleet*: 12 slides,
-**287 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
+**292 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
 panels. It was built through the pipeline rather than written, assembled from
 [`shell/`](shell), which is the reference deck with its content cut out, then authored three slides
 at a time with the gate run per batch.

@@ -33,6 +33,7 @@ import content                                                      # noqa: E402
 import component                                                    # noqa: E402
 import printgeom                                                    # noqa: E402
 import figgrid                                                      # noqa: E402
+import density                                                      # noqa: E402
 import printpages                                                   # noqa: E402
 import spec                                                         # noqa: E402
 
@@ -1716,6 +1717,11 @@ ABSENCE_IS_A_PASS = {
     "DS-219": ("conditional", "a label sitting on a data mark owes two ratios; no label on a mark, "
                               "no pair to measure. The row prints its own denominator, `0 of 0`"),
     "DS-227": ("prohibition", "no panel open at load"),
+    "DS-237": ("prohibition", "no motion rule declares neither kind; the subject is the deck's "
+                              "stylesheet, and a document with no stylesheet has none to classify. "
+                              "The row prints its own denominator (T-112)"),
+    "DS-238": ("prohibition", "no motion is governed by the wrong half of the split. Same subject "
+                              "and same denominator as DS-237 above (T-112)"),
     "DS-232": ("prohibition", "no SVG paint reference pointing into another slide. The subject is "
                               "the deck's own `url(#id)` and `<use href=\"#id\">` references, and "
                               "the row prints its own denominator - a deck with one slide, or with "
@@ -1812,6 +1818,11 @@ ABSENCE_IS_A_FAIL = {
     "PRINT-3": ("requirement", "no card reaches the footnote band on a printed contents sheet. "
                                "Same absent subject as PRINT-2, and the same reason it must fail "
                                "rather than pass"),
+    "DS-239": ("requirement", "a deck to read. `density.verdicts` takes the deck itself, so its "
+                              "absent subject is the empty path, and a ranking that was never read "
+                              "is not a ranking that is right. A deck that WAS supplied and carries "
+                              "no content motion is a different state and a pass - `kind_verdicts` "
+                              "and `density.self_test` hold that one (T-112)"),
     "DS-236": ("requirement", "a deck to measure. `figgrid.verdicts` takes the deck itself, so "
                               "its absent subject is the empty path - and an unmeasured diagram is "
                               "not a placed one. A deck that WAS supplied and draws no diagram is a "
@@ -2213,6 +2224,12 @@ def self_test():
     # placement and must decline. Its OTHER absent subject - a render that succeeded and found no
     # diagram - is a pass, and `figgrid.self_test` holds the row to that one, denominator included.
     rows += figgrid.verdicts("")
+    # `density` has both shapes, and they have different absent subjects. `verdicts` takes the deck,
+    # so no deck is an unmeasured ranking and it must decline. `kind_verdicts` takes the markup, and
+    # a document with no stylesheet has classified nothing wrongly - it passes, with its own
+    # denominator in the row so it cannot read like a document whose motions were checked.
+    rows += density.verdicts("")
+    rows += density.kind_verdicts("")
     # `spec.verdicts` reads the two specification documents rather than the deck, so its absent
     # subject is a pair of empty ones - no source list, no slide, no ledger. It is the first
     # producer here that `check.py` does not consume, and it is held to the same bar anyway: the
@@ -2277,7 +2294,7 @@ def self_test():
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
                  "printpages.verdicts", "printgeom.verdicts", "spec.verdicts",
-                 "figgrid.verdicts"}
+                 "figgrid.verdicts", "density.verdicts", "density.kind_verdicts"}
     producers = verdict_producers()
     undeclared_producers = sorted(set(producers) - exercised - set(DELEGATING_PRODUCERS))
     if undeclared_producers:

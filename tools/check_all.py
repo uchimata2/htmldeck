@@ -97,6 +97,11 @@ DECK_EXEMPT = {
 # Every other tracked tool, with what it is. A checker whose checks are wholly reached by a gate
 # above says which gate; anything else says what it is instead of a checker.
 NOT_RUN = {
+    "tools/deck/density.py":
+        "runs inside tools/deck/check.py, the per-deck gate, which is where its exit code is read. "
+        "Its verdicts() is DS-239's row and kind_verdicts() carries DS-237 and DS-238. Runnable "
+        "alone, and then it prints the rank of every content motion in the deck rather than one "
+        "verdict: python tools/deck/density.py list <deck>",
     "tools/deck/figgrid.py":
         "runs inside tools/deck/check.py, the per-deck gate, which is where its exit code is read. "
         "Its verdicts() is DS-236's row and check.py gathers it on every deck. It was a "

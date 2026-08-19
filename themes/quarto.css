@@ -153,6 +153,11 @@
   --pulse-dur:1.2s;
   --pulse-ease:ease-in-out;
   --pulse-delay:600ms;
+  /* T-112. How much of the deck's CONTENT motion runs, 0-100. Affordance motion - a hover state,
+     a control turning, the flow arrow, the slide you just left - is not governed by it and runs at
+     every value. The default is deliberately low: a deck should be mostly still, with the occasional
+     moment, rather than a continuously moving surface. */
+  --motion-density:10;
   --slide-dur:500ms;
   --slide-ease:cubic-bezier(.4,0,.2,1);
   --slide-leave-fwd:slide-leave-fwd;

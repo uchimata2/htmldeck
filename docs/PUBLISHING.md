@@ -162,7 +162,7 @@ already gone stale under that instruction, because a rule with nothing behind it
 `checked   84`, so a sentence saying `checks` names that field and one about the judgement half does
 not — a correct number moved into the wrong sentence fails, and the report names the field behind
 every figure it compared. **The same rule reaches five documents that paste no output at all**:
-wherever a page states a part of a whole the gate prints — *"85 of the 115 rules a gate owns … the
+wherever a page states a part of a whole the gate prints — *"88 of the 118 rules a gate owns … the
 other 30"* — the part must be a figure of that account and the remainder must be the subtraction.
 That figure lived in five places and drifted to three different values; correcting it by hand is
 [T-045](../tasks/T-045-sweep-the-stale-claims-across-the-live-documents.md)'s work, and this is why

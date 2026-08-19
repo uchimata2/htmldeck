@@ -220,6 +220,7 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--pulse-dur` | motion | primitive | Pulse-once. Never loops (DS-140). | ms 800-1600 |
 | `--pulse-ease` | motion | primitive | Pulse-once's easing. | — |
 | `--pulse-delay` | motion | primitive | How long Pulse-once waits for the slide to settle. | — |
+| `--motion-density` | motion | primitive | **How much of the deck's content motion runs** (DS-238), and the band is DS-238's. A content motion runs when this is at or above its element's `--m-rank`, so 0 is none, 100 is all of them, and the default is a deck that is mostly still with the occasional moment. Affordance motion is not governed by it and runs at every value — DS-237. | n 0-100 |
 | `--slide-dur` | motion | primitive | The inter-slide transition, which DS-141 puts at 400–500 ms. | ms 400-500 |
 | `--slide-ease` | motion | primitive | The inter-slide transition's easing. | — |
 | `--slide-leave-fwd` | motion | primitive | Which transition the deck uses, going forward. `slide-leave-fwd` or `none`; `none` is `immediate` (DS-235). | — |

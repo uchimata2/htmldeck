@@ -139,10 +139,13 @@ STATIC_VARIANTS = [
         # of its own: every token is still declared, still inside its band, and there is no literal
         # anywhere for the scan to find. What has gone is the tokenisation itself - a theme moving
         # Turn now moves everything except the disclosure mark.
+        # T-112 added `--motion-kind` to this rule, so the seed carries it through both
+        # halves: the defect being seeded is the tokenisation, and a variant that also
+        # dropped the kind declaration would be caught by DS-237 and prove the wrong thing.
         (".disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);\n"
-         "  transition:transform var(--turn-dur) var(--turn-ease)}",
+         "  transition:transform var(--turn-dur) var(--turn-ease);--motion-kind:affordance}",
          ".disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);\n"
-         "  transition:transform var(--slide-dur) var(--slide-ease)}")]),
+         "  transition:transform var(--slide-dur) var(--slide-ease);--motion-kind:affordance}")]),
     ("easing-curve-in-a-component", "DS-010", [
         # §5's line, and the one the scan could not see until T-016: a curve is a choice about how
         # a motion FEELS, so a component writing one has taken a decision the theme owns.

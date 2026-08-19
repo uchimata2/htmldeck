@@ -276,6 +276,7 @@
   --slide-leave-shadow:0 var(--shadow-y) var(--shadow-blur) var(--shadow);
   --slide-scale:.94;
   --slide-shift:6%;
+  --motion-density:10;
 }
 </style>
 
@@ -364,8 +365,8 @@ svg{display:block}
   animation-duration:var(--slide-dur);
   animation-timing-function:var(--slide-ease);
   animation-fill-mode:forwards}
-.slide[data-leaving="fwd"]{animation-name:var(--slide-leave-fwd)}
-.slide[data-leaving="back"]{animation-name:var(--slide-leave-back)}
+.slide[data-leaving="fwd"]{animation-name:var(--slide-leave-fwd);--motion-kind:affordance}
+.slide[data-leaving="back"]{animation-name:var(--slide-leave-back);--motion-kind:affordance}
 
 /* The printed contents page (T-034) exists only on paper. It is generated into the stage so it
    inherits the theme and the page box, and this is the single rule that keeps it off the screen -
@@ -548,7 +549,7 @@ svg{display:block}
 }
 .disc-mark::before{width:var(--disc-mark-bar);height:var(--disc-mark-stroke)}
 .disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);
-  transition:transform var(--turn-dur) var(--turn-ease)}
+  transition:transform var(--turn-dur) var(--turn-ease);--motion-kind:affordance}
 .disc-btn[aria-expanded="true"] .disc-mark::after{transform:translate(-50%,-50%) rotate(90deg)}
 .disc-panel{                                     /* opens below the control (DS-138) */
   position:absolute;top:calc(100% + var(--sp-2));left:0;
@@ -563,7 +564,7 @@ svg{display:block}
 .disc-panel .k{font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
   text-transform:uppercase;color:var(--ink-faint);flex:none;width:var(--disc-key-w);
   padding-top:var(--sp-0)}
-.opening{animation:open var(--open-dur) var(--open-ease) both}
+.opening{animation:open var(--open-dur) var(--open-ease) both;--motion-kind:affordance}
 @keyframes open{from{opacity:0;transform:translateY(calc(-1 * var(--open-rise))) scaleY(var(--open-squash));
   transform-origin:top center}to{opacity:1;transform:none}}
 
@@ -612,6 +613,7 @@ svg{display:block}
   content:"";display:block;width:var(--rule);height:calc(14*var(--du));
   border-radius:var(--radius-xs);background:var(--ui-line);
   transition:background var(--scale-dur) var(--scale-ease),height var(--scale-dur) var(--scale-ease);
+  --motion-kind:affordance;
 }
 /* the stage starts - the seven that stay targets past the bound */
 .ruler-ticks li[data-section] button::before{height:calc(26*var(--du));background:var(--line-firm)}
@@ -667,6 +669,7 @@ svg{display:block}
   border:var(--rule) solid var(--accent);border-radius:50%;
   transform:translateX(calc(var(--rx,0px) - 15*var(--du)));
   transition:transform var(--scale-dur) var(--scale-ease);
+  --motion-kind:affordance;
   pointer-events:none;
 }
 /* first paint must not fly in from the left */
@@ -818,14 +821,73 @@ svg{display:block}
 
 /* ---------------------------------------------------------------- motion (DS-140..150) */
 .rise{opacity:0;transform:translateY(var(--rise-dist))}
+/* ---------------------------------------------------------------- motion: the two kinds (T-112)
+
+   **Every rule that starts a motion declares which of two kinds it is, and the two are governed
+   differently.** The line between them is *what the motion is for*:
+
+     `affordance`  answers "is this thing interactive, and did I just touch it?", or "did the deck
+                   just move, and where am I now?" - a hover state, a control turning, the ruler's
+                   ring easing to where you are, the dashed flow arrow saying THIS IS A FLOW, the
+                   slide you just left sliding out, and **the arriving slide's staggered rise**. A
+                   reader needs those answers whether or not they want the deck to move, so
+                   **density has no say over them**;
+     `content`     answers a question about the argument, and the deck would still make its point
+                   without it - a number pulsing once under a headline that says nothing is
+                   measured, a dot arriving, an arrowhead scaling out of its line. How many such
+                   moments a deck has is taste, and that is what `--motion-density` is.
+
+   **`rise` is `affordance`, and that was settled by counting rather than by argument.** It is
+   tempting to call it content: it animates the argument. But the shipped decks carry **68, 58 and
+   33** risen elements against **1, 1 and 2** pulses, so a density that governed rise would, at the
+   default of 10, run six of a deck's sixty-eight entrances - some elements of some slides arriving
+   and the rest simply appearing. That is not a quieter deck, it is an inconsistent one. And it is
+   one gesture with the transition anyway: the old slide leaves as the new one rises, and splitting
+   a single gesture across the two kinds would make the split describe the CSS rather than the
+   reader's experience. What density is for is the moment layered on top.
+
+   **The declaration is on the rule that starts the motion**, as `--motion-kind`, so a checker can
+   find it in one pass and a motion nobody classified fails rather than defaulting. It is inert:
+   nothing reads it at run time, which is the point - a rule that had to be wired up would be a
+   rule people wire up wrongly.
+
+   **Density is a rank, not a switch.** Every element eligible for content motion carries
+   `--m-rank`, a number 1-100 the build writes and derives from the deck itself, and a content
+   motion runs when `--motion-density >= --m-rank`. So density 10 runs the tenth of the deck's
+   content motions that were ranked first, 100 runs all of them, and 0 runs none - and the same
+   specification built twice ranks the same elements, because the rank is derived rather than
+   drawn. `--m-on` is the arithmetic, and it is 1 or 0 with nothing in between:
+
+     max(0, min(1, density - rank + 1))
+
+   `min` and `max` rather than the one CSS function that would read better here: DS-033 bans that
+   function's name anywhere inside the stage, because it is the idiom for fluid type and type here
+   is sized in design units. This arithmetic is unitless and has nothing to do with type - but the
+   rule is a prohibition on the construct rather than on the use, and evading it by argument is
+   worse than writing the same thing twice as long. The ban is on the literal text, so naming it in
+   a comment fails the check too, which is why this paragraph talks around it.
+
+   A motion that is off has its **duration** multiplied by 0 rather than its name removed, which
+   matters: a zero-duration animation still applies its fill state, so a `rise` that is off lands on
+   its settled end rather than holding the invisible start it begins from. Removing the name would
+   leave the element at `opacity:0`, which is DS-224's failure in a new place. */
+/* The fallback is in the `var()` and not in a `:root` block, which would be a second theme region
+   and is what DS-011 counts. 101 outranks every density, so an element the build did not rank does
+   not move - a content motion nobody placed is not a content motion the deck chose. */
+.pulse{--m-on:max(0,min(1,calc(var(--motion-density) - var(--m-rank,101) + 1)))}
+
 .slide[data-played] .rise{animation:rise var(--rise-dur) var(--rise-ease) both;
-  animation-delay:calc(var(--i,0) * var(--rise-stagger))}
+  animation-delay:calc(var(--i,0) * var(--rise-stagger));
+  --motion-kind:affordance}
 @keyframes rise{from{opacity:0;transform:translateY(var(--rise-dist))}to{opacity:1;transform:none}}
 
-.current{stroke-dasharray:var(--current-dash);animation:current var(--current-dur) linear infinite}
+.current{stroke-dasharray:var(--current-dash);animation:current var(--current-dur) linear infinite;
+  --motion-kind:affordance}
 @keyframes current{to{stroke-dashoffset:-26}}
 
-.pulse{animation:pulse var(--pulse-dur) var(--pulse-ease) 1 both;animation-delay:var(--pulse-delay)}
+.pulse{animation:pulse var(--pulse-dur) var(--pulse-ease) 1 both;animation-delay:var(--pulse-delay);
+  animation-duration:calc(var(--m-on,0) * var(--pulse-dur));
+  --motion-kind:content}
 @keyframes pulse{0%,100%{transform:scale(1)}45%{transform:scale(1.035)}}
 
 :root[data-motion="off"] .current{animation:none}
@@ -1721,7 +1783,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </header>
   <div class="body stat">
     <div class="stat-left rise" style="--i:2">
-      <p class="stat-figure pulse"><span data-count="11">11</span></p>
+      <p class="stat-figure pulse" style="--m-rank:1"><span data-count="11">11</span></p>
       <p class="stat-unit">minutes, average wait</p>
     </div>
     <div class="stat-right rise" style="--i:3">

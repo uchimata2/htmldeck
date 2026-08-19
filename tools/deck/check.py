@@ -49,6 +49,7 @@ import content                                                      # noqa: E402
 import printpages                                                   # noqa: E402
 import printgeom                                                    # noqa: E402
 import figgrid                                                      # noqa: E402
+import density                                                      # noqa: E402
 import theme                                                        # noqa: E402
 import component                                                    # noqa: E402
 
@@ -413,6 +414,9 @@ NOT_STATIC = {
                           "(T-123, **L-76**)",
     "spec.verdicts": "the content half. Its subject is the specification and the sources beside the "
                      "deck, not the deck's own markup",
+    "density.verdicts": "reads the deck from its path so the row can name it; the ranking it "
+                        "checks is derived from the markup and `density.kind_verdicts` is the "
+                        "static half, which `static_rows` gathers (T-112)",
     "figgrid.verdicts": "measures the leftmost rendered ink against the slide's text edge. The "
                         "markup cannot answer it: the <svg> is on the column in every deck that "
                         "fails, and what is inset is the drawing inside a viewBox scaled by a "
@@ -457,6 +461,9 @@ def static_rows(html):
     # would change; this holds it to the elements a generator has to emit - the other half of the
     # same claim, and the one T-002 cannot start without.
     rows += component.verdicts(html)
+    # DS-237 and DS-238, added by T-112. The split is declared in the stylesheet the deck carries,
+    # so both are settled from the markup: a render would say the same thing after a browser start.
+    rows += density.kind_verdicts(html)
     return rows
 
 
@@ -536,6 +543,10 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     # `figgrid` owns the measurement and a second copy of the probe here is the composition that
     # disagreed the first time either half changed (**L-08**, **L-13**).
     rows += figgrid.verdicts(deck)
+
+    # DS-239, added by T-112. It takes the deck rather than the markup only because it reports the
+    # path in its own row; the derivation itself is pure.
+    rows += density.verdicts(deck)
 
     if not skip_contract:
         rows += list(contract.audit(deck, quiet=True))
