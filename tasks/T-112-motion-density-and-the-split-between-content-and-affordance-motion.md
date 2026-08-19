@@ -165,8 +165,9 @@ separately, not something density smuggles in.
   *what is the motion for* — the entrance answers *the deck just moved and here is what it says now*,
   which is the arriving half of the gesture whose leaving half is DS-235's transition. Splitting one
   gesture across the two kinds would make the split describe the stylesheet rather than the reader.
-  **This is the classification to overturn first if any of this is wrong**, and everything else
-  follows from it.
+  It was written as the classification to overturn first if any of this were wrong, and
+  **the owner confirmed it on 2026-08-19** — so it is a ruling rather than an inference, and
+  DS-237 says so. Everything else in this task follows from it.
 - **Density is a rank, and the rank is derived** — 2026-08-19. `--m-rank` per content motion,
   `--motion-density` per theme, and a motion runs when the density reaches its rank. The rank is
   `floor((i-1)/n*100)+1` over `(tier, slide, document order)`, so the first always ranks 1 and runs
@@ -265,3 +266,4 @@ gentle. They are theme tokens precisely so that answer can be changed without to
 | 2026-08-12 | (no change) | The pager's hover and press motions are the one part of this that waits on [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md). Building them before the pager's shape is settled is building them twice. Not `blocked_by` — everything else here can start. |
 | 2026-08-18 | (no change) | **Not started, and the reason is a gate rather than a preference.** Six of the eight acceptance criteria are readings of motion over time — *density 0 leaves every affordance motion running and every content motion still*, *each is looked at*, *nothing moves under reduced motion at density 100*, and the demonstration at three densities. Nothing in this environment has a running document timeline ([T-185](T-185-no-instrument-here-can-watch-an-animation-play.md)), so building this now would put a second large unverifiable change on the shared shell and leave it exactly where [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) is. `blocked_by` set rather than a note, because this is a real gate and it should propagate. |
 | 2026-08-19 | proposed → done | The split, the density, the derivation and the four motions. **`rise` is affordance**, and counting settled that rather than argument: 68, 58 and 33 risen elements against 1, 1 and 2 pulses, so a density governing rise would run six of sixty-eight entrances and leave a deck inconsistent rather than quiet. Density therefore governs the moment layered on top, and on `measure-first` rank 1 is the **`0`** §1 names as the model — the shipped default runs exactly it. Two defects found by looking, the sharper one a matrix that went blank at density 0 because a zero-duration animation still honours its delay; one more caught by DS-143, which the two new motions had been left out of. |
+| 2026-08-19 | (no change) | **The owner confirmed the `rise` classification**, which was the one call this task put up for review. It is recorded in DS-237 as a ruling rather than as this task's reasoning, because the rule is `hard` and the next person to read it should not have to re-derive why the deck's most common motion sits on the side density cannot reach. No code changed: the classification was already what shipped. |
