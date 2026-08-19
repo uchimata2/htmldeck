@@ -1452,7 +1452,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </header>
   <div class="body">
     <div class="flowwrap">
-      <svg class="fig" viewBox="0 0 1600 330" role="img"
+      <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="0 0 1600 330" role="img"
            aria-label="The current demand planning process: calculate a draft, eight regions
            adjust and merge, the monthly meeting agrees a number, Finance checks it against the
            budget, and a plan that does not fit goes back to the meeting rather than to the data.">
@@ -1590,7 +1590,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <div class="body">
     <div class="flowwrap">
-      <svg class="fig" viewBox="0 0 1900 430" role="img"
+      <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="120 0 1900 430" role="img"
            aria-label="A four-step cycle: the forecast, a manager's adjustment, the plan shipping,
            and what actually sold. The return edge from what sold back to the forecast is drawn
            as absent, because Larkfield never makes that comparison.">
@@ -1678,7 +1678,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <div class="body">
     <div class="flowwrap">
-      <svg class="fig" viewBox="0 0 1700 420" role="img"
+      <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="0 0 1700 420" role="img"
            aria-label="Left, the six data quality dimensions rated on a five-point scale: two
            Poor, two Fair, two Good. Right, the six AI readiness checks: two red, three amber,
            one green.">
@@ -1787,7 +1787,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <div class="body">
     <div class="flowwrap">
-      <svg class="fig" viewBox="0 0 1800 420" role="img"
+      <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="127.2 0 1800 420" role="img"
            aria-label="A matrix of business value against data quality. Three of the four most
            valuable data assets sit in the high-value, low-quality quadrant: supplier delivery
            dates, the draft forecast with its reason codes, and practice counts per market.">
@@ -1864,7 +1864,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <div class="body">
     <div class="flowwrap">
-      <svg class="fig" viewBox="0 0 1700 380" role="img"
+      <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="60 0 1700 380" role="img"
            aria-label="The redesigned demand planning process in eight steps. Finance sets the
            limits first. Two steps need a trained model: forecasting demand and supplier risk,
            and recommending an action per family. The decision log written at approval feeds
@@ -1956,7 +1956,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <div class="body">
     <div class="flowwrap">
-      <svg class="fig" viewBox="0 0 1740 380" role="img"
+      <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="30 0 1740 380" role="img"
            aria-label="The four analytics types in order: descriptive, diagnostic, predictive and
            prescriptive. The prescriptive recommendation then branches: inside the agreed band
            the system acts, outside it a person approves.">
@@ -1998,24 +1998,26 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
         <text class="name" x="1392" y="102" text-anchor="start">what should we do</text>
         <text class="name" x="1392" y="136" text-anchor="start">bring the order forward</text>
 
-        <path class="quiet-s" stroke-width="2"
-              d="M870 223 L928 281 L870 339 L812 281 Z"></path>
-        <text class="lab" x="870" y="368" text-anchor="middle">within the band</text>
+        <g class="decision">
+          <path class="decision-shape" d="M870 223 L1025 281 L870 339 L715 281 Z"></path>
+          <text class="decision-label" x="870" y="265">within</text>
+          <text class="decision-label" x="870" y="297">the band</text>
+        </g>
 
-        <line class="quiet-s" x1="812" y1="281" x2="706" y2="281" stroke-width="3"
+        <line class="quiet-s" x1="715" y1="281" x2="575" y2="281" stroke-width="3"
               marker-end="url(#ah-q6)"></line>
-        <line class="quiet-s" x1="928" y1="281" x2="1034" y2="281" stroke-width="3"
+        <line class="quiet-s" x1="1025" y1="281" x2="1165" y2="281" stroke-width="3"
               marker-end="url(#ah-q6)"></line>
-        <text class="lab" x="759" y="265" text-anchor="middle">inside</text>
-        <text class="lab" x="981" y="265" text-anchor="middle">outside</text>
+        <text class="decision-branch" x="645" y="265" text-anchor="middle">inside</text>
+        <text class="decision-branch" x="1095" y="265" text-anchor="middle">outside</text>
 
-        <rect class="quiet-s" x="300" y="246" width="400" height="72" rx="14"
+        <rect class="quiet-s" x="169" y="246" width="400" height="72" rx="14"
               stroke-width="2"></rect>
-        <text class="name" x="500" y="290" text-anchor="middle">The system acts</text>
+        <text class="name" x="369" y="290" text-anchor="middle">The system acts</text>
 
-        <rect class="accent-s" x="1040" y="246" width="400" height="72" rx="14"
+        <rect class="accent-s" x="1171" y="246" width="400" height="72" rx="14"
               stroke-width="3"></rect>
-        <text class="name" x="1240" y="290" text-anchor="middle">A person approves</text>
+        <text class="name" x="1371" y="290" text-anchor="middle">A person approves</text>
       <defs><marker id="ah-q6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="quiet" d="M0 0 L10 5 L0 10 z"></path></marker><marker id="ah-a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="accent" d="M0 0 L10 5 L0 10 z"></path></marker></defs></svg>
       <div class="frags">
         <p class="frag rise" style="--i:0">The bands are 10% of the plan and €25,000 of
@@ -2058,7 +2060,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <div class="body">
     <div class="flowwrap">
-      <svg class="fig" viewBox="0 0 1800 380" role="img"
+      <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="60 0 1800 380" role="img"
            aria-label="A twenty-four month timeline. Four phases: improve data months one to four
            at 120,000 euro; implement analytics months five to eight at 180,000; integrate into
            the process months nine to twelve at 150,000; continuous improvement from month
@@ -2425,8 +2427,11 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
 
 /* ---- a figure label is set from the stage's type scale, then scaled again by the
        SVG viewBox. At --fs-mono it renders under the 16-unit floor, so figures take
-       the next size up (DS-035). ---- */
-.fig .lab{font-size:var(--fs-small)}
+       the next size up (DS-035). A branch label is a .lab in every respect, so it
+       takes the same step up: leaving it behind put slide 8's INSIDE and OUTSIDE at
+       15.0 units, on the one diagram whose viewBox scales DOWN (T-184). ---- */
+.fig .lab,
+.fig .decision-branch{font-size:var(--fs-small)}
 
 /* ---- semantic marks (DS-026). The contract's own .pos/.neg/.caution rows are
        `vocabulary`, meaning a deck that uses them fails component.py, so the roles

@@ -112,8 +112,14 @@ def build():
                  r'(?=<p class="bottom-line)', "\n  ", flags=re.S)
 
     # S3 Encoding - the before/after network becomes four boxes joined by arrow glyphs.
-    old_fig = html[html.index('<svg class="fig" viewBox="0 0 1728 500" role="img"'):
-                   html.index("</svg>", html.index('<svg class="fig" viewBox="0 0 1728 500" role="img"')) + 6]
+    # Anchored on the slide, not on a viewBox literal. T-184 rewrote every viewBox on this deck
+    # and inserted `preserveAspectRatio` ahead of it, so the old string stopped matching - loudly,
+    # which was luck: three of the deck's figures shared that viewBox, and the literal took
+    # whichever came first. A near-miss there seeds the wrong slide and says nothing, which is the
+    # failure T-058 found in the seed above this one.
+    sl = html.index('data-name="One transfer disappears"')
+    fig_at = html.index('<svg class="fig"', sl)
+    old_fig = html[fig_at:html.index("</svg>", fig_at) + 6]
     boxes = """<div class="seeded-boxes">
       <div class="seeded-box"><h4>North Line</h4><p>Route 3 to Centre</p></div>
       <div class="seeded-arrow">&#8594;</div>

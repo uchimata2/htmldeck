@@ -95,12 +95,12 @@ DECK_EXEMPT = {
 # above says which gate; anything else says what it is instead of a checker.
 NOT_RUN = {
     "tools/deck/figgrid.py":
-        "a measurement, not a checker. It reports how far each diagram's ink sits from the "
-        "slide's text column, and every deck this repository ships fails the rule it measures - "
-        "18 of 21 diagrams, 2026-08-18. Gating it now would be red on three correct-looking decks "
-        "from the moment it landed, so T-117 landed the rule for what a build writes from now on "
-        "and T-184 re-cuts what is already shipped and promotes this to a gated DS rule. Run it "
-        "by hand: python tools/deck/figgrid.py <deck>",
+        "runs inside tools/deck/check.py, the per-deck gate, which is where its exit code is read. "
+        "Its verdicts() is DS-236's row and check.py gathers it on every deck. It was a "
+        "measurement rather than a checker until 2026-08-19, because every deck this repository "
+        "shipped failed the rule it measures - 18 of 21 diagrams - and T-184 re-cut those first, "
+        "which is what made gating it honest. Still runnable alone, and then it prints the offset "
+        "per diagram rather than one verdict: python tools/deck/figgrid.py <deck>",
     "tools/docs/refcheck.py":
         "runs inside tools/tasks/lint.py, the first gate, which is where its exit code is read",
     "tools/docs/findings.py":

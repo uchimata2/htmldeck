@@ -33,7 +33,7 @@ study, company or place. See *Provenance*, below.
 *Buy frequency before bikes*, a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-[`reference-deck.html`](reference-deck.html) is **289 KB in one file**, 295 902 bytes. Three embedded
+[`reference-deck.html`](reference-deck.html) is **289 KB in one file**, 296 193 bytes. Three embedded
 typefaces (97 KB of it as base64), eleven Lucide icons in one sprite, eight hand-written SVG figures,
 and the deck shell. No libraries, no build step, no network.
 
@@ -261,7 +261,7 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 It runs the auto gate, the contrast audit, the render gate and the resolution contract in one pass,
-then declares what it did **not** check: 84 of the 114 rules a gate owns are decided, and the other
+then declares what it did **not** check: 85 of the 115 rules a gate owns are decided, and the other
 30 are named with a reason each. The four commands after it still exist because each is useful
 alone. `audit.py` and `contract.py` are for when you want one stage's output without the account, and the
 two variant suites are separate because they build decks rather than read one.
@@ -324,7 +324,7 @@ edited without regenerating is a red run rather than a discovery two audits late
 
 [`sort-window/`](sort-window) holds all four artifacts a build run leaves behind: the deck, the
 foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
-reconciled against. It is **287 KB in one file**, 293 935 bytes, 12 slides, six hand-written SVG
+reconciled against. It is **287 KB in one file**, 294 164 bytes, 12 slides, six hand-written SVG
 figures, ten disclosure panels, zero external references.
 
 ```bash
@@ -380,7 +380,7 @@ first one. Nothing but a person saw the other two.**
 
 [`measure-first/measure-first.html`](measure-first/measure-first.html) is *Demand Planning: what
 Business Analytics can do first*, and it runs to 13 slides, the last of them a colophon. It is
-**397 KB in one file**, 406 119 bytes, zero external references. It argues that measurement and
+**397 KB in one file**, 406 711 bytes, zero external references. It argues that measurement and
 discipline fix demand planning before any AI is bought, for an invented dental group deciding what
 to do first.
 

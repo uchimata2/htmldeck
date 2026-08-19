@@ -80,7 +80,11 @@ will not tell you, because they are this stage's judgement:
   which is arithmetic only the build can do because SVG cannot grow a path to fit text. An
   axis-aligned text block of half-width `w` and half-height `h` fits half-diagonals `A`, `B` when
   `w/A + h/B <= 1`; leave margin rather than landing on 1.0. Branch labels stay outside on their
-  edges as `.decision-branch`. **Never put the label under the shape and hope**: that was the only
+  edges as `.decision-branch`, which is **a `.lab` in every respect** — so whatever the slides
+  block does to `.lab` it does to `.decision-branch` in the same rule. A deck that steps `.lab` up
+  a size and leaves the branch label behind renders it smaller than the edge labels beside it, and
+  DS-035 catches that only on a diagram whose viewBox scales *down* (T-184).
+  **Never put the label under the shape and hope**: that was the only
   option before T-117 and it left the reader binding a caption to a rhombus by proximity, on one
   slide beside two branch labels already.
 - **A `<marker>`, gradient or filter belongs in the slide that uses it** (DS-232). Every slide but

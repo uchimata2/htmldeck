@@ -32,6 +32,7 @@ import content                                                      # noqa: E402
 # the same bar since T-075 - not for anything this module's own rows measure.
 import component                                                    # noqa: E402
 import printgeom                                                    # noqa: E402
+import figgrid                                                      # noqa: E402
 import printpages                                                   # noqa: E402
 import spec                                                         # noqa: E402
 
@@ -1811,6 +1812,11 @@ ABSENCE_IS_A_FAIL = {
     "PRINT-3": ("requirement", "no card reaches the footnote band on a printed contents sheet. "
                                "Same absent subject as PRINT-2, and the same reason it must fail "
                                "rather than pass"),
+    "DS-236": ("requirement", "a deck to measure. `figgrid.verdicts` takes the deck itself, so "
+                              "its absent subject is the empty path - and an unmeasured diagram is "
+                              "not a placed one. A deck that WAS supplied and draws no diagram is a "
+                              "different state and a pass; `figgrid.self_test` is what holds it to "
+                              "that, with the denominator in the row (T-184)"),
 }
 
 # --------------------------------------------------------------- what the probe actually emits
@@ -2203,6 +2209,10 @@ def self_test():
     # `printgeom` takes the deck itself, so its absent subject is the empty path - and it must
     # decline rather than report an unblemished page, which is the whole reason it exists.
     rows += printgeom.verdicts("")
+    # `figgrid` takes the deck too, and the same distinction applies to it: no deck is an unmeasured
+    # placement and must decline. Its OTHER absent subject - a render that succeeded and found no
+    # diagram - is a pass, and `figgrid.self_test` holds the row to that one, denominator included.
+    rows += figgrid.verdicts("")
     # `spec.verdicts` reads the two specification documents rather than the deck, so its absent
     # subject is a pair of empty ones - no source list, no slide, no ledger. It is the first
     # producer here that `check.py` does not consume, and it is held to the same bar anyway: the
@@ -2266,7 +2276,8 @@ def self_test():
                  "audit.fetch_verdicts", "audit.marker_verdicts",
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
-                 "printpages.verdicts", "printgeom.verdicts", "spec.verdicts"}
+                 "printpages.verdicts", "printgeom.verdicts", "spec.verdicts",
+                 "figgrid.verdicts"}
     producers = verdict_producers()
     undeclared_producers = sorted(set(producers) - exercised - set(DELEGATING_PRODUCERS))
     if undeclared_producers:

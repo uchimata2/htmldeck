@@ -48,6 +48,7 @@ import contract                                                     # noqa: E402
 import content                                                      # noqa: E402
 import printpages                                                   # noqa: E402
 import printgeom                                                    # noqa: E402
+import figgrid                                                      # noqa: E402
 import theme                                                        # noqa: E402
 import component                                                    # noqa: E402
 
@@ -412,6 +413,10 @@ NOT_STATIC = {
                           "(T-123, **L-76**)",
     "spec.verdicts": "the content half. Its subject is the specification and the sources beside the "
                      "deck, not the deck's own markup",
+    "figgrid.verdicts": "measures the leftmost rendered ink against the slide's text edge. The "
+                        "markup cannot answer it: the <svg> is on the column in every deck that "
+                        "fails, and what is inset is the drawing inside a viewBox scaled by a "
+                        "factor only the laid-out page knows (T-184)",
 }
 
 
@@ -526,6 +531,11 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     if not rdata:
         notes.append("reduced-motion pass: NO RESULT - DS-143 is unmeasured, not passing")
     rows += audit.reduced_verdicts(rdata)
+
+    # DS-236, added by T-184. Its own render rather than a row off `render_data` above, because
+    # `figgrid` owns the measurement and a second copy of the probe here is the composition that
+    # disagreed the first time either half changed (**L-08**, **L-13**).
+    rows += figgrid.verdicts(deck)
 
     if not skip_contract:
         rows += list(contract.audit(deck, quiet=True))

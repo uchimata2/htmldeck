@@ -3,12 +3,19 @@
 
     python tools/deck/figgrid.py <deck> [<deck> ...]
 
-**This reports; it does not gate, and that is deliberate rather than unfinished.** Every deck this
-repository ships violates the rule it measures, so a gated version would be red on three correct-
-looking decks from the moment it landed. T-117 landed the rule for what a build *writes from now
-on*; [T-184] re-cuts the diagrams already shipped and promotes this to a gated `DS-nnn` once the
-decks can pass it. Until then the number is a finding somebody can re-derive in one command, which
-is worth more than a comment saying the same thing.
+**This gates, from 2026-08-19.** `verdicts()` is DS-236's row and `check.py` reads it, so the
+measurement is decided on every run rather than when somebody remembers to type the command. It
+reported and did not gate until T-184, on the accurate ground that every deck this repository
+shipped failed it - 18 of 21 diagrams - and a gate that is red on three correct-looking decks from
+the moment it lands teaches people to ignore it. T-117 landed the rule for what a build *writes
+from now on*; T-184 re-cut what was already shipped, which is what made gating it honest.
+
+**Two causes, and only one of them is the author's.** An **aspect letterbox** - `.fig` is
+`width:100%;height:100%`, so a viewBox taller in proportion than its wrapper is fitted by height and
+the default `preserveAspectRatio` (`xMidYMid`) centres the slack, inset with nobody involved; and the
+drawing's own **left margin** inside the viewBox. The fixes are `preserveAspectRatio="xMinYMid meet"`
+and a `min-x` set to where the ink begins. This measures the outcome and does not care which caused
+it.
 
 **What it measures, and why not the `<svg>` element.** The element is already on the column - 96 du
 on every slide of every deck, exactly where the headline, the body and the bottom line sit. What is
@@ -39,6 +46,8 @@ ROOT = render.ROOT
 # not merely near - the two slides that already come out at +1 and +2 du are inside it, and they
 # are the accident this rule turns into the rule.
 TOLERANCE_DU = 4.0
+
+RULE = "DS-236"
 
 PROBE = r"""
 <script>
@@ -113,6 +122,24 @@ def report(deck, rows):
     return (len(off), len(rows))
 
 
+def verdicts(deck):
+    """DS-236's row - `[(rule, what, ok)]`, the shape `check.py` gathers.
+
+    **A prohibition, and the denominator is what makes it one.** *No diagram starts its ink off the
+    column* has the deck's diagrams as its subject, so a deck that draws none has nothing off the
+    column and passes honestly - but *0 off, of 0* and *0 off, of 8* are the same boolean and not
+    the same fact (**L-36**), so the count travels in the text. That is DS-231's and DS-232's shape
+    and it is here for their reason.
+
+    **A measurement that did not happen is a failure, never a pass.** A render that produced nothing
+    leaves every diagram unmeasured, which is the case T-028 found where a stage printed NO RESULT
+    and the run stayed green.
+    """
+    if not deck:
+        return [(RULE, "no deck to measure - the diagram grid gate has no subject", False)]
+    return [_verdict_from(measure(deck))]
+
+
 def self_test():
     """The arithmetic, and the two ways of reading it wrongly (**L-04**)."""
     rows = [{"slide": "a", "i": 1, "textL": 96.0, "inkL": 98.0, "svgL": 96.0, "off": 2.0},
@@ -129,7 +156,40 @@ def self_test():
     # A negative offset is off the column too: ink left of the text is not alignment.
     if not [r for r in [{"off": -90.0}] if abs(r["off"]) > TOLERANCE_DU]:
         sys.exit("SELF-TEST FAILED: ink to the LEFT of the text column was read as placed")
+    # The absence discipline, in the module that owns the rule (`audit.ABSENCE_IS_A_PASS` is the
+    # same fixture for the rows `audit` produces). Two cases, and they must not read alike.
+    rid, what, ok = _verdict_from(rows=[])
+    if not ok:
+        sys.exit("SELF-TEST FAILED: a deck that draws no diagram has none off the column, so the "
+                 "row is a pass. Failing it would fail every deck without a diagram")
+    if "of 0" not in what:
+        sys.exit("SELF-TEST FAILED: the row for a deck with no diagram does not print its own "
+                 "denominator, so *0 off of 0* reads exactly like *0 off of 8* (**L-36**)")
+    rid, what, ok = _verdict_from(rows=None)
+    if ok:
+        sys.exit("SELF-TEST FAILED: a render that produced nothing was reported as a pass. An "
+                 "unmeasured diagram is not a placed one (T-028)")
+    rid, what, ok = _verdict_from(rows=[{"i": 4, "off": 186.2}, {"i": 5, "off": 1.3}])
+    if ok or "1 of 2" not in what or "slide 4" not in what:
+        sys.exit("SELF-TEST FAILED: a deck with one diagram off the column and one inside the "
+                 "tolerance did not report exactly that")
     return True
+
+
+def _verdict_from(rows):
+    """`verdicts` over a measurement supplied directly - what `self_test` holds the row to.
+
+    The browser is the only reason `verdicts` takes a deck rather than rows, and the self-test has
+    no browser (**L-07**). So the row's logic lives here and both callers reach it.
+    """
+    if rows is None:
+        return (RULE, "no render result - every diagram's placement is unmeasured, not passing",
+                False)
+    off = [r for r in rows if abs(r["off"]) > TOLERANCE_DU]
+    detail = "" if not off else " - " + "; ".join(
+        "slide %d %+.1f du" % (r["i"], r["off"]) for r in off[:4])
+    return (RULE, "diagrams starting their ink off the slide's text column by more than %.0f du: "
+                  "%d of %d%s" % (TOLERANCE_DU, len(off), len(rows), detail), not off)
 
 
 def main(argv):
@@ -147,7 +207,7 @@ def main(argv):
         print("")
     print("%d of %d diagram(s) sit off the slide's text column by more than %.0f du."
           % (total_off, total, TOLERANCE_DU))
-    print("This reports and does not gate: T-184 re-cuts the diagrams and promotes it to a rule.")
+    print("%s: the same measurement check.py gates on, run here on its own." % RULE)
     return 0
 
 

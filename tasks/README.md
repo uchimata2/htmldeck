@@ -42,7 +42,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-178](T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md) | In dense mode the current-position mark is half the size of the section marks, and the ring is gone | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-035, T-114 |
 | [T-181](T-181-nothing-detects-that-a-decks-embedded-quick-view-has-drifted-from-its-source.md) | Nothing detects that a deck's embedded quick view has drifted from its source | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-069, T-070, T-107, T-121, T-179 |
 | [T-182](T-182-the-shipped-example-decks-specification-carries-three-false-claims-about-the-deck.md) | The shipped example deck's specification carries three false claims about the deck it briefed | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-115, T-117, T-128, T-184 |
-| [T-184](T-184-re-cut-the-shipped-diagrams-onto-the-text-column-and-gate-it.md) | Re-cut the shipped diagrams onto the text column, and turn the measurement into a gate | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-115, T-117, T-182 |
 | [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) | No instrument here can watch an animation play, so any rule about motion over time is unverifiable | `PH3` | - | `proposed` | `specify` | - | - | - | T-111, T-112 | T-041, T-057, T-111, T-112, T-183 |
 
 ## Closed
@@ -223,5 +222,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-179](T-179-a-quick-view-cannot-be-refreshed-after-the-renderer-changes.md) | A quick view cannot be refreshed after the renderer changes, so a renderer fix never reaches a deck that already carries one | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-070, T-107, T-121, T-181, T-183 |
 | [T-180](T-180-seed-ds-218s-failing-branch-so-the-persistent-control-check-is-watched-failing.md) | Seed DS-218's failing branch, so the persistent-control check has been watched failing | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-005, T-051, T-114 |
 | [T-183](T-183-ds-063-failed-once-in-four-full-gate-runs-on-an-unchanged-tree.md) | DS-063 failed once in four full-gate runs on a tree no code change touched | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-054, T-179, T-185 |
+| [T-184](T-184-re-cut-the-shipped-diagrams-onto-the-text-column-and-gate-it.md) | Re-cut the shipped diagrams onto the text column, and turn the measurement into a gate | `PH3` | - | `done` | `review` | - | - | - | - | T-115, T-117, T-182 |
 
 <!-- taskmd:end -->
