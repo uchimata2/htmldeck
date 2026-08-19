@@ -26,6 +26,7 @@ cannot make, which is the whole of T-038.
 Pure standard library (**L-07**) - including the PDF reading, which is a page count and no more.
 """
 
+import inspect
 import os
 import re
 import sys
@@ -47,8 +48,14 @@ def print_to_pdf(deck, dest=None):
     else's directory layout on paper and is not reachable from CSS."""
     # The deck's project, not this tool's - see `paths.output_root` and T-074.
     out = render.out_dir(deck)
-    dest = dest or os.path.join(out, "pagecount.pdf")
-    os.makedirs(os.path.dirname(os.path.abspath(dest)) or out, exist_ok=True)
+    # **Resolved here, once, and that is T-186.** `--print-to-pdf=` goes to Chrome verbatim and
+    # Chrome resolves a relative path against ITS OWN working directory - so the PDF was written
+    # somewhere else and the existence check below looked where the caller meant, returning `None`
+    # from a run that had printed a real file. It is T-094's defect exactly, in the module that
+    # change did not sweep: `abspath` was already here, on the *directory* being created, and the
+    # path handed to Chrome went out unresolved beside it.
+    dest = os.path.abspath(dest or os.path.join(out, "pagecount.pdf"))
+    os.makedirs(os.path.dirname(dest) or out, exist_ok=True)
     if os.path.exists(dest):
         os.remove(dest)
     render.chrome_run(render.file_url(deck), 1280, 800,
@@ -127,7 +134,25 @@ def verdicts(deck, slide_count):
 
 def self_test():
     """A minimal PDF with a known page count, built in memory (**L-04**). If the reader cannot
-    count two pages here it cannot be trusted to count thirteen there."""
+    count two pages here it cannot be trusted to count thirteen there.
+
+    **And one fixture over a path rather than over a PDF** (T-186). `print_to_pdf` needs a browser,
+    so what is held here is the one line of it that does not: the destination is resolved before it
+    is handed over, because Chrome resolves a relative one against its own working directory and the
+    caller never hears about it.
+    """
+    probe = "relative/destination.pdf"
+    if not os.path.isabs(os.path.abspath(probe)):
+        sys.exit("SELF-TEST FAILED: abspath returned a relative path")
+    src = inspect.getsource(print_to_pdf)
+    if "--print-to-pdf=" not in src:
+        sys.exit("SELF-TEST FAILED: print_to_pdf no longer passes --print-to-pdf, so this fixture "
+                 "is guarding a flag that has moved")
+    if "os.path.abspath(dest" not in src.replace(" ", "") and \
+       "dest=os.path.abspath(" not in src.replace(" ", ""):
+        sys.exit("SELF-TEST FAILED: the destination is not resolved before it reaches Chrome. A "
+                 "relative path is printed into Chrome's working directory and the run reports "
+                 "None from a print that succeeded (T-186)")
     fake = (b"%PDF-1.4\n1 0 obj<</Type /Pages /Count 2 /Kids[2 0 R 3 0 R]>>endobj\n"
             b"2 0 obj<</Type /Page /Parent 1 0 R>>endobj\n"
             b"3 0 obj<</Type /Page /Parent 1 0 R>>endobj\n")
