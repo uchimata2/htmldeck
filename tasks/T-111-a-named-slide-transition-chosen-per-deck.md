@@ -2,8 +2,8 @@
 id: T-111
 title: A named slide transition, chosen per deck, with slide and immediate as the shipping pair
 type: deliverable
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-016, T-041, T-057, T-112, T-185]
@@ -161,6 +161,18 @@ sound:
 | reduced motion | `check.py` DS-143 passes on a forced-reduced-motion render |
 | the whole gate | `check.py` green on all three decks |
 
+**Closed 2026-08-19, on the instrument
+[T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) built.** The paragraph below is
+what was true on 2026-08-18 and is kept because it is why this task waited; §4 carries what the
+instrument then measured. Two things it found that the 2026-08-18 table could not:
+
+- **the transition's own curve, in both directions** — the outgoing slide scales 1 → 0.94 and
+  translates 0 → −115.08 px going forward, and 0 → **+115.08** going back, over 420 ms with
+  opacity 1 → 0. Mirrored exactly, which is DS-235's *left when advancing, right when going back*
+  measured rather than read;
+- **exactly one animation targets a `section.slide`**, and it is the outgoing one. *The incoming
+  slide does not animate* was an inference from the CSS; it is now a reading.
+
 **What is NOT verified, and why the task stays open.** **No instrument in this session has a running
 document timeline**, so nothing here can watch the transition actually play:
 
@@ -178,12 +190,30 @@ does not. [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) carri
 
 ## 4. Review
 
+Re-measured 2026-08-19 in real Chrome, offline, on the 13-slide reference deck. Every row is a
+reading taken that day rather than carried from §3.
+
 | Acceptance criterion | Result | Note |
 | :--- | :--- | :--- |
-|  |  |  |
+| Both transitions named in the ruleset and selectable per deck | **pass** | DS-235 names both. `immediate` selected the way a deck selects it — `--slide-leave-fwd:none` — computes `animation-name:none` and the leaving slide goes straight to `opacity:0 visibility:hidden` |
+| `slide` animates only the outgoing slide, and the direction follows navigation in all three paths — keys, pager, ruler jump | **pass** | Keys: `ArrowRight` → `slide-leave-fwd`, `ArrowLeft` → `slide-leave-back`. Pager: `fwd`. Ruler: forward to slide 5 → `fwd`, then a **four-slide jump backwards** → `back`. Direction is the navigation's, not the slide numbers'. And only one animation targets a `section.slide` — T-185 §3 |
+| Duration and easing are theme tokens; the default is 500 ms | **pass, with the deck's own value recorded** | `themes/quarto.css` carries `--slide-dur:500ms`. All four decks here carry **420 ms**, which the tokens exist to allow — `shell/deck.js` says so in its own words, *a deck may set `--slide-dur` to anything the contract allows*, and 420 is inside DS-141's 400–500 ms reservation. Computed on the deck: `0.42s / ease-in-out / forwards` |
+| With `prefers-reduced-motion`, both behave as `immediate` | **pass** | Every one of the five navigations above, re-run under `--force-prefers-reduced-motion`: `animation-name:none`, `0s`, `fill:none`, `opacity:0 visibility:hidden`. The deck still navigates, which is the half of DS-143 a `display:none` would have broken |
+| A printed deck and a headless capture show no transition state | **pass** | Measured rather than reasoned: the deck was put into the state that should break it — motion **off**, one page turned, so the mark cannot be cleared by `animationend` and the leaving slide computes `opacity:0 visibility:hidden` on screen — and then printed. **All 14 pages are identical to a plain print**, ink and character count. What saves it is `@media print`'s `.slide{opacity:1!important;visibility:visible!important}`, written for DS-224 rather than for this, and `!important` outranks an animation's own fill state |
+| Advancing twice inside one transition leaves exactly one slide visible | **pass** | Two `next` clicks with no wait: **one** slide marked leaving, and 2 slides computing `visible` — the arriving one and the one leaving, which is the transition rather than a stranded slide. Under reduced motion the same two clicks leave **1** visible, the leaving slide already hidden |
+| Demonstrated on a real 12-slide deck with diagrams, opened and looked at, offline | **pass** | Five frames across the 580 ms navigation on the 13-slide reference deck, looked at: at 0 ms the outgoing slide is settled, at 145 ms it is smaller and sliding left under the arriving headline, at 290 ms it is a ghost, at 580 ms the new slide is settled and the old one is gone |
+| `python tools/deck/check.py` green; `render.py` green | **pass** | `python tools/check_all.py` green over the whole set |
+
+**One thing the re-measurement cost, and it is worth writing down.** The first keyboard reading said
+the arrows do not navigate at all — and the fault was the probe. A synthetic `KeyboardEvent`
+dispatched on `document` gives a listener a `Document` as `e.target`, and the handler's first line
+is `e.target.matches('input,textarea')`, which a Document does not have. The listener threw and the
+deck sat still, which reads exactly like a broken key binding. Dispatched on `document.body`, where
+a real key press lands, all four bindings work. **A negative result from an instrument nobody
+checked is not evidence** — the same shape as **L-06** and **L-110**, one level down.
 
 **Child fix tasks raised**
-- none
+- none.
 
 ## Log
 
@@ -194,3 +224,4 @@ does not. [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) carri
 | 2026-08-18 | (no change) | **Held open on the instrument, not on the work.** Nothing available here has a running document timeline — the preview pane reports `document.timeline.currentTime === 0` and will not composite, `render.py` pins motion off before capturing, and Claude in Chrome is not connected. So the deck cannot be *looked at* moving, and `CLAUDE.md` rule 6 is the bar. Raised [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md); this closes behind it. |
 | 2026-08-18 | in_progress → blocked | The implementation is finished and the gate is green; what is missing is a look, and no instrument here can give one. `blocked` rather than `in_progress` because nothing further can be done on this task until [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) lands — which is what that status is for, and the dependency propagates so nothing downstream reads this as available. |
 | 2026-08-19 | blocked → in_progress | [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) closed, so the transition can be looked at. Its measurement of this deliverable is in T-185 §3; what remains here is this task's own criteria, which reach further than the transition curve. |
+| 2026-08-19 | in_progress → done | Closed on [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md)'s instrument, and every criterion re-measured rather than carried forward. The curve is now a reading in both directions, mirrored; all three navigation paths give the direction the navigation took, including a four-slide ruler jump backwards; reduced motion collapses every path; and the print criterion was settled by **printing the state that should break it** — motion off, one page turned — and finding all 14 pages identical to a plain print. The deck's 420 ms against the theme's 500 ms default is the token working, and is recorded rather than changed. |
