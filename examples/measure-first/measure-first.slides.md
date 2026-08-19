@@ -20,16 +20,21 @@ deliverables mark each value `[example]`, `[case]` or `[D-n]`. The deck says so 
 - **Bottom line.** Too much stock and too little stock come from the same forecast.
 - **Structure.** Two equal columns on one grid, both genuinely argued — the failure mode of A-04 is a
   weaker side, and here the two sides carry three figures each. Left column *Too much stock*, right
-  column *Too little stock*. The bottom line sits below both, spanning the full width, so the
-  reader's eye lands on the join rather than on either column. Tier one is everything except the
+  column *Too little stock*. The bottom line sits below both, starting on the same left edge as the
+  columns and running to the measure the shell caps it at — 1500 of the content column's 1726
+  design units — so the reader's eye lands on the join rather than on either column. **Nothing
+  spans the content column here**: `--bottom-measure` holds a bottom line to a readable line length
+  on every slide of every deck, so *full width* is not a layout this shell offers. Tier one is everything except the
   scope panel.
 - **Text.** Left, under the heading *Too much stock*: `€18.6m held in stock` · `45% of it in two slow
   families` · `turning 1.4× a year`. Right, under *Too little stock*: `87% of orders arrive on time`
   · `~310 complaints a quarter` · `58% of them about delivery`. One standfirst above the columns:
   *Demand for dental products keeps growing. Both of these are getting worse.*
 - **Visuals.** No diagram. The two columns are the visual: a shared baseline grid track, one accent
-  rule under each heading, and the three figures set at display weight so the symmetry reads at a
-  glance. A diagram here would assert a relationship the slide has not yet earned (X-04).
+  rule under each heading, and **two figures per side set at display weight** — `€18.6m` and
+  `45%` left, `87%` and `310` right — so the symmetry reads at a glance from four marks rather
+  than six. The third figure on each side sits inside the note under the second, where it qualifies
+  the number above it rather than competing with it. A diagram here would assert a relationship the slide has not yet earned (X-04).
 - **Animations.** Rise, staggered, left column then right, so the two halves arrive as a pair rather
   than as one list.
 - **Interactive elements.** One `.disc`, `data-disc="scope"`, labelled *What "on time" counts*. It
@@ -215,10 +220,11 @@ deliverables mark each value `[example]`, `[case]` or `[D-n]`. The deck says so 
   and *outside the band* → `a person approves`. Fragment: `bands: 10% of plan, €25,000 of order
   value`.
 - **Visuals.** Inline SVG. Four boxes in sequence with labelled connectors, then a decision diamond
-  `Inside the band?` with two labelled outgoing edges — **this is where the process branches and the
-  diagram branches with it**. The diamond is drawn from the measured width of its own label so the
-  outline cannot cut the text. The two outcome boxes sit at different heights so neither edge label
-  overlaps the other edge.
+  labelled `within the band` with two labelled outgoing edges — **this is where the process branches
+  and the diagram branches with it**. The diamond is drawn from the measured width of its own label
+  so the outline cannot cut the text. The two outcome boxes sit level with each other, one on each
+  side; what keeps the edge labels apart is the length of the connectors, sized from the labels
+  themselves rather than from the diamond.
 - **Animations.** Rise across the four stages in order. Current on the two branch edges, so both
   outcomes read as live.
 - **Interactive elements.** One `.disc`, `data-disc="condition"`, labelled *When the system may act
