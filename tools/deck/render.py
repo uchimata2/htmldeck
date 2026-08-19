@@ -11,6 +11,14 @@ Two things here are not obvious and both cost time to discover (**L-26**):
 - **`--window-size` sets the outer window, not the viewport.** The viewport comes back short by a
   constant, so "1280x720" is not 720p unless the shortfall is measured and corrected. `calibrate`
   does that, and asserts the corrected size actually landed.
+- **Headless never produces a frame, so an animation's own clock never starts.** Measured
+  2026-08-19 (T-185): under this invocation `document.timeline.currentTime` stays at 0, no
+  `animationstart` or `animationend` fires, and a 420 ms animation reads `currentTime: 0` after
+  900 ms of real timers - on a compositor property and on a main-thread one alike. Adding
+  `--disable-gpu` makes the *document* timeline advance (0, 200, 900) and changes nothing about the
+  animation, which is the sharp version of the finding: **the clock a CSS animation runs on is
+  frame production, not time.** So `motion` **seeks** rather than waits. See its own docstring for
+  what that proves and what it does not.
 - **An infinite animation stops a headless render from ever settling.** DS-140's `Current` loops
   forever, so the virtual-time budget never reaches a quiescent state and `--screenshot` fires
   mid-transition, producing convincingly blank slides. Captures pin motion off first.
@@ -19,6 +27,10 @@ Two things here are not obvious and both cost time to discover (**L-26**):
     python tools/deck/render.py shots   examples/reference-deck.html
     python tools/deck/render.py shots   examples/reference-deck.html 0,4,6
     python tools/deck/render.py shots   examples/reference-deck.html --out shots/
+    python tools/deck/render.py motion  examples/reference-deck.html
+    python tools/deck/render.py motion  examples/reference-deck.html --into 4 --at 0,25,50,75,100
+    python tools/deck/render.py motion  examples/reference-deck.html --into 4 --shots
+    python tools/deck/render.py motion  examples/reference-deck.html --into 4 --back
 
 Output goes to `<the deck's project>/.assets-cache/deck/`, or to `--out`. **The deck's project, not
 this tool's** - installed as a plugin those are different directories, and writing to the second put
@@ -360,6 +372,216 @@ def cmd_shots(deck, which, out=None, w=1920, h=1234):
     print("\n%s" % out)
 
 
+# **The opposite of `PROBE`'s `quiet` half, and a separate probe rather than a flag on that one.**
+# `quiet` exists to pin motion OFF so a capture measures a settled page (DS-221); weakening it with
+# a flag would put the guarantee and its exception in one place, where the next edit reaches both.
+# T-185's scope says the exception gets its own name, and this is it.
+MOTION_PROBE = r"""
+<script>
+(function(){
+  var P = new URLSearchParams(location.search);
+  var into = parseInt(P.get('into') || '1', 10);
+  var back = P.get('back') === '1';
+  /* **A capture is one moment on one clock, and that is the whole difference between a frame and
+     a picture of nothing.** This page's animations are staggered - `rise` at delays 0, 60, 120,
+     180, 240 - and run for 340, 420, 1200 and 4500 ms. Seeking each to the same FRACTION of its
+     own duration composites five moments that never co-occur, and the result looks exactly like a
+     frame, which is **L-110**'s failure with a new face. So the capture takes an absolute
+     millisecond `t` and puts each animation at `t - delay`, clamped to its own duration - which is
+     where it would be if the page had been photographed at `t`. */
+  var seek = P.get('seekms');
+  var offs = (P.get('at') || '0,25,50,75,100').split(',');
+  function css(el){
+    var c = getComputedStyle(el);
+    return {transform: c.transform, opacity: c.opacity, filter: c.filter,
+            visibility: c.visibility, boxShadow: c.boxShadow.slice(0, 60)};
+  }
+  function who(el){
+    var name = el.tagName.toLowerCase();
+    if (el.id) { name += '#' + el.id; }
+    var cls = el.getAttribute('class');
+    if (cls) { name += '.' + cls.trim().split(/\s+/).slice(0, 3).join('.'); }
+    var sl = el.closest ? el.closest('.slide') : null;
+    return {sel: name, slide: sl ? (sl.dataset.name || '') : ''};
+  }
+  function run(){
+    var next = document.getElementById('next');
+    if (!next) { document.title = 'PROBE-ERROR no next control'; return; }
+    /* **What was already running is not part of this navigation, and telling them apart is the
+       whole of whether a capture is a frame.** The slide being left finished its own entrance
+       animations long ago; they carry `fill: both`, so they are still in `getAnimations()` and a
+       seek to t=0 rewinds them to their invisible start - which produced a capture of a page in a
+       state that never exists (**L-110**: the instrument, not the deck). Nothing in a frozen
+       headless clock distinguishes them, because every animation reads `currentTime: 0`. So take
+       the set BEFORE the click: what is new belongs to the navigation and rides its clock; what
+       was there is finished and is put at its end. */
+    /* **The backward transition is a different keyframe and needs a different arrival.**
+       DS-235 names `--slide-leave-fwd` and `--slide-leave-back`, and direction follows the
+       navigation rather than the slide numbers - so the only way to reach the second one is to
+       arrive at the slide by going back to it. Advance one further, then take Previous, and the
+       set-difference below picks up the leave-back exactly as it picks up the leave-fwd. */
+    var prev = document.getElementById('prev');
+    if (back) {
+      if (!prev) { document.title = 'PROBE-ERROR no prev control'; return; }
+      for (var m = 0; m <= into; m++) { next.click(); }
+    }
+    var before = new Set(document.getAnimations());
+    /* Drive the deck through its own control, exactly as `PROBE` does and for the same reason:
+       writing internal state would measure a transition the audience never triggers. */
+    if (back) { prev.click(); }
+    else { for (var n = 0; n < into; n++) { next.click(); } }
+    var settled = 0;
+    document.getAnimations().forEach(function(a){
+      if (before.has(a)) { try { a.finish(); } catch (e) { a.pause(); } settled++; }
+    });
+    var anims = document.getAnimations().filter(function(a){
+      return a.effect && a.effect.target && !before.has(a);
+    });
+    /* **Which slides this navigation involves.** The current one, and the one being left - the
+       latter identified by carrying the leave animation rather than by index, so a deck whose
+       transition is named differently still resolves. Everything outside a slide is chrome and
+       counts: the ruler moves as part of the same navigation. */
+    var cur = document.querySelector('.slide[data-current]');
+    var leaving = null;
+    anims.forEach(function(a){
+      var n = a.animationName || '';
+      if (n.indexOf('slide-leave') === 0 && a.effect.target.classList &&
+          a.effect.target.classList.contains('slide')) {
+        leaving = a.effect.target;
+      }
+    });
+    var out = {into: into, count: anims.length, settled: settled, anims: []};
+    anims.forEach(function(a){
+      var el = a.effect.target, tm = a.effect.getTiming();
+      var dur = (typeof tm.duration === 'number') ? tm.duration : 0;
+      var sl = el.closest ? el.closest('.slide') : null;
+      var row = {name: a.animationName || (a.effect.getKeyframes ? '(effect)' : ''),
+                 target: who(el), duration: dur, easing: tm.easing, fill: tm.fill,
+                 delay: tm.delay, iterations: tm.iterations,
+                 /* finite, and on a slide this navigation is moving between, or on the chrome */
+                 inNav: (tm.iterations === 1) && (!sl || sl === cur || sl === leaving),
+                 stateBefore: a.playState, at: []};
+      a.pause();
+      var want;
+      if (seek !== null && seek !== undefined) {
+        var at = parseFloat(seek) - (tm.delay || 0);
+        want = [Math.max(0, Math.min(dur, at))];
+      } else {
+        /* The report is per animation and stays a fraction of each one's own duration: it
+           describes one animation's lifecycle, where a fraction is the right unit. */
+        want = offs.map(function(p){ return dur * (parseFloat(p) / 100); });
+      }
+      want.forEach(function(ms){
+        a.currentTime = ms;
+        row.at.push({ms: Math.round(ms * 100) / 100, read: a.currentTime,
+                     state: a.playState, css: css(el)});
+      });
+      out.anims.push(row);
+    });
+    if (seek === null || seek === undefined) {
+      var el = document.createElement('div');
+      el.textContent = 'RESULT' + JSON.stringify(out) + 'ENDRESULT';
+      document.body.appendChild(el);
+    }
+  }
+  if (document.readyState === 'complete') { setTimeout(run, 60); }
+  else { window.addEventListener('load', function(){ setTimeout(run, 60); }); }
+})();
+</script>
+"""
+
+
+def motion_span(anims):
+    """How long the navigation's clock runs, in ms - `delay + duration`, over the animations it
+    started. Returns `None` when none of them belongs to it.
+
+    **Pure, so the fixtures can reach it without a browser** (**L-07**), and it is worth reaching:
+    a span taken over the wrong set is a capture of five settled pages that looks exactly like a
+    capture of a transition.
+    """
+    innav = [a for a in anims if a.get("inNav")]
+    if not innav:
+        return None
+    return max(a["delay"] + a["duration"] for a in innav)
+
+
+def cmd_motion(deck, into=1, at=None, shots=False, back=False, out=None, w=1920, h=1234):
+    """Report what the animations a navigation produces are, and what they look like part way.
+
+    **This seeks; it does not watch.** Headless Chrome produces no frames, so no animation's own
+    clock ever starts - measured 2026-08-19 across four invocations, on a compositor property and a
+    main-thread one alike (T-185, and the module docstring above carries the numbers). What the Web
+    Animations API still offers is a **settable `currentTime`**, and the computed style follows it
+    exactly: a 420 ms linear fade reads opacity 0, 0.25, 0.5, 0.75, 1 at the five offsets, and an
+    eased width reads its own curve rather than a straight line.
+
+    **So be exact about what a green run here means.** It proves the animation exists on the
+    element the CSS names, with the duration, easing, fill and iteration count the CSS intends, and
+    that every intermediate state interpolates to what the keyframes say - which is what
+    `CLAUDE.md` rule 6 needs to look at a transition, and it is more than anything here could
+    answer before. It does **not** prove the animation plays: frame rate, dropped frames and
+    compositor behaviour are all downstream of frame production, and this instrument has none.
+    A frame-rate figure is T-057's and needs a real browser.
+    """
+    at = at or [0, 25, 50, 75, 100]
+    probe = make_probe(deck, name="motion.html", extra=MOTION_PROBE, out=out)
+    where = os.path.dirname(probe)
+    url = (file_url(probe) + "?into=%d&at=%s%s"
+           % (into, ",".join(str(x) for x in at), "&back=1" if back else ""))
+    data, err = read_result(url, w, h)
+    if not data:
+        print("no result - the navigation produced nothing to read\n%s" % err[:300])
+        return 1
+    print("%s slide %d by the deck's own %s control - %d animation(s) this navigation "
+          "started, %d already-finished one(s) put at their end"
+          % ("back into" if back else "into", data["into"] + 1,
+             "Previous" if back else "Next", data["count"], data.get("settled", 0)))
+    if not data["count"]:
+        print("\nNothing is animating. Either the transition is `immediate` for this deck, or the "
+              "navigation did not happen - and those are different, so check which.")
+        return 1
+    for a in data["anims"]:
+        print("\n  %s on %s%s" % (a["name"] or "(unnamed effect)", a["target"]["sel"],
+                                  ("  [slide %s]" % a["target"]["slide"]) if a["target"]["slide"] else ""))
+        print("    %s ms, %s, fill %s, delay %s, iterations %s"
+              % (a["duration"], a["easing"], a["fill"], a["delay"], a["iterations"]))
+        print("    %8s %8s %-10s %-9s %s" % ("seek", "read", "state", "opacity", "transform"))
+        for s in a["at"]:
+            print("    %8s %8s %-10s %-9s %s"
+                  % (s["ms"], s["read"], s["state"], s["css"]["opacity"],
+                     s["css"]["transform"][:44]))
+        moved = len(set(json.dumps(s["css"]) for s in a["at"])) > 1
+        print("    the computed style %s across the offsets"
+              % ("MOVES" if moved else "DOES NOT MOVE - the seek reached nothing"))
+    if shots:
+        # **One clock, and its span is stated rather than assumed.** The span runs to the last
+        # moment anything this navigation started is still moving - `delay + duration`, over the
+        # finite animations on the two slides involved and on the chrome. An animation looping on
+        # a slide nobody is looking at (DS-140's `Current`, 4500 ms) would otherwise stretch every
+        # offset past the end of the transition and photograph five settled pages.
+        span = motion_span(data["anims"])
+        if span is None:
+            print("\nNo finite animation belongs to this navigation, so there is no clock to "
+                  "sample. Nothing captured.")
+            return 1
+        innav = [a for a in data["anims"] if a.get("inNav")]
+        print("\nclock: 0 to %g ms - the last moment anything this navigation started is still "
+              "moving, over %d of %d animation(s)" % (span, len(innav), len(data["anims"])))
+        for pct in at:
+            ms = span * (float(pct) / 100)
+            dest = os.path.join(where, "motion-%s%03d.png" % ("back-" if back else "", int(pct)))
+            chrome_run(file_url(probe) + "?into=%d&seekms=%s%s"
+                       % (into, ms, "&back=1" if back else ""), w, h,
+                       ["--screenshot=" + dest])
+            if os.path.isfile(dest) and os.path.getsize(dest):
+                print("  %s  %.0f KB  the page at %.0f ms"
+                      % (os.path.basename(dest), os.path.getsize(dest) / 1024, ms))
+            else:
+                print("  %s  FAILED - no image at %s" % (os.path.basename(dest), dest))
+        print("\n%s" % where)
+    return 0
+
+
 SECTION_CLASS = re.compile(r'<section[^>]*\sclass="([^"]*)"', re.I)
 
 
@@ -435,6 +657,30 @@ def self_test():
     if counted != 4:
         sys.exit("SELF-TEST FAILED: slide_count read %d slides out of a fixture holding 4 - it no "
                  "longer matches `slide` as a class token, so it and the DOM count disagree" % counted)
+    # ---- `motion`'s clock (T-185) ------------------------------------------------------------
+    # **The span is taken over the navigation's own animations and nothing else.** A deck carries
+    # DS-140's `Current` looping at 4500 ms on a slide nobody is looking at; letting it into the
+    # span puts every requested offset past the end of a 420 ms transition, and five captures of a
+    # settled page look exactly like five captures of a transition that does not move.
+    fixture = [
+        {"delay": 0, "duration": 420, "inNav": True},      # the slide transition
+        {"delay": 240, "duration": 340, "inNav": True},     # the last staggered rise
+        {"delay": 0, "duration": 4500, "inNav": False},     # `Current`, looping, another slide
+    ]
+    if motion_span(fixture) != 580:
+        sys.exit("SELF-TEST FAILED: the motion clock ran to %s ms, not 580. It is `delay + "
+                 "duration` over the navigation's own animations - a looping one on a slide "
+                 "nobody is looking at must not stretch it" % motion_span(fixture))
+    if motion_span([{"delay": 0, "duration": 4500, "inNav": False}]) is not None:
+        sys.exit("SELF-TEST FAILED: a navigation that started nothing returned a clock. There is "
+                 "no moment to sample, and a span invented here is a capture of nothing")
+    if "before" not in MOTION_PROBE or "getAnimations" not in MOTION_PROBE:
+        sys.exit("SELF-TEST FAILED: the motion probe no longer takes the animation set BEFORE the "
+                 "click. Without it, animations that finished long ago are rewound to their start "
+                 "and the capture is of a page that never exists")
+    if "animation:none" in MOTION_PROBE:
+        sys.exit("SELF-TEST FAILED: the motion probe pins motion off. It is the one path that must "
+                 "not - DS-221's default lives in PROBE and this is its named exception")
     return True
 
 
@@ -460,6 +706,43 @@ def main(argv):
     # '--out'` at exactly the step that closes the *visual* gate. Reported from a real project on
     # 2026-08-10, which found seven geometry defects by working around it.
     rest, out = list(argv[2:]), None
+
+    # **`motion` takes its own options and is parsed before the shared ones**, because the shared
+    # path below rejects every unknown flag by design - which is what stops a documented flag going
+    # unimplemented for a second time (T-074, and the note under `--out`).
+    if cmd == "motion":
+        into, at, shots = 1, [0, 25, 50, 75, 100], False
+        if "--into" in rest:
+            i = rest.index("--into")
+            if i + 1 >= len(rest):
+                sys.exit("--into needs a slide number")
+            into = int(rest[i + 1])
+            del rest[i:i + 2]
+        if "--at" in rest:
+            i = rest.index("--at")
+            if i + 1 >= len(rest):
+                sys.exit("--at needs a comma-separated list of percentages")
+            at = [float(x) for x in rest[i + 1].split(",")]
+            del rest[i:i + 2]
+        if "--shots" in rest:
+            shots = True
+            rest.remove("--shots")
+        back = "--back" in rest
+        if back:
+            rest.remove("--back")
+        if "--out" in rest:
+            i = rest.index("--out")
+            if i + 1 >= len(rest):
+                sys.exit("--out needs a directory")
+            out = rest[i + 1]
+            del rest[i:i + 2]
+        if rest:
+            sys.exit("unknown option %r - `motion` takes [--into N] [--at a,b,c] [--back] "
+                     "[--shots] [--out <dir>]" % rest[0])
+        print("browser: %s" % CHROME)
+        print("deck:    %s\n" % paths.display_path(deck, ROOT))
+        return cmd_motion(deck, into=into, at=at, shots=shots, back=back, out=out)
+
     if "--out" in rest:
         i = rest.index("--out")
         if i + 1 >= len(rest):
@@ -482,7 +765,7 @@ def main(argv):
     elif cmd == "shots":
         cmd_shots(deck, which, out=out)
     else:
-        sys.exit("unknown command %r - use measure or shots" % cmd)
+        sys.exit("unknown command %r - use measure, shots or motion" % cmd)
     return 0
 
 

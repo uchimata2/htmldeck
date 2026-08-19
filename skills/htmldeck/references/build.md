@@ -176,6 +176,12 @@ python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py <slug>.html [--sources <dir>] -
 python ${CLAUDE_PLUGIN_ROOT}/tools/deck/render.py shots <slug>.html --out <dir>
 ```
 
+**If the deck names a transition, look at it too.** `render.py motion <slug>.html --into 1 --shots`
+seeks the animations a navigation starts along one clock and writes a frame at each point, which is
+the only way anything here can show you a transition part way through — headless produces no
+frames, so nothing plays. It reports what does not play either: an animation whose computed style
+does not move across the offsets never reached the element the CSS names.
+
 **Pass `--quiet` to that fourth command and read the default without it.** A passing run prints its
 notes and one line carrying the rule partition — 345 bytes instead of 17,581 — and a run that is
 not passing prints everything either way, so the flag costs no diagnosis. Drop it when you want the

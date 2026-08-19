@@ -150,6 +150,7 @@ comes here.
 | [L-119](lessons/L-119.md) | Pairing two independent measurements by position turns a rare dropped sample into a false verdict | Tooling |
 | [L-120](lessons/L-120.md) | A centred viewBox inserts a margin nobody authored, and it looks exactly like one that was | Tooling |
 | [L-121](lessons/L-121.md) | "Matches X exactly" holds only where the two are declared together | Tooling |
+| [L-122](lessons/L-122.md) | A frozen clock makes a finished thing and an unstarted thing read alike | Tooling |
 
 ### Writing
 

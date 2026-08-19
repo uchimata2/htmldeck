@@ -307,6 +307,24 @@ because a preview pane is not a faithful `file://` environment: it allowed a loc
 real restricted origin denies, and it drew a diagram as broken whose DOM geometry was correct to the
 pixel (**L-06**, **L-15**).
 
+**`render.py motion` is the third instrument, and it exists because the other two cannot watch
+anything move.** Headless Chrome produces no frames, so no animation's own clock ever starts: a
+420 ms transition reads `currentTime: 0` after 900 ms of real timers, and no `animationend` fires.
+What the Web Animations API still offers is a settable `currentTime`, and the computed style
+follows it exactly. So `motion` drives the deck through its own Next control, takes the animation
+set the navigation *created*, and seeks that set along one clock:
+
+```bash
+python tools/deck/render.py motion examples/reference-deck.html --into 1 --shots
+```
+
+It reports each animation's name, duration, easing, fill and the state of its element part way
+through, and `--shots` writes a frame at chosen points on that clock. **Be exact about what a green
+run means**: it proves the animation exists with the timing the CSS intends and that every
+intermediate state interpolates to what the keyframes say — which is what makes a transition
+something a person can look at. It does not prove the animation *plays*, because frame rate and
+dropped frames are downstream of frame production and this instrument has none.
+
 Running `check.py` over both decks is what produced the table above: the good deck reports **0
 failures**; the seeded deck reports **4**, spread across three dimensions, and the other seven
 seeded defects are invisible to it.
