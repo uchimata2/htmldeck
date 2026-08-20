@@ -267,7 +267,7 @@ svg{display:block}
 }
 .disc-mark::before{width:var(--disc-mark-bar);height:var(--disc-mark-stroke)}
 .disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);
-  transition:transform var(--turn-dur) var(--turn-ease);--motion-kind:affordance}
+  transition:transform var(--afford-dur) var(--afford-ease);--motion-kind:affordance}
 .disc-btn[aria-expanded="true"] .disc-mark::after{transform:translate(-50%,-50%) rotate(90deg)}
 .disc-panel{                                     /* opens below the control (DS-138) */
   position:absolute;top:calc(100% + var(--sp-2));left:0;
@@ -330,7 +330,7 @@ svg{display:block}
 .ruler-ticks button::before{
   content:"";display:block;width:var(--rule);height:calc(14*var(--du));
   border-radius:var(--radius-xs);background:var(--ui-line);
-  transition:background var(--scale-dur) var(--scale-ease),height var(--scale-dur) var(--scale-ease);
+  transition:background var(--afford-dur) var(--afford-ease),height var(--afford-dur) var(--afford-ease);
   --motion-kind:affordance;
 }
 /* the stage starts - the seven that stay targets past the bound */
@@ -386,7 +386,7 @@ svg{display:block}
   width:calc(30*var(--du));height:calc(30*var(--du));margin-top:calc(-15*var(--du));
   border:var(--rule) solid var(--accent);border-radius:50%;
   transform:translateX(calc(var(--rx,0px) - 15*var(--du)));
-  transition:transform var(--scale-dur) var(--scale-ease);
+  transition:transform var(--afford-dur) var(--afford-ease);
   --motion-kind:affordance;
   pointer-events:none;
 }
@@ -419,7 +419,7 @@ svg{display:block}
   border:var(--rule) solid var(--accent);border-radius:var(--radius);
   background:none;
   transform:translateX(calc(var(--rx,0px) - 5*var(--du)));
-  transition:transform var(--scale-dur) var(--scale-ease);
+  transition:transform var(--afford-dur) var(--afford-ease);
   --motion-kind:affordance;
   pointer-events:none;
 }
@@ -496,13 +496,18 @@ svg{display:block}
 }
 /* **The highlight fades in rather than snapping.** T-112's first affordance motion: a control
    that changes colour between two frames answers *is this interactive?* with a flicker, and one
-   that takes 180 ms answers it with a gesture. It borrows Scale's pair because it is the same
-   question the ruler's ring answers - *this is the thing you are pointing at* - and a second
-   duration token for one more hover state would be a value nobody could tell from this one. */
-.btn{transition:border-color var(--scale-dur) var(--scale-ease),
-                color var(--scale-dur) var(--scale-ease),
-                background var(--scale-dur) var(--scale-ease),
-                transform var(--turn-dur) var(--turn-ease);
+   that takes a beat answers it with a gesture.
+
+   **It reads the affordance band, not Scale's pair (DS-240, T-198).** It borrowed Scale until
+   2026-08-20, on the argument that a second duration token for one more hover state would be a
+   value nobody could tell from this one. That was wrong in the direction nobody checks: the
+   borrowed pair is paced for a reveal, so the pager's press acknowledgement took **420 ms** and
+   the owner reported the controls as broken. A control answers the hand and a reveal answers the
+   argument; they are two clocks and the theme now has both. */
+.btn{transition:border-color var(--afford-dur) var(--afford-ease),
+                color var(--afford-dur) var(--afford-ease),
+                background var(--afford-dur) var(--afford-ease),
+                transform var(--afford-dur) var(--afford-ease);
      --motion-kind:affordance}
 .btn:hover{border-color:var(--accent);color:var(--ink)}
 /* THE PAGER, filled (T-114). The complaint that opened the task was that prev/next read as an
@@ -521,7 +526,16 @@ svg{display:block}
    exactly the kind of value a second theme would set differently. */
 .btn.btn--pager:hover{transform:rotate(var(--pager-tilt))}
 .btn.btn--pager.is-back:hover{transform:rotate(calc(-1 * var(--pager-tilt)))}
-.btn.btn--pager:active{transform:scale(var(--pager-pinch))}
+/* **The press names both buttons, and that is the fix rather than tidiness (T-199, DS-240).** A
+   press happens while the pointer is hovering, so both rules match and the cascade decides. The
+   back button's hover rule carries three classes and outranked a two-class `:active`, so Previous
+   rendered its lean and never its pinch - for as long as the pager has existed, on every deck
+   shipped, and no check here can watch an animation play (T-185). Naming `.is-back` on this
+   selector makes the two buttons symmetric by construction instead of by source order, which is
+   all that was holding Next up. */
+.btn.btn--pager:active,
+.btn.btn--pager.is-back:active{transform:scale(var(--pager-pinch));
+  transition:transform var(--press-dur) var(--press-ease);--motion-kind:affordance}
 .btn svg{width:var(--icon-ui);height:var(--icon-ui)}
 .btn .chev{width:var(--chev);height:var(--chev);border-right:var(--chev-stroke) solid currentColor;
   border-bottom:var(--chev-stroke) solid currentColor}

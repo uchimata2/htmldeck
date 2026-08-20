@@ -153,11 +153,21 @@
   --pulse-dur:1.2s;
   --pulse-ease:ease-in-out;
   --pulse-delay:600ms;
-  /* T-112. How much of the deck's CONTENT motion runs, 0-100. Affordance motion - a hover state,
-     a control turning, the flow arrow, the slide you just left - is not governed by it and runs at
-     every value. The default is deliberately low: a deck should be mostly still, with the occasional
-     moment, rather than a continuously moving surface. */
-  --motion-density:10;
+  /* DS-240, T-198. A CONTROL'S ANSWER TO THE HAND, which is a shorter clock than anything the
+     argument moves on. `linear` is deliberate: a state that tracks a pointer has no arrival to
+     shape. The press is shorter still and overshoots on arrival - that overshoot is the whole
+     reason a press reads as physical, and it is the one moment a control has to say *I got that*
+     before the slide changes. */
+  --afford-dur:200ms;
+  --afford-ease:linear;
+  --press-dur:100ms;
+  --press-ease:cubic-bezier(.34,1.56,.64,1);
+  /* T-112, raised to 100 on 2026-08-20 by T-188. How much of the deck's CONTENT motion runs,
+     0-100. Affordance motion - a hover state, a control turning, the flow arrow, the slide you
+     just left - is not governed by it and runs at every value. The default now runs every content
+     motion the deck carries: at 10 a deck ran exactly one, because it holds too few content
+     motions for a tenth to mean a tenth. Lowering it again is optimisation, and deferred. */
+  --motion-density:100;
   --pager-tilt:3deg;            /* how far the pager leans toward where it is going (T-112) */
   --pager-pinch:.94;            /* what it shrinks to while held */
   --dot-stagger:8ms;            /* the gap between two dots arriving; 30 of them stay inside DS-141 */

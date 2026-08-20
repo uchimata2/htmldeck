@@ -2,12 +2,13 @@
 id: T-188
 title: Raise the shipped motion density default from 10 to 100, and correct every document that states the old figure
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-112, T-187]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: medium
 effort: s
@@ -99,28 +100,37 @@ either fixing it or dropping it. If it is real it is a separate defect and gets 
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Change the token in the shipped theme and in every deck that declares it | `themes/quarto.css`, three decks, the fixture |
+| 2 | Correct every document stating the old figure as a fact | DS-238, THEME-CONTRACT.md, RELEASE-PHASES.md |
+| 3 | Re-derive the seeded-defect fixture rather than editing it | `seed_defects.py --check` green |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- none yet
+- **`components.css`'s density prose stays.** T-188 asked whether line 626 reads as a statement of the default. It does not - *density 10 runs the tenth of the deck's content motions that were ranked first* illustrates the arithmetic and stays true at any default. Checked and left alone rather than reworded - 2026-08-20.
+- **All four decks carried `10`, not the two the task located.** `sort-window` and `measure-first` were found by grepping rather than by the located list, which had only the reference deck and the fixture - 2026-08-20.
 
 **Outputs produced**
-- none yet
+- `themes/quarto.css`
+- `docs/DESIGN-SYSTEM.md` DS-238
+- `docs/THEME-CONTRACT.md` `--motion-density`
+- `examples/reference-deck.html`, `sort-window`, `measure-first`, and the fixture
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The token is 100 in the shipped theme and in every deck | **pass** | measured in the browser: `--motion-density` resolves to `100` |
+| No document states the old figure as a fact | **pass** | grep for `density 10` and `default of **10**` returns only the amendment notes, which state it as history |
+| The fixture is derived, not edited | **pass** | `seed_defects.py --check` green |
 
 **Child fix tasks raised**
-- none yet
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-19 | → proposed | Created from the owner's ruling of the same day, answering the question T-112 §4 shipped without being asked. Raised as its own task rather than reopening T-112, which is `done`: the value is one token but it is asserted as a fact in four documents, and a change that leaves them behind is the defect this project keeps finding in figures. |
+| 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Implemented with T-198 and T-199; one theme, one edit. |
+| 2026-08-20 | -> done | All three criteria met. Awaiting a release for `shipped_in`. |

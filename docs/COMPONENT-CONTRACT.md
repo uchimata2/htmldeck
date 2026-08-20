@@ -502,9 +502,18 @@ remembered to tokenise.
 | `.pulse` | Pulse-once (DS-140) | `--pulse-dur` `--pulse-ease` `--pulse-delay` |
 | `.opening` | Open (DS-140) | `--open-dur` `--open-ease` |
 | `@keyframes open` | Open | `--open-rise` `--open-squash` |
-| `.disc-mark::after` | Turn (DS-140) | `--turn-dur` `--turn-ease` |
-| `.ruler-ticks button::before` | Scale (DS-140) | `--scale-dur` `--scale-ease` |
-| `.ruler[data-ticks="dot"] .ruler-ring` | a transition (DS-141) | `--scale-dur` `--scale-ease` |
+| `.disc-mark::after` | a control answering the hand (DS-240) | `--afford-dur` `--afford-ease` |
+| `.ruler-ticks button::before` | a control answering the hand (DS-240) | `--afford-dur` `--afford-ease` |
+| `.ruler[data-ticks="dot"] .ruler-ring` | a control answering the hand (DS-240) | `--afford-dur` `--afford-ease` |
+| `.btn` | a control answering the hand (DS-240) | `--afford-dur` `--afford-ease` |
+| `.btn.btn--pager:active` | the press (DS-240) | `--press-dur` `--press-ease` |
+
+*The first three read Turn's and Scale's pairs until 2026-08-20. They were never reveals — each is
+a control saying* this is the thing you are pointing at *— and borrowing a reveal's clock is what
+made the pager's press take 420 ms.
+[T-198](../tasks/T-198-give-affordance-motion-its-own-band-faster-than-content-motion.md) moved
+them onto the band DS-240 states, and added the two rows below them, which were animating with no
+row here at all.*
 
 **Durations are covered from the other side and are not re-checked here.**
 `theme.py check` scans every length, duration and easing curve written outside the theme region and

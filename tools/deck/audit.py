@@ -404,6 +404,101 @@ def ds141_durations(h):
     return True
 
 
+BAND_TOKEN = re.compile(r"var\(\s*--(?:afford|press)-(?:dur|ease)\s*\)")
+TRANSFORM_DECL = re.compile(r"[;{]\s*transform\s*:")
+
+
+def _specificity(sel):
+    """`(ids, classes, types)` for the simple selectors this ruleset writes.
+
+    A pseudo-element is stripped first, so `::before` cannot be read as a pseudo-*class*; what is
+    left counts classes, attribute selectors and pseudo-classes together, which is what CSS does.
+    """
+    s = re.sub(r"::[a-zA-Z-]+", " ", sel.strip())
+    ids = len(re.findall(r"#[\w-]+", s))
+    cls = (len(re.findall(r"\.[\w-]+", s))
+           + len(re.findall(r"\[[^\]]*\]", s))
+           + len(re.findall(r":[a-zA-Z-]+(?:\([^)]*\))?", s)))
+    rest = re.sub(r"[#.][\w-]+|\[[^\]]*\]|:[a-zA-Z-]+(?:\([^)]*\))?", " ", s)
+    return (ids, cls, len(re.findall(r"[a-zA-Z][\w-]*", rest)))
+
+
+def _rules(h):
+    """`[(selector, body)]` for the deck's CSS, **with comments removed first**.
+
+    `re.findall(r"([^{}]+)\\{([^{}]*)\\}", css(h))` is the house pattern and it reads everything
+    between the previous `}` and the next `{` as the selector - which includes any comment written
+    above the rule. This ruleset comments almost every rule, so a test like `selector.endswith(
+    ":active")` silently matches nothing. Found 2026-08-20 by seeding T-199's defect back into the
+    reference deck and watching DS-240 report it clean.
+    """
+    return re.findall(r"([^{}]+)\{([^{}]*)\}", re.sub(r"/\*.*?\*/", " ", css(h), flags=re.S))
+
+
+def _compound(base):
+    """The simple selectors of one compound as a set, or None where a combinator makes it two.
+
+    `.btn.btn--pager` -> `{'.btn', '.btn--pager'}`. A base carrying a descendant, child or sibling
+    combinator describes a relationship between two elements and is not something this compares.
+    """
+    base = base.strip()
+    if not base or re.search(r"[\s>+~]", base):
+        return None
+    return frozenset(re.findall(r"\[[^\]]*\]|[#.][\w-]+|[a-zA-Z][\w-]*", base))
+
+
+def ds240_band_is_closed(h):
+    """DS-240 - `--afford-*` and `--press-*` appear only inside a rule declaring `affordance`.
+
+    The short band exists because a control answers the hand faster than the argument moves. If a
+    content motion may reach for it, it is not a band for controls - it is a way around DS-141's
+    cap, and the rule that admits the exception is the rule that repeals the cap.
+    """
+    for _sel, body in _rules(h):
+        if BAND_TOKEN.search(body) and "--motion-kind:affordance" not in body.replace(" ", ""):
+            return False
+    return True
+
+
+def ds240_press_beats_hover(h):
+    """DS-240 - where one element has both, the `:active` transform outranks the `:hover` one.
+
+    **This is the check for a defect no render can see** (T-185, T-199). A press happens while the
+    pointer is hovering, so both rules match and the cascade decides. The pager's back button
+    carried `.btn.btn--pager.is-back:hover` at three classes against `.btn.btn--pager:active` at
+    two, so it drew its lean and never its pinch - on every deck ever shipped here, with both
+    declarations present and a screenshot unable to tell. The cascade is computable from the
+    stylesheet, which is why this is `auto` rather than a look.
+
+    Scoped to a selector **ending** in the pseudo-class: `.a:hover .b` is one element reacting to
+    another and is not this rule's subject.
+
+    **Matching bases by string is what the first draft of this check did, and it reported the very
+    defect it was written for as clean.** The two rules do not share a base: the hover is
+    `.btn.btn--pager.is-back` and the press is `.btn.btn--pager`, which is a *superset* relation
+    rather than equality - the press rule matches the element the hover rule matches, with fewer
+    classes and therefore less weight, which is the whole mechanism of the fault. So a press is a
+    candidate for a hover when its compound is a **subset** of the hover's.
+    """
+    hovers, actives = [], []
+    for i, (sel, body) in enumerate(_rules(h)):
+        if not TRANSFORM_DECL.search(";" + body):
+            continue
+        for one in sel.split(","):
+            one = one.strip()
+            for pseudo, bucket in ((":hover", hovers), (":active", actives)):
+                if not one.endswith(pseudo):
+                    continue
+                compound = _compound(one[:-len(pseudo)])
+                if compound is not None:
+                    bucket.append((compound, (_specificity(one), i)))
+    for compound, hover_key in hovers:
+        press = [k for c, k in actives if c <= compound]
+        if press and max(press) < hover_key:
+            return False
+    return True
+
+
 def ds144_no_3d_between_slides(h):
     """DS-144 - no 3D transitions between slides. The 3D reveal of a card is permitted, so the
     check is scoped to rules that target a slide rather than to the file."""
@@ -650,6 +745,8 @@ STATIC = [
     ("DS-118", "no literal colour in a fill= or stroke=", ds118_svg_colour_from_css),
     ("DS-119", "every <canvas> carries pixel dimensions", ds119_canvas_dimensions),
     ("DS-141", "no duration over 500 ms outside DS-140's vocabulary", ds141_durations),
+    ("DS-240", "the short band is reached only by affordance motion", ds240_band_is_closed),
+    ("DS-240", "a control's press outranks its own hover", ds240_press_beats_hover),
     ("DS-144", "no 3D transform on a slide transition", ds144_no_3d_between_slides),
     ("DS-163", "no :hover rule revealing content", ds163_no_hover_only),
     ("DS-165", "the disclosure mark is not restyled per slide", ds165_one_disclosure_mark),
