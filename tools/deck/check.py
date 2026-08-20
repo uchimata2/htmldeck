@@ -447,6 +447,7 @@ def static_rows(html):
     # deck with one slide and no SVG has pointed nowhere and must not read as one whose references
     # were checked.
     rows += audit.marker_verdicts(html)
+    rows += audit.eyebrow_verdicts(html)
     # DS-005, added by T-093. Same shape and same reason as the two rows above: the verdict needs a
     # count in its text, and the boolean it replaced forbade `import(blob:)` - the one route R6 §6
     # measured as working, and the one DS-006 exists to make work.

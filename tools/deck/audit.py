@@ -542,6 +542,61 @@ def ds240_press_beats_hover(h):
     return True
 
 
+EYEBROW = re.compile(r'<p[^>]*\bclass="[^"]*\beyebrow\b[^"]*"[^>]*>(.*?)</p>', re.S | re.I)
+TICK_SPAN = re.compile(r'<span[^>]*\bclass="[^"]*\btick\b[^"]*"[^>]*>.*?</span>', re.S | re.I)
+HEADLINE_EL = re.compile(r'<h2[^>]*\bclass="[^"]*\bheadline\b[^"]*"[^>]*>(.*?)</h2>', re.S | re.I)
+STAGES_VAR = re.compile(r"var\s+STAGES\s*=\s*\[(.*?)\]", re.S)
+STARTS_WITH_POSITION = re.compile(r"^\d+\s*[·–—\-.|/:]")
+
+
+def _stage_names(h):
+    m = STAGES_VAR.search(h)
+    if not m:
+        return set()
+    return set(x.strip("'\" ").lower() for x in re.findall(r"'[^']*'|\"[^\"]*\"", m.group(1)))
+
+
+def _flat(fragment):
+    return " ".join(content.runs(fragment)).strip()
+
+
+def _norm_words(text):
+    return set(w for w in re.findall(r"[a-z0-9]+", text.lower()) if len(w) > 2)
+
+
+def ds241_eyebrow_offenders(h):
+    """`[slide-name]` for every eyebrow that does not name its slide's subject.
+
+    **The eyebrow is the one place a presenter can learn what is on screen before speaking**, and
+    two of the three decks shipped here spent it on `02 · Why now` - the position, which the ruler
+    prints, beside the stage, which the ruler also prints. So the most prominent line after the
+    headline said nothing that was not already on the screen twice, and a presenter had to read the
+    whole slide to find out what it was about. Reported by the owner 2026-08-20 against a deck where
+    a RACI chart and an AI policy were distinguishable only by reading them (T-197).
+
+    Three mechanical failures, and the positive half - *is that the right name* - is a reading this
+    cannot make and DS-241 hands to the critique pass.
+    """
+    stages = _stage_names(h)
+    bad = []
+    for m in SLIDE_BLOCK.finditer(content.strip_comments(h)):
+        block, inner = m.group(0), m.group(1)
+        name = re.search(r'data-name="([^"]*)"', block)
+        name = name.group(1) if name else "?"
+        em = EYEBROW.search(inner)
+        if not em:
+            continue                      # the part's presence is DS-229's, not this rule's
+        text = _flat(TICK_SPAN.sub(" ", em.group(1)))
+        head = HEADLINE_EL.search(inner)
+        head = _flat(head.group(1)) if head else ""
+        if (not text
+                or STARTS_WITH_POSITION.match(text)
+                or text.lower() in stages
+                or (head and _norm_words(text) and _norm_words(text) <= _norm_words(head))):
+            bad.append(name)
+    return bad
+
+
 def ds144_no_3d_between_slides(h):
     """DS-144 - no 3D transitions between slides. The 3D reveal of a card is permitted, so the
     check is scoped to rules that target a slide rather than to the file."""
@@ -928,6 +983,15 @@ def marker_verdicts(html):
              % (len(bad), examined,
                 "" if not bad else " - " + "; ".join("%s: #%s" % b for b in bad[:3])),
              not bad)]
+
+
+def eyebrow_verdicts(html):
+    """DS-241's row. The offending slides travel in the text, per T-193."""
+    bad = ds241_eyebrow_offenders(html)
+    return [("DS-241",
+             "eyebrows naming the position, the stage or the headline instead of the subject: "
+             "%d%s" % (len(bad), _naming(bad)), not bad)]
+
 
 
 # ------------------------------------------------------------- stage 1c: the provenance mark
@@ -1830,6 +1894,14 @@ ABSENCE_IS_A_PASS = {
                               "- *0 naming a path, of 0 sites* and *of 12* are the same boolean and "
                               "not the same fact (T-093)"),
     "DS-035": ("prohibition", "no text run under 16 design units; the subject is the deck's text"),
+    "DS-241": ("prohibition", "no eyebrow spending itself on the position, the stage or the "
+                              "headline's own words. **The row is written as the prohibition on "
+                              "purpose**, and the choice is worth stating: the rule's positive "
+                              "half - *is that the right name for what is on the slide* - is a "
+                              "reading, so what is left for a program is the four things the name "
+                              "must not be. A slide carrying no eyebrow at all is skipped rather "
+                              "than failed; whether the part is present is DS-229's question and "
+                              "answering it twice would put two rules on one subject"),
     "DS-043": ("prohibition", "no box nested in a box that carries its own text"),
     "DS-073": ("guarded by DS-070", "the reflow view's sections; DS-070 fails when it never "
                                     "engaged, so there is no run in which this is the only silence"),
@@ -2353,7 +2425,8 @@ def self_test():
         # found nothing, which is a different thing from a render where the preference never took -
         # `reduced_verdicts` reports that one as its own failure and it is not an absent subject.
         rows = (render_verdicts(empty) + split_verdicts("") + provenance_verdicts("")
-                + fetch_verdicts("") + marker_verdicts("") + reduced_verdicts(reduced))
+                + fetch_verdicts("") + marker_verdicts("") + eyebrow_verdicts("")
+                + reduced_verdicts(reduced))
     except KeyError as exc:
         sys.exit("SELF-TEST FAILED: a verdict reads data[%s] unconditionally, so it is not in "
                  "ALWAYS_MEASURED and the nothing-was-found measurement cannot be built. Add the "
@@ -2456,7 +2529,7 @@ def self_test():
     # equally invisible. The source is read rather than imported so a module nothing imports is
     # still found.
     exercised = {"audit.render_verdicts", "audit.split_verdicts", "audit.provenance_verdicts",
-                 "audit.fetch_verdicts", "audit.marker_verdicts",
+                 "audit.fetch_verdicts", "audit.marker_verdicts", "audit.eyebrow_verdicts",
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
                  "printpages.verdicts", "printgeom.verdicts", "spec.verdicts",
