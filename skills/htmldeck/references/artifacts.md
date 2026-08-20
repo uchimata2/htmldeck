@@ -1,8 +1,10 @@
 # The artifact contract
 
+> **`$HTMLDECK` is the plugin's own directory.** Resolve it once as `SKILL.md` §0 says, and substitute the printed path into every command below. It is not an environment variable and nothing exports it.
+
 Load this at stage 3. It fixes where the two specification files go, what they are called, and what
 shape they take. **What makes their content good is
-`${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md`'s job, not this file's.**
+`$HTMLDECK/docs/DESIGN-SYSTEM.md`'s job, not this file's.**
 
 ## Where they go, and what they are called
 

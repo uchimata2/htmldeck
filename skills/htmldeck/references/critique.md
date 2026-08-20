@@ -1,12 +1,14 @@
 # Critique mode
 
+> **`$HTMLDECK` is the plugin's own directory.** Resolve it once as `SKILL.md` §0 says, and substitute the printed path into every command below. It is not an environment variable and nothing exports it.
+
 Load this whenever a review is being written: at pipeline stage 5, at stage 7, and when a user
 points at a deck and asks what is wrong with it. It is **one mode over two inputs**, not two modes —
 the only difference is whether the artifact is a specification or a rendered deck.
 
 **It reports. It does not fix.** A reviewer that edits its own subject cannot be re-run to prove the
 fix landed, and two reports of the same deck stop being comparable. Inside the convergence loop the
-fixes belong to the build step, with `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §6.2's ledger
+fixes belong to the build step, with `$HTMLDECK/docs/EVALUATION.md` §6.2's ledger
 keeping them attributable.
 
 ---
@@ -14,7 +16,7 @@ keeping them attributable.
 ## 1. Get the spine before writing a word
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/critique.py <deck> [--sources <dir>]
+python $HTMLDECK/tools/deck/critique.py <deck> [--sources <dir>]
 ```
 
 That prints which passes ran, **what the gate already decided**, the figure ledger, and the list of
@@ -37,13 +39,13 @@ the normal outcome, not evidence the pass is broken.
 ## 2. The hard-judge checklist is not optional
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/critique.py <deck> --worksheet > sheet.txt
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/critique.py --answers sheet.txt
+python $HTMLDECK/tools/deck/critique.py <deck> --worksheet > sheet.txt
+python $HTMLDECK/tools/deck/critique.py --answers sheet.txt
 ```
 
 26 `hard` rules that no mechanical gate can reach. **One line each: `pass`, `fail` with what and
 where, or `excused` with why and what would close the excusal.** A rule in none of those three
-states fails the run — `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §1.1, and the tool enforces it.
+states fails the run — `$HTMLDECK/docs/EVALUATION.md` §1.1, and the tool enforces it.
 
 **An excusal is about the instrument, never the rule.** *"No deck here has an appendix"* is a
 reason. *"Hard to judge"* is not, and a `hard` rule that genuinely cannot be judged is a **ruleset
@@ -126,8 +128,8 @@ where the sentence puts it, or the thing beneath it is not beneath it.
 
 ## 4. What to look for that no check can
 
-The anti-patterns are `${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md` §6, twelve of them with `X-nn`
-IDs, and the dimension anchors are `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §3 and §4. **Read
+The anti-patterns are `$HTMLDECK/docs/DESIGN-SYSTEM.md` §6, twelve of them with `X-nn`
+IDs, and the dimension anchors are `$HTMLDECK/docs/EVALUATION.md` §3 and §4. **Read
 them; do not restate them here or in the report.** A finding cites the ID.
 
 Two tests worth running by hand because nothing else does:
@@ -152,14 +154,14 @@ Two tests worth running by hand because nothing else does:
 
 ## 5. The four outcomes are not interchangeable
 
-`${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §6.1 owns them; each reports something different.
+`$HTMLDECK/docs/EVALUATION.md` §6.1 owns them; each reports something different.
 
 | Outcome | What the report is |
 | :--- | :--- |
 | **PASS** | What was fixed, and every remaining `Note`. **A pass is not "no findings".** |
 | **CAP** | The remaining findings as *"Open — needs a decision"*. There is no fourth attempt |
 | **STALL** | *These are not defects the loop can fix* — almost always design decisions wearing a finding's clothes. Escalate, do not retry |
-| **OSCILLATION** | **Stop and name the two rules in tension.** This is a finding about the *ruleset*, and it is recorded in `${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-RATIONALE.md` §2, not papered over with a third fix |
+| **OSCILLATION** | **Stop and name the two rules in tension.** This is a finding about the *ruleset*, and it is recorded in `$HTMLDECK/docs/DESIGN-RATIONALE.md` §2, not papered over with a third fix |
 
 ## 6. Voice, and the one number rule
 
@@ -171,6 +173,6 @@ the corpus was the most useful artifact in it.
 a deck never licenses rewriting it in this register.
 
 **No score reaches the report.** Not a slide total, not a deck total, not a per-dimension number —
-`${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §8.2. A dimension at 0 or 1 reaches the reader as **a
+`$HTMLDECK/docs/EVALUATION.md` §8.2. A dimension at 0 or 1 reaches the reader as **a
 finding naming the dimension**. The numbers imply a precision the rubric does not have, and a visible
 number invites fixes aimed at the number.

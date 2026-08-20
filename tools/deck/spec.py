@@ -153,7 +153,7 @@ def slide_text(deck_html):
     into the figure beside it - the mistake it carries its own comment about.
     """
     out = {}
-    for m in SLIDE_SECTION.finditer(deck_html):
+    for m in SLIDE_SECTION.finditer(content.strip_comments(deck_html)):
         number = SLIDE_NUMBER.search(m.group(0))
         if number:
             out[int(number.group(1))] = canonical(" ".join(content.runs(m.group(1))))
@@ -207,12 +207,27 @@ def verdicts(foundation_text, slides_text, deck_html=""):
     unknown = sorted({(n, s) for n, ss in named.items() for s in ss if s not in listed})
     unused = [s for s in listed if not any(s in ss for ss in named.values())]
 
+    # **`Origin` is a list, and one entry of it is a reserved word** (T-194).
+    #
+    # It read `row[2].strip("`")` until 2026-08-20 - one slug, so a row citing two arrived as a
+    # single slug named `` exercise`, `notes ``, matched nothing listed, and SPEC-4 failed. A deck
+    # whose job is to cross-check two documents produces such rows **by construction**: the first
+    # outside build was nine of them, and its author's only recourse was to pick one origin and put
+    # the truth in prose - the ledger lying to keep the gate quiet, which is the opposite of what a
+    # ledger is for. `slugs()` already splits and strips exactly this shape for the slide's own
+    # `Sources` cell; the two cells now read the same way.
+    #
+    # **`derived` is the third kind, and it is a different claim from either source.** A figure a
+    # deck works out by comparing two documents is stated in neither of them, so *both sources* and
+    # *neither source* are not the same answer and the ledger has to be able to make each. It is
+    # reserved rather than free text so the check can tell a claim from a typo, and it composes: a
+    # row may read `` `exercise`, `notes`, derived `` - these two documents, and the number is ours.
     contradicted = []
     for row in ledger:
-        origin = row[2].strip("`")
-        for n in used_on(row[3]):
-            if n in named and origin not in named[n] and (n, origin) not in contradicted:
-                contradicted.append((n, origin))
+        for origin in [o for o in slugs(row[2]) if o.lower() != "derived"]:
+            for n in used_on(row[3]):
+                if n in named and origin not in named[n] and (n, origin) not in contradicted:
+                    contradicted.append((n, origin))
 
     # **Each row reports None when its own subject is absent, never True.** All four are of the form
     # *every X is Y*, and such a rule over no X is undecided rather than satisfied - the bar
@@ -301,6 +316,24 @@ def self_test():
     if [r for r, ok in without.items() if ok is not (None if r == "SPEC-5" else True)]:
         sys.exit("SELF-TEST FAILED: the run with no deck did not leave SPEC-1..4 alone and "
                  "SPEC-5 undecided - %r" % without)
+
+    # **A two-source row, and a derived one** (T-194). Both are what a cross-check deck produces
+    # and neither parsed before 2026-08-20: the first arrived as one slug named after both, the
+    # second had no way to say *this number is in neither document*. Seeded failing first - with
+    # `row[2].strip("`")` in place, the two-source pair reports SPEC-4 `False`.
+    two = foundation.replace("| Capital | $1 | cost-model | 2 |",
+                             "| Capital | $1 | `cost-model`, `calendar` | 2 |\n"
+                             "| Gap | $2 | `cost-model`, `calendar`, derived | 2 |")
+    got = dict((r, ok) for r, _w, ok in verdicts(two, good, deck))
+    if got["SPEC-4"] is not True:
+        sys.exit("SELF-TEST FAILED: a ledger row citing two sources, and one derived from them, "
+                 "reported SPEC-4 %r against a slide whose Sources names both - %r"
+                 % (got["SPEC-4"], got))
+    # And the reserved word is not a way past the rule: an origin the slide does not name still fails.
+    bad_two = foundation.replace("| Capital | $1 | cost-model | 2 |",
+                                 "| Capital | $1 | `cost-model`, `nowhere` | 2 |")
+    if dict((r, ok) for r, _w, ok in verdicts(bad_two, good, deck))["SPEC-4"] is not False:
+        sys.exit("SELF-TEST FAILED: a second origin the slide does not cite was not reported")
 
     # **The label the adopter's deck carried, and the label this repository's two decks carry.**
     # Both parse, and the widened pattern is only worth having if the second still does - a fix

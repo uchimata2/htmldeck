@@ -404,6 +404,49 @@ def ds141_durations(h):
     return True
 
 
+def _naming(items, keep=3):
+    """` - a, b, c and 4 more`, or nothing at all when there is nothing to name.
+
+    **A failing row names what failed** (T-193). Several rows here reported a *count* while the
+    probe that produced it still held the subjects - `DS-113` printed `len(unusedSymbols)` with the
+    ids in hand - so an author was told two icons were dead and not which two, and the only way on
+    was to read this file. The first outside build did exactly that, seven times.
+
+    Bounded on purpose: a row listing forty elements is a different failure of the same kind.
+    """
+    items = list(items or [])
+    if not items:
+        return ""
+    shown = ", ".join(_name_of(i) for i in items[:keep])
+    return " - %s%s" % (shown, " and %d more" % (len(items) - keep) if len(items) > keep else "")
+
+
+def _name_of(item):
+    """The identifying part of one measured item, whatever shape the probe emitted it in.
+
+    The probe returns a bare string for some rows, a `[name, ...]` pair for others and a dict for
+    the newest. A row should not have to know which - what an author needs is the same thing in
+    every case, which is the name they can go and look at.
+    """
+    if isinstance(item, dict):
+        for key in ("sel", "name", "slide", "id"):
+            if item.get(key):
+                return str(item[key])
+        return str(sorted(item.items())[:1])
+    if isinstance(item, (list, tuple)) and item:
+        return str(item[0])
+    return str(item)
+
+
+def _widest(rows, keep=3):
+    """` - widest: div.x 859px, table 604px`, for DS-075's offenders."""
+    rows = list(rows or [])
+    if not rows:
+        return ""
+    return " - widest: " + ", ".join("%s %dpx" % (r.get("sel", "?"), r.get("w", 0))
+                                     for r in rows[:keep])
+
+
 BAND_TOKEN = re.compile(r"var\(\s*--(?:afford|press)-(?:dur|ease)\s*\)")
 TRANSFORM_DECL = re.compile(r"[;{]\s*transform\s*:")
 
@@ -808,7 +851,7 @@ def split_data(html):
     """`(cited, unsupported)` — figures the deck's bottom lines cite, and those of them a reader
     with every panel closed cannot see anywhere on the slide."""
     cited, unsupported = 0, []
-    for m in SLIDE_BLOCK.finditer(html):
+    for m in SLIDE_BLOCK.finditer(content.strip_comments(html)):
         block, panels = m.group(1), DISC_PANEL.findall(m.group(1))
         if not panels:
             continue
@@ -861,7 +904,7 @@ ELEMENT_ID = re.compile(r'\bid="([^"]+)"')
 def marker_data(html):
     """`(examined, [(slide, id)])` — paint references resolving inside a *different* slide."""
     slides = []
-    for m in SLIDE_BLOCK.finditer(html):
+    for m in SLIDE_BLOCK.finditer(content.strip_comments(html)):
         name = re.search(r'data-name="([^"]*)"', m.group(0))
         slides.append(((name.group(1) if name else "?"), m.group(0)))
     owned = [set(ELEMENT_ID.findall(body)) for _n, body in slides]
@@ -1510,8 +1553,20 @@ PROBE = r"""
       doc.style.width = '320px';
       doc.getBoundingClientRect();
       out.at320ScrollWidth = doc.scrollWidth;
-      out.at320Overflowing = Array.prototype.filter.call(doc.querySelectorAll('#docBody *'),
-        function(el){ return el.getBoundingClientRect().width > 321; }).length;
+      // **The elements, not just how many** (T-193). This kept `.length` and threw the elements
+      // away inside the probe, so the verdict row could not name the wide one however it was
+      // worded - and DS-075 is the rule an author is most likely to hit and least able to act on.
+      var wide = Array.prototype.filter.call(doc.querySelectorAll('#docBody *'),
+        function(el){ return el.getBoundingClientRect().width > 321; })
+        .map(function(el){
+          var cls = (typeof el.className === 'string' && el.className.trim())
+            ? '.' + el.className.trim().split(/\s+/).join('.') : '';
+          return { sel: el.tagName.toLowerCase() + cls,
+                   w: Math.round(el.getBoundingClientRect().width) };
+        })
+        .sort(function(a, b){ return b.w - a.w; });
+      out.at320Overflowing = wide.length;
+      out.at320Widest = wide.slice(0, 3);
       doc.style.width = prev;
       out.switchVisibleInDoc = document.getElementById('toStage').getBoundingClientRect().width > 0;
       document.getElementById('toStage').click();
@@ -2020,6 +2075,7 @@ CONDITIONALLY_MEASURED = {
     "docShorterThanSlide": "if (doc)",
     "at320ScrollWidth": "if (doc)",
     "at320Overflowing": "if (doc)",
+    "at320Widest": "if (doc)",
     "leftFrom": "if (doc)",
     "backOnSlide": "if (doc)",
 }
@@ -2119,13 +2175,17 @@ def render_verdicts(data):
          not data.get("headlineCounts")),
         ("DS-091", "headlines over six words: %d" % len(data["longHeadlines"]),
          not data["longHeadlines"]),
-        ("DS-202", "slides with no bottom line: %d" % len(data.get("noBottomLine", [])),
+        ("DS-202", "slides with no bottom line: %d%s"
+         % (len(data.get("noBottomLine", [])), _naming(data.get("noBottomLine"))),
          not data.get("noBottomLine")),
-        ("DS-202", "bottom lines that are not one sentence: %d"
-         % len(data.get("multiSentence", [])), not data.get("multiSentence")),
-        ("DS-205", "bottom lines behind a disclosure: %d" % len(data.get("bottomLineHidden", [])),
+        ("DS-202", "bottom lines that are not one sentence: %d%s"
+         % (len(data.get("multiSentence", [])), _naming(data.get("multiSentence"))),
+         not data.get("multiSentence")),
+        ("DS-205", "bottom lines behind a disclosure: %d%s"
+         % (len(data.get("bottomLineHidden", [])), _naming(data.get("bottomLineHidden"))),
          not data.get("bottomLineHidden")),
-        ("DS-203", "prose outranking the bottom line: %d" % len(data.get("outranked", [])),
+        ("DS-203", "prose outranking the bottom line: %d%s"
+         % (len(data.get("outranked", [])), _naming(data.get("outranked"))),
          not data.get("outranked")),
         ("DS-216", "encodings of position: %d (%s)"
          % (len(data.get("positionEncodings", [])), ", ".join(data.get("positionEncodings", []))),
@@ -2160,7 +2220,8 @@ def render_verdicts(data):
         ("DS-138", "panel drops below its control: %s" % data.get("panelBelowControl"),
          None if data.get("panelBelowControl") is None
          else data["panelBelowControl"] is True),
-        ("DS-142", "looping motion on static content: %d" % len(data.get("ambient", [])),
+        ("DS-142", "looping motion on static content: %d%s"
+         % (len(data.get("ambient", [])), _naming(data.get("ambient"))),
          not data.get("ambient")),
         # `persistent` rather than `present`: the control exists in every deck the shell builds,
         # so existence decided nothing. What a looping deck owes is a control not shut inside the
@@ -2178,8 +2239,9 @@ def render_verdicts(data):
          None if data.get("currentDasharray") is None
          else data["currentDasharray"] != "none"),
         ("DS-070", "reflow view engages: %s" % data.get("docOn"), data.get("docOn") is True),
-        ("DS-073", "sections carrying less text than their slide: %d"
-         % len(data.get("docShorterThanSlide", [])), not data.get("docShorterThanSlide")),
+        ("DS-073", "sections carrying less text than their slide: %d%s"
+         % (len(data.get("docShorterThanSlide", [])), _naming(data.get("docShorterThanSlide"))),
+         not data.get("docShorterThanSlide")),
         # Two nulls compare equal, so a deck with no reflow view reported a pass here on
         # `None == None`. DS-070 goes red in that case, so no deck escaped the run - but the row
         # itself was still claiming a rule it had not decided (T-051).
@@ -2187,29 +2249,35 @@ def render_verdicts(data):
          % (data.get("docPanelsOpen"), data.get("docPanelsTotal")),
          None if data.get("docPanelsTotal") is None
          else data["docPanelsOpen"] == data["docPanelsTotal"]),
-        ("DS-075", "reflow scrollWidth at 320 CSS px: %s (overflowing: %s)"
-         % (data.get("at320ScrollWidth"), data.get("at320Overflowing")),
+        ("DS-075", "reflow scrollWidth at 320 CSS px: %s (overflowing: %s)%s"
+         % (data.get("at320ScrollWidth"), data.get("at320Overflowing"),
+            _widest(data.get("at320Widest"))),
          data.get("at320ScrollWidth", 999) <= 321 and data.get("at320Overflowing") == 0),
         ("DS-076", "position preserved returning from the reflow view: left %r, back on %r"
          % (data.get("leftFrom"), data.get("backOnSlide")),
          bool(data.get("backOnSlide")) and data.get("backOnSlide") == data.get("leftFrom")),
-        ("DS-214", "dead fill= attributes overridden by CSS: %d"
-         % len(data.get("deadFillAttributes", [])), not data.get("deadFillAttributes")),
-        ("DS-215", "text runs rendering under 4.5:1: %d"
-         % len(data.get("renderedLowContrast", [])), not data.get("renderedLowContrast")),
+        ("DS-214", "dead fill= attributes overridden by CSS: %d%s"
+         % (len(data.get("deadFillAttributes", [])), _naming(data.get("deadFillAttributes"))),
+         not data.get("deadFillAttributes")),
+        ("DS-215", "text runs rendering under 4.5:1: %d%s"
+         % (len(data.get("renderedLowContrast", [])), _naming(data.get("renderedLowContrast"))),
+         not data.get("renderedLowContrast")),
         # ---- added by T-005
-        ("DS-080", "slides that are not a <section>: %d" % len(data.get("notSections", [])),
+        ("DS-080", "slides that are not a <section>: %d%s"
+         % (len(data.get("notSections", [])), _naming(data.get("notSections"))),
          not data.get("notSections")),
-        ("DS-092", "sentences over 20 words: %d, paragraphs over 4 sentences: %d"
-         % (len(data.get("longSentences", [])), len(data.get("longParagraphs", []))),
+        ("DS-092", "sentences over 20 words: %d%s, paragraphs over 4 sentences: %d%s"
+         % (len(data.get("longSentences", [])), _naming(data.get("longSentences"), 2),
+            len(data.get("longParagraphs", [])), _naming(data.get("longParagraphs"), 2)),
          not data.get("longSentences") and not data.get("longParagraphs")),
         # `symbolCount > 0` required the deck to CONTAIN icons, which DESIGN-SYSTEM.md nowhere
         # states: DS-113 is a prohibition over the sprite's symbols, and DS-112 governs where icons
         # come from IF a deck has any. The identical clause to DS-164's, and it takes DS-164's
         # answer - with no sprite the rule has no subject, with one it looks for dead symbols
         # (T-066).
-        ("DS-113", "sprite icons never used: %d of %d"
-         % (len(data.get("unusedSymbols", [])), data.get("symbolCount", 0)),
+        ("DS-113", "sprite icons never used: %d of %d%s"
+         % (len(data.get("unusedSymbols", [])), data.get("symbolCount", 0),
+            _naming(data.get("unusedSymbols"))),
          None if not data.get("symbolCount") else not data.get("unusedSymbols")),
         # Measured outside the disclosure block since T-066 - see the probe. The null that survives
         # is a one-slide deck, which has no second title to compare and is DS-081's failure anyway.
@@ -2237,8 +2305,9 @@ def render_verdicts(data):
         # DS-026 is measured (`rolesWithoutLegend`) and NOT emitted as a verdict: the rule wants a
         # *visible* legend and the tripwire slide draws one as two unmarked SVG swatches, which a
         # class-based check reports as missing. Excused in `check.py`, with the argument.
-        ("DS-043", "boxes nested in a box that has its own text: %d"
-         % len(data.get("nestedTextBoxes", [])), not data.get("nestedTextBoxes")),
+        ("DS-043", "boxes nested in a box that has its own text: %d%s"
+         % (len(data.get("nestedTextBoxes", [])), _naming(data.get("nestedTextBoxes"))),
+         not data.get("nestedTextBoxes")),
         # `panelCount > 0` is DS-164's clause again, word for word in effect: it required a
         # conforming deck to CONTAIN a disclosure panel. DS-160 is "two tiers, never three", which a
         # deck with no panels cannot violate. **This is the row the adopting project was still

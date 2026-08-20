@@ -25,7 +25,7 @@ Two things here are not obvious and both cost time to discover (**L-26**):
 
     python tools/deck/render.py measure examples/reference-deck.html
     python tools/deck/render.py shots   examples/reference-deck.html
-    python tools/deck/render.py shots   examples/reference-deck.html 0,4,6
+    python tools/deck/render.py shots   examples/reference-deck.html 1,5,7
     python tools/deck/render.py shots   examples/reference-deck.html --out shots/
     python tools/deck/render.py motion  examples/reference-deck.html
     python tools/deck/render.py motion  examples/reference-deck.html --into 4 --at 0,25,50,75,100
@@ -300,7 +300,7 @@ def measure(deck, which, quiet=False, out=None):
             results[label].append(data)
             if not quiet:
                 print("  %-10s slide %2d  vp=%dx%d k=%.4f stage=%sx%s body=%.1fpx hit=%s %s"
-                      % (label, s, data["vw"], data["vh"], data["k"],
+                      % (label, s + 1, data["vw"], data["vh"], data["k"],
                          data["stage"][0], data["stage"][1],
                          data["type"].get("body", {}).get("css", -1),
                          data.get("discHitCssPx"), data["fonts"]))
@@ -757,7 +757,22 @@ def main(argv):
     # reference deck's length and not any deck's: the 14-slide seeded fixture rendered 12 shots and
     # said nothing about the two it dropped, so "look at the rendered deck" (CLAUDE.md rule 6) was
     # being satisfied against an artifact two slides short (**L-05**).
-    which = [int(x) for x in rest[0].split(",")] if rest else list(range(slide_count(deck)))
+    # **The argument counts from one, and it did not until 2026-08-20 (T-196).** The index was the
+    # internal one and the filename was `slide-%02d % (s + 1)`, so `shots <deck> 1,12,14` wrote
+    # `slide-02`, `slide-13`, `slide-15` - a caller reading the shots back, which is the entire
+    # point of the command, read a different numbering from the one they typed. The ruler, the
+    # eyebrow, the filename and every conversation about a deck count from one; the argument was
+    # the only thing that did not. Internally it stays zero-based, which is what `?s=` wants.
+    count = slide_count(deck)
+    if rest:
+        asked = [int(x) for x in rest[0].split(",")]
+        bad = [n for n in asked if not 1 <= n <= count]
+        if bad:
+            sys.exit("slide %s - this deck has %d, numbered 1 to %d"
+                     % (", ".join(str(n) for n in bad), count, count))
+        which = [n - 1 for n in asked]
+    else:
+        which = list(range(count))
     print("browser: %s" % CHROME)
     print("deck:    %s\n" % paths.display_path(deck, ROOT))
     if cmd == "measure":

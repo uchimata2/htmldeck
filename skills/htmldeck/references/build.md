@@ -1,7 +1,9 @@
 # Build mode
 
+> **`$HTMLDECK` is the plugin's own directory.** Resolve it once as `SKILL.md` §0 says, and substitute the printed path into every command below. It is not an environment variable and nothing exports it.
+
 Load this at stage 6, once the slide-by-slide specification has been reviewed. It is **how a deck
-gets written**; what makes a deck good is `${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md`'s job and
+gets written**; what makes a deck good is `$HTMLDECK/docs/DESIGN-SYSTEM.md`'s job and
 nothing here repeats it.
 
 **The input is a reviewed `<slug>.slides.md`, not a brief.** Nine fields per slide are already
@@ -15,22 +17,22 @@ Roughly 170 KB of every deck is the same deck — three embedded faces, the shar
 the script, the chrome, the reading view. It is not authored, it is assembled:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py new <slug>.html \
+python $HTMLDECK/tools/deck/shell.py new <slug>.html \
     --title "<the deck's name>" --subtitle "<one line: who, when, and any illustrative-subject note>"
 ```
 
 That writes a deck with the shell in place and no slides. **Do not copy
-`${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` and edit it** — it is the structural reference,
+`$HTMLDECK/examples/reference-deck.html` and edit it** — it is the structural reference,
 and a copy carries twelve slides of someone else's content plus a `<style id="slides">` composition
 written for them.
 
 Then set the argument's stages, which the ruler and the printed contents page both render. They come
 from the outline in `<slug>.foundation.md`, and they are declared in the deck's own script — the
 three `var` lines at the top, `DECK`, `STAGES` and `STAGE_ICON`. Every stage icon must exist in
-`${CLAUDE_PLUGIN_ROOT}/shell/icons.svg`; look at the set before choosing:
+`$HTMLDECK/shell/icons.svg`; look at the set before choosing:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py icons --sheet <somewhere>.svg
+python $HTMLDECK/tools/deck/shell.py icons --sheet <somewhere>.svg
 ```
 
 **Never draw an icon** (DS-112). If the set has nothing for a concept, use the nearest one that is
@@ -39,7 +41,7 @@ honest rather than invent path data.
 Then check the specification pair against itself, before any slide is written:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/spec.py <slug>.foundation.md <slug>.slides.md
+python $HTMLDECK/tools/deck/spec.py <slug>.foundation.md <slug>.slides.md
 ```
 
 It decides four things the two documents can only get wrong together — a slide citing a source the
@@ -57,7 +59,7 @@ Three slides, then the loop in §3, then the next three. **Batching is not about
 that components are built once and reused, so a defect found in batch one is fixed once rather than
 in twelve places.
 
-Per slide, the parts and their attributes are `${CLAUDE_PLUGIN_ROOT}/docs/COMPONENT-CONTRACT.md`
+Per slide, the parts and their attributes are `$HTMLDECK/docs/COMPONENT-CONTRACT.md`
 §3.2–§3.8, and `component.py check` decides them. Read it before the first slide. Three things it
 will not tell you, because they are this stage's judgement:
 
@@ -94,7 +96,7 @@ will not tell you, because they are this stage's judgement:
   a motion rule that declares neither (DS-237), and the shell's own motions are already declared, so
   in practice this reaches a motion you add.
 - **A content motion carries a rank, and the rank is derived rather than chosen.** Run
-  `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/density.py write <slug>.html` and it writes them; run
+  `python $HTMLDECK/tools/deck/density.py write <slug>.html` and it writes them; run
   `check` and it recomputes the whole set and tells you whether the deck's numbers are the ones the
   rule gives (DS-239). **Do not write `--m-rank` by hand** — two builds of one specification have to
   animate the same elements, and a number somebody picked is the one thing that cannot be
@@ -159,15 +161,51 @@ body, one row per source, each row typed and routed exactly as above. **It carri
 find the links on earlier slides**: that sentence is merely unhelpful on the stage and untrue in the
 reading view and on paper, where there are no corners and nothing to open.
 
-The markup for all of it is `${CLAUDE_PLUGIN_ROOT}/docs/COMPONENT-CONTRACT.md` §3.2 and §3.2.1, and
+The markup for all of it is `$HTMLDECK/docs/COMPONENT-CONTRACT.md` §3.2 and §3.2.1, and
 `component.py check` decides it.
+
+### The reading view has to fold to 320 CSS px, and a wide table is what breaks it
+
+**DS-075 is the rule a wide element fails, and the fix is not the one you will reach for first.**
+The check puts the reading view in a 320 px box and reads two numbers: the document's own
+`scrollWidth`, which must be 321 or under, and how many elements inside `#docBody` are themselves
+wider than 321. **Both have to be clean**, so a horizontal scroll container is not a fix — the
+container holds its content off the page's own scroll, and the element inside it is still wide, so
+the second number does not move. Neither does wrapping it in `overflow:hidden`, which hides the
+content instead of folding it.
+
+**Measured on a real deck, 2026-08-20**, a six-column table added to a slide of `measure-first`:
+
+| The slide carries | `scrollWidth` | `overflowing` | DS-075 |
+| :--- | ---: | ---: | :--- |
+| the table, untouched | 538 | 4 | FAIL |
+| `.doc .t{overflow-x:auto}` — the scroll container | **320** | **3** | FAIL |
+| `.doc .t,.doc tr,.doc td,.doc th{display:block;width:auto}` | 320 | 0 | **pass** |
+
+The middle row is the whole trap: the container *does* fix the page's scroll, and the elements
+inside it are still 900 px wide, so the rule still fails and the number that moved is not the number
+that was failing.
+
+What works is making the content itself narrower at that width:
+
+- **A table or a grid stacks.** Inside `.doc`, put `display:block;width:auto` on the table, its rows
+  and its cells. An *n*-column row becomes *n* stacked lines. This is what the shipped decks already
+  do to their own slide grids — `.doc .statrow,.doc .frags,.doc .flowwrap{display:block}` — and the
+  case the rule was written about.
+- **A wide `<svg>` scales.** `width:100%;height:auto` on the element, with the drawing's own size in
+  the `viewBox`. A diagram fails this rule only when its width is written in pixels.
+- **A long unbroken string wraps.** `overflow-wrap:anywhere` on the run, not on its container.
+
+**The failure names the widest element** — `widest: div.thing 900px` — so start there rather than
+bisecting the slide. It did not until 0.5.0; a failure against an older copy of the plugin gives a
+count and nothing else (T-193, T-195).
 
 **A batch that introduces a `<template>`, a `<canvas>` or a `getContext` changes what the deck's
 capability preflight has to test** (DS-009), so re-derive it — the block is only correct for the
 deck as it stood when it was written:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py preflight <slug>.html
+python $HTMLDECK/tools/deck/shell.py preflight <slug>.html
 ```
 
 `shell.py check` in §3 reports a stale block the way it reports a stale sprite, so a forgotten run
@@ -176,7 +214,7 @@ is a red check rather than a deck that fails silently on a browser nobody has.
 Sync the sprite whenever a batch introduced an icon — it keeps DS-113 true by construction:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py icons <slug>.html --set <concept>=<lucide-name>,<concept>=<lucide-name>
+python $HTMLDECK/tools/deck/shell.py icons <slug>.html --set <concept>=<lucide-name>,<concept>=<lucide-name>
 ```
 
 **`--set` takes one comma-separated value, not one flag per icon.** Repeating the flag is refused
@@ -188,11 +226,11 @@ later as *icon `i-x` is used and nothing says which Lucide glyph it is*.
 Run all five on the batch. The first two are cheap and catch the expensive mistakes.
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py check <slug>.html
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/component.py check <slug>.html
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/theme.py check <slug>.html
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py <slug>.html [--sources <dir>] --quiet
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/render.py shots <slug>.html --out <dir>
+python $HTMLDECK/tools/deck/shell.py check <slug>.html
+python $HTMLDECK/tools/deck/component.py check <slug>.html
+python $HTMLDECK/tools/deck/theme.py check <slug>.html
+python $HTMLDECK/tools/deck/check.py <slug>.html [--sources <dir>] --quiet
+python $HTMLDECK/tools/deck/render.py shots <slug>.html --out <dir>
 ```
 
 **If the deck names a transition, look at it too.** `render.py motion <slug>.html --into 1 --shots`
@@ -215,8 +253,8 @@ there, the deck was built on an older release of this plugin.** That is not a de
 there is nothing to hand-patch:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py sync <slug>.html
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py sync <slug>.html --write
+python $HTMLDECK/tools/deck/shell.py sync <slug>.html
+python $HTMLDECK/tools/deck/shell.py sync <slug>.html --write
 ```
 
 The first reports which regions move and confirms every per-deck region is untouched; the second
@@ -230,8 +268,8 @@ declaration is a theme value in a per-deck region `sync` must never touch. So th
 `theme.py` then fails DS-013 on a token you never had the chance to declare:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py tokens <slug>.html
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py tokens <slug>.html --write
+python $HTMLDECK/tools/deck/shell.py tokens <slug>.html
+python $HTMLDECK/tools/deck/shell.py tokens <slug>.html --write
 ```
 
 The first names each token and the value the shipped theme gives it; the second adds exactly those,
@@ -240,7 +278,7 @@ declared is a value you chose, and nothing rewrites it. Change any of the writte
 if this deck wants a different look.
 
 Then score **S3 Encoding · S5 Craft · S6 Motion** on the batch's slides, per
-`${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md`. **And look at the shots.** A deck that passes every
+`$HTMLDECK/docs/EVALUATION.md`. **And look at the shots.** A deck that passes every
 check can still be a deck nobody can read; that is why the render step is in the loop and not at the
 end.
 
@@ -268,19 +306,19 @@ Two obligations come with that authority, and the first is the one under pressur
    asks the user to file anything; the obligation is to say which entries are candidates rather than
    let a closed workaround look like a settled question.
 
-**This is not the exit for everything.** `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §6.1 keeps its
+**This is not the exit for everything.** `$HTMLDECK/docs/EVALUATION.md` §6.1 keeps its
 two: **STALL** — a design decision wearing a finding's clothes — escalates, and **OSCILLATION** —
 two rules genuinely in tension — stops and names them. Deviation authority is for what this stage
 *can* resolve.
 
 ## 5. Delivery
 
-Stop when `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §5 says the deck is done, not when it feels
+Stop when `$HTMLDECK/docs/EVALUATION.md` §5 says the deck is done, not when it feels
 finished. **Then run the specification pair once more, this time with the deck**, which is the only
 point at which every slide it names exists:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/tools/deck/spec.py <slug>.foundation.md <slug>.slides.md <slug>.html
+python $HTMLDECK/tools/deck/spec.py <slug>.foundation.md <slug>.slides.md <slug>.html
 ```
 
 `SPEC-5` fails a `Used on` cell that names a slide not showing the value. It is not a per-batch
@@ -290,10 +328,10 @@ report as missing.
 Then hand over:
 
 - **The deck and both specification files**, in the delivery directory, per
-  `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/artifacts.md`.
+  `$HTMLDECK/skills/htmldeck/references/artifacts.md`.
 - **The deviation bullets** from §4, if there were any.
 - **What printing does and does not do** — three sentences, and
-  `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/pipeline.md` has them. Say them once, at
+  `$HTMLDECK/skills/htmldeck/references/pipeline.md` has them. Say them once, at
   handover, never on the deck's own surface.
 - **Which half was checked.** A run with no sources is presentation-only and has to say so; a
   presentation-only check presented as a clean pass is a false one. If such a run needed a figure, it

@@ -1,8 +1,10 @@
 # The run shape
 
+> **`$HTMLDECK` is the plugin's own directory.** Resolve it once as `SKILL.md` §0 says, and substitute the printed path into every command below. It is not an environment variable and nothing exports it.
+
 Load this at the start of every build run. It is the sequence, the hand-offs and the two gates —
 nothing about what a good deck looks like, which is
-`${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md`'s job.
+`$HTMLDECK/docs/DESIGN-SYSTEM.md`'s job.
 
 ```
 governing idea ─→ requirements ─→ foundation spec (carries the outline) ─→ OUTLINE SIGN-OFF
@@ -74,11 +76,11 @@ itself, because there is nothing to check it against.
 **It is a selection sheet, not a design document.** One theme is already fully resolved, so the
 per-deck content is: the governing idea, the narrative spine, the archetypes and elements this deck
 selects, and any per-deck additions to the quality bar. **It cites
-`${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md`; it never restates it.**
+`$HTMLDECK/docs/DESIGN-SYSTEM.md`; it never restates it.**
 
 The outline names, per slide and at minimum: **archetype · title · bottom line** (DS-211). The
 bottom line in the outline is the same sentence that ships on the slide — not a paraphrase of it.
-Load `${CLAUDE_PLUGIN_ROOT}/docs/DESIGN-SYSTEM.md` §3.2 for the thirteen archetypes and §3.4 for
+Load `$HTMLDECK/docs/DESIGN-SYSTEM.md` §3.2 for the thirteen archetypes and §3.4 for
 what a bottom line owes the audience.
 
 ## Gate 1 — Outline sign-off
@@ -114,7 +116,7 @@ DS-213 was the one rule in this stage that no instrument mentioned, while its ow
 named at stage 4. This stage **is** DS-213's instrument, so it says so.*
 
 **This is critique mode's first format**, not a mode of its own — load
-`${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/critique.md`. It scores what a specification can
+`$HTMLDECK/skills/htmldeck/references/critique.md`. It scores what a specification can
 carry: **S1 Claim · S2 Evidence · D1 Spine · D2 Pacing · D3 Close · D4 source-reconciliation.**
 It does not score S3 Encoding, S4 Density, S5 Craft, S6 Motion or D4's visual half — those need a
 rendered artifact and are the build review's.
@@ -140,7 +142,7 @@ file says what was never settled.
 **In:** the reviewed slide-by-slide specification. **Not a brief.**
 **Out:** the deck.
 
-**Load `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/build.md`** — how the deck is assembled,
+**Load `$HTMLDECK/skills/htmldeck/references/build.md`** — how the deck is assembled,
 what this stage may decide for itself, and the loop below stated in commands.
 
 Build a few slides, run the cheap loop on them, then continue. Batching is not about scoring — it
@@ -157,7 +159,7 @@ the deck existed.
 **In:** the whole deck.
 **Out:** a converged deck, then the user's own review.
 
-The whole-deck measurement round is `${CLAUDE_PLUGIN_ROOT}/docs/EVALUATION.md` §6, including the
+The whole-deck measurement round is `$HTMLDECK/docs/EVALUATION.md` §6, including the
 fresh-context judgement pass. **It runs before the user sees the deck, not after** — the corpus pipeline puts the machine
 review second and the human third.
 
@@ -191,7 +193,7 @@ lands. Stated so a run is not mistaken for a finished plugin:
 
 | Stage | Owned by | Until then |
 | :--- | :--- | :--- |
-| 5 · spec review, 7 · build review | ~~Critique mode~~ — **built 2026-08-09.** `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/critique.md` fixes both report formats, and `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/critique.py <deck>` assembles the half a program can. | — |
-| 6 · build | ~~Build mode~~ — **built 2026-08-09.** `${CLAUDE_PLUGIN_ROOT}/skills/htmldeck/references/build.md` is the stage, and `${CLAUDE_PLUGIN_ROOT}/shell/` plus `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/shell.py` are what a deck is assembled from. | — |
-| 6 · per-batch automatic checks | ~~The build check~~ — **built 2026-08-09.** `python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json] [--quiet]` gates 88 of the 118 rules the ruleset puts in its jurisdiction and **names every one of the other 30, with a reason**. | — |
-| 6 · tokens, components, motion | The theme and interaction layers | `${CLAUDE_PLUGIN_ROOT}/examples/reference-deck.html` carries a working first instance of both, and `${CLAUDE_PLUGIN_ROOT}/shell/` is that instance with the content cut out. |
+| 5 · spec review, 7 · build review | ~~Critique mode~~ — **built 2026-08-09.** `$HTMLDECK/skills/htmldeck/references/critique.md` fixes both report formats, and `python $HTMLDECK/tools/deck/critique.py <deck>` assembles the half a program can. | — |
+| 6 · build | ~~Build mode~~ — **built 2026-08-09.** `$HTMLDECK/skills/htmldeck/references/build.md` is the stage, and `$HTMLDECK/shell/` plus `python $HTMLDECK/tools/deck/shell.py` are what a deck is assembled from. | — |
+| 6 · per-batch automatic checks | ~~The build check~~ — **built 2026-08-09.** `python $HTMLDECK/tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json] [--quiet]` gates 88 of the 118 rules the ruleset puts in its jurisdiction and **names every one of the other 30, with a reason**. | — |
+| 6 · tokens, components, motion | The theme and interaction layers | `$HTMLDECK/examples/reference-deck.html` carries a working first instance of both, and `$HTMLDECK/shell/` is that instance with the content cut out. |

@@ -38,6 +38,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import content                                                      # noqa: E402
 
 import paths                                                        # noqa: E402
 
@@ -78,7 +79,9 @@ DOT_STEP = 7
 def slide_bounds(html):
     """`[(start, end, name)]` for every slide section, in document order."""
     out = []
-    for m in SLIDE.finditer(html):
+    # Comments blanked, not deleted: the bounds below are offsets into the string the CALLER holds
+    # (T-191, and see `content.strip_comments`).
+    for m in SLIDE.finditer(content.strip_comments(html, keep_length=True)):
         end = html.find("</section>", m.end())
         name = re.search(r'data-name="([^"]*)"', m.group(0))
         out.append((m.start(), end if end > 0 else len(html), name.group(1) if name else ""))

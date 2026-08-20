@@ -232,7 +232,14 @@ def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_
         "ICONS": "",
         # The marker is a comment rather than a stub slide: a placeholder headline is copy nobody
         # wrote, and DS-090 wants a claim there.
-        "SLIDES": "\n<!-- slides go here, one <section class=\"slide\"> each "
+        #
+        # **And it writes no tag, which is T-191.** It used to spell the example out as
+        # `<section class="slide">`, inside the comment - and four tools split a deck with a regex
+        # over exactly that string, so the comment opened a phantom slide and `FIG-1` reported the
+        # `3.2` after it as an unsourced figure on slide 1. `content.strip_comments` is the fix
+        # that holds for any comment; this is the other half, so a deck built by an older copy of
+        # this tool is not carrying the trap in the first place.
+        "SLIDES": "\n<!-- slides go here, one section.slide each "
                   "(COMPONENT-CONTRACT.md 3.2) -->\n",
         # The menu form, because a fresh deck has no motion yet and DS-218 owes a persistent
         # control only where something loops. A deck that grows looping motion moves `Motion` out
@@ -1044,6 +1051,28 @@ def parts_report():
         print("  %-12s %s" % ("{{%s}}" % slot, what))
 
 
+USAGE = {
+    "new": "usage: shell.py new <out.html> --title T [--subtitle S] [--theme t.css]\n"
+           "  Writes a deck skeleton carrying the shipped shell and no slides.",
+    "icons": "usage: shell.py icons <deck> [--set concept=lucide,...] [--check]\n"
+             "       shell.py icons --list\n"
+             "       shell.py icons --sheet <out.svg>\n"
+             "  Keeps the deck's sprite equal to the icons the deck uses (DS-113).\n"
+             "  --list   prints the concept ids the library holds, one per line\n"
+             "  --sheet  draws every glyph into one SVG to look at\n"
+             "  --check  reports whether the sprite is already exactly the used set",
+    "sync": "usage: shell.py sync <deck> [--write]\n"
+            "  Puts the shipped shared block back into a deck that has fallen behind.",
+    "tokens": "usage: shell.py tokens <deck> [--write]\n"
+              "  Adds the theme tokens THEME-CONTRACT.md requires and this deck lacks.\n"
+              "  Only ever adds: a token already declared is a value someone chose.",
+    "check": "usage: shell.py check <deck>\n"
+             "  Proves the deck still carries the shipped shell, byte for byte.",
+    "preflight": "usage: shell.py preflight <deck> [--check]",
+    "parts": "usage: shell.py parts\n  Lists the regions the shell is cut into.",
+}
+
+
 def main(argv):
     if "--self-test" in argv:
         return 1 if self_test() else 0
@@ -1051,6 +1080,15 @@ def main(argv):
     if not argv:
         print(__doc__.strip())
         return 2
+
+    # **`--help` is answered before the self-test, and that is deliberate (T-192).** A help request
+    # is not evidence and does not need any; running twenty fixtures first and then dying on
+    # `FileNotFoundError: '--help'` - which is what `icons --help` did in 0.4.0, because the flag
+    # was taken as the deck path - is the worst of both. Found by the first outside build, which
+    # asked twice, got a traceback twice, and went and grepped `icons.svg` instead.
+    if argv[0] in ("--help", "-h", "help") or "--help" in argv or "-h" in argv:
+        print(USAGE.get(argv[0], __doc__.strip()))
+        return 0
 
     print("Self-test first - a tool that has not been shown to fail is not evidence (L-04).\n")
     if self_test():
@@ -1085,6 +1123,15 @@ def main(argv):
         return 0
 
     if cmd == "icons":
+        # **The library, in the terminal (T-192).** `--sheet` answers *what do they look like* and
+        # is the only answer 0.4.0 had, so an author who wanted *what may I name* had to open an
+        # SVG or grep it. The first outside build grepped, with the wrong pattern first.
+        if "--list" in rest:
+            names = sorted(library())
+            print("\n".join(names))
+            print("\n%d concept(s). Use one as `--set <concept>=<lucide>`." % len(names),
+                  file=sys.stderr)
+            return 0
         target = option(rest, "--sheet")
         if target:
             write(target, sheet())

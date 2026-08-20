@@ -145,6 +145,35 @@ QUICK_VIEW = re.compile(r'<template class="qv-src"[^>]*>.*?</template>'
                         r'|<div class="qv-body"[^>]*>.*?</div>', re.S | re.I)
 
 
+def strip_comments(html, keep_length=False):
+    """The document with every HTML comment removed, and it is run **before** slides are split.
+
+    **A comment can open a phantom slide, and the shell's own scaffold comment did** (T-191). Four
+    tools here split a deck with a regex over `<section ... class="slide" ...>`, and
+    `shell.py new` wrote
+
+        <!-- slides go here, one <section class="slide"> each (COMPONENT-CONTRACT.md 3.2) -->
+
+    at the insertion point. The pattern matched the tag **inside the comment**, so the comment
+    became a slide running to the first real `</section>` - and `runs()` below, which does strip
+    comments, could not help: it sees the fragment *after* the split, by which point the opening
+    `<!--` has been consumed and there is nothing left to strip. What came out was `3.2` reported
+    under `FIG-1` as a figure on slide 1 appearing in no source, **on a string the shell wrote**.
+
+    So the order is the fix, not the regex: comments stop being markup before anything looks for
+    markup. The four callers keep their own patterns, which genuinely differ - `density.py` wants
+    the opening tag alone - and share this one fact about what a comment is.
+
+    **`keep_length` blanks each comment instead of deleting it**, so every offset after it is the
+    offset it was. `density.py` returns `(start, end)` pairs its callers slice the ORIGINAL string
+    with; deleting bytes there would leave the slide bounds pointing a little further left with
+    every comment passed, which is a worse defect than the one being fixed and a silent one.
+    """
+    if keep_length:
+        return re.sub(r"<!--.*?-->", lambda m: " " * len(m.group(0)), html, flags=re.S)
+    return re.sub(r"<!--.*?-->", " ", html, flags=re.S)
+
+
 def runs(fragment):
     """The text runs of a fragment, split at every non-inline tag.
 
@@ -186,7 +215,7 @@ def deck_figures(deck):
     ledger already reads those documents; counting them here as well compares a document with
     itself.
     """
-    html = io.open(deck, encoding="utf-8").read()
+    html = strip_comments(io.open(deck, encoding="utf-8").read())
     out = []
     for m in re.finditer(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>(.*?)</section>',
                          html, re.S | re.I):

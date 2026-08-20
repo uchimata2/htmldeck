@@ -140,7 +140,14 @@ def read_answers(text, rules):
 def spine(data, rules, sources_given):
     """The lines of the report a program can be trusted with. No judgement, no scores."""
     rows = data.get("rows", [])
-    failing = [r for r in rows if not r.get("ok")]
+    # **A verdict has three states and `not r["ok"]` reads two.** `ok is None` is NO SUBJECT - the
+    # check ran and found nothing in this deck to judge - and `check.py` prints it as such while
+    # passing the deck. Testing falsiness put those rows under a heading that tells the reviewer to
+    # cite them, so a deck the gate passed arrived at the review carrying failures the gate never
+    # declared. Reported against `0.4.0` by the first outside build (T-190), and it is T-051's
+    # fault reflected: that one read absence as conformance, this one read absence as failure.
+    failing = [r for r in rows if r.get("ok") is False]
+    no_subject = [r for r in rows if r.get("ok") is None]
     out = []
 
     out.append("WHICH PASSES RAN")
@@ -159,6 +166,16 @@ def spine(data, rules, sources_given):
     else:
         out.append("  no mechanical failure. That is a deck carrying no defect the gate was built")
         out.append("  to see, which is not the same as a good deck (L-05).")
+
+    # **NO SUBJECT is printed, and printed apart.** Silence would hand the reviewer the same wrong
+    # picture the bug did, one direction over: a rule the gate could not judge is not a rule the
+    # gate cleared, and which rules had no subject in this deck is exactly the kind of thing a
+    # reviewer should know before deciding what the review has to cover itself.
+    if no_subject:
+        out.append("")
+        out.append("WHAT THE GATE COULD NOT JUDGE - no subject in this deck, so nobody has decided")
+        for r in no_subject:
+            out.append("  --    %-8s %s" % (r.get("rule", "?"), r.get("what", "")))
 
     out.append("")
     out.append("WHAT NO CHECK IN THIS REPOSITORY REACHES - the review is these")
@@ -257,9 +274,18 @@ def self_test():
     ok("a verdict for a rule that is not on the sheet is reported", unknown == ["DS-999"])
 
     fake = {"rows": [{"rule": "DS-001", "what": "zero external references", "ok": True},
-                     {"rule": "DS-035", "what": "type under the floor", "ok": False}]}
+                     {"rule": "DS-035", "what": "type under the floor", "ok": False},
+                     {"rule": "DS-140", "what": "no dashed flow in this deck", "ok": None}]}
     text = "\n".join(spine(fake, rules, False))
     ok("the spine names the failure the gate already found", "DS-035" in text)
+    # T-190. The whole defect in one assertion: a NO SUBJECT row must not reach the FAIL list.
+    # **The first version of this line spelled the padding wrong and passed against the restored
+    # bug** - the row prints as `FAIL  DS-140`, two spaces, and the assertion looked for five. An
+    # assertion that cannot fail is the fixture failure this repository keeps finding (L-04), and
+    # it was caught the only way it can be: by putting the defect back and running.
+    ok("and a NO SUBJECT rule is not called a failure",
+       "FAIL  DS-140" not in text and "COULD NOT JUDGE" in text)
+    ok("and the rule the gate could not judge is still shown", "DS-140" in text)
     ok("and says so when the content half did not run", "presentation-only" in text)
     ok("and never prints a score",
        not re.search(r"\b\d+\s*/\s*(?:24|16)\b", text) and "score" not in text.lower())
