@@ -13,8 +13,9 @@
 > outside, and only one of them is waiting for something. This is the first. Recorded by
 > [T-157](../../tasks/T-157-hand-the-upstream-registers-to-their-owners.md), which sent the other two.
 
-**From the htmldeck project, one machine, two shells.** Two observations, neither ranked and neither
-a request. This document exists because the first of them was originally filed against the wrong
+**From the htmldeck project, one machine, two shells.** Three observations, none ranked and none
+a request. *`O-C3` was added 2026-08-20, after the first two had been recorded; the disposition
+note above is unchanged and still covers the document.* This document exists because the first of them was originally filed against the wrong
 project, and the register it sat in had no home for an owner that is not a plugin.
 
 **Scope warning, up front.** Everything below was measured on **one machine — Windows 11, Git Bash
@@ -28,6 +29,7 @@ generally.
 | :--- | :--- |
 | **O-C1** | **The shell snapshot's `PATH` line is truncated mid-value, and it silently removes every plugin's `bin/` directory.** The snapshot's `export PATH='…'` line is **5,551 characters, 67 entries, and ends mid-path with no closing quote**; the shell that sources it has **37 entries and zero plugin `bin/` directories**, so 30 entries were lost including all three from the plugin cache. **20 of the 67 are session-scoped `local-agent-mode-sessions/<id>/<id>/rpm/plugin_<id>/bin` paths of about 200 characters each**, which is where the length comes from. Nothing reports the failure: a plugin's command simply does not exist, which reads as a broken install |
 | **O-C2** | **PowerShell gets no plugin `bin/` at all, by a different route.** `Get-Command <plugin-command>` does not resolve and `$env:PATH` contains no `plugins` entry, on the same machine and in the same session where the Bash snapshot at least *contained* the directory before losing it. So the two shells this environment offers disagree about what commands exist, and neither offers the plugin's. Recorded separately from `O-C1` because the mechanism is not the same and a fix for one need not fix the other |
+| **O-C3** | **`${CLAUDE_PLUGIN_ROOT}` is interpolated into a plugin's manifest files and is not exported into the shell the agent drives.** Measured 2026-08-20: in a shell tool call, `echo "[${CLAUDE_PLUGIN_ROOT}]"` prints `[]` and `env | grep -c CLAUDE_PLUGIN` prints `0`. **Nothing reports it** - the variable expands to nothing, so a documented `python ${CLAUDE_PLUGIN_ROOT}/tools/x.py` becomes `python /tools/x.py` and fails on a path the reader never wrote. Recorded here because it is the same shape as `O-C1`: a value that is present in one place, absent where it is used, and silent in between. **What it cost is measured rather than argued.** This plugin documented 67 commands that way. The first outside build read those documents in full, used the variable **zero** times, and substituted a hardcoded version-pinned path into the plugin cache **87 times** instead - in a session that had upgraded the plugin an hour earlier, so the pin was one update from being wrong. **The direction worth considering is the same as `O-C1`'s second**: a documentation variable that silently resolves to nothing in the one place people paste it is worth either exporting or refusing |
 
 ## What it cost, which is the argument for `O-C1` mattering
 
@@ -49,7 +51,7 @@ truncation.
 ## Provenance
 
 Assembled by the htmldeck project as part of a context-economy audit of its own development
-workflow. Both rows are *implementation* vintage: they were found while building something, not
+workflow. All three rows are *implementation* vintage: they were found while building something, not
 while auditing, and **no backlog was consulted** — there was none available to read. See
 [`../CONTEXT-AUDIT.md`](../CONTEXT-AUDIT.md) §7.3 for where they sat before this document existed,
 and [`../research/R8-context-economy-for-coding-agents.md`](../research/R8-context-economy-for-coding-agents.md)
