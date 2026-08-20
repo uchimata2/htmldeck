@@ -133,6 +133,17 @@ STATIC_VARIANTS = [
         # the shared block. The contract cannot know about it, which is the whole point: the row
         # is what makes it emittable, and the gate is what makes the row get written.
         (".icon{width:var(--icon)", ".callout{color:var(--accent)}\n.icon{width:var(--icon)")]),
+    # **The form the rule was written from, and the form that walked through it** (T-197, and the
+    # hole found the day 0.5.0 shipped). A build writes the separator as `&middot;`, so the eyebrow
+    # never reached the check as text - `runs()` decoded `&nbsp;` and `&amp;` and nothing else, and
+    # a digit followed by an ampersand is not a digit followed by a separator. Both forms are
+    # seeded, because a rule that catches only the decoded one catches only decks nobody built.
+    ("eyebrow-that-repeats-the-position-and-stage", "DS-241", [
+        ('<span class="tick"></span>The two proposals',
+         '<span class="tick"></span>05 &middot; The choice')]),
+    ("eyebrow-that-repeats-the-position-decoded", "DS-241", [
+        ('<span class="tick"></span>Corridor by corridor',
+         '<span class="tick"></span>06 · The choice')]),
     ("motion-that-stopped-reading-its-token", "DS-229", [
         # **The half `theme.py`'s literal scan cannot state, and the seed has to avoid writing a
         # literal or it proves the wrong thing.** Turn reads the slide transition's dials instead

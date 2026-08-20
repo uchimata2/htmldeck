@@ -17,6 +17,7 @@ Pure standard library (**L-07**), real Chrome offline via `render.py`.
 """
 
 import json
+import html
 import os
 import re
 import sys
@@ -557,7 +558,17 @@ def _stage_names(h):
 
 
 def _flat(fragment):
-    return " ".join(content.runs(fragment)).strip()
+    """The fragment's text, **with HTML entities decoded** before anything reads it.
+
+    **`&middot;` is how a build writes the separator, and it walked straight through DS-241 on the
+    first day the rule shipped.** `runs()` decodes `&nbsp;` and `&amp;` and nothing else, so an
+    eyebrow reading `07 &middot; Structure` arrived here as that literal string - and
+    `STARTS_WITH_POSITION`, which looks for a digit then a separator, saw a digit then an
+    ampersand and passed it. The deck the rule was written from is written that way, so the check
+    missed the one deck it existed to catch. Found by rendering the slide and reading it (rule 6)
+    after the gate had already said the deck was clean.
+    """
+    return " ".join(content.runs(html.unescape(fragment))).strip()
 
 
 def _norm_words(text):

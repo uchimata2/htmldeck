@@ -234,9 +234,10 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-194](T-194-spec-py-cannot-express-a-figure-derived-from-two-sources.md) | spec.py cannot express a figure derived from two sources, so a cross-check deck fails SPEC-4 | `PH1` | `0.5.0` | `done` | `review` | - | - | T-069 |
 | [T-195](T-195-build-md-has-no-guidance-for-the-reading-view-width-rule.md) | build.md gives no guidance for the reading-view width rule, which is the rule wide tables fail | `PH3` | `0.5.0` | `done` | `review` | - | - | - |
 | [T-196](T-196-render-py-shots-indexes-from-zero-and-names-files-from-one.md) | render.py shots indexes slides from zero and names its files from one | `PH3` | `0.5.0` | `done` | `review` | - | - | - |
-| [T-197](T-197-name-the-slides-subject-where-the-presenter-reads-it-first.md) | Name the slide's subject in the eyebrow, where a presenter reads it before speaking | `PH3` | `0.5.0` | `done` | `review` | - | - | T-114 |
+| [T-197](T-197-name-the-slides-subject-where-the-presenter-reads-it-first.md) | Name the slide's subject in the eyebrow, where a presenter reads it before speaking | `PH3` | `0.5.0` | `done` | `review` | - | - | T-114, T-201 |
 | [T-198](T-198-give-affordance-motion-its-own-band-faster-than-content-motion.md) | Give affordance motion its own duration band, faster than content motion | `PH3` | `0.5.0` | `done` | `review` | - | - | T-112, T-114, T-187, T-188, T-199 |
 | [T-199](T-199-the-back-pager-button-never-plays-its-press-animation.md) | The back pager button never plays its press animation | `PH1` | `0.5.0` | `done` | `review` | - | - | T-112, T-185, T-198 |
 | [T-200](T-200-add-a-lobby-slide-and-count-the-argument-not-the-file.md) | Add a lobby slide, and count the argument rather than the file | `PH3` | `0.5.0` | `done` | `review` | - | - | T-036, T-108, T-175, T-178 |
+| [T-201](T-201-ds-241s-check-misses-an-eyebrow-written-as-an-entity.md) | DS-241's check misses an eyebrow whose separator is written as an entity | `PH1` | `0.5.1` | `done` | `review` | - | - | T-197 |
 
 <!-- taskmd:end -->
