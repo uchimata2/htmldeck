@@ -278,11 +278,13 @@ def is_scoped(part, styled):
 
 SCRIPT_ARRAY = re.compile(r"var\s+([A-Z][A-Z_]*)\s*=\s*\[(.*?)\]\s*;", re.S)
 
-# Values an `#ARRAY` attribute may hold that are not subscripts. One so far: `data-stage="back"`
+# Values an `#ARRAY` attribute may hold that are not subscripts. Two: `data-stage="back"` and,
+# since 2026-08-20, `data-stage="front"` - the lobby a deck may open on (T-200). Both name matter
+# that is outside the argument, which is why neither indexes a stage.
 # marks a slide as outside the argument, so it indexes nothing (T-108). Kept as a set rather than a
 # literal because the contract states it as a vocabulary, and the next one must not need this
 # branch rewritten.
-NOT_AN_INDEX = frozenset(["back"])
+NOT_AN_INDEX = frozenset(["back", "front"])
 
 
 def script_arrays(html):
@@ -337,6 +339,15 @@ def structure(root, parts, styled, arrays=None):
             hosts = [root]
 
         for h in hosts:
+            # **A lobby rests on nothing, so it carries no provenance mark** (DS-242, T-200). This
+            # is the one scoped exemption in the count check and it is stated rather than inferred:
+            # `.provenance` says *what the argument rests on*, and front matter is not the argument
+            # - the same shape as DS-225's *back matter carries no mark*, which the ruleset already
+            # holds. It is narrow on purpose. DS-085 warns that a slide kind relaxing the contract
+            # hands the next slide kind the same argument, so the exemption names one part and one
+            # stage, and everything else on a lobby is the ordinary contract.
+            if name == "provenance" and "front" in (h.attrs.get("data-stage", ""), ):
+                continue
             n = len([e for e in els if ancestor(e, p.within) is h]) if p.within else len(els)
             if n < p.lo or (p.hi is not None and n > p.hi):
                 bad.append(".%s: %d per %s, outside %s"

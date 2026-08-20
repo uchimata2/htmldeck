@@ -149,6 +149,9 @@ with a mark that referenced nothing.
 | `.bottom-line` | `p` | `.slide` | `1` | — | author |
 | `.bottom-line--center` | — | `on .bottom-line` | `0+` | — | author |
 | `.provenance` | `p` | `.slide` | `1` | — | author |
+
+*One scoped exemption, and the only one in this table: a slide with `data-stage="front"` — a lobby (DS-242) — carries no `.provenance`. The mark says what the argument rests on, and front matter is not the argument; it is DS-225's *back matter carries no mark* at the other end. **It names one part and one stage on purpose.** DS-085 warns that a slide kind allowed to relax the contract hands the next slide kind the same argument, so everything else on a lobby is the ordinary contract — header, body, one bottom line. Added 2026-08-20 by [T-200](../tasks/T-200-add-a-lobby-slide-and-count-the-argument-not-the-file.md).*
+
 | `.sources` | `span` | `.slide` | `0-1` | — | author |
 | `.sources--one` | — | `on .sources` | `0+` | — | author |
 | `.sources--list` | — | `on .sources` | `0+` | — | author |

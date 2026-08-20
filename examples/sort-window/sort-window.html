@@ -2380,11 +2380,22 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
      it names, where `Colophon` is true of one. */
   var BACK_MATTER = 'Back matter';
 
+  /* **Front matter is the same idea at the other end, and it arrived last** (T-200). A lobby - the
+     slide an audience looks at while the room fills - carries the topic, the presenter and the
+     occasion and nothing from the argument, so it indexes no stage for exactly back matter's
+     reason. Both are OPTIONAL: a deck with neither is the ordinary case and nothing here requires
+     one.
+
+     **`matter` is what the rest of this file reads**, never `back` alone. Every place that asked
+     *is this outside the argument?* asked it as `m.back`, and adding a second kind by hand at each
+     site is how the two would drift apart. */
+  var FRONT_MATTER = 'Front matter';
+
   function manifest(){
     return slides.map(function(s, i){
       var b = s.querySelector('.bottom-line');
       var raw = (s.dataset.stage || '').trim();
-      var back = raw === 'back';
+      var back = raw === 'back', front = raw === 'front', matter = back || front;
       var st = parseInt(raw, 10);
       if (isNaN(st) || st < 0 || st >= STAGES.length) st = 0;
       return {
@@ -2392,9 +2403,11 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
         title:     s.dataset.name || '',
         bottom:    b ? b.textContent.replace(/\s+/g, ' ').trim() : '',
         back:      back,
-        stage:     back ? null : st,
-        stageName: back ? BACK_MATTER : STAGES[st],
-        icon:      back ? null : STAGE_ICON[st]
+        front:     front,
+        matter:    matter,
+        stage:     matter ? null : st,
+        stageName: back ? BACK_MATTER : front ? FRONT_MATTER : STAGES[st],
+        icon:      matter ? null : STAGE_ICON[st]
       };
     });
   }
@@ -2453,12 +2466,24 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
 
   var MAN = manifest();
 
+  function argumentTotal(){
+    var n = 0;
+    MAN.forEach(function(m){ if (!m.matter) n++; });
+    return n;
+  }
+
+  function argumentPosition(i){
+    var n = 0;
+    for (var k = 0; k <= i; k++) if (!MAN[k].matter) n++;
+    return n;
+  }
+
   function buildRuler(){
     MAN.forEach(function(m, i){
       /* Back matter starts no section, and the guard is load-bearing rather than tidy:
          `firstSlideOfStage(null)` matches nothing and returns 0, so without it the deck's FIRST
          slide would be re-declared a section every time a back-matter slide was drawn (T-108). */
-      var isSection = !m.back && firstSlideOfStage(m.stage) === i;
+      var isSection = !m.matter && firstSlideOfStage(m.stage) === i;
       var li = document.createElement('li');
       li.dataset.slide = i;
       if (isSection) li.dataset.section = '';
@@ -2509,7 +2534,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   function restoreLabel(){
     rulerLabel.removeAttribute('data-preview');
     var m = MAN[idx];
-    rulerLabel.textContent = m ? (m.back ? m.title : m.stageName) : '';
+    rulerLabel.textContent = m ? (m.matter ? m.title : m.stageName) : '';
   }
 
   /* Sized after layout, and again on resize - the controls' width is what decides capacity, and a
@@ -2740,11 +2765,19 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     /* charts and entrances draw in once, never on the way back (DS-146) */
     if (!played[i]) { played[i] = true; slides[i].setAttribute('data-played',''); }
 
+    /* **The counter counts the ARGUMENT, not the file** (T-200). A lobby and a colophon are covers
+       on the topic rather than content, so counting them told a presenter they were on 15 of 16
+       when they were on the last thing they had to say. On a matter slide there is no argument
+       position to report, and the ruler's label is already carrying that slide's own title - so
+       this goes empty rather than inventing a number for a slide outside the sequence. */
     countBox.innerHTML = '';
-    var strong = document.createElement('b');
-    strong.textContent = (i + 1) < 10 ? '0' + (i + 1) : String(i + 1);
-    countBox.appendChild(strong);
-    countBox.appendChild(document.createTextNode(' / ' + slides.length));
+    if (!MAN[i].matter) {
+      var pos = argumentPosition(i), tot = argumentTotal();
+      var strong = document.createElement('b');
+      strong.textContent = pos < 10 ? '0' + pos : String(pos);
+      countBox.appendChild(strong);
+      countBox.appendChild(document.createTextNode(' / ' + tot));
+    }
 
     /* The ruler lights the SLIDE, where the ribbon lit the stage - the tick is per slide now, and
        the section ticks show the stage boundaries graphically. `aria-current` moves with it, as it

@@ -985,6 +985,34 @@ def marker_verdicts(html):
              not bad)]
 
 
+def front_matter_verdicts(html):
+    """DS-242's row. The lobby is optional, so absence is a pass; what is checked is its shape.
+
+    Three mechanical clauses and no more. *Nothing from the argument* is the clause that matters
+    most and it is a reading, so it stays with the critique pass - the same division DS-241 and
+    DS-090 make. What a program settles is that there is at most one, that it is first, and that
+    the deck still has an argument to be in front of.
+    """
+    stages = [m.group(1).strip().lower()
+              for m in re.finditer(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*'
+                                   r'data-stage="([^"]*)"', content.strip_comments(html), re.I)]
+    if not stages:
+        return [("DS-242", "front matter: no slides to judge", None)]
+    front = [i for i, v in enumerate(stages) if v == "front"]
+    argument = [v for v in stages if v not in ("front", "back")]
+    bad = []
+    if len(front) > 1:
+        bad.append("%d lobby slides" % len(front))
+    if front and front[0] != 0:
+        bad.append("the lobby is slide %d, not the first" % (front[0] + 1))
+    if front and not argument:
+        bad.append("a lobby in front of no argument")
+    return [("DS-242", "a lobby, if any, is single, first and in front of an argument: %s"
+             % ("; ".join(bad) if bad else
+                "%d lobby, %d argument slide(s)" % (len(front), len(argument))),
+             not bad)]
+
+
 def eyebrow_verdicts(html):
     """DS-241's row. The offending slides travel in the text, per T-193."""
     bad = ds241_eyebrow_offenders(html)
@@ -2426,6 +2454,7 @@ def self_test():
         # `reduced_verdicts` reports that one as its own failure and it is not an absent subject.
         rows = (render_verdicts(empty) + split_verdicts("") + provenance_verdicts("")
                 + fetch_verdicts("") + marker_verdicts("") + eyebrow_verdicts("")
+                + front_matter_verdicts("")
                 + reduced_verdicts(reduced))
     except KeyError as exc:
         sys.exit("SELF-TEST FAILED: a verdict reads data[%s] unconditionally, so it is not in "
@@ -2530,6 +2559,7 @@ def self_test():
     # still found.
     exercised = {"audit.render_verdicts", "audit.split_verdicts", "audit.provenance_verdicts",
                  "audit.fetch_verdicts", "audit.marker_verdicts", "audit.eyebrow_verdicts",
+                 "audit.front_matter_verdicts",
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
                  "printpages.verdicts", "printgeom.verdicts", "spec.verdicts",
