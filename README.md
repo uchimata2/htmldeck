@@ -282,8 +282,9 @@ built. **PH3** is the
 larger work, including 3D visuals, the frame-rate figure and those seven conditions.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
-The current release is 0.5.0. Most of it came from watching somebody else build a deck with 0.4.0
-and writing down everything that got in their way.
+The current release is 0.5.1. Most of it came from watching somebody else build a deck with 0.4.0
+and writing down everything that got in their way. The .1 is a check that shipped in 0.5.0
+unable to see the thing it was written to catch, found a few hours later by looking at a slide.
 
 The controls answer faster. Pressing the back or forward arrow used to take most of half a second to
 show anything, which is long enough to wonder whether the button works. The back arrow never
