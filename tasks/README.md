@@ -35,19 +35,8 @@ first reached an installed copy, derived from the first tag containing the commi
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | - | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112, T-185 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187 |
-| [T-110](T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md) | The quick view styles a source as deck copy, not as a document | `PH3` | - | `proposed` | `specify` | - | - | T-070, T-106, T-107, T-109, T-121, T-122 |
 | [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | - | `proposed` | `specify` | - | - | T-057, T-112, T-119 |
 | [T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md) | Open DS-140's closed motion vocabulary into a style guide, keeping the rules that protect behaviour | `PH3` | - | `proposed` | `specify` | - | - | T-016, T-057, T-112, T-188, T-198 |
-| [T-189](T-189-resolve-the-plugin-root-in-every-documented-command.md) | Every documented command interpolates CLAUDE_PLUGIN_ROOT, which is empty in the shell | `PH1` | - | `proposed` | `specify` | - | - | T-064, T-074 |
-| [T-190](T-190-critique-py-reports-a-no-subject-rule-as-a-gate-failure.md) | critique.py reports a NO SUBJECT rule as a gate failure the reviewer must cite | `PH1` | - | `proposed` | `specify` | - | - | T-051 |
-| [T-191](T-191-the-shells-scaffold-comment-is-parsed-as-a-slide.md) | The shell's own scaffold comment is parsed as a slide and injects a figure into slide 1 | `PH1` | - | `proposed` | `specify` | - | - | T-167 |
-| [T-192](T-192-shell-py-icons-help-crashes-and-nothing-lists-the-sprite.md) | shell.py icons --help crashes, and no command lists what the sprite holds | `PH1` | - | `proposed` | `specify` | - | - | - |
-| [T-193](T-193-failing-rows-print-a-count-where-the-probe-holds-the-evidence.md) | A failing row prints a count where the probe already holds the evidence that names the fault | `PH3` | - | `proposed` | `specify` | - | - | T-066 |
-| [T-194](T-194-spec-py-cannot-express-a-figure-derived-from-two-sources.md) | spec.py cannot express a figure derived from two sources, so a cross-check deck fails SPEC-4 | `PH1` | - | `proposed` | `specify` | - | - | T-069 |
-| [T-195](T-195-build-md-has-no-guidance-for-the-reading-view-width-rule.md) | build.md gives no guidance for the reading-view width rule, which is the rule wide tables fail | `PH3` | - | `proposed` | `specify` | - | - | - |
-| [T-196](T-196-render-py-shots-indexes-from-zero-and-names-files-from-one.md) | render.py shots indexes slides from zero and names its files from one | `PH3` | - | `proposed` | `specify` | - | - | - |
-| [T-197](T-197-name-the-slides-subject-where-the-presenter-reads-it-first.md) | Name the slide's subject in the eyebrow, where a presenter reads it before speaking | `PH3` | - | `proposed` | `specify` | - | - | T-114 |
-| [T-200](T-200-add-a-lobby-slide-and-count-the-argument-not-the-file.md) | Add a lobby slide, and count the argument rather than the file | `PH3` | - | `proposed` | `specify` | - | - | T-036, T-108, T-175, T-178 |
 
 ## Closed
 
@@ -160,6 +149,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-107](T-107-quickviews-markdown-renderer-drops-thematic-breaks.md) | quickview.py's Markdown renderer drops thematic breaks, shipping "---" as body text | `PH1` | `0.2.3` | `done` | `review` | - | - | T-070, T-110, T-121, T-122, T-179, T-181 |
 | [T-108](T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md) | A deck has no back-matter stage, so the colophon is labelled with the last argument stage | `PH1` | `0.2.3` | `done` | `review` | - | - | T-034, T-035, T-036, T-109, T-124, T-175, T-200 |
 | [T-109](T-109-one-source-reference-component-rendered-in-three-places.md) | One source-reference component, typed by what the source is, rendered in three places | `PH3` | `0.3.1` | `done` | `review` | - | - | T-069, T-070, T-103, T-106, T-108, T-110, T-115, T-117, T-118, T-176 |
+| [T-110](T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md) | The quick view styles a source as deck copy, not as a document | `PH3` | `unreleased` | `done` | `review` | - | - | T-070, T-106, T-107, T-109, T-121, T-122 |
 | [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) | A named slide transition, chosen per deck, with slide and immediate as the shipping pair | `PH3` | - | `done` | `review` | - | - | T-016, T-041, T-057, T-112, T-185 |
 | [T-112](T-112-motion-density-and-the-split-between-content-and-affordance-motion.md) | Motion density, and the split between content motion and affordance motion | `PH3` | - | `done` | `review` | - | - | T-016, T-041, T-057, T-111, T-113, T-114, T-185, T-187, T-188, T-198, T-199 |
 | [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | The chrome row layout — give the pager the corner, and decide what happens to Read and Motion | `PH3` | `0.4.0` | `done` | `review` | - | - | T-035, T-036, T-112, T-115, T-119, T-177, T-178, T-180, T-197, T-198 |
@@ -236,7 +226,17 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) | No instrument here can watch an animation play, so any rule about motion over time is unverifiable | `PH3` | - | `done` | `review` | - | - | T-041, T-057, T-111, T-112, T-183, T-199 |
 | [T-186](T-186-print-to-pdf-drops-the-file-when-its-destination-is-relative.md) | print_to_pdf drops the file when its destination is relative, and reports nothing | `PH3` | - | `done` | `review` | - | - | T-074, T-094, T-123 |
 | [T-188](T-188-raise-the-shipped-motion-density-default-to-100.md) | Raise the shipped motion density default from 10 to 100, and correct every document that states the old figure | `PH3` | `unreleased` | `done` | `review` | - | - | T-112, T-187, T-198 |
+| [T-189](T-189-resolve-the-plugin-root-in-every-documented-command.md) | Every documented command interpolates CLAUDE_PLUGIN_ROOT, which is empty in the shell | `PH1` | `unreleased` | `done` | `review` | - | - | T-064, T-074 |
+| [T-190](T-190-critique-py-reports-a-no-subject-rule-as-a-gate-failure.md) | critique.py reports a NO SUBJECT rule as a gate failure the reviewer must cite | `PH1` | `unreleased` | `done` | `review` | - | - | T-051 |
+| [T-191](T-191-the-shells-scaffold-comment-is-parsed-as-a-slide.md) | The shell's own scaffold comment is parsed as a slide and injects a figure into slide 1 | `PH1` | `unreleased` | `done` | `review` | - | - | T-167 |
+| [T-192](T-192-shell-py-icons-help-crashes-and-nothing-lists-the-sprite.md) | shell.py icons --help crashes, and no command lists what the sprite holds | `PH1` | `unreleased` | `done` | `review` | - | - | - |
+| [T-193](T-193-failing-rows-print-a-count-where-the-probe-holds-the-evidence.md) | A failing row prints a count where the probe already holds the evidence that names the fault | `PH3` | `unreleased` | `done` | `review` | - | - | T-066 |
+| [T-194](T-194-spec-py-cannot-express-a-figure-derived-from-two-sources.md) | spec.py cannot express a figure derived from two sources, so a cross-check deck fails SPEC-4 | `PH1` | `unreleased` | `done` | `review` | - | - | T-069 |
+| [T-195](T-195-build-md-has-no-guidance-for-the-reading-view-width-rule.md) | build.md gives no guidance for the reading-view width rule, which is the rule wide tables fail | `PH3` | `unreleased` | `done` | `review` | - | - | - |
+| [T-196](T-196-render-py-shots-indexes-from-zero-and-names-files-from-one.md) | render.py shots indexes slides from zero and names its files from one | `PH3` | `unreleased` | `done` | `review` | - | - | - |
+| [T-197](T-197-name-the-slides-subject-where-the-presenter-reads-it-first.md) | Name the slide's subject in the eyebrow, where a presenter reads it before speaking | `PH3` | `unreleased` | `done` | `review` | - | - | T-114 |
 | [T-198](T-198-give-affordance-motion-its-own-band-faster-than-content-motion.md) | Give affordance motion its own duration band, faster than content motion | `PH3` | `unreleased` | `done` | `review` | - | - | T-112, T-114, T-187, T-188, T-199 |
 | [T-199](T-199-the-back-pager-button-never-plays-its-press-animation.md) | The back pager button never plays its press animation | `PH1` | `unreleased` | `done` | `review` | - | - | T-112, T-185, T-198 |
+| [T-200](T-200-add-a-lobby-slide-and-count-the-argument-not-the-file.md) | Add a lobby slide, and count the argument rather than the file | `PH3` | `unreleased` | `done` | `review` | - | - | T-036, T-108, T-175, T-178 |
 
 <!-- taskmd:end -->

@@ -2,12 +2,13 @@
 id: T-190
 title: critique.py reports a NO SUBJECT rule as a gate failure the reviewer must cite
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-051]
 work_package: PH1
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: s
@@ -66,25 +67,34 @@ own header.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Split the three-state verdict properly | `critique.py` line 143 |
+| 2 | Decide what a NO SUBJECT row prints | a third list |
+| 3 | Fixture it, seeded failing first | `self_test` |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **NO SUBJECT is printed, in its own list, not silenced** - 2026-08-20. Silence hands the reviewer the same wrong picture one direction over: a rule the gate could not judge is not a rule it cleared, and which rules had no subject is exactly what a reviewer needs before deciding what the review must cover itself.
+- **The fixture passed against the restored bug on its first version.** The row prints as `FAIL  DS-140`, two spaces, and the assertion looked for five. Caught only by putting the defect back and running (**L-04**); the corrected assertion is watched failing.
 
 **Outputs produced**
-- <path>
+- `tools/deck/critique.py`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| critique and check agree about DS-140 on the adopter deck | **pass** | `DS-140` now appears under *WHAT THE GATE COULD NOT JUDGE*, and the gate passes the deck |
+| A fixture holds a NO SUBJECT row and is watched failing first | **pass** | 13 of 14 with the bug restored, 14 of 14 fixed |
+| Every other three-state read is swept | **pass** | `not r.get("ok")` over a verdict row appears nowhere else in the repository |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | One line, and a fixture that took two attempts. |
+| 2026-08-20 | -> done | Three criteria met. |

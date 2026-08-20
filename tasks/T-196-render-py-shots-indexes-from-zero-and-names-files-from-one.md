@@ -2,12 +2,13 @@
 id: T-196
 title: render.py shots indexes slides from zero and names its files from one
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: []
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: low
 effort: xs
@@ -51,25 +52,33 @@ the whole point of the command - is reading a different numbering from the one t
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Make the argument one-based and bound it | `render.py` |
+| 2 | Update the docstring examples and `measure`'s printed index | one base everywhere |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **One-based on the argument**, as recommended at filing: the filename, the ruler, the eyebrow and every conversation about a deck count from one.
+- **`motion --into N` was left alone.** It is a count of transitions rather than a slide index, and it already reports its arrival one-based. Touching it would be a second change with its own risk under this task's name.
+- **Out of range is refused with the deck's real length** rather than silently skipped.
 
 **Outputs produced**
-- <path>
+- `tools/deck/render.py`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `shots <deck> 12` writes `slide-12.png` and it is slide 12 | **pass** | `shots ... 1,13` wrote `slide-01.png` and `slide-13.png` |
+| Every call site and document using the old base is updated | **pass** | the docstring examples and `measure`'s printed index; task records are history and were left as written |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Small, with a stated migration. |
+| 2026-08-20 | -> done | Both criteria met. |

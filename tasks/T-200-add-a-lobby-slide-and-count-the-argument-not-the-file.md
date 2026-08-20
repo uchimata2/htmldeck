@@ -2,12 +2,13 @@
 id: T-200
 title: Add a lobby slide, and count the argument rather than the file
 type: decision
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-036, T-108, T-175, T-178]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: l
@@ -97,25 +98,45 @@ stage-keyed marks working exactly as T-108 built them.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Mirror the back-matter stage at the front | `data-stage="front"` |
+| 2 | Count the argument in the counter and the ruler | `deck.js` |
+| 3 | Gate the lobby's shape | `audit.front_matter_verdicts` |
+| 4 | Add one to a shipped deck, print it and look | `measure-first` |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **Front and back matter keep their contents boxes**, as recommended at filing and confirmed by the owner. The contents page maps the sheets in a reader's hand; the counter answers where you are in the argument.
+- **Optional, on the owner's instruction** - a deck with neither is the ordinary case. `front_matter_verdicts` passes a deck with no lobby.
+- **DS-225 needed no amendment.** Measured: the contents page is print-only, built inside `deck.js`'s print path, so *placed first* is about sheet order and a lobby - an ordinary `.slide` - still follows it. The clause was expected to need rewording and did not.
+- **One scoped exemption: a lobby carries no `.provenance`.** The mark says what the argument rests on. Named in the contract against DS-085's warning that a slide kind allowed to relax the contract hands the next slide kind the same argument.
+- **A matter slide reports no position rather than a dash or a zero** - the ruler label is already carrying that slide's own title, so there is nothing to invent.
 
 **Outputs produced**
-- <path>
+- `docs/DESIGN-SYSTEM.md` DS-242
+- `docs/COMPONENT-CONTRACT.md`
+- `shell/deck.js`
+- `tools/deck/audit.py`
+- `tools/deck/component.py`
+- `tools/deck/check.py`
+- `examples/measure-first/measure-first.html`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| A deck with both reports `n / N` over its argument alone | **pass** | `measure-first`: 14 slides, and its first argument slide renders `01 / 12` |
+| The lobby rule names what may appear, and a second one fails the gate | **pass** | DS-242's row reports more than one, one that is not first, and a lobby with no argument behind it |
+| A 16-argument deck with both covers still prints one contents sheet | **pass** | 14 entries on 1 sheet measured here, and the bound is unchanged at 16 - the counting clause is what keeps a 16-argument deck off the second sheet |
+| Printed and looked at | **pass** | PRINT-1 15 pages declared and counted, PRINT-2 14 cards over 1 sheet with no intersection, PRINT-3 clear of the footnote; the lobby rendered and read |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Front matter, then the counter, then the deck. |
+| 2026-08-20 | -> done | Four criteria met. |

@@ -2,12 +2,13 @@
 id: T-194
 title: spec.py cannot express a figure derived from two sources, so a cross-check deck fails SPEC-4
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-069]
 work_package: PH1
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: s
@@ -54,25 +55,34 @@ was to pick one origin and put the truth in prose, which is the ledger lying to 
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Read `Origin` with the same parser the slide's `Sources` cell uses | `slugs()` |
+| 2 | Decide the third origin kind | `derived`, reserved |
+| 3 | Fixture both, seeded failing first | `self_test` |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **`derived` is reserved rather than free text**, so the check can tell a claim from a typo - and it composes: `` `exercise`, `notes`, derived `` is *these two documents, and the number is ours*.
+- **A second origin the slide does not cite still fails.** Asserted in both directions, because a vocabulary widened by one value is one step from one that admits anything.
 
 **Outputs produced**
-- <path>
+- `tools/deck/spec.py`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| A ledger row citing two sources validates unedited | **pass** | seeded into the fixture pair: SPEC-4 `False` with the old parser, `True` with the new one |
+| A single-origin ledger is unchanged | **pass** | the three shipped decks' SPEC rows are identical |
+| Watched failing first | **pass** | recorded above |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | One parser, shared. |
+| 2026-08-20 | -> done | Three criteria met. |

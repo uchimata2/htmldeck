@@ -2,12 +2,13 @@
 id: T-193
 title: A failing row prints a count where the probe already holds the evidence that names the fault
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-066]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: s
@@ -56,25 +57,36 @@ the checker's source is not something an adopter should ever be doing.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Name the evidence in DS-113 and DS-075 | `_naming`, `_widest` |
+| 2 | Keep the wide elements inside the DS-075 probe | `at320Widest` |
+| 3 | Sweep every count-only row | ten more rows widened |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **Bounded at three, then `and N more`** - a row listing forty elements is a different failure of the same kind.
+- **`_name_of` handles a string, a pair and a dict**, because the probe emits all three and a row should not have to know which.
+- **Left alone: `DS-219`'s mark pairs and `DS-092`'s counts of counts** - the first holds objects whose identifying part is a colour pair rather than a name, the second is a row whose subject genuinely is a count. Both recorded here rather than silently skipped.
+- **The absent-subject fixture caught the omission**: `at320Widest` was in neither `ALWAYS_MEASURED` nor `CONDITIONALLY_MEASURED`, and the run refused to start.
 
 **Outputs produced**
-- <path>
+- `tools/deck/audit.py`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| DS-113 names the dead symbol ids | **pass** | seeded two unused symbols: `sprite icons never used: 2 of 13 - i-decoy-one, i-decoy-two` |
+| DS-075 names the widest offending element | **pass** | seeded a 900 px div: `reflow scrollWidth at 320 CSS px: 920 (overflowing: 1) - widest: div.wide-decoy 900px` |
+| The sweep is recorded, including what was left alone | **pass** | ten rows widened, two named above with the reason |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Two rows, then the sweep. |
+| 2026-08-20 | -> done | Three criteria met. |

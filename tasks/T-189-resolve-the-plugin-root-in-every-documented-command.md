@@ -2,12 +2,13 @@
 id: T-189
 title: Every documented command interpolates CLAUDE_PLUGIN_ROOT, which is empty in the shell
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-064, T-074]
 work_package: PH1
+shipped_in: unreleased
 owner: the project owner
 business_value: critical
 effort: s
@@ -74,25 +75,36 @@ cannot be reached.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Prove the variable is empty in the shell the model drives | measured `[]` |
+| 2 | Find a resolution that survives a version change | a discovery command |
+| 3 | Replace every use across the skill, and give SKILL.md a section 0 | 67 sites |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **A resolution line, not a launcher** - 2026-08-20, as recommended at filing. A launcher is a second thing to keep in step with the tools, and what failed here was documentation.
+- **`$HTMLDECK` rather than reusing the name.** Keeping `${CLAUDE_PLUGIN_ROOT}` and explaining it would leave 67 strings that look like a variable the shell knows.
+- **The resolution is version-independent and is stated as discovery**: `ls -d "$HOME"/.claude/plugins/cache/*/htmldeck/*/ | sort -V | tail -1`. Shell state does not persist between tool calls, so section 0 says to substitute the printed path and to re-resolve after an update - which is the half the adopter's hardcoded path got wrong, not the path itself.
 
 **Outputs produced**
-- <path>
+- `skills/htmldeck/SKILL.md` section 0
+- `references/build.md`, `pipeline.md`, `critique.md`, `artifacts.md`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| No document under `skills/` gives a command depending on the variable | **pass** | 67 occurrences replaced; a grep for the old name returns nothing under `skills/` |
+| The replacement is run, off the plugin's own directory and off `C:` | **pass** | run from `$HOME`, resolved the 0.4.0 cache and executed `check.py` out of it |
+| It survives a version change | **pass** | the glob names no version and sorts with `-V`, so the newest installed copy wins |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Measured empty, then replaced. |
+| 2026-08-20 | -> done | Three criteria met. |

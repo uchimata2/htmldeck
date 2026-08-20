@@ -1173,42 +1173,59 @@ svg{display:block}
   text-transform:uppercase;
 }
 .qv-close:hover{border-color:var(--accent);color:var(--ink)}
+/* **A document scale, not the projection scale** (T-110). Everything below read `--fs-*`, which is
+   sized in design units for a slide seen from the back of a room, while this panel is `fixed` and
+   read at arm's length. Two things followed, and the second is the one that shows: the body came
+   out at 26 px, five to seven words to a line - and the heading scale INVERTED, because `h3` took
+   `--fs-small`, which is below `--fs-body`. A rendered source had headings smaller than its own
+   prose. The reading view already owns a document scale for exactly this surface, so this reads
+   `--doc-*` and adds no token of its own. */
 .qv-body{
   flex:1 1 auto;min-height:0;overflow:auto;
-  padding:var(--sp-4);
-  font-size:var(--fs-body);line-height:1.6;color:var(--ink);
+  padding:var(--doc-sp-lg);
+  font-size:var(--doc-fs);line-height:1.65;color:var(--ink);
 }
 /* The rendered source. Every element it may contain is styled here, because the source brought no
    stylesheet of its own and must not be able to bring one (admission test 2). */
-.qv-doc > * + *{margin-top:var(--sp-2)}
+.qv-doc > * + *{margin-top:var(--doc-sp-sm)}
 .qv-doc h1,.qv-doc h2,.qv-doc h3{font-family:var(--font-display);line-height:1.25}
-.qv-doc h1{font-size:var(--fs-lead)}
-.qv-doc h2{font-size:var(--fs-body)}
-.qv-doc h3{font-size:var(--fs-small)}
+/* Descending, and every one of them above the body. A heading is a heading by being bigger. */
+.qv-doc h1{font-size:var(--doc-fs-title);margin-top:var(--doc-sp-lg)}
+.qv-doc h2{font-size:var(--doc-fs-head);margin-top:var(--doc-sp)}
+.qv-doc h3{font-size:var(--doc-fs-lead);margin-top:var(--doc-sp-sm)}
+.qv-doc h1:first-child,.qv-doc h2:first-child,.qv-doc h3:first-child{margin-top:0}
 /* The reset above kills every marker (`list-style:none`), which is right for the deck and
    wrong for a quoted document: an ordered list rendered without its numbers has lost the
    thing that made it ordered. Restored here, and only here. T-107. */
-.qv-doc ul,.qv-doc ol{padding-left:var(--sp-4)}
+.qv-doc ul,.qv-doc ol{padding-left:var(--doc-sp-lg)}
 .qv-doc ul{list-style:disc}
 .qv-doc ol{list-style:decimal}
 /* A thematic break: themed and visible, so nothing markdown() emits ships unstyled. The
    value is deliberately the plainest one the theme allows - T-110 owns what it should look
    like, and picks it against a rendered source rather than here. */
-.qv-doc hr{height:0;margin:var(--sp-3) 0;border:0;border-top:var(--hair) solid var(--line)}
-.qv-doc li + li{margin-top:var(--sp-1)}
-.qv-doc pre,.qv-doc code{font-family:var(--font-mono);font-size:var(--fs-small)}
-.qv-doc pre{padding:var(--sp-2);border-radius:var(--radius);background:var(--paper-sunk);
+.qv-doc hr{height:0;margin:var(--doc-sp) 0;border:0;border-top:var(--doc-hair) solid var(--line)}
+.qv-doc li + li{margin-top:var(--doc-sp-2xs)}
+.qv-doc pre,.qv-doc code{font-family:var(--font-mono);font-size:var(--doc-fs-sm)}
+.qv-doc pre{padding:var(--doc-sp-sm);border-radius:var(--doc-radius);background:var(--paper-sunk);
   overflow-x:auto;white-space:pre-wrap}
-.qv-doc table{border-collapse:collapse;width:100%;font-size:var(--fs-small)}
-.qv-doc th,.qv-doc td{padding:var(--sp-1) var(--sp-2);border:var(--hair) solid var(--line);
-  text-align:left}
-.qv-doc blockquote{padding-left:var(--sp-3);border-left:var(--hair) solid var(--line);
+/* **The table: one dimmed rule per row, and a tinted header** (T-110). Three candidates were
+   rendered against a real source and looked at. The full grid it had - a hairline on all four
+   sides of every cell - draws 4n lines to separate n rows, and at a document's line height the
+   verticals crowd the columns rather than dividing them. An alternating row tint reads as a
+   spreadsheet: the stripe is a stronger signal than any cell in it. The horizontal rule is what a
+   document does, and the header earns the one tint because it is the row that is different. */
+.qv-doc table{border-collapse:collapse;width:100%;font-size:var(--doc-fs-sm)}
+.qv-doc th,.qv-doc td{padding:var(--doc-sp-xs) var(--doc-sp-sm);text-align:left;
+  border:0;border-bottom:var(--doc-hair) solid var(--line)}
+.qv-doc thead th,.qv-doc tr:first-child th{background:var(--paper-sunk);color:var(--ink-soft)}
+.qv-doc tr:last-child td{border-bottom:0}
+.qv-doc blockquote{padding-left:var(--doc-sp);border-left:var(--doc-hair) solid var(--line);
   color:var(--ink-soft)}
 /* The one place a raster is legal, and the rule says so by naming this container (DS-110). */
 .qv-doc img,.qv-doc svg{display:block;max-width:100%;height:auto}
 /* A source's own <a> is rendered as text with its target beside it, so nothing here is a link that
    could be dead (DS-105) or reach the network (DS-001). */
-.qv-doc .qv-href{font-family:var(--font-mono);font-size:var(--fs-mono);color:var(--ink-faint)}
+.qv-doc .qv-href{font-family:var(--font-mono);font-size:var(--doc-fs-mono);color:var(--ink-faint)}
 
 /* The control that opens one, inside the sources box it belongs to. */
 .sources-open{

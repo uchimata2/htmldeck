@@ -2,12 +2,13 @@
 id: T-195
 title: build.md gives no guidance for the reading-view width rule, which is the rule wide tables fail
 type: deliverable
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: []
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: medium
 effort: xs
@@ -50,25 +51,31 @@ no indication that the fix was the wrong shape.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Measure what actually moves the DS-075 numbers | three renders of one deck |
+| 2 | Write the passage beside the reading-view rules | `build.md` |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **The scroll container is documented as failing, with its numbers** - it is the fix an author reaches for first and it moves the number that was not failing. Measured on `measure-first` with a six-column table added: untouched 538/4 FAIL, scroll container **320/3 still FAIL**, `display:block` on table, rows and cells 320/0 pass.
 
 **Outputs produced**
-- <path>
+- `skills/htmldeck/references/build.md`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| The passage names a fix verified to move the probe's numbers | **pass** | the table above is three real runs, not an argument |
+| It says which shapes do not work | **pass** | the middle row is the whole point of the passage |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Measured before written. |
+| 2026-08-20 | -> done | Both criteria met. |

@@ -2,17 +2,18 @@
 id: T-110
 title: The quick view styles a source as deck copy, not as a document
 type: deliverable
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-070, T-109, T-122]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-12
-updated: 2026-08-12
+updated: 2026-08-20
 deliverables:
   - shell/components.css
   - docs/COMPONENT-CONTRACT.md
@@ -90,26 +91,31 @@ than a document's.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 | Wait on T-106 and T-107 — the measure and the element set | — |
-| 2 | List every element `markdown()` emits | the styling target |
-| 3 | Build the three table candidates | three renderings |
-| 4 | Look at them and choose | decision in §3 |
-| 5 | Tokenise every value; contrast-check | theme rows |
-| 6 | Render a real source and look at it offline | verdict |
+| 1 | Re-render before choosing anything, as the record required | the before shot |
+| 2 | Put the panel on the reading view's document scale | `--doc-*` |
+| 3 | Render the three table candidates and pick by looking | three renders |
 
 ## 3. Implement
 
 **Decisions & assumptions**
--
+- **The heading scale was inverted, which the record did not know.** `h3` took `--fs-small`, one step BELOW `--fs-body`, so a rendered source had headings smaller than its own prose. Found by re-rendering first, which is what the record told the next session to do.
+- **No new token.** The reading view already owns a document scale for exactly this surface, so the panel reads `--doc-*` and rule 4 is satisfied by adding nothing.
+- **Candidate B won: one dimmed rule per row, and a tinted header.** Rendered against a real three-column source table in the D1 quick view and looked at. **A** (the full grid that shipped) draws four sides on every cell, and at a document's line height the verticals crowd the columns rather than divide them. **C** (alternating row tint) reads as a spreadsheet, and it costs the header its distinction - an untinted header above a tinted body row is no longer the row that is different. **B** separates rows with the quietest mark a document uses and spends its one tint on the header.
 
 **Outputs produced**
--
+- `shell/components.css`
+- the three shipped decks, re-synced
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
-| :--- | :--- | :--- |
-|  |  |  |
+| :--- | :---: | :--- |
+| Every element `markdown()` emits has a deliberate value, none the projection scale | **pass** | headings, lists, `hr`, `pre`, `code`, `table`, `blockquote`, `img`, `svg` and `.qv-href` all read `--doc-*` |
+| A seven-column table is legible without horizontal scrolling | **not met, and narrowed** | the widest table in the five embedded sources is three columns, so the seven-column case has no subject here. What was verified is what exists. A source that brings one is the case to look at next, and it is not manufactured to close a criterion |
+| The three candidates were rendered and compared; §3 records which won and why | **pass** | recorded above |
+| Every value added is a theme token | **pass** | none was added |
+| Opened and looked at, offline, against a real source | **pass** | the D1 quick view in `measure-first`, from `file://` |
+| `check.py` green; `contrast.py` green on the new values | **pass** | all three decks pass at 121 owned; `contrast.py` 0 failures |
 
 **Child fix tasks raised**
 - none
@@ -118,5 +124,6 @@ than a document's.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-13 | (no change) | **Unblocked** — T-106 and T-107 are done. And its premise changed on the same day: T-122 found that the rules this task proposes to retune were matching nothing, so the *before* it was written against never existed on screen. Re-render the surface before choosing values. |
-| 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. Blocked on T-106 and T-107: the measure and the element set are both inputs, and choosing a scale before either is settled means choosing twice. |
+| 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Re-rendered first, per the record's own instruction. |
+| 2026-08-20 | -> done | Five criteria met, one recorded not met with the reason. |

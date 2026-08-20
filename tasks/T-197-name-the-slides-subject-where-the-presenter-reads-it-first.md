@@ -2,12 +2,13 @@
 id: T-197
 title: Name the slide's subject in the eyebrow, where a presenter reads it before speaking
 type: decision
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-114]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: m
@@ -79,25 +80,41 @@ amendment to a full one.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Measure how the shipped decks use the slot | 23 of 36 slides were position+stage |
+| 2 | Write DS-241 and gate its mechanical half | `audit.eyebrow_verdicts` |
+| 3 | Re-cut the two older decks and look | 24 eyebrows |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **DS-090 is untouched**, as recommended at filing. The subject goes in the eyebrow, which was carrying the position and the stage - both already printed by the navigation row at the same moment.
+- **The stage gives way rather than sharing the slot** - the owner's call, taken as recommended. The navigation row is the stage's home and is always visible.
+- **Authored, not derived.** Deriving the subject from the slide's title would make it a second copy of the headline, which is the one thing it must not be.
+- **The rule was missing rather than broken**, and the measurement is the evidence: `measure-first`, the newest deck, was already right and is what the rule was read off; the other two were not.
 
 **Outputs produced**
-- <path>
+- `docs/DESIGN-SYSTEM.md` DS-241
+- `tools/deck/audit.py`
+- `tools/deck/check.py`
+- `examples/reference-deck.html`
+- `examples/sort-window/sort-window.html`
+- `examples/measure-first/measure-first.html`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| A rule exists and DS-090 is unchanged | **pass** | DS-241, `hard` and `auto`; DS-090's row is byte-identical |
+| The three shipped decks are re-cut and looked at | **pass** | 24 eyebrows; slide 5 of the reference deck rendered and read - `THE TWO PROPOSALS` over `Both options are real`, with `05 / 13` and `THE CHOICE` in the ruler |
+| A reader can say what a slide is about from the top strip alone | **pass** | on the rendered slide, yes. The judgement half of the rule stays the critique pass's and is not claimed here |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Measured first: 23 of 36 slides. |
+| 2026-08-20 | -> done | Three criteria met. |

@@ -2,12 +2,13 @@
 id: T-191
 title: The shell's own scaffold comment is parsed as a slide and injects a figure into slide 1
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-167]
 work_package: PH1
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: s
@@ -67,25 +68,39 @@ and the four tools above share the fault, not just `content.py`.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Reproduce the phantom slide | a probe over `content.deck_figures` |
+| 2 | Strip comments before the split, in one place | `content.strip_comments` |
+| 3 | Stop the shell writing a tag inside a comment | `shell.py` |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **Both halves, not one.** `strip_comments` holds for any comment; changing what `shell.py new` writes means a deck built by an older copy is not carrying the trap.
+- **`keep_length` for `density.py`** - it returns `(start, end)` offsets its callers slice the original string with, so its comments are blanked rather than deleted. Deleting bytes there would shift every later bound, which is a worse defect and a silent one.
+- **Four callers keep their own regexes.** They genuinely differ - `density.py` wants the opening tag alone - and what they share is one fact about what a comment is.
 
 **Outputs produced**
-- <path>
+- `tools/deck/content.py`
+- `tools/deck/audit.py`
+- `tools/deck/spec.py`
+- `tools/deck/density.py`
+- `tools/deck/shell.py`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| A fresh skeleton with one slide yields no figure from the comment | **pass** | `deck_figures` returned `[{'value': '3.2', ...}]` before and `[]` after, with the comment both inside and outside a slide |
+| One definition, or each splitter immune | **pass** | all four route through `content.strip_comments` |
+| Watched failing first | **pass** | the probe is kept in the session's scratch and reported the phantom before the fix |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Root cause is the order, not the regex. |
+| 2026-08-20 | -> done | Three criteria met. |

@@ -2,12 +2,13 @@
 id: T-192
 title: shell.py icons --help crashes, and no command lists what the sprite holds
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: []
 work_package: PH1
+shipped_in: unreleased
 owner: the project owner
 business_value: medium
 effort: xs
@@ -51,25 +52,32 @@ directly - and its first regex was wrong, so four tool calls went on *what icons
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Answer `--help` before the self-test | `USAGE`, one entry per subcommand |
+| 2 | Add `icons --list` | the concept ids on stdout |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision - rationale - date>
+- **`--help` is answered before the self-test** - a help request is not evidence and does not need any. Running twenty fixtures and then dying on the flag is the worst of both.
+- **`--list` prints to stdout and its count to stderr**, so the list pipes cleanly.
 
 **Outputs produced**
-- <path>
+- `tools/deck/shell.py`
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `shell.py <subcommand> --help` exits 0 and prints usage | **pass** | verified for `icons`; the bare form still prints the module docstring |
+| `icons --list` prints the ids, generated from `icons.svg` | **pass** | it reads `library()`, the same source the sheet draws from |
+
+**Child fix tasks raised**
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-20 | -> proposed | Created. |
+| 2026-08-20 | -> in_progress | Two small commands. |
+| 2026-08-20 | -> done | Both criteria met. |
