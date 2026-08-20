@@ -13,7 +13,7 @@ business_value: medium
 effort: s
 created: 2026-08-13
 updated: 2026-08-18
-shipped_in: unreleased
+shipped_in: 0.5.0
 deliverables:
   - docs/DESIGN-SYSTEM.md
   - skills/htmldeck/references/critique.md

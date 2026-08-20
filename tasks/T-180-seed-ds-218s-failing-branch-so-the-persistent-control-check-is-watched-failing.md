@@ -4,7 +4,7 @@ title: Seed DS-218's failing branch, so the persistent-control check has been wa
 type: fix
 status: done
 phase: review
-shipped_in: unreleased
+shipped_in: 0.5.0
 parent: null
 blocked_by: []
 related: [T-005, T-051, T-114]

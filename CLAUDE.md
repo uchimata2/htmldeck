@@ -62,12 +62,12 @@ Grounded in a corpus of real decks, prompts and written style guides from a trai
 prompt — **one 1.2 KB file, and it is a prompt rather than a codebase**: nothing in it is code to
 copy or behaviour to verify.
 
-**What exists.** `python tools/deck/check.py <deck>` decides 88 of the 118 rules a gate owns and
+**What exists.** `python tools/deck/check.py <deck>` decides 91 of the 121 rules a gate owns and
 names the other 30 with a reason each; `skills/htmldeck/references/build.md` plus `shell/` turn a
 reviewed specification into a deck; `skills/htmldeck/references/critique.md` plus
 `tools/deck/critique.py` are the review. **The repository is public at
 `github.com/uchimata2/htmldeck`, `master` is the published branch, and the current version is
-`0.4.0`.**
+`0.5.0`.**
 
 **When each of those landed, which release carried which fix, and which task found which defect are
 [`docs/RELEASE-HISTORY.md`](docs/RELEASE-HISTORY.md)** — tier 3, loaded by nothing. It was this

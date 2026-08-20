@@ -8,7 +8,7 @@ of them by double-clicking, with the network off.
 | [`reference-deck.html`](reference-deck.html) | The reference deck. 12 slides and a colophon, built **by hand** against [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) by [T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md); the colophon and the source citations are [T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md)'s. |
 | [`reference-deck-seeded-defects.html`](reference-deck-seeded-defects.html) | The same deck with **one deliberate defect per evaluation dimension**. A test fixture, not an example to copy. |
 | [`sort-window/`](sort-window) | *Move the window, not the fleet*, 12 slides, built **through build mode** by [T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md), with its two specification files and its sources beside it. |
-| [`measure-first/`](measure-first) | *Demand Planning: what Business Analytics can do first*, 13 slides, the last of them a colophon. The only deck here **somebody else built**, using the published plugin, in their own project. Copied in and sanitized by [T-128](../tasks/T-128-publish-the-adopter-deck-as-a-worked-example.md), with its two specifications, its five source documents and its two process models. |
+| [`measure-first/`](measure-first) | *Demand Planning: what Business Analytics can do first*, 14 slides: a lobby, twelve of argument, and a colophon. The counter reads 12, because the covers are not content. The only deck here **somebody else built**, using the published plugin, in their own project. Copied in and sanitized by [T-128](../tasks/T-128-publish-the-adopter-deck-as-a-worked-example.md), with its two specifications, its five source documents and its two process models. |
 
 **The difference between the first and the third is the whole point of T-002.** One was authored;
 the other was assembled from [`shell/`](../shell) and then authored into, three slides at a time,
@@ -33,7 +33,7 @@ study, company or place. See *Provenance*, below.
 *Buy frequency before bikes*, a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-[`reference-deck.html`](reference-deck.html) is **301 KB in one file**, 308 721 bytes. Three embedded
+[`reference-deck.html`](reference-deck.html) is **306 KB in one file**, 313 257 bytes. Three embedded
 typefaces (97 KB of it as base64), eleven Lucide icons in one sprite, eight hand-written SVG figures,
 and the deck shell. No libraries, no build step, no network.
 
@@ -261,7 +261,7 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 It runs the auto gate, the contrast audit, the render gate and the resolution contract in one pass,
-then declares what it did **not** check: 88 of the 118 rules a gate owns are decided, and the other
+then declares what it did **not** check: 91 of the 121 rules a gate owns are decided, and the other
 30 are named with a reason each. The four commands after it still exist because each is useful
 alone. `audit.py` and `contract.py` are for when you want one stage's output without the account, and the
 two variant suites are separate because they build decks rather than read one.
@@ -342,7 +342,7 @@ edited without regenerating is a red run rather than a discovery two audits late
 
 [`sort-window/`](sort-window) holds all four artifacts a build run leaves behind: the deck, the
 foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
-reconciled against. It is **299 KB in one file**, 306 662 bytes, 12 slides, six hand-written SVG
+reconciled against. It is **304 KB in one file**, 311 236 bytes, 12 slides, six hand-written SVG
 figures, ten disclosure panels, zero external references.
 
 ```bash
@@ -404,8 +404,9 @@ first one. Nothing but a person saw the other two.**
 ## The deck somebody else built
 
 [`measure-first/measure-first.html`](measure-first/measure-first.html) is *Demand Planning: what
-Business Analytics can do first*, and it runs to 13 slides, the last of them a colophon. It is
-**410 KB in one file**, 419 815 bytes, zero external references. It argues that measurement and
+Business Analytics can do first*, and it runs to 14 slides: a lobby, twelve of argument, and a
+colophon. It is
+**416 KB in one file**, 425 507 bytes, zero external references. It argues that measurement and
 discipline fix demand planning before any AI is bought, for an invented dental group deciding what
 to do first.
 

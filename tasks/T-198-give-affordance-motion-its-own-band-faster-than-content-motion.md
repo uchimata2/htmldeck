@@ -8,7 +8,7 @@ parent: null
 blocked_by: []
 related: [T-112, T-114, T-187, T-188]
 work_package: PH3
-shipped_in: unreleased
+shipped_in: 0.5.0
 owner: the project owner
 business_value: high
 effort: m

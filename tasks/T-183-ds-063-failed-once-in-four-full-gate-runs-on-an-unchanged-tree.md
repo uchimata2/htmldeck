@@ -13,7 +13,7 @@ business_value: high
 effort: m
 created: 2026-08-18
 updated: 2026-08-18
-shipped_in: unreleased
+shipped_in: 0.5.0
 deliverables: [tools/deck/contract.py, docs/lessons/L-119.md]
 ---
 

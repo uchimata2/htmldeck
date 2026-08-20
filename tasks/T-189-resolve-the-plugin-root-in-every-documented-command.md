@@ -8,7 +8,7 @@ parent: null
 blocked_by: []
 related: [T-064, T-074]
 work_package: PH1
-shipped_in: unreleased
+shipped_in: 0.5.0
 owner: the project owner
 business_value: critical
 effort: s

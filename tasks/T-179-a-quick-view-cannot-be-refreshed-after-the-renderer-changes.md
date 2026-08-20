@@ -13,7 +13,7 @@ business_value: medium
 effort: s
 created: 2026-08-18
 updated: 2026-08-18
-shipped_in: unreleased
+shipped_in: 0.5.0
 deliverables: [tools/deck/quickview.py, docs/lessons/L-118.md]
 ---
 

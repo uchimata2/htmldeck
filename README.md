@@ -64,7 +64,7 @@ the installed plugin a few minutes after each session starts.
 
 | | |
 | :--- | :--- |
-| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset.** 172 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
+| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | **The operative ruleset.** 175 rules, each with a stable `DS-nnn` ID, a hard/default/guidance label, and a statement of whether a check can reach it at all |
 | [`docs/DESIGN-RATIONALE.md`](docs/DESIGN-RATIONALE.md) | Why each rule is what it is: what was measured, what was inherited, what was overruled, and the conflicts resolved by name |
 | [`docs/EVALUATION.md`](docs/EVALUATION.md) | How a deck is scored, and **when it is good enough to stop** |
 | [`tools/deck/check.py`](tools/deck/check.py) | The build check. A pass/fail per rule ID, **and an account of every rule it did not check, with a reason each** |
@@ -90,20 +90,20 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 ```
-  owned by a gate      118
-  checked               88
+  owned by a gate      121
+  checked               91
   failing                0
   excused in the rules   3   DS-072 DS-210 DS-211
   excused here          27
   undecided, no subject  0
   SILENT                 0
   ------------------------
-  buckets sum to       118   = owned, so the account is a partition
+  buckets sum to       121   = owned, so the account is a partition
 
 0 failure(s): none
 ```
 
-**Read the account, not just the failure count.** A gate that checks 88 of 118 rules and says nothing
+**Read the account, not just the failure count.** A gate that checks 91 of 121 rules and says nothing
 about the other 30 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each
 run **checked**, **excused in writing** (with what would close the excusal), or **failing**, and a
 rule in none of those three states *fails the run*. So a rule added to the ruleset with nothing behind
@@ -122,9 +122,9 @@ python tools/deck/ruleset.py --counts
 ```
 
 ```
-  rule rows in the table            172
+  rule rows in the table            175
   + declared in prose, not a row      1   DS-000 (guidance)
-  = rule IDs the document declares  173   <- the figure that counts DS-000
+  = rule IDs the document declares  176   <- the figure that counts DS-000
 ```
 
 **Which gate owns each `hard` rule.**
@@ -134,12 +134,12 @@ python tools/deck/ruleset.py --gates
 ```
 
 ```
-  hard rules                        125
-  gated mechanically (auto|render)   92   tools/deck/check.py
+  hard rules                        128
+  gated mechanically (auto|render)   95   tools/deck/check.py
   gated by judgement (judge)         28   EVALUATION.md 1.1, the hard-judge checklist
   bind the checker, not the deck      5   DS-107 DS-190 DS-191 DS-220 DS-221
   ------------------------
-  125 = hard, so every hard rule has an owner
+  128 = hard, so every hard rule has an owner
 ```
 
 **Every reference in every document.**
@@ -149,8 +149,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 2993 document pointer(s) checked, 0 broken
-     875 section reference(s) resolved, 0 dead; 2698 not bound to a document and skipped.
+OK - 3060 document pointer(s) checked, 0 broken
+     885 section reference(s) resolved, 0 dead; 2748 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -186,7 +186,7 @@ and need nothing but Python.
 
 ## The reference deck
 
-[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **299 KB
+[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **306 KB
 in one file, zero external references**, three embedded typefaces, eleven icons and eight hand-written
 SVG figures. Download it, disconnect, double-click it. Every measurement behind it, and how to
 reproduce each, is in [`examples/README.md`](examples/README.md).
@@ -203,7 +203,7 @@ names every one it misses.
 ## The deck nobody authored by hand
 
 [`examples/sort-window/`](examples/sort-window) holds *Move the window, not the fleet*: 12 slides,
-**299 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
+**306 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
 panels. It was built through the pipeline rather than written, assembled from
 [`shell/`](shell), which is the reference deck with its content cut out, then authored three slides
 at a time with the gate run per batch.
@@ -282,21 +282,31 @@ built. **PH3** is the
 larger work, including 3D visuals, the frame-rate figure and those seven conditions.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
-The current release is 0.4.0, and it rebuilds the row of controls along the bottom of a deck.
-Someone using 0.2.2 said the back and forward arrows read as an afterthought, and they were right.
-The arrows sat between a slide counter and two wide labelled buttons, so the one control you
-actually press was the quietest thing in the row.
+The current release is 0.5.0. Most of it came from watching somebody else build a deck with 0.4.0
+and writing down everything that got in their way.
 
-The ruler, the counter and the arrows now share a drawn box, because between them they answer one
-question: where am I, and how do I move. The arrows are filled and nothing else in the row is, so
-they are easy to find. Everything else moved out to the right, behind a `More` button.
+The controls answer faster. Pressing the back or forward arrow used to take most of half a second to
+show anything, which is long enough to wonder whether the button works. The back arrow never
+showed anything at all, because one style rule quietly outranked another. Both are fixed, and a
+control now runs on a shorter clock than the slides do.
 
-`Motion` is the exception. A deck with looping motion has to keep a visible way to stop it, so that
-button stays outside the menu, and moves inside it only in decks with nothing running. The build
-decides which, and a check enforces it.
+Every slide says what it is about. The line above the headline used to repeat the slide number and the section name, and the bar along the bottom was already showing you
+both. Now it names the thing on the slide, so a presenter glancing up learns something. Two of the
+three example decks here had the old habit, and both are rewritten.
 
-A deck built on an earlier version will fail the shell check until you run `shell.py sync`. The
-release notes say what fails and what fixes it.
+A deck can open on a lobby slide, the one an audience looks at while the room fills, carrying the
+topic, who is presenting and what the occasion is. It is optional, like the sources page at the
+end, and neither of them counts towards the slide numbers any more. They are covers, not content.
+
+A quoted source finally reads like a document rather than like a slide. Its headings were smaller
+than its own body text, which nobody had noticed.
+
+The commands in the instructions now run. They were all written against a variable that turns out
+to be empty in a shell, so anyone following them had to work out the paths themselves.
+
+A deck built on an earlier version will fail several checks until you run `shell.py tokens` and
+`shell.py sync`. The release notes say what fails and what fixes it. One of them, the line above
+each headline, needs a sentence from you rather than a command.
 
 **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
 half's first run and were settled the same day in

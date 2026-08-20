@@ -478,13 +478,13 @@ and the second was growing with every closure — finding `CE-05`,
 remain are both about the build and critique modes, not about the deck.***
 
 - ~~A deck renders correctly with the network disabled.~~ **Met.**
-  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 301 KB, zero
+  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 306 KB, zero
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
 - ~~The build check demonstrated failing on each class of problem it claims to catch.~~ **Met
   2026-08-09** by [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md).
-  `python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]` decides **88 of the
-  118 rules** the ruleset puts in a gate's jurisdiction and **names the other 30 with a reason and a
+  `python tools/deck/check.py <deck> [--sources <dir>] [--print-pages] [--json]` decides **91 of the
+  121 rules** the ruleset puts in a gate's jurisdiction and **names the other 30 with a reason and a
   closing condition**; a rule in neither state fails the run, so silent coverage is now impossible
   rather than merely discouraged. **41 seeded defects across four suites, all caught** — and the
   exercise keeps catching checks that were passing decks they should have failed: two on the day

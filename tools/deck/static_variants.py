@@ -142,8 +142,12 @@ STATIC_VARIANTS = [
         # T-112 added `--motion-kind` to this rule, so the seed carries it through both
         # halves: the defect being seeded is the tokenisation, and a variant that also
         # dropped the kind declaration would be caught by DS-237 and prove the wrong thing.
+        # **The rule moved onto the affordance band on 2026-08-20** (DS-240, T-198): the mark is a
+        # control answering the hand, not a reveal, and it read Turn's pair until then. The variant
+        # follows the deck rather than being deleted - what it seeds is the tokenisation going away,
+        # and that defect is the same whichever band the rule reads.
         (".disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);\n"
-         "  transition:transform var(--turn-dur) var(--turn-ease);--motion-kind:affordance}",
+         "  transition:transform var(--afford-dur) var(--afford-ease);--motion-kind:affordance}",
          ".disc-mark::after{width:var(--disc-mark-stroke);height:var(--disc-mark-bar);\n"
          "  transition:transform var(--slide-dur) var(--slide-ease);--motion-kind:affordance}")]),
     ("easing-curve-in-a-component", "DS-010", [
