@@ -138,6 +138,22 @@ def band(n, lo=None, hi=None, inset=0.5):
     return [lo + step * (inset + i) for i in range(n)]
 
 
+def spread(ys, gap):
+    """`ys` pushed apart so no two are closer than `gap`, keeping their order and their centre.
+
+    A series-end label sits at its series' value, and two series that end four points apart put
+    two labels on top of each other however correct both positions are. This is the arithmetic a
+    chart library spends most of its label code on, and it is the fourth thing DS-122 means by
+    borrowing it: twelve lines, not a dependency."""
+    order = sorted(range(len(ys)), key=lambda i: ys[i])
+    out = list(ys)
+    for n, i in enumerate(order):                 # downward pass: nothing sits above its predecessor
+        if n and out[i] - out[order[n - 1]] < gap:
+            out[i] = out[order[n - 1]] + gap
+    shift = (sum(ys) - sum(out)) / float(len(ys))  # put the block back on the centre it started from
+    return [y + shift for y in out]
+
+
 def fmt(v, dp=0, group=False):
     """A number as it is read, not as Python prints it."""
     s = format(float(v), ",.%df" % dp) if group else (("%%.%df" % dp) % v)
@@ -188,7 +204,8 @@ def fig_curve():
             o.append(text(xs[i], ys[i] - 28, "$%d" % v, "val t-accent"))
         o.append(text(xs[i], base + 44, str(yr), "name" if first_or_last else "name t-soft",
                       "start" if i == 0 else ("end" if first_or_last else "middle")))
-    o.append(text(L, top - 14, "$/MWh — axis starts at 55, not zero", "lab t-soft", "start"))
+    # Top-right, because the first point's value label owns the top-left and the two collided.
+    o.append(text(right, top - 14, "$/MWh — axis starts at 55, not zero", "lab t-soft", "end"))
     o.append(text(L, base + 96, "Contracted new supply of 14.2 GW against 3.1 GW of demand growth.",
                   "val t-soft", "start"))
     return svg("Modelled wholesale power price, 2026 to 2030: $78, $74, $69, $64 and $61 per MWh. "
@@ -206,37 +223,55 @@ def fig_limit_bar():
          '      <line class="axis" x1="%.1f" y1="%.0f" x2="%.1f" y2="%.0f"/>'
          % (x45, y - 22, x45, y + h + 22),
          text(x45, y - 34, "single-sector ceiling 45%", "lab t-soft"),
-         text(x52 + 18, y + h / 2 + 10, "52%", "val t-accent", "start"),
-         text(L, y + h + 62, "share of net asset value", "lab t-soft", "start")]
+         text(x52 + 18, y + h / 2 + 10, "52%", "val t-accent", "start")]
     return svg("Renewables at 52 percent of net asset value against a 45 percent policy limit. "
                "The seven-point overshoot is drawn beyond the limit rule.", "\n".join(o),
-               "120 0 1728 210")
+               "120 0 1728 170")
 
 
 def fig_area():
-    """Slide 4. Five bands stacked to 100 at every year. The densest chart in the deck."""
-    xs = band(len(YEARS), 220, 1360, inset=0.0)
-    keyx = 1400.0
-    o = ['      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (L, BASE, 1360, BASE)]
-    floor = [0.0] * len(YEARS)
+    """Slide 4. Five sectors' share of NAV, 2022 to 2026, one line each.
+
+    **This was a stacked area and it could not be read.** DS-020 allows exactly one accent hue, so
+    four of the five bands rendered in the same quiet fill and the chart showed two shapes where it
+    claimed five; the key labels then collided, because four bands' mid-points sit within a few
+    units of each other at the top of a 100% stack. Looking at it is what found that - the gate
+    passed the slide (CLAUDE.md rule 6, L-05). One line per sector separates on position instead of
+    on colour, which is the comparison the slide is making anyway, and the deviation from the
+    reviewed specification is recorded in `portfolio-review.slides.md`."""
+    xs = band(len(YEARS), 300, 1180, inset=0.0)
+    keyx = 1215.0
+    lo, hi = 0.0, 56.0
+    o = ['      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (L, BASE, 1180, BASE)]
+    ends, starts = [], []
     for si, (name, series) in enumerate(ALLOCATION):
-        tops = [floor[i] + series[i] for i in range(len(YEARS))]
-        up = ["%.1f %.1f" % (xs[i], y_of(tops[i], 0, 100)) for i in range(len(YEARS))]
-        down = ["%.1f %.1f" % (xs[i], y_of(floor[i], 0, 100)) for i in range(len(YEARS) - 1, -1, -1)]
-        o.append('      <path class="%s" d="M%s L%s Z"/>'
-                 % ("accent" if si == 0 else "quiet", up[0], " L".join(up[1:] + down)))
-        mid = (floor[-1] + tops[-1]) / 2.0
-        ky = y_of(mid, 0, 100) + 6
-        guard_label(keyx, ky, 1728 - 120, 470, name, 22)
-        o.append(text(keyx, ky, "%s  %d → %d" % (name, series[0], series[-1]),
-                      "name", "start"))
-        floor = tops
+        pts = [(xs[i], linear(series[i], lo, hi, BASE, TOP)) for i in range(len(YEARS))]
+        o.append('      <path class="%s" fill="none" stroke-width="%d" d="%s"/>'
+                 % ("accent-s" if si == 0 else "quiet-s", 5 if si == 0 else 3,
+                    " ".join(("M" if i == 0 else "L") + "%.1f %.1f" % p
+                             for i, p in enumerate(pts))))
+        for i in (0, len(YEARS) - 1):
+            o.append('      <circle class="%s" cx="%.1f" cy="%.1f" r="%d"/>'
+                     % ("accent" if si == 0 else "quiet", pts[i][0], pts[i][1],
+                        9 if si == 0 else 6))
+        ends.append((pts[-1][1] + 8, "%s  %d → %d" % (name, series[0], series[-1]),
+                     "name" if si == 0 else "name t-soft"))
+        starts.append((pts[0][1] + 8, str(series[0]),
+                       "val t-accent" if si == 0 else "val t-soft"))
+    # Transmission ends at 18 and digital at 20, so their labels landed on one another; water
+    # and transport start at 18 and 15 and did the same. Both columns are spread.
+    for (_, label, cls), ky in zip(ends, spread([e[0] for e in ends], 38.0)):
+        guard_label(keyx, ky, 1728 - 120, 470, label, 22)
+        o.append(text(keyx, ky, label, cls, "start"))
+    for (_, label, cls), ky in zip(starts, spread([e[0] for e in starts], 34.0)):
+        o.append(text(xs[0] - 26, ky, label, cls, "end"))
     for i, yr in enumerate(YEARS):
-        o.append(text(xs[i], NAMES_Y, str(yr), "name t-soft"))
-    o.append(text(keyx, y_of(52, 0, 100) - 34, "renewables  +21 points", "val t-accent", "start"))
-    o.append(text(L, TOP - 8, "share of NAV, %  —  every column sums to 100",
+        o.append(text(xs[i], NAMES_Y, str(yr), "name t-soft",
+                      "start" if i == 0 else ("end" if i == len(YEARS) - 1 else "middle")))
+    o.append(text(keyx, TOP + 4, "+21 points", "val t-accent", "start"))
+    o.append(text(L, TOP - 8, "share of NAV, %  —  the five sum to 100 at every year",
                   "lab t-soft", "start"))
-    return svg("Share of net asset value by sector, 2022 to 2026, stacked to 100 percent. "
+    return svg("Share of net asset value by sector, 2022 to 2026, one line each. "
                "Renewables rises from 31 to 52, transmission 22 to 18, digital 14 to 20, "
                "water 18 to 7, transport 15 to 3.", "\n".join(o))
 
@@ -274,18 +309,21 @@ def fig_contribution():
 
 def fig_waterfall():
     """Slide 6. Two grounded bars, five floating, and the connectors that make it a waterfall."""
-    hi = 2500.0
+    # A truncated axis, because the movements are what the slide is about and they are 2% of
+    # the total each. Labelled as truncated on the axis rather than left for a reader to find.
+    lo, hi = 2050.0, 2500.0
     xs = band(len(WATERFALL), 190, 1590, inset=0.0)
     bw = 140.0                               # so the first bar's left edge lands exactly on 120
     o, run, tops = [], 0.0, []
     for i, (name, v, kind) in enumerate(WATERFALL):
         x = xs[i] - bw / 2
         if kind == "total":
-            y0, y1 = 0.0, float(v)
+            y0, y1 = lo, float(v)
         else:
             y0, y1 = run, run + v
         run = y1 if kind != "total" else float(v)
-        ytop, ybot = y_of(max(y0, y1), 0, hi), y_of(min(y0, y1), 0, hi)
+        ytop = linear(max(y0, y1), lo, hi, BASE, TOP)
+        ybot = linear(min(y0, y1), lo, hi, BASE, TOP)
         cls = {"total": "quiet", "up": "pos", "down": "neg"}[kind]
         if name == "revaluation":
             cls = "accent"
@@ -293,8 +331,9 @@ def fig_waterfall():
         tops.append((x, x + bw, ytop, ybot))
         # The two grounded bars are the deck's opening and closing NAV and are read as money,
         # so they carry a thousands separator; the five movements are read as deltas and do not.
-        o.append(text(xs[i], ytop - 14, ("+" if v > 0 and kind != "total" else "") + fmt(abs(v))
-                      if kind != "total" else fmt(v, 0, True),
+        label = (fmt(v, 0, True) if kind == "total"
+                 else (("+" + fmt(v)) if v > 0 else fmt(v)))
+        o.append(text(xs[i], ytop - 14, label,
                       "val t-accent" if cls == "accent" else "val"))
         o.append(text(xs[i], NAMES_Y, name, "name" if cls == "accent" else "name t-soft"))
     for i in range(len(tops) - 1):
@@ -306,7 +345,7 @@ def fig_waterfall():
         o.append('      <line class="grid" x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f"/>'
                  % (xr, yy, nxt[0], yy))
     o.append('      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (L, BASE, R, BASE))
-    o.append(text(L, TOP - 8, "$M", "lab t-faint", "start"))
+    o.append(text(L, TOP - 8, "$M — axis truncated below the opening balance, so the six movements are legible", "lab t-soft", "start"))
     o.append(text(L, NOTE_Y, "$131M of the revaluation sits in renewables.", "val t-soft", "start"))
     return svg("NAV movement over FY26 in millions: opening 2,150, contributions plus 180, "
                "distributions minus 145, realised gains plus 95, unrealised revaluation plus 172, "
@@ -324,14 +363,25 @@ def fig_scatter():
     o.append('      <line class="grid" x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" '
              'stroke-dasharray="6 8"/>' % (d0[0], d0[1], d1[0], d1[1]))
     o.append(text(d1[0] + 10, d1[1] + 26, "equal return per unit of risk", "lab t-faint", "start"))
+    # Labels sit beside their point, not above it, and each side is spread on its own. Stacking
+    # them vertically put three of the five within 50 px of each other and two ran through a
+    # neighbour's dot - visible only by looking, which is how it was found.
+    left, right = [], []
     for name, irr, vol in RISK_RETURN:
         cx, cy = linear(vol, lo, hi, plot_l, plot_r), y_of(irr, lo, hi)
         below = irr < vol
         o.append('      <circle class="%s" cx="%.1f" cy="%.1f" r="%d"/>'
                  % ("caution" if below else "quiet", cx, cy, 13 if below else 11))
-        guard_label(cx, cy - 24, 1728 - 120, 470, name, 22)
-        o.append(text(cx, cy - 24, "%s  %s / %s" % (name, fmt(irr, 1), fmt(vol, 1)),
-                      "val t-caution" if below else "val t-soft"))
+        label = "%s  %s / %s" % (name, fmt(irr, 1), fmt(vol, 1))
+        cls = "val t-caution" if below else "val t-soft"
+        (right if vol < 11.0 else left).append((cx, cy + 8, label, cls))
+    for group, side in ((right, "start"), (left, "end")):
+        if not group:
+            continue
+        for (cx, _, label, cls), ly in zip(group, spread([g[1] for g in group], 40.0)):
+            lx = cx + 26 if side == "start" else cx - 26
+            guard_label(lx, ly, 1728 - 120, 470, label, 22)
+            o.append(text(lx, ly, label, cls, side))
     o.append(text(R, NAMES_Y, "volatility %", "lab t-soft", "end"))
     o.append(text(L, TOP + 12, "net IRR %", "lab t-soft", "start"))
     o.append(text(L, NOTE_Y, "Each point is labelled with its IRR and its volatility.",
@@ -348,10 +398,12 @@ def fig_top3():
     o, run = [], 0.0
     for i, (name, v) in enumerate(TOP3):
         x0, x1 = linear(run, 0, hi, L, R), linear(run + v, 0, hi, L, R)
-        o.append(rect(x0, y, x1 - x0, h, "accent" if i == 0 else "quiet"))
+        # Inset by 3 each side, so two adjacent segments in the same quiet fill read as two.
+        # On screen they were one grey block and the second and third names had nothing to name.
+        o.append(rect(x0 + 3, y, x1 - x0 - 6, h, "accent" if i == 0 else "quiet"))
         # The value sits with the name under the bar, not on it: a label on a data mark owes
         # two contrast ratios (DS-219) and two of these three could not pay the second.
-        o.append(text((x0 + x1) / 2, y + h + 40, "%s  %d%%" % (name, v),
+        o.append(text((x0 + x1) / 2, y + h + 38, "%s  %d%%" % (name, v),
                       "name" if i == 0 else "name t-soft"))
         run += v
     xlim = linear(TOP3_LIMIT, 0, hi, L, R)
@@ -360,11 +412,9 @@ def fig_top3():
              % (xlim, y - 22, xlim, y + h + 22))
     o.append(text(xlim, y - 34, "top-three ceiling 30%", "lab t-soft"))
     o.append(text(xend + 18, y + h / 2 + 10, "34%", "val t-accent", "start"))
-    o.append(text(L, y + h + 96, "share of net asset value, three largest assets",
-                  "lab t-soft", "start"))
     return svg("The three largest assets hold 34 percent of net asset value against a 30 percent "
                "policy limit: Calder wind 13, Norbeck solar 11, Aldis transmission 10.",
-               "\n".join(o), "120 0 1728 220")
+               "\n".join(o), "120 0 1728 190")
 
 
 def fig_drawdown():
@@ -384,7 +434,7 @@ def fig_drawdown():
     o.append(rect(tx - 40, ty, 80, ry - ty, "caution"))
     o.append('      <circle class="caution" cx="%.1f" cy="%.1f" r="12"/>' % (tx, ty))
     o.append(text(tx, ty + 40, "−6.8%", "val t-caution"))
-    o.append(text(tx, ty - 20, "5.1 pts renewables", "lab t-soft"))
+    o.append(text(tx + 54, ty - 26, "5.1 pts renewables", "lab t-soft", "start"))
     for i, (q, _) in enumerate(DRAWDOWN):
         o.append(text(xs[i], base + 46, q, "name t-soft",
                       "start" if i == 0 else ("end" if i == len(DRAWDOWN) - 1 else "middle")))
@@ -424,7 +474,7 @@ def fig_timeline():
         o.append(text(x, y + 100, "to %d%%" % to, "lab t-soft"))
     # The gate carries its label inside itself (COMPONENT-CONTRACT 3.6), so the rhombus is sized
     # to the text rather than the text placed near a rhombus.
-    hw, hh = 132.0, 74.0
+    hw, hh = 168.0, 78.0
     o.append('      <g class="decision">')
     o.append('        <path class="decision-shape" d="M%.0f %.0f L%.0f %.0f L%.0f %.0f L%.0f %.0f Z"/>'
              % (gate_x, y - hh, gate_x + hw, y, gate_x, y + hh, gate_x - hw, y))
@@ -470,6 +520,13 @@ def selftest():
     moves = sum(v for _, v, k in WATERFALL if k != "total")
     check("opening plus the movements is the close", opening + moves == WATERFALL[-1][1],
           "%d + %d" % (opening, moves))
+
+    got = spread([100.0, 104.0, 140.0], 30.0)
+    check("spread separates labels by the gap and keeps their order",
+          all(got[i + 1] - got[i] >= 29.999 for i in range(len(got) - 1))
+          and got == sorted(got), "got %s" % [round(g, 1) for g in got])
+    check("spread keeps the block on its own centre",
+          abs(sum(got) / 3.0 - (100.0 + 104.0 + 140.0) / 3.0) < 1e-9)
 
     check("the top three sum to the stated 34%", sum(v for _, v in TOP3) == 34)
     check("the tranches take renewables to the 45% limit", TRANCHES[-1][2] == 45)
@@ -680,7 +737,7 @@ def build_slides():
         'limit, on a position nobody bought.</p></div>\n'
         '    </div>\n    %s' % fig_limit_bar(),
         "The policy limit is 45%, and no purchase caused the breach.",
-        ["portfolio-model"]))
+        ["portfolio-model"], body_cls="body limitwrap"))
 
     s.append(slide(
         4, "1", "Five years of quiet drift", "Allocation, 2022 to 2026",
@@ -748,7 +805,7 @@ def build_slides():
         'neither by a decision.</p></div>\n'
         '    </div>\n    %s' % fig_top3(),
         "The second limit is breached as well, against a 30% policy ceiling.",
-        ["portfolio-model"],
+        ["portfolio-model"], body_cls="body limitwrap",
         disc=disclosure("instances", "Which three assets", "p8", [
             ("Calder wind", "13% of NAV. Renewables. Acquired 2019, revalued twice since."),
             ("Norbeck solar", "11% of NAV. Renewables. Acquired 2021, the fund's largest single cheque."),
@@ -864,6 +921,11 @@ COMPOSITION = """
 
 .figwrap{position:relative}
 
+/* 3 and 8 - a statistic and a band, stacked from the top. The default body spread them to its
+   two ends, which put the band's labels on the bottom line. Looked at, not caught by the gate. */
+.limitwrap{display:grid;grid-template-rows:auto auto;align-content:start;gap:var(--sp-4)}
+.limitwrap .fig{max-width:calc(1560*var(--du))}
+
 /* 9 - three numbers that add up. The arithmetic is the layout, so there is no chart. */
 .sum{display:grid;gap:var(--sp-2);align-content:center;max-width:calc(1180*var(--du))}
 .sum-voice{font-family:var(--font-display);font-size:var(--fs-subhead);color:var(--ink-soft);
@@ -901,7 +963,8 @@ COMPOSITION = """
    collapses to a block, because a two-column track at 320 CSS px is DS-075's two-dimensional
    scroll; and every size above is restated in `--doc-*`, because the design unit is a different
    size here and a stage size carried into the document lands under DS-035's 16 du floor. */
-.doc .two-fig,.doc .split,.doc .stat,.doc .ledger2,.doc .close-cols,.doc .sum-row{display:block}
+.doc .two-fig,.doc .split,.doc .stat,.doc .ledger2,.doc .close-cols,.doc .sum-row,
+.doc .limitwrap{display:block}
 .doc .two-fig{padding-bottom:0}
 .doc .two-fig-val{font-size:var(--doc-fs-figure);display:block}
 .doc .two-fig-lab,.doc .side-lab,.doc .sum-lab,.doc .col-head,.doc .close-head,

@@ -1652,7 +1652,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       <circle class="accent" cx="992.0" cy="242.4" r="10"/>
       <text class="val t-accent" x="992" y="214.4" text-anchor="middle">$61</text>
       <text class="name" x="992" y="344" text-anchor="end">2030</text>
-      <text class="lab t-soft" x="120" y="46" text-anchor="start">$/MWh — axis starts at 55, not zero</text>
+      <text class="lab t-soft" x="1160" y="46" text-anchor="end">$/MWh — axis starts at 55, not zero</text>
       <text class="val t-soft" x="120" y="396" text-anchor="start">Contracted new supply of 14.2 GW against 3.1 GW of demand growth.</text>
     </svg></div>
       <div class="split-side">
@@ -1682,7 +1682,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     <p class="eyebrow rise" style="--i:0"><span class="tick"></span>Single-sector limit</p>
     <h2 class="headline rise" style="--i:1">Renewables reached 52% of NAV</h2>
   </header>
-  <div class="body rise" style="--i:3">
+  <div class="body limitwrap rise" style="--i:3">
     <div class="stat">
       <div class="stat-left">
         <p class="stat-scale">$2.40B net asset value</p>
@@ -1691,14 +1691,13 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       </div>
       <div class="stat-right"><p class="stat-read">Seven points above the single-sector limit, on a position nobody bought.</p></div>
     </div>
-    <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="120 0 1728 210" role="img"
+    <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="120 0 1728 170" role="img"
          aria-label="Renewables at 52 percent of net asset value against a 45 percent policy limit. The seven-point overshoot is drawn beyond the limit rule.">
       <rect class="quiet" x="120.0" y="62.0" width="693.0" height="72.0"/>
       <rect class="accent" x="813.0" y="62.0" width="107.8" height="72.0"/>
       <line class="axis" x1="813.0" y1="40" x2="813.0" y2="156"/>
       <text class="lab t-soft" x="813" y="28" text-anchor="middle">single-sector ceiling 45%</text>
       <text class="val t-accent" x="938.8" y="108" text-anchor="start">52%</text>
-      <text class="lab t-soft" x="120" y="196" text-anchor="start">share of net asset value</text>
     </svg>
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The policy limit is 45%, and no purchase caused the breach.</b></p>
@@ -1713,25 +1712,40 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </header>
   <div class="body figwrap rise" style="--i:3">
     <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="120 0 1728 470" role="img"
-         aria-label="Share of net asset value by sector, 2022 to 2026, stacked to 100 percent. Renewables rises from 31 to 52, transmission 22 to 18, digital 14 to 20, water 18 to 7, transport 15 to 3.">
-      <line class="axis" x1="120" y1="360" x2="1360" y2="360"/>
-      <path class="accent" d="M220.0 260.8 L505.0 244.8 L790.0 225.6 L1075.0 209.6 L1360.0 193.6 L1360.0 360.0 L1075.0 360.0 L790.0 360.0 L505.0 360.0 L220.0 360.0 Z"/>
-      <text class="name" x="1400" y="282.8" text-anchor="start">Renewables  31 → 52</text>
-      <path class="quiet" d="M220.0 190.4 L505.0 177.6 L790.0 161.6 L1075.0 148.8 L1360.0 136.0 L1360.0 193.6 L1075.0 209.6 L790.0 225.6 L505.0 244.8 L220.0 260.8 Z"/>
-      <text class="name" x="1400" y="170.8" text-anchor="start">Transmission  22 → 18</text>
-      <path class="quiet" d="M220.0 145.6 L505.0 123.2 L790.0 100.8 L1075.0 81.6 L1360.0 72.0 L1360.0 136.0 L1075.0 148.8 L790.0 161.6 L505.0 177.6 L220.0 190.4 Z"/>
-      <text class="name" x="1400" y="110" text-anchor="start">Digital  14 → 20</text>
-      <path class="quiet" d="M220.0 88.0 L505.0 75.2 L790.0 62.4 L1075.0 52.8 L1360.0 49.6 L1360.0 72.0 L1075.0 81.6 L790.0 100.8 L505.0 123.2 L220.0 145.6 Z"/>
-      <text class="name" x="1400" y="66.8" text-anchor="start">Water  18 → 7</text>
-      <path class="quiet" d="M220.0 40.0 L505.0 40.0 L790.0 40.0 L1075.0 40.0 L1360.0 40.0 L1360.0 49.6 L1075.0 52.8 L790.0 62.4 L505.0 75.2 L220.0 88.0 Z"/>
-      <text class="name" x="1400" y="50.8" text-anchor="start">Transport  15 → 3</text>
-      <text class="name t-soft" x="220" y="404" text-anchor="middle">2022</text>
-      <text class="name t-soft" x="505" y="404" text-anchor="middle">2023</text>
-      <text class="name t-soft" x="790" y="404" text-anchor="middle">2024</text>
-      <text class="name t-soft" x="1075" y="404" text-anchor="middle">2025</text>
-      <text class="name t-soft" x="1360" y="404" text-anchor="middle">2026</text>
-      <text class="val t-accent" x="1400" y="159.6" text-anchor="start">renewables  +21 points</text>
-      <text class="lab t-soft" x="120" y="32" text-anchor="start">share of NAV, %  —  every column sums to 100</text>
+         aria-label="Share of net asset value by sector, 2022 to 2026, one line each. Renewables rises from 31 to 52, transmission 22 to 18, digital 14 to 20, water 18 to 7, transport 15 to 3.">
+      <line class="axis" x1="120" y1="360" x2="1180" y2="360"/>
+      <path class="accent-s" fill="none" stroke-width="5" d="M300.0 182.9 L520.0 154.3 L740.0 120.0 L960.0 91.4 L1180.0 62.9"/>
+      <circle class="accent" cx="300.0" cy="182.9" r="9"/>
+      <circle class="accent" cx="1180.0" cy="62.9" r="9"/>
+      <path class="quiet-s" fill="none" stroke-width="3" d="M300.0 234.3 L520.0 240.0 L740.0 245.7 L960.0 251.4 L1180.0 257.1"/>
+      <circle class="quiet" cx="300.0" cy="234.3" r="6"/>
+      <circle class="quiet" cx="1180.0" cy="257.1" r="6"/>
+      <path class="quiet-s" fill="none" stroke-width="3" d="M300.0 280.0 L520.0 262.9 L740.0 251.4 L960.0 240.0 L1180.0 245.7"/>
+      <circle class="quiet" cx="300.0" cy="280.0" r="6"/>
+      <circle class="quiet" cx="1180.0" cy="245.7" r="6"/>
+      <path class="quiet-s" fill="none" stroke-width="3" d="M300.0 257.1 L520.0 274.3 L740.0 291.4 L960.0 308.6 L1180.0 320.0"/>
+      <circle class="quiet" cx="300.0" cy="257.1" r="6"/>
+      <circle class="quiet" cx="1180.0" cy="320.0" r="6"/>
+      <path class="quiet-s" fill="none" stroke-width="3" d="M300.0 274.3 L520.0 297.1 L740.0 320.0 L960.0 337.1 L1180.0 342.9"/>
+      <circle class="quiet" cx="300.0" cy="274.3" r="6"/>
+      <circle class="quiet" cx="1180.0" cy="342.9" r="6"/>
+      <text class="name" x="1215" y="61.8" text-anchor="start">Renewables  31 → 52</text>
+      <text class="name t-soft" x="1215" y="282.7" text-anchor="start">Transmission  22 → 18</text>
+      <text class="name t-soft" x="1215" y="244.7" text-anchor="start">Digital  14 → 20</text>
+      <text class="name t-soft" x="1215" y="320.7" text-anchor="start">Water  18 → 7</text>
+      <text class="name t-soft" x="1215" y="358.7" text-anchor="start">Transport  15 → 3</text>
+      <text class="val t-accent" x="274" y="171.8" text-anchor="end">31</text>
+      <text class="val t-soft" x="274" y="223.2" text-anchor="end">22</text>
+      <text class="val t-soft" x="274" y="325.2" text-anchor="end">14</text>
+      <text class="val t-soft" x="274" y="257.2" text-anchor="end">18</text>
+      <text class="val t-soft" x="274" y="291.2" text-anchor="end">15</text>
+      <text class="name t-soft" x="300" y="404" text-anchor="start">2022</text>
+      <text class="name t-soft" x="520" y="404" text-anchor="middle">2023</text>
+      <text class="name t-soft" x="740" y="404" text-anchor="middle">2024</text>
+      <text class="name t-soft" x="960" y="404" text-anchor="middle">2025</text>
+      <text class="name t-soft" x="1180" y="404" text-anchor="end">2026</text>
+      <text class="val t-accent" x="1215" y="44" text-anchor="start">+21 points</text>
+      <text class="lab t-soft" x="120" y="32" text-anchor="start">share of NAV, %  —  the five sum to 100 at every year</text>
     </svg>
   </div>
   <div class="disc" data-disc="derivation">
@@ -1804,35 +1818,35 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   <div class="body figwrap rise" style="--i:3">
     <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="120 0 1728 470" role="img"
          aria-label="NAV movement over FY26 in millions: opening 2,150, contributions plus 180, distributions minus 145, realised gains plus 95, unrealised revaluation plus 172, fees and carry minus 52, closing 2,400.">
-      <rect class="quiet" x="120.0" y="84.8" width="140.0" height="275.2"/>
-      <text class="val" x="190" y="70.8" text-anchor="middle">2,150</text>
+      <rect class="quiet" x="120.0" y="288.9" width="140.0" height="71.1"/>
+      <text class="val" x="190" y="274.9" text-anchor="middle">2,150</text>
       <text class="name t-soft" x="190" y="404" text-anchor="middle">opening</text>
-      <rect class="pos" x="353.3" y="61.8" width="140.0" height="23.0"/>
-      <text class="val" x="423.3" y="47.8" text-anchor="middle">+180</text>
+      <rect class="pos" x="353.3" y="160.9" width="140.0" height="128.0"/>
+      <text class="val" x="423.3" y="146.9" text-anchor="middle">+180</text>
       <text class="name t-soft" x="423.3" y="404" text-anchor="middle">contributions</text>
-      <rect class="neg" x="586.7" y="61.8" width="140.0" height="18.6"/>
-      <text class="val" x="656.7" y="47.8" text-anchor="middle">145</text>
+      <rect class="neg" x="586.7" y="160.9" width="140.0" height="103.1"/>
+      <text class="val" x="656.7" y="146.9" text-anchor="middle">−145</text>
       <text class="name t-soft" x="656.7" y="404" text-anchor="middle">distributions</text>
-      <rect class="pos" x="820.0" y="68.2" width="140.0" height="12.2"/>
-      <text class="val" x="890" y="54.2" text-anchor="middle">+95</text>
+      <rect class="pos" x="820.0" y="196.4" width="140.0" height="67.6"/>
+      <text class="val" x="890" y="182.4" text-anchor="middle">+95</text>
       <text class="name t-soft" x="890" y="404" text-anchor="middle">realised</text>
-      <rect class="accent" x="1053.3" y="46.1" width="140.0" height="22.0"/>
-      <text class="val t-accent" x="1123.3" y="32.1" text-anchor="middle">+172</text>
+      <rect class="accent" x="1053.3" y="74.1" width="140.0" height="122.3"/>
+      <text class="val t-accent" x="1123.3" y="60.1" text-anchor="middle">+172</text>
       <text class="name" x="1123.3" y="404" text-anchor="middle">revaluation</text>
-      <rect class="neg" x="1286.7" y="46.1" width="140.0" height="6.7"/>
-      <text class="val" x="1356.7" y="32.1" text-anchor="middle">52</text>
+      <rect class="neg" x="1286.7" y="74.1" width="140.0" height="37.0"/>
+      <text class="val" x="1356.7" y="60.1" text-anchor="middle">−52</text>
       <text class="name t-soft" x="1356.7" y="404" text-anchor="middle">fees, carry</text>
-      <rect class="quiet" x="1520.0" y="52.8" width="140.0" height="307.2"/>
-      <text class="val" x="1590" y="38.8" text-anchor="middle">2,400</text>
+      <rect class="quiet" x="1520.0" y="111.1" width="140.0" height="248.9"/>
+      <text class="val" x="1590" y="97.1" text-anchor="middle">2,400</text>
       <text class="name t-soft" x="1590" y="404" text-anchor="middle">closing</text>
-      <line class="grid" x1="260.0" y1="61.8" x2="353.3" y2="61.8"/>
-      <line class="grid" x1="493.3" y1="61.8" x2="586.7" y2="61.8"/>
-      <line class="grid" x1="726.7" y1="68.2" x2="820.0" y2="68.2"/>
-      <line class="grid" x1="960.0" y1="46.1" x2="1053.3" y2="46.1"/>
-      <line class="grid" x1="1193.3" y1="46.1" x2="1286.7" y2="46.1"/>
-      <line class="grid" x1="1426.7" y1="52.8" x2="1520.0" y2="52.8"/>
+      <line class="grid" x1="260.0" y1="160.9" x2="353.3" y2="160.9"/>
+      <line class="grid" x1="493.3" y1="160.9" x2="586.7" y2="160.9"/>
+      <line class="grid" x1="726.7" y1="196.4" x2="820.0" y2="196.4"/>
+      <line class="grid" x1="960.0" y1="74.1" x2="1053.3" y2="74.1"/>
+      <line class="grid" x1="1193.3" y1="74.1" x2="1286.7" y2="74.1"/>
+      <line class="grid" x1="1426.7" y1="111.1" x2="1520.0" y2="111.1"/>
       <line class="axis" x1="120" y1="360" x2="1660" y2="360"/>
-      <text class="lab t-faint" x="120" y="32" text-anchor="start">$M</text>
+      <text class="lab t-soft" x="120" y="32" text-anchor="start">$M — axis truncated below the opening balance, so the six movements are legible</text>
       <text class="val t-soft" x="120" y="452" text-anchor="start">$131M of the revaluation sits in renewables.</text>
     </svg>
   </div>
@@ -1865,15 +1879,15 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       <line class="grid" x1="280.0" y1="360.0" x2="1460.0" y2="40.0" stroke-dasharray="6 8"/>
       <text class="lab t-faint" x="1470" y="66" text-anchor="start">equal return per unit of risk</text>
       <circle class="quiet" cx="1289.6" cy="61.3" r="11"/>
-      <text class="val t-soft" x="1289.6" y="37.3" text-anchor="middle">Digital  16.8 / 15.4</text>
       <circle class="quiet" cx="1073.2" cy="107.6" r="11"/>
-      <text class="val t-soft" x="1073.2" y="83.6" text-anchor="middle">Renewables  14.2 / 12.1</text>
       <circle class="quiet" cx="686.4" cy="198.2" r="11"/>
-      <text class="val t-soft" x="686.4" y="174.2" text-anchor="middle">Transmission  9.1 / 6.2</text>
       <circle class="quiet" cx="594.7" cy="228.4" r="11"/>
-      <text class="val t-soft" x="594.7" y="204.4" text-anchor="middle">Water  7.4 / 4.8</text>
       <circle class="caution" cx="909.3" cy="255.1" r="13"/>
-      <text class="val t-caution" x="909.3" y="231.1" text-anchor="middle">Transport  5.9 / 9.6</text>
+      <text class="val t-soft" x="712.4" y="195.3" text-anchor="start">Transmission  9.1 / 6.2</text>
+      <text class="val t-soft" x="620.7" y="235.3" text-anchor="start">Water  7.4 / 4.8</text>
+      <text class="val t-caution" x="935.3" y="275.3" text-anchor="start">Transport  5.9 / 9.6</text>
+      <text class="val t-soft" x="1263.6" y="69.3" text-anchor="end">Digital  16.8 / 15.4</text>
+      <text class="val t-soft" x="1047.2" y="115.6" text-anchor="end">Renewables  14.2 / 12.1</text>
       <text class="lab t-soft" x="1660" y="404" text-anchor="end">volatility %</text>
       <text class="lab t-soft" x="120" y="52" text-anchor="start">net IRR %</text>
       <text class="val t-soft" x="120" y="452" text-anchor="start">Each point is labelled with its IRR and its volatility.</text>
@@ -1900,7 +1914,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     <p class="eyebrow rise" style="--i:0"><span class="tick"></span>The second limit</p>
     <h2 class="headline rise" style="--i:1">Top three assets hold 34%</h2>
   </header>
-  <div class="body rise" style="--i:3">
+  <div class="body limitwrap rise" style="--i:3">
     <div class="stat">
       <div class="stat-left">
         <p class="stat-figure pulse" style="--m-rank:61"><span>34%</span></p>
@@ -1908,18 +1922,17 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       </div>
       <div class="stat-right"><p class="stat-read">Two limits, both breached, and neither by a decision.</p></div>
     </div>
-    <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="120 0 1728 220" role="img"
+    <svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="120 0 1728 190" role="img"
          aria-label="The three largest assets hold 34 percent of net asset value against a 30 percent policy limit: Calder wind 13, Norbeck solar 11, Aldis transmission 10.">
-      <rect class="accent" x="120.0" y="62.0" width="500.5" height="72.0"/>
-      <text class="name" x="370.2" y="174" text-anchor="middle">Calder wind  13%</text>
-      <rect class="quiet" x="620.5" y="62.0" width="423.5" height="72.0"/>
-      <text class="name t-soft" x="832.2" y="174" text-anchor="middle">Norbeck solar  11%</text>
-      <rect class="quiet" x="1044.0" y="62.0" width="385.0" height="72.0"/>
-      <text class="name t-soft" x="1236.5" y="174" text-anchor="middle">Aldis transmission  10%</text>
+      <rect class="accent" x="123.0" y="62.0" width="494.5" height="72.0"/>
+      <text class="name" x="370.2" y="172" text-anchor="middle">Calder wind  13%</text>
+      <rect class="quiet" x="623.5" y="62.0" width="417.5" height="72.0"/>
+      <text class="name t-soft" x="832.2" y="172" text-anchor="middle">Norbeck solar  11%</text>
+      <rect class="quiet" x="1047.0" y="62.0" width="379.0" height="72.0"/>
+      <text class="name t-soft" x="1236.5" y="172" text-anchor="middle">Aldis transmission  10%</text>
       <line class="axis" x1="1275.0" y1="40" x2="1275.0" y2="156"/>
       <text class="lab t-soft" x="1275" y="28" text-anchor="middle">top-three ceiling 30%</text>
       <text class="val t-accent" x="1447" y="108" text-anchor="start">34%</text>
-      <text class="lab t-soft" x="120" y="230" text-anchor="start">share of net asset value, three largest assets</text>
     </svg>
   </div>
   <div class="disc" data-disc="instances">
@@ -1983,7 +1996,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       <rect class="caution" x="390.0" y="224.7" width="80.0" height="0.0"/>
       <circle class="caution" cx="430.0" cy="224.7" r="12"/>
       <text class="val t-caution" x="430" y="264.7" text-anchor="middle">−6.8%</text>
-      <text class="lab t-soft" x="430" y="204.7" text-anchor="middle">5.1 pts renewables</text>
+      <text class="lab t-soft" x="484" y="198.7" text-anchor="start">5.1 pts renewables</text>
       <text class="name t-soft" x="120" y="296" text-anchor="start">Q1</text>
       <text class="name t-soft" x="275" y="296" text-anchor="middle">Q2</text>
       <text class="name t-soft" x="430" y="296" text-anchor="middle">Q3</text>
@@ -2033,7 +2046,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       <text class="val" x="1500" y="258" text-anchor="middle">$40M</text>
       <text class="lab t-soft" x="1500" y="300" text-anchor="middle">to 45%</text>
       <g class="decision">
-        <path class="decision-shape" d="M710 126 L842 200 L710 274 L578 200 Z"/>
+        <path class="decision-shape" d="M710 122 L878 200 L710 278 L542 200 Z"/>
         <text class="decision-label" x="710" y="194" text-anchor="middle">gate</text>
         <text class="decision-label" x="710" y="226" text-anchor="middle">realised vs 4.5%</text>
       </g>
@@ -2190,6 +2203,11 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
 
 .figwrap{position:relative}
 
+/* 3 and 8 - a statistic and a band, stacked from the top. The default body spread them to its
+   two ends, which put the band's labels on the bottom line. Looked at, not caught by the gate. */
+.limitwrap{display:grid;grid-template-rows:auto auto;align-content:start;gap:var(--sp-4)}
+.limitwrap .fig{max-width:calc(1560*var(--du))}
+
 /* 9 - three numbers that add up. The arithmetic is the layout, so there is no chart. */
 .sum{display:grid;gap:var(--sp-2);align-content:center;max-width:calc(1180*var(--du))}
 .sum-voice{font-family:var(--font-display);font-size:var(--fs-subhead);color:var(--ink-soft);
@@ -2227,7 +2245,8 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
    collapses to a block, because a two-column track at 320 CSS px is DS-075's two-dimensional
    scroll; and every size above is restated in `--doc-*`, because the design unit is a different
    size here and a stage size carried into the document lands under DS-035's 16 du floor. */
-.doc .two-fig,.doc .split,.doc .stat,.doc .ledger2,.doc .close-cols,.doc .sum-row{display:block}
+.doc .two-fig,.doc .split,.doc .stat,.doc .ledger2,.doc .close-cols,.doc .sum-row,
+.doc .limitwrap{display:block}
 .doc .two-fig{padding-bottom:0}
 .doc .two-fig-val{font-size:var(--doc-fs-figure);display:block}
 .doc .two-fig-lab,.doc .side-lab,.doc .sum-lab,.doc .col-head,.doc .close-head,
