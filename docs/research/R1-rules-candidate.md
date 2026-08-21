@@ -81,7 +81,7 @@ a single instance · `stated` written down but under-delivered.
 | A7 | Build slides in batches so feedback lands mid-build | stated | **defer → T-020** |
 | A8 | Pages sit in a container giving each a boundary, resolution-independent | stated | **keep** — see L1/C-11 |
 | A9 | One strong closing line plus one subtle supporting line — nothing else | stated | **keep** |
-| A10 | No speaker notes, presenter markers or script. Deck only | stated | **amend** — BRIEF Q4 |
+| A10 | No speaker notes, presenter markers or script. Deck only | stated | **keep** — *resolved 2026-08-21 by [T-211](../../tasks/T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md). This read **amend — BRIEF Q4** from the day it was written. The amendment is not needed: DS-088 governs the **shipped** deck, notes live in a presenter build that never ships, and the corpus's own reason — a self-contained file carries its notes to whoever receives it — is unchanged.* |
 
 ## A′. Process — the document pipeline
 

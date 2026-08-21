@@ -690,6 +690,77 @@ def ds001_no_external_references(h):
 QUICK_VIEW = content.QUICK_VIEW
 
 
+# **DS-122 binds on structure, and the structure is *marks built at run time*** (T-202).
+#
+# It was a substring blocklist of five vendor names - `chart.js`, `d3.min`, `plotly`, `highcharts`,
+# `echarts`. Probed against the row itself, `uPlot`, `tanstack charts`, `apexcharts` and
+# `frappe-charts` all passed a rule reading *no chart library*, so the column read `auto` while what
+# the machine decided was whether five strings appeared (**L-125**).
+#
+# **What separates this repository's charts from an engine's is not a name, it is when the marks
+# exist.** Every figure here is literal SVG in the file, written by the generator at build time. An
+# engine draws at run time, and there are only three ways to do that in a browser: build SVG shape
+# elements from script, take a canvas context, or ship a `<canvas>` for something else to draw into.
+#
+# **Calibrated against every deck this repository ships** - `reference-deck`,
+# `reference-deck-seeded-defects`, `portfolio-review`, `measure-first` and `sort-window`, 2026-08-21.
+# All five score zero on all three signals. The shell's own two `createElementNS` calls build `svg`
+# and `use` - one icon reference into the sprite - which is why the signal is the **shape** argument
+# and not the call: bound on the call alone it would fail all five decks it must pass (**L-125**
+# again, from the other side).
+#
+# **The limit, stated rather than discovered later:** an engine that writes marks by assigning
+# `innerHTML` from a string of `<path …>` is not seen, because a deck's own literal figures contain
+# the same bytes and no structural reading separates them. This rule catches the three mechanisms a
+# real engine uses and says so; it is not a proof that no engine can be present.
+CHART_MARKS = ("path", "rect", "circle", "ellipse", "line", "polyline", "polygon", "g", "text")
+RUNTIME_SVG = re.compile(
+    r"""createElementNS\s*\([^)]{0,140}?["']\s*(?:%s)\s*["']""" % "|".join(CHART_MARKS))
+CANVAS_CTX = re.compile(r"""getContext\s*\(\s*["'](?:2d|webgl2?|bitmaprenderer)["']""", re.I)
+CANVAS_TAG = re.compile(r"<canvas\b", re.I)
+
+# The declaration, in the head, as one block. **Beside the chart it governs was the alternative and
+# it loses**: a per-chart declaration multiplies the places a deck can forget one, and the check
+# would have to decide which chart each governs in order to say anything - where a single block is
+# one thing to find and one licence to read. It follows DS-009's preflight, which is also one head
+# block for a whole-deck capability.
+CHART_ENGINE_DECL = re.compile(
+    r"""<meta\s+name=["']htmldeck-chart-engine["']\s+content=["']([^"']+)["']""", re.I)
+
+# SPDX identifiers whose terms permit redistribution inside a single file, which is what a deck is.
+# The same test DS-032 applies to an embedded face, one artifact along.
+REDISTRIBUTABLE = ("mit", "isc", "0bsd", "bsd-2-clause", "bsd-3-clause", "apache-2.0",
+                   "ofl-1.1", "unlicense", "cc0-1.0")
+
+
+def ds122_charts(h):
+    """`(ok, why)` - the deck draws its charts at build time, or declares the engine that does not."""
+    seen = [name for name, rx in (("SVG marks built from script", RUNTIME_SVG),
+                                  ("a canvas drawing context", CANVAS_CTX),
+                                  ("a <canvas> element", CANVAS_TAG)) if rx.search(h)]
+    decl = CHART_ENGINE_DECL.search(h)
+    if not decl:
+        if seen:
+            return False, "draws at run time (%s) and declares no chart engine" % ", ".join(seen)
+        return True, "hand-authored: no marks are built at run time"
+    fields = dict()
+    for part in decl.group(1).split(";"):
+        if "=" in part:
+            k, v = part.split("=", 1)
+            fields[k.strip().lower()] = v.strip()
+    missing = [k for k in ("engine", "version", "licence", "output") if not fields.get(k)]
+    if missing:
+        return False, "the chart-engine declaration omits %s" % ", ".join(missing)
+    if fields["output"].lower() != "svg":
+        return False, ("the declared engine outputs %r; the stage is scaled by a transform and the "
+                       "deck is printed, so the output has to be SVG" % fields["output"])
+    if fields["licence"].lower() not in REDISTRIBUTABLE:
+        return False, ("the declared licence %r is not one whose terms permit redistribution inside "
+                       "a single file" % fields["licence"])
+    return True, "declares %s %s, %s, SVG output" % (fields["engine"], fields["version"],
+                                                     fields["licence"])
+
+
 def ds110_no_produced_raster(h):
     """DS-110 as narrowed by scope. A quick view's contents are removed, then nothing may remain."""
     outside = QUICK_VIEW.sub("", h)
@@ -837,9 +908,8 @@ STATIC = [
      lambda h: "speaker-note" not in h and 'class="notes' not in h),
     ("DS-110", "no raster the deck produces; a quoted source may be raster inside a quick view",
      lambda h: ds110_no_produced_raster(h)),
-    ("DS-122", "no chart library",
-     lambda h: not any(x in h.lower() for x in
-                       ("chart.js", "d3.min", "plotly", "highcharts", "echarts"))),
+    ("DS-122", "charts are built at build time, or the engine that draws them is declared",
+     lambda h: ds122_charts(h)[0]),
     # The two rows that read slide copy rather than the file. See the note above the helpers.
     ("DS-100", "no rhetorical questions in slide copy", ds100_no_rhetorical_questions),
     ("DS-106", "no banned terminology", ds106_no_banned_terminology),
@@ -2633,6 +2703,40 @@ def self_test():
             sys.exit("SELF-TEST FAILED: %s is declared to delegate to %s, and either that is not "
                      "an exercised producer or its source does not call it. A delegation nobody "
                      "checks is how a producer parks itself outside the fixture." % (name, target))
+
+    # ---- DS-122, both directions (T-202, **L-125**) -------------------------------------------
+    #
+    # **One direction proves half a rule.** The blocklist this replaced was never probed with a
+    # library it did not name, so nobody found that `uPlot`, `tanstack charts`, `apexcharts` and
+    # `frappe-charts` walked past a rule reading *no chart library*. The engine below is invented
+    # for the fixture on purpose: **the check must not know its name to refuse it.**
+    _decl = ('<meta name="htmldeck-chart-engine" content="engine=nobody-has-heard-of-this; '
+             'version=0.3.1; licence=MIT; output=svg">')
+    _engine = ("<script>var e=document.createElementNS('http://www.w3.org/2000/svg','path');"
+               "</script>")
+    _ds122 = [
+        ("an invented engine building SVG marks, undeclared", "<head></head>" + _engine, False),
+        ("a <canvas>, undeclared", "<head></head><canvas id='c'></canvas>", False),
+        ("a 2d drawing context, undeclared", "<head></head><script>x.getContext('2d')</script>",
+         False),
+        # The blocklist failed this and it is not a defect: naming a library in prose is what a
+        # deck arguing against one does. A false alarm is a defect in the check (**L-125**).
+        ("prose naming a real library", "<head></head><p>We considered Chart.js.</p>", True),
+        ("the same invented engine, declared", "<head>" + _decl + "</head>" + _engine, True),
+        ("declared with a field missing", "<head>" + _decl.replace("version=0.3.1; ", "")
+         + "</head>" + _engine, False),
+        ("declared under a licence that forbids redistribution",
+         "<head>" + _decl.replace("licence=MIT", "licence=Proprietary") + "</head>" + _engine,
+         False),
+        ("declared with canvas output", "<head>" + _decl.replace("output=svg", "output=canvas")
+         + "</head>" + _engine, False),
+        ("a deck that draws nothing at run time", "<head></head><svg><path d='M0 0'/></svg>", True),
+    ]
+    for _label, _html, _want in _ds122:
+        _got, _why = ds122_charts(_html)
+        if _got != _want:
+            sys.exit("SELF-TEST FAILED: DS-122 on %r wanted %s and gave %s (%s)"
+                     % (_label, "pass" if _want else "fail", "pass" if _got else "fail", _why))
 
     # **What did the rows actually ask for?** A key in neither table is one the fixture has no model
     # of, so whatever a row reads it with is fiction. This is DS-217's whole story: `chromeHeightDu`

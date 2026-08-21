@@ -40,6 +40,15 @@ OUT = os.path.join(render.OUT, "variants")
 # (name, rule it must break, [(old, new), ...]) - the edit is the smallest one that breaks the
 # rule and nothing else, because a variant that breaks three rules proves nothing about any of them.
 STATIC_VARIANTS = [
+    # ---- added by T-202, which re-bound DS-122 from five vendor names onto when the marks exist.
+    # The engine is invented on purpose: a check that has to know a library's name is a check the
+    # next library walks past, which is what the blocklist did to four of them (**L-125**).
+    ("chart-engine-undeclared", "DS-122", [
+        ("</body>",
+         "<script>var e=document.createElementNS('http://www.w3.org/2000/svg','path');"
+         "</script></body>")]),
+    ("chart-canvas-undeclared", "DS-122", [
+        ("</body>", "<canvas id=\"chart\"></canvas></body>")]),
     ("cdn-reference", "DS-002", [
         ('<meta charset="utf-8">',
          '<meta charset="utf-8"><link rel="stylesheet" href="https://cdn.example.com/x.css">')]),

@@ -459,6 +459,25 @@ the rows stay*; an adopting project then built exactly that deck and had to choo
 the loss in red and passing the gate (T-105). `.t-ink` moved with them: it is the sibling of five
 `author` text roles and would have failed the next deck to colour figure text explicitly.
 
+**The chart-engine declaration is a figure part, and it lives in the head** (DS-122, T-202). A deck
+whose charts the reader is expected to *interrogate* may carry an engine, and it says so once:
+
+| Part | Element | Sits in | Count | Attributes | Source |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `htmldeck-chart-engine` | `meta` | `head` | `0..1` | `name` `content` | author |
+
+`content` is four `key=value` pairs separated by `;` — **`engine`**, **`version`**, **`licence`**
+and **`output`**. All four are required, `output` must be `svg`, and `licence` must be an SPDX
+identifier whose terms permit redistribution inside a single file, which is the same test DS-032
+applies to an embedded face. **A deck that declares nothing is held to the hand-authored default**,
+which is where every deck this repository ships stands today.
+
+**Why the head and not beside the chart.** Beside it is more local, and it was the alternative
+considered. It loses on two counts: it multiplies the places a deck can forget one, and a check
+reading it would first have to decide which chart each declaration governs before it could say
+anything at all. One block is one thing to find and one licence to read — the same shape DS-009's
+preflight already uses for a whole-deck capability.
+
 ### 3.7 Shared pieces
 
 | Part | Element | Sits in | Count | Attributes | Source |
