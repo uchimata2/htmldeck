@@ -2,8 +2,8 @@
 id: T-113
 title: Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used
 type: research
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-057, T-112, T-187]
@@ -13,7 +13,8 @@ business_value: high
 effort: l
 created: 2026-08-12
 updated: 2026-08-21
-deliverables: [docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md, examples/portfolio-review/portfolio-review.html]
+shipped_in: unreleased
+deliverables: [docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md, examples/portfolio-review/portfolio-review.html, tools/examples/portfolio_charts.py]
 ---
 
 # T-113 — Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used
@@ -380,21 +381,74 @@ estimate:
    the few dozen lines and none of the rest**, which is the comparison the recommendation has to make
    and is not the comparison the request assumed.
 
+### Steps 5 to 8
+
+**Gate 2 — licences, read out of the file that carries each.** MIT for TanStack Charts (1,079 B),
+Chart.js (1,093 B) and uPlot (1,078 B); Apache-2.0 for ECharts (11,990 B) **plus a 168-byte
+`NOTICE` that §4(d) obliges to travel with any redistribution** — the only candidate whose licence
+costs a second file inside a single-file deck.
+
+**Gate 5 — reduced motion, counted in the shipped bytes.** `prefers-reduced-motion` appears **6**
+times in TanStack Charts' financial bundle and **zero** times in Chart.js, ECharts and uPlot.
+TanStack Charts is the only candidate that honours the preference itself; for the other three the
+deck would own a shim that DS-143 then gates. uPlot has **no animation at all** — which passes
+DS-221 and DS-224 for free and makes DS-146's staggered draw-in unreachable.
+
+**Gate 6 — executes nothing it was not given.** `eval(` and `new Function` both count **zero** in
+all four shipped bundles. All four pass.
+
+**Gate 4 — theme tokens.** All four fail equally as shipped: each carries its own palette and none
+reads CSS custom properties natively. The shim is the same size whichever wins, so gate 4 ranks
+nobody — and the finding is that the cost it names is real and appears in no size table.
+
+**Step 7 — what hand-authored SVG cost, measured from what the deck actually took.**
+`tools/examples/portfolio_charts.py` is 1,036 lines. **The scale arithmetic a chart library exists
+to supply is 69 of them**, and a library would replace at most 379 in total. **DS-122's claim that
+this is "a few lines" is literally true**, and the comparison the request assumed — library against
+hand-drawing — is the wrong one: the drawing is not where the cost is.
+
+**Step 8 — the recommendation**, in [R9](../docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md).
+SVG stays the default; a library is admissible only for a deck whose charts the reader *interrogates*;
+chart count is never the trigger; and when the trigger fires the candidate is TanStack Charts, which
+is the only SVG-by-default, framework-free, reduced-motion-honouring candidate and is 23 days old.
+
 **Outputs produced**
-- Gate verdicts for gates 1, 2, 3 and 7 across four candidates, above. They are R9's input tables.
-- `examples/portfolio-review/` — two source models, both specifications, and a composed 12-slide
-  deck that does not yet pass the gate.
-- `tools/examples/portfolio_charts.py` — the scale arithmetic, ten figures, and 22 self-test checks
-  asserting the identities the deck's own quality bar promises.
+- [`docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md`](../docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md)
+  — the note: seven gates, four candidates, the threshold rule, and DS-122's disposition.
+- [`examples/portfolio-review/`](../examples/portfolio-review/portfolio-review.foundation.md) — the
+  evaluation's subject: two illustrative source models, both specifications, and a 12-slide deck
+  carrying ten hand-authored SVG figures. Green on `check.py`, `check_all.py`, `spec.py` SPEC-1 to
+  SPEC-5, `quickview.py` and `printgeom.py`.
+- [`tools/examples/portfolio_charts.py`](../tools/examples/portfolio_charts.py) — the scale
+  arithmetic, ten figures, and 24 self-test checks asserting the identities the deck's own quality
+  bar promises.
+- [`docs/lessons/L-126.md`](../docs/lessons/L-126.md) — a published benchmark is stated in its own
+  deployment's units, not in yours.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :--- | :--- |
-|  |  |  |
+| A chart-intensive deck exists first | **met** | `examples/portfolio-review/` — 12 slides, ten hand-authored SVG figures across seven chart kinds, real financial structure, green on every gate this repository owns. |
+| Every candidate has a verdict against all seven gates, with the failing gate named | **met** | R9 §3 to §5. Gate 3 eliminated nobody; gate 7 eliminated TanStack Charts on age alone, which is the only gate any candidate failed. |
+| A measured inlined size for each surviving candidate, against the same real chart from that deck | **met**, with one thing worth stating | R9 §4. **For Chart.js, ECharts and uPlot the figure is chart-independent**: they ship one UMD or IIFE build and there is nothing to tree-shake, so *the bundle for that deck's chart* and *the whole bundle* are the same number. Only TanStack Charts tree-shakes, and its 165,077 B was built from slides 5 and 6's actual mark set. |
+| A recommendation, and the threshold rule expressed as a class of deck | **met** | R9 §7. Three rows, and the middle one's trigger is *the reader interrogates the chart* rather than any count. |
+| The false premise is recorded as a finding, not silently corrected | **met** | R9 §1, with the second premise finding beside it. |
+| Nothing about any candidate is stated without a source that was actually fetched | **met** | npm registry, GitHub API, unpkg, the packages' own `LICENSE`, `NOTICE` and docs trees, and local `esbuild` bundles. Every figure in R9 was measured or read on 2026-08-21. |
+| Written to a new research note under `docs/research/` — **R9** | **met** | The number moved R8 → R9 during this task: R8 was taken on 2026-08-18 while this record held it in prose. |
+| `python tools/docs/refcheck.py` green | **met** | 3,133 pointers, 0 broken. |
+| DS-122's disposition is stated, and what its check binds on is named | **met** | R9 §8: amend the rule to the threshold, re-bind the check on a declared engine. Raised as [T-202](T-202-amend-ds-122-into-a-threshold-and-bind-its-check-on-structure.md) rather than done here, because the recommendation is *no library yet*. |
+
+**Two things this task did not settle, both recorded in R9 §9.** The build-time
+`renderChartSvg` route, which would put the library in the build and nothing but marks in the deck —
+probed three times, failed on scale configuration, and the correct shape is now known. And the theme
+shim's real cost, estimated as equal across candidates and never built.
 
 **Child fix tasks raised**
-- expected: the chart component itself, raised from this task's recommendation
+- [T-202](T-202-amend-ds-122-into-a-threshold-and-bind-its-check-on-structure.md) — amend DS-122 into
+  a threshold, and bind its check on structure rather than on five vendor names.
+- still expected: the chart component itself, whose shape now depends on which row of R9 §7 the next
+  deck lands in.
 
 ## Log
 
@@ -406,3 +460,4 @@ estimate:
 | 2026-08-21 | specified → planned | The plan is re-ordered so the two disqualifying gates — framework and maintenance — run before the deck is built, and re-scoped so nothing is measured against the reference deck's single line chart. Eight steps; step 3 named as the long pole and as a stop boundary rather than something to shrink. |
 | 2026-08-21 | planned -> in_progress | Steps 1, 2 and 4 done, out of order and deliberately: the two disqualifying gates ran first as planned, and gate 1 followed because the library builds were already downloaded to answer gate 3. **Gate 3 eliminated nobody** — all four candidates ship a framework-free entry, TanStack Charts included, whose React-only appearance is a documentation fact rather than a packaging one and whose 13 framework peers are every one of them optional. **Gate 7 eliminated one**: TanStack Charts is 23 days old at 0.14.0 and cannot evidence *reliable* or *robust*, which is a wait rather than a refusal. **Gate 1 was measured in raw bytes**, and the finding that will carry the recommendation is that every published comparison quotes gzip while a `file://` deck pays raw — TanStack's own page says 37.60–43.56 KiB against a measured 165,077 B. Steps 3 and 5-8 remain; step 3, the chart-intensive deck, is the long pole and has not started. |
 | 2026-08-21 | (no change) | **Step 3 started and not finished.** The chart-intensive deck is specified, its two illustrative source models are written, and `tools/examples/portfolio_charts.py` composes 12 slides carrying ten hand-authored SVG figures — a stacked area, a diverging contribution bar, a waterfall, a risk-return scatter, two limit bars, a drawdown line, a tranche bar and a gated timeline. `spec.py` is green on SPEC-1 to SPEC-4 and the generator's 22 arithmetic checks pass. **`check.py` names 13 failures**, listed in §3 by class; the largest is sourcing, where 13 of 95 figures on a slide appear in no source because the disclosure detail was written into the deck rather than into the model. The deck is left untracked while it is red, because `check_all.py` fails on an undeclared tracked `.html` and declaring a red deck would leave the release gate red. Steps 5 to 8 are unstarted. |
+| 2026-08-21 | in_progress → done | **Closed.** Steps 3 and 5 to 8 finished in the same session as 1, 2 and 4. The deck went from 13 `check.py` failures to 0, and then a person looked at it and found **nine more that every gate had passed** — two of them fatal to the slide they were on: a five-series stacked area that rendered as two shapes because DS-020 allows one accent hue, and a waterfall that was arithmetically right and unreadable because five movements of 52 to 180 sit in one band on a 0-2,500 axis. Both are CLAUDE.md rule 6 working, and both are in R9 §6 as the strongest argument in the note *for* a library. The recommendation is SVG by default, a library only where the reader interrogates the chart, never on chart count, and TanStack Charts when it has a track record to read. `check_all.py` green: 35 ran, 2 skipped with a reason, 0 failed, 0 unclassified. `shipped_in` is `unreleased` — no tag contains this yet. |
