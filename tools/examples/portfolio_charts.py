@@ -314,7 +314,7 @@ def fig_waterfall():
     lo, hi = 2050.0, 2500.0
     xs = band(len(WATERFALL), 190, 1590, inset=0.0)
     bw = 140.0                               # so the first bar's left edge lands exactly on 120
-    o, run, tops = [], 0.0, []
+    o, run, bars = [], 0.0, []
     for i, (name, v, kind) in enumerate(WATERFALL):
         x = xs[i] - bw / 2
         if kind == "total":
@@ -328,7 +328,8 @@ def fig_waterfall():
         if name == "revaluation":
             cls = "accent"
         o.append(rect(x, ytop, bw, max(ybot - ytop, MIN_BAR_PX), cls))
-        tops.append((x, x + bw, ytop, ybot))
+        # The running total after this bar, kept because it is what a connector attaches to.
+        bars.append((x, x + bw, run))
         # The two grounded bars are the deck's opening and closing NAV and are read as money,
         # so they carry a thousands separator; the five movements are read as deltas and do not.
         label = (fmt(v, 0, True) if kind == "total"
@@ -336,14 +337,16 @@ def fig_waterfall():
         o.append(text(xs[i], ytop - 14, label,
                       "val t-accent" if cls == "accent" else "val"))
         o.append(text(xs[i], NAMES_Y, name, "name" if cls == "accent" else "name t-soft"))
-    for i in range(len(tops) - 1):
-        _, xr, ytop, ybot = tops[i]
-        nxt = tops[i + 1]
-        yy = ytop if WATERFALL[i][1] >= 0 or WATERFALL[i][2] == "total" else ybot
-        yy = min(ytop, nxt[2]) if WATERFALL[i + 1][2] == "up" else max(ybot, nxt[3])
-        yy = nxt[2] if WATERFALL[i + 1][2] in ("up", "total") else nxt[2]
+    # A connector leaves a bar at the running total after it, which is also where the next bar
+    # begins. Drawn from that value rather than from a rectangle edge, so the bar and the connector
+    # cannot disagree: there is only one number now. Three assignments to `yy` stood here, of which
+    # the first two were unreachable and the third returned the next bar's top on both arms - the
+    # waterfall's arithmetic was right throughout and only the joins were wrong (T-203).
+    for i in range(len(bars) - 1):
+        _, xr, run_after = bars[i]
+        yy = linear(run_after, lo, hi, BASE, TOP)
         o.append('      <line class="grid" x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f"/>'
-                 % (xr, yy, nxt[0], yy))
+                 % (xr, yy, bars[i + 1][0], yy))
     o.append('      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (L, BASE, R, BASE))
     o.append(text(L, TOP - 8, "$M — axis truncated below the opening balance, so the six movements are legible", "lab t-soft", "start"))
     o.append(text(L, NOTE_Y, "$131M of the revaluation sits in renewables.", "val t-soft", "start"))
@@ -366,6 +369,11 @@ def fig_scatter():
     # Labels sit beside their point, not above it, and each side is spread on its own. Stacking
     # them vertically put three of the five within 50 px of each other and two ran through a
     # neighbour's dot - visible only by looking, which is how it was found.
+    # **Which side is decided by the reference line, not by volatility.** A point above the line
+    # takes its label to the left and a point below takes it to the right, so every label moves
+    # away from the diagonal instead of running along it. Choosing on `vol < 11.0` was unrelated to
+    # the line and put the two low-volatility labels straight through it (T-203). It fixes the
+    # binding at the same time: a label left of its own dot cannot begin nearer a neighbour's.
     left, right = [], []
     for name, irr, vol in RISK_RETURN:
         cx, cy = linear(vol, lo, hi, plot_l, plot_r), y_of(irr, lo, hi)
@@ -374,7 +382,7 @@ def fig_scatter():
                  % ("caution" if below else "quiet", cx, cy, 13 if below else 11))
         label = "%s  %s / %s" % (name, fmt(irr, 1), fmt(vol, 1))
         cls = "val t-caution" if below else "val t-soft"
-        (right if vol < 11.0 else left).append((cx, cy + 8, label, cls))
+        (right if below else left).append((cx, cy + 8, label, cls))
     for group, side in ((right, "start"), (left, "end")):
         if not group:
             continue
@@ -465,16 +473,20 @@ def fig_timeline():
     y = 200.0
     xs = [420.0, 1000.0, 1500.0]
     gate_x = 710.0
-    o = ['      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (240, y, 1620, y)]
+    # The gate carries its label inside itself (COMPONENT-CONTRACT 3.6), so the rhombus is sized
+    # to the text rather than the text placed near a rhombus.
+    hw, hh = 168.0, 78.0
+    # **A gate on a timeline interrupts the line; it is not overdrawn by it.** The axis stops at the
+    # rhombus's left vertex and resumes at its right one - both sit on `y` by construction, so the
+    # line reads as entering the gate and leaving it (T-203).
+    o = ['      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (240, y, gate_x - hw, y),
+         '      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (gate_x + hw, y, 1620, y)]
     for i, ((when, size, to), x) in enumerate(zip(TRANCHES, xs)):
         o.append('      <circle class="%s" cx="%.0f" cy="%.0f" r="16"/>'
                  % ("accent" if i == 0 else "quiet", x, y))
         o.append(text(x, y - 44, when, "name" if i == 0 else "name t-soft"))
         o.append(text(x, y + 58, "$%dM" % size, "val t-accent" if i == 0 else "val"))
         o.append(text(x, y + 100, "to %d%%" % to, "lab t-soft"))
-    # The gate carries its label inside itself (COMPONENT-CONTRACT 3.6), so the rhombus is sized
-    # to the text rather than the text placed near a rhombus.
-    hw, hh = 168.0, 78.0
     o.append('      <g class="decision">')
     o.append('        <path class="decision-shape" d="M%.0f %.0f L%.0f %.0f L%.0f %.0f L%.0f %.0f Z"/>'
              % (gate_x, y - hh, gate_x + hw, y, gate_x, y + hh, gate_x - hw, y))
@@ -489,6 +501,76 @@ def fig_timeline():
                "a committee gate reviewing the realised discount against 4.5 percent, then $60M "
                "in Q3 2027 to 47 percent and $40M in Q1 2028 to 45 percent.",
                "\n".join(o), "240 0 1450 480")
+
+
+# --- Reading a figure back, so three of its relations can be checked ----------------------------
+# **These read the emitted SVG rather than recomputing the placement.** A check that re-derives what
+# the figure derived shares its bug and passes: the four defects T-203 fixed were all relations
+# between marks, and every one of them was arithmetically consistent with the code that drew it.
+# Deliberately narrow - this deck's own figures, three relations, no vocabulary. The general
+# instrument is T-204's.
+
+LINE_RE = re.compile(r'<line class="([^"]*)"([^/]*)/>')
+TEXT_RE = re.compile(r'<text class="([^"]*)" x="([^"]*)" y="([^"]*)" text-anchor="([^"]*)">'
+                     r'([^<]*)</text>')
+CIRCLE_RE = re.compile(r'<circle class="([^"]*)" cx="([\d.]+)" cy="([\d.]+)" r="(\d+)"/>')
+ATTR_RE = re.compile(r'(\w[\w-]*)="([^"]*)"')
+RECT_RE = re.compile(r'<rect class="[^"]*"([^/]*)/>')
+
+
+def read_lines(svg_text, cls):
+    """Every `<line>` of one class, as (x1, y1, x2, y2, attrs)."""
+    out = []
+    for got_cls, rest in LINE_RE.findall(svg_text):
+        if got_cls != cls:
+            continue
+        a = dict(ATTR_RE.findall(rest))
+        out.append((float(a["x1"]), float(a["y1"]), float(a["x2"]), float(a["y2"]), a))
+    return out
+
+
+def read_labels(svg_text, font_px=22.0):
+    """Every `<text>` as a box. The width estimate is `guard_label`'s, on purpose: two estimates
+    of one quantity disagree the first time either changes (L-13)."""
+    out = []
+    for cls, x, y, anchor, body in TEXT_RE.findall(svg_text):
+        w = len(body) * font_px * 0.62
+        x = float(x)
+        x0 = x if anchor == "start" else (x - w if anchor == "end" else x - w / 2)
+        out.append({"cls": cls, "text": body, "anchor": anchor, "x": x, "y": float(y),
+                    "box": (x0, float(y) - font_px * 0.8, x0 + w, float(y) + font_px * 0.25)})
+    return out
+
+
+def read_nodes(svg_text):
+    return [(float(cx), float(cy), float(r)) for _, cx, cy, r in CIRCLE_RE.findall(svg_text)]
+
+
+def seg_hits_box(x1, y1, x2, y2, box):
+    """Liang-Barsky: does the segment meet the rectangle at all?"""
+    bx0, by0, bx1, by1 = box
+    dx, dy = x2 - x1, y2 - y1
+    t0, t1 = 0.0, 1.0
+    for p, q in ((-dx, x1 - bx0), (dx, bx1 - x1), (-dy, y1 - by0), (dy, by1 - y1)):
+        if p == 0:
+            if q < 0:
+                return False
+            continue
+        t = q / p
+        if p < 0:
+            t0 = max(t0, t)
+        else:
+            t1 = min(t1, t)
+        if t0 > t1:
+            return False
+    return True
+
+
+def box_hits_disc(box, cx, cy, r):
+    bx0, by0, bx1, by1 = box
+    nx = min(max(cx, bx0), bx1)
+    ny = min(max(cy, by0), by1)
+    return (nx - cx) ** 2 + (ny - cy) ** 2 <= r * r
 
 
 # --- The self-test: the identities the deck's own quality bar promises --------------------------
@@ -533,6 +615,56 @@ def selftest():
     check("the tranches sum to the $170M to be moved",
           sum(s for _, s, _ in TRANCHES) == 170, "got %d" % sum(s for _, s, _ in TRANCHES))
 
+    # --- three relations between marks, read back off the drawn figure (T-203) -----------------
+    # Each of these was false in a deck every gate passed, and each was found by a person looking.
+
+    wf = fig_waterfall()
+    rects = [(float(a["x"]), float(a["y"]), float(a["width"]), float(a["height"]))
+             for a in (dict(ATTR_RE.findall(m)) for m in RECT_RE.findall(wf))]
+    joins = read_lines(wf, "grid")
+    edges = [(y, y + h) for _, y, _, h in rects]
+    ok, detail = len(joins) == len(rects) - 1, ""
+    if not ok:
+        detail = "%d connectors for %d bars" % (len(joins), len(rects))
+    for i, (x1, y1, x2, _, _) in enumerate(joins):
+        near = lambda a, b: abs(a - b) < 0.6                          # noqa: E731
+        shared = (any(near(y1, e) for e in edges[i])
+                  and any(near(y1, e) for e in edges[i + 1]))
+        ends = near(x1, rects[i][0] + rects[i][2]) and near(x2, rects[i + 1][0])
+        if not (shared and ends):
+            ok = False
+            detail = ("connector %d at y=%.1f joins %s to %s"
+                      % (i + 1, y1, [round(e, 1) for e in edges[i]],
+                         [round(e, 1) for e in edges[i + 1]]))
+            break
+    check("every waterfall connector sits on the edge both its bars share", ok, detail)
+
+    sc = fig_scatter()
+    nodes = read_nodes(sc)
+    named = dict(zip([n for n, _, _ in RISK_RETURN], nodes))
+    diag = [ln for ln in read_lines(sc, "grid") if "stroke-dasharray" in ln[4]]
+    # A point's label is the one that names it. The class does not separate them - the figure's
+    # own footnote carries `val t-soft` too, which is what this filter is for.
+    marks = [t for t in read_labels(sc) if t["text"].split("  ")[0] in named]
+    check("every scatter node carries a label", len(marks) == len(nodes),
+          "%d labels for %d nodes" % (len(marks), len(nodes)))
+    crossed = [t["text"] for t in marks
+               if diag and seg_hits_box(diag[0][0], diag[0][1], diag[0][2], diag[0][3], t["box"])]
+    check("no scatter label meets the equal-return line", len(diag) == 1 and not crossed,
+          "%d reference lines, crossed by %s" % (len(diag), crossed or "none"))
+
+    astray = []
+    for t in marks:
+        own = named[t["text"].split("  ")[0]]
+        d = lambda n: (t["x"] - n[0]) ** 2 + (t["y"] - n[1]) ** 2                 # noqa: E731
+        if any(d(n) < d(own) for n in nodes if n != own):
+            astray.append(t["text"])
+    check("every scatter label is nearest its own node", not astray,
+          "astray: %s" % (astray or "none"))
+
+    fouled = [t["text"] for t in marks if any(box_hits_disc(t["box"], *n) for n in nodes)]
+    check("no scatter label overprints a node", not fouled, "fouled: %s" % (fouled or "none"))
+
     # every figure builds, and every guard it calls is live
     for name, fn in FIGURES.items():
         try:
@@ -541,7 +673,10 @@ def selftest():
         except Exception as exc:                                     # noqa: BLE001
             check("%s builds" % name, False, "%s: %s" % (type(exc).__name__, exc))
 
-    print("\n%d of %d checks passed." % (len(FIGURES) + 12 - len(fails), len(FIGURES) + 12))
+    # 13 relations plus one build check per figure. The constant read 12 and had done since
+    # a fifth allocation year was added, so the line under-reported itself by one (T-203).
+    total = len(FIGURES) + 18
+    print("\n%d of %d checks passed." % (total - len(fails), total))
     return 1 if fails else 0
 
 
@@ -926,19 +1061,32 @@ COMPOSITION = """
 .limitwrap{display:grid;grid-template-rows:auto auto;align-content:start;gap:var(--sp-4)}
 .limitwrap .fig{max-width:calc(1560*var(--du))}
 
-/* 9 - three numbers that add up. The arithmetic is the layout, so there is no chart. */
-.sum{display:grid;gap:var(--sp-2);align-content:center;max-width:calc(1180*var(--du))}
+/* 9 - three numbers that add up. The arithmetic is the layout, so there is no chart.
+
+   **This body is five stacked blocks where every other body in the deck holds one or two, and it
+   did not fit the row it has.** Measured at the design scale where `.body` is 543: the block was
+   726, so the total crossed the bottom line and the note landed 56 below it, inside the chrome.
+   `.body` is a block in a `1fr` row with `min-height:0`, so the content simply overflowed
+   downward - `align-content` never entered into it, and `center` was inert here. Two changes fix
+   it and neither removes an authored word: the rhythm tightens by one step throughout, and the
+   total takes `--fs-title` at `line-height:.9` rather than `--fs-figure` at 1. That measures 498
+   in 543. Tightening alone leaves it 59 over; keeping `--fs-figure` fits only by deleting the
+   note, and then by 19. A sum set twice the size of its parts is decoration - this one is set off
+   by the rule above it, the accent, the pulse and its own label, which is what `.sum-total` is
+   for. `line-height:.9` also matches `.two-fig-val` and `.stat-figure`; the total was the one
+   figure in this deck still at 1 (T-203). */
+.sum{display:grid;gap:var(--sp-1);align-content:start;max-width:calc(1180*var(--du))}
 .sum-voice{font-family:var(--font-display);font-size:var(--fs-subhead);color:var(--ink-soft);
-  margin-bottom:var(--sp-4);max-width:var(--measure)}
+  margin-bottom:var(--sp-2);max-width:var(--measure)}
 .sum-row{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:var(--sp-4);
-  padding:var(--sp-2) 0}
-.sum-total{border-top:var(--rule) solid var(--ink);margin-top:var(--sp-2);padding-top:var(--sp-3)}
+  padding:var(--sp-1) 0}
+.sum-total{border-top:var(--rule) solid var(--ink);margin-top:var(--sp-1);padding-top:var(--sp-2)}
 .sum-lab{font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
   text-transform:uppercase;color:var(--ink-faint)}
 .sum-val{font-family:var(--font-display);font-size:var(--fs-title);line-height:1;color:var(--ink)}
-.sum-total .sum-val{font-size:var(--fs-figure);color:var(--accent);display:inline-block;
-  transform-origin:right center}
-.sum-note{font-size:var(--fs-small);color:var(--ink-soft);margin-top:var(--sp-3)}
+.sum-total .sum-val{font-size:var(--fs-title);line-height:.9;color:var(--accent);
+  display:inline-block;transform-origin:right center}
+.sum-note{font-size:var(--fs-small);color:var(--ink-soft);margin-top:var(--sp-2)}
 
 /* 10 - two columns, both argued, drawn differently because they are not the same kind of claim */
 .ledger2{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5);align-items:start}
@@ -1021,7 +1169,11 @@ def compose():
     print("next, in order:")
     print("  python tools/deck/shell.py icons %s --set %s" % (rel, ICON_SET))
     print("  python tools/deck/density.py write %s      # DS-239 derives the ranks" % rel)
-    print("  python tools/deck/preflight.py %s --write  # DS-009 holds only this deck's rows" % rel)
+    # `preflight.py` reads and proves; the command that *writes* a deck's rows is
+    # `shell.py preflight`, which is what `shell.py check` names when it finds them stale.
+    # This line named `preflight.py <deck> --write`, which that tool has no such command for
+    # - so the third step of the printed chain exited with a usage error (T-203).
+    print("  python tools/deck/shell.py preflight %s      # DS-009 holds only this deck's rows" % rel)
     print("  python tools/deck/check.py %s --sources examples/portfolio-review/sources" % rel)
 
 

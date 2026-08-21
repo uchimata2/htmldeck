@@ -52,11 +52,19 @@ real and is not a rename — the package is a new codebase, *"a tiny TypeScript 
 was `2.0.0-beta.7` in November 2023. **That is a datum about this library's long-run odds and it
 beats *23 days* as a reason.** R9 §3 should carry it.
 
-**3 — R9 §6 says nine defects and the number is thirteen.** It reads as though the look was
+**3 — R9 §6 says nine defects and the number is fifteen.** It reads as though the look was
 complete. It covered **ten of twelve slides** and passed three of the ten; the owner found four more
-([T-203](T-203-four-chart-defects-the-decks-look-missed.md)). The paragraph makes a real point — a
-green gate is not a good chart — and it makes it on a coverage figure it does not state. **A claim
-about an instrument owes the instrument's coverage.**
+([T-203](T-203-four-chart-defects-the-decks-look-missed.md)), and T-203's own closing look — twelve
+of twelve this time — found **two more on slides 4 and 10, which that owner review had also
+passed** ([T-207](T-207-two-more-mark-collisions-the-twelve-slide-look-found.md)). The paragraph
+makes a real point — a green gate is not a good chart — and it makes it on a coverage figure it does
+not state. **A claim about an instrument owes the instrument's coverage.**
+
+*Corrected from thirteen 2026-08-21, and the correction is the argument.* The number moved twice in
+one day without a line of the deck changing between the second and third look. So **the figure to
+write into R9 is not a total at all** — any total is a reading of the last look's reach. Write what
+each look covered and what it found, and let the total be derived. A defect count stated as a fact
+about a deck will be wrong again the next time somebody looks.
 
 **And one thing to re-read rather than correct**
 Three of the four new defects are **relational geometry** — where a connector attaches, whether a
@@ -124,3 +132,4 @@ threshold should not move — which is the whole reason that task is ranked ahea
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-21 | → proposed | Raised from the owner's review of T-113's output on the day it closed. Three corrections: gate 7 scored per clause rather than as one verdict, because two candidates fail it for opposite reasons; the archived predecessor as a better reason to wait than the 23 days; and R9 §6's defect count restated as a coverage figure, since the look it describes covered ten slides of twelve. Ranked behind T-203 and T-204 because the fourth change — whether the threshold gains a second trigger — is decided by what the checker turns out to catch. |
+| 2026-08-21 | (no change) | **The count in correction 3 moves thirteen to fifteen, and that changes what the correction should say.** T-203's closing look covered all twelve slides and found two more defects on slides 4 and 10 — slides the owner's review had also passed (T-207). Two moves in one day on an unchanged deck means a total is a reading of the last look's reach, not a property of the deck, so R9 should carry coverage-and-yield per look and derive any total. The fourth change is still held for T-204. |

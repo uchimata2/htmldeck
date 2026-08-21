@@ -101,6 +101,7 @@ comes here.
 | [L-124](lessons/L-124.md) | Seed the form the artifact contains, not the form you typed | Evidence and verification |
 | [L-125](lessons/L-125.md) | Before amending a rule, read what its gate actually tests | Evidence and verification |
 | [L-126](lessons/L-126.md) | A published benchmark is stated in its own deployment's units, not in yours | Evidence and verification |
+| [L-127](lessons/L-127.md) | A figure can be arithmetically right and relationally wrong, and only the drawing shows which | Evidence and verification |
 
 ### Tooling
 

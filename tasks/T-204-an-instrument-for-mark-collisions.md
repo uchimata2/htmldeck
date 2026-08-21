@@ -25,13 +25,31 @@ A checker that fails a deck when two things that should not overlap do. Three of
 [T-203](T-203-four-chart-defects-the-decks-look-missed.md)'s four defects are inside its reach, and
 so is the fourth if it also measures a slide's content against its own bottom line.
 
+**Six subjects now, not four — added 2026-08-21 when T-203 closed.** Its closing look covered all
+twelve slides and found **two more of this class**, on slides 4 and 10, both of which two earlier
+human looks had passed:
+[T-207](T-207-two-more-mark-collisions-the-twelve-slide-look-found.md). That strengthens the
+argument here rather than changing it — a label over a line and two labels over each other are
+exactly what this checker is for, and the seed corpus is now six.
+
+**And T-203 left a working sketch to start from, not a blank page.** Five geometry identities now
+live above `selftest()` in
+[`tools/examples/portfolio_charts.py`](../tools/examples/portfolio_charts.py), with readers that
+take marks back off the emitted SVG (`read_lines`, `read_labels`, `read_nodes`, `seg_hits_box`,
+`box_hits_disc`). They are deliberately narrow — one deck, no vocabulary — but the segment-versus-box
+and box-versus-disc arithmetic is the same arithmetic this task needs, and it is proven against
+seeded defects. **Read it before writing a second copy** (**L-13**); what is missing is generality,
+not geometry.
+
 **The gap, stated as a measurement rather than as a worry**
 On 2026-08-21 the portfolio-review deck passed `check.py` (0 failures across 91 decided rules),
 `check_all.py` (35 commands, 0 failures) and `printgeom.py` (PRINT-2, PRINT-3) while carrying
-**thirteen** chart defects. Nine were found by looking; the remaining four were found by the owner
-looking at the same deck afterwards. **Nothing in this repository can see a mark overlap another
-mark**, so the only instrument is a person, and a person demonstrably missed four — including a
-whole slide.
+**fifteen** chart defects. Nine were found by looking; four more by the owner looking at the same
+deck afterwards; **two more by a third look, over all twelve slides, after those four were fixed**
+(T-207). **Nothing in this repository can see a mark overlap another mark**, so the only instrument
+is a person — and three separate people-looks each missed some, which is a stronger statement than
+the one this paragraph originally made. *Thirteen until 2026-08-21; the number is the count of
+defects found, so it rises whenever anyone looks again, and that is the point.*
 
 **Why this is the cheaper answer than the one it competes with**
 [R9](../docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md) §6 offers the same
@@ -127,3 +145,4 @@ the failure [T-183](T-183-ds-063-failed-once-in-four-full-gate-runs-on-an-unchan
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-21 | → proposed | Raised from the owner's review of the portfolio-review deck. The deck passed every gate this repository owns while carrying thirteen chart defects, nine found by one look and four by a second — so the instrument for a mark overlapping a mark is a person, and a person missed four including a whole slide. Ranked `high` because it is the cheaper of the two answers on the table: R9 §6 reads the same evidence as an argument for a chart library, and a detector costs a fraction of one. |
+| 2026-08-21 | (no change) | **Two more subjects and a starting sketch, from T-203's closing look.** The count in §1 goes thirteen to fifteen: slides 4 and 10 carry the same class of defect and had been passed by two earlier looks (T-207). T-203 also left five working geometry identities and their SVG readers in the portfolio generator, proven against seeded defects — narrow on purpose, but the arithmetic this task needs, so it starts from a sketch rather than a blank page. |

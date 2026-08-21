@@ -36,9 +36,11 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | - | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112, T-185 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187 |
 | [T-202](T-202-amend-ds-122-into-a-threshold-and-bind-its-check-on-structure.md) | Amend DS-122 into a threshold, and bind its check on structure rather than on five vendor names | `PH3` | - | `proposed` | `specify` | T-113 | - | T-113, T-119 |
-| [T-203](T-203-four-chart-defects-the-decks-look-missed.md) | Fix four chart defects in the portfolio-review deck that a green gate and an incomplete look both passed | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-204, T-205 |
-| [T-204](T-204-an-instrument-for-mark-collisions.md) | An instrument for mark collisions, so a person is not the only thing that can see one | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-203, T-205 |
+| [T-204](T-204-an-instrument-for-mark-collisions.md) | An instrument for mark collisions, so a person is not the only thing that can see one | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-203, T-205, T-206, T-207 |
 | [T-205](T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md) | Correct R9's gate-7 scoring and its account of what looking found | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-203, T-204 |
+| [T-206](T-206-ds-063-gives-a-different-verdict-on-identical-input.md) | DS-063 gives a different verdict on identical input, so no run of the gate settles it | `PH3` | - | `proposed` | `specify` | - | - | T-183, T-203, T-204 |
+| [T-207](T-207-two-more-mark-collisions-the-twelve-slide-look-found.md) | Fix two more mark collisions in the portfolio-review deck, found by looking at all twelve slides | `PH3` | - | `proposed` | `specify` | - | - | T-203, T-204 |
+| [T-208](T-208-shell-py-does-not-list-the-command-its-own-error-names.md) | shell.py does not list the preflight command its own error message tells you to run | `PH1` | - | `proposed` | `specify` | - | - | T-203 |
 
 ## Closed
 
@@ -224,7 +226,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-180](T-180-seed-ds-218s-failing-branch-so-the-persistent-control-check-is-watched-failing.md) | Seed DS-218's failing branch, so the persistent-control check has been watched failing | `PH3` | `0.5.0` | `done` | `review` | - | - | T-005, T-051, T-114 |
 | [T-181](T-181-nothing-detects-that-a-decks-embedded-quick-view-has-drifted-from-its-source.md) | Nothing detects that a deck's embedded quick view has drifted from its source | `PH3` | - | `done` | `review` | - | - | T-069, T-070, T-107, T-121, T-179 |
 | [T-182](T-182-the-shipped-example-decks-specification-carries-three-false-claims-about-the-deck.md) | The shipped example deck's specification carries three false claims about the deck it briefed | `PH3` | - | `done` | `review` | - | - | T-115, T-117, T-128, T-184 |
-| [T-183](T-183-ds-063-failed-once-in-four-full-gate-runs-on-an-unchanged-tree.md) | DS-063 failed once in four full-gate runs on a tree no code change touched | `PH3` | `0.5.0` | `done` | `review` | - | - | T-054, T-179, T-185 |
+| [T-183](T-183-ds-063-failed-once-in-four-full-gate-runs-on-an-unchanged-tree.md) | DS-063 failed once in four full-gate runs on a tree no code change touched | `PH3` | `0.5.0` | `done` | `review` | - | - | T-054, T-179, T-185, T-206 |
 | [T-184](T-184-re-cut-the-shipped-diagrams-onto-the-text-column-and-gate-it.md) | Re-cut the shipped diagrams onto the text column, and turn the measurement into a gate | `PH3` | - | `done` | `review` | - | - | T-115, T-117, T-182 |
 | [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) | No instrument here can watch an animation play, so any rule about motion over time is unverifiable | `PH3` | - | `done` | `review` | - | - | T-041, T-057, T-111, T-112, T-183, T-199 |
 | [T-186](T-186-print-to-pdf-drops-the-file-when-its-destination-is-relative.md) | print_to_pdf drops the file when its destination is relative, and reports nothing | `PH3` | - | `done` | `review` | - | - | T-074, T-094, T-123 |
@@ -243,5 +245,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-199](T-199-the-back-pager-button-never-plays-its-press-animation.md) | The back pager button never plays its press animation | `PH1` | `0.5.0` | `done` | `review` | - | - | T-112, T-185, T-198 |
 | [T-200](T-200-add-a-lobby-slide-and-count-the-argument-not-the-file.md) | Add a lobby slide, and count the argument rather than the file | `PH3` | `0.5.0` | `done` | `review` | - | - | T-036, T-108, T-175, T-178 |
 | [T-201](T-201-ds-241s-check-misses-an-eyebrow-written-as-an-entity.md) | DS-241's check misses an eyebrow whose separator is written as an entity | `PH1` | `0.5.1` | `done` | `review` | - | - | T-197 |
+| [T-203](T-203-four-chart-defects-the-decks-look-missed.md) | Fix four chart defects in the portfolio-review deck that a green gate and an incomplete look both passed | `PH3` | `unreleased` | `done` | `review` | - | - | T-113, T-204, T-205, T-206, T-207, T-208 |
 
 <!-- taskmd:end -->
