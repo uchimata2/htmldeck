@@ -39,7 +39,13 @@ if hasattr(sys.stdout, "reconfigure"):
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, "tools", "assets"))
 
-from chart_probe import guard_height, guard_label, MIN_BAR_PX          # noqa: E402
+from chart_probe import guard_height, guard_label, label_box, ChartError, MIN_BAR_PX          # noqa: E402
+
+# **One estimate of one quantity** (L-13). Every label box in this file - the clip guard's and the
+# collision identities' - is estimated at this size. It is the size `read_labels` has always used
+# and the size the two removed `guard_label` calls passed; naming it stops the third caller
+# inventing a fourth number.
+LABEL_FONT_PX = 22.0
 
 DECK = os.path.join(ROOT, "examples", "portfolio-review", "portfolio-review.html")
 SOURCES = os.path.join(ROOT, "examples", "portfolio-review", "sources")
@@ -166,8 +172,29 @@ def esc(s):
 
 
 def svg(aria, body, viewbox=VIEWBOX):
+    # **Every label a figure emits is guarded here, and that is the point of doing it here**
+    # (T-212). Eight of the ten figures never called `guard_label`, and the two that did handed it
+    # a literal belonging to a third figure - so the guard was optional in practice and wrong where
+    # it was used. This function is the one place that holds a figure's body and its viewBox at the
+    # same time, so guarding here is the only version a figure cannot forget to opt into. **L-128**:
+    # a guarantee a caller can decline is not a guarantee.
+    guard_labels(body, viewbox)
     return ('<svg class="fig" preserveAspectRatio="xMinYMid meet" viewBox="%s" role="img"\n'
             '         aria-label="%s">\n%s\n    </svg>' % (viewbox, esc(aria), body))
+
+
+def guard_labels(body, viewbox):
+    """Refuse a figure carrying a label its own viewBox will clip."""
+    min_x, min_y, w, h = (float(v) for v in viewbox.split())
+    for lab in read_labels(body):
+        # `margin=0` - flush at the viewBox edge is how these figures place their axis labels,
+        # and the breathing room is the slide's padding around the figure. Measured: the default
+        # margin refused seven of the ten figures and six of the seven were flush-left labels that
+        # render correctly. What is left is the defect the guard is for - a label running *past*
+        # the edge.
+        guard_label(lab["x"], lab["y"], w, h, lab["text"], LABEL_FONT_PX,
+                    anchor=lab["anchor"], min_x=min_x, min_y=min_y, margin=0.0,
+                    slack=0.02 * w)
 
 
 def text(x, y, s, cls="val", anchor="middle"):
@@ -177,8 +204,23 @@ def text(x, y, s, cls="val", anchor="middle"):
 
 
 def rect(x, y, w, h, cls):
+    # **A non-positive extent is a caller error every time, and clamping it hid one** (T-210).
+    # `max(w, 0.0), max(h, 0.0)` turned `ry - ty` with its operands reversed into a legal,
+    # invisible rectangle - so the drawdown band was absent from a slide whose caption promised
+    # it, and every other caller was protected from ever learning it got a sign wrong.
+    #
+    # **Refusing is the owner's ruling of 2026-08-21**: a broken build is louder than a wrong
+    # picture, and the clamp's only effect was to make the wrong picture quiet. Counted before it
+    # was done, as the ruling required - seven call sites, every one of them passing at least one
+    # extent derived from the data, five as an inline subtraction. The one guard that legitimately
+    # produces a small extent, `MIN_BAR_PX`, floors it above zero and is unaffected.
+    if w <= 0.0 or h <= 0.0:
+        raise ValueError(
+            "rect(cls=%s) got a non-positive extent - width=%.3f, height=%.3f. Nothing "
+            "legitimately asks for one; check the order of the subtraction that produced it."
+            % (cls, w, h))
     return ('      <rect class="%s" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>'
-            % (cls, x, y, max(w, 0.0), max(h, 0.0)))
+            % (cls, x, y, w, h))
 
 
 # --- The seven figures --------------------------------------------------------------------------
@@ -262,7 +304,6 @@ def fig_area():
     # and transport start at 18 and 15 and did the same. Both columns are spread.
     end_ys = spread([e[0] for e in ends], 38.0)
     for (_, label, cls), ky in zip(ends, end_ys):
-        guard_label(keyx, ky, 1728 - 120, 470, label, 22)
         o.append(text(keyx, ky, label, cls, "start"))
     for (_, label, cls), ky in zip(starts, spread([e[0] for e in starts], 34.0)):
         o.append(text(xs[0] - 26, ky, label, cls, "end"))
@@ -394,7 +435,6 @@ def fig_scatter():
             continue
         for (cx, _, label, cls), ly in zip(group, spread([g[1] for g in group], 40.0)):
             lx = cx + 26 if side == "start" else cx - 26
-            guard_label(lx, ly, 1728 - 120, 470, label, 22)
             o.append(text(lx, ly, label, cls, side))
     o.append(text(R, NAMES_Y, "volatility %", "lab t-soft", "end"))
     o.append(text(L, TOP + 12, "net IRR %", "lab t-soft", "start"))
@@ -445,7 +485,11 @@ def fig_drawdown():
     trough_i = min(range(len(DRAWDOWN)), key=lambda i: DRAWDOWN[i][1])
     tx, ty = pts[trough_i]
     ry = linear(-5.1, lo, hi, base, top)
-    o.append(rect(tx - 40, ty, 80, ry - ty, "caution"))
+    # **5.1 points measured from zero** - the owner's ruling of 2026-08-21, and the caption is
+    # what decided it: "Renewables carried 5.1 points of the 6.8". The other reading, the span
+    # between `-5.1` and the trough, shades 1.7 points and says something the caption does not.
+    # Both edges now sit above the trough rather than straddling it.
+    o.append(rect(tx - 40, zero_y, 80, ry - zero_y, "caution"))
     o.append('      <circle class="caution" cx="%.1f" cy="%.1f" r="12"/>' % (tx, ty))
     o.append(text(tx, ty + 40, "−6.8%", "val t-caution"))
     # **Below the trough, because the trough is the one place the line does not go** (T-207). The
@@ -457,7 +501,8 @@ def fig_drawdown():
         o.append(text(xs[i], base + 46, q, "name t-soft",
                       "start" if i == 0 else ("end" if i == len(DRAWDOWN) - 1 else "middle")))
     return svg("FY26 drawdown by quarter: flat, minus 2.1, minus 6.8 at the trough, minus 1.4, "
-               "flat at year end. Renewables carried 5.1 points of the 6.8.",
+               "flat at year end. Renewables carried 5.1 points of the 6.8, shaded from the "
+               "zero line down to minus 5.1.",
                "\n".join(o), "120 0 660 310")
 
 
@@ -539,16 +584,19 @@ def read_lines(svg_text, cls):
     return out
 
 
-def read_labels(svg_text, font_px=22.0):
+def read_labels(svg_text, font_px=LABEL_FONT_PX):
     """Every `<text>` as a box. The width estimate is `guard_label`'s, on purpose: two estimates
-    of one quantity disagree the first time either changes (L-13)."""
+    of one quantity disagree the first time either changes (L-13).
+
+    *It was a copy rather than a call until T-212, and the copy was the correct one: this function
+    has always read the anchor and `guard_label` never did. The arithmetic now lives in
+    `chart_probe.label_box` and both ask it.*"""
     out = []
     for cls, x, y, anchor, body in TEXT_RE.findall(svg_text):
-        w = len(body) * font_px * 0.62
         x = float(x)
-        x0 = x if anchor == "start" else (x - w if anchor == "end" else x - w / 2)
+        x0, x1 = label_box(x, body, font_px, anchor)
         out.append({"cls": cls, "text": body, "anchor": anchor, "x": x, "y": float(y),
-                    "box": (x0, float(y) - font_px * 0.8, x0 + w, float(y) + font_px * 0.25)})
+                    "box": (x0, float(y) - font_px * 0.8, x1, float(y) + font_px * 0.25)})
     return out
 
 
@@ -692,6 +740,26 @@ def selftest():
             if seg_hits_box(dpts[i][0], dpts[i][1], dpts[i + 1][0], dpts[i + 1][1], t["box"])]
     check("the drawdown annotation clears the line it annotates", bool(note) and not over,
           "%d annotation(s), crossed: %s" % (len(note), over or "none"))
+
+    # **T-210: the band is read out of the emitted figure, and relationally.** It was drawn at
+    # zero height for as long as the figure existed, and nothing here saw it: every identity above
+    # asks whether a total matches its parts, and a mark that is simply absent satisfies all of
+    # them. The three below are stated against the figure's own other marks rather than against a
+    # second copy of its scale constants, which is **L-08**, and they are relational rather than
+    # arithmetic, which is **L-127** - a band of the right height in the wrong place is the defect
+    # this figure had in its first version.
+    grid = re.search(r'<line class="grid"[^>]*y1="([0-9.]+)"', dd)
+    band = re.search(r'<rect class="caution"[^>]*y="([0-9.]+)" width="[0-9.]+" height="([0-9.]+)"', dd)
+    trough = re.search(r'<circle class="caution"[^>]*cy="([0-9.]+)"', dd)
+    check("the drawdown band is drawn at all", band is not None and float(band.group(2)) > 0.0,
+          "height=%s" % (band.group(2) if band else "no rect emitted"))
+    if band and grid:
+        check("and it starts at the zero line", abs(float(band.group(1)) - float(grid.group(1))) < 0.5,
+              "band y=%s against grid y=%s" % (band.group(1), grid.group(1)))
+    if band and trough:
+        foot = float(band.group(1)) + float(band.group(2))
+        check("and it stops above the trough", foot < float(trough.group(1)),
+              "band foot=%.1f against trough cy=%s" % (foot, trough.group(1)))
 
     # every figure builds, and every guard it calls is live
     for name, fn in FIGURES.items():

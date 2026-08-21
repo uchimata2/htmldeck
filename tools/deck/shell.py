@@ -10,8 +10,10 @@ this tool is what puts it back.
     python tools/deck/shell.py new <out.html> --title "..." --subtitle "..."
     python tools/deck/shell.py icons <deck> [--set concept=lucide,...] [--check]
     python tools/deck/shell.py icons --sheet <out.svg>
+    python tools/deck/shell.py preflight <deck> [--check]
     python tools/deck/shell.py sync <deck> [--write]
     python tools/deck/shell.py tokens <deck> [--write]
+    python tools/deck/shell.py tail <deck> --loops|--still [--write]
     python tools/deck/shell.py check <deck>
     python tools/deck/shell.py parts
 
@@ -1029,6 +1031,26 @@ def self_test():
            "--set" in str(exc) and "comma-separated" in str(exc),
            "it exited without naming the argument: %s" % exc)
 
+    # The usage list, the per-command help and the dispatch name the same commands.
+    #
+    # **T-208.** `preflight` was dispatched, named in `USAGE` and named in a DS-009 failure message,
+    # and absent from the list a reader gets with no arguments. `tail` was named nowhere at all.
+    # Both were discoverable only by reading the source of the error you were trying to fix, which
+    # is a tool telling the truth in one place and not the other.
+    #
+    # **The comparison is the one a reader cannot make**, so the tool makes it. Both sets are read
+    # out of this file rather than kept as a list beside it, so the next command added fails here
+    # rather than in someone's terminal - the same reason `parts` derives its regions from `SLOTS`.
+    src = read(os.path.abspath(__file__))
+    dispatched = set(re.findall(r'if cmd == "([a-z]+)"', src))
+    listed = set(re.findall(r"shell\.py ([a-z]+)", __doc__))
+    ok("every dispatched command is in the usage list", dispatched <= listed,
+       "missing: %s" % ", ".join(sorted(dispatched - listed)))
+    ok("and every one has its own --help entry", dispatched <= set(USAGE),
+       "missing: %s" % ", ".join(sorted(dispatched - set(USAGE))))
+    ok("and the list names nothing the tool will not run", listed <= dispatched,
+       "not dispatched: %s" % ", ".join(sorted(listed - dispatched)))
+
     print("\n%d of %d fixtures behaved as specified.\n" % (len(ran) - len(failures), len(ran)))
     return failures
 
@@ -1068,7 +1090,12 @@ USAGE = {
               "  Only ever adds: a token already declared is a value someone chose.",
     "check": "usage: shell.py check <deck>\n"
              "  Proves the deck still carries the shipped shell, byte for byte.",
-    "preflight": "usage: shell.py preflight <deck> [--check]",
+    "preflight": "usage: shell.py preflight <deck> [--check]\n"
+                 "  Writes the preflight rows this deck's own content needs (DS-009).\n"
+                 "  --check  reports whether they are already exactly the needed set",
+    "tail": "usage: shell.py tail <deck> --loops|--still [--write]\n"
+            "  Places the `Motion` control DS-218 requires: beside `More` when the deck\n"
+            "  loops, inside the menu when it does not.",
     "parts": "usage: shell.py parts\n  Lists the regions the shell is cut into.",
 }
 

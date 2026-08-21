@@ -74,15 +74,54 @@ def bar_length(value, vmax, full_px):
     return raw, False
 
 
-def guard_label(x, y, width, height, text, font_px):
+def label_box(x, text, font_px, anchor="middle"):
+    """The horizontal span the renderer will draw, as `(left, right)`.
+
+    **The anchor is the whole of it, and leaving it out made the guard both blind and noisy**
+    (T-212). `guard_label` assumed every label was centre-anchored. Against a real `start`-anchored
+    annotation it passed a label that printed clipped and refused one that renders correctly - a
+    guard that fails a correct figure is worse than one nobody calls. One function computes the
+    span now, and everything that needs a label's box asks it (**L-13**).
+    """
+    w = len(text) * font_px * 0.62
+    left = x if anchor == "start" else (x - w if anchor == "end" else x - w / 2)
+    return left, left + w
+
+
+def guard_label(x, y, width, height, text, font_px, anchor="middle", min_x=0.0, min_y=0.0,
+                margin=LABEL_MARGIN, slack=0.0):
     """Prevent the clipped label. Estimates the text box and checks it against the viewBox.
     The estimate is deliberately generous - over-reporting a clip is cheap, missing one is the
-    defect this exists to catch."""
-    approx_w = len(text) * font_px * 0.62
-    if x - approx_w / 2 < LABEL_MARGIN or x + approx_w / 2 > width - LABEL_MARGIN:
-        raise ChartError("label %r at x=%.0f (est. width %.0f) is clipped by a %.0f-wide viewBox"
-                         % (text, x, approx_w, width))
-    if y < font_px or y > height - LABEL_MARGIN:
+    defect this exists to catch.
+
+    `min_x` / `min_y` are the viewBox origin. They default to zero, which is this file's own
+    charts; a deck figure whose viewBox starts at `x=120` must say so, or the right edge is
+    computed 120 units short of where it is.
+
+    `margin` is the breathing room demanded inside the box, and **it is a parameter because it
+    caused six false alarms out of seven the first time this guard was pointed at a real deck**
+    (T-212). This file's own charts are drawn with a gutter and `LABEL_MARGIN` is calibrated for
+    them. A deck figure places its axis labels flush at the viewBox origin on purpose, and the
+    breathing room is the slide's padding around the figure rather than the figure's own. Flush is
+    not clipped; **past the edge is**, and that is what `margin=0` tests.
+
+    `slack` is how far past the edge the *estimate* may run before the label is called clipped. It
+    exists because the estimate is deliberately generous and the generosity is not uniform - one
+    font size stands in for every label class - and **both sides of it are measured** (T-212). The
+    real defect, a lengthened annotation that printed cut off, overran its 660-wide viewBox by
+    **150 units, 23% of the width**. The tightest correct label on the same deck, a reference-line
+    caption that renders comfortably inside its box, overruns by **18 units, 1%**. Nothing sits
+    between them, so 2% of the width separates the two cases with an order of magnitude to spare.
+    Zero is the default, which is this file's own charts, where the estimate and the drawing use
+    the same font size.
+    """
+    left, right = label_box(x, text, font_px, anchor)
+    if (left < min_x - slack - 0.001 + margin
+            or right > min_x + width + slack + 0.001 - margin):
+        raise ChartError("label %r at x=%.0f (%s-anchored, est. %.0f..%.0f) is clipped by a "
+                         "%.0f-wide viewBox starting at %.0f"
+                         % (text, x, anchor, left, right, width, min_x))
+    if y < min_y + font_px or y > min_y + height + 0.001 - margin:
         raise ChartError("label %r at y=%.0f is clipped by a %.0f-tall viewBox" % (text, y, height))
     return True
 
@@ -224,7 +263,15 @@ def wrap(title, body):
 def selftest():
     failures = []
 
+    # **Counted, not declared.** This function ended with `SELFTEST OK - 12 checks`, a number kept
+    # by hand beside the checks it described - and it was already wrong: eleven assertions ran.
+    # T-207 fixed the same defect in `tools/examples/portfolio_charts.py` and the reasoning is
+    # unchanged (**L-13**, one home for one quantity). A total that counts what actually ran cannot
+    # disagree with what ran.
+    ran = []
+
     def expect_raise(label, fn):
+        ran.append(label)
         try:
             fn()
         except ChartError:
@@ -232,6 +279,7 @@ def selftest():
         failures.append("%s: expected ChartError, got none" % label)
 
     def expect_ok(label, fn):
+        ran.append(label)
         try:
             fn()
         except ChartError as exc:
@@ -242,14 +290,17 @@ def selftest():
     expect_ok("sane chart accepted", lambda: guard_height(380, 700))
 
     # The 1.4 px bar: a value 0.4% of max across 350 px is 1.4 px. Must be floored and flagged.
+    ran.append("the 1.4 px bar is floored and flagged")
     length, flagged = bar_length(0.4, 100.0, 350)
     if not (length == MIN_BAR_PX and flagged):
         failures.append("1.4px bar: got length=%.2f flagged=%s, want floored and flagged"
                         % (length, flagged))
+    ran.append("a normal bar is left alone")
     length, flagged = bar_length(50, 100.0, 350)
     if not (abs(length - 175) < 0.01 and not flagged):
         failures.append("normal bar: got length=%.2f flagged=%s" % (length, flagged))
     # Zero must stay zero - flooring a real zero would draw a bar where there is no value.
+    ran.append("a real zero stays zero")
     length, flagged = bar_length(0, 100.0, 350)
     if length != 0.0:
         failures.append("zero bar: got %.2f, want 0" % length)
@@ -259,19 +310,41 @@ def selftest():
                  lambda: guard_label(880, 100, 900, 380, "Q4 2026 forecast", 17))
     expect_ok("inset label accepted", lambda: guard_label(450, 100, 900, 380, "Q4", 17))
 
+    # **The anchor, which this guard could not see until T-212.** A `start`-anchored label runs
+    # rightward from its x, so one that fits when read as centred can still be clipped - and one
+    # that is refused when read as centred can be perfectly placed. Both directions are fixtures,
+    # because a guard that only ever over-reports teaches people to switch it off.
+    expect_raise("start-anchored label past the right edge refused",
+                 lambda: guard_label(800, 100, 900, 380, "Q4 2026 forecast", 17, anchor="start"))
+    expect_ok("the same label centred at the same x accepted",
+              lambda: guard_label(800, 100, 900, 380, "Q4 2026 forecast", 17))
+    expect_raise("end-anchored label past the left edge refused",
+                 lambda: guard_label(60, 100, 900, 380, "Q4 2026 forecast", 17, anchor="end"))
+
+    # **The viewBox origin.** A figure whose viewBox starts at x=120 has its right edge at
+    # 120 + width, and reading it as `width` fails a label that fits.
+    expect_ok("a label near the right edge of an offset viewBox accepted",
+              lambda: guard_label(650, 100, 660, 310, "5.1 pts", 22, anchor="start", min_x=120))
+    expect_raise("and the same label refused when the origin is read as zero",
+                 lambda: guard_label(650, 100, 660, 310, "5.1 pts", 22, anchor="start"))
+
     # Ticks must be round numbers, not vmax/n.
+    ran.append("ticks are round numbers")
     if nice_ticks(37)[:3] != [0, 10.0, 20.0]:
         failures.append("nice_ticks(37) = %r, want round steps" % (nice_ticks(37)[:3],))
 
     # The axis-scale bug, caught by measuring the built page rather than looking at it: a line
     # chart drawn with band-scale labels put "Q5" 76 px from the point it named. A point scale
     # must start on the axis and end on the right edge; a band scale must do neither.
+    ran.append("a point scale spans the plot")
     pt = x_positions(5, "point")
     if not (abs(pt[0] - PAD_L) < 0.01 and abs(pt[-1] - (PAD_L + PLOT_W)) < 0.01):
         failures.append("point scale must span the full plot, got %r" % (pt,))
+    ran.append("a band scale insets from both edges")
     band = x_positions(5, "band")
     if abs(band[0] - PAD_L) < 0.01 or abs(band[-1] - (PAD_L + PLOT_W)) < 0.01:
         failures.append("band scale must inset from both edges, got %r" % (band,))
+    ran.append("the two scales differ")
     if max(abs(a - b) for a, b in zip(pt, band)) < 50:
         failures.append("the two scales should differ substantially; they are near-identical")
 
@@ -280,7 +353,8 @@ def selftest():
         for f in failures:
             print("  " + f)
         return 1
-    print("SELFTEST OK - 12 checks. Each guard was fed the input that produced the corpus defect:")
+    print("SELFTEST OK - %d checks. Each guard was fed the input that produced the corpus defect:"
+          % len(ran))
     print("  558 px chart refused - 1.4 px bar floored and flagged - clipped label refused.")
     return 0
 
