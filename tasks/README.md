@@ -38,9 +38,9 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-202](T-202-amend-ds-122-into-a-threshold-and-bind-its-check-on-structure.md) | Amend DS-122 into a threshold, and bind its check on structure rather than on five vendor names | `PH3` | - | `proposed` | `specify` | T-113 | - | T-113, T-119 |
 | [T-204](T-204-an-instrument-for-mark-collisions.md) | An instrument for mark collisions, so a person is not the only thing that can see one | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-203, T-205, T-206, T-207 |
 | [T-205](T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md) | Correct R9's gate-7 scoring and its account of what looking found | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-203, T-204 |
-| [T-206](T-206-ds-063-gives-a-different-verdict-on-identical-input.md) | DS-063 gives a different verdict on identical input, so no run of the gate settles it | `PH3` | - | `proposed` | `specify` | - | - | T-183, T-203, T-204 |
 | [T-207](T-207-two-more-mark-collisions-the-twelve-slide-look-found.md) | Fix two more mark collisions in the portfolio-review deck, found by looking at all twelve slides | `PH3` | - | `proposed` | `specify` | - | - | T-203, T-204 |
 | [T-208](T-208-shell-py-does-not-list-the-command-its-own-error-names.md) | shell.py does not list the preflight command its own error message tells you to run | `PH1` | - | `proposed` | `specify` | - | - | T-203 |
+| [T-209](T-209-six-more-probes-measure-a-page-whose-entrance-never-ran.md) | Six more probes measure a page whose entrance animation never ran, and none of them says so | `PH3` | - | `proposed` | `specify` | - | - | T-185, T-206 |
 
 ## Closed
 
@@ -228,7 +228,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-182](T-182-the-shipped-example-decks-specification-carries-three-false-claims-about-the-deck.md) | The shipped example deck's specification carries three false claims about the deck it briefed | `PH3` | - | `done` | `review` | - | - | T-115, T-117, T-128, T-184 |
 | [T-183](T-183-ds-063-failed-once-in-four-full-gate-runs-on-an-unchanged-tree.md) | DS-063 failed once in four full-gate runs on a tree no code change touched | `PH3` | `0.5.0` | `done` | `review` | - | - | T-054, T-179, T-185, T-206 |
 | [T-184](T-184-re-cut-the-shipped-diagrams-onto-the-text-column-and-gate-it.md) | Re-cut the shipped diagrams onto the text column, and turn the measurement into a gate | `PH3` | - | `done` | `review` | - | - | T-115, T-117, T-182 |
-| [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) | No instrument here can watch an animation play, so any rule about motion over time is unverifiable | `PH3` | - | `done` | `review` | - | - | T-041, T-057, T-111, T-112, T-183, T-199 |
+| [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) | No instrument here can watch an animation play, so any rule about motion over time is unverifiable | `PH3` | - | `done` | `review` | - | - | T-041, T-057, T-111, T-112, T-183, T-199, T-206, T-209 |
 | [T-186](T-186-print-to-pdf-drops-the-file-when-its-destination-is-relative.md) | print_to_pdf drops the file when its destination is relative, and reports nothing | `PH3` | - | `done` | `review` | - | - | T-074, T-094, T-123 |
 | [T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md) | Open DS-140's closed motion vocabulary into a style guide, keeping the rules that protect behaviour | `PH3` | - | `done` | `review` | - | - | T-016, T-057, T-112, T-113, T-188, T-198 |
 | [T-188](T-188-raise-the-shipped-motion-density-default-to-100.md) | Raise the shipped motion density default from 10 to 100, and correct every document that states the old figure | `PH3` | `0.5.0` | `done` | `review` | - | - | T-112, T-187, T-198 |
@@ -246,5 +246,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-200](T-200-add-a-lobby-slide-and-count-the-argument-not-the-file.md) | Add a lobby slide, and count the argument rather than the file | `PH3` | `0.5.0` | `done` | `review` | - | - | T-036, T-108, T-175, T-178 |
 | [T-201](T-201-ds-241s-check-misses-an-eyebrow-written-as-an-entity.md) | DS-241's check misses an eyebrow whose separator is written as an entity | `PH1` | `0.5.1` | `done` | `review` | - | - | T-197 |
 | [T-203](T-203-four-chart-defects-the-decks-look-missed.md) | Fix four chart defects in the portfolio-review deck that a green gate and an incomplete look both passed | `PH3` | `unreleased` | `done` | `review` | - | - | T-113, T-204, T-205, T-206, T-207, T-208 |
+| [T-206](T-206-ds-063-gives-a-different-verdict-on-identical-input.md) | DS-063 gives a different verdict on identical input, so no run of the gate settles it | `PH3` | `unreleased` | `done` | `review` | - | - | T-183, T-185, T-203, T-204, T-209 |
 
 <!-- taskmd:end -->

@@ -124,19 +124,31 @@ PROBE = r"""
   function run(){
     var stage = document.getElementById('stage');
     var next  = document.getElementById('next');
-    if (quiet){
-      document.documentElement.setAttribute('data-motion','off');
-      var s = document.createElement('style');
-      /* `*` DOES NOT MATCH PSEUDO-ELEMENTS, so this pinned motion on every element and on none of
-         the ::before marks - and the ruler's tick marks are ::before. A capture taken while one of
-         them was mid-transition read its animated height and colour instead of its settled ones,
-         which is DS-221's failure in the instrument rather than in the deck: it does not look like
-         a broken capture, it looks like broken CSS, and it cost a round of chasing specificity
-         that was never wrong. Found 2026-08-08 building the ruler's dot variant. */
-      s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}' +
-                      '.rise,.pulse,.opening{opacity:1!important;transform:none!important}';
-      document.head.appendChild(s);
-    }
+    /* **Unconditional, and never behind `quiet` again (T-206).** It sat inside `if (quiet)` until
+       2026-08-21, so `shots` measured a settled page and `measure` - the one that produces a
+       VERDICT - measured whatever the entrance animation happened to be showing. Measured on the
+       portfolio-review deck that day: 27 of 132 readings at EVERY resolution sat exactly 18.00 du
+       from settled, which is `--rise-dist` to the digit. Not part-way through the entrance: frame
+       zero of it, because under `--virtual-time-budget` a CSS animation's clock is frame
+       production rather than time (**L-26**, T-185) and the 700 ms wait below is virtual.
+       DS-063 still PASSED, because all three resolutions were frozen equally and agreeing about
+       the wrong page reads exactly like agreeing about the right one. The moment one pass
+       produced a frame the other did not, the same comparison reported anything from 0 to 18.00
+       du of disagreement against a 0.25 du bound - which is the intermittency T-206 was raised
+       for, and the five magnitudes recorded there all fall inside that range.
+       So the guarantee has no exception in this probe at all; the exception has its own name and
+       its own probe, `MOTION_PROBE` below. `quiet` now controls the title and nothing else. */
+    document.documentElement.setAttribute('data-motion','off');
+    var s = document.createElement('style');
+    /* `*` DOES NOT MATCH PSEUDO-ELEMENTS, so this pinned motion on every element and on none of
+       the ::before marks - and the ruler's tick marks are ::before. A capture taken while one of
+       them was mid-transition read its animated height and colour instead of its settled ones,
+       which is DS-221's failure in the instrument rather than in the deck: it does not look like
+       a broken capture, it looks like broken CSS, and it cost a round of chasing specificity
+       that was never wrong. Found 2026-08-08 building the ruler's dot variant. */
+    s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}' +
+                    '.rise,.pulse,.opening{opacity:1!important;transform:none!important}';
+    document.head.appendChild(s);
     if (want > 0){
       if (!next) { document.title = 'PROBE-ERROR no next control'; return; }
       for (var n = 0; n < want; n++) next.click();
@@ -372,10 +384,16 @@ def cmd_shots(deck, which, out=None, w=1920, h=1234):
     print("\n%s" % out)
 
 
-# **The opposite of `PROBE`'s `quiet` half, and a separate probe rather than a flag on that one.**
-# `quiet` exists to pin motion OFF so a capture measures a settled page (DS-221); weakening it with
-# a flag would put the guarantee and its exception in one place, where the next edit reaches both.
-# T-185's scope says the exception gets its own name, and this is it.
+# **The opposite of `PROBE`'s motion pin, and a separate probe rather than a flag on that one.**
+# `PROBE` pins motion OFF unconditionally so that everything it reports - a capture (DS-221) and a
+# measurement alike - is taken on a settled page; weakening that with a flag would put the
+# guarantee and its exception in one place, where the next edit reaches both. T-185's scope says
+# the exception gets its own name, and this is it.
+#
+# **That pin was behind `quiet` until T-206**, which is the same "one place" fault seen from the
+# inside: `shots` asked for the guarantee and `measure` did not, so the only consumer that issues a
+# verdict was the one measuring an unsettled page. A guarantee a caller can decline is an exception
+# without a name.
 MOTION_PROBE = r"""
 <script>
 (function(){
@@ -613,6 +631,24 @@ def self_test():
     probe_marker = "data-probe-done"
     if probe_marker not in PROBE:
         sys.exit("SELF-TEST FAILED: the probe no longer signals completion")
+
+    # **T-206's guard, and it is structural on purpose.** The fault it watches for is not a wrong
+    # number, it is the motion pin going back behind a caller's flag - at which point `measure`
+    # silently returns to reading a page mid-entrance and DS-063's verdict stops being a function
+    # of the deck's bytes. Nothing about that is visible in a value: the gate stayed GREEN through
+    # it for as long as the two resolutions were unsettled by the same amount. So the assertion is
+    # on the shape of the probe, which is what actually changed, and it needs no browser - which
+    # matters, because a ten-run measurement is minutes of Chrome and would never run here.
+    if "data-motion" not in PROBE:
+        sys.exit("SELF-TEST FAILED: the probe no longer pins motion off, so every measurement it "
+                 "takes is of whatever the entrance animation was showing (T-206)")
+    # Matched as CODE, not as prose: the brace is the difference. The first version of this guard
+    # looked for `if (quiet)` and was tripped by the comment above it explaining the fault - a
+    # self-test that fails on its own documentation teaches the next reader to delete the
+    # documentation.
+    if re.search(r"if\s*\(\s*quiet\s*\)\s*\{", PROBE):
+        sys.exit("SELF-TEST FAILED: the motion pin is behind `quiet` again - that is the T-206 "
+                 "fault exactly, and it fails the gate green rather than red")
     if "--host-resolver-rules=MAP * ~NOTFOUND" not in " ".join(
             ["--host-resolver-rules=MAP * ~NOTFOUND"]):
         sys.exit("SELF-TEST FAILED: offline flag missing")
