@@ -36,8 +36,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | - | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112, T-185 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187 |
 | [T-202](T-202-amend-ds-122-into-a-threshold-and-bind-its-check-on-structure.md) | Amend DS-122 into a threshold, and bind its check on structure rather than on five vendor names | `PH3` | - | `proposed` | `specify` | T-113 | - | T-113, T-119 |
-| [T-205](T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md) | Correct R9's gate-7 scoring and its account of what looking found | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-203, T-204 |
-| [T-209](T-209-six-more-probes-measure-a-page-whose-entrance-never-ran.md) | Six more probes measure a page whose entrance animation never ran, and none of them says so | `PH3` | - | `planned` | `plan` | - | - | T-185, T-206 |
 | [T-211](T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md) | Scope speaker notes, and decide what DS-088 becomes | `PH3` | - | `proposed` | `specify` | - | - | - |
 
 ## Closed
@@ -245,9 +243,11 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-201](T-201-ds-241s-check-misses-an-eyebrow-written-as-an-entity.md) | DS-241's check misses an eyebrow whose separator is written as an entity | `PH1` | `0.5.1` | `done` | `review` | - | - | T-197 |
 | [T-203](T-203-four-chart-defects-the-decks-look-missed.md) | Fix four chart defects in the portfolio-review deck that a green gate and an incomplete look both passed | `PH3` | `unreleased` | `done` | `review` | - | - | T-113, T-204, T-205, T-206, T-207, T-208, T-210, T-212 |
 | [T-204](T-204-an-instrument-for-mark-collisions.md) | An instrument for mark collisions, so a person is not the only thing that can see one | `PH3` | `unreleased` | `done` | `review` | - | - | T-113, T-203, T-205, T-206, T-207, T-210 |
+| [T-205](T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md) | Correct R9's gate-7 scoring and its account of what looking found | `PH3` | `unreleased` | `done` | `review` | - | - | T-113, T-203, T-204 |
 | [T-206](T-206-ds-063-gives-a-different-verdict-on-identical-input.md) | DS-063 gives a different verdict on identical input, so no run of the gate settles it | `PH3` | `unreleased` | `done` | `review` | - | - | T-183, T-185, T-203, T-204, T-209 |
 | [T-207](T-207-two-more-mark-collisions-the-twelve-slide-look-found.md) | Fix two more mark collisions in the portfolio-review deck, found by looking at all twelve slides | `PH3` | `unreleased` | `done` | `review` | - | - | T-203, T-204, T-210, T-212 |
 | [T-208](T-208-shell-py-does-not-list-the-command-its-own-error-names.md) | shell.py does not list the preflight command its own error message tells you to run | `PH1` | `unreleased` | `done` | `review` | - | - | T-203 |
+| [T-209](T-209-six-more-probes-measure-a-page-whose-entrance-never-ran.md) | Six more probes measure a page whose entrance animation never ran, and none of them says so | `PH3` | `unreleased` | `done` | `review` | - | - | T-185, T-206 |
 | [T-210](T-210-the-drawdown-figures-shaded-band-is-emitted-at-zero-height.md) | The drawdown figure's shaded band is emitted at zero height, and rect() clamps the sign error away | `PH3` | `unreleased` | `done` | `review` | - | - | T-203, T-204, T-207, T-212 |
 | [T-212](T-212-eight-of-ten-figures-never-call-the-clipped-label-guard.md) | Eight of ten figures never call the clipped-label guard, and the guard cannot see an anchor | `PH3` | `unreleased` | `done` | `review` | - | - | T-203, T-207, T-210 |
 

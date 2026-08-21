@@ -90,11 +90,9 @@ PROBE = r"""
      can agree with itself and be wrong: every reading this deck's own geometry rule took was
      exactly `--rise-dist` from settled, and the rule passed because both renderings were equally
      wrong. This one is born pinned rather than waiting to be swept. */
-  var s = document.createElement('style');
-  s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}' +
-                  '.rise,.pulse,.opening{opacity:1!important;transform:none!important}';
-  document.documentElement.setAttribute('data-motion', 'off');
-  (document.head || document.documentElement).appendChild(s);
+  /* Pinned by `render.MOTION_PIN`, injected for every probe by `make_probe`
+     (T-209). This file was born with its own copy under T-204; the copy is what
+     T-209 removed, not the guarantee. */
 
   function mapper(fig, m, sr, k) {
     var owner = fig.ownerSVGElement || fig;

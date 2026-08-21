@@ -21,8 +21,17 @@ cannot reach by hand — not because SVG cannot draw it, but because its disclos
 authored per slide and interrogation is per data point.
 
 **When that trigger fires, the candidate is TanStack Charts — and not yet.** It is the only
-candidate that passes gates 1 to 6, and it fails gate 7 on one thing that time fixes by itself: it
-was 23 days old when this was written. Revisit at 1.0, when there is a release history to read.
+candidate that passes gates 1 to 6. Gate 7 is **six clauses**, and it fails on two of them —
+*reliable* and *robust* — while leading the field on the two this note once used to explain the
+failure. Revisit at 1.0, when there is a release history to read.
+
+*Corrected 2026-08-21 by [T-205](../../tasks/T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md).
+This paragraph read "it fails gate 7 on one thing that time fixes by itself: it was 23 days old".
+Both halves were wrong. **The age is not what it fails on** — §3 already scored it on the missing
+track record and the summary contradicted the body. And **time does not fix it by itself**: the same
+author's previous attempt at this problem is archived, which §3 now carries as the reason to wait.
+The owner's report that decided it: "a monthly release and 1-3 weeks old file still represent
+continuous maintenance and improvements in my book."*
 
 **Until then, a chart-intensive deck is still hand-authored**, and
 [`examples/portfolio-review/`](../../examples/portfolio-review/portfolio-review.foundation.md) is the
@@ -96,6 +105,27 @@ simple, recently and continuously updated*:
   releases in the 23 days since its first, the most active of the four. It fails because *reliable*
   and *robust* are claims about a track record that does not exist yet. **This is a wait, not a
   refusal.**
+
+**Scored per clause, because six clauses collapsed into one verdict hid that two candidates fail for
+opposite reasons.** *Added 2026-08-21 by
+[T-205](../../tasks/T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md), on the same
+measurements as the table above — nothing was re-fetched.*
+
+| Candidate | free · simple | reliable · robust | recently · continuously updated |
+| :--- | :--- | :--- | :--- |
+| TanStack Charts | pass | **fail** — no track record to read | **pass, and best of the four** — releases on 12 distinct days in 24 |
+| Chart.js | pass | pass | **thin** — one release in twelve months |
+| Apache ECharts | pass | pass | pass |
+| uPlot | pass | pass | **fail** — no release at all in twelve months |
+
+**The better reason to wait is not the age, and this note did not carry it.** Read from the GitHub
+API and the npm registry on 2026-08-21: `TanStack/charts` was created **2026-07-28**, so the 23 days
+is real and is not a rename — it is a new codebase, *"a tiny TypeScript visualization grammar …
+powered by granular D3 primitives"*. But the same author's **previous attempt at the same problem,
+`TanStack/react-charts`, is archived**: last pushed **2025-03-10**, and its npm package's last
+publish was `2.0.0-beta.7` in **November 2023**. **That is a datum about this library's long-run odds
+and it beats *23 days* as a reason to wait**, because age is a fact that repairs itself and an
+abandoned predecessor is not.
 
 ---
 
@@ -220,9 +250,25 @@ seven.** `chart_probe.py` has bar, line, share and stat. Stacked area, waterfall
 exist and were written here. That gap is the honest shape of what a library supplies, and it is
 narrower than *charting*: it is three mark geometries and a label spreader.
 
-**A green gate is not a good chart, and the margin is thirteen defects.** *Corrected 2026-08-21: this section read **nine** on the day it shipped. The look it describes covered **ten of twelve slides** and passed three of the ten; the owner's review the same day found four more — [T-203](../../tasks/T-203-four-chart-defects-the-decks-look-missed.md). The point below stands and is stronger; what the paragraph owed and did not give is the look's **coverage**, which is [T-205](../../tasks/T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md).* `check.py`, `check_all.py` and
-`printgeom.py` were all green on this deck before a person looked at it. Looking found nine, two of
-them fatal to the slide they were on: a five-series stacked area that rendered as two shapes, because
+**A green gate is not a good chart, and the margin is every defect any look has found so far.**
+`check.py`, `check_all.py` and `printgeom.py` were all green on this deck before a person looked at
+it. **What each look covered, and what it found:**
+
+| The look | Slides covered | Passed | Found |
+| :--- | :--- | ---: | ---: |
+| This note's, 2026-08-19 | **10 of 12** | 3 of the 10 | 9 |
+| The owner's review, 2026-08-21 — [T-203](../../tasks/T-203-four-chart-defects-the-decks-look-missed.md) | not stated | — | 4 |
+| T-203's closing look, 2026-08-21 — [T-207](../../tasks/T-207-two-more-mark-collisions-the-twelve-slide-look-found.md) | **12 of 12** | — | 2, on slides 4 and 10, which the owner's review had passed |
+
+**No total is stated here, and that is the correction rather than an omission.** *This paragraph read
+**nine** on the day it shipped, was corrected to **thirteen** on 2026-08-21, and would now read
+fifteen. The number moved twice in one day without a line of the deck changing between the second
+look and the third.* **Any total is a reading of the last look's reach, not a property of the deck**
+— so this section states what each pass covered and what it found, and leaves the total to be
+derived by whoever needs one. **A claim about an instrument owes the instrument's coverage.** Carried
+by [T-205](../../tasks/T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md).
+
+The first look's nine included two that were fatal to the slide they were on: a five-series stacked area that rendered as two shapes, because
 DS-020 allows one accent hue and four bands therefore shared a fill; and a waterfall that was
 arithmetically correct and unreadable, because five movements of 52 to 180 on a 0–2,500 axis are one
 flat band. **Neither is a rule violation.** Both are the failure CLAUDE.md rule 6 exists to catch,
@@ -240,6 +286,22 @@ Stated as the owner stated it — a class of deck, not a property of one chart.
 | **Every deck this repository has shipped, and this one** | **Hand-authored SVG** | The charts are static marks with labelled values. The reader reads them; they do not interrogate them. 69 lines of arithmetic and 0 bytes. |
 | **A deck whose charts the reader interrogates** — hover a continuous series, brush a range, zoom a time axis, cross-filter linked views | **A library** | A disclosure is authored per slide; interrogation is per data point. This is the only thing hand-authored SVG plus this repository's components cannot reach. |
 | **A deck with a lot of charts** | **Hand-authored SVG** | Count is not the trigger. Ten figures cost 310 lines; the eleventh costs 31. |
+
+**The threshold keeps one trigger, and the second candidate was tested rather than waved off.**
+*Decided 2026-08-21 by [T-205](../../tasks/T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md),
+against [T-204](../../tasks/T-204-an-instrument-for-mark-collisions.md)'s report.* Three of the four
+defects the owner's review found are **relational geometry** — where a connector attaches, whether a
+label crosses a line, whether an axis stops at a node — which suggested a second trigger: *the
+chart's geometry is relational*. **It does not become one.** The test set for it was whether a small
+checker can catch the class, because a class a checker catches is a **detection gap in this
+repository's instruments** rather than a capability only a library supplies. `markhits.py` is that
+checker: standard library, browser-read geometry, and on its first run against the shipped deck it
+named the slide-4 collision **unseeded**, the same one a third human look had just filed as
+[T-207](../../tasks/T-207-two-more-mark-collisions-the-twelve-slide-look-found.md). Its calibration
+across four decks and 30 diagram slides is 1 fire and 1 real defect on text-against-text, which
+gates, and 16 fires and 1 real defect on text-against-line, which reports. **The half that cannot
+gate is a precision problem in our own instrument, and no library gates it either** — so it argues
+for a better checker, not for a different default.
 
 **And one constraint that decides *which* library the day the middle row fires: the output has to be
 SVG.** The stage is scaled by a transform (DS-060, DS-062) and the deck is printed (DS-224). A canvas
@@ -280,9 +342,10 @@ new door until the middle row of §7 actually fires.
 - **Whether TanStack Charts is any good.** This note measures its packaging, its licence, its size
   and its reduced-motion handling. It has not been used to draw a chart in a deck, because gate 7
   says not yet.
-- **How gate 7 should be scored.** The owner's wording is six clauses and this note gives one
-  verdict, which is unfair to the candidate that leads the field on *continuously updated* and
-  vague about what it actually fails. Reopened 2026-08-21 and carried by
-  [T-205](../../tasks/T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md).
+- ~~**How gate 7 should be scored.**~~ **Settled 2026-08-21 by
+  [T-205](../../tasks/T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md): per clause,
+  wherever a verdict is stated.** §3 carries the table and the recommendation no longer collapses
+  six clauses into one word. Two candidates fail gate 7 for opposite reasons, which the single
+  verdict hid.
 - **The chart component itself.** Still this task's expected child, and its shape now depends on
   which row of §7 the next deck lands in.

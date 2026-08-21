@@ -125,11 +125,8 @@ PROBE = r"""
   function run(){
     var stage = document.getElementById('stage');
     var next  = document.getElementById('next');
-    document.documentElement.setAttribute('data-motion','off');
-    var st = document.createElement('style');
-    st.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}' +
-                     '.rise,.pulse,.opening{opacity:1!important;transform:none!important}';
-    document.head.appendChild(st);
+    /* Pinned by `render.MOTION_PIN`, injected for every probe by
+       `make_probe` (T-209). This file carried its own copy until then. */
     if (want > 0){
       if (!next) { document.title = 'PROBE-ERROR no next control'; return; }
       for (var n = 0; n < want; n++) next.click();

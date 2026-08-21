@@ -1194,6 +1194,14 @@ def provenance_verdicts(html):
 
 # ---------------------------------------------------------------------------- stage 2: rendered
 PROBE = r"""
+<!-- htmldeck:measures-motion - DS-140, DS-142 and DS-218 are decided below by reading
+     `animationIterationCount` for `infinite`, and `make_probe`'s pin sets `animation:none`, which
+     erases it. Measured under T-209: pinned, the seeded DS-218 variant that hides its stop control
+     inside a shut menu goes from CAUGHT to MISSED, because the rule loses its subject rather than
+     its verdict. Its geometry rows were measured both ways on the portfolio deck and are identical,
+     so nothing is bought by pinning this one and three rules are lost. **A geometry row added here
+     inherits an unsettled page** - read `render.PROBE`, which is pinned, or pin locally after the
+     motion facts are read. -->
 <script>
 (function(){
   function tabbables(root){
@@ -1844,6 +1852,10 @@ def render_data(deck):
 # takes is in the default state. So this is a SECOND render with the preference forced, and it is
 # the whole of the fix: the deck already honoured the query, and nothing had ever looked.
 REDUCED_PROBE = r"""
+<!-- htmldeck:measures-motion - this probe asks what the DECK does under
+     `prefers-reduced-motion`, so pinning motion off from outside makes every deck compliant.
+     Measured under T-209: pinned, the seeded DS-143 variant that leaves a slide blank goes from
+     CAUGHT to MISSED. -->
 <script>
 (function(){
   function run(){

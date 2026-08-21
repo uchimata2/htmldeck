@@ -2,8 +2,8 @@
 id: T-205
 title: Correct R9's gate-7 scoring and its account of what looking found
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-113, T-203, T-204]
@@ -13,7 +13,8 @@ business_value: medium
 effort: s
 created: 2026-08-21
 updated: 2026-08-21
-deliverables: []
+shipped_in: unreleased
+deliverables: [docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md]
 ---
 
 # T-205 — Correct R9's gate-7 scoring and its account of what looking found
@@ -101,31 +102,66 @@ threshold should not move — which is the whole reason that task is ranked ahea
 - [ ] `python tools/docs/refcheck.py` and `python tools/tasks/lint.py` green.
 
 **Open questions**
-- Whether a corrected research note is edited in place or gains a dated correction block. This
-  project's precedent is in-place with the correction marked — R9 §1 already does that for T-113's
-  own premise — so in-place, marked, unless the change gets large enough to bury the original
-  finding.
-
+- ~~Whether a corrected research note is edited in place or gains a dated correction block.~~
+  **In place, marked**, as the precedent said. Every correction below carries its date and the task
+  that made it, and none of them grew large enough to bury the finding it corrects — the longest is
+  §6's coverage table, which replaces a sentence with a table and states *why* no total is given.
 ## 2. Plan
 
-*Not started.*
+| # | Step | Output |
+| :-- | :--- | :--- |
+| 1 | Score gate 7 per clause in §3, on the measurements already there — nothing re-fetched | a four-row table |
+| 2 | Correct the recommendation, which said *fails on age* while §3 said otherwise | the summary agrees with the body |
+| 3 | Put the archived-predecessor datum in §3 with its dates and where they were read | the better reason to wait |
+| 4 | Replace §6's defect total with what each look covered and what it found | coverage, and no total |
+| 5 | Read [T-204](T-204-an-instrument-for-mark-collisions.md)'s calibration and decide §7's second trigger either way | a recorded decision |
+| 6 | Restate T-113's two §4 rows that rest on the same two errors, without reopening the task | an honest review table |
+| 7 | `python tools/docs/refcheck.py`, then `python tools/tasks/lint.py` | green |
 
 ## 3. Implement
 
 **Decisions & assumptions**
--
+- **The recommendation was wrong in both halves, not one.** It read *"it fails gate 7 on one thing
+  that time fixes by itself: it was 23 days old"*. §3 already said it fails on the missing track
+  record, so the summary contradicted its own body — and *time fixes it by itself* is exactly what
+  the archived predecessor argues against. Both are corrected in place and marked. — 2026-08-21
+- **§7 keeps one trigger, and the second was tested rather than waved off.** The test set in §1 was
+  *if a small checker catches the class, it is a detection gap rather than a capability gap*.
+  [T-204](T-204-an-instrument-for-mark-collisions.md) settles it: `markhits.py` named the slide-4
+  collision **unseeded** on its first run, the same defect a third human look had just filed.
+  Calibration across four decks and 30 diagram slides — text-against-text 1 fire, 1 real, gates;
+  text-against-line 16 fires, 1 real, reports. **The half that cannot gate is our own precision
+  problem and no library gates it either**, so it argues for a better checker rather than a
+  different default. — 2026-08-21
+- **§6 states no total, and that is the correction.** The number was nine, then thirteen, then
+  fifteen, and the deck did not change between the second look and the third. A total is a reading
+  of the last look's reach. The section now carries a table of what each pass covered and found, and
+  says why the total is left to be derived. — 2026-08-21
+- **T-113 is restated, not reopened.** Both rows stay **met**; each gains a dated note saying what
+  the claim was actually worth. Reopening a closed task to fix the wording of a criterion it did
+  meet would make the record less true, not more. — 2026-08-21
 
 **Outputs produced**
--
+- [`docs/research/R9-...`](../docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md)
+  — the recommendation, §3's per-clause table and archived-predecessor datum, §6's coverage table,
+  §7's threshold decision, and §9's open item closed.
+- [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) §4 — two rows
+  restated.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
-| :--- | :--- | :--- |
-|  |  |  |
+| :--- | :---: | :--- |
+| Gate 7 is scored per clause wherever R9 states a verdict, and no summary line collapses six clauses into one word | **met** | §3 gains a four-row per-clause table on the measurements already there; the recommendation and §9's open item both restated. Two candidates fail gate 7 for opposite reasons — TanStack on `reliable`/`robust`, uPlot on `recently`/`continuously updated` — which the single verdict hid. |
+| The archived-predecessor datum is in §3, with its dates and where they were read | **met** | `TanStack/react-charts` archived, last pushed 2025-03-10, npm `2.0.0-beta.7` in November 2023, read from the GitHub API and the npm registry on 2026-08-21. Stated as the better reason to wait, because age repairs itself and an abandoned predecessor does not. |
+| §6 states the look's coverage rather than a bare defect count | **met** | A table: 10 of 12 slides and 9 found; the owner's review and 4 more; T-203's closing look at 12 of 12 and 2 more on slides the owner's review had passed. **No total**, with the reason stated. |
+| T-113's §4 row for the deck criterion says what the look actually covered; the task stays `done` | **met** | Two rows restated, both still **met**. The second — *gate 7 eliminated TanStack Charts on age alone* — carried the same collapse and is corrected with it. |
+| §7's threshold either gains the relational-geometry trigger **or** records why T-204's result means it should not | **met** | It does not gain it, and §7 records why with T-204's calibration figures. |
+| `python tools/docs/refcheck.py` and `python tools/tasks/lint.py` green | **met** | refcheck: **3,187 pointers, 0 broken**; 924 section references resolved, 0 dead. lint: all four checks. |
+| *(closing checklist step 3)* | **n/a** | This task produced no rendered artifact. Its output is four sections of a research note. |
 
 **Child fix tasks raised**
--
+- none
 
 ## Log
 
@@ -133,3 +169,4 @@ threshold should not move — which is the whole reason that task is ranked ahea
 | :--- | :--- | :--- |
 | 2026-08-21 | → proposed | Raised from the owner's review of T-113's output on the day it closed. Three corrections: gate 7 scored per clause rather than as one verdict, because two candidates fail it for opposite reasons; the archived predecessor as a better reason to wait than the 23 days; and R9 §6's defect count restated as a coverage figure, since the look it describes covered ten slides of twelve. Ranked behind T-203 and T-204 because the fourth change — whether the threshold gains a second trigger — is decided by what the checker turns out to catch. |
 | 2026-08-21 | (no change) | **The count in correction 3 moves thirteen to fifteen, and that changes what the correction should say.** T-203's closing look covered all twelve slides and found two more defects on slides 4 and 10 — slides the owner's review had also passed (T-207). Two moves in one day on an unchanged deck means a total is a reading of the last look's reach, not a property of the deck, so R9 should carry coverage-and-yield per look and derive any total. The fourth change is still held for T-204. |
+| 2026-08-21 | proposed → done | All three corrections made in place and marked, which is what the open question predicted. **The recommendation was wrong in both halves**: it said gate 7 failed on age while §3 said the missing track record, and *time fixes it by itself* is what the archived predecessor refutes — `TanStack/react-charts`, last pushed 2025-03-10, npm `2.0.0-beta.7` in November 2023. **§6 now states no total at all**, because the number moved nine → thirteen → fifteen in one day without the deck changing, so a total reads the last look's reach rather than the deck. **§7 keeps one trigger**, decided against T-204 rather than assumed: a checker caught the class unseeded, so it is a detection gap in our instruments, not a capability only a library supplies. T-113 restated, not reopened. |

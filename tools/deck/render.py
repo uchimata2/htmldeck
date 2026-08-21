@@ -110,6 +110,50 @@ RESOLUTIONS = [(3840, 2000, "3840x2000"), (1280, 634, "1280x634"), (1280, 720, "
 # failure. A measurement tool must not depend on a piece of chrome a design rule can delete. Next
 # and previous are controls, not position encodings, so they survive a chrome redesign; if they
 # ever do not, the assertion below fails loudly instead of silently measuring slide 1 twelve times.
+# **The motion pin, in one place, applied to every probe that is not about motion** (T-209).
+#
+# T-206 put this pin into `PROBE` and proved what it is worth: on a page read at frame zero, 27 of
+# 132 elements sat exactly 18.00 design units from where they settle - the entrance animation's full
+# travel, to the digit. But `make_probe` composes the page as `extra or PROBE`, so **`extra`
+# replaces the shared probe rather than joining it**, and every one of the eight probe sources that
+# passes an `extra` lost the pin. The fix belongs here rather than copied into eight files, which is
+# T-206's own argument one level up.
+#
+# **The exception is not a flag a caller passes; it is a declaration the probe carries.** A
+# `pin=False` parameter would make this a guarantee any caller can decline, which is not a guarantee
+# (**L-128**). A probe whose *subject* is motion declares `MEASURES_MOTION` in its own source and is
+# left alone - the same idiom as DS-217's `data-scale` and DS-230's `data-disc`, where the artifact
+# states the claim and the tool reads it back.
+#
+# **There are three such probes and only one of them was obvious**, which is the finding this task
+# produced rather than the one it was raised for. `MOTION_PROBE` announces itself (T-185). The other
+# two do not: `audit.PROBE` decides DS-140, DS-142 and DS-218 by reading
+# `getComputedStyle(el).animationIterationCount` for `infinite`, and `audit.REDUCED_PROBE` asks what
+# the *deck* does under `prefers-reduced-motion`. **`animation:none!important` erases exactly the
+# property both of them read.** Pinned unconditionally, the seeded-variant suite went from 8 of 8 and
+# 2 of 2 caught to 7 of 8 and 1 of 2: a deck that hides its stop control inside a shut menu passed
+# DS-218, and a deck that leaves a slide blank under reduced motion passed DS-143 - both because the
+# rule had no subject left to fail on. **A pin that silences a rule is worse than a probe that reads
+# an unsettled page**, and this is the absent-subject defect this repository has now met eight times
+# (**L-57**).
+MEASURES_MOTION = "htmldeck:measures-motion"
+#
+# `*` DOES NOT MATCH PSEUDO-ELEMENTS, so the selector names them: the ruler's tick marks are
+# `::before`, and a capture taken while one was mid-transition read its animated height and colour
+# instead of its settled ones. Found 2026-08-08 building the ruler's dot variant.
+MOTION_PIN = r"""
+<script>
+(function(){
+  document.documentElement.setAttribute('data-motion','off');
+  var s = document.createElement('style');
+  s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}' +
+                  '.rise,.pulse,.opening{opacity:1!important;transform:none!important}';
+  (document.head || document.documentElement).appendChild(s);
+})();
+</script>
+"""
+
+
 PROBE = r"""
 <script>
 (function(){
@@ -138,17 +182,9 @@ PROBE = r"""
        for, and the five magnitudes recorded there all fall inside that range.
        So the guarantee has no exception in this probe at all; the exception has its own name and
        its own probe, `MOTION_PROBE` below. `quiet` now controls the title and nothing else. */
-    document.documentElement.setAttribute('data-motion','off');
-    var s = document.createElement('style');
-    /* `*` DOES NOT MATCH PSEUDO-ELEMENTS, so this pinned motion on every element and on none of
-       the ::before marks - and the ruler's tick marks are ::before. A capture taken while one of
-       them was mid-transition read its animated height and colour instead of its settled ones,
-       which is DS-221's failure in the instrument rather than in the deck: it does not look like
-       a broken capture, it looks like broken CSS, and it cost a round of chasing specificity
-       that was never wrong. Found 2026-08-08 building the ruler's dot variant. */
-    s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}' +
-                    '.rise,.pulse,.opening{opacity:1!important;transform:none!important}';
-    document.head.appendChild(s);
+    /* The pin itself is `MOTION_PIN`, injected by `make_probe` ahead of this script and ahead of
+       every other probe body (T-209). It was inline here until then, which is why the eight
+       sources that pass an `extra` never had it. */
     if (want > 0){
       if (!next) { document.title = 'PROBE-ERROR no next control'; return; }
       for (var n = 0; n < want; n++) next.click();
@@ -236,7 +272,11 @@ def make_probe(deck, name="probe.html", extra="", out=None):
     html = open(deck, "r", encoding="utf-8").read()
     if "</body>" not in html:
         sys.exit("%s has no </body> - not a deck" % deck)
-    html = html.replace("</body>", (PROBE if not extra else extra) + "\n</body>")
+    # **Every probe is pinned except the one whose subject is motion** (T-209). The pin goes in
+    # ahead of the probe body, so it is a property of `make_probe` rather than of any caller.
+    body = PROBE if not extra else extra
+    pin = "" if MEASURES_MOTION in body else MOTION_PIN
+    html = html.replace("</body>", pin + body + "\n</body>")
     # The probe is a **whole copy of the deck**. Writing it under the tool put an adopter's
     # content inside the installed package; it goes with the deck now (T-074).
     out = out_dir(deck, out)
@@ -395,6 +435,8 @@ def cmd_shots(deck, which, out=None, w=1920, h=1234):
 # verdict was the one measuring an unsettled page. A guarantee a caller can decline is an exception
 # without a name.
 MOTION_PROBE = r"""
+<!-- htmldeck:measures-motion - this probe's declared subject is the animation itself, so
+     `make_probe` leaves it unpinned (T-209). -->
 <script>
 (function(){
   var P = new URLSearchParams(location.search);
@@ -639,16 +681,39 @@ def self_test():
     # it for as long as the two resolutions were unsettled by the same amount. So the assertion is
     # on the shape of the probe, which is what actually changed, and it needs no browser - which
     # matters, because a ten-run measurement is minutes of Chrome and would never run here.
-    if "data-motion" not in PROBE:
-        sys.exit("SELF-TEST FAILED: the probe no longer pins motion off, so every measurement it "
-                 "takes is of whatever the entrance animation was showing (T-206)")
+    #
+    # **T-209 moved what it asserts, because T-206's version asserted the wrong thing.** It read
+    # `"data-motion" not in PROBE` - true of the shared probe and true of nothing else, while eight
+    # probe sources passed an `extra` that replaced `PROBE` entirely and took no pin with it. A
+    # guard on one probe's text cannot see a guarantee that belongs to `make_probe`. So the
+    # assertion is now on what `make_probe` writes, which is the thing every caller actually gets.
+    if "data-motion" not in MOTION_PIN:
+        sys.exit("SELF-TEST FAILED: MOTION_PIN no longer pins motion off, so every measurement "
+                 "every probe takes is of whatever the entrance animation was showing (T-206)")
     # Matched as CODE, not as prose: the brace is the difference. The first version of this guard
     # looked for `if (quiet)` and was tripped by the comment above it explaining the fault - a
     # self-test that fails on its own documentation teaches the next reader to delete the
     # documentation.
-    if re.search(r"if\s*\(\s*quiet\s*\)\s*\{", PROBE):
+    if re.search(r"if\s*\(\s*quiet\s*\)\s*\{", PROBE + MOTION_PIN):
         sys.exit("SELF-TEST FAILED: the motion pin is behind `quiet` again - that is the T-206 "
                  "fault exactly, and it fails the gate green rather than red")
+    # **And no probe source may carry a copy of it** (T-209). Two did, and a third would have been
+    # written the next time somebody needed one - which is how the pin came to be in `PROBE` and
+    # nowhere else in the first place. Read off the package directory rather than a list kept here,
+    # so a module added tomorrow is covered (**L-57**).
+    _pin_css = "transition:none!important;animation:none!important"
+    _copies = []
+    for _name in sorted(os.listdir(os.path.dirname(os.path.abspath(__file__)))):
+        if not _name.endswith(".py") or _name == "render.py":
+            continue
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), _name),
+                  "r", encoding="utf-8") as _fh:
+            if _pin_css in _fh.read():
+                _copies.append(_name)
+    if _copies:
+        sys.exit("SELF-TEST FAILED: %s carr%s its own copy of the motion pin. There is one pin and "
+                 "`make_probe` injects it; a copy is a second home that goes stale silently (T-209)"
+                 % (", ".join(_copies), "ies" if len(_copies) == 1 else "y"))
     if "--host-resolver-rules=MAP * ~NOTFOUND" not in " ".join(
             ["--host-resolver-rules=MAP * ~NOTFOUND"]):
         sys.exit("SELF-TEST FAILED: offline flag missing")
@@ -678,6 +743,29 @@ def self_test():
         if not os.path.isabs(probe) or not os.path.exists(probe):
             sys.exit("SELF-TEST FAILED: make_probe with a relative --out returned %r, which is "
                      "what every caller joins its output paths onto" % probe)
+
+        # **The pin, proved on the page `make_probe` writes rather than on a constant** (T-209).
+        # Three cases, because two of them are the ones that were broken: a probe built with no
+        # `extra`, a probe built with a foreign `extra` - the case all eight sources are - and
+        # `MOTION_PROBE`, which must NOT be pinned because measuring motion is its subject.
+        with open(probe, "r", encoding="utf-8") as _fh:
+            _plain = _fh.read()
+        if "data-motion" not in _plain:
+            sys.exit("SELF-TEST FAILED: make_probe wrote a probe with no motion pin")
+        _foreign = make_probe(deck, name="foreign.html", extra="<script>/*caller*/</script>",
+                              out=os.path.join(fixture, "out"))
+        with open(_foreign, "r", encoding="utf-8") as _fh:
+            _ftext = _fh.read()
+        if "data-motion" not in _ftext or "/*caller*/" not in _ftext:
+            sys.exit("SELF-TEST FAILED: a probe built with a caller's own `extra` lost the motion "
+                     "pin - that is the T-209 fault exactly, and it is invisible in every value "
+                     "the probe reports")
+        _motion = make_probe(deck, name="motion.html", extra=MOTION_PROBE,
+                             out=os.path.join(fixture, "out"))
+        with open(_motion, "r", encoding="utf-8") as _fh:
+            if "data-motion" in _fh.read():
+                sys.exit("SELF-TEST FAILED: MOTION_PROBE was pinned. Measuring motion is its "
+                         "declared subject; pinning it makes it report a page with none (T-185)")
     finally:
         shutil.rmtree(fixture, ignore_errors=True)
 
