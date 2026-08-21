@@ -35,7 +35,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | - | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112, T-185 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187 |
-| [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | - | `proposed` | `specify` | - | - | T-057, T-112, T-119 |
+| [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | - | `in_progress` | `implement` | - | - | T-057, T-112, T-119, T-187 |
 
 ## Closed
 
@@ -224,7 +224,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-184](T-184-re-cut-the-shipped-diagrams-onto-the-text-column-and-gate-it.md) | Re-cut the shipped diagrams onto the text column, and turn the measurement into a gate | `PH3` | - | `done` | `review` | - | - | T-115, T-117, T-182 |
 | [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md) | No instrument here can watch an animation play, so any rule about motion over time is unverifiable | `PH3` | - | `done` | `review` | - | - | T-041, T-057, T-111, T-112, T-183, T-199 |
 | [T-186](T-186-print-to-pdf-drops-the-file-when-its-destination-is-relative.md) | print_to_pdf drops the file when its destination is relative, and reports nothing | `PH3` | - | `done` | `review` | - | - | T-074, T-094, T-123 |
-| [T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md) | Open DS-140's closed motion vocabulary into a style guide, keeping the rules that protect behaviour | `PH3` | - | `done` | `review` | - | - | T-016, T-057, T-112, T-188, T-198 |
+| [T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md) | Open DS-140's closed motion vocabulary into a style guide, keeping the rules that protect behaviour | `PH3` | - | `done` | `review` | - | - | T-016, T-057, T-112, T-113, T-188, T-198 |
 | [T-188](T-188-raise-the-shipped-motion-density-default-to-100.md) | Raise the shipped motion density default from 10 to 100, and correct every document that states the old figure | `PH3` | `0.5.0` | `done` | `review` | - | - | T-112, T-187, T-198 |
 | [T-189](T-189-resolve-the-plugin-root-in-every-documented-command.md) | Every documented command interpolates CLAUDE_PLUGIN_ROOT, which is empty in the shell | `PH1` | `0.5.0` | `done` | `review` | - | - | T-064, T-074 |
 | [T-190](T-190-critique-py-reports-a-no-subject-rule-as-a-gate-failure.md) | critique.py reports a NO SUBJECT rule as a gate failure the reviewer must cite | `PH1` | `0.5.0` | `done` | `review` | - | - | T-051 |
