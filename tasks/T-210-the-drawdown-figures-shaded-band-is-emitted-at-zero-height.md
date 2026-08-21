@@ -51,11 +51,15 @@ the `-5.1` level. Because `y` grows downward and `-5.1` is *above* `-6.8`, `ry -
    interesting half, because the clamp protects **every** `rect()` caller from ever learning it got
    a sign wrong.
 
-**And the band's meaning has to be settled before the arithmetic can be, which is why this is not a
-one-line fix.** The figure claims 5.1 points of a 6.8-point drawdown are renewables. Between the
-`-5.1` level and the trough is **1.7** points, not 5.1. Measuring 5.1 from zero instead gives the
-span from the zero line to `-5.1`. The two readings put the band in different places and say
-different things, and only one of them matches the caption. Someone has to choose.
+**The band's meaning had to be settled before the arithmetic could be, and it is — ruled by the
+owner 2026-08-21: the band is 5.1 points measured from zero**, spanning the zero line down to the
+`-5.1` level. The alternative reading, the span between `-5.1` and the trough, shades **1.7** points
+rather than 5.1 and so contradicts the caption — *"Renewables carried 5.1 points of the 6.8"* — which
+is what decided it. The operands follow: `rect(tx - 40, zero_y, 80, ry - zero_y)`, and both are now
+above the trough rather than straddling it.
+
+*Recorded here because a ruling is a fact about this task, and because §1's original wording asked
+the question rather than answering it.*
 
 **Scope**
 - In: what the band means, and the arithmetic that follows from it.
@@ -72,8 +76,8 @@ different things, and only one of them matches the caption. Someone has to choos
   relationally wrong; this is the third case, where the mark is not drawn at all.
 
 **Acceptance criteria**
-- [ ] The band's meaning is stated in the figure, and the arithmetic matches the caption's 5.1
-      against 6.8.
+- [ ] The band spans the zero line to the `-5.1` level, per the owner's ruling above, and the figure
+      says so in its own text so the next reader does not re-open it.
 - [ ] The band renders, confirmed by looking at the printed and screen slide, not by the markup.
 - [ ] An identity in the generator's self-test fails if the band's height returns to zero — proved
       by seeding it, the method T-203 and T-207 both used.
@@ -112,3 +116,4 @@ different things, and only one of them matches the caption. Someone has to choos
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-21 | → proposed | Found by looking at slide 10 after T-207's annotation fix landed on the same figure. The emitted rectangle carries `height="0.0"`: `ry - ty` is negative because `y` grows downward, and `rect()`'s `max(h, 0.0)` turns the sign error into a legal invisible mark. Two faults, and the clamp is the wider one — it protects every caller from discovering a wrong sign. Not a one-line fix, because 5.1 of 6.8 measured from the trough is 1.7 points and measured from zero is a different band, so what the shading means has to be decided first. `PH3`: the deck is shipped and the missing mark is an omission rather than a wrong statement. |
+| 2026-08-21 | (no change) | **The owner ruled what the band means: 5.1 points measured from zero**, spanning the zero line to the `-5.1` level. The alternative - the span between `-5.1` and the trough - shades 1.7 points and contradicts the caption, which is what decided it. §1 and the first acceptance criterion updated; the task stays `proposed` because nothing has been built. The two open questions about `rect()`'s clamp are untouched and are still the wider half. |
