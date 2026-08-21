@@ -85,10 +85,14 @@ the question rather than answering it.*
       a computed extent.
 
 **Open questions**
-- Whether `rect()` refusing is safe. It is called by every figure, and a refusal turns a silent
-  wrong picture into a build failure — which is right, but it should be counted before it is done.
-- Whether any other figure is passing a computed extent that the clamp is already absorbing. Nobody
-  has looked; the clamp means nothing would have shown up.
+- ~~Whether `rect()` refusing is safe.~~ **Answered 2026-08-21 by the owner: it refuses, and the
+  build fails.** A silent wrong picture is the worse failure, and the clamp's only effect is to hide
+  one. The count of callers passing a computed extent is measured and reported **before** the refusal
+  lands — the fourth acceptance criterion is therefore a precondition of the change rather than a
+  record of it.
+- ~~Whether any other figure is passing a computed extent that the clamp is already absorbing.~~
+  **Not a question for the owner.** Nobody had looked, and the clamp means nothing would have shown
+  up — so it is the measurement the ruling above requires, and it is step 1 of §2.
 
 ## 2. Plan
 
@@ -117,3 +121,4 @@ the question rather than answering it.*
 | :--- | :--- | :--- |
 | 2026-08-21 | → proposed | Found by looking at slide 10 after T-207's annotation fix landed on the same figure. The emitted rectangle carries `height="0.0"`: `ry - ty` is negative because `y` grows downward, and `rect()`'s `max(h, 0.0)` turns the sign error into a legal invisible mark. Two faults, and the clamp is the wider one — it protects every caller from discovering a wrong sign. Not a one-line fix, because 5.1 of 6.8 measured from the trough is 1.7 points and measured from zero is a different band, so what the shading means has to be decided first. `PH3`: the deck is shipped and the missing mark is an omission rather than a wrong statement. |
 | 2026-08-21 | (no change) | **The owner ruled what the band means: 5.1 points measured from zero**, spanning the zero line to the `-5.1` level. The alternative - the span between `-5.1` and the trough - shades 1.7 points and contradicts the caption, which is what decided it. §1 and the first acceptance criterion updated; the task stays `proposed` because nothing has been built. The two open questions about `rect()`'s clamp are untouched and are still the wider half. |
+| 2026-08-21 | (no change) | **The owner ruled on the clamp: `rect()` refuses a non-positive extent and the build fails.** A silent wrong picture is worse than a broken build, and the clamp's only effect is to hide one. Two consequences: the caller count §1 asked for becomes a **precondition** of the change rather than a record of it, and the second open question stops being a question — it is the measurement the ruling requires. The task stays `proposed` because nothing has been built. |

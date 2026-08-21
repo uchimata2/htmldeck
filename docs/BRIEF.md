@@ -421,7 +421,13 @@ and the second was growing with every closure — finding `CE-05`,
    SVG chart generator" the question guessed at is the right answer — T-006 builds it.
 3. ~~**One template or many?**~~ **Answered above:** one theme, parametric, generator later.
 4. **Speaker notes and PDF export.** Both wanted eventually; neither in the corpus. Scope now,
-   build later.
+   build later. **Split 2026-08-21 by the owner, and only one half moved.**
+   ~~*Speaker notes*~~ are scoped by
+   [T-211](../tasks/T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md), which is what
+   makes DS-088 amendable: R1's candidate rule **A10** has carried the marker *amend — BRIEF Q4*
+   since it was written, and that marker now has a task behind it rather than a deferral.
+   *PDF export* is **unchanged and still deferred** — [R7](research/R7-printable-mode.md) covers
+   the printed page, and an explicit export path was not raised.
 7. ~~**The fixed stage versus the accessibility floor.**~~ **Answered 2026-08-06 by the owner: keep
    the stage, add a reflow view.** Built and **enforced** by
    [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md), closed 2026-08-07; the

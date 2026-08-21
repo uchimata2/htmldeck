@@ -38,8 +38,9 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-202](T-202-amend-ds-122-into-a-threshold-and-bind-its-check-on-structure.md) | Amend DS-122 into a threshold, and bind its check on structure rather than on five vendor names | `PH3` | - | `proposed` | `specify` | T-113 | - | T-113, T-119 |
 | [T-205](T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md) | Correct R9's gate-7 scoring and its account of what looking found | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-203, T-204 |
 | [T-208](T-208-shell-py-does-not-list-the-command-its-own-error-names.md) | shell.py does not list the preflight command its own error message tells you to run | `PH1` | - | `proposed` | `specify` | - | - | T-203 |
-| [T-209](T-209-six-more-probes-measure-a-page-whose-entrance-never-ran.md) | Six more probes measure a page whose entrance animation never ran, and none of them says so | `PH3` | - | `proposed` | `specify` | - | - | T-185, T-206 |
+| [T-209](T-209-six-more-probes-measure-a-page-whose-entrance-never-ran.md) | Six more probes measure a page whose entrance animation never ran, and none of them says so | `PH3` | - | `planned` | `plan` | - | - | T-185, T-206 |
 | [T-210](T-210-the-drawdown-figures-shaded-band-is-emitted-at-zero-height.md) | The drawdown figure's shaded band is emitted at zero height, and rect() clamps the sign error away | `PH3` | - | `proposed` | `specify` | - | - | T-203, T-204, T-207 |
+| [T-211](T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md) | Scope speaker notes, and decide what DS-088 becomes | `PH3` | - | `proposed` | `specify` | - | - | - |
 
 ## Closed
 

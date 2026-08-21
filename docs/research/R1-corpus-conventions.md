@@ -195,7 +195,7 @@ carry verbatim:
 The pattern: **the written conventions run ahead of the artefacts.** They are the owner's
 considered position, refined over 7–8 feedback rounds on one deck and then deliberately carried
 forward to the next. Where the two conflict, the stated rule is the better source for the plugin —
-with the caveat in the open question below.
+and the owner ruled on 2026-08-21 that it does, which closes the open question below.
 
 ---
 
@@ -412,10 +412,16 @@ These recur across feedback documents and are stated as instructions, not prefer
 
 ---
 
-## Open question for the owner
+## Open question for the owner — answered
 
-**Where a written rule and the decks disagree, which wins?** §7 shows the specs consistently run
-ahead of the artefacts — they read as the owner's refined intent, and the older decks as work that
-predates them. R1 assumes **stated beats actual**, and flags the one case where that assumption is
-load-bearing: `prefers-reduced-motion` is stated as absolute and delivered in 5/12. If the stated
-rules win, the plugin enforces it always.
+~~**Where a written rule and the decks disagree, which wins?**~~ **Answered 2026-08-21 by the owner:
+the stated rule wins.** §7 shows the specs consistently run ahead of the artefacts — they read as
+the owner's refined intent, and the older decks as work that predates them. R1 assumed **stated
+beats actual** throughout; that is now the project's rule rather than this note's assumption.
+
+The one case the note flagged as load-bearing follows from it: `prefers-reduced-motion` is stated as
+absolute and delivered in 5/12, so **the plugin enforces it always**.
+
+*Answered in place and marked — this project's precedent for correcting a research note, the same
+one §1 uses for T-113's premise. The question had been open since this note was written and nothing
+had ruled it, while the project had been acting on the assumption throughout.*
