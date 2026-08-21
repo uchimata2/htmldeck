@@ -356,16 +356,22 @@ def ds119_canvas_dimensions(h):
     return True
 
 
-# DS-140's two long motions, **by the token that carries each**. Until T-007 this was a pair of
-# exact seconds, 1.2 and 4.5, and the check admitted any duration matching one of them. Banding
-# those numbers broke the check in a way the variant suite caught immediately: a 900 ms slide
-# transition falls inside Pulse-once's 0.8-1.6 s band and was waved through, because a scan over
-# durations cannot tell which motion a number belongs to.
+# DS-141's licence to exceed the 500 ms cap, **declared on the rule that starts the motion**.
 #
-# **DS-141's own words are the fix** - Pulse-once and Current are conformant *by name*. So a
-# duration over the cap is licensed when the declaration reads it out of one of these two tokens,
-# and the band each token must sit in is the contract's business (`theme.py`, DS-140).
-DS140_LONG_TOKENS = ("--pulse-dur", "--current-dur")
+# The history is worth keeping, because each version failed differently. Until T-007 the licence was
+# a pair of exact seconds, 1.2 and 4.5, and the check admitted any duration matching one of them;
+# banding those numbers broke it in a way the variant suite caught immediately, since a 900 ms slide
+# transition falls inside Pulse-once's 0.8-1.6 s band and a scan over durations cannot tell which
+# motion a number belongs to. T-007 replaced the numbers with the two token NAMES that carry them,
+# which worked only for as long as DS-140 fixed the vocabulary at four.
+#
+# **T-187 opened DS-140, so the name stopped being a test.** A licence that reads `--pulse-dur` says
+# nothing about a motion nobody has named. So the licence is now declared - `--motion-long`, on the
+# rule itself, carrying WHY - and this check reads that the declaration is there. Whether the reason
+# is TRUE is DS-243's business and a reader's; that split is the same one DS-237 makes with
+# `--motion-kind` and DS-230 with `data-disc`.
+DS141_REASONS = ("loop", "illustration", "emphasis", "request")
+MOTION_LONG = re.compile(r"--motion-long\s*:\s*(?:%s)\b" % "|".join(DS141_REASONS))
 
 
 def _custom_properties(c):
@@ -388,20 +394,26 @@ def _expand_vars(value, toks, depth=4):
 
 
 def ds141_durations(h):
-    """DS-141 - entry and transition animations max 500 ms, with DS-140's named vocabulary as the
-    specific override. So: every duration over 500 ms is read out of one of DS-140's two long
-    motions **by name**, which is the licence the rule's own sentence grants.
+    """DS-141 - entry and transition animations max 500 ms, and a motion running longer declares
+    `--motion-long` on the rule that starts it. So: every duration over the cap sits in a rule
+    carrying the licence, which is what the rule's own sentence now grants.
+
+    **Read per rule, not over the file.** The licence is a sibling declaration, so the block is the
+    unit; scanning declaration values flat cannot see what else the rule said. `density.CSS_RULE`
+    is the same parser DS-237 and DS-238 read `--motion-kind` with - one shape for one job.
 
     **Only duration-bearing declarations are read.** `animation-delay:600ms` is not a duration and
     scanning the file for `\\d+s` counted one, alongside six fragments of an embedded typeface."""
     c = css(h)
     toks = _custom_properties(c)
-    for value in re.findall(r"\b(?:animation|transition)(?:-duration)?\s*:\s*([^;{}]+)", c):
-        if any(t in value for t in DS140_LONG_TOKENS):
-            continue                     # named, so DS-140 governs it and DS-141 yields (F-04)
-        for m in re.finditer(r"(\d+(?:\.\d+)?)(ms|s)\b", _expand_vars(value, toks)):
-            if float(m.group(1)) / (1000.0 if m.group(2) == "ms" else 1.0) > 0.5:
-                return False
+    for rule in density.CSS_RULE.finditer(c):
+        body = rule.group(2)
+        if MOTION_LONG.search(body):
+            continue                     # licensed, and DS-243 judges whether the reason is true
+        for value in re.findall(r"\b(?:animation|transition)(?:-duration)?\s*:\s*([^;{}]+)", body):
+            for m in re.finditer(r"(\d+(?:\.\d+)?)(ms|s)\b", _expand_vars(value, toks)):
+                if float(m.group(1)) / (1000.0 if m.group(2) == "ms" else 1.0) > 0.5:
+                    return False
     return True
 
 
@@ -853,7 +865,7 @@ STATIC = [
     ("DS-111", "no embedded object standing in for a diagram", ds111_figures_are_drawn),
     ("DS-118", "no literal colour in a fill= or stroke=", ds118_svg_colour_from_css),
     ("DS-119", "every <canvas> carries pixel dimensions", ds119_canvas_dimensions),
-    ("DS-141", "no duration over 500 ms outside DS-140's vocabulary", ds141_durations),
+    ("DS-141", "no duration over 500 ms without a declared --motion-long licence", ds141_durations),
     ("DS-240", "the short band is reached only by affordance motion", ds240_band_is_closed),
     ("DS-240", "a control's press outranks its own hover", ds240_press_beats_hover),
     ("DS-144", "no 3D transform on a slide transition", ds144_no_3d_between_slides),
@@ -1234,7 +1246,10 @@ PROBE = r"""
         (el.closest('.slide')||{dataset:{}}).dataset.name || '']);
     }
 
-    // DS-140/142 - DS-140 sanctions exactly one looping motion, `Current`, for flows. Anything
+    // DS-140/142 - a flow may loop, and the shipped theme's `Current` is the instance every deck
+    // carries. (This read `DS-140 sanctions exactly one looping motion` until T-187 opened the
+    // vocabulary; what decides the rows below is whether a looping thing is a flow or static
+    // content, which was always the actual test.) Anything
     // else looping is continuous motion on static content, which DS-142 bans outright. DS-218
     // additionally requires a control for whatever does loop (WCAG 2.2.2 is the criterion behind
     // it; DS-218 is the rule that makes building the control an obligation rather than an

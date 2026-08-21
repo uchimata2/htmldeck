@@ -99,6 +99,7 @@ comes here.
 | [L-117](lessons/L-117.md) | A control that is `display:none` when shut is invisible to every gate, so a green run says nothing about how it looks open | Evidence and verification |
 | [L-123](lessons/L-123.md) | A number read from the DOM is in a coordinate system you have not established, and the error hides wherever the two systems nearly agree | Evidence and verification |
 | [L-124](lessons/L-124.md) | Seed the form the artifact contains, not the form you typed | Evidence and verification |
+| [L-125](lessons/L-125.md) | Before amending a rule, read what its gate actually tests | Evidence and verification |
 
 ### Tooling
 

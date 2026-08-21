@@ -100,7 +100,7 @@ nothing loads this file at runtime.
 | **F-02** | DS-033 | unbuildable | **Rule clarified: the ban is on *bare* `px`.** "No `px` inside the stage" cannot hold literally — every CSS length resolves to an absolute unit, so a design unit has to be declared as one somewhere. The rule's real content is that `vw`, `vh` and `clamp()` fight the transform and bare `px` bypasses the scale; declaring `--du` once and deriving every size from it does neither. **The rule was right about the failure and wrong about the mechanism**, which is the failure mode of a rule written from a symptom. |
 | **F-03** | DS-140 × §7 2.2.2 | silence | **New rule, DS-218** — owner's decision, 2026-08-06. `Current` is infinite, so DS-140 mandates the exact motion 2.2.2 requires a control for, and nothing required the deck to build one. The alternative — leaving it to §7, where the criterion already sits — was rejected because **the reference deck only got a control because the build happened to notice**, and a floor that reaches the builder as a criterion rather than an instruction produces non-conformant decks by default. A rule ID also gives the build check something to test by number, which §7's criterion rows do not offer. |
 | **F-04** | DS-140 × DS-141 | conflict | **DS-141 yields, by scope.** Its 500 ms cap now governs entry and transition only, with DS-140's named vocabulary as the specific override. DS-141 was written about the class of animation that makes a deck feel slow; Pulse-once and Current are neither. **The general rule yields to the specific one, and the text now says so** rather than leaving each builder to infer it — which is what T-024 had to do. |
-| **F-05** | DS-146 × DS-140 | conflict | **DS-140 wins; DS-146 says how.** The draw-in is Rise applied to the chart's marks, staggered. The tempting fix — a stroke-dash draw — is a fifth motion, and DS-140's whole value is that the vocabulary is closed at four: *a named vocabulary is what stops animation becoming decoration* (§4). **A rule that requires an effect must be satisfiable from the vocabulary another rule closes**, so the requirement is expressed in the vocabulary's own terms. |
+| **F-05** | DS-146 × DS-140 | conflict | **DS-146 says how, and it now says why on its own.** The draw-in is Rise applied to the chart's marks, staggered. The tempting fix — a stroke-dash draw — was rejected because it would be a fifth motion in a vocabulary closed at four. *That resolution died with the closure on 2026-08-21 ([T-187](../tasks/T-187-open-the-motion-vocabulary-into-a-style-guide.md)), and the conflict it settled did not: **this is no longer a conflict at all.** DS-140 admits a motion that passes its test, so nothing stops DS-146 reaching for a new one — and DS-146 still refuses the dash, on **DS-243**: a line drawing itself makes the reader watch the drawing rather than read the shape, which is a figure designed around its own animation. The outcome is identical and the reason is the rule's own, which is what the closure was standing in for here as everywhere.* |
 | **F-06** | DS-168 × DS-071 | silence | **DS-168 amended with the design-unit floor: ≥ 48.** The number was always computable and never stated. `scale = min(vw/1920, vh/1080)`, and DS-071 hands over to the reflow view below 960 CSS px, so the stage bottoms out at scale 0.5 and a design unit is worth half a CSS pixel at the smallest size the stage is ever shown. 24 CSS px therefore needs 48 design units. **The unstated consequence is the trap: a builder reading "24" inside a stage measured in design units will write 24, match the number and fail the criterion.** The reference deck used 52. *Caveat, closed 2026-08-07: the 0.5 floor assumed width binds, and a short, wide viewport scales lower. **DS-071 now keys off the scale factor itself**, so 0.5 is the floor by construction rather than by assumption. DS-071 is still `default` — a deck that moves the reflow threshold still moves this floor with it.* |
 | **F-07** | DS-117 | unbuildable | **Rule split: labels are universal, arrowheads are conditional.** The rule assumed every diagram is a directed flow, which is true of A-08 and false of a network graph. An arrowhead is not decoration — it asserts a direction — so applying the rule literally to an undirected edge makes the diagram *say something untrue* in order to satisfy a rule about tidiness. **The label half was right for every diagram; only the arrowhead half was over-generalised.** |
 | **F-08** | DS-063 | check impossible | **Tolerance stated, and measured rather than guessed:** a non-text box's rect ≤ 0.25 du, a text run's rect ≤ 2 du. A check demanding exact equality fails every deck containing text — **the rule was unfalsifiable, which is worse than lax.** The two tolerances differ because the mechanisms differ: box geometry rounds once, a text run accumulates rounding per glyph, so the text figure carries headroom for runs longer than this deck's. **Corrected 2026-08-07 by [T-021](../tasks/T-021-the-reflow-view-and-the-resolution-contract.md), and the correction is the interesting part** — see *What the first tolerance measurement did not measure*, below. |
@@ -387,7 +387,7 @@ defect above), and claiming bare AA while shipping a scaled stage (a silent omis
 
 ---
 
-## 4. Motion — DS-140, DS-150
+## 4. Motion — DS-140, DS-150, DS-243
 
 **Adopted: motion must encode something.** The brief's *Richness* decision says "no JavaScript
 budget" and reads as permission. Mayer's coherence principle is the best-supported result R2 found —
@@ -398,6 +398,23 @@ side: the corpus's most developed spec defines exactly four motions and nothing 
 reason that a named vocabulary is what stops animation becoming decoration, and two specs
 independently forbid 3D spins. **The conflict is between the brief's wording and a practice that
 never took that permission.** No re-scope requested; a wording change proposed in `BRIEF.md`.
+
+**Amended 2026-08-21 — the closure went, the position did not.** The owner ruled that any animation
+aligned with the rules is admissible and the four names are a suggestion
+([T-187](../tasks/T-187-open-the-motion-vocabulary-into-a-style-guide.md)), which overturns the
+sentence this section leaned on: *a named vocabulary is what stops animation becoming decoration.*
+**That sentence was a proxy, and it is worth saying what for.** A name tested nothing — it recorded
+that a motion had once been considered, and the four were the corpus's four rather than anything
+derived. It worked because the corpus's author had already done the thinking; it would not have
+worked for a motion they never met, and a list cannot by construction.
+
+**What replaces it is DS-243** — *the page is not designed around its own animation* — which is the
+claim the closure was making indirectly. Mayer's coherence result is untouched and still the
+best-supported thing R2 found; **it argues against decoration, and it never argued for a list.** The
+adopted position is therefore unchanged in substance and better grounded: decorative motion is
+rejected by DS-150 (does it encode anything?) and animation-led design by DS-243 (what shaped the
+page?), and both reach a motion nobody has named. The five remaining principles the owner stated are
+[`MOTION-GUIDE.md`](MOTION-GUIDE.md), which is guidance and gates nothing.
 
 ---
 

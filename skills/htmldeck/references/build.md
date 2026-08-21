@@ -95,6 +95,13 @@ will not tell you, because they are this stage's judgement:
   question about the argument and the slide would still make its point without it. `check.py` fails
   a motion rule that declares neither (DS-237), and the shell's own motions are already declared, so
   in practice this reaches a motion you add.
+- **You may invent a motion, and a motion running past 500 ms says why.** DS-140 is a suggested
+  starter set rather than an allow-list, so a motion that encodes something, does not shape the page
+  and survives reduced motion, print and the stop control is admissible whether or not it has a name
+  in the ruleset. What DS-141 still holds is the clock: over 500 ms, add `--motion-long` to the same
+  rule, valued `loop`, `illustration`, `emphasis` or `request`. Without it `check.py` fails DS-141,
+  and with a value outside those four it fails the same way. `MOTION-GUIDE.md` is how to decide
+  whether the motion is worth having at all.
 - **A content motion carries a rank, and the rank is derived rather than chosen.** Run
   `python $HTMLDECK/tools/deck/density.py write <slug>.html` and it writes them; run
   `check` and it recomputes the whole set and tells you whether the deck's numbers are the ones the
@@ -103,8 +110,10 @@ will not tell you, because they are this stage's judgement:
   re-derived. The rule, so you can read what it did: order every element carrying a content motion
   by `(tier, slide, document order)` and give the *i*th of *n* the rank `floor((i-1)/n*100)+1`. Tier
   is the table at the top of `density.py`, and it is the argument's key figure before its decoration
-  — so at the shipped density of 10 a deck shows its one emphasis pulse and nothing else, which is
-  the intent: **mostly still, with the occasional moment.**
+  — so a low density selects the argument's key figure first and its decoration last. **The shipped
+  default is 100**: a built deck runs every content motion it carries. *This read "at the shipped
+  density of 10 a deck shows its one emphasis pulse and nothing else"; T-188 raised the default on
+  2026-08-20 and this line was left behind.*
 - **A whole figure is one content motion, not one per mark.** `.arrow-pop` and `.dot-pop` go on the
   `<svg class="fig">`. Ranking each arrowhead separately would pop three of a diagram's five, and a
   diagram half in motion reads as broken rather than as restrained.

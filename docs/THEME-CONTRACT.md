@@ -251,7 +251,7 @@ amendments are faithful to the rule's own recorded reason.
 | Rule | Was | Is | Why the change is faithful |
 | :--- | :--- | :--- | :--- |
 | DS-034 | body 24–28 du **at line-height 1.55** | body 24–28 du at line-height **1.40–1.70**, this theme's being 1.55 | [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §3 argues the type **floor** and computes it; line-height is not argued there at all. |
-| DS-140 | four motions at 340 / 380 / 420 / 300 ms, 1.2 s, 4.5 s | the same four motions, **banded**: reveals and entries inside DS-141's cap, Pulse-once 0.8–1.6 s, Current 3–6 s | [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §4 argues that *a named vocabulary is what stops animation becoming decoration*. **The names and the closure carry that; the milliseconds are one theme's instance of it.** |
+| DS-140 | four motions at 340 / 380 / 420 / 300 ms, 1.2 s, 4.5 s | a **suggested starter set** the theme still supplies, **banded**: reveals and entries inside DS-141's cap, Pulse-once 0.8–1.6 s, Current 3–6 s — and a motion outside the set is admissible when it passes DS-140's test | [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md) §4 argued that *a named vocabulary is what stops animation becoming decoration*, and the milliseconds were only ever one theme's instance of it. **What carries the guard now is DS-243** — the page is not designed around its animation — which is what the closure was standing in for, so a theme adding a motion adds no risk this contract used to hold. *Opened 2026-08-21 by [T-187](../tasks/T-187-open-the-motion-vocabulary-into-a-style-guide.md); the banding is T-007's and is unchanged.* |
 
 ## 5. What may still be a literal
 

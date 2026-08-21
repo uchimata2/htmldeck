@@ -661,7 +661,10 @@ svg{display:block}
 .pulse,.arrow-pop,.dot-pop{--m-on:max(0,min(1,calc(var(--motion-density) - var(--m-rank,101) + 1)))}
 
 /* **The arrowhead scales out of its line.** T-112's first content motion, and it is DS-140's Scale
-   rather than a fifth motion: a reveal, applied to the mark that says *this way*. It sits on the
+   reused rather than a new motion invented: a reveal, applied to the mark that says *this way*.
+   (That read `rather than a fifth motion` until T-187 opened DS-140. Reusing the reveal is still
+   the right call - it is the same gesture the deck already makes - but it is now a choice rather
+   than the only admissible one.) It sits on the
    figure and not on the marker, because a `<marker>` renders in its own context and inherits from
    where it is DEFINED - so `--m-rank` on the figure carrying `.arrow-pop` reaches the marker's
    path, and one figure's arrowheads are one content motion with one rank. Ranking each arrowhead
@@ -709,13 +712,17 @@ svg{display:block}
   --motion-kind:affordance}
 @keyframes rise{from{opacity:0;transform:translateY(var(--rise-dist))}to{opacity:1;transform:none}}
 
+/* `--motion-long` is DS-141's licence to run past the 500 ms cap, and it replaces the token-name
+   waiver the gate used before T-187 opened DS-140. The value says WHY, and `loop` is why this one
+   runs 4.5s: it repeats, which is also what puts it under DS-218's stop control. */
 .current{stroke-dasharray:var(--current-dash);animation:current var(--current-dur) linear infinite;
-  --motion-kind:affordance}
+  --motion-kind:affordance;--motion-long:loop}
 @keyframes current{to{stroke-dashoffset:-26}}
 
 .pulse{animation:pulse var(--pulse-dur) var(--pulse-ease) 1 both;animation-delay:var(--pulse-delay);
   animation-duration:calc(var(--m-on,0) * var(--pulse-dur));
-  --motion-kind:content}
+  /* DS-141's licence: 1.2s is a once-only mark held long enough to be seen, not a slow entrance. */
+  --motion-kind:content;--motion-long:emphasis}
 @keyframes pulse{0%,100%{transform:scale(1)}45%{transform:scale(1.035)}}
 
 :root[data-motion="off"] .current{animation:none}

@@ -477,8 +477,10 @@ use, and unused-in-*this*-deck is not the same claim.
 
 ### 3.8 Motion
 
-Three classes carry DS-140's vocabulary onto elements the rest of these tables already name, so
-they sit on anything and contract only *where* they may sit.
+Three classes carry DS-140's suggested starter set onto elements the rest of these tables already
+name, so they sit on anything and contract only *where* they may sit. **They are what a deck gets
+without designing a motion, not the set it is held to** — DS-140 admits a motion that passes its
+test, and a deck adding one adds a row here rather than arguing an exemption.
 
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -501,8 +503,8 @@ remembered to tokenise.
 | `.rise` | Rise's rest state (DS-140) | `--rise-dist` |
 | `.slide[data-played] .rise` | Rise | `--rise-dur` `--rise-ease` `--rise-stagger` |
 | `@keyframes rise` | Rise | `--rise-dist` |
-| `.current` | Current (DS-140) | `--current-dash` `--current-dur` |
-| `.pulse` | Pulse-once (DS-140) | `--pulse-dur` `--pulse-ease` `--pulse-delay` |
+| `.current` | Current (DS-140), licensed long by `--motion-long:loop` | `--current-dash` `--current-dur` |
+| `.pulse` | Pulse-once (DS-140), licensed long by `--motion-long:emphasis` | `--pulse-dur` `--pulse-ease` `--pulse-delay` |
 | `.opening` | Open (DS-140) | `--open-dur` `--open-ease` |
 | `@keyframes open` | Open | `--open-rise` `--open-squash` |
 | `.disc-mark::after` | a control answering the hand (DS-240) | `--afford-dur` `--afford-ease` |

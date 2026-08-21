@@ -189,7 +189,7 @@ DEFERRED = {
     "DS-139": ("Triage: `default`. The assumption marker's edge placement is measurable; nothing "
                "has needed it.",
                ("work", "an assumption-marker edge-placement measurement")),
-    "DS-145": ("Triage: `default`. Reveal motions are DS-140's vocabulary, checked statically "
+    "DS-145": ("Triage: `default`. Reveal motions are DS-140's starter set, checked statically "
                "there; *flows use dashed arrows* is the DS-140 row.",
                ("work", "a check for dashed arrows on flow connectors")),
     "DS-147": ("Triage: `default`. Count-up and the single pulse are present; *one per slide* is "
