@@ -337,8 +337,55 @@ attempts used. **Recorded as unsettled rather than as a failure** — the correc
 and it is the first thing step 6 retries. If it works it is the most interesting answer available,
 because it is DS-122's *hand-written SVG, borrowing scale arithmetic* at industrial strength.
 
+### Step 3 — the chart-intensive deck, in progress
+
+The subject exists and does not yet pass. What is built:
+
+| Artefact | State |
+| :--- | :--- |
+| `examples/portfolio-review/sources/` — two illustrative models | written |
+| `portfolio-review.foundation.md` — governing idea, spine, selections, 29-row ledger, 12-slide outline | written; `spec.py` SPEC-1 to SPEC-4 green |
+| `portfolio-review.slides.md` — nine fields per slide, three open decisions recorded | written |
+| `tools/examples/portfolio_charts.py` — the scale arithmetic and the composer | written; its 22 self-test checks pass |
+| `portfolio-review.html` — 12 slides, 359,269 bytes | **built, 13 gate failures open** |
+
+**The deck is deliberately not committed while it is red.** `tools/check_all.py` fails on any tracked
+`.html` that its deck map does not declare, and declaring a deck that fails `check.py` would leave
+the release gate red in the tree. The generator rebuilds it from the two specifications in one
+command, so nothing is lost by leaving the artefact untracked until it is green.
+
+**What the gate names, in the order it will be worked:**
+
+| Class | Rules | What it is |
+| :--- | :--- | :--- |
+| Sourcing | `FIG-1` 13 of 95, `FIG-2` 8, `FIG-3` 1 | Figures in the disclosures that the two source models do not carry, plus a format mismatch — the deck writes `$78` where the model's table writes `78` under a `$/MWh` head. The invented ones are the disclosure detail on slides 5, 6, 7, 8 and 9, and the honest fix is to put them in the model, which is where a figure lives. |
+| Layout | three slides overflow by 141, 446 and 393 du; `DS-075` reflow overflows 24 px at 320 | The stat-plus-chart slides ask for a figure and a statistic in one body. |
+| Contrast | `DS-215` 3 text runs, `DS-219` data-mark labels | `t-soft` and `t-faint` used on marks that need 4.5:1. |
+| Motion | `DS-239` 5 content motions whose `--m-rank` is not what the rule derives | The rank was written by hand rather than derived. |
+| Grid | `DS-236` diagrams starting their ink off the text column | Four figures carry a viewBox whose x-origin is not 120. |
+| Copy | `DS-241` slide 12's eyebrow names the stage; `DS-203` its ask outranks its bottom line; `DS-092` one sentence over 20 words; `DS-035` one text run under 16 du | Ordinary first-build copy defects. |
+| Preflight | `DS-009` holds rows this deck has no subject for | One `shell.py` command. |
+
+**Two findings for R9 are already in hand from building it**, and neither would have come from an
+estimate:
+
+1. **The repository's existing borrowed arithmetic covers four chart kinds and a financial deck needs
+   seven.** `tools/assets/chart_probe.py` has bar, line, share and stat. Stacked area, waterfall and
+   scatter did not exist and had to be written. That gap is the honest shape of what a library
+   supplies, and it is narrower than *charting* — it is three mark geometries.
+2. **The cost of hand-authored SVG is not the drawing, it is everything around it.** The scale
+   arithmetic — `linear`, `y_of`, `band` and the guards imported from the probe — is a few dozen
+   lines, exactly as DS-122 claims. What the same file spends on top of that is the slide markup,
+   the disclosure panels, the provenance marks and the source quick views. **A chart library replaces
+   the few dozen lines and none of the rest**, which is the comparison the recommendation has to make
+   and is not the comparison the request assumed.
+
 **Outputs produced**
 - Gate verdicts for gates 1, 2, 3 and 7 across four candidates, above. They are R9's input tables.
+- `examples/portfolio-review/` — two source models, both specifications, and a composed 12-slide
+  deck that does not yet pass the gate.
+- `tools/examples/portfolio_charts.py` — the scale arithmetic, ten figures, and 22 self-test checks
+  asserting the identities the deck's own quality bar promises.
 
 ## 4. Review
 
@@ -358,3 +405,4 @@ because it is DS-122's *hand-written SVG, borrowing scale arithmetic* at industr
 | 2026-08-21 | proposed → specified | **Re-specified and re-planned in one session.** Four changes. (a) A fifth premise finding: **DS-122**, the `hard`/`auto`/owned rule that forbids the outcome the owner asked for, is enforced by a five-name substring blocklist in `audit.py`'s `STATIC` table — `uPlot`, `tanstack charts`, `apexcharts` and `frappe-charts` all pass a rule reading *no chart library*, probed against the row itself. **Amending DS-122 therefore moves into scope**, where §1 had put it out. (b) **DS-146's re-derivation of the same day** by T-187 changes how gate 5 is applied: a candidate's own draw-in is now measured against DS-140's admission test rather than against a closed four-name vocabulary. (c) The note's number moves **R8 → R9**; R8 was taken on 2026-08-18 while this task held it in prose. (d) `effort` **m → l**, because the 2026-08-19 restatement made a chart-intensive deck an input rather than a child, and a 12-slide deck is not an `m`. |
 | 2026-08-21 | specified → planned | The plan is re-ordered so the two disqualifying gates — framework and maintenance — run before the deck is built, and re-scoped so nothing is measured against the reference deck's single line chart. Eight steps; step 3 named as the long pole and as a stop boundary rather than something to shrink. |
 | 2026-08-21 | planned -> in_progress | Steps 1, 2 and 4 done, out of order and deliberately: the two disqualifying gates ran first as planned, and gate 1 followed because the library builds were already downloaded to answer gate 3. **Gate 3 eliminated nobody** — all four candidates ship a framework-free entry, TanStack Charts included, whose React-only appearance is a documentation fact rather than a packaging one and whose 13 framework peers are every one of them optional. **Gate 7 eliminated one**: TanStack Charts is 23 days old at 0.14.0 and cannot evidence *reliable* or *robust*, which is a wait rather than a refusal. **Gate 1 was measured in raw bytes**, and the finding that will carry the recommendation is that every published comparison quotes gzip while a `file://` deck pays raw — TanStack's own page says 37.60–43.56 KiB against a measured 165,077 B. Steps 3 and 5-8 remain; step 3, the chart-intensive deck, is the long pole and has not started. |
+| 2026-08-21 | (no change) | **Step 3 started and not finished.** The chart-intensive deck is specified, its two illustrative source models are written, and `tools/examples/portfolio_charts.py` composes 12 slides carrying ten hand-authored SVG figures — a stacked area, a diverging contribution bar, a waterfall, a risk-return scatter, two limit bars, a drawdown line, a tranche bar and a gated timeline. `spec.py` is green on SPEC-1 to SPEC-4 and the generator's 22 arithmetic checks pass. **`check.py` names 13 failures**, listed in §3 by class; the largest is sourcing, where 13 of 95 figures on a slide appear in no source because the disclosure detail was written into the deck rather than into the model. The deck is left untracked while it is red, because `check_all.py` fails on an undeclared tracked `.html` and declaring a red deck would leave the release gate red. Steps 5 to 8 are unstarted. |
