@@ -220,7 +220,7 @@ seven.** `chart_probe.py` has bar, line, share and stat. Stacked area, waterfall
 exist and were written here. That gap is the honest shape of what a library supplies, and it is
 narrower than *charting*: it is three mark geometries and a label spreader.
 
-**A green gate is not a good chart, and the margin is nine defects.** `check.py`, `check_all.py` and
+**A green gate is not a good chart, and the margin is thirteen defects.** *Corrected 2026-08-21: this section read **nine** on the day it shipped. The look it describes covered **ten of twelve slides** and passed three of the ten; the owner's review the same day found four more — [T-203](../../tasks/T-203-four-chart-defects-the-decks-look-missed.md). The point below stands and is stronger; what the paragraph owed and did not give is the look's **coverage**, which is [T-205](../../tasks/T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md).* `check.py`, `check_all.py` and
 `printgeom.py` were all green on this deck before a person looked at it. Looking found nine, two of
 them fatal to the slide they were on: a five-series stacked area that rendered as two shapes, because
 DS-020 allows one accent hue and four bands therefore shared a fill; and a waterfall that was
@@ -275,10 +275,14 @@ new door until the middle row of §7 actually fires.
 
 ## 9. What this does not settle
 
-- **The build-time SVG route** (§5). Unsettled, with the shape of the fix now known.
+- **The build-time SVG route** (§5). Unsettled, with the shape of the fix now known. **Scheduled by the owner on 2026-08-21 for a session of its own**, and the package's own description — *server-rendered charts* — says it is a supported path rather than an accident. It owes a task record when it starts.
 - **The theme shim's real cost** (gate 4). Estimated as equal across candidates and never built.
 - **Whether TanStack Charts is any good.** This note measures its packaging, its licence, its size
   and its reduced-motion handling. It has not been used to draw a chart in a deck, because gate 7
   says not yet.
+- **How gate 7 should be scored.** The owner's wording is six clauses and this note gives one
+  verdict, which is unfair to the candidate that leads the field on *continuously updated* and
+  vague about what it actually fails. Reopened 2026-08-21 and carried by
+  [T-205](../../tasks/T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md).
 - **The chart component itself.** Still this task's expected child, and its shape now depends on
   which row of §7 the next deck lands in.

@@ -36,6 +36,9 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | - | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112, T-185 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187 |
 | [T-202](T-202-amend-ds-122-into-a-threshold-and-bind-its-check-on-structure.md) | Amend DS-122 into a threshold, and bind its check on structure rather than on five vendor names | `PH3` | - | `proposed` | `specify` | T-113 | - | T-113, T-119 |
+| [T-203](T-203-four-chart-defects-the-decks-look-missed.md) | Fix four chart defects in the portfolio-review deck that a green gate and an incomplete look both passed | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-204, T-205 |
+| [T-204](T-204-an-instrument-for-mark-collisions.md) | An instrument for mark collisions, so a person is not the only thing that can see one | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-203, T-205 |
+| [T-205](T-205-correct-r9s-gate-7-scoring-and-its-account-of-looking.md) | Correct R9's gate-7 scoring and its account of what looking found | `PH3` | - | `proposed` | `specify` | - | - | T-113, T-203, T-204 |
 
 ## Closed
 
@@ -151,7 +154,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-110](T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md) | The quick view styles a source as deck copy, not as a document | `PH3` | `0.5.0` | `done` | `review` | - | - | T-070, T-106, T-107, T-109, T-121, T-122 |
 | [T-111](T-111-a-named-slide-transition-chosen-per-deck.md) | A named slide transition, chosen per deck, with slide and immediate as the shipping pair | `PH3` | - | `done` | `review` | - | - | T-016, T-041, T-057, T-112, T-185 |
 | [T-112](T-112-motion-density-and-the-split-between-content-and-affordance-motion.md) | Motion density, and the split between content motion and affordance motion | `PH3` | - | `done` | `review` | - | - | T-016, T-041, T-057, T-111, T-113, T-114, T-185, T-187, T-188, T-198, T-199 |
-| [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | `unreleased` | `done` | `review` | - | T-202 | T-057, T-112, T-119, T-187, T-202 |
+| [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) | Evaluate an embeddable chart library against hand-authored SVG, and settle where each is used | `PH3` | `unreleased` | `done` | `review` | - | T-202 | T-057, T-112, T-119, T-187, T-202, T-203, T-204, T-205 |
 | [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md) | The chrome row layout — give the pager the corner, and decide what happens to Read and Motion | `PH3` | `0.4.0` | `done` | `review` | - | - | T-035, T-036, T-112, T-115, T-119, T-177, T-178, T-180, T-197, T-198 |
 | [T-115](T-115-the-specification-can-assert-a-layout-the-shell-cannot-honour.md) | A specification can assert a layout the shell cannot honour, and nothing reads the two together | `PH3` | `0.5.0` | `done` | `review` | - | - | T-109, T-114, T-117, T-118, T-119, T-182, T-184 |
 | [T-116](T-116-the-printed-contents-page-collides-at-thirteen-entries.md) | The printed contents page collides at thirteen entries, well below its measured bound | `PH1` | `0.2.3` | `done` | `review` | - | - | T-034, T-036, T-084, T-120, T-123, T-124, T-125 |

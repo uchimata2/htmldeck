@@ -260,7 +260,7 @@ the count-ups print their final value (DS-143); for print they hold nothing back
 | :-- | :--- | :--- | :--- |
 | 1 | Slide 2's y-axis starts at 55 rather than zero. | A truncated axis exaggerates the fall, which is the slide's claim. Starting at zero flattens a 22% decline into something a reader will not act on. | Keep the truncation and label it on the axis, as specified. The alternative is a chart nobody can read making a point nobody disputes. Recorded as decided by this specification, not deferred. |
 | 2 | Slide 6 shades one waterfall bar in the accent and leaves five neutral. | Colour is doing argument here, not category. A reader could take the accent for a data property. | Keep it, and say so in the bar's own label rather than in a legend. |
-| 3 | Whether tranches two and three should appear at all, given the ask is tranche one. | Showing a three-tranche programme while asking for one invites the committee to approve or refuse all three. | Keep them, because slide 12 names explicitly what approval does not cover. This is the one item a reviewer might overturn and it is left visible rather than settled quietly. |
+| 3 | Whether tranches two and three should appear at all, given the ask is tranche one. | Showing a three-tranche programme while asking for one invites the committee to approve or refuse all three. | Keep them, because slide 12 names explicitly what approval does not cover. **Settled by the owner 2026-08-21: keep.** It was flagged here as the one item a reviewer might overturn, it was put to one, and it stands. |
 
 **Gate 2 — detailed-spec sign-off: not asked**, on the same ground as gate 1 and recorded the same
 way. The three items above are therefore this specification's own decisions rather than the owner's,
