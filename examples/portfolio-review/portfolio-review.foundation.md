@@ -76,8 +76,8 @@ go missing (**L-62**).
 | Renewables share of FY26 return | 65% | portfolio-model | 1, 5 |
 | Net asset value | $2.40B | portfolio-model | 3 |
 | Single-sector policy limit | 45% | portfolio-model | 3, 11 |
-| Forward curve, 2026 | $78/MWh | market-outlook | 2 |
-| Forward curve, 2030 | $61/MWh | market-outlook | 2 |
+| Forward curve, 2026 | $78 | market-outlook | 2 |
+| Forward curve, 2030 | $61 | market-outlook | 2 |
 | Curve decline to 2030 | 22% | market-outlook | 2 |
 | Renewables revenue exposed to the curve | 39% | market-outlook | 2 |
 | Renewables allocation rise, five years | 21 points | portfolio-model | 4 |
@@ -86,7 +86,7 @@ go missing (**L-62**).
 | Transport contribution | −0.7 pp | portfolio-model | 5 |
 | Unrealised revaluation | $172M | portfolio-model | 6 |
 | Revaluation sitting in renewables | $131M | portfolio-model | 6 |
-| Closing NAV | $2,400M | portfolio-model | 6 |
+| Closing NAV | 2,400 | portfolio-model | 6 |
 | Transport net IRR | 5.9% | portfolio-model | 7 |
 | Transport volatility | 9.6% | portfolio-model | 7 |
 | Water net IRR | 7.4% | portfolio-model | 7 |

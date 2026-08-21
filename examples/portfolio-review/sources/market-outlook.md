@@ -7,15 +7,15 @@ example and describe no real market. Every value is an output of the assumptions
 
 Modelled wholesale power price in the fund's core market, calendar year average:
 
-| Year | $/MWh |
+| Year | Price |
 | :--- | ---: |
-| 2026 | **78** |
-| 2027 | 74 |
-| 2028 | 69 |
-| 2029 | 64 |
-| 2030 | **61** |
+| 2026 | **$78**/MWh |
+| 2027 | $74/MWh |
+| 2028 | $69/MWh |
+| 2029 | $64/MWh |
+| 2030 | **$61**/MWh |
 
-The curve falls **22%** from 2026 to 2030. That is the external change, and it is the reason the
+The curve falls **22%** from **$78** in 2026 to **$61** in 2030. That is the external change, and it is the reason the
 timing of this review is not arbitrary.
 
 ## Why it falls

@@ -71,6 +71,7 @@ WIDE = [
     ("tools/deck/contract_variants.py", []),
     ("tools/deck/content_variants.py", []),
     ("tools/examples/seed_defects.py", ["--check"]),
+    ("tools/examples/portfolio_charts.py", ["selftest"]),
     ("tools/deck/contents_bound.py", []),
 ]
 
@@ -203,6 +204,7 @@ DECKS = {
     "examples/reference-deck.html": "examples/sources",
     "examples/sort-window/sort-window.html": "examples/sort-window/sources",
     "examples/measure-first/measure-first.html": "examples/measure-first/sources",
+    "examples/portfolio-review/portfolio-review.html": "examples/portfolio-review/sources",
 }
 
 # Tracked `.html` that is not a deck, and what it is.

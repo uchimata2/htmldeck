@@ -138,9 +138,9 @@ def band(n, lo=None, hi=None, inset=0.5):
     return [lo + step * (inset + i) for i in range(n)]
 
 
-def fmt(v, dp=0):
+def fmt(v, dp=0, group=False):
     """A number as it is read, not as Python prints it."""
-    s = ("%%.%df" % dp) % v
+    s = format(float(v), ",.%df" % dp) if group else (("%%.%df" % dp) % v)
     return s.replace("-", "−")            # a real minus sign, not a hyphen
 
 
@@ -169,10 +169,14 @@ def rect(x, y, w, h, cls):
 
 def fig_curve():
     """Slide 2. Five points, one series, a deliberately truncated axis that says so."""
-    xs = band(len(CURVE), 200, 1580)
-    ys = [y_of(v, CURVE_LO, CURVE_HI) for _, v in CURVE]
-    guard_height(BASE - TOP, SLIDE_CONTENT_H)
-    o = ['      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (L, BASE, R, BASE)]
+    # This chart shares its slide with two figures, so it is drawn to a column-sized viewBox
+    # rather than a full-width one. A full-width viewBox in a two-thirds column scales every
+    # label down with it, and the axis note landed at 12.5 du against DS-035's 16.
+    base, top, right = 300.0, 60.0, 1160.0
+    xs = band(len(CURVE), 200, 1080)
+    ys = [linear(v, CURVE_LO, CURVE_HI, base, top) for _, v in CURVE]
+    guard_height(base - top, SLIDE_CONTENT_H)
+    o = ['      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (L, base, right, base)]
     o.append('      <path class="accent-s" fill="none" stroke-width="4" d="%s"/>'
              % " ".join(("M" if i == 0 else "L") + "%.1f %.1f" % (xs[i], ys[i])
                         for i in range(len(xs))))
@@ -182,31 +186,31 @@ def fig_curve():
                  % ("accent" if first_or_last else "quiet", xs[i], ys[i], 10 if first_or_last else 8))
         if first_or_last:
             o.append(text(xs[i], ys[i] - 28, "$%d" % v, "val t-accent"))
-        o.append(text(xs[i], NAMES_Y, str(yr), "name" if first_or_last else "name t-soft"))
-    o.append(text(L, TOP - 8, "$/MWh — axis starts at 55, not zero", "lab t-faint", "start"))
-    o.append(text(L, NOTE_Y, "Contracted new supply of 14.2 GW against 3.1 GW of demand growth.",
+        o.append(text(xs[i], base + 44, str(yr), "name" if first_or_last else "name t-soft",
+                      "start" if i == 0 else ("end" if first_or_last else "middle")))
+    o.append(text(L, top - 14, "$/MWh — axis starts at 55, not zero", "lab t-soft", "start"))
+    o.append(text(L, base + 96, "Contracted new supply of 14.2 GW against 3.1 GW of demand growth.",
                   "val t-soft", "start"))
     return svg("Modelled wholesale power price, 2026 to 2030: $78, $74, $69, $64 and $61 per MWh. "
-               "The axis starts at 55 rather than zero. The fall is 22 percent.", "\n".join(o))
+               "The axis starts at 55 rather than zero. The fall is 22 percent.", "\n".join(o),
+               "120 0 1060 400")
 
 
 def fig_limit_bar():
     """Slide 3. One bar, one limit rule, and the overshoot drawn as the overshoot."""
-    y, h = 150.0, 90.0
+    y, h = 62.0, 72.0
     x45, x52 = linear(45, 0, 100, L, R), linear(52, 0, 100, L, R)
     guard_height(h, SLIDE_CONTENT_H)
     o = [rect(L, y, x45 - L, h, "quiet"),
          rect(x45, y, x52 - x45, h, "accent"),
          '      <line class="axis" x1="%.1f" y1="%.0f" x2="%.1f" y2="%.0f"/>'
-         % (x45, y - 26, x45, y + h + 26),
-         text(x45, y - 38, "policy limit 45%", "lab t-faint"),
+         % (x45, y - 22, x45, y + h + 22),
+         text(x45, y - 34, "single-sector ceiling 45%", "lab t-soft"),
          text(x52 + 18, y + h / 2 + 10, "52%", "val t-accent", "start"),
-         text(L, y + h + 62, "share of net asset value", "lab t-soft", "start"),
-         text(L, NOTE_Y, "Seven points of overshoot, on a position nobody bought.",
-              "val t-soft", "start")]
+         text(L, y + h + 62, "share of net asset value", "lab t-soft", "start")]
     return svg("Renewables at 52 percent of net asset value against a 45 percent policy limit. "
                "The seven-point overshoot is drawn beyond the limit rule.", "\n".join(o),
-               "120 0 1728 480")
+               "120 0 1728 210")
 
 
 def fig_area():
@@ -225,13 +229,13 @@ def fig_area():
         ky = y_of(mid, 0, 100) + 6
         guard_label(keyx, ky, 1728 - 120, 470, name, 22)
         o.append(text(keyx, ky, "%s  %d → %d" % (name, series[0], series[-1]),
-                      "name" if si == 0 else "name t-soft", "start"))
+                      "name", "start"))
         floor = tops
     for i, yr in enumerate(YEARS):
         o.append(text(xs[i], NAMES_Y, str(yr), "name t-soft"))
-    o.append(text(xs[-1], y_of(26, 0, 100), "+21 points", "val t-accent", "middle"))
+    o.append(text(keyx, y_of(52, 0, 100) - 34, "renewables  +21 points", "val t-accent", "start"))
     o.append(text(L, TOP - 8, "share of NAV, %  —  every column sums to 100",
-                  "lab t-faint", "start"))
+                  "lab t-soft", "start"))
     return svg("Share of net asset value by sector, 2022 to 2026, stacked to 100 percent. "
                "Renewables rises from 31 to 52, transmission 22 to 18, digital 14 to 20, "
                "water 18 to 7, transport 15 to 3.", "\n".join(o))
@@ -240,38 +244,39 @@ def fig_area():
 def fig_contribution():
     """Slide 5. Five bars against one axis, one of them negative and crossing the zero rule."""
     lo, hi = -1.0, 8.6
-    zero = linear(0, lo, hi, L, R)
+    bar_l, bar_r = 560.0, R                  # the names occupy the column edge, the bars start clear
+    zero = linear(0, lo, hi, bar_l, bar_r)
     top, bh, gap = 60.0, 44.0, 20.0
     o = ['      <line class="axis" x1="%.1f" y1="%.0f" x2="%.1f" y2="%.1f"/>'
          % (zero, top - 16, zero, top + len(CONTRIBUTION) * (bh + gap))]
     for i, (name, v) in enumerate(CONTRIBUTION):
         y = top + i * (bh + gap)
-        x = linear(v, lo, hi, L, R)
+        x = linear(v, lo, hi, bar_l, bar_r)
         w = abs(x - zero)
         if w < MIN_BAR_PX:                       # the 1.4 px bar the probe's guard is named for
             w = MIN_BAR_PX
         cls = "neg" if v < 0 else ("accent" if i == 0 else "quiet")
         o.append(rect(min(zero, x), y, w, bh, cls))
-        o.append(text(L - 12, y + bh - 12, name, "name t-soft", "end"))
+        o.append(text(L, y + bh - 12, name, "name", "start"))
         lx = (x + 14) if v >= 0 else (x - 14)
         o.append(text(lx, y + bh - 12, ("+" if v >= 0 else "−") + fmt(abs(v), 1),
                       "val t-accent" if i == 0 else ("val t-caution" if v < 0 else "val"),
                       "start" if v >= 0 else "end"))
     foot = top + len(CONTRIBUTION) * (bh + gap) + 34
-    o.append(text(zero, foot, "0", "lab t-faint"))
-    o.append(text(L - 12, foot, "total +%s" % fmt(FY26_RETURN, 1), "val", "end"))
-    o.append(text(L - 12, foot + 40, "percentage points of the FY26 return",
-                  "lab t-soft", "end"))
+    o.append(text(zero, foot, "0", "lab t-soft"))
+    o.append(text(L, foot, "total +%s" % fmt(FY26_RETURN, 1), "val", "start"))
+    o.append(text(L, foot + 40, "percentage points of the FY26 return",
+                  "lab t-soft", "start"))
     return svg("Contribution to the FY26 return by sector, in percentage points: renewables plus "
                "8.1, digital plus 3.4, transmission plus 1.4, water plus 0.2, transport minus 0.7. "
-               "They total plus 12.4.", "\n".join(o), "0 0 1728 480")
+               "They total plus 12.4.", "\n".join(o), "120 0 1728 480")
 
 
 def fig_waterfall():
     """Slide 6. Two grounded bars, five floating, and the connectors that make it a waterfall."""
     hi = 2500.0
     xs = band(len(WATERFALL), 190, 1590, inset=0.0)
-    bw = 150.0
+    bw = 140.0                               # so the first bar's left edge lands exactly on 120
     o, run, tops = [], 0.0, []
     for i, (name, v, kind) in enumerate(WATERFALL):
         x = xs[i] - bw / 2
@@ -286,8 +291,10 @@ def fig_waterfall():
             cls = "accent"
         o.append(rect(x, ytop, bw, max(ybot - ytop, MIN_BAR_PX), cls))
         tops.append((x, x + bw, ytop, ybot))
+        # The two grounded bars are the deck's opening and closing NAV and are read as money,
+        # so they carry a thousands separator; the five movements are read as deltas and do not.
         o.append(text(xs[i], ytop - 14, ("+" if v > 0 and kind != "total" else "") + fmt(abs(v))
-                      if kind != "total" else fmt(v),
+                      if kind != "total" else fmt(v, 0, True),
                       "val t-accent" if cls == "accent" else "val"))
         o.append(text(xs[i], NAMES_Y, name, "name" if cls == "accent" else "name t-soft"))
     for i in range(len(tops) - 1):
@@ -326,8 +333,8 @@ def fig_scatter():
         o.append(text(cx, cy - 24, "%s  %s / %s" % (name, fmt(irr, 1), fmt(vol, 1)),
                       "val t-caution" if below else "val t-soft"))
     o.append(text(R, NAMES_Y, "volatility %", "lab t-soft", "end"))
-    o.append(text(plot_l - 14, TOP + 12, "net IRR %", "lab t-soft", "end"))
-    o.append(text(plot_l, NOTE_Y, "Each point is labelled with its IRR and its volatility.",
+    o.append(text(L, TOP + 12, "net IRR %", "lab t-soft", "start"))
+    o.append(text(L, NOTE_Y, "Each point is labelled with its IRR and its volatility.",
                   "val t-soft", "start"))
     return svg("Net IRR against volatility by sector: digital 16.8 at 15.4, renewables 14.2 at "
                "12.1, transmission 9.1 at 6.2, water 7.4 at 4.8, transport 5.9 at 9.6. Transport "
@@ -336,67 +343,71 @@ def fig_scatter():
 
 def fig_top3():
     """Slide 8. The same grammar as slide 3, because it is the same kind of fact."""
-    y, h = 150.0, 90.0
+    y, h = 62.0, 72.0
     hi = 40.0
     o, run = [], 0.0
     for i, (name, v) in enumerate(TOP3):
         x0, x1 = linear(run, 0, hi, L, R), linear(run + v, 0, hi, L, R)
         o.append(rect(x0, y, x1 - x0, h, "accent" if i == 0 else "quiet"))
-        o.append(text((x0 + x1) / 2, y + h / 2 + 8, name, "name t-paper" if i == 0 else "name"))
+        # The value sits with the name under the bar, not on it: a label on a data mark owes
+        # two contrast ratios (DS-219) and two of these three could not pay the second.
+        o.append(text((x0 + x1) / 2, y + h + 40, "%s  %d%%" % (name, v),
+                      "name" if i == 0 else "name t-soft"))
         run += v
     xlim = linear(TOP3_LIMIT, 0, hi, L, R)
     xend = linear(run, 0, hi, L, R)
     o.append('      <line class="axis" x1="%.1f" y1="%.0f" x2="%.1f" y2="%.0f"/>'
-             % (xlim, y - 26, xlim, y + h + 26))
-    o.append(text(xlim, y - 38, "policy limit 30%", "lab t-faint"))
+             % (xlim, y - 22, xlim, y + h + 22))
+    o.append(text(xlim, y - 34, "top-three ceiling 30%", "lab t-soft"))
     o.append(text(xend + 18, y + h / 2 + 10, "34%", "val t-accent", "start"))
-    o.append(text(L, y + h + 62, "share of net asset value, three largest assets",
+    o.append(text(L, y + h + 96, "share of net asset value, three largest assets",
                   "lab t-soft", "start"))
     return svg("The three largest assets hold 34 percent of net asset value against a 30 percent "
                "policy limit: Calder wind 13, Norbeck solar 11, Aldis transmission 10.",
-               "\n".join(o), "120 0 1728 480")
+               "\n".join(o), "120 0 1728 220")
 
 
 def fig_drawdown():
     """Slide 10, left column. The trough marked, and the part of it that is renewables shaded."""
     lo, hi = -8.0, 1.0
-    xs = band(len(DRAWDOWN), 220, 900, inset=0.0)
-    zero_y = linear(0, lo, hi, BASE, TOP)
-    o = ['      <line class="grid" x1="200" y1="%.1f" x2="940" y2="%.1f" stroke-dasharray="6 8"/>'
+    base, top = 250.0, 60.0
+    xs = band(len(DRAWDOWN), 120, 740, inset=0.0)
+    zero_y = linear(0, lo, hi, base, top)
+    o = ['      <line class="grid" x1="120" y1="%.1f" x2="740" y2="%.1f" stroke-dasharray="6 8"/>'
          % (zero_y, zero_y)]
-    pts = [(xs[i], linear(v, lo, hi, BASE, TOP)) for i, (_, v) in enumerate(DRAWDOWN)]
+    pts = [(xs[i], linear(v, lo, hi, base, top)) for i, (_, v) in enumerate(DRAWDOWN)]
     o.append('      <path class="accent-s" fill="none" stroke-width="4" d="%s"/>'
              % " ".join(("M" if i == 0 else "L") + "%.1f %.1f" % p for i, p in enumerate(pts)))
     trough_i = min(range(len(DRAWDOWN)), key=lambda i: DRAWDOWN[i][1])
     tx, ty = pts[trough_i]
-    ry = linear(-5.1, lo, hi, BASE, TOP)
-    o.append(rect(tx - 46, ty, 92, ry - ty, "caution"))
+    ry = linear(-5.1, lo, hi, base, top)
+    o.append(rect(tx - 40, ty, 80, ry - ty, "caution"))
     o.append('      <circle class="caution" cx="%.1f" cy="%.1f" r="12"/>' % (tx, ty))
-    o.append(text(tx, ty + 44, "−6.8% trough", "val t-caution"))
-    o.append(text(tx, ty - 22, "5.1 pts renewables", "lab t-faint"))
+    o.append(text(tx, ty + 40, "−6.8%", "val t-caution"))
+    o.append(text(tx, ty - 20, "5.1 pts renewables", "lab t-soft"))
     for i, (q, _) in enumerate(DRAWDOWN):
-        o.append(text(xs[i], NAMES_Y, q, "name t-soft"))
-    o.append(text(200, NOTE_Y, "Recovered over the following 11 weeks.", "val t-soft", "start"))
+        o.append(text(xs[i], base + 46, q, "name t-soft",
+                      "start" if i == 0 else ("end" if i == len(DRAWDOWN) - 1 else "middle")))
     return svg("FY26 drawdown by quarter: flat, minus 2.1, minus 6.8 at the trough, minus 1.4, "
                "flat at year end. Renewables carried 5.1 points of the 6.8.",
-               "\n".join(o), "200 0 800 470")
+               "\n".join(o), "120 0 660 310")
 
 
 def fig_tranches():
     """Slide 10, right column. Three bars, deliberately a different chart kind to its neighbour."""
     hi = 80.0
-    xs = band(len(TRANCHES), 260, 700, inset=0.0)
+    base, top = 250.0, 60.0
     bw = 110.0
-    o = ['      <line class="axis" x1="200" y1="%.0f" x2="820" y2="%.0f"/>' % (BASE, BASE)]
+    xs = band(len(TRANCHES), 180.0, 690.0, inset=0.0)
+    o = ['      <line class="axis" x1="120" y1="%.0f" x2="740" y2="%.0f"/>' % (base, base)]
     for i, (when, size, _) in enumerate(TRANCHES):
-        ytop = y_of(size, 0, hi)
-        o.append(rect(xs[i] - bw / 2, ytop, bw, BASE - ytop, "accent" if i == 0 else "quiet"))
+        ytop = linear(size, 0, hi, base, top)
+        o.append(rect(xs[i] - bw / 2, ytop, bw, base - ytop, "accent" if i == 0 else "quiet"))
         o.append(text(xs[i], ytop - 14, "$%dM" % size, "val t-accent" if i == 0 else "val"))
-        o.append(text(xs[i], NAMES_Y, when, "name" if i == 0 else "name t-soft"))
-    o.append(text(200, NOTE_Y, "$22.5M one-off, spread over three tranches.",
-                  "val t-soft", "start"))
+        o.append(text(xs[i], base + 46, when, "name" if i == 0 else "name t-soft",
+                      "start" if i == 0 else "middle"))
     return svg("The rebalancing programme in three tranches: $70M in Q1 2027, $60M in Q3 2027 "
-               "and $40M in Q1 2028.", "\n".join(o), "200 0 700 470")
+               "and $40M in Q1 2028.", "\n".join(o), "120 0 660 310")
 
 
 def fig_timeline():
@@ -525,6 +536,9 @@ def md_to_html(md):
         flush_rows()
         if not s.strip():
             flush_para()
+        elif s.startswith("### "):
+            flush_para()
+            out.append("<h3>%s</h3>" % inline(s[4:]))
         elif s.startswith("## "):
             flush_para()
             out.append("<h2>%s</h2>" % inline(s[3:]))
@@ -624,13 +638,13 @@ def build_slides():
         1, "0", "Concentration, not performance", "Meridian Infrastructure Fund · investment committee",
         "Concentration, not performance",
         '    <div class="two-fig">\n'
-        '      <div class="two-fig-item"><p class="two-fig-val pulse" style="--m-rank:2">'
+        '      <div class="two-fig-item"><p class="two-fig-val pulse">'
         '<span>52%</span></p><p class="two-fig-lab">share of the fund</p></div>\n'
-        '      <div class="two-fig-item"><p class="two-fig-val pulse" style="--m-rank:1">'
+        '      <div class="two-fig-item"><p class="two-fig-val pulse">'
         '<span>65%</span></p><p class="two-fig-lab">share of the return</p></div>\n'
         '      <p class="title-note">Meridian Infrastructure Fund is illustrative. It does not '
-        'exist. Every figure in this deck is an output of the assumptions in the source it names, '
-        'and none is drawn from a real fund, manager or transaction.</p>\n'
+        'exist. Every figure here is an output of the assumptions in the source it names. '
+        'None is drawn from a real fund, manager or transaction.</p>\n'
         '    </div>',
         "Renewables is 52% of the fund and produced 65% of the year's return.",
         ["portfolio-model"],
@@ -659,8 +673,8 @@ def build_slides():
         '    <div class="stat">\n'
         '      <div class="stat-left">\n'
         '        <p class="stat-scale">$2.40B net asset value</p>\n'
-        '        <p class="stat-figure pulse" style="--m-rank:1"><span>52%%</span></p>\n'
-        '        <p class="stat-unit">of the fund, against a 45%% limit</p>\n'
+        '        <p class="stat-figure pulse"><span>52%%</span></p>\n'
+        '        <p class="stat-unit">of the fund, above its own ceiling</p>\n'
         '      </div>\n'
         '      <div class="stat-right"><p class="stat-read">Seven points above the single-sector '
         'limit, on a position nobody bought.</p></div>\n'
@@ -727,8 +741,8 @@ def build_slides():
         "Top three assets hold 34%",
         '    <div class="stat">\n'
         '      <div class="stat-left">\n'
-        '        <p class="stat-figure pulse" style="--m-rank:1"><span>34%%</span></p>\n'
-        '        <p class="stat-unit">in three assets, against a 30%% limit</p>\n'
+        '        <p class="stat-figure pulse"><span>34%%</span></p>\n'
+        '        <p class="stat-unit">in three assets, above the second ceiling</p>\n'
         '      </div>\n'
         '      <div class="stat-right"><p class="stat-read">Two limits, both breached, and '
         'neither by a decision.</p></div>\n'
@@ -752,7 +766,7 @@ def build_slides():
         '      <div class="sum-row"><span class="sum-lab">redeployment drag</span>'
         '<span class="sum-val">$14.8M</span></div>\n'
         '      <div class="sum-row sum-total"><span class="sum-lab">total</span>'
-        '<span class="sum-val pulse" style="--m-rank:1"><span>$22.5M</span></span></div>\n'
+        '<span class="sum-val pulse"><span>$22.5M</span></span></div>\n'
         '      <p class="sum-note">0.9% of net asset value, on $170M moved out of the sector.</p>\n'
         '    </div>',
         "Selling $170M forgoes $7.7M on discount and $14.8M idle, 0.9% of NAV.",
@@ -791,7 +805,7 @@ def build_slides():
         ])))
 
     s.append(slide(
-        12, "4", "Approve tranche one", "The ask",
+        12, "4", "Approve tranche one", "Tranche one, Q1 2027",
         "Approve tranche one",
         '    <div class="close">\n'
         '      <p class="close-ask">Approve tranche one — $70M, Q1 2027.</p>\n'
@@ -874,13 +888,41 @@ COMPOSITION = """
 
 /* 12 - the close. One ask, and what it does not cover kept beside it rather than hidden. */
 .close{display:grid;gap:var(--sp-5);align-content:center}
-.close-ask{font-family:var(--font-display);font-size:var(--fs-display);line-height:1.05;
+.close-ask{font-family:var(--font-display);font-size:var(--fs-subhead);line-height:1.2;
   color:var(--ink);max-width:var(--measure)}
 .close-cols{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5)}
 .close-head{font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
   text-transform:uppercase;color:var(--ink-faint);margin-bottom:var(--sp-2)}
 .close-item{font-size:var(--fs-body);color:var(--ink-soft);padding:var(--sp-1) 0;
   border-top:var(--hair) solid var(--line);max-width:var(--measure)}
+
+/* the reading view reflows the composition; the components reflow themselves.
+   Two things this half is for, and the second is the one that is easy to miss: every grid above
+   collapses to a block, because a two-column track at 320 CSS px is DS-075's two-dimensional
+   scroll; and every size above is restated in `--doc-*`, because the design unit is a different
+   size here and a stage size carried into the document lands under DS-035's 16 du floor. */
+.doc .two-fig,.doc .split,.doc .stat,.doc .ledger2,.doc .close-cols,.doc .sum-row{display:block}
+.doc .two-fig{padding-bottom:0}
+.doc .two-fig-val{font-size:var(--doc-fs-figure);display:block}
+.doc .two-fig-lab,.doc .side-lab,.doc .sum-lab,.doc .col-head,.doc .close-head,
+.doc .stat-unit,.doc .stat-scale{font-size:var(--doc-fs-mono)}
+.doc .two-fig-item{margin-bottom:var(--doc-sp)}
+.doc .title-note{font-size:var(--doc-fs);max-width:none;margin-top:var(--doc-sp-sm)}
+.doc .split-side,.doc .stat-right{border-left:0;padding-left:0;margin-top:var(--doc-sp)}
+.doc .side-val,.doc .sum-val{font-size:var(--doc-fs-lead)}
+.doc .stat-read{font-size:var(--doc-fs-lead);max-width:none}
+.doc .sum{max-width:none}
+.doc .sum-voice{font-size:var(--doc-fs-lead);max-width:none;margin-bottom:var(--doc-sp)}
+.doc .sum-row{padding:var(--doc-sp-2xs) 0}
+.doc .sum-total{border-top:var(--doc-hair) solid var(--ink);padding-top:var(--doc-sp-sm)}
+.doc .sum-total .sum-val{font-size:var(--doc-fs-figure);display:block}
+.doc .sum-note{font-size:var(--doc-fs);margin-top:var(--doc-sp-sm)}
+.doc .ledger2 .col + .col{border-left:0;padding-left:0;margin-top:var(--doc-sp)}
+.doc .col-note{font-size:var(--doc-fs);max-width:none}
+.doc .close-ask{font-size:var(--doc-fs-head);max-width:none}
+.doc .close-cols > * + *{margin-top:var(--doc-sp)}
+.doc .close-item{font-size:var(--doc-fs);max-width:none;
+  border-top:var(--doc-hair) solid var(--line);padding:var(--doc-sp-2xs) 0}
 """
 
 
@@ -912,8 +954,12 @@ def compose():
     print("wrote %s - %d bytes, %d slides"
           % (os.path.relpath(DECK, ROOT).replace("\\", "/"), len(html.encode("utf-8")),
              html.count('<section class="slide"')))
-    print("next: python tools/deck/shell.py icons %s --set %s"
-          % (os.path.relpath(DECK, ROOT).replace("\\", "/"), ICON_SET))
+    rel = os.path.relpath(DECK, ROOT).replace("\\", "/")
+    print("next, in order:")
+    print("  python tools/deck/shell.py icons %s --set %s" % (rel, ICON_SET))
+    print("  python tools/deck/density.py write %s      # DS-239 derives the ranks" % rel)
+    print("  python tools/deck/preflight.py %s --write  # DS-009 holds only this deck's rows" % rel)
+    print("  python tools/deck/check.py %s --sources examples/portfolio-review/sources" % rel)
 
 
 if __name__ == "__main__":
