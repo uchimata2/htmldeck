@@ -110,6 +110,14 @@ NOT_RUN = {
         "shipped failed the rule it measures - 18 of 21 diagrams - and T-184 re-cut those first, "
         "which is what made gating it honest. Still runnable alone, and then it prints the offset "
         "per diagram rather than one verdict: python tools/deck/figgrid.py <deck>",
+    "tools/deck/markhits.py":
+        "runs inside tools/deck/check.py, the per-deck gate, which is where its exit code is read. "
+        "Its verdicts() is DS-244's row and check.py gathers it on every deck. Half of what it "
+        "measures gates and half reports: a label over another label fails a deck, and a label set "
+        "on a line does not, because across these four decks that fires 16 times for one real "
+        "defect and the two are geometrically identical (T-204). Still runnable alone, and then it "
+        "prints every collision and every placement rather than one verdict: python "
+        "tools/deck/markhits.py <deck>",
     "tools/docs/refcheck.py":
         "runs inside tools/tasks/lint.py, the first gate, which is where its exit code is read",
     "tools/docs/findings.py":

@@ -49,6 +49,7 @@ import content                                                      # noqa: E402
 import printpages                                                   # noqa: E402
 import printgeom                                                    # noqa: E402
 import figgrid                                                      # noqa: E402
+import markhits                                                     # noqa: E402
 import density                                                      # noqa: E402
 import theme                                                        # noqa: E402
 import component                                                    # noqa: E402
@@ -421,6 +422,9 @@ NOT_STATIC = {
                         "markup cannot answer it: the <svg> is on the column in every deck that "
                         "fails, and what is inset is the drawing inside a viewBox scaled by a "
                         "factor only the laid-out page knows (T-184)",
+    "markhits.verdicts": "measures one diagram label's box against another's. The markup cannot "
+                         "answer it either: how wide a label is depends on the face, and only a "
+                         "browser with that face loaded knows (T-204)",
 }
 
 
@@ -545,6 +549,13 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     # `figgrid` owns the measurement and a second copy of the probe here is the composition that
     # disagreed the first time either half changed (**L-08**, **L-13**).
     rows += figgrid.verdicts(deck)
+
+    # DS-244, added by T-204. Its own render for `figgrid`'s reason: the tool owns the measurement,
+    # and a second copy of the probe here is the composition that disagreed the first time either
+    # half changed (**L-08**, **L-13**). Only its text-against-text half can fail a deck; the
+    # label-on-line count travels in the row's text and gates nothing, which is the calibration
+    # T-204 section 3 recorded rather than a hedge.
+    rows += markhits.verdicts(deck)
 
     # DS-239, added by T-112. It takes the deck rather than the markup only because it reports the
     # path in its own row; the derivation itself is pure.

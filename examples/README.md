@@ -261,7 +261,7 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 It runs the auto gate, the contrast audit, the render gate and the resolution contract in one pass,
-then declares what it did **not** check: 91 of the 121 rules a gate owns are decided, and the other
+then declares what it did **not** check: 92 of the 122 rules a gate owns are decided, and the other
 30 are named with a reason each. The four commands after it still exist because each is useful
 alone. `audit.py` and `contract.py` are for when you want one stage's output without the account, and the
 two variant suites are separate because they build decks rather than read one.

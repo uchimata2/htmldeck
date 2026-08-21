@@ -34,6 +34,7 @@ import content                                                      # noqa: E402
 import component                                                    # noqa: E402
 import printgeom                                                    # noqa: E402
 import figgrid                                                      # noqa: E402
+import markhits                                                     # noqa: E402
 import density                                                      # noqa: E402
 import printpages                                                   # noqa: E402
 import spec                                                         # noqa: E402
@@ -2106,6 +2107,12 @@ ABSENCE_IS_A_FAIL = {
                               "not a placed one. A deck that WAS supplied and draws no diagram is a "
                               "different state and a pass; `figgrid.self_test` is what holds it to "
                               "that, with the denominator in the row (T-184)"),
+    "DS-244": ("requirement", "a deck to measure. `markhits.verdicts` takes the deck itself, so "
+                              "its absent subject is the empty path - and a diagram whose labels "
+                              "were never measured is not a diagram whose labels are clear. A deck "
+                              "that WAS supplied and draws no diagram is a different state and a "
+                              "pass; `markhits.self_test` holds that one, denominator and "
+                              "label-on-line count included (T-204)"),
 }
 
 # --------------------------------------------------------------- what the probe actually emits
@@ -2518,6 +2525,11 @@ def self_test():
     # placement and must decline. Its OTHER absent subject - a render that succeeded and found no
     # diagram - is a pass, and `figgrid.self_test` holds the row to that one, denominator included.
     rows += figgrid.verdicts("")
+    # `markhits` is the same shape as `figgrid` and for the same reason: no deck is an unmeasured
+    # diagram, which must decline rather than pass. Its other absent subject - a render that found
+    # no diagram at all - is a pass, and `markhits.self_test` holds the row to that one along with
+    # the label-on-line count, which must survive into the text even when nothing gates (T-204).
+    rows += markhits.verdicts("")
     # `density` has both shapes, and they have different absent subjects. `verdicts` takes the deck,
     # so no deck is an unmeasured ranking and it must decline. `kind_verdicts` takes the markup, and
     # a document with no stylesheet has classified nothing wrongly - it passes, with its own
@@ -2589,7 +2601,8 @@ def self_test():
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
                  "printpages.verdicts", "printgeom.verdicts", "spec.verdicts",
-                 "figgrid.verdicts", "density.verdicts", "density.kind_verdicts"}
+                 "figgrid.verdicts", "markhits.verdicts", "density.verdicts",
+                 "density.kind_verdicts"}
     producers = verdict_producers()
     undeclared_producers = sorted(set(producers) - exercised - set(DELEGATING_PRODUCERS))
     if undeclared_producers:

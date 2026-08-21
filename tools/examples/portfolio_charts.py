@@ -260,7 +260,8 @@ def fig_area():
                        "val t-accent" if si == 0 else "val t-soft"))
     # Transmission ends at 18 and digital at 20, so their labels landed on one another; water
     # and transport start at 18 and 15 and did the same. Both columns are spread.
-    for (_, label, cls), ky in zip(ends, spread([e[0] for e in ends], 38.0)):
+    end_ys = spread([e[0] for e in ends], 38.0)
+    for (_, label, cls), ky in zip(ends, end_ys):
         guard_label(keyx, ky, 1728 - 120, 470, label, 22)
         o.append(text(keyx, ky, label, cls, "start"))
     for (_, label, cls), ky in zip(starts, spread([e[0] for e in starts], 34.0)):
@@ -268,7 +269,12 @@ def fig_area():
     for i, yr in enumerate(YEARS):
         o.append(text(xs[i], NAMES_Y, str(yr), "name t-soft",
                       "start" if i == 0 else ("end" if i == len(YEARS) - 1 else "middle")))
-    o.append(text(keyx, TOP + 4, "+21 points", "val t-accent", "start"))
+    # **The callout is placed against the labels it shares a column with, not against the plot**
+    # (T-207). It sat at `TOP + 4` while the series labels were positioned by `spread()`, and
+    # neither was an input to the other - so the two landed about 18 px apart on a 22 px face and
+    # the ascenders of one met the descenders of the other. Fixed offsets from different origins is
+    # the mechanism; deriving this one from `end_ys` is what removes it rather than nudging it.
+    o.append(text(keyx, min(end_ys) - 34, "+21 points", "val t-accent", "start"))
     o.append(text(L, TOP - 8, "share of NAV, %  —  the five sum to 100 at every year",
                   "lab t-soft", "start"))
     return svg("Share of net asset value by sector, 2022 to 2026, one line each. "
@@ -442,7 +448,11 @@ def fig_drawdown():
     o.append(rect(tx - 40, ty, 80, ry - ty, "caution"))
     o.append('      <circle class="caution" cx="%.1f" cy="%.1f" r="12"/>' % (tx, ty))
     o.append(text(tx, ty + 40, "−6.8%", "val t-caution"))
-    o.append(text(tx + 54, ty - 26, "5.1 pts renewables", "lab t-soft", "start"))
+    # **Below the trough, because the trough is the one place the line does not go** (T-207). The
+    # annotation sat at a fixed offset ABOVE it, and the recovery leg rises steeply out of the
+    # trough, so the label's own box crossed the segment it was annotating. Everything above the
+    # trough is somewhere the line has been or is about to be; below it is clear by construction.
+    o.append(text(tx + 54, ty + 30, "5.1 pts renewables", "lab t-soft", "start"))
     for i, (q, _) in enumerate(DRAWDOWN):
         o.append(text(xs[i], base + 46, q, "name t-soft",
                       "start" if i == 0 else ("end" if i == len(DRAWDOWN) - 1 else "middle")))
@@ -546,31 +556,16 @@ def read_nodes(svg_text):
     return [(float(cx), float(cy), float(r)) for _, cx, cy, r in CIRCLE_RE.findall(svg_text)]
 
 
-def seg_hits_box(x1, y1, x2, y2, box):
-    """Liang-Barsky: does the segment meet the rectangle at all?"""
-    bx0, by0, bx1, by1 = box
-    dx, dy = x2 - x1, y2 - y1
-    t0, t1 = 0.0, 1.0
-    for p, q in ((-dx, x1 - bx0), (dx, bx1 - x1), (-dy, y1 - by0), (dy, by1 - y1)):
-        if p == 0:
-            if q < 0:
-                return False
-            continue
-        t = q / p
-        if p < 0:
-            t0 = max(t0, t)
-        else:
-            t1 = min(t1, t)
-        if t0 > t1:
-            return False
-    return True
+# **The collision arithmetic is `tools/deck/markhits.py`'s, not this file's** (T-204). It was
+# written here by T-203 and proved against seeded defects here, and then a general instrument
+# needed exactly the same two predicates - at which point keeping a copy meant two homes for one
+# quantity, which is the shape that disagrees the first time either changes (**L-13**). The
+# general tool owns them; this one borrows them, and the identities below are unchanged.
+sys.path.insert(0, os.path.join(ROOT, "tools", "deck"))
+import markhits                                                     # noqa: E402
 
-
-def box_hits_disc(box, cx, cy, r):
-    bx0, by0, bx1, by1 = box
-    nx = min(max(cx, bx0), bx1)
-    ny = min(max(cy, by0), by1)
-    return (nx - cx) ** 2 + (ny - cy) ** 2 <= r * r
+seg_hits_box = markhits.seg_hits_box
+box_hits_disc = markhits.box_hits_disc
 
 
 # --- The self-test: the identities the deck's own quality bar promises --------------------------
@@ -580,8 +575,11 @@ def selftest():
     this deck's added quality bar, and a bar nothing tests is a bar that passes everything."""
     fails = []
 
+    ran = []
+
     def check(label, ok, detail=""):
         print("  %-4s %s%s" % ("ok" if ok else "FAIL", label, ("  - " + detail) if detail else ""))
+        ran.append(label)
         if not ok:
             fails.append(label)
 
@@ -665,6 +663,36 @@ def selftest():
     fouled = [t["text"] for t in marks if any(box_hits_disc(t["box"], *n) for n in nodes)]
     check("no scatter label overprints a node", not fouled, "fouled: %s" % (fouled or "none"))
 
+    # **T-207's two, in the shape above.** Both were found by a person looking at all twelve slides
+    # after four defects of the same class had already been fixed, and both had passed two earlier
+    # looks - which is the argument for measuring them here rather than trusting a third look.
+    # **A baseline gap, not a box overlap, and the seeding is what decided that.** The first
+    # version of this identity compared the two boxes `read_labels` estimates - and it did not
+    # fire when the defect was seeded back, because that reader assumes one 22 px face for every
+    # label and these two are set at different sizes. A check that cannot see the thing it was
+    # written for is worse than none (**L-127**). The gap between baselines needs no font metrics
+    # at all, and it is the invariant the fix actually establishes.
+    ar = fig_area()
+    callout = [t for t in read_labels(ar) if t["text"].startswith("+21")]
+    series = [t for t in read_labels(ar) if "→" in t["text"]]
+    gap = (min(t["y"] for t in series) - max(c["y"] for c in callout)
+           if callout and series else 0.0)
+    check("the allocation callout clears the topmost series label by a line",
+          bool(callout) and bool(series) and gap >= 30.0,
+          "%d callout(s), %d series label(s), gap %.1f of 30 needed" % (len(callout), len(series), gap))
+
+    dd = fig_drawdown()
+    # The drawdown is one `<path>`, so the segments come off the emitted `d` rather than off a
+    # `<line>`. Sampling the polyline's own vertices is exact here - every leg is straight.
+    dpts = [tuple(float(v) for v in m.split()) for m in
+            re.findall(r"[ML]([\d.]+ [\d.]+)", re.search(r'class="accent-s"[^>]*d="([^"]*)"', dd).group(1))]
+    note = [t for t in read_labels(dd) if "renewables" in t["text"]]
+    over = [t["text"] for t in note
+            for i in range(len(dpts) - 1)
+            if seg_hits_box(dpts[i][0], dpts[i][1], dpts[i + 1][0], dpts[i + 1][1], t["box"])]
+    check("the drawdown annotation clears the line it annotates", bool(note) and not over,
+          "%d annotation(s), crossed: %s" % (len(note), over or "none"))
+
     # every figure builds, and every guard it calls is live
     for name, fn in FIGURES.items():
         try:
@@ -673,9 +701,12 @@ def selftest():
         except Exception as exc:                                     # noqa: BLE001
             check("%s builds" % name, False, "%s: %s" % (type(exc).__name__, exc))
 
-    # 13 relations plus one build check per figure. The constant read 12 and had done since
-    # a fifth allocation year was added, so the line under-reported itself by one (T-203).
-    total = len(FIGURES) + 18
+    # **Counted, not declared** (T-207). This was `len(FIGURES) + 18`, a constant that had to be
+    # edited in the same breath as any new identity - and it had already drifted once, reading 12
+    # after a fifth allocation year was added, which T-203 found and corrected to a number that
+    # went stale again the moment two identities were added here. A total that counts what actually
+    # ran cannot disagree with it (**L-13**: one home for one quantity).
+    total = len(ran)
     print("\n%d of %d checks passed." % (total - len(fails), total))
     return 1 if fails else 0
 
