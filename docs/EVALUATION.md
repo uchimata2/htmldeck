@@ -390,13 +390,21 @@ figures that are not**, and there is one so far. It is a table rather than a sen
 measurement taken outside the harness belongs to the machine that took it, and the second row is the
 point of the first — **a later reading on other hardware adds a row and never overwrites one.**
 
-**Frame rate held**, measured with `python tools/deck/fps.py <deck>`. The tool picks the slide
-carrying the most animated elements, counts `requestAnimationFrame` callbacks over a stated
-interval, and measures the display's refresh ceiling separately in the same run. *Held* without
-*ceiling* is not a figure: 58 fps is excellent against 60 and a fault against 144.
+**Frame rate held**, measured with `python tools/deck/fps.py <deck>`. The tool walks the deck, ranks
+its slides by **looping** motion, goes to the heaviest, counts `requestAnimationFrame` callbacks over
+a stated interval, and measures the display's refresh ceiling separately in the same run.
+
+Three things about that sentence are load-bearing, and each was got wrong once. *Held* without
+*ceiling* is not a figure — 58 fps is excellent against 60 and a fault against 144. The **walk** is
+what makes the ranking real: `.rise` is declared `.slide[data-played] .rise`, so an unvisited slide
+has no motion to count and a standing-start count picks the opening slide on every deck. And
+**looping** is the axis rather than the total, because an entry animation is finished 340 ms in and
+costs nothing across the window being measured. The *Animated* column therefore reads
+`total · n looping`, and a row with **0 looping** is a measurement of an idle page — true, and not
+what this table is for.
 
 | Date | Deck | Slide | Animated | Held | Ceiling | Machine |
-| :--- | :--- | :--- | ---: | ---: | ---: | :--- |
+| :--- | :--- | :--- | :--- | ---: | ---: | :--- |
 | — | — | — | — | — | — | *no reading yet — see the note below* |
 
 **Why the table is empty, and what it is waiting for.** No deck in this repository has ever had its

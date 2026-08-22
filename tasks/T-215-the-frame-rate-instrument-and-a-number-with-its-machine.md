@@ -159,6 +159,27 @@ through a second door — and it is also the proof that the instrument cannot be
 harness, a background tab or a preview pane, which is the property that makes its output worth
 recording at all.
 
+**The first real reading found two defects, and only a real reading could have**
+The owner ran it and returned *slide 1, 5 animated, 144.0 held, 144 ceiling*. The **numbers are
+sound and the subject is wrong**, which is the failure mode this task exists to prevent wearing its
+most convincing face — a plausible figure, correctly measured, of the wrong thing.
+
+- **The walk.** `.rise` is declared `.slide[data-played] .rise`, so a slide nobody has visited has no
+  animation to count. `weigh()` ran from a standing start, saw motion on the opening slide and zero
+  on the other twelve, and picked slide 1 — **every time, on any deck**, while printing a count that
+  reads as a derivation. Fixed by walking the deck before weighing. Verified headlessly: the walk
+  reports 5, 5, 6, 5, 5, 5, 8, 6, 7, 7, 5, 3, 5 across thirteen slides.
+- **The axis.** Ranking on total animated elements is wrong for a *sustained* measurement. An entry
+  animation is over 340 ms in and costs nothing across a six-second window; only a **looping** one
+  costs for the whole interval. On the counts above, ranking by total picks slide 7 and ranking by
+  looping picks **slide 8**, the only slide in the deck carrying an infinite animation — `Current`,
+  which is the thing worth measuring.
+- **Consequence for the record:** the returned row is not entered. It measured an idle page, which
+  is a true statement about slide 1 and not the criterion.
+
+The card now names both counts and says so plainly when a slide has nothing looping, so *144 of 144*
+can never again be read as a loaded deck holding its frame rate when it is an idle one.
+
 **Outputs produced**
 - [`tools/deck/fps.py`](../tools/deck/fps.py) — the instrument, standard library only (**L-07**)
 - [`tools/check_all.py`](../tools/check_all.py) — the `NOT_RUN` entry saying what it is instead
@@ -183,7 +204,7 @@ could only meet by inventing a number — which is the one outcome it was raised
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Frame rate held on a real 12-slide deck, heaviest slide, **number and machine stated together** | *pending* | The instrument is built and runs. The reading needs a window that draws frames; the owner will take it |
+| Frame rate held on a real 12-slide deck, heaviest slide, **number and machine stated together** | *pending* | Instrument built, run once, and corrected by what that run exposed. The first reading measured slide 1 — sound numbers, wrong subject — and was not entered. Re-run owed |
 | The instrument runs somewhere a person can repeat it, and what it needs is written down | met | `python tools/deck/fps.py <deck>`; the docstring states what it needs and why nothing here can substitute |
 | The figure's home takes a second row for a second machine without contradicting the first | met | `docs/EVALUATION.md` §6.3 — a table keyed by date, deck, slide and machine |
 | Nothing this task adds can fail a deck | met | `fps.py` is in `check_all.py`'s `NOT_RUN`, is called by no gate, and prints a measurement rather than a verdict |
@@ -195,5 +216,6 @@ could only meet by inventing a number — which is the one outcome it was raised
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (still in_progress) | **The first reading found two defects in the instrument and was not recorded.** The walk and the ranking axis were both wrong, and each independently guaranteed the wrong slide: `.rise` only exists on a played slide, and entry animations are finished before a six-second window starts. Both fixed and verified headlessly — the ranking now picks slide 8, the deck's only looping motion. **A correctly measured number about the wrong subject is the outcome this task was raised to prevent**, and it took a real machine to surface it: no self-test would have, because the logic was internally consistent. Re-run owed. |
 | 2026-08-22 | → in_progress | **Instrument built; the reading is the only thing outstanding.** Both open questions settled at specify - the owner runs it in Chrome or Edge on the development machine, and the heaviest slide is counted at run time rather than proxied. Three of four criteria met. Held open rather than closed `not met`, because the owner's answer has arrived and only the number has not; closing now would make a one-command wait look like a limit of the task. |
 | 2026-08-22 | → proposed | **Split out of [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) while restating that task's dissolved DS-140 criterion.** T-057 was three deliverables wearing one title, the third went with the owner's 2026-08-19 ruling, and its own plan calls this half independent and the only one measuring something that already exists. `m` rather than `l` because there is no visual to build and no rule to change; `PH3` because it is not a defect in the published plugin. **The constraint carried over from T-185 is the whole shape of it**: headless produces no frames, so this is the first measurement here that cannot be taken by the harness. |

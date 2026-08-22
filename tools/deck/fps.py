@@ -23,6 +23,14 @@ the reasoning **L-05** refuses and the scope warning in `docs/upstream/harness.m
 know the ceiling was 60 and not 144. The overlay measures the refresh ceiling first, on an idle
 burst before any slide is shown, and reports *held against ceiling*.
 
+**Finding the heaviest slide takes a walk, and ranking it takes the right axis.** Both halves were
+wrong in the first build and the first real reading found them. `.rise` is declared
+`.slide[data-played] .rise`, so a slide nobody has visited has no animation to count — counting from
+a standing start reports the opening slide and nothing else, while looking like a derivation. And an
+entry animation is over 340 ms in, so across a six-second window it costs nothing: what has to be
+ranked is **looping** motion, with the total only breaking ties. Ranking on the raw count picks the
+slide with the most *finished* animations.
+
 **What it collects about the machine, and what it does not.** OS and browser, browser version, core
 count, device memory, screen size, device pixel ratio, display refresh, and the WebGL renderer
 string. That is a class of hardware — the thing that makes the figure interpretable. It reads no
@@ -82,18 +90,31 @@ OVERLAY = """
     })();
   }
 
-  /* The heaviest slide, counted rather than guessed: elements whose COMPUTED animation-name is not
-     `none`. No CSS is parsed and no class name is trusted, which is the same lesson DS-142's
-     checker was rebuilt on (T-214). Off-screen slides are `visibility:hidden` and still compute. */
+  /* The heaviest slide, counted rather than guessed - and **the count has to walk the deck first**.
+     `.rise` is declared `.slide[data-played] .rise`, so a slide nobody has visited has NO animation
+     to see. Counting from a standing start therefore reports the opening slide and zero everywhere
+     else, and the instrument picks slide 1 every time while looking like it derived something.
+     Measured 2026-08-22 on the first real reading: slide 1, 5 animated, 144 of 144 - a correct
+     measurement of an idle page.
+
+     **Ranked on LOOPING animations first, and that is the substantive half.** An entry animation
+     runs for 340 ms and is over long before a six-second window starts, so it costs nothing for the
+     interval actually being measured; an infinite one costs for all of it. Ranking on the raw count
+     picks the slide with the most finished animations, which is the same wrong answer arrived at
+     more slowly. Total breaks ties, because a slide with more to composite is the better bet when
+     nothing loops. */
   function weigh(){
     var slides = document.querySelectorAll('.stage .slide'), out = [];
     for (var i = 0; i < slides.length; i++){
-      var all = slides[i].querySelectorAll('*'), n = 0;
+      goTo(i);                       /* visiting is what makes the slide's motion exist to count */
+      var all = slides[i].querySelectorAll('*'), n = 0, inf = 0;
       for (var j = 0; j < all.length; j++){
-        var a = getComputedStyle(all[j]).animationName;
-        if (a && a !== 'none') n++;
+        var c = getComputedStyle(all[j]);
+        if (!c.animationName || c.animationName === 'none') continue;
+        n++;
+        if ((c.animationIterationCount || '').indexOf('infinite') >= 0) inf++;
       }
-      out.push({i: i, n: n, name: slides[i].dataset.name || ('slide ' + (i + 1))});
+      out.push({i: i, n: n, inf: inf, name: slides[i].dataset.name || ('slide ' + (i + 1))});
     }
     return out;
   }
@@ -166,7 +187,7 @@ OVERLAY = """
     var row = '| ' + [new Date().toISOString().slice(0, 10),
                       document.title.replace(/\\s*\\u2014.*$/, '').trim() || 'this deck',
                       (slide.i + 1) + ' \\u00b7 ' + slide.name,
-                      slide.n,
+                      slide.n + ' \\u00b7 ' + slide.inf + ' looping',
                       held.toFixed(1),
                       ceiling.toFixed(0),
                       mc.os + ', ' + mc.browser + ', ' + mc.cores + ' cores, ' + mc.gpu
@@ -177,7 +198,11 @@ OVERLAY = """
       '<div style="opacity:.75;margin-bottom:1rem">against a ' + ceiling.toFixed(0) +
       ' fps display ceiling \\u2014 ' + pct + '%% of what this screen can draw</div>' +
       '<div style="opacity:.85">slide ' + (slide.i + 1) + ' \\u00b7 ' + esc(slide.name) +
-      ' \\u00b7 ' + slide.n + ' animated element(s) \\u00b7 ' + SECONDS + 's</div>' +
+      ' \\u00b7 ' + slide.n + ' animated, ' + slide.inf + ' looping \\u00b7 ' + SECONDS + 's</div>' +
+      (slide.inf === 0 ? '<div style="opacity:.85;margin-bottom:.6rem;color:#F0C878">Nothing on ' +
+        'this slide loops, so the interval measured is an idle page holding the refresh rate. ' +
+        'That is a real result and not a fault - this deck has no sustained motion outside its ' +
+        'flow.</div>' : '') +
       '<div style="opacity:.85;margin-bottom:1rem">' + esc(mc.os) + ' \\u00b7 ' + esc(mc.browser) +
       ' \\u00b7 ' + mc.cores + ' cores \\u00b7 ' + esc(mc.memory) + ' \\u00b7 ' + esc(mc.screen) +
       '<br>' + esc(mc.gpu) + '</div>' +
@@ -193,13 +218,15 @@ OVERLAY = """
     count(1000, function(n, ms){
       stage = 'measuring';
       var ceiling = n / (ms / 1000);
+      say('Walking the deck to see what each slide animates\\u2026');
       var weights = weigh();
-      var slide = FORCED !== null
-        ? weights[FORCED - 1]
-        : weights.reduce(function(a, b){ return b.n > a.n ? b : a; }, weights[0]);
+      var ranked = weights.slice().sort(function(a, b){
+        return (b.inf - a.inf) || (b.n - a.n) || (a.i - b.i);
+      });
+      var slide = FORCED !== null ? weights[FORCED - 1] : ranked[0];
       if (!slide) { say('no slides found - is this a deck?'); return; }
-      say('Slide ' + (slide.i + 1) + ' carries ' + slide.n +
-          ' animated element(s). Measuring for ' + SECONDS + 's\\u2026');
+      say('Slide ' + (slide.i + 1) + ' carries ' + slide.n + ' animated element(s), ' +
+          slide.inf + ' looping. Measuring for ' + SECONDS + 's\\u2026');
       goTo(slide.i);
       requestAnimationFrame(function(){
         count(SECONDS * 1000, function(n2, ms2){
