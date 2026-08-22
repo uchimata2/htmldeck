@@ -35,6 +35,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
 | [T-213](T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md) | Build the presenter build, and the marker that keeps it unshippable | `PH3` | - | `proposed` | `specify` | T-211 | - | - | T-211 |
+| [T-216](T-216-the-ph1-reopening-count-contradicts-the-prose-below-it.md) | The PH1 reopening count contradicts the prose below it, and T-214 made it a tenth | `PH3` | - | `proposed` | `specify` | - | - | - | T-105, T-143, T-214 |
 
 ## Closed
 
@@ -143,7 +144,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-102](T-102-data-stage-is-an-index-and-the-contract-does-not-say-so.md) | data-stage is an index into STAGES, the contract does not say so, and component.py passes a name | `PH1` | `0.2.2` | `done` | `review` | - | - | - | T-035, T-090, T-101 |
 | [T-103](T-103-build-md-drops-ds-105s-link-clause-for-a-single-source-slide.md) | build.md drops DS-105's link clause for a single-source slide, so the mark does not read as provenance | `PH1` | `0.2.2` | `done` | `review` | - | - | - | T-069, T-070, T-092, T-109, T-168 |
 | [T-104](T-104-an-svg-marker-defined-in-one-slide-does-not-paint-in-another.md) | An SVG marker defined in one slide does not paint in another, and four gates stay silent about it | `PH3` | `0.2.2` | `done` | `review` | - | - | - | T-016, T-092 |
-| [T-105](T-105-fig-pos-neg-caution-are-vocabulary-so-a-real-deck-fails-for-using-them.md) | The figure's pos, neg and caution roles are vocabulary, so the first deck to use them fails component.py | `PH1` | `0.2.2` | `done` | `review` | - | - | - | T-092, T-214 |
+| [T-105](T-105-fig-pos-neg-caution-are-vocabulary-so-a-real-deck-fails-for-using-them.md) | The figure's pos, neg and caution roles are vocabulary, so the first deck to use them fails component.py | `PH1` | `0.2.2` | `done` | `review` | - | - | - | T-092, T-214, T-216 |
 | [T-106](T-106-the-quick-view-sheet-is-sized-to-the-prose-measure.md) | The quick-view sheet is sized to the prose measure, so a source's tables are crushed | `PH1` | `0.2.3` | `done` | `review` | - | - | - | T-070, T-109, T-110, T-166, T-167 |
 | [T-107](T-107-quickviews-markdown-renderer-drops-thematic-breaks.md) | quickview.py's Markdown renderer drops thematic breaks, shipping "---" as body text | `PH1` | `0.2.3` | `done` | `review` | - | - | - | T-070, T-110, T-121, T-122, T-179, T-181 |
 | [T-108](T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md) | A deck has no back-matter stage, so the colophon is labelled with the last argument stage | `PH1` | `0.2.3` | `done` | `review` | - | - | - | T-034, T-035, T-036, T-109, T-124, T-175, T-200 |
@@ -181,7 +182,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-140](T-140-correct-and-extend-the-upstream-register-from-what-implementing-the-audit-found.md) | Correct and extend the upstream register from what implementing the audit found | `PH3` | `0.3.0` | `done` | `review` | - | - | - | T-130, T-131, T-137, T-139, T-141, T-142, T-157 |
 | [T-141](T-141-extract-the-upstream-register-into-one-document-per-owner.md) | Extract the upstream register into one document per owner | `PH3` | `0.3.0` | `done` | `review` | - | - | - | T-130, T-140, T-142, T-145, T-147, T-157, T-160, T-164 |
 | [T-142](T-142-fix-o-h4-the-handoff-spine-routes-a-mode-word-with-a-qualifier-to-the-opposite-mode.md) | Fix O-H4 — the handoff spine routes a mode word with a qualifier to the opposite mode | `PH3` | `0.3.0` | `done` | `review` | - | - | - | T-140, T-141 |
-| [T-143](T-143-split-the-release-chronology-out-of-claude-md.md) | Split the release chronology out of CLAUDE.md | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-134, T-144, T-152, T-158 |
+| [T-143](T-143-split-the-release-chronology-out-of-claude-md.md) | Split the release chronology out of CLAUDE.md | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-134, T-144, T-152, T-158, T-216 |
 | [T-144](T-144-give-each-cumulative-rule-one-operative-home.md) | Give each cumulative rule one operative home | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-134, T-143, T-152, T-158 |
 | [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-098, T-130, T-141, T-146, T-147 |
 | [T-146](T-146-one-file-per-lesson-with-a-generated-index.md) | One file per lesson, with a generated index | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-145, T-147, T-159 |
@@ -251,7 +252,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-210](T-210-the-drawdown-figures-shaded-band-is-emitted-at-zero-height.md) | The drawdown figure's shaded band is emitted at zero height, and rect() clamps the sign error away | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-203, T-204, T-207, T-212 |
 | [T-211](T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md) | Scope speaker notes, and decide what DS-088 becomes | `PH3` | `unreleased` | `done` | `review` | - | T-213 | - | T-213 |
 | [T-212](T-212-eight-of-ten-figures-never-call-the-clipped-label-guard.md) | Eight of ten figures never call the clipped-label guard, and the guard cannot see an anchor | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-203, T-207, T-210 |
-| [T-214](T-214-ds-142s-checker-is-an-allow-list-of-one-class-name.md) | DS-142's checker is an allow-list of one class name, and T-187 left it behind | `PH1` | `unreleased` | `done` | `review` | - | - | T-057 | T-005, T-057, T-105, T-187, T-202 |
+| [T-214](T-214-ds-142s-checker-is-an-allow-list-of-one-class-name.md) | DS-142's checker is an allow-list of one class name, and T-187 left it behind | `PH1` | `unreleased` | `done` | `review` | - | - | T-057 | T-005, T-057, T-105, T-187, T-202, T-216 |
 | [T-215](T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md) | The frame-rate instrument, and a number with the machine it was measured on | `PH3` | `unreleased` | `done` | `review` | T-057 | - | - | T-016, T-057, T-185 |
 
 <!-- taskmd:end -->
