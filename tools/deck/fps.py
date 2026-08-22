@@ -23,6 +23,14 @@ the reasoning **L-05** refuses and the scope warning in `docs/upstream/harness.m
 know the ceiling was 60 and not 144. The overlay measures the refresh ceiling first, on an idle
 burst before any slide is shown, and reports *held against ceiling*.
 
+**Two counts, and only one of them is in the measurement.** A slide's *entry* animations run once
+when it arrives — 340 ms, staggered 60 ms apart — then hold their end state and never replay, so a
+six-second window that opens afterwards never sees them. Its *looping* animations run for all of it.
+The reference deck's slide 8 carries six animated elements and **one** of them is moving while the
+figure is taken: five `rise` entrances and the dashed `Current` flow. Reporting a single *animated*
+count invites the reader to look for six moving things and find one — asked, and rightly, on the
+first good reading. So both numbers are printed and the looping one leads.
+
 **Finding the heaviest slide takes a walk, and ranking it takes the right axis.** Both halves were
 wrong in the first build and the first real reading found them. `.rise` is declared
 `.slide[data-played] .rise`, so a slide nobody has visited has no animation to count — counting from
@@ -74,7 +82,7 @@ OVERLAY = """
 </div>
 <script>
 (function(){
-  var SECONDS = %(seconds)s, FORCED = %(forced)s;
+  var SECONDS = %(seconds)s, FORCED = %(forced)s, DECK_NAME = '%(deck)s';
   var card = document.getElementById('fps-card'), state = document.getElementById('fps-state');
   function say(t){ state.textContent = t; }
 
@@ -185,9 +193,9 @@ OVERLAY = """
     done_ = true;
     var pct = ceiling ? Math.round(held / ceiling * 100) : 0;
     var row = '| ' + [new Date().toISOString().slice(0, 10),
-                      document.title.replace(/\\s*\\u2014.*$/, '').trim() || 'this deck',
+                      DECK_NAME,
                       (slide.i + 1) + ' \\u00b7 ' + slide.name,
-                      slide.n + ' \\u00b7 ' + slide.inf + ' looping',
+                      slide.inf + ' looping + ' + (slide.n - slide.inf) + ' entry',
                       held.toFixed(1),
                       ceiling.toFixed(0),
                       mc.os + ', ' + mc.browser + ', ' + mc.cores + ' cores, ' + mc.gpu
@@ -198,7 +206,10 @@ OVERLAY = """
       '<div style="opacity:.75;margin-bottom:1rem">against a ' + ceiling.toFixed(0) +
       ' fps display ceiling \\u2014 ' + pct + '%% of what this screen can draw</div>' +
       '<div style="opacity:.85">slide ' + (slide.i + 1) + ' \\u00b7 ' + esc(slide.name) +
-      ' \\u00b7 ' + slide.n + ' animated, ' + slide.inf + ' looping \\u00b7 ' + SECONDS + 's</div>' +
+      ' \\u00b7 ' + SECONDS + 's</div>' +
+      '<div style="opacity:.85">' + slide.inf + ' looping \\u2014 running for the whole window' +
+      '<br>' + (slide.n - slide.inf) + ' entry \\u2014 played when the slide arrived and finished ' +
+      'before the window opened, so they cost this figure nothing</div>' +
       (slide.inf === 0 ? '<div style="opacity:.85;margin-bottom:.6rem;color:#F0C878">Nothing on ' +
         'this slide loops, so the interval measured is an idle page holding the refresh rate. ' +
         'That is a real result and not a fault - this deck has no sustained motion outside its ' +
@@ -243,12 +254,19 @@ OVERLAY = """
 </body>"""
 
 
-def instrument(html, seconds=6, slide=None):
-    """The deck with the overlay injected. Raises if the anchor is not there."""
+def instrument(html, seconds=6, slide=None, name=None):
+    """The deck with the overlay injected. Raises if the anchor is not there.
+
+    `name` is the deck's own name, and it has to come from here: `deck.js` rewrites
+    `document.title` to the current slide on every navigation, so a page reading its own title
+    reports the slide it is standing on and never the deck. Found on the first good reading -
+    both columns said *One transfer disappears*.
+    """
     if ANCHOR not in html:
         raise ValueError("no %s in this file - it does not look like a deck" % ANCHOR)
     body = OVERLAY % {"seconds": int(seconds),
-                      "forced": "null" if slide is None else int(slide)}
+                      "forced": "null" if slide is None else int(slide),
+                      "deck": (name or "this deck").replace("\\", "").replace("'", "")}
     return html.replace(ANCHOR, body, 1)
 
 
@@ -260,6 +278,8 @@ def self_test():
     assert "var SECONDS = 3," in out, "--seconds did not reach the page"
     assert "FORCED = null" in out, "an unforced run should pick the slide itself"
     assert "FORCED = 4" in instrument("<body></body>", slide=4), "--slide did not reach the page"
+    assert "DECK_NAME = 'my-deck'" in instrument("<body></body>", name="my-deck"), "the deck name did not"
+    assert "DECK_NAME = 'this deck'" in out, "a missing name must not leave the template unfilled"
     # A percent sign in the template that is not doubled would raise here rather than at run time.
     assert "%(seconds)s" not in out, "the template was not applied"
     try:
@@ -298,7 +318,8 @@ def main(argv):
     os.makedirs(out_dir, exist_ok=True)
     out = os.path.join(out_dir, os.path.splitext(os.path.basename(deck))[0] + "-fps.html")
     with open(out, "w", encoding="utf-8", newline="") as fh:
-        fh.write(instrument(html, seconds, slide))
+        fh.write(instrument(html, seconds, slide,
+                            os.path.splitext(os.path.basename(deck))[0]))
 
     print("deck:    %s" % paths.display_path(deck, ROOT))
     print("built:   %s  (%d KB)" % (paths.display_path(out, ROOT), os.path.getsize(out) // 1024))

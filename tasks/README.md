@@ -35,7 +35,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
 | [T-213](T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md) | Build the presenter build, and the marker that keeps it unshippable | `PH3` | - | `proposed` | `specify` | T-211 | - | - | T-211 |
-| [T-215](T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md) | The frame-rate instrument, and a number with the machine it was measured on | `PH3` | - | `in_progress` | `implement` | T-057 | - | - | T-016, T-057, T-185 |
 
 ## Closed
 
@@ -253,5 +252,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-211](T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md) | Scope speaker notes, and decide what DS-088 becomes | `PH3` | `unreleased` | `done` | `review` | - | T-213 | - | T-213 |
 | [T-212](T-212-eight-of-ten-figures-never-call-the-clipped-label-guard.md) | Eight of ten figures never call the clipped-label guard, and the guard cannot see an anchor | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-203, T-207, T-210 |
 | [T-214](T-214-ds-142s-checker-is-an-allow-list-of-one-class-name.md) | DS-142's checker is an allow-list of one class name, and T-187 left it behind | `PH1` | `unreleased` | `done` | `review` | - | - | T-057 | T-005, T-057, T-105, T-187, T-202 |
+| [T-215](T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md) | The frame-rate instrument, and a number with the machine it was measured on | `PH3` | `unreleased` | `done` | `review` | T-057 | - | - | T-016, T-057, T-185 |
 
 <!-- taskmd:end -->

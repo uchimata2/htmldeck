@@ -2,8 +2,8 @@
 id: T-215
 title: The frame-rate instrument, and a number with the machine it was measured on
 type: deliverable
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: T-057
 blocked_by: []
 related: [T-057, T-185, T-016]
@@ -13,7 +13,8 @@ business_value: medium
 effort: m
 created: 2026-08-22
 updated: 2026-08-22
-deliverables: [tools/deck/fps.py]
+shipped_in: unreleased
+deliverables: [tools/deck/fps.py, docs/lessons/L-131.md]
 ---
 
 # T-215 — The frame-rate instrument, and a number with the machine it was measured on
@@ -192,19 +193,29 @@ can never again be read as a loaded deck holding its frame rate when it is an id
 - Built against the reference deck: 314 KB out, overlay present, no console errors on load.
 - `python tools/check_all.py` green with the tool staged and declared.
 
-**What is still owed, and by whom**
-**The reading itself.** The owner has said they will run it in Chrome or Edge on the development
-machine (asked and answered 2026-08-22, §1). Until that row exists, `docs/EVALUATION.md` §6.3 carries
-an empty table with the reason in it, and this task stays open rather than closing on a criterion it
-could only meet by inventing a number — which is the one outcome it was raised to prevent.
+**The reading, and the two defects between it and the first attempt**
+Three runs on the owner's machine produced one row. **None of the three was a bad measurement** —
+each counted frames correctly, and each of the first two counted them on the wrong subject.
 
-    python tools/deck/fps.py examples/reference-deck.html
+| Run | What came back | What was wrong |
+| :--- | :--- | :--- |
+| 1 | slide 1, 5 animated, 144.0 / 144 | The count ran before the walk, and `.rise` only exists on a played slide. Slide 1 wins on every deck |
+| 2 | slide 8, `6 · 1 looping`, 144.1 / 144 | Right slide. But *6 animated* invites the reader to find six moving things and see one, and the deck column named the slide because `deck.js` rewrites `document.title` on navigation |
+| 3 | recorded | — |
+
+**The owner found the second one by looking at the deck and counting**, which is `CLAUDE.md` rule 6
+doing exactly what it is for: the gate was green, the self-test passed, the number was right, and the
+label was wrong in a way only a person watching the slide could see.
+
+**The figure:** **144.1 fps held against a 144 fps ceiling**, reference deck slide 8, one looping
+animation and five finished entrances, Windows 11 / Chrome 151 / 16 cores / RTX 4070, 2026-08-22.
+Recorded in [`docs/EVALUATION.md`](../docs/EVALUATION.md) §6.3, which takes a row per machine.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Frame rate held on a real 12-slide deck, heaviest slide, **number and machine stated together** | *pending* | Instrument built, run once, and corrected by what that run exposed. The first reading measured slide 1 — sound numbers, wrong subject — and was not entered. Re-run owed |
+| Frame rate held on a real 12-slide deck, heaviest slide, **number and machine stated together** | met | **144.1 held against a 144 ceiling**, reference deck slide 8, 1 looping + 5 entry, on Windows 11 / Chrome 151 / 16 cores / RTX 4070. `docs/EVALUATION.md` §6.3. Took three runs, and the first two were the instrument's fault |
 | The instrument runs somewhere a person can repeat it, and what it needs is written down | met | `python tools/deck/fps.py <deck>`; the docstring states what it needs and why nothing here can substitute |
 | The figure's home takes a second row for a second machine without contradicting the first | met | `docs/EVALUATION.md` §6.3 — a table keyed by date, deck, slide and machine |
 | Nothing this task adds can fail a deck | met | `fps.py` is in `check_all.py`'s `NOT_RUN`, is called by no gate, and prints a measurement rather than a verdict |
@@ -216,6 +227,7 @@ could only meet by inventing a number — which is the one outcome it was raised
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | → done | **The figure exists, and this repository has never had one before.** 144.1 against a 144 ceiling on the reference deck's slide 8, with the machine beside it. All four criteria met. **Three runs, two of them defects in the instrument rather than in the deck**, and the second was caught by the owner counting animations on screen against what the card claimed - a green gate, a passing self-test and a correct number, with the label wrong. Kept as **L-131**. The baseline this leaves is what [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md)'s 3D visual gets measured against, on this machine, as a second row. |
 | 2026-08-22 | (still in_progress) | **The first reading found two defects in the instrument and was not recorded.** The walk and the ranking axis were both wrong, and each independently guaranteed the wrong slide: `.rise` only exists on a played slide, and entry animations are finished before a six-second window starts. Both fixed and verified headlessly — the ranking now picks slide 8, the deck's only looping motion. **A correctly measured number about the wrong subject is the outcome this task was raised to prevent**, and it took a real machine to surface it: no self-test would have, because the logic was internally consistent. Re-run owed. |
 | 2026-08-22 | → in_progress | **Instrument built; the reading is the only thing outstanding.** Both open questions settled at specify - the owner runs it in Chrome or Edge on the development machine, and the heaviest slide is counted at run time rather than proxied. Three of four criteria met. Held open rather than closed `not met`, because the owner's answer has arrived and only the number has not; closing now would make a one-command wait look like a limit of the task. |
 | 2026-08-22 | → proposed | **Split out of [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) while restating that task's dissolved DS-140 criterion.** T-057 was three deliverables wearing one title, the third went with the owner's 2026-08-19 ruling, and its own plan calls this half independent and the only one measuring something that already exists. `m` rather than `l` because there is no visual to build and no rule to change; `PH3` because it is not a defect in the published plugin. **The constraint carried over from T-185 is the whole shape of it**: headless produces no frames, so this is the first measurement here that cannot be taken by the harness. |

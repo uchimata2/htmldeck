@@ -399,21 +399,43 @@ Three things about that sentence are load-bearing, and each was got wrong once. 
 what makes the ranking real: `.rise` is declared `.slide[data-played] .rise`, so an unvisited slide
 has no motion to count and a standing-start count picks the opening slide on every deck. And
 **looping** is the axis rather than the total, because an entry animation is finished 340 ms in and
-costs nothing across the window being measured. The *Animated* column therefore reads
-`total · n looping`, and a row with **0 looping** is a measurement of an idle page — true, and not
-what this table is for.
+costs nothing across the window being measured.
 
-| Date | Deck | Slide | Animated | Held | Ceiling | Machine |
+So the *Motion* column reads `n looping + m entry`, and **only the first number is inside the
+figure**. Entry animations run once as the slide arrives and then hold their end state; a window
+that opens after them never sees them. On the reference deck's slide 8 that is one dashed flow
+against five staggered entrances — six elements carry an animation and one is moving while the
+figure is taken. A row with **0 looping** is a measurement of an idle page: true, and not what this
+table is for.
+
+| Date | Deck | Slide | Motion | Held | Ceiling | Machine |
 | :--- | :--- | :--- | :--- | ---: | ---: | :--- |
-| — | — | — | — | — | — | *no reading yet — see the note below* |
+| 2026-08-22 | `reference-deck` | 8 · One transfer disappears | 1 looping + 5 entry | **144.1** | 144 | Windows 11, Chrome 151, 16 cores, NVIDIA GeForce RTX 4070 (ANGLE / Direct3D 11) |
 
-**Why the table is empty, and what it is waiting for.** No deck in this repository has ever had its
-frame rate measured on any machine. `render.py` cannot take this one: headless Chrome never produces
-a frame, so a CSS animation's clock there is frame production rather than time
+**How to read the first row, including the part that looks wrong.** *Held* slightly exceeds
+*ceiling* — 144.1 against 144. The deck is not outrunning the display: the ceiling is counted over a
+one-second burst and the figure over six, so the coarser number is the ceiling and the 0.1 is its
+noise. What the row says is that **this deck holds its display's full refresh rate with its heaviest
+slide on screen**, on hardware that is not being troubled by one dashed SVG path. It is a baseline,
+not a result: the case worth measuring is
+[T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md)'s 3D visual,
+on this same machine, against this row.
+
+**It took three runs to get one row, and none of the three was a bad measurement.** The first picked
+slide 1, because `.rise` only exists on a slide that has been visited and the count ran before the
+walk. The second picked slide 8 correctly but labelled six elements *animated* when one was moving,
+and named the deck after the slide, because `deck.js` rewrites `document.title` on every navigation.
+Each was internally consistent, each produced a plausible number, and no self-test could have caught
+any of them — the instrument was measuring exactly what it had been told to, on the wrong subject.
+That is the whole argument for
+[T-215](../tasks/T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md)'s insistence that
+a figure arrives with its machine and its subject attached.
+
+**No deck in this repository had ever had its frame rate measured on any machine before this row.**
+`render.py` cannot take it: headless Chrome never produces a frame, so a CSS animation's clock there
+is frame production rather than time
 ([T-185](../tasks/T-185-no-instrument-here-can-watch-an-animation-play.md), **L-26**), and every
-other measurement this project makes is taken that way. The instrument exists and runs; it needs a
-window somebody is looking at. [T-215](../tasks/T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md)
-carries it.
+other measurement this project makes is taken that way.
 
 **Nothing in this section gates a deck, and that is a ruling rather than an omission.** A threshold
 here would be a claim about hardware, generalised from however many rows this table has — which at
