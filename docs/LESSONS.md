@@ -173,5 +173,6 @@ comes here.
 | [L-93](lessons/L-93.md) | A rule in five documents is a rule with no home | Writing |
 | [L-100](lessons/L-100.md) | Two rules that are both right can block the same fix; report the collision, do not pick | Writing |
 | [L-101](lessons/L-101.md) | A document written to be sent is wrong at home in exactly the ways nothing here can check | Writing |
+| [L-133](lessons/L-133.md) | An ordinal cited in prose is a running total in disguise, and fixing one numbering in a document does not fix the other | Writing |
 
 <!-- lessons:end -->

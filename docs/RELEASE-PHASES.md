@@ -95,15 +95,29 @@ picked.*
 | ~~[T-103](../tasks/T-103-build-md-drops-ds-105s-link-clause-for-a-single-source-slide.md)~~ **done 2026-08-12, `0.2.2`** | DS-105 conditions the link on **reachability**; `build.md` conditioned it on **count**, so a slide resting on one source got a bare uppercase title that the first adopting deck's owner read as a subtitle. The one-source mark now carries the glyph and is itself the route — a link where the source is reachable, the quick view where it is a local document — which also gives `n = 1` the quick view built for exactly that case and reachable only through a control it did not get. |
 | ~~[T-105](../tasks/T-105-fig-pos-neg-caution-are-vocabulary-so-a-real-deck-fails-for-using-them.md)~~ **done 2026-08-12, `0.2.2`** | §3.6 classified `.fig .pos`, `.neg` and `.caution` as `vocabulary` — *the contract styles it and no deck authors it* — and wrote down that a figure encoding a loss was the obvious next deck. That deck arrived and had to choose between drawing the loss in red and passing the gate. The sweep the fix asked for found `.t-ink` and `.mono` in the same position, so **all five rows moved to `author`** and the source now has no members: every one of them was a class this contract defines for a deck to use. |
 
-*The phase has reopened eight times, and **the sixth was the first from outside this repository**:
-T-090 and T-091 were raised on 2026-08-11 by htmldeck's first adopting project, against the published
-`0.2.0`. Both arrived labelled `PH3` and were moved, because the phase a defect belongs to is decided
-by where it was hit and not by its size — the effort line at `l` sorts the two phases that are not the
-published one. The five before them were the project's own: `v0.1.1` through `v0.1.5`. **The seventh
-is T-094, and it is the project's own again** — found on 2026-08-11 while rendering a deck to look at
-it, which is where a defect in the looking step would have to be found.*
+*The first reopening **raised from outside this repository** was `0.2.1`'s: T-090 and T-091 were
+raised on 2026-08-11 by htmldeck's first adopting project, against the published `0.2.0`. Both
+arrived labelled `PH3` and were moved, because the phase a defect belongs to is decided by where it
+was hit and not by its size — the effort line at `l` sorts the two phases that are not the published one. Every
+reopening before them was the project's own: `v0.1.1` through `v0.1.5`. **`0.2.1` carried T-094 as
+well, and that one is the project's own again** — found on 2026-08-11 while rendering a deck to look
+at it, which is where a defect in the looking step would have to be found.*
 
-**The eighth reopening is four tasks, not one, and all four came from the adopting project on
+**This section states no reopening total, and the omission is the finding rather than a gap.** It
+carried *eight* until 2026-08-22 and narrated a *ninth* four screens below, neither marked as
+superseding the other. The count is over **events**, and the groupings here satisfy no single rule for
+what one event is: `0.2.1` holds two, split by where they came from, while `0.2.3` holds one made of
+six tasks across two days and two sources. **This document had already been fixed for the same defect
+once** — five of its execution-order notes cited row numbers until an insertion cascaded into the
+prose, and they cite task ids now, checked by `tools/docs/findings.py`. An ordinal is an index into a
+set that keeps growing; a release, a date and a source are facts about the item and do not move
+(**[L-133](lessons/L-133.md)**).
+**What is countable is `work_package: PH1` in the task front matter**, and
+[`RELEASE-HISTORY.md`](RELEASE-HISTORY.md) §1 is one row per release.
+*[T-216](../tasks/T-216-the-ph1-reopening-count-contradicts-the-prose-below-it.md), which removed the
+same figure from [`RELEASE-HISTORY.md`](RELEASE-HISTORY.md) §2 in the same pass.*
+
+**`0.2.2`'s reopening is four tasks, not one, and all four came from the adopting project on
 2026-08-12** — T-101, T-102, T-103 and T-105. Three arrived as defect reports and the fourth as
 feedback; the owner ruled T-105 into this phase on the ground that a published gate failing a deck
 for using a documented class is a defect in the check, whatever the report calls it.
@@ -112,8 +126,9 @@ All four went out in **`0.2.2`** on 2026-08-12, by [`PUBLISHING.md`](PUBLISHING.
 else — the first release run under §8's new step 5, so it is also the first whose note names what an
 upgrade stops accepting.
 
-**The ninth reopening is three tasks, also from the adopting project, also 2026-08-12** — and it is
-the first that came from a **finished deck rather than a failing command**. The project built an exam
+**`0.2.3`'s reopening opens with three tasks, also from the adopting project, also 2026-08-12** — and
+it is the first that came from a **finished deck rather than a failing command**. Three more join it
+below, on 2026-08-13. The project built an exam
 presentation on `0.2.2`, presented it, and reported on what it was like to read:
 
 | | |
@@ -122,23 +137,23 @@ presentation on `0.2.2`, presented it, and reported on what it was like to read:
 | ~~[T-107](../tasks/T-107-quickviews-markdown-renderer-drops-thematic-breaks.md)~~ **done 2026-08-13** — the audit was the deliverable. Every block construct counted across **355 corpus documents**, counts only: three were one branch each and landed (thematic breaks in 119 documents, ordered lists rendered as `<ul>` in 161, front matter rendered as body text in 130), two went to **T-121**, and the `---`-versus-setext ambiguity was settled by counting rather than arguing — one setext underline in 355 documents. |
 | ~~[T-108](../tasks/T-108-a-deck-has-no-back-matter-stage-so-the-colophon-is-labelled-with-the-last-argument-stage.md) — a deck has no back-matter stage~~ **done 2026-08-13** | `data-stage` was mandatory and held only argument stages, so a colophon was pushed into the nearest one and the ruler named it at rest — *Decision*, on a slide in no stage. Fixed as the missing vocabulary value it was, not the label bug it looked like: **`data-stage="back"`**, and the four renderings of the one manifest all follow. **This repository had it worse than the deck that reported it.** The reference deck had invented an eighth stage, `Colophon`, and left `STAGE_ICON` at seven — so its contents box drew `<use href="#undefined">` and printed with no mark, and its Decision-stage census ran a slide long. The census now reads **7 section ticks where it read 8**. Two rules moved with it: DS-225 had said the marks cannot be uneven, which back matter makes false, and `shell.py check` gained a `STAGE TABLE` gate so the two halves of that one table can never differ in length again. |
 
-**All three shipped as `0.2.3` on 2026-08-13**, the ninth PH1 reopening, together with T-120 below.
+**All three shipped as `0.2.3` on 2026-08-13**, together with T-120 below.
 Two of the three were found by looking at a rendered deck rather than by running anything, and both
 were in this repository's own reference deck as well as in the adopter's.
 
-**A fourth joined them on 2026-08-13, and it is the only one nobody reported.**
+**T-116 joined them on 2026-08-13, and it is the only one nobody reported.**
 
 | | |
 | :--- | :--- |
 | ~~[T-116](../tasks/T-116-the-printed-contents-page-collides-at-thirteen-entries.md) — the printed contents page collides at 13 entries~~ **done 2026-08-13** | The **generated contents page collided at 13 entries** against a stated limit of 24: on paper the fourth row printed through the footnote and rows two and three had touching card borders. **The diagnosis in this row was the second cause, not the first.** The entry height is real, but the fault exists **only in paged layout** — Chrome gives a grid item its own content height there where the screen zeroes it, so a 267 du card sat in a 201 du pitch. `contents_bound.py`, which measures the print rules lifted onto screen, called the same deck clean on the same day; a taller fixture alone would not have caught it, verified by running exactly that. Fixed by stating both bounds — `max-height:min(268du,100%)` — plus a per-row-band description clamp, because holding the cards to their rows exposed a cut second line underneath. **It was in this repository's reference deck too**, the same 13 entries, printing with two overlapping row pairs and its footnote inside a card (**T-083**'s pattern again, **L-76**). The instrument gap is [T-123](../tasks/T-123-nothing-can-see-a-print-only-layout-fault.md). |
 
-**A sixth joined the same day, found while verifying the second.**
+**T-122 joined the same day, found while verifying T-107.**
 
 | | |
 | :--- | :--- |
 | ~~[T-122](../tasks/T-122-the-quick-views-contracted-article-is-never-created-so-seventeen-rules-are-dead.md)~~ **done 2026-08-13** | [`COMPONENT-CONTRACT.md`](COMPONENT-CONTRACT.md) gives `.qv-doc` as an `<article>` the **script** creates inside `.qv-body`, and `openQuick()` never created it — so **seventeen style rules matched nothing in every deck this project has shipped**. A quoted source rendered at slide scale with uncollapsed table borders because the rules that say otherwise were dead. **Nothing could have caught it**: the placement check reads static markup, and the contract's own `origin: script` column is read by no check at all. **It changes [T-110](../tasks/T-110-the-quick-view-styles-a-source-as-deck-copy-not-as-a-document.md)'s premise** — that task reads the complaint as values chosen for a slide, and half of it was no values at all. |
 
-**A fifth joined on 2026-08-13, and it is the only one a command found.**
+**T-120 joined on 2026-08-13, and it is the only one a command found.**
 
 | | |
 | :--- | :--- |
@@ -146,13 +161,14 @@ were in this repository's own reference deck as well as in the adopter's.
 
 **These six are `0.2.3`, and the owner committed to the release on 2026-08-12** — four of them then,
 **T-120 added to it by the owner on 2026-08-13**, the day the rule put it in `PH1`, and
-**T-122 found the same day while closing T-107**. Open `PH1` is therefore exactly the release's
-contents, which is the phase doing the job it was split for. **Three of the six are closed**: T-106,
-T-107 and T-122.
+**T-122 found the same day while closing T-107**. Open `PH1` was therefore exactly the release's
+contents, which is the phase doing the job it was split for. **All six are `done` and all six shipped
+in `0.2.3`.**
 
-**Four of the five came from *looking*, not from a failing command** — three from an adopter reading a
-finished deck, and T-116 from opening the PDF that deck was printed to. No gate in this repository
-could have produced any of those four, and CLAUDE.md rule 6 is the only step that would. **T-120 is
+**Five of the six came from *looking*, not from a failing command** — three from an adopter reading a
+finished deck, T-116 from opening the PDF that deck was printed to, and T-122 while verifying T-107.
+No gate in this repository could have produced any of those five, and CLAUDE.md rule 6 is the only
+step that would. **T-120 is
 the exception and it needed a new instrument**: no command in the sixteen the last two releases were
 cut on ever ran the checker that was wrong.
 

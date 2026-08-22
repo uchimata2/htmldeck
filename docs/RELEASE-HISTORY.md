@@ -66,11 +66,17 @@ Counted 2026-08-14.
 
 ## 2. The phases, as they actually ran
 
-**PH1 shipped 2026-08-09 as `0.1.0` and has reopened nine times.** A defect in the published plugin
-is a `PH1` **phase** task, not a later improvement, so the phase reopens rather than the fix waiting
-for a later one. Every patch in §1's table above `0.1.0` is one of those reopenings. *`CLAUDE.md`
-carried the counts **nine reopenings** and **seven PH1 patches** until 2026-08-14; neither was
-re-derivable from the record and §1's table is countable, so they were not carried over.*
+**PH1 shipped 2026-08-09 as `0.1.0` and has reopened on every release since that carried a defect
+fix.** A defect in the published plugin is a `PH1` **phase** task, not a later improvement, so the
+phase reopens rather than the fix waiting for a later one. **No total is stated here, and that is the
+same ruling made twice.** *`CLAUDE.md` carried the counts **nine reopenings** and **seven PH1
+patches** until 2026-08-14; neither was re-derivable from the record, so they were not carried over.*
+This document then carried **nine** in their place until 2026-08-22 — by which time `0.5.0` and
+`0.5.1` had each reopened the phase again, so the figure that replaced two unmaintained ones was
+unmaintained too. §1's table is one row per release and `work_package: PH1` in the task front matter
+is countable.
+*[T-216](../tasks/T-216-the-ph1-reopening-count-contradicts-the-prose-below-it.md), which removed the
+same figure from [`RELEASE-PHASES.md`](RELEASE-PHASES.md) in the same pass.*
 
 **PH2 shipped 2026-08-11 as `0.2.0` and the phase stayed open behind it for two days.** T-080 and
 T-036 kept the `PH2` label by the owner's decision, so a shipped release and an open phase were not a
