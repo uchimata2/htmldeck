@@ -49,7 +49,8 @@ accounts*, where `the gate's coverage of the ruleset — 92 of 122` is held to
   column, or a checker of its own. The first is recommended — the mechanism is already written and
   the second copy of it is the drift this repository keeps finding.
 - Out: **the fourth column**, *what it is remembered for*. It is prose and no tool can decide it.
-- Out: the **date** column, unless it falls out of the same pass for nothing — see the open question.
+- In: **the date column too**, on the same pass. Settled 2026-08-22 by measurement rather than by argument: all seventeen rows already agree with `%(creatordate:short)`, so binding it cannot fail a row today and the *a person may state it* case has no instance behind it in the whole history. The document names the tag command in the same fence as the count command, so it already treats both columns as derived.
+- In: **the comparison is against `%(creatordate:short)` and nothing better.** Not a publication timestamp, not `gh release view`, not a UTC normalisation. The tag set is **mixed** — seventeen tags, some annotated and some lightweight — and `creatordate` means the tag's date for one and the commit's for the other. Binding to the command the document names tests the claim the document makes; binding to anything better tests a claim nobody made, and would move a near-midnight release by a day the first time a timezone differs.
 - Out: back-filling the records. Done 2026-08-22, and this task must not need it repeated.
 - Out: `figures.py`'s **floor blocks**, where growth above the pasted value is reported rather than
   failed by design. This column is not a floor: a row that disagrees is wrong in either direction.
@@ -68,11 +69,10 @@ accounts*, where `the gate's coverage of the ruleset — 92 of 122` is held to
 - [ ] It runs from `check_all.py` and lands in that command's **ran / skipped / failed** partition,
       so an unwired checker goes red rather than unnoticed.
 - [ ] A release that adds a row satisfies it **without editing the checker**.
+- [ ] A row whose **date** disagrees with its tag fails, and a row with **no tag at all** fails rather than passing quietly.
 
 **Open questions**
-- Does the **date** column get the same treatment? It is derivable from the tag, and the document's
-  own command prints both. Against: a release's date is a fact a person may reasonably state, and
-  the tag's date is the commit's rather than the publication's. — the project owner.
+- None. The date column was the one open question and it is answered above. **If the owner wants the column to mean the publication date rather than the tag date, that is an edit to `RELEASE-HISTORY.md`'s stated command, not to this checker** — the check enforces whatever the document says derives it.
 
 ## 2. Plan
 
@@ -104,4 +104,5 @@ accounts*, where `the gate's coverage of the ruleset — 92 of 122` is held to
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (no status change) | **The one open question is answered and the date column is in scope.** Decided by measuring rather than by weighing the argument: all seventeen rows already agree with `%(creatordate:short)`, so the *a person may state it* case has no instance behind it, and binding the column cannot fail a row today. The condition is that the comparison uses the command the document names and not a better one — the tag set is mixed, annotated and lightweight, and `creatordate` means different things across it. |
 | 2026-08-22 | → proposed | **Created from a figure found wrong while cutting `0.6.0`.** Two rows of the chronology disagreed with the command the document itself names, and one of them had been eight short since `0.5.0` shipped. The back-fill that closed half of it is done; this is the half that recurs, because the column is derived by a command and maintained by hand. `PH3` per `CLAUDE.md`: it is this repository's own tooling and not a defect in the published plugin, so it does not reopen `PH1`. |
