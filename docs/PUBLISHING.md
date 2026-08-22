@@ -206,6 +206,12 @@ shipped: four releases had each re-derived the same sequence from the last one's
 until the person doing it is not the person who did it last. *Step 5 was added on 2026-08-12 by
 [T-100](../tasks/T-100-a-release-adds-a-required-part-and-conforming-decks-fail-silently.md).*
 
+**There is no step 0, and the pre-release audit is why this says so.**
+[`AUDIT-METHOD.md`](AUDIT-METHOD.md) describes an audit of the whole repository that runs **only when
+the owner asks for one**. It is deliberately outside this sequence: it costs several sessions, and a
+cost a release cannot refuse is one that gets skipped rather than paid. When it does run, it finishes
+before step 1 — the gate is step 1, and an audit that follows it invalidates its own evidence.
+
 | # | Step | What proves it |
 | :-- | :--- | :--- |
 | 1 | **`python tools/check_all.py` green** — the whole set, not the routine one. **It takes minutes, so run it in the background**; it prints its own elapsed time. **Stage first if the release adds a tool or a deck**: the tool partition is derived from what git tracks, so an unstaged file is invisible to the run and the *next* run is the first that can fail on it as `UNCLASSIFIED` (measured 2026-08-22, T-041) | Its own last line: `0 failure(s), 0 unclassified, 0 stale` and the seconds beside them. It replaced a list of sixteen commands on 2026-08-13 ([T-096](../tasks/T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md)) |

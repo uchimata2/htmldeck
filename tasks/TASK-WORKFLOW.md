@@ -216,3 +216,27 @@ checked, when it resolves, and why quoting a dead reference must not create one.
    inside the one command, so a failure stops the chain instead of scrolling past. **The fourth binds
    an audit finding to the task serving it**, so a closure that leaves the two disagreeing stops here
    rather than at the next release.
+
+---
+
+## 8. Audit requests
+
+**The method is the taskmd skill's, like the rest of it** — its `METHOD.md` §5 for the type and for
+the rule that a finding is never fixed where it is found, its `audit.md` for the procedure, and its
+`pre-release-audit.md` for an audit whose subject is everything about to be released.
+[`../docs/AUDIT-METHOD.md`](../docs/AUDIT-METHOD.md) is this project's binding: which audits run here,
+what the decks are exempt from reading, and the one tool gap. Neither is read until an audit is asked
+for.
+
+**An audit runs when the owner asks for one.** None is automatic and none is a release step:
+[`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8 is eight steps and an audit is not among them.
+
+Two things are this file's rather than the method's:
+
+- **An umbrella starts from [`_audit-umbrella-template.md`](_audit-umbrella-template.md)**, not from
+  [`_task-template.md`](_task-template.md). Its four sections are still the four phases of §2, and
+  its §2 carries that audit's own procedure — which is where the method says a procedure belongs,
+  rather than in a document every audit would inherit.
+- **A child fix is its own task file with `parent:` set to the umbrella**, and its phase and type are
+  re-derived from [`../CLAUDE.md`](../CLAUDE.md) rather than inherited. An audit finding about the
+  published plugin is a `PH1` defect however late the audit ran.
