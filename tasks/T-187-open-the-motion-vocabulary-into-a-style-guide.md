@@ -12,7 +12,8 @@ owner: the project owner
 business_value: high
 effort: l
 created: 2026-08-19
-updated: 2026-08-21
+updated: 2026-08-22
+shipped_in: unreleased
 deliverables: [docs/MOTION-GUIDE.md]
 ---
 
@@ -256,6 +257,7 @@ which is simultaneously the proof of the rule and the proof that the page count 
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (no status change) | **`shipped_in` set to `unreleased`, which it should have carried since the day it closed.** It closed 2026-08-21 and `v0.5.1` was tagged 2026-08-20, so this task shipped in nothing and said so by carrying an empty field — the same silence a task still in flight makes. Found while reading the unreleased set for `docs/PUBLISHING.md` §8.1's row, where it matters twice: this is the task that opened DS-140 and replaced DS-141's name-based waiver with `--motion-long`, so a release set missing it understates what an adopter must change. Eight other `done` tasks carry no `shipped_in` and are a different case — all closed 2026-08-19, before the tag — so theirs is a past release's step 8 and is corrected there, not here. |
 | 2026-08-21 | → done | Closed in one session, all four phases. **The design decision the whole task turned on was not in §1**: DS-141's cap was enforced by a *name*, so opening DS-140 would have silently dropped the cap out of the `auto` column. Declaring the licence (`--motion-long`) keeps the coverage and puts the reason on the artifact. **DS-230's open question was decided here rather than handed back** — from the rule's own reason, recorded as reversible. Two findings worth more than the task: `deck.js` implements DS-143 a second time, so the obvious seed proved nothing (**L-124** again), and the DS-140 self-test runs under `check.py` and not under `audit.py`, so the first mutation run reported a false green. |
 | 2026-08-21 | → planned, → in_progress | Specify was already complete from 2026-08-19. Planned, implemented and reviewed the same day. |
 | 2026-08-19 | → proposed | Created from the owner's ruling of the same day, taken while resuming a handoff whose whole purpose was to put four open questions to them. It supersedes T-057's open question rather than answering it: asked to choose between a fifth motion and an exemption, the owner rejected the allow-list itself. Raised as its own task because DS-140's closure is cited by six rules and one self-test, so this is a ruleset change under DS-000 and not an edit to one row. |

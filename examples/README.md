@@ -324,6 +324,9 @@ run means**: it proves the animation exists with the timing the CSS intends and 
 intermediate state interpolates to what the keyframes say — which is what makes a transition
 something a person can look at. It does not prove the animation *plays*, because frame rate and
 dropped frames are downstream of frame production and this instrument has none.
+`tools/deck/fps.py` is the one that measures those, on a machine a person is watching, and it
+is deliberately not a gate: a frame-rate threshold is a claim about hardware this project has
+no corpus for.
 
 Running `check.py` over both decks is what produced the table above: the good deck reports **0
 failures**; the seeded deck reports **4**, spread across three dimensions, and the other seven

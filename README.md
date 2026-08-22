@@ -149,8 +149,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 3264 document pointer(s) checked, 0 broken
-     942 section reference(s) resolved, 0 dead; 2908 not bound to a document and skipped.
+OK - 3357 document pointer(s) checked, 0 broken
+     970 section reference(s) resolved, 0 dead; 2959 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -266,8 +266,9 @@ describe a plan.
   faults came out of somebody opening the deck and clicking: a control that reopened at the previous
   document's scroll position, and a colophon filed as an argument slide. The pattern is the point.
   A ruleset tested only by its authors is tested against what its authors already knew.
-- **The gate names seven glitch-free conditions it does not check**, and there is no frame-rate
-  figure. Both are PH3, not oversights.
+- **There is still no 3D visual class.** It is the last thing this page has been promising that is
+  not built. The frame-rate figure and the seven glitch-free conditions were listed here too, until
+  this release.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
 is split into three phases, and a phase is not a version. **PH1** is what a first working plugin
@@ -279,35 +280,40 @@ from looking at a rendered deck rather than from any command, and both turned ou
 repository's own example deck as well as in the deck that reported them. 0.2.4 changed nothing you
 install; it was the project's own record. 0.3.0 was the first release shaped by a deck somebody else
 built. **PH3** is the
-larger work, including 3D visuals, the frame-rate figure and those seven conditions.
+larger work. The frame-rate figure and those seven conditions have now shipped; the 3D visuals have
+not.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
-The current release is 0.5.1. Most of it came from watching somebody else build a deck with 0.4.0
-and writing down everything that got in their way. The .1 is a check that shipped in 0.5.0
-unable to see the thing it was written to catch, found a few hours later by looking at a slide.
+The current release is 0.6.0. It is the release where the gate stopped taking the deck's word for
+things. Every check used to read the file. Now it also opens the file, clicks through every slide,
+and reports what the browser actually did.
 
-The controls answer faster. Pressing the back or forward arrow used to take most of half a second to
-show anything, which is long enough to wonder whether the button works. The back arrow never
-showed anything at all, because one style rule quietly outranked another. Both are fixed, and a
-control now runs on a shorter clock than the slides do.
+Seven of those reports are new. The console has to stay clean from the load to the last slide. The
+embedded faces have to load, and the text has to come out in them. Nothing may scroll out of its box
+or jump when the fonts arrive. Every canvas has to draw, and every slide has to be reachable without
+a script error. Reading the file answers none of that, which is why this page listed all seven as
+unchecked until now.
 
-Every slide says what it is about. The line above the headline used to repeat the slide number and the section name, and the bar along the bottom was already showing you
-both. Now it names the thing on the slide, so a presenter glancing up learns something. Two of the
-three example decks here had the old habit, and both are rewritten.
+Diagram labels no longer sit on top of one another. A deck here passed every check while carrying
+fifteen chart defects that only people found, and three separate readings each missed some of them.
+A tool now measures label against label on the rendered page, and a deck fails when two overlap far
+enough that you have to read them one at a time.
 
-A deck can open on a lobby slide, the one an audience looks at while the room fills, carrying the
-topic, who is presenting and what the occasion is. It is optional, like the sources page at the
-end, and neither of them counts towards the slide numbers any more. They are covers, not content.
+Charts can use a chart engine, if the reader is meant to interrogate them by hovering a series for
+its value or brushing a range of it. The deck declares the engine in its own head. A deck that
+declares nothing is held to hand-written SVG, which is where every deck stands today.
 
-A quoted source finally reads like a document rather than like a slide. Its headings were smaller
-than its own body text, which nobody had noticed.
+The motion rules read what a motion says about itself instead of what it is called. One of them was
+an allow-list of a single class name, so any looping animation you wrote that was not that one class
+failed a gate for a design the rules permit. A motion now states its own subject, and states why it
+is allowed to run past half a second.
 
-The commands in the instructions now run. They were all written against a variable that turns out
-to be empty in a shell, so anyone following them had to work out the paths themselves.
+Speaker notes have somewhere to live. They go into a presenter build, a second file made from the
+same specification. It carries a marker the gate fails on, so it cannot become the file you send.
 
-A deck built on an earlier version will fail several checks until you run `shell.py tokens` and
-`shell.py sync`. The release notes say what fails and what fixes it. One of them, the line above
-each headline, needs a sentence from you rather than a command.
+A deck built on an earlier version will fail `shell.py check` until you run `shell.py sync`. The
+release notes say what else fails and what fixes it. Most of it now needs the deck opened in a
+browser rather than a command run against the file.
 
 **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
 half's first run and were settled the same day in
