@@ -1327,12 +1327,22 @@ PROBE = r"""
     }
 
     // DS-140/142 - a flow may loop, and the shipped theme's `Current` is the instance every deck
-    // carries. (This read `DS-140 sanctions exactly one looping motion` until T-187 opened the
-    // vocabulary; what decides the rows below is whether a looping thing is a flow or static
-    // content, which was always the actual test.) Anything
-    // else looping is continuous motion on static content, which DS-142 bans outright. DS-218
-    // additionally requires a control for whatever does loop (WCAG 2.2.2 is the criterion behind
-    // it; DS-218 is the rule that makes building the control an obligation rather than an
+    // carries. What decides the rows below is whether a looping thing's subject is static content,
+    // which was always the actual test - and until T-214 this code did not implement it. It read
+    // `classList.contains('current')`, so the test was a CLASS NAME: an allow-list of one, correct
+    // only for as long as DS-140 fixed the vocabulary at four. T-187 opened it and re-derived every
+    // rule that reasoned from the closure except this one, and the comment here was rewritten to
+    // claim the re-derivation three lines above the code that had not had it.
+    //
+    // **A motion now declares its own subject** - `--motion-subject:live`, the idiom DS-237 and
+    // DS-141 already use - and this reads it back. `.current` passes by declaring, like anything
+    // else; no class name decides a verdict. The property is registered `inherits:false` in
+    // `shell/components.css`, which is what stops a glow nested inside a live subject inheriting
+    // the exemption. Anything looping that does not declare `live` is continuous motion on static
+    // content, which DS-142 bans outright.
+    //
+    // DS-218 additionally requires a control for whatever does loop (WCAG 2.2.2 is the criterion
+    // behind it; DS-218 is the rule that makes building the control an obligation rather than an
     // inference).
     out.infinite = []; out.ambient = [];
     for (var j=0;j<all.length;j++){
@@ -1340,7 +1350,8 @@ PROBE = r"""
       if ((c.animationIterationCount||'').indexOf('infinite') < 0) continue;
       var row = [c.animationName, (all[j].closest('.slide')||{dataset:{}}).dataset.name || ''];
       out.infinite.push(row);
-      if (!all[j].classList.contains('current')) out.ambient.push(row);
+      var subj = (c.getPropertyValue('--motion-subject') || '').trim();
+      if (subj !== 'live') out.ambient.push(row);
     }
     // DS-218 asks for a PERSISTENT control, and T-114 put a `More` menu on the chrome row -
     // so existence stopped being the test. A stop button one click inside a shut menu is not

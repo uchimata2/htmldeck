@@ -2,8 +2,8 @@
 id: T-214
 title: DS-142's checker is an allow-list of one class name, and T-187 left it behind
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-187, T-057, T-005, T-202, T-105]
@@ -13,7 +13,8 @@ business_value: high
 effort: m
 created: 2026-08-22
 updated: 2026-08-22
-deliverables: []
+shipped_in: unreleased
+deliverables: [docs/lessons/L-130.md]
 ---
 
 # T-214 — DS-142's checker is an allow-list of one class name, and T-187 left it behind
@@ -118,33 +119,139 @@ at all — any looping motion they write that is not a dashed flow.
 - [ ] DS-140's admission test names DS-142, in `DESIGN-SYSTEM.md` and in `MOTION-GUIDE.md` §3
 - [ ] The comment in `audit.py` describes what the code does
 
-**Open questions**
-- **What is the declaration called, and where does it sit?** `--motion-subject: live | static` on the
-  rule that starts the motion is the shape that matches `--motion-kind` and `--motion-long`, and
-  `data-`-attributes are the shape that matches `data-disc` and `data-scale`. The three existing
-  instances split two to one in favour of a custom property for *motion* facts and an attribute for
-  *editorial* ones, which argues for the property. **Decide during specify from that precedent
-  rather than asking** — it is a naming question the rule's own reason settles.
+**Settled during specify**
+- **The declaration is `--motion-subject: live | static`, a custom property on the rule that starts
+  the motion.** Decided 2026-08-22 from the precedent the open question names, without asking. The
+  three existing instances split two to one — a custom property carries *motion* facts
+  (`--motion-kind`, `--motion-long`), an attribute carries *editorial* ones (`data-disc`,
+  `data-scale`) — and a motion's subject is a motion fact. It also lands where a reader already
+  looks: `.current` declares `--motion-kind:affordance;--motion-long:loop` on one rule
+  ([`shell/components.css`](../shell/components.css)), and this is a third token on that same line.
+- **Both values are meaningful, so the closed pair is not one value plus a violation.** `static` is
+  the honest declaration for a *non-looping* motion on static content — DS-147's emphasis pulse is
+  exactly that — so the property describes any motion's subject and DS-142 binds only where the
+  motion also loops. That is what makes absence a defect in DS-237's shape rather than a default.
+
+**Verified during specify, and it is worse than the task assumed**
+- **`static_variants.py` carries no DS-142 seed in either direction.** Grepped 2026-08-22: the file
+  seeds DS-140 (`motion-outside-its-band`) and DS-218 (`motion-stop-shut-inside-the-menu`) and
+  nothing for DS-142. So the row has never been observed to fire *or* to pass on any input — it is
+  **L-36 and L-129 at once**, not just the L-129 the task was raised on. Its green on four shipped
+  decks is the absence of a subject, which is the same reading T-051 was raised for.
+- **`run_must_pass` already exists** and is the harness the second criterion needs — added by T-041
+  for GF-7, the other check whose pass had never been seen. This task adds the second user of it
+  rather than a mechanism.
 
 ## 2. Plan
 
+**The one finding that shapes every step below: a custom property inherits, and the checker reads
+computed style.** DS-237's `--motion-kind` and DS-141's `--motion-long` are read out of the **CSS
+source text** by regex on the rule body, so inheritance never reaches them. DS-142 is decided by the
+live probe on `getComputedStyle`, which is a different instrument on the same idiom — and there an
+element that declares nothing inherits its ancestor's value. A glow nested inside `.current` would
+read `live` and be exempted. **That is the same defect one shape along: an allow-list of one class
+becomes an exemption one subtree wide**, which is what the scope forbids. So the property is
+**registered non-inheriting** — `@property{inherits:false}` — and the guard sits at the exact point
+the measurement is taken rather than in a rule about where authors may write the token. Step 5 is
+what proves it, and it is not optional.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
+| 1 | Register `--motion-subject` with `inherits:false`, and declare `--motion-subject:live` on `.current` beside its two existing motion tokens | `shell/components.css` |
+| 2 | Re-derive the probe's DS-142 branch: ambient unless the element's own `--motion-subject` computes to `live`. **Correct the comment above it**, which claims a re-derivation the code below it never had | `tools/deck/audit.py` |
+| 3 | Seed the fail direction — an infinite glow on static content, which must still fail DS-142 exactly as today | `tools/deck/static_variants.py`, `RENDER_VARIANTS` |
+| 4 | Seed the pass direction — an infinite motion on an element that is **not** `.current`, declaring `live`, which must pass | `tools/deck/static_variants.py`, a new `RENDER_PASS_VARIANTS` run through `run_must_pass` |
+| 5 | Seed the inheritance direction — an infinite glow **nested inside `.current`**, which must fail. This is the seed that proves step 1's registration and that no subtree is exempt | `tools/deck/static_variants.py`, `RENDER_VARIANTS` |
+| 6 | Amend DS-142's row to say what decides it, make DS-140's admission test name DS-142, and register the declaration where a component declares things | `docs/DESIGN-SYSTEM.md`, `docs/MOTION-GUIDE.md` §3, `docs/COMPONENT-CONTRACT.md` §3.8 |
+| 7 | Prove the three seeds **red before the fix**, then green after, and the four shipped decks' verdicts unchanged | run output recorded in §3 |
+
+**Step 4 needs a new list and one line of wiring**, because `run_must_pass` exists but has exactly
+one caller — `GF_PASS_VARIANTS` against `glitchfree_failures`. The rendered half has no pass
+direction at all today. That is the mechanism T-041 built being used a second time, not a new one.
+
+**Order matters between 3-5 and 1-2.** Seed first and run them against the *unfixed* checker; a
+seed written after the fix proves only that the fix agrees with itself (**L-125**). *Corrected
+during implement: this step said watch all three **fail**, and only one of them can. Seeds 3 and 5
+are caught before the fix and after it — they are regression guards, and the nested seed's evidence
+is that its ambient **count** falls from 2 to 1 rather than that its verdict flips. Only seed 4 is
+red-then-green. Writing it as three would have made two seeds look like proof they are not, which is
+the same over-claim **L-129** names one level up.*
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **`--motion-subject: live | static`, a custom property on the rule that starts the motion** —
+  settled at specify from the two-to-one precedent, not asked. 2026-08-22.
+- **The property is registered `@property{syntax:"*";inherits:false}`, and that is the whole of what
+  makes the fix smaller than the defect** — 2026-08-22. `--motion-kind` and `--motion-long` are read
+  by a regex over the CSS source, so inheritance never reaches them; DS-142 is decided by a live
+  probe on `getComputedStyle`, where a custom property inherits. Copying the idiom without its
+  instrument would have traded an allow-list of one class name for an exemption one subtree wide.
+  Kept as **L-130**.
+- **Every seed declares `--motion-kind:affordance`** — 2026-08-22. A glow on a headline is not an
+  affordance and the claim is false, but DS-237 checks that a kind is declared and DS-243/DS-150
+  judge whether the claim is true. Declaring `content` would gate the seed on `--m-on` and demand an
+  `--m-rank`, breaking DS-238 and DS-239 alongside DS-142 and proving nothing about any of the three.
+- **The comment in `shell/components.css` was written long and then cut to four lines** —
+  2026-08-22. It ships inside every deck: the first draft cost **1,198 bytes in each of four decks**
+  and moved nine pasted figures. The argument lives in DS-142's row and in `audit.py`, neither of
+  which ships.
+- **`shell.py sync --write` is wrong on `reference-deck-seeded-defects.html`** — 2026-08-22. That
+  deck is *derived* from the reference deck and carries seeded CSS in the same region, so syncing it
+  silently dropped eleven lines. It is regenerated with `tools/examples/seed_defects.py`, and the
+  gate caught it.
 
 **Outputs produced**
-- <path>
+- [`shell/components.css`](../shell/components.css) — the registration and `.current`'s declaration
+- [`tools/deck/audit.py`](../tools/deck/audit.py) — the re-derived probe branch, and the comment
+  corrected to describe what the code does
+- [`tools/deck/static_variants.py`](../tools/deck/static_variants.py) — three seeds and
+  `RENDER_PASS_VARIANTS`, the rendered half's first pass direction
+- [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — DS-142's row, and DS-140's admission test
+- [`docs/MOTION-GUIDE.md`](../docs/MOTION-GUIDE.md) §3, [`docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) §3.8
+- [`docs/lessons/L-130.md`](../docs/lessons/L-130.md)
+- The four shipped decks, re-synced to the new component block
+
+**Verification**
+
+Red before green, on the three seeds, `RENDER_VARIANTS` and `RENDER_PASS_VARIANTS`:
+
+| Seed | Before the fix | After |
+| :--- | :--- | :--- |
+| `ambient-glow-on-static-content` | CAUGHT, 12 ambient | CAUGHT, 12 ambient |
+| `ambient-glow-inheriting-a-live-subject` | CAUGHT, **2** ambient — `seedspin`, `seedglow` | CAUGHT, **1** — `seedglow` |
+| `looping-motion-declaring-a-live-subject` | **DID NOT PASS**, 1 ambient — the defect | **PASSED**, 0 ambient |
+
+The middle row is the evidence for the registration: the declaring parent stopped being ambient and
+its undeclared child did not, so inheritance carries no exemption.
+
+`python tools/check_all.py` — **35 ran, 2 skipped with a stated reason, 0 failed, 270 s.** The four
+shipped decks' verdicts are unchanged.
+
+**Looked at** (CLAUDE.md rule 6): `render.py shots examples/reference-deck.html 1,8` — slide 8 is the
+only slide carrying `.current`. The dashed flow, its arrowhead, the ruler and the chrome row all
+render as before; motion is pinned off in a capture, as `render.py` documents.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| DS-142 fails an ambient glow on static content, on a seeded variant, exactly as today | met | `ambient-glow-on-static-content`, 12 ambient rows before and after |
+| DS-142 **passes** a looping motion that declares a live subject | met | `looping-motion-declaring-a-live-subject` — DID NOT PASS before, PASSED after. The rendered half had no pass direction at all until this task |
+| `.current` passes by declaring, not by being named; no class name decides a verdict | met | `classList.contains('current')` is gone from `audit.py`; `.current` carries `--motion-subject:live` |
+| The reference deck and the other three shipped decks still pass, verdicts unchanged | met | `check_all.py` green, 35 ran / 0 failed. All four re-synced to the new component block |
+| DS-140's admission test names DS-142, in `DESIGN-SYSTEM.md` and `MOTION-GUIDE.md` §3 | met | Both amended |
+| The comment in `audit.py` describes what the code does | met | Rewritten, and it now records that the old comment claimed T-187's re-derivation three lines above code that had not had it (**L-39**) |
+
+**Child fix tasks raised**
+- none
+
+**What this task found that it was not looking for**
+- **DS-142 had no seed in either direction**, so its green on four shipped decks was the absence of a
+  subject rather than a verdict — **L-36** and **L-129** at once, where the task was raised on L-129
+  alone.
+- **The declaration idiom does not carry its guarantees across instruments.** Kept as **L-130**; it
+  is the finding that decided the shape of the fix rather than a note beside it.
 
 **Child fix tasks raised**
 - none
@@ -153,4 +260,5 @@ at all — any looping motion they write that is not a dashed flow.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | → done | **Closed the same day it was raised.** The fix is one probe branch, one registered property, one declaration and three seeds; what took the time was the registration, without which the fix would have been wider than the defect (**L-130**). `check_all.py` green at 35 ran / 0 failed, and slide 8 looked at. Unblocks [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md), whose 3D oscillation is infinite by construction and was the deck this rule would have failed. |
 | 2026-08-22 | → proposed | **Raised while restating T-057's DS-140 criterion, and it is not what that restatement was looking for.** T-057's criterion asked for a ruling the owner dissolved on 2026-08-19, so the question was which rule now decides whether a 3D wobble is admissible. The answer is that DS-140's admission test admits it and **DS-142's checker rejects it**, on a class name — so the criterion was blocked by a rule nobody had asked. `PH1` because a published gate fails a deck for a design choice the ruleset permits, which is `CLAUDE.md`'s stated case for reopening it; `m` because the fix is one probe branch, one declaration and two seeded variants, and `high` because it gates [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) and reaches an adopter with no 3D at all. |

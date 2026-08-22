@@ -214,6 +214,12 @@ STATIC_VARIANTS = [
 # The one-source provenance mark, written once: two anchors below quote it (T-103).
 MARK21 = ('<p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src21"><span class="sources-item">Ridership model</span></span></span></p>')
 
+# The anchor T-214's two element-injecting seeds hang off - the one headline in the deck whose
+# text is unique, so the injection lands in a slide (the probe walks `.stage` only) and lands
+# once. Named rather than repeated because both directions must inject at the SAME place: a
+# pass seed and a fail seed differing in where they sit would not be a pair.
+SEED_HEAD = '<h2 class="headline rise" style="--i:1">The window shuts in March</h2>'
+
 RENDER_VARIANTS = [
     ("slide-is-not-a-section", "DS-080", [
         ('<section class="slide" data-name="Waiting is the trip"',
@@ -279,6 +285,62 @@ RENDER_VARIANTS = [
          'aria-controls="moreMenu">More</button>\n'
          '    <div class="more-menu" id="moreMenu" hidden>\n'
          '      <button class="btn" id="motion" aria-pressed="false">Motion on</button>\n')]),
+    # ---- DS-142, both directions (T-214) ------------------------------------------------------
+    # **This rule had no seed at all until T-214**, in either direction, so its green on four
+    # shipped decks was the absence of a subject rather than a verdict - T-051's reading, and
+    # **L-36** and **L-129** at once. The pass direction is `RENDER_PASS_VARIANTS` below.
+    #
+    # **Every seed here declares `--motion-kind:affordance`, and that is deliberate.** A glow on a
+    # headline is not an affordance and the declaration is a false claim - but DS-237 checks that a
+    # motion declares a kind, not that the claim is true (DS-243 and DS-150 judge that, and both are
+    # `judge`). Declaring `content` instead would gate the seed on `--m-on` and demand an `--m-rank`,
+    # so DS-238 and DS-239 would break alongside DS-142 and the seed would prove nothing about any
+    # of the three. The smallest edit that breaks one rule is the whole convention of this file.
+    ("ambient-glow-on-static-content", "DS-142", [
+        # The direction the checker already caught, kept so the fix cannot quietly lose it. A
+        # headline is static content by construction: it is the slide's claim, it does not change,
+        # and nothing about it is in flight.
+        ("</nav>\n",
+         "</nav>\n<style>.slide .headline{animation:seedglow 3s ease-in-out infinite;"
+         "--motion-kind:affordance;--motion-long:loop}\n"
+         "@keyframes seedglow{50%{opacity:.55}}</style>\n")]),
+    ("ambient-glow-inheriting-a-live-subject", "DS-142", [
+        # **The seed that guards the mechanism rather than the rule.** `--motion-subject` is a
+        # custom property, and custom properties inherit - so a glow nested inside an element that
+        # declares `live` would read `live` off `getComputedStyle` and be exempted by descent. That
+        # turns an allow-list of one class name into an exemption one SUBTREE wide, which is the
+        # same defect one shape along and exactly what T-214's scope forbids.
+        #
+        # `shell/components.css` registers the property `inherits:false` to close it. Delete that
+        # registration and this seed stops being caught while every other row stays green, which is
+        # what makes it worth a render: the child declares nothing and must be judged on that.
+        ("</nav>\n",
+         "</nav>\n<style>.seed-live{display:inline-block;width:10px;height:10px;"
+         "animation:seedspin 3s linear infinite;"
+         "--motion-kind:affordance;--motion-long:loop;--motion-subject:live}\n"
+         ".seed-glow{display:inline-block;width:6px;height:6px;"
+         "animation:seedglow 3s ease-in-out infinite;--motion-kind:affordance;--motion-long:loop}\n"
+         "@keyframes seedspin{to{transform:rotate(360deg)}}\n"
+         "@keyframes seedglow{50%{opacity:.55}}</style>\n"),
+        (SEED_HEAD, SEED_HEAD + '<span class="seed-live"><i class="seed-glow"></i></span>')]),
+]
+
+
+# **The rendered half's pass direction, which did not exist until T-214.** `run_must_pass` was built
+# by T-041 for GF-7 and had exactly one caller; this is the second. The rendered suite could prove
+# only that a row FAILS, and DS-142's pass had never been observed on anything but `.current` -
+# which is the whole of what T-214 was raised for.
+RENDER_PASS_VARIANTS = [
+    ("looping-motion-declaring-a-live-subject", "DS-142", [
+        # A looping motion that is **not** `.current`, on an element that carries no class the
+        # checker has ever heard of, declaring its subject. Before T-214 this failed DS-142 for the
+        # only reason that ever mattered: the element was not called `current`.
+        ("</nav>\n",
+         "</nav>\n<style>.seed-live{display:inline-block;width:10px;height:10px;"
+         "animation:seedspin 3s linear infinite;"
+         "--motion-kind:affordance;--motion-long:loop;--motion-subject:live}\n"
+         "@keyframes seedspin{to{transform:rotate(360deg)}}</style>\n"),
+        (SEED_HEAD, SEED_HEAD + '<span class="seed-live"></span>')]),
 ]
 
 
@@ -519,6 +581,8 @@ def main(argv):
         render.self_test()
         print("=== rendered (one real Chrome render each)")
         bad += run(RENDER_VARIANTS, render_failures, "rendered")
+        print("=== rendered, the pass direction")
+        bad += run_must_pass(RENDER_PASS_VARIANTS, render_failures, "rendered pass")
         print("=== rendered with prefers-reduced-motion forced")
         bad += run(REDUCED_VARIANTS, reduced_failures, "reduced-motion")
         # T-041. Last because it is the most expensive half - each variant walks every slide.

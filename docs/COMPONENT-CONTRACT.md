@@ -507,6 +507,14 @@ test, and a deck adding one adds a row here rather than arguing an exemption.
 | `.current` | — | `.fig` | `0+` | — | author |
 | `.pulse` | — | `.slide` | `0+` | — | author |
 
+**A rule that starts a motion declares `--motion-subject`, and a looping one is failed without it.**
+`live` says the motion's subject is genuinely in flight, `static` says it is not, and DS-142 reads
+the declaration back rather than inferring it from a class name — the same split DS-237 makes with
+`--motion-kind` and DS-230 with `data-disc`. `.current` carries `--motion-subject:live` and passes on
+that, not on its name. **The property is registered `inherits:false` in `shell/components.css`**, so
+a motion nested inside a live subject is judged on its own declaration; that registration is
+load-bearing rather than housekeeping, and removing it exempts a whole subtree.
+
 **Every component reads its motion from [`THEME-CONTRACT.md`](THEME-CONTRACT.md) §3.6.** This table
 is that sentence made checkable: the rule named on the left must reference the tokens named on the
 right, so a theme moving the motion axis moves this deck and not only the four rules someone

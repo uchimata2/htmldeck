@@ -84,9 +84,9 @@ few.
 ## 3. Designing a new motion
 
 **The admission test is DS-140's and it is short.** A motion is admissible when it encodes something
-(DS-150), does not shape the page (DS-243), declares its kind (DS-237), sits inside DS-141's band or
-declares `--motion-long`, and survives reduced motion, print and the stop control. Nothing else is
-required, and no name is.
+(DS-150), does not shape the page (DS-243), declares its kind (DS-237), declares its subject
+(DS-142), sits inside DS-141's band or declares `--motion-long`, and survives reduced motion, print
+and the stop control. Nothing else is required, and no name is.
 
 What the test does not tell you, and this guide does:
 
@@ -100,6 +100,11 @@ What the test does not tell you, and this guide does:
   you are in — affordance answers the hand and lives in DS-240's short bands; content answers the
   argument and lives in DS-141's. Getting this backwards is what made the pager's press take 420 ms
   ([T-198](../tasks/T-198-give-affordance-motion-its-own-band-faster-than-content-motion.md)).
+- **If it loops, say what it is about.** `--motion-subject` takes `live` or `static`, and DS-142
+  bans continuous motion on static content. This is the one declaration that can fail a deck on its
+  own: a loop declaring `static`, or declaring nothing, is ambient decoration by definition. Write
+  `live` only where something really is in flight — a flow carrying a sequence, a process still
+  running — and never as the token that makes the gate quiet.
 - **If it runs long, write down why.** `--motion-long` takes `loop`, `illustration`, `emphasis` or
   `request`. The value is a claim on the artifact, so the critique pass can disagree with it — which
   is the point, and is more than a name ever offered.

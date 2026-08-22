@@ -715,8 +715,14 @@ svg{display:block}
 /* `--motion-long` is DS-141's licence to run past the 500 ms cap, and it replaces the token-name
    waiver the gate used before T-187 opened DS-140. The value says WHY, and `loop` is why this one
    runs 4.5s: it repeats, which is also what puts it under DS-218's stop control. */
+/* DS-142 bans continuous motion on static content, and a motion declares its own subject rather
+   than being recognised by class name (T-214). `inherits:false` is load-bearing: DS-142 is read off
+   computed style, so without it a glow nested inside a `live` subject would inherit the exemption.
+   The argument is DS-142's row; the seed that holds it is `ambient-glow-inheriting-a-live-subject`. */
+@property --motion-subject{syntax:"*";inherits:false}
+
 .current{stroke-dasharray:var(--current-dash);animation:current var(--current-dur) linear infinite;
-  --motion-kind:affordance;--motion-long:loop}
+  --motion-kind:affordance;--motion-long:loop;--motion-subject:live}
 @keyframes current{to{stroke-dashoffset:-26}}
 
 .pulse{animation:pulse var(--pulse-dur) var(--pulse-ease) 1 both;animation-delay:var(--pulse-delay);
