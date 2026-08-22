@@ -35,6 +35,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
 | [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `planned` | `implement` | - | - | - | T-042, T-119, T-130, T-153, T-218 |
+| [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216 |
 
 ## Closed
 
@@ -81,7 +82,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-039](T-039-finish-the-record-t-037-left-in-the-wrong-places.md) | Finish the record T-037 left in the wrong places | `WP2` | `0.1.0` | `done` | `review` | T-037 | - | - | T-005, T-014, T-021, T-022, T-042, T-046 |
 | [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md) | Fix the three reference-deck defects the completed gate found | `WP3` | `0.1.0` | `done` | `review` | T-005 | - | - | T-024, T-028, T-044, T-052 |
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112, T-185 |
-| [T-042](T-042-audit-the-whole-repository-against-itself.md) | Audit the repository against itself — stale claims, unreachable rules, and unchecked references | - | `0.1.0` | `done` | `review` | - | T-043, T-044, T-045, T-046, T-047, T-048, T-049, T-050 | - | T-004, T-005, T-008, T-036, T-037, T-039, T-041, T-056, T-218, T-219 |
+| [T-042](T-042-audit-the-whole-repository-against-itself.md) | Audit the repository against itself — stale claims, unreachable rules, and unchecked references | - | `0.1.0` | `done` | `review` | - | T-043, T-044, T-045, T-046, T-047, T-048, T-049, T-050 | - | T-004, T-005, T-008, T-036, T-037, T-039, T-041, T-056, T-218, T-219, T-220 |
 | [T-043](T-043-make-the-gates-coverage-account-provable.md) | Make the gate's coverage account provable, and derive the counts the documents state | - | `0.1.0` | `done` | `review` | T-042 | - | - | T-005, T-037, T-038, T-051, T-054 |
 | [T-044](T-044-restore-the-seeded-defect-fixture-and-its-claims.md) | Restore the seeded-defect fixture, and re-measure everything examples/README claims | - | `0.1.0` | `done` | `review` | T-042 | T-051 | - | T-023, T-024, T-028, T-032, T-034, T-035, T-040, T-045, T-052 |
 | [T-045](T-045-sweep-the-stale-claims-across-the-live-documents.md) | Sweep the nine stale claims the audit found across the live documents | - | `0.1.0` | `done` | `review` | T-042 | - | - | T-028, T-037, T-044, T-046, T-047 |
@@ -134,7 +135,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-093](T-093-ds-005s-check-bans-the-one-esm-route-r6-measured-as-working.md) | DS-005's check bans the one ESM route R6 measured as working | `PH3` | `0.2.1` | `done` | `review` | - | - | - | T-019, T-069, T-095 |
 | [T-094](T-094-render-py-shots-out-with-a-relative-path-writes-nothing.md) | render.py shots --out with a relative path writes nothing and says FAILED | `PH1` | `0.2.1` | `done` | `review` | - | - | - | T-019, T-074, T-186 |
 | [T-095](T-095-static-variants-builds-its-static-half-from-a-hand-kept-list.md) | static_variants builds its static half from a hand-kept list, so a new producer is outside the suite | `PH3` | `0.3.0` | `done` | `review` | - | - | - | T-066, T-075, T-093, T-096 |
-| [T-096](T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | One command that runs every checker under tools/ and reports what it skipped, with a reason | `PH3` | `0.2.3` | `done` | `review` | - | - | - | T-078, T-083, T-084, T-095, T-120, T-130 |
+| [T-096](T-096-one-command-that-runs-every-checker-and-says-what-it-skipped.md) | One command that runs every checker under tools/ and reports what it skipped, with a reason | `PH3` | `0.2.3` | `done` | `review` | - | - | - | T-078, T-083, T-084, T-095, T-120, T-130, T-220 |
 | [T-097](T-097-ds-004s-excusal-says-degrade-gracefully-is-unobservable-and-ds-009-gave-it-an-instrument.md) | DS-004's excusal says degrading gracefully is unobservable, and DS-009 gave half of it an instrument | `PH3` | `0.3.0` | `done` | `review` | - | - | - | T-017, T-019, T-041, T-165 |
 | [T-098](T-098-check-reports-briefs-phase-tables-as-a-second-index.md) | taskmd check reports BRIEF.md's phase tables as a second index, and will on every run | `PH3` | `0.2.3` | `done` | `review` | - | - | - | T-063, T-080, T-099, T-145 |
 | [T-099](T-099-rename-the-release-phases-so-they-cannot-be-read-as-versions.md) | Rename the release phases to PH1-PH3 and record which version shipped each task | `PH3` | `0.2.2` | `done` | `review` | - | - | - | T-078, T-092, T-098 |
@@ -183,7 +184,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-142](T-142-fix-o-h4-the-handoff-spine-routes-a-mode-word-with-a-qualifier-to-the-opposite-mode.md) | Fix O-H4 — the handoff spine routes a mode word with a qualifier to the opposite mode | `PH3` | `0.3.0` | `done` | `review` | - | - | - | T-140, T-141 |
 | [T-143](T-143-split-the-release-chronology-out-of-claude-md.md) | Split the release chronology out of CLAUDE.md | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-134, T-144, T-152, T-158, T-216 |
 | [T-144](T-144-give-each-cumulative-rule-one-operative-home.md) | Give each cumulative rule one operative home | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-134, T-143, T-152, T-158 |
-| [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-098, T-130, T-141, T-146, T-147 |
+| [T-145](T-145-move-brief-mds-release-phases-to-its-own-document.md) | Move BRIEF.md's Release phases to its own document | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-098, T-130, T-141, T-146, T-147, T-220 |
 | [T-146](T-146-one-file-per-lesson-with-a-generated-index.md) | One file per lesson, with a generated index | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-145, T-147, T-159 |
 | [T-147](T-147-one-workflow-file-per-lifecycle-phase.md) | One workflow file per lifecycle phase | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-141, T-145, T-146, T-159 |
 | [T-148](T-148-give-a-measured-figure-a-durable-home.md) | Give a measured figure a durable home | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130 |
@@ -254,7 +255,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-213](T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md) | Build the presenter build, and the marker that keeps it unshippable | `PH3` | `0.6.0` | `done` | `review` | T-211 | - | - | T-211, T-217 |
 | [T-214](T-214-ds-142s-checker-is-an-allow-list-of-one-class-name.md) | DS-142's checker is an allow-list of one class name, and T-187 left it behind | `PH1` | `0.6.0` | `done` | `review` | - | - | T-057 | T-005, T-057, T-105, T-187, T-202, T-216 |
 | [T-215](T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md) | The frame-rate instrument, and a number with the machine it was measured on | `PH3` | `0.6.0` | `done` | `review` | T-057 | - | - | T-016, T-057, T-185 |
-| [T-216](T-216-the-ph1-reopening-count-contradicts-the-prose-below-it.md) | The PH1 reopening count contradicts the prose below it | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-105, T-143, T-214 |
+| [T-216](T-216-the-ph1-reopening-count-contradicts-the-prose-below-it.md) | The PH1 reopening count contradicts the prose below it | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-105, T-143, T-214, T-220 |
 | [T-217](T-217-notes-attach-by-position-and-position-is-not-identity.md) | Speaker notes attach by position, and the second example proves position is not identity | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-211, T-213 |
 | [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md) | Record the pre-release audit method, and the machinery a run needs | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-042, T-119, T-130, T-153, T-219 |
 
