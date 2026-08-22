@@ -36,6 +36,7 @@ import printgeom                                                    # noqa: E402
 import figgrid                                                      # noqa: E402
 import markhits                                                     # noqa: E402
 import density                                                      # noqa: E402
+import glitchfree                                                   # noqa: E402
 import printpages                                                   # noqa: E402
 import spec                                                         # noqa: E402
 
@@ -2189,6 +2190,29 @@ ABSENCE_IS_A_FAIL = {
                               "not a placed one. A deck that WAS supplied and draws no diagram is a "
                               "different state and a pass; `figgrid.self_test` is what holds it to "
                               "that, with the denominator in the row (T-184)"),
+    # R6 section 8's conditions 2 to 8 (T-041). Every one is a requirement over a subject only a
+    # render produces, and `glitchfree.verdicts` takes the deck itself - so the empty path is a walk
+    # that never happened, and seven conditions that went unmeasured. **A measurement that did not
+    # happen is a failure, never a pass**: that is T-028's case, where a stage printed NO RESULT and
+    # the run stayed green. Each condition's OTHER absent subject - a walk that DID happen and found
+    # no declared face, no text, no canvas, or no interval across the font settle - is a different
+    # state and reports None; `glitchfree.self_test` is what holds all six of those, in both
+    # directions, with no browser.
+    "GF-2": ("requirement", "a page that loaded and a walk that ran. An unread console is not a "
+                            "clean one, and the trap reports an empty array either way"),
+    "GF-3": ("requirement", "a render that reported the font set. Faces that were never asked "
+                            "about are not faces that loaded"),
+    "GF-4": ("requirement", "text that was actually laid out. A family nothing resolved is not a "
+                            "family that resolved to an embedded face"),
+    "GF-5": ("requirement", "a stage that was measured. A slide nobody sized has not been shown "
+                            "to fit"),
+    "GF-6": ("requirement", "two snapshots across the font settle. No snapshot is not no shift"),
+    "GF-7": ("requirement", "a walk that reached the surfaces. A deck that WAS walked and draws no "
+                            "canvas is the different state this condition exists for, and reports "
+                            "None - which is where R6 section 8 puts the renderer that silently "
+                            "draws nothing"),
+    "GF-8": ("requirement", "a deck that could be advanced. Zero slides reached is not every slide "
+                            "reached"),
     "DS-244": ("requirement", "a deck to measure. `markhits.verdicts` takes the deck itself, so "
                               "its absent subject is the empty path - and a diagram whose labels "
                               "were never measured is not a diagram whose labels are clear. A deck "
@@ -2618,6 +2642,12 @@ def self_test():
     # denominator in the row so it cannot read like a document whose motions were checked.
     rows += density.verdicts("")
     rows += density.kind_verdicts("")
+    # `glitchfree` takes the deck too, and its absent subject is the empty path: no walk happened,
+    # so all seven conditions are unmeasured and every one must decline rather than report a deck
+    # that rendered cleanly. Its other absent subjects - a walk that ran and found no face, no
+    # text, no canvas or no interval - are six different states that report None, and
+    # `glitchfree.self_test` holds each of them in both directions with no browser (T-041).
+    rows += glitchfree.verdicts("")
     # `spec.verdicts` reads the two specification documents rather than the deck, so its absent
     # subject is a pair of empty ones - no source list, no slide, no ledger. It is the first
     # producer here that `check.py` does not consume, and it is held to the same bar anyway: the
@@ -2684,7 +2714,7 @@ def self_test():
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
                  "printpages.verdicts", "printgeom.verdicts", "spec.verdicts",
                  "figgrid.verdicts", "markhits.verdicts", "density.verdicts",
-                 "density.kind_verdicts"}
+                 "density.kind_verdicts", "glitchfree.verdicts"}
     producers = verdict_producers()
     undeclared_producers = sorted(set(producers) - exercised - set(DELEGATING_PRODUCERS))
     if undeclared_producers:

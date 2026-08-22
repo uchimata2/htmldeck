@@ -33,7 +33,6 @@ first reached an installed copy, derived from the first tag containing the commi
 
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | - | `proposed` | `specify` | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112, T-185 |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187 |
 | [T-213](T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md) | Build the presenter build, and the marker that keeps it unshippable | `PH3` | - | `proposed` | `specify` | T-211 | - | T-211 |
 
@@ -81,6 +80,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-038](T-038-the-gate-emits-verdicts-for-judge-rules-and-one-wrong-id.md) | Stop the gate reporting judge rules, and one verdict under the wrong rule ID | `WP3` | `0.1.0` | `done` | `review` | - | - | T-005, T-014, T-037, T-043, T-051, T-053, T-055 |
 | [T-039](T-039-finish-the-record-t-037-left-in-the-wrong-places.md) | Finish the record T-037 left in the wrong places | `WP2` | `0.1.0` | `done` | `review` | T-037 | - | T-005, T-014, T-021, T-022, T-042, T-046 |
 | [T-040](T-040-fix-the-three-reference-deck-defects-the-new-gate-found.md) | Fix the three reference-deck defects the completed gate found | `WP3` | `0.1.0` | `done` | `review` | T-005 | - | T-024, T-028, T-044, T-052 |
+| [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | `unreleased` | `done` | `review` | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112, T-185 |
 | [T-042](T-042-audit-the-whole-repository-against-itself.md) | Audit the repository against itself — stale claims, unreachable rules, and unchecked references | - | `0.1.0` | `done` | `review` | - | T-043, T-044, T-045, T-046, T-047, T-048, T-049, T-050 | T-004, T-005, T-008, T-036, T-037, T-039, T-041, T-056 |
 | [T-043](T-043-make-the-gates-coverage-account-provable.md) | Make the gate's coverage account provable, and derive the counts the documents state | - | `0.1.0` | `done` | `review` | T-042 | - | T-005, T-037, T-038, T-051, T-054 |
 | [T-044](T-044-restore-the-seeded-defect-fixture-and-its-claims.md) | Restore the seeded-defect fixture, and re-measure everything examples/README claims | - | `0.1.0` | `done` | `review` | T-042 | T-051 | T-023, T-024, T-028, T-032, T-034, T-035, T-040, T-045, T-052 |

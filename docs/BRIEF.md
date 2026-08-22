@@ -250,8 +250,11 @@ watched a font check and a WebGL check both pass on a broken render. **R6 propos
 to implement* and T-005's own §1 never adopted them**, so it closed on 2026-08-09 having built
 condition 1 and the restricted-origin half of condition 2 (DS-001, DS-005, DS-006) and having said
 nothing about the other seven. Caught reconciling the two documents against each other rather than
-by either of them; the remainder is
-[T-041](../tasks/T-041-implement-the-nine-glitch-free-conditions.md).
+by either of them. **The remainder closed on 2026-08-22**:
+[T-041](../tasks/T-041-implement-the-nine-glitch-free-conditions.md) built conditions 2 to 8 as
+`GF-2` to `GF-8`, numbered off R6's table, and every deck this repository ships passes all
+seven. So eight of the nine are a verdict and the ninth is condition 9 - *looked at*, by a
+person - which the gate's closing text now names as its boundary rather than leaving implicit.
 
 Those are all presentation checks. **When the user supplies source documents, the check also
 reconciles content:** every figure on a slide appears in a source with the same value, and every

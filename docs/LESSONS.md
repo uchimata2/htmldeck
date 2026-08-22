@@ -103,6 +103,7 @@ comes here.
 | [L-126](lessons/L-126.md) | A published benchmark is stated in its own deployment's units, not in yours | Evidence and verification |
 | [L-127](lessons/L-127.md) | A figure can be arithmetically right and relationally wrong, and only the drawing shows which | Evidence and verification |
 | [L-128](lessons/L-128.md) | Two instruments agreeing proves they agree, and a shared error is the cheapest way to get that | Evidence and verification |
+| [L-129](lessons/L-129.md) | A check for something the corpus does not contain is never seen to pass, and that looks exactly like working | Evidence and verification |
 
 ### Tooling
 

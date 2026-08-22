@@ -29,6 +29,7 @@ import paths                                                        # noqa: E402
 import render                                                        # noqa: E402
 import audit                                                         # noqa: E402
 import check                                                         # noqa: E402
+import glitchfree                                                    # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -310,6 +311,63 @@ REDUCED_VARIANTS = [
 ]
 
 
+# **The glitch-free half** (T-041). One seed per condition R6 section 8 numbers 2 to 8, and each
+# breaks its own condition rather than a `DS-nnn` rule - these are a decomposition of CLAUDE.md
+# rule 2, not new design law. Six of the seven need a browser and the seventh would be dishonest
+# without one, so they are a fourth suite rather than rows in the static half.
+#
+# **GF-7's seed is the interesting one.** The unbroken deck returns NO SUBJECT for it, so this is
+# the only condition whose variant has to CREATE the subject before it can break it - a blank
+# canvas is both. That is R6's reason for the condition in one object: a renderer that silently
+# draws nothing passes every other check.
+GF_VARIANTS = [
+    ("console-throws-on-load", "GF-2", [
+        ("</head>", "<script>document.__gfSeed.boom();</script></head>")]),
+    ("a-declared-face-never-loads", "GF-3", [
+        ("</head>", "<style>@font-face{font-family:'GF3 Seed';"
+                    "src:url(data:font/woff2;base64,AAAA) format(\"woff2\")}</style></head>")]),
+    ("headings-fall-back-to-georgia", "GF-4", [
+        ("</head>", "<style>.slide h1,.slide h2{font-family:Georgia,serif !important}"
+                    "</style></head>")]),
+    ("a-slide-outgrows-the-stage", "GF-5", [
+        ("</head>", "<style>#stage{overflow:hidden}.slide[data-current]{min-height:4000px}"
+                    "</style></head>")]),
+    # **Upward, and small.** The first seed here moved the slide DOWN 40 px and broke GF-5 as well,
+    # on 10 of 13 slides: content pushed below the stage grows `scrollHeight`, and a variant that
+    # breaks two conditions proves nothing about either. A negative offset moves every box by more
+    # than GF-6's 0.5 px tolerance without adding anything below the fold to scroll to.
+    ("layout-moves-after-the-fonts-settle", "GF-6", [
+        ("</head>", "<script>document.fonts.ready.then(function(){"
+                    "var s=document.querySelector('.slide[data-current]');"
+                    "if(s)s.style.transform='translateY(-8px)';});</script></head>")]),
+    ("a-canvas-that-draws-nothing", "GF-7", [
+        ("</body>", "<canvas id=\"gf7-seed\" width=\"80\" height=\"80\"></canvas></body>")]),
+    # **A slide the navigation cannot reach, not a deck that fails to start.** Renaming `id="next"`
+    # was the first seed and it broke the deck's own init: GF-8 came back *0 of 13, no slide carries
+    # data-current*, GF-2 failed on the resulting throw, and GF-4 and GF-6 lost their subject
+    # entirely. That proves the gate notices a broken deck, which was never in question. This one
+    # leaves the deck working and adds a fourteenth slide outside the stage, so the walk reaches 13
+    # of 14 and nothing else changes.
+    ("a-slide-the-walk-cannot-reach", "GF-8", [
+        ("</body>", "<section class=\"slide\" data-name=\"orphan\" "
+                    "style=\"display:none\"></section></body>")]),
+]
+
+
+# **The other direction, and GF-7 is the only condition that needs it here.** Every variant above
+# proves a check can fail. GF-7 is the one whose PASS has never been observed on any deck in this
+# repository, because none of the four draws a canvas - so `a-canvas-that-draws-nothing` proves the
+# FAIL and nothing at all proved that the pixel scan can see ink. **A check only ever seen to fail
+# is L-36 with the sign flipped**, and a scan that returned *blank* for every input would look
+# exactly like a working one against a corpus with no canvas in it.
+GF_PASS_VARIANTS = [
+    ("a-canvas-that-draws", "GF-7", [
+        ("</body>", "<canvas id=\"gf7-ink\" width=\"80\" height=\"80\"></canvas>"
+                    "<script>var g=document.getElementById('gf7-ink').getContext('2d');"
+                    "g.fillStyle='#3b2f7a';g.fillRect(8,8,40,40);</script></body>")]),
+]
+
+
 def build(name, edits):
     html = open(SRC, "r", encoding="utf-8").read()
     for old, new in edits:
@@ -353,6 +411,21 @@ def render_failures(path):
     return {r for r, _w, ok in rows if ok is False}, rows
 
 
+def glitchfree_failures(path):
+    """The same shape as `render_failures`, from the glitch-free walk (T-041).
+
+    **A fourth collector rather than a fourth entry in the third.** `render_failures` reaches
+    `audit.render_verdicts` and nothing else, so a variant seeded against `GF-n` run through it
+    would come back MISSED for a condition that is checked - which is exactly the drift T-093
+    caused and T-095 closed one level up.
+    """
+    rows = glitchfree.verdicts(path)
+    # `is False`, for `render_failures`' reason: a row reporting `None` decided nothing, and
+    # counting that as a catch would let a variant look caught because the seed removed the
+    # condition's subject rather than broke it (T-051).
+    return {r for r, _w, ok in rows if ok is False}, rows
+
+
 def reduced_failures(path):
     """The same shape as `render_failures`, from the reduced-motion render."""
     data, err = audit.reduced_motion_data(path)
@@ -368,7 +441,8 @@ def self_test():
     if not os.path.exists(SRC):
         sys.exit("SELF-TEST FAILED: no reference deck at %s" % SRC)
     src = open(SRC, "r", encoding="utf-8").read()
-    for name, _rule, edits in STATIC_VARIANTS + RENDER_VARIANTS + REDUCED_VARIANTS:
+    for name, _rule, edits in (STATIC_VARIANTS + RENDER_VARIANTS + REDUCED_VARIANTS
+                              + GF_VARIANTS + GF_PASS_VARIANTS):
         for old, _new in edits:
             if src.count(old) < 1:
                 sys.exit("SELF-TEST FAILED: variant %r no longer matches the deck.\n"
@@ -385,6 +459,30 @@ def self_test():
     # answer is about, and a run of it must not depend on somebody having run the other.
     check.producer_split()
     return True
+
+
+def run_must_pass(variants, failures_of, label):
+    """The mirror of `run`: a seeded SUBJECT the check has to accept.
+
+    **`True`, not merely *not caught*.** NO SUBJECT is also not caught, and it is what the unbroken
+    deck already reports for GF-7 - so an assertion phrased as absence from the failure set would be
+    satisfied by the seed never being seen at all, which is the thing being tested.
+    """
+    bad = []
+    for name, rule, edits in variants:
+        deck = build(name, edits)
+        _caught, rows = failures_of(deck)
+        got = [ok for r, _w, ok in (rows or []) if r == rule]
+        good = got == [True]
+        if not good:
+            bad.append((name, rule, got))
+        print("  %-28s must pass %-7s -> %s" % (name, rule, "PASSED" if good else "DID NOT"))
+        for r, what, ok in (rows or []):
+            if r == rule or ok is False:
+                print("      %-8s %-58s %s"
+                      % (r, what[:58], "NO SUBJECT" if ok is None else "pass" if ok else "FAIL"))
+    print("  %d of %d %s variants passed.\n" % (len(variants) - len(bad), len(variants), label))
+    return bad
 
 
 def run(variants, failures_of, label):
@@ -423,6 +521,11 @@ def main(argv):
         bad += run(RENDER_VARIANTS, render_failures, "rendered")
         print("=== rendered with prefers-reduced-motion forced")
         bad += run(REDUCED_VARIANTS, reduced_failures, "reduced-motion")
+        # T-041. Last because it is the most expensive half - each variant walks every slide.
+        print("=== glitch-free (R6 section 8, conditions 2 to 8)")
+        bad += run(GF_VARIANTS, glitchfree_failures, "glitch-free")
+        print("=== glitch-free, the pass direction")
+        bad += run_must_pass(GF_PASS_VARIANTS, glitchfree_failures, "glitch-free pass")
     if bad:
         print("MISSED - the gate does not check what it says it checks:")
         for name, rule, caught in bad:

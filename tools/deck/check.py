@@ -51,6 +51,7 @@ import printgeom                                                    # noqa: E402
 import figgrid                                                      # noqa: E402
 import markhits                                                     # noqa: E402
 import density                                                      # noqa: E402
+import glitchfree                                                   # noqa: E402
 import theme                                                        # noqa: E402
 import component                                                    # noqa: E402
 
@@ -422,6 +423,10 @@ NOT_STATIC = {
                         "markup cannot answer it: the <svg> is on the column in every deck that "
                         "fails, and what is inset is the drawing inside a viewBox scaled by a "
                         "factor only the laid-out page knows (T-184)",
+    "glitchfree.verdicts": "walks every slide in a real browser with a console trap listening. "
+                           "Six of its seven conditions are facts about what the browser DID - "
+                           "which faces loaded, which family text actually rendered in, whether a "
+                           "canvas drew - and the markup states none of them (T-041)",
     "markhits.verdicts": "measures one diagram label's box against another's. The markup cannot "
                          "answer it either: how wide a label is depends on the face, and only a "
                          "browser with that face loaded knows (T-204)",
@@ -560,6 +565,14 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     # DS-239, added by T-112. It takes the deck rather than the markup only because it reports the
     # path in its own row; the derivation itself is pure.
     rows += density.verdicts(deck)
+
+    # GF-2 to GF-8, added by T-041. R6 section 8 decomposed CLAUDE.md rule 2 into nine conditions
+    # for T-005 to implement; T-005's own criterion was narrower and seven of the nine were never
+    # anyone's (**L-39**). Its own render for `figgrid`'s reason - the tool owns the measurement,
+    # and a second copy of the probe here is the composition that disagreed the first time either
+    # half changed (**L-08**, **L-13**). Condition 1 is DS-001 and condition 9 is a person, which
+    # the closing text names rather than this list.
+    rows += glitchfree.verdicts(deck)
 
     if not skip_contract:
         rows += list(contract.audit(deck, quiet=True))
@@ -964,7 +977,14 @@ sharpest case: text can pass all five categories and still read as machine-writt
 DS-106 is never "reads as human-written" (DS-107, C-10).** Five of the ten evaluation dimensions -
 %s - are invisible to any check here and were proven so
 against a seeded-defect deck. A clean run is not a good deck; it is a deck carrying no defect this
-gate was built to see (L-05, DS-191).""" % res["blindTo"])
+gate was built to see (L-05, DS-191).
+
+**And R6 section 8's ninth condition is a person.** GF-2 to GF-8 above decide conditions 2 to 8 and
+DS-001 decides condition 1, so *renders glitch-free* is eight-ninths measured here. The ninth is
+*looked at* - a human opens the deck offline and reads it - and it is not deferred, not excused and
+not scheduled: no check replaces it and none ever will (L-01). CLAUDE.md rule 6 says what looking is
+and what it excludes; `tasks/TASK-WORKFLOW.md` section 7 says when it is owed. **This gate reaching
+green is the moment that becomes due, not the moment it is discharged.**""" % res["blindTo"])
     return 0 if res["ok"] else 1
 
 

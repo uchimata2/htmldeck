@@ -110,6 +110,14 @@ NOT_RUN = {
         "shipped failed the rule it measures - 18 of 21 diagrams - and T-184 re-cut those first, "
         "which is what made gating it honest. Still runnable alone, and then it prints the offset "
         "per diagram rather than one verdict: python tools/deck/figgrid.py <deck>",
+    "tools/deck/glitchfree.py":
+        "runs inside tools/deck/check.py, the per-deck gate, which is where its exit code "
+        "is read. Its verdicts() are GF-2 to GF-8 - R6 section 8's conditions 2 to 8, the "
+        "decomposition of CLAUDE.md rule 2 - and check.py gathers all seven on every deck. "
+        "Condition 1 is DS-001 and condition 9 is a person, which check.py's closing text "
+        "names rather than this table. Still runnable alone, and then it prints all seven "
+        "rows per deck with the counts behind them rather than one verdict: python "
+        "tools/deck/glitchfree.py <deck>",
     "tools/deck/markhits.py":
         "runs inside tools/deck/check.py, the per-deck gate, which is where its exit code is read. "
         "Its verdicts() is DS-244's row and check.py gathers it on every deck. Half of what it "

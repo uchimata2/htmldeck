@@ -141,6 +141,55 @@ MEASURES_MOTION = "htmldeck:measures-motion"
 # `*` DOES NOT MATCH PSEUDO-ELEMENTS, so the selector names them: the ruler's tick marks are
 # `::before`, and a capture taken while one was mid-transition read its animated height and colour
 # instead of its settled ones. Found 2026-08-08 building the ruler's dot variant.
+# **The console trap, in `<head>`, ahead of the deck's own script** (T-041, GF-2).
+#
+# R6 section 8's condition 2 is *no console errors and no unhandled rejections, collected over the
+# full load and one pass through every slide*. A listener appended at `</body>` cannot satisfy the
+# first half: the deck's own script has already run and thrown by then, and a load-time error is
+# exactly the class this condition exists for. So `make_probe` gained a second injection point and
+# this is what goes through it.
+#
+# **Unconditional, on `MOTION_PIN`'s argument and for `MOTION_PIN`'s reason.** Eight probe sources
+# pass an `extra`; anything a caller has to remember is a thing eight callers will forget, which is
+# how the pin came to be in `PROBE` and nowhere else (**L-57**, T-206, T-209). It differs from the
+# pin in the one way that decides whether an exemption is needed: **the pin changes the page and
+# this only listens**, so no probe's subject can be erased by it and there is no counterpart to
+# `MEASURES_MOTION` here.
+#
+# The one thing it does change is `console.error`, which it wraps and calls through. A wrapper that
+# forwards is not a silenced console, and the alternative - reading Chrome's stderr - cannot say
+# which slide an error came from, which is the half of the condition that needs the walk.
+#
+# `capture: true` on `error` is what catches a **resource** failure. Those do not bubble, and under
+# `--host-resolver-rules=MAP * ~NOTFOUND` they are how an external reference announces itself at run
+# time. DS-001 decides the same thing from the markup; this sees what the browser actually did.
+ERROR_TRAP = r"""
+<script>
+(function(){
+  var E = [];
+  window.__htmldeckErr = E;
+  function rec(kind, text){
+    if (E.length < 50) E.push(kind + ': ' + String(text).slice(0, 300));
+  }
+  window.addEventListener('error', function(e){
+    var t = e && e.target;
+    if (t && t !== window && t.tagName) rec('resource', t.tagName + ' ' + (t.src || t.href || ''));
+    else rec('error', (e && e.message) || 'error');
+  }, true);
+  window.addEventListener('unhandledrejection', function(e){
+    var r = e && e.reason;
+    rec('rejection', (r && (r.message || r)) || 'rejection');
+  });
+  var ce = console.error;
+  console.error = function(){
+    rec('console.error', Array.prototype.join.call(arguments, ' '));
+    return ce.apply(console, arguments);
+  };
+})();
+</script>
+"""
+
+
 MOTION_PIN = r"""
 <script>
 (function(){
@@ -268,6 +317,24 @@ PROBE = r"""
 """
 
 
+def inject_head(html, snippet):
+    """Put `snippet` as early in the document as the markup allows.
+
+    **Earliest, not merely inside `<head>`** - the point of the seam is to sit ahead of the deck's
+    own script, and a deck declares that script in `<head>` like everything else. Three fallbacks,
+    because the last of them is what `self_test`'s fixture is: a page with no `<head>` at all still
+    parses a leading `<script>` into an implied one, so the guarantee survives markup that never
+    wrote the tag.
+    """
+    m = re.search(r"<head\b[^>]*>", html, re.I)
+    if m:
+        return html[:m.end()] + snippet + html[m.end():]
+    m = re.search(r"<html\b[^>]*>", html, re.I)
+    if m:
+        return html[:m.end()] + snippet + html[m.end():]
+    return snippet + html
+
+
 def make_probe(deck, name="probe.html", extra="", out=None):
     html = open(deck, "r", encoding="utf-8").read()
     if "</body>" not in html:
@@ -277,6 +344,9 @@ def make_probe(deck, name="probe.html", extra="", out=None):
     body = PROBE if not extra else extra
     pin = "" if MEASURES_MOTION in body else MOTION_PIN
     html = html.replace("</body>", pin + body + "\n</body>")
+    # **And every probe carries the console trap, with no exemption at all** (T-041). It goes in
+    # after the pin so the two seams never contend for one anchor, and lands first in the document.
+    html = inject_head(html, ERROR_TRAP)
     # The probe is a **whole copy of the deck**. Writing it under the tool put an adopter's
     # content inside the installed package; it goes with the deck now (T-074).
     out = out_dir(deck, out)
@@ -697,23 +767,46 @@ def self_test():
     if re.search(r"if\s*\(\s*quiet\s*\)\s*\{", PROBE + MOTION_PIN):
         sys.exit("SELF-TEST FAILED: the motion pin is behind `quiet` again - that is the T-206 "
                  "fault exactly, and it fails the gate green rather than red")
+    # **The trap's two listeners and its store, asserted as text** (T-041). GF-2 is decided from
+    # `window.__htmldeckErr`, and a trap that stopped installing either listener would report an
+    # empty array - a clean console is exactly what a broken collector looks like, which is the
+    # optimistic-direction failure R6 section 8 raised conditions 3 and 7 for. Structural, and it
+    # needs no browser, for the same reason the pin's guard is.
+    for _needle, _why in (("__htmldeckErr", "the store GF-2 reads"),
+                          ("'error'", "the error listener"),
+                          ("'unhandledrejection'", "the rejection listener"),
+                          ("console.error", "the console wrapper")):
+        if _needle not in ERROR_TRAP:
+            sys.exit("SELF-TEST FAILED: ERROR_TRAP no longer installs %s (%s), so GF-2 reports a "
+                     "clean console for every deck whatever it logged (T-041)" % (_why, _needle))
+
     # **And no probe source may carry a copy of it** (T-209). Two did, and a third would have been
     # written the next time somebody needed one - which is how the pin came to be in `PROBE` and
     # nowhere else in the first place. Read off the package directory rather than a list kept here,
     # so a module added tomorrow is covered (**L-57**).
-    _pin_css = "transition:none!important;animation:none!important"
-    _copies = []
-    for _name in sorted(os.listdir(os.path.dirname(os.path.abspath(__file__)))):
-        if not _name.endswith(".py") or _name == "render.py":
-            continue
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), _name),
-                  "r", encoding="utf-8") as _fh:
-            if _pin_css in _fh.read():
+    # T-041 put the console trap through the same sweep rather than writing a second one: both are
+    # single-home guarantees `make_probe` owns, and the sweep's whole point is that it is read off
+    # the directory rather than off a list somebody has to extend.
+    _seams = [("the motion pin", "transition:none!important;animation:none!important", "T-209"),
+              ("the console trap", "__htmldeckErr", "T-041")]
+    for _what, _marker, _task in _seams:
+        _copies = []
+        for _name in sorted(os.listdir(os.path.dirname(os.path.abspath(__file__)))):
+            if not _name.endswith(".py") or _name == "render.py":
+                continue
+            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), _name),
+                      "r", encoding="utf-8") as _fh:
+                _text = _fh.read()
+            # A module that READS the store is not a module that installs one. `glitchfree.py`
+            # names `__htmldeckErr` because reading it is its subject; what is forbidden is a
+            # second copy of the installer, which is the assignment rather than the name.
+            if _marker in _text and ("window.__htmldeckErr =" in _text
+                                     or _marker != "__htmldeckErr"):
                 _copies.append(_name)
-    if _copies:
-        sys.exit("SELF-TEST FAILED: %s carr%s its own copy of the motion pin. There is one pin and "
-                 "`make_probe` injects it; a copy is a second home that goes stale silently (T-209)"
-                 % (", ".join(_copies), "ies" if len(_copies) == 1 else "y"))
+        if _copies:
+            sys.exit("SELF-TEST FAILED: %s carr%s its own copy of %s. There is one and `make_probe` "
+                     "injects it; a copy is a second home that goes stale silently (%s)"
+                     % (", ".join(_copies), "ies" if len(_copies) == 1 else "y", _what, _task))
     if "--host-resolver-rules=MAP * ~NOTFOUND" not in " ".join(
             ["--host-resolver-rules=MAP * ~NOTFOUND"]):
         sys.exit("SELF-TEST FAILED: offline flag missing")
@@ -763,9 +856,26 @@ def self_test():
         _motion = make_probe(deck, name="motion.html", extra=MOTION_PROBE,
                              out=os.path.join(fixture, "out"))
         with open(_motion, "r", encoding="utf-8") as _fh:
-            if "data-motion" in _fh.read():
-                sys.exit("SELF-TEST FAILED: MOTION_PROBE was pinned. Measuring motion is its "
-                         "declared subject; pinning it makes it report a page with none (T-185)")
+            _mtext = _fh.read()
+        if "data-motion" in _mtext:
+            sys.exit("SELF-TEST FAILED: MOTION_PROBE was pinned. Measuring motion is its "
+                     "declared subject; pinning it makes it report a page with none (T-185)")
+
+        # **The trap, proved on the written page and in all three cases** (T-041). The pin has one
+        # declared exemption and the trap has none, so `MOTION_PROBE` is here as a case that must
+        # carry it rather than as one that must not - the two seams differ exactly here, and a
+        # reader who assumes they match would be wrong in the direction that loses the guarantee.
+        # The fixture also has no `<head>`, so this is `inject_head`'s last fallback under test.
+        for _label, _text in (("no extra", _plain), ("a caller's extra", _ftext),
+                              ("MOTION_PROBE", _mtext)):
+            if "__htmldeckErr" not in _text:
+                sys.exit("SELF-TEST FAILED: the probe built with %s carries no console trap, so "
+                         "GF-2 reads an absent store and reports a clean console (T-041)" % _label)
+            # Ahead of the deck, not merely present. A trap after the deck's own script cannot see
+            # the load-time error that is the whole reason condition 2 needs a `<head>` seam.
+            if _text.index("__htmldeckErr") > _text.lower().index("<body"):
+                sys.exit("SELF-TEST FAILED: the console trap in the probe built with %s sits after "
+                         "<body>, so a load-time throw happens before it listens (T-041)" % _label)
     finally:
         shutil.rmtree(fixture, ignore_errors=True)
 
