@@ -35,7 +35,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
 | [T-213](T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md) | Build the presenter build, and the marker that keeps it unshippable | `PH3` | - | `proposed` | `specify` | T-211 | - | - | T-211 |
-| [T-215](T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md) | The frame-rate instrument, and a number with the machine it was measured on | `PH3` | - | `proposed` | `specify` | T-057 | - | - | T-016, T-057, T-185 |
+| [T-215](T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md) | The frame-rate instrument, and a number with the machine it was measured on | `PH3` | - | `in_progress` | `implement` | T-057 | - | - | T-016, T-057, T-185 |
 
 ## Closed
 

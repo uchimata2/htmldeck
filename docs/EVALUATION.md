@@ -383,6 +383,43 @@ reused, so a component defect caught in batch one is fixed once instead of in tw
 
 ---
 
+## 6.3 Figures no gate can take, and the machine each was taken on
+
+**Everything else in this document is decided by something that runs here. This section is for the
+figures that are not**, and there is one so far. It is a table rather than a sentence because a
+measurement taken outside the harness belongs to the machine that took it, and the second row is the
+point of the first — **a later reading on other hardware adds a row and never overwrites one.**
+
+**Frame rate held**, measured with `python tools/deck/fps.py <deck>`. The tool picks the slide
+carrying the most animated elements, counts `requestAnimationFrame` callbacks over a stated
+interval, and measures the display's refresh ceiling separately in the same run. *Held* without
+*ceiling* is not a figure: 58 fps is excellent against 60 and a fault against 144.
+
+| Date | Deck | Slide | Animated | Held | Ceiling | Machine |
+| :--- | :--- | :--- | ---: | ---: | ---: | :--- |
+| — | — | — | — | — | — | *no reading yet — see the note below* |
+
+**Why the table is empty, and what it is waiting for.** No deck in this repository has ever had its
+frame rate measured on any machine. `render.py` cannot take this one: headless Chrome never produces
+a frame, so a CSS animation's clock there is frame production rather than time
+([T-185](../tasks/T-185-no-instrument-here-can-watch-an-animation-play.md), **L-26**), and every
+other measurement this project makes is taken that way. The instrument exists and runs; it needs a
+window somebody is looking at. [T-215](../tasks/T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md)
+carries it.
+
+**Nothing in this section gates a deck, and that is a ruling rather than an omission.** A threshold
+here would be a claim about hardware, generalised from however many rows this table has — which at
+one row is exactly the reasoning **L-05** refuses. The rows describe machines; they do not describe
+decks.
+
+**What goes in *Machine*: capability, never identity.** OS, browser and version, core count and GPU
+renderer — the facts that make the number mean something. Not a hostname, a user name, a path or an
+account. `CLAUDE.md`'s publishing rule keeps machine data out of this repository and this is how the
+two hold together; `fps.py` gathers nothing else, so the rule is kept by what is collected rather
+than by what is remembered.
+
+---
+
 ## 7. Validating the rubric itself
 
 **A rubric that has never been tested is a rubric that passes everything.** This project has already

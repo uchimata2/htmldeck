@@ -2,8 +2,8 @@
 id: T-215
 title: The frame-rate instrument, and a number with the machine it was measured on
 type: deliverable
-status: proposed
-phase: specify
+status: in_progress
+phase: implement
 parent: T-057
 blocked_by: []
 related: [T-057, T-185, T-016]
@@ -13,7 +13,7 @@ business_value: medium
 effort: m
 created: 2026-08-22
 updated: 2026-08-22
-deliverables: []
+deliverables: [tools/deck/fps.py]
 ---
 
 # T-215 — The frame-rate instrument, and a number with the machine it was measured on
@@ -71,35 +71,122 @@ start. T-057 has sat `proposed` since 2026-08-09 and this half was never the rea
 - [ ] The figure's home takes a second row for a second machine without contradicting the first
 - [ ] Nothing this task adds can fail a deck
 
-**Open questions**
-- **Where does the measurement run, given that headless produces no frames?** T-185 recorded that
-  playback at a frame rate *"needs the owner's browser"*. That makes this the first measurement here
-  taken outside the harness, so the instrument's output has to carry its own provenance rather than
-  inheriting the harness's. **Owner** — whether they will run it, and on what.
-- **What counts as *the heaviest slide*?** A count of animated elements is derivable and is probably
-  the right proxy, but the honest answer may be *the slide with the 3D visual on it*, which does not
-  exist until T-057. **Decide during specify**: if the answer is the second, this task measures the
-  heaviest slide that exists today and T-057 re-measures, which is a row rather than a rewrite.
+**Settled during specify**
+- **The owner will run it, in Chrome or Edge on the development machine.** Asked and answered
+  2026-08-22, which is the one question this task could not settle for itself. So the instrument is
+  built to be handed over and run by a person, and its output carries its **own** provenance —
+  browser, platform, core count, display refresh and GPU renderer, read by the page at the moment of
+  measurement — rather than inheriting the harness's, which is not the thing running it.
+- **The heaviest slide is derived at run time, and it is not a proxy.** The open question offered a
+  count of animated elements as *probably the right proxy*; it can be the exact thing instead. The
+  instrument already runs inside the deck in a real browser, so it walks every slide and counts the
+  elements whose computed `animation-name` is not `none`. Nothing is parsed and nothing is guessed.
+  **T-057 then re-measures and adds a row** rather than rewriting this one, which is the second half
+  of the open question answered as it proposed.
+- **Naming the machine is capability, never identity — and that is a constraint this task inherits
+  rather than invents.** `CLAUDE.md`'s publishing rule requires this repository to be free of
+  personal and **machine** data, and this task's whole point is that a number without its machine is
+  worthless. Both hold at once: what makes the figure interpretable is the **class of hardware** —
+  OS, browser and version, core count, display refresh, GPU renderer — and none of that is a
+  hostname, a user name, a serial or a path. `docs/upstream/harness.md` already publishes *one
+  machine — Windows 11, Git Bash and PowerShell 7* on exactly this reading. The instrument collects
+  nothing else, so the rule is kept by what it does not gather rather than by remembering to redact.
+- **The figure's home is `docs/EVALUATION.md`.** Named in Inputs, and it is the document that already
+  separates what the gate decides from what it cannot reach. `docs/upstream/harness.md` was
+  considered and rejected: it is a register of observations addressed to a vendor, not a place this
+  project records its own measurements.
+
+**Why the number needs a second number beside it**
+A frame rate is bounded by the display, so *58 fps* means nothing until you know whether the ceiling
+was 60 or 144. The instrument therefore measures the **refresh ceiling** on the same machine in the
+same run, and the figure is recorded as *held against ceiling*. Without it the first row would invite
+exactly the comparison across machines that this task's `Out: a gate` clause refuses.
 
 ## 2. Plan
 
+**The instrument is a tool that prepares a deck and a person who runs it**, because no other split
+works: the measurement needs frames, frames need a real window, and a real window needs somebody
+looking at it (T-185, **L-26**). So `fps.py` does everything that can be automated — inject, pick the
+slide, count, gather provenance, format the row — and the person supplies the one thing the harness
+cannot, which is a machine that draws.
+
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
+| 1 | `fps.py <deck>`: copy the deck, inject a measuring overlay before `</body>`, write it to the deck's own assets cache and open it. Standard library only (**L-07**) | `tools/deck/fps.py` |
+| 2 | The overlay measures the **refresh ceiling** first, on an idle frame burst, before any slide is shown — the ceiling is a property of the display, and measuring it while the deck animates would fold the two numbers together | in `fps.py` |
+| 3 | It walks every slide counting elements whose computed `animation-name` is not `none`, picks the heaviest, and drives the deck there through its own `next`/`prev` controls — never by assuming an index, which is how `audit.py`'s helper survived a chrome redesign | in `fps.py` |
+| 4 | It counts `requestAnimationFrame` callbacks over a stated interval on that slide, then shows a result card with the figure, the ceiling, the slide, the animated-element count and the machine's **capability** fields — and a pre-formatted table row to paste | in `fps.py` |
+| 5 | Declare the tool in `check_all.py`'s `NOT_RUN` with what it is instead, and **stage it before the gate runs**, since `check_all` discovers tracked files only (`PUBLISHING.md` §8 step 1) | `tools/check_all.py` |
+| 6 | Give the figure a home that takes one row per measurement — deck, slide, held, ceiling, machine, date | `docs/EVALUATION.md` |
+| 7 | Hand the command to the owner, record the row they return, and close | §3, §4 |
+
+**Nothing here can fail a deck**, which is the scope's one prohibition. `fps.py` is not in the gate,
+is not called by `check.py`, and prints a measurement rather than a verdict. Step 5 is what keeps
+that true *and* keeps `check_all` green, which otherwise fails any tracked tool no table names.
+
+**The one acceptance criterion this task cannot close on its own is the first**, and that was known
+when it was raised. If the owner's reading does not arrive, it is recorded `not met` with the reason
+and the instrument still ships — §2 of `TASK-WORKFLOW.md` says that closes a task honestly, and a
+number invented next to a machine nobody ran is the single outcome this task exists to prevent.
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- **The instrument is a preparer plus a person, and the split is forced rather than chosen** —
+  2026-08-22. `fps.py` injects, weighs, drives, counts and formats; the person supplies a window
+  that draws. Nothing else divides the work, because frames need a real foreground window.
+- **The heaviest slide is counted in the browser, not parsed from CSS** — 2026-08-22. The overlay is
+  already running inside the deck, so it reads computed `animation-name` per element per slide. This
+  is the same move T-214 made one rule along: bind on what is true at run time, never on a name.
+- **The refresh ceiling is measured first, before any slide is shown** — 2026-08-22. It is a property
+  of the display; measuring it while the deck animates folds two numbers into one and neither
+  survives.
+- **`fps.py` is declared in `check_all.py`'s `NOT_RUN` and staged before the gate ran** — 2026-08-22.
+  `check_all` discovers *tracked* files, so an unstaged new tool is invisible to it and a staged one
+  with no entry fails the run as `UNCLASSIFIED`. Both halves are `PUBLISHING.md` §8 step 1.
+- **The machine is recorded as capability and never as identity** — 2026-08-22. OS, browser, cores,
+  memory, screen, refresh, GPU renderer; no hostname, user, path or account. That is how this task's
+  *state the machine* and `CLAUDE.md`'s *no machine data* hold at once, and `fps.py` keeps it by not
+  collecting the rest.
+
+**A defect found in this tool by checking it, and worth more than the tool**
+Opening the instrumented deck in a hidden preview pane to check the overlay for script errors: the
+card rendered, the script ran clean, `requestAnimationFrame` **never fired once**, and the page sat
+on *Measuring the display's refresh ceiling…* indefinitely. **A stall is indistinguishable from a
+slow machine**, and it is the reading most likely to be written down as a number. The overlay now
+carries a watchdog that reports *No frames* with what causes it. This is T-185's finding arriving
+through a second door — and it is also the proof that the instrument cannot be satisfied by the
+harness, a background tab or a preview pane, which is the property that makes its output worth
+recording at all.
 
 **Outputs produced**
-- <path>
+- [`tools/deck/fps.py`](../tools/deck/fps.py) — the instrument, standard library only (**L-07**)
+- [`tools/check_all.py`](../tools/check_all.py) — the `NOT_RUN` entry saying what it is instead
+- [`docs/EVALUATION.md`](../docs/EVALUATION.md) §6.3 — the figure's home, one row per measurement
+
+**Verification**
+- `fps.py` self-test passes: the overlay lands, the anchor is replaced rather than duplicated,
+  `--seconds` and `--slide` reach the page, and a file with no `</body>` is refused rather than
+  silently returned unchanged.
+- Built against the reference deck: 314 KB out, overlay present, no console errors on load.
+- `python tools/check_all.py` green with the tool staged and declared.
+
+**What is still owed, and by whom**
+**The reading itself.** The owner has said they will run it in Chrome or Edge on the development
+machine (asked and answered 2026-08-22, §1). Until that row exists, `docs/EVALUATION.md` §6.3 carries
+an empty table with the reason in it, and this task stays open rather than closing on a criterion it
+could only meet by inventing a number — which is the one outcome it was raised to prevent.
+
+    python tools/deck/fps.py examples/reference-deck.html
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Frame rate held on a real 12-slide deck, heaviest slide, **number and machine stated together** | *pending* | The instrument is built and runs. The reading needs a window that draws frames; the owner will take it |
+| The instrument runs somewhere a person can repeat it, and what it needs is written down | met | `python tools/deck/fps.py <deck>`; the docstring states what it needs and why nothing here can substitute |
+| The figure's home takes a second row for a second machine without contradicting the first | met | `docs/EVALUATION.md` §6.3 — a table keyed by date, deck, slide and machine |
+| Nothing this task adds can fail a deck | met | `fps.py` is in `check_all.py`'s `NOT_RUN`, is called by no gate, and prints a measurement rather than a verdict |
 
 **Child fix tasks raised**
 - none
@@ -108,4 +195,5 @@ start. T-057 has sat `proposed` since 2026-08-09 and this half was never the rea
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | → in_progress | **Instrument built; the reading is the only thing outstanding.** Both open questions settled at specify - the owner runs it in Chrome or Edge on the development machine, and the heaviest slide is counted at run time rather than proxied. Three of four criteria met. Held open rather than closed `not met`, because the owner's answer has arrived and only the number has not; closing now would make a one-command wait look like a limit of the task. |
 | 2026-08-22 | → proposed | **Split out of [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) while restating that task's dissolved DS-140 criterion.** T-057 was three deliverables wearing one title, the third went with the owner's 2026-08-19 ruling, and its own plan calls this half independent and the only one measuring something that already exists. `m` rather than `l` because there is no visual to build and no rule to change; `PH3` because it is not a defect in the published plugin. **The constraint carried over from T-185 is the whole shape of it**: headless produces no frames, so this is the first measurement here that cannot be taken by the harness. |

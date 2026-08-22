@@ -175,6 +175,12 @@ NOT_RUN = {
     "tools/deck/render.py":
         "an instrument, not a gate. It renders a deck in real Chrome offline and reports what came "
         "out; the gates that need a render call it",
+    "tools/deck/fps.py":
+        "an instrument a PERSON runs, and the only one here that cannot be automated at all. "
+        "Headless produces no frames, so a frame rate cannot be measured by anything in this file "
+        "(T-185, L-26); it prepares a deck and a real browser window supplies the frames. It "
+        "decides nothing and fails no deck - a frame-rate threshold would be a claim about hardware "
+        "this project has no corpus for (L-05). Run it by hand: python tools/deck/fps.py <deck>",
     "tools/deck/preflight.py":
         "a builder. It writes the capability preflight into a deck; shell.py check gates the result",
     "tools/deck/print_variants.py":
