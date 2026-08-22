@@ -12,7 +12,8 @@ owner: the project owner
 business_value: medium
 effort: l
 created: 2026-08-18
-updated: 2026-08-19
+updated: 2026-08-22
+shipped_in: 0.5.0
 deliverables:
   - examples/reference-deck.html
   - examples/sort-window/sort-window.html
@@ -233,5 +234,6 @@ practice, exactly as §1 said.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **`shipped_in` set to `0.5.0`, back-filled.** The field was never written, so this task read as belonging to no release while being closed. **Derived, not assumed**: the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. Found while reading the unreleased set for `0.6.0` — eight tasks closed 2026-08-19 all carried an empty field, and a ninth ([T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md)) closed after the tag and belonged to `0.6.0` instead. |
 | 2026-08-18 | → proposed | Split out of [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md) on the owner's ruling, once measuring turned *one deck's diagrams* into 18 across three decks. `l` rather than `m` because the arithmetic is mechanical and the looking is not. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule: the decks render correctly and no adopter is affected, so it does not reopen `PH1`. |
 | 2026-08-19 | → done | 18 of 21 diagrams re-cut and the measurement promoted to **DS-236**, decided by `check.py`. The offset was two faults — an aspect letterbox nobody chose and the drawing's own margin — and they took different mechanisms. Slide 8's decision node rebuilt with its label inside. Two defects found by looking that no gate reached, one of them a `.decision-branch` sizing hole left by [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md). One acceptance criterion deviated from, with the argument in §4. |

@@ -12,7 +12,8 @@ owner: the project owner
 business_value: high
 effort: m
 created: 2026-08-18
-updated: 2026-08-19
+updated: 2026-08-22
+shipped_in: 0.5.0
 deliverables:
   - shell/components.css
   - tools/deck/longdeck.py
@@ -177,6 +178,7 @@ constraint a step has to satisfy and would otherwise discover late.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **`shipped_in` set to `0.5.0`, back-filled.** The field was never written, so this task read as belonging to no release while being closed. **Derived, not assumed**: the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. Found while reading the unreleased set for `0.6.0` — eight tasks closed 2026-08-19 all carried an empty field, and a ninth ([T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md)) closed after the tag and belonged to `0.6.0` instead. |
 | 2026-08-18 | → proposed | Found by [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md)'s post-build look, doing the half that had never been done: the chrome row **in dark mode**, at 13 slides and at 25. The defect is not dark-specific and shows in both themes, which is the part worth keeping — it had been rendered in light at 25 during T-114 step 10 and read as *a compact mode* rather than as a loss, because nothing put the two lengths side by side. `contrast.py` passes it, and correctly: every pair clears its ratio. The failure is one of **rank**, not of contrast, and no gate here owns rank (**L-05**). Not a tag blocker for the release T-114 ships in — the two rules that produce it both predate T-114 and neither moved — but this release lowers the capacity bound 17 → 16, so one more deck length falls into dense mode than before, and that is why it is filed now rather than noticed later. |
 | 2026-08-19 | (no change) | **The owner confirmed §1's open question keeps its stated method: a rendered strip first, then the pick.** Offered the alternative of choosing from a written description of the three candidates, they declined it. So the next step is to build two or three treatments — a ring sized to the dense cell, a bracket, an underline — render a 25-slide deck in Chrome offline in both themes, and put the strip in front of them. Recorded here so the question is not re-asked as prose by a later session; the answer is that this one cannot be answered as prose. |
 | 2026-08-19 | in_progress → done | **Built the capsule, chosen by the owner from a rendered strip.** The instrument is the deliverable that outlives the fix: `longdeck.py` makes the long-deck fixture a command rather than a scratch file that dies with the session, and `rulerstrip.py` renders the candidates and reports what each mark measures. Two measurement defects were found and fixed inside the instrument before the treatment was built - a DOM rectangle cannot crop a Chrome capture, and `getComputedStyle` is pre-transform where `getBoundingClientRect` is post - and both were invisible at the wide window and obvious at the 0.5 floor, which is **L-123**. The fix itself is one declaration: the dense ring reshapes to the cell instead of disappearing, scoped to neither tick style so `bar` is covered by the same rule that covers `dot`. |

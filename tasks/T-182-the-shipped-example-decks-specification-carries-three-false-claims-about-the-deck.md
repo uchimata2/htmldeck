@@ -12,7 +12,8 @@ owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-18
-updated: 2026-08-19
+updated: 2026-08-22
+shipped_in: 0.5.0
 deliverables: [examples/measure-first/measure-first.slides.md]
 ---
 
@@ -150,6 +151,7 @@ collision that a different mechanism prevents.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **`shipped_in` set to `0.5.0`, back-filled.** The field was never written, so this task read as belonging to no release while being closed. **Derived, not assumed**: the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. Found while reading the unreleased set for `0.6.0` — eight tasks closed 2026-08-19 all carried an empty field, and a ninth ([T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md)) closed after the tag and belonged to `0.6.0` instead. |
 | 2026-08-18 | → proposed | Raised by [T-115](T-115-the-specification-can-assert-a-layout-the-shell-cannot-honour.md), whose scope books fixing a reference deck's own specification as a child rather than as part of building the pass. Three claims, each measured rather than read; two are the specification's fault and one is the deck's. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule — a wrong sentence in an example specification does not break the published plugin, so it does not reopen `PH1`. |
 | 2026-08-18 | (no change) | **Row 3 is spent before the task starts.** [T-117](T-117-the-decision-diamond-has-no-label-slot-and-diagrams-sit-off-the-text-grid.md) closed the same day and re-cut slide 2's decision node as its demonstration, so the sentence *the diamond is sized from its own label so the outline never crosses the text* is now a true description of the deck — verified against the rebuilt node: label inside the outline, `w/A + h/B = 0.74`. Two sentences remain, both *fix the specification*. Recorded here rather than left for the next session to rediscover. |
 | 2026-08-19 | → done | Four sentences, not two. Both remaining rows corrected against readings taken the same day — T-184 had changed this deck that morning, so §1's figures were re-measured rather than trusted, and slide 1's reproduce exactly. Row 3 verified true and left. A sweep of every geometry claim in the document then found two more in slide 8: the diamond named by a label the deck does not carry, and *the two outcome boxes sit at different heights*, which they never did. One loose claim — *the upper two thirds*, measured at 79–89% — recorded with its numbers and deliberately left. |

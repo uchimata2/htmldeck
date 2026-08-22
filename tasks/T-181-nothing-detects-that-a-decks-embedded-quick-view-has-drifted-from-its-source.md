@@ -12,7 +12,8 @@ owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-18
-updated: 2026-08-19
+updated: 2026-08-22
+shipped_in: 0.5.0
 deliverables: [tools/deck/quickview.py, tools/check_all.py]
 ---
 
@@ -184,6 +185,7 @@ only that something did.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **`shipped_in` set to `0.5.0`, back-filled.** The field was never written, so this task read as belonging to no release while being closed. **Derived, not assumed**: the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. Found while reading the unreleased set for `0.6.0` — eight tasks closed 2026-08-19 all carried an empty field, and a ninth ([T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md)) closed after the tag and belonged to `0.6.0` instead. |
 | 2026-08-18 | → proposed | Raised out of [T-179](T-179-a-quick-view-cannot-be-refreshed-after-the-renderer-changes.md), whose refresh verb found three stranded corrections in one deck and thereby proved that nothing reports the drift. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule: the published plugin is not broken by this — a deck built today is correct from the start — so it does not reopen `PH1`. T-179 fixed the *unreachability*; this is the *undetectability*, which is the half a refresh verb cannot cover, and **L-118** says why they are owed together. |
 | 2026-08-19 | (no change) | **The one open question is closed by the owner**, on the recommendation written the day before: the check takes a per-deck `--source` list rather than teaching the deck to record its own source paths. That keeps this task `s` — the wider option would have reached the build and every deck it emits — and it means an unattended session can implement this without handing anything back. |
 | 2026-08-19 | → done | `quickview.py check`, a fourth verb that writes nothing and returns 1 on drift, reached per deck by `check_all.py`. What it prints separates the two causes — a tag count that moved is the renderer, a differing word is the source document — because the three drifts that raised this task were two of one and one of the other, and a byte count names neither. Watched failing on three seeded instances and passing on both shipped decks. The owner's `--source` ruling implemented as given: the tool takes the list, the runner derives it, and no deck format changed. |

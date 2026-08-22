@@ -12,7 +12,8 @@ owner: the project owner
 business_value: medium
 effort: m
 created: 2026-08-12
-updated: 2026-08-19
+updated: 2026-08-22
+shipped_in: 0.5.0
 deliverables:
   - shell/deck.js
   - shell/components.css
@@ -219,6 +220,7 @@ checked is not evidence** — the same shape as **L-06** and **L-110**, one leve
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **`shipped_in` set to `0.5.0`, back-filled.** The field was never written, so this task read as belonging to no release while being closed. **Derived, not assumed**: the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. Found while reading the unreleased set for `0.6.0` — eight tasks closed 2026-08-19 all carried an empty field, and a ninth ([T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md)) closed after the tag and belonged to `0.6.0` instead. |
 | 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. Four transitions were requested; the owner cut it to two the same day and deferred the other two to a brainstorm. The DS-144 and DS-150 collisions are recorded in §1 so the brainstorm starts from them. |
 | 2026-08-18 | proposed → in_progress | Built. The transition is the outgoing slide's alone — the incoming cross-fade that had been there since the beginning is gone, because §1 says the incoming slide is *revealed* and keeping the fade would have shipped half the rule. The choice moved from an attribute on `<html>` to a pair of theme tokens once it was clear `<html>` is shell and `sync` carries it byte for byte, so no deck could have chosen. Direction and interrupt behaviour are measured and correct, including a ruler jump backwards. Three defects came out of measuring rather than reading: the `animation` shorthand parsing `forwards` as the animation name when the token is `none`, a shadow literal failing DS-011, and the component contract still claiming `.slide` reads the transition tokens. |
 | 2026-08-18 | (no change) | **Held open on the instrument, not on the work.** Nothing available here has a running document timeline — the preview pane reports `document.timeline.currentTime === 0` and will not composite, `render.py` pins motion off before capturing, and Claude in Chrome is not connected. So the deck cannot be *looked at* moving, and `CLAUDE.md` rule 6 is the bar. Raised [T-185](T-185-no-instrument-here-can-watch-an-animation-play.md); this closes behind it. |

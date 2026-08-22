@@ -12,7 +12,8 @@ owner: the project owner
 business_value: high
 effort: m
 created: 2026-08-18
-updated: 2026-08-19
+updated: 2026-08-22
+shipped_in: 0.5.0
 deliverables: [tools/deck/render.py]
 ---
 
@@ -214,5 +215,6 @@ connecting one is still the owner's action.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **`shipped_in` set to `0.5.0`, back-filled.** The field was never written, so this task read as belonging to no release while being closed. **Derived, not assumed**: the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. Found while reading the unreleased set for `0.6.0` — eight tasks closed 2026-08-19 all carried an empty field, and a ninth ([T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md)) closed after the tag and belonged to `0.6.0` instead. |
 | 2026-08-18 | → proposed | Raised out of [T-111](T-111-a-named-slide-transition-chosen-per-deck.md), which is built and green and cannot be closed because nothing here can watch it move. Three instruments measured and all three refuse in different ways; the pane's is the one worth remembering, since it reports an animation as `running` at `currentTime: 0` indefinitely rather than failing. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule — no published deck is broken, but four open tasks are held behind it. |
 | 2026-08-19 | → done | `render.py motion`, on the cheap path, and it settled the question differently from how §1 framed it. `--disable-gpu` makes the document timeline advance and **no animation advances with it** — the clock a CSS animation runs on is frame production, not time, and headless produces no frames. So the verb **seeks**: the computed style follows `currentTime` exactly, which makes every intermediate state measurable and a transition something a person can look at. Two defects in the instrument found by looking at its own output, the second being **L-122**. T-111's transition measured in both directions; T-111 itself left to close against its own criteria. |

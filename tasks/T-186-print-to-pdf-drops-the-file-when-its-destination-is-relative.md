@@ -12,7 +12,8 @@ owner: the project owner
 business_value: low
 effort: s
 created: 2026-08-19
-updated: 2026-08-19
+updated: 2026-08-22
+shipped_in: 0.5.0
 deliverables: [tools/deck/printpages.py]
 ---
 
@@ -123,5 +124,6 @@ An absolute destination is unchanged, which is every caller in this repository.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **`shipped_in` set to `0.5.0`, back-filled.** The field was never written, so this task read as belonging to no release while being closed. **Derived, not assumed**: the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. Found while reading the unreleased set for `0.6.0` — eight tasks closed 2026-08-19 all carried an empty field, and a ninth ([T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md)) closed after the tag and belonged to `0.6.0` instead. |
 | 2026-08-19 | → proposed | Found while building [T-111](T-111-a-named-slide-transition-chosen-per-deck.md)'s print check, which handed the function a relative destination and got `None` from a run that had printed a real PDF. Raised rather than fixed in place because this project's method has no work without a task file, and closed in the same session under the owner's standing instruction — it needs no ruling and reaches no shipped command. |
 | 2026-08-19 | → done | One `abspath`, where the destination is built. The function already had one on the directory it creates and handed Chrome the unresolved path beside it — **T-094's defect in the module that change did not sweep**. The fixture reads the source rather than printing, because the self-test runs before every command and a print there would cost a browser start every time; it was checked against the pre-fix source and fires. |

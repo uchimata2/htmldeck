@@ -12,7 +12,8 @@ owner: the project owner
 business_value: high
 effort: l
 created: 2026-08-12
-updated: 2026-08-19
+updated: 2026-08-22
+shipped_in: 0.5.0
 deliverables:
   - shell/components.css
   - shell/shell.html
@@ -263,6 +264,7 @@ gentle. They are theme tokens precisely so that answer can be changed without to
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **`shipped_in` set to `0.5.0`, back-filled.** The field was never written, so this task read as belonging to no release while being closed. **Derived, not assumed**: the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. Found while reading the unreleased set for `0.6.0` — eight tasks closed 2026-08-19 all carried an empty field, and a ninth ([T-187](T-187-open-the-motion-vocabulary-into-a-style-guide.md)) closed after the tag and belonged to `0.6.0` instead. |
 | 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. Scoped around the content/affordance split rather than as "more animation", because the exemptions the owner listed are all affordances and that is what makes one parameter coherent. |
 | 2026-08-12 | (no change) | Density questioned and kept. The owner read the note about what density must not do as a recommendation to drop it; it was the opposite. Reasons for keeping it written into §1 so the question does not have to be re-asked: a knob the owner owns, a reproducible artifact, and two builds of one specification that match. |
 | 2026-08-12 | (no change) | The pager's hover and press motions are the one part of this that waits on [T-114](T-114-the-chrome-row-layout-the-pager-deserves-the-corner.md). Building them before the pager's shape is settled is building them twice. Not `blocked_by` — everything else here can start. |
