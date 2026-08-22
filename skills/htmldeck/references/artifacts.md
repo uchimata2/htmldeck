@@ -101,7 +101,7 @@ on the slide, not a paraphrase of it (DS-211).>
 ```markdown
 # <Deck title> — slide-by-slide specification
 
-Expanded from the outline in `<slug>.foundation.md`, page by page. Nine fields per slide.
+Expanded from the outline in `<slug>.foundation.md`, page by page. Nine fields per slide, and an optional tenth.
 
 ## Slide <n> — <title>
 
@@ -122,6 +122,15 @@ Expanded from the outline in `<slug>.foundation.md`, page by page. Nine fields p
   A slide rests on a source it quotes no number from — a date, a definition, a threshold, a
   redrawn diagram — so this field is wider than the figure ledger and is **checked against** it,
   never derived from it: where the two disagree the ledger wins and the disagreement is reported.>
+- **Notes.** <*Optional, and the only optional field.* What the presenter says, watches for, or
+  concedes — addressed to the person presenting and never to the audience. **It does not render
+  into the shipped deck, ever.** DS-088 forbids notes there and the gate enforces it, so a note
+  written here reaches the presenter through a second artifact:
+  `python tools/deck/presenter.py <slug>.html <slug>.slides.md` writes `<slug>-presenter.html`,
+  which carries the notes and **fails DS-088 by design** — the only build that can pass a gate is
+  the one with no notes in it. Omit the field entirely on a slide with nothing to say; an empty
+  `Notes.` and no `Notes.` are the same answer. This is not slide copy, so DS-106's terminology
+  gate and DS-100's rhetorical-question rule do not reach it.>
 
 ## Open — needs a decision
 

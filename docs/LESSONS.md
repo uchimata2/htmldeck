@@ -160,6 +160,7 @@ comes here.
 | [L-121](lessons/L-121.md) | "Matches X exactly" holds only where the two are declared together | Tooling |
 | [L-122](lessons/L-122.md) | A frozen clock makes a finished thing and an unstarted thing read alike | Tooling |
 | [L-130](lessons/L-130.md) | An idiom carries the guarantees of the instrument that reads it, not the ones its syntax suggests | Tooling |
+| [L-132](lessons/L-132.md) | Make the forbidden thing its own marker, and make it the only failure | Tooling |
 
 ### Writing
 

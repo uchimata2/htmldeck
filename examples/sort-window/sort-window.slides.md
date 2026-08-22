@@ -58,6 +58,9 @@ bottom line in the outline to be the one that ships.
 - **Interactive elements.** Disclosure, `data-disc="derivation"` — *How the rate is measured*:
   numerator, denominator, the 31 working days, and the three exclusions.
 - **Sources.** throughput-model
+- **Notes.** The 12.4% is the number they will argue with. Concede the measurement window before
+  they raise it - 31 working days, three exclusions, all in the disclosure - and hold the
+  direction rather than the decimal.
 
 ## Slide 4 — The failure is seasonal, not structural
 

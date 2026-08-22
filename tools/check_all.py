@@ -175,6 +175,12 @@ NOT_RUN = {
     "tools/deck/render.py":
         "an instrument, not a gate. It renders a deck in real Chrome offline and reports what came "
         "out; the gates that need a render call it",
+    "tools/deck/presenter.py":
+        "a derivation, not a gate. It writes <slug>-presenter.html beside a deck - the same deck "
+        "plus the speaker notes its specification authors - and that artifact FAILS DS-088 by "
+        "design, which is T-211 section 3's safety property rather than a defect. It decides "
+        "nothing about the deck it reads and never modifies it. Run it by hand: python "
+        "tools/deck/presenter.py <deck> <slug>.slides.md",
     "tools/deck/fps.py":
         "an instrument a PERSON runs, and the only one here that cannot be automated at all. "
         "Headless produces no frames, so a frame rate cannot be measured by anything in this file "

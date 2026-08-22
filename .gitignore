@@ -13,6 +13,13 @@ __pycache__/
 .kb/
 .assets-cache/
 
+# Presenter builds. A second artifact from the same specification, carrying the speaker notes
+# DS-088 keeps out of a shipped deck (T-211 section 3, T-213). It is generated beside the deck
+# because that is where a presenter wants it, and ignored here because it must never be committed:
+# `check_all.py` fails any tracked `.html` it has no entry for, so a committed one would go red -
+# correctly, and one release later than this line does.
+*-presenter.html
+
 # Printed output. The repository keeps the script and the numbers, never the artefact (R6),
 # and a printed PDF also carries whatever the print dialog put in its header.
 examples/*.pdf

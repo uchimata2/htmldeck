@@ -494,6 +494,36 @@ mono label actually appears. **It was `vocabulary` until 2026-08-12** and moved 
 roles (T-105): a utility the contract styles and documents for a deck to use is one a deck may
 use, and unused-in-*this*-deck is not the same claim.
 
+### 3.7a The presenter panel — **never in a shipped deck**
+
+**This is the one region in this document that a conforming deck must not contain.** It is here
+because it has to be written down somewhere and because a deck author reading the contract end to
+end should meet it and understand why it is not theirs to use.
+
+A **presenter build** is a second artifact derived from a shipped deck by
+[`tools/deck/presenter.py`](../tools/deck/presenter.py): the same deck, plus the speaker notes its
+specification authors in the optional `Notes` field. It is written as `<slug>-presenter.html`, it is
+one self-contained file that opens by double-clicking — a presenter is a recipient too — and it
+**fails `check.py`**.
+
+| Part | Element | Sits in | Count | Attributes | Source |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `#pb-bar` | `div` | `body` | `0` in a deck, `1` in a presenter build | — | `presenter.py` |
+| `#pb-notes` | `div` | `body` | `0` in a deck, `1` in a presenter build | — | `presenter.py` |
+| `.speaker-note` | `div` | `#pb-notes` | `0` in a deck, `1` in a presenter build | — | `presenter.py` |
+
+**`.speaker-note` is the marker, and it is the note rather than a flag beside it.** DS-088's check
+fails on that class name, so a presenter build is unshippable **because it carries notes** — not
+because it carries a token announcing that it carries notes. A separate flag would be a second thing
+to keep in sync, and a build that lost it would pass. This is why the count column reads `0` in a
+deck: the rule and the contract say the same thing in two places, and neither can drift from the
+other without the gate going red.
+
+**Every length in the panel's CSS is one of the deck's own tokens** (§4), so a presenter build fails
+on DS-088 **and nothing else**. That is asserted rather than assumed: T-213 §3 records the run. A
+build failing three rules invites a maintainer to tidy the other two away, and the shortest path to
+a quiet gate is deleting the notes.
+
 ### 3.8 Motion
 
 Three classes carry DS-140's suggested starter set onto elements the rest of these tables already
