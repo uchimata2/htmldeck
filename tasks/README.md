@@ -249,10 +249,11 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-208](T-208-shell-py-does-not-list-the-command-its-own-error-names.md) | shell.py does not list the preflight command its own error message tells you to run | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-203 |
 | [T-209](T-209-six-more-probes-measure-a-page-whose-entrance-never-ran.md) | Six more probes measure a page whose entrance animation never ran, and none of them says so | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-185, T-206 |
 | [T-210](T-210-the-drawdown-figures-shaded-band-is-emitted-at-zero-height.md) | The drawdown figure's shaded band is emitted at zero height, and rect() clamps the sign error away | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-203, T-204, T-207, T-212 |
-| [T-211](T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md) | Scope speaker notes, and decide what DS-088 becomes | `PH3` | `unreleased` | `done` | `review` | - | T-213 | - | T-213 |
+| [T-211](T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md) | Scope speaker notes, and decide what DS-088 becomes | `PH3` | `unreleased` | `done` | `review` | - | T-213 | - | T-213, T-217 |
 | [T-212](T-212-eight-of-ten-figures-never-call-the-clipped-label-guard.md) | Eight of ten figures never call the clipped-label guard, and the guard cannot see an anchor | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-203, T-207, T-210 |
-| [T-213](T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md) | Build the presenter build, and the marker that keeps it unshippable | `PH3` | `unreleased` | `done` | `review` | T-211 | - | - | T-211 |
+| [T-213](T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md) | Build the presenter build, and the marker that keeps it unshippable | `PH3` | `unreleased` | `done` | `review` | T-211 | - | - | T-211, T-217 |
 | [T-214](T-214-ds-142s-checker-is-an-allow-list-of-one-class-name.md) | DS-142's checker is an allow-list of one class name, and T-187 left it behind | `PH1` | `unreleased` | `done` | `review` | - | - | T-057 | T-005, T-057, T-105, T-187, T-202, T-216 |
 | [T-215](T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md) | The frame-rate instrument, and a number with the machine it was measured on | `PH3` | `unreleased` | `done` | `review` | T-057 | - | - | T-016, T-057, T-185 |
+| [T-217](T-217-notes-attach-by-position-and-position-is-not-identity.md) | Speaker notes attach by position, and the second example proves position is not identity | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-211, T-213 |
 
 <!-- taskmd:end -->

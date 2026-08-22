@@ -254,6 +254,11 @@ the count-ups print their final value (DS-143); for print they hold nothing back
   states $70M and Q1 2027, both of which are the model's. `spec.py` caught the mismatch against
   the ledger (SPEC-4) rather than a reader catching it later, which is the check working.*
 
+- **Notes.** Make the ask and stop talking. The three covered lines answer the questions that
+  usually come first, so let the silence do the work rather than filling it. The one to expect is
+  the 4.5% discount assumption - it is on the slide deliberately, and the answer is that tranches
+  two and three come back here, so approving it today commits nothing beyond $70M.
+
 ## Open — needs a decision
 
 | # | The question | Why it matters | Proposed |

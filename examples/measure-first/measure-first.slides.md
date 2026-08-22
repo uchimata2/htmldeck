@@ -260,6 +260,7 @@ deliverables mark each value `[example]`, `[case]` or `[D-n]`. The deck says so 
   reduction High +€0.3m · sustainability Medium +€0.05m. The face states the €1.2m total, so the
   panel names the members of it.
 - **Sources.** `D4-implementation-concept`, `D5-management-decision-matrix`
+- **Notes.** They will argue about the €1.2m, and it is not what is being approved today. Bring them back to the month-4 gate: €120k, three months of draft forecasts and reason codes, and a data dictionary - then this committee decides again. If the payback month is challenged, concede month 19 is a model output and hold that the gate is not.
 
 ---
 
