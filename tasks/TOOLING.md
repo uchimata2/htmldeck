@@ -61,6 +61,8 @@ closing evidence, finish every edit first, start it last, and touch nothing unti
 edit turns out to be necessary, the run is void, and re-running is cheaper than reasoning about which
 steps were affected.
 
+**A bulk edit of a task field must match the front-matter block, never the whole file.** Task records quote field syntax in their own prose, so a script testing `"shipped_in: unreleased" in text` edits records that do not carry the field at all. **Measured 2026-08-22 while recording `0.6.0`**: twenty tasks were in the release and twenty-one files changed, because [`T-219`](T-219-pre-release-audit-of-the-whole-repository.md) —2's cycle table names the field in a cell. It is `planned`, and it was handed a shipping version. Nothing failed: the lint passed, the index rendered, and the only thing that caught it was counting the files written against the tasks expected. **So split the file at its front matter and match only there, then read back and assert the field landed in front matter and once.**
+
 `lint.py` is the four checks a task edit owes: it stops at the first failure and exits with that
 failure's code, and it is `tracker_lint` in [`../.handoff/config.md`](../.handoff/config.md).
 **It is also the only name tier 1 gives**: [`../CLAUDE.md`](../CLAUDE.md) enumerated the checkers
