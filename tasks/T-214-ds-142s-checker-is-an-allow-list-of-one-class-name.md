@@ -13,7 +13,7 @@ business_value: high
 effort: m
 created: 2026-08-22
 updated: 2026-08-22
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [docs/lessons/L-130.md]
 ---
 
@@ -260,5 +260,6 @@ render as before; motion is pinned off in a capture, as `render.py` documents.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-22 | → done | **Closed the same day it was raised.** The fix is one probe branch, one registered property, one declaration and three seeds; what took the time was the registration, without which the fix would have been wider than the defect (**L-130**). `check_all.py` green at 35 ran / 0 failed, and slide 8 looked at. Unblocks [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md), whose 3D oscillation is infinite by construction and was the deck this rule would have failed. |
 | 2026-08-22 | → proposed | **Raised while restating T-057's DS-140 criterion, and it is not what that restatement was looking for.** T-057's criterion asked for a ruling the owner dissolved on 2026-08-19, so the question was which rule now decides whether a 3D wobble is admissible. The answer is that DS-140's admission test admits it and **DS-142's checker rejects it**, on a class name — so the criterion was blocked by a rule nobody had asked. `PH1` because a published gate fails a deck for a design choice the ruleset permits, which is `CLAUDE.md`'s stated case for reopening it; `m` because the fix is one probe branch, one declaration and two seeded variants, and `high` because it gates [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) and reaches an adopter with no 3D at all. |

@@ -13,7 +13,7 @@ business_value: high
 effort: l
 created: 2026-08-09
 updated: 2026-08-22
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/deck/glitchfree.py, docs/lessons/L-129.md]
 ---
 
@@ -247,6 +247,7 @@ trap injects shows on the page.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-22 | planned → done | **Seven conditions built, seeded and proved.** `GF-2` to `GF-8` in `tools/deck/glitchfree.py`, a second `<head>` seam in `make_probe` for the console trap, and the T-209 guard extended to cover both seams. 7 of 7 seeded variants caught, and `GF-7`'s pass direction seeded as well because the corpus cannot produce it, which is **L-129**. All four shipped decks pass all seven; `GF-6` was unmeasured on two of them until a `setTimeout(0)` was raced against `requestAnimationFrame`. **R6 section 8 is now eight-ninths a verdict and the ninth is a person, which the gate now says in words.** |
 | 2026-08-22 | proposed → planned | **Specify re-verified and plan written.** §1's table dates from 2026-08-12 and is the scope, so it was re-derived against the tools first; all nine rows stand. The plan mints `GF-2` to `GF-8` off R6 §8's numbering, puts them in a module of their own on `figgrid`/`markhits` precedent, and takes three decisions up front - the unconditional error trap, `GF-7`'s `NO SUBJECT` on a canvas-free deck, and `GF-5` reading R6's test rather than `render.py`'s overflow list. |
 | 2026-08-10 | (specify) | **Estimated `high`/`l`, and moved to `PH3`.** `high` because CLAUDE.md rule 2 is a testable statement only once decomposed, and seven of R6's nine conditions are still nobody's; `l` because each condition needs its own probe, or its own stated reason for not having one, in an account that already partitions 113 rules. `PH3` under the release split set by the owner 2026-08-10, on size. |

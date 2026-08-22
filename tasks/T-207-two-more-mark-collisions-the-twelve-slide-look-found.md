@@ -13,7 +13,7 @@ business_value: medium
 effort: s
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/examples/portfolio_charts.py, examples/portfolio-review/portfolio-review.html]
 ---
 
@@ -142,5 +142,6 @@ evidence T-204 could have produced for itself.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Raised from T-203's closing look, which covered all twelve slides and found two defects beyond the four it was fixing. Both are labels drawn over another mark, both are on slides that two earlier human looks had already passed, and both were green on every gate. Fifteen defects now in this deck's history, of which no instrument found one. |
 | 2026-08-21 | → done, review | Both fixed at the mechanism rather than the offset: slide 4's callout is derived from `spread()`'s result instead of sitting at its own fixed `TOP + 4`, and slide 10's annotation moved below the trough, which is the one region the line does not enter whatever the recovery slope does. **T-204's instrument named slide 4 independently on the shipped deck, unseeded**, and both defects are gone from its output. Two identities added and proved by seeding - and the seeding **rejected the first version of the slide-4 one**, which compared font-metric estimates and did not fire; it is a baseline gap now, which needs no metrics. Reported deviation: the self-test's check total was a hand-kept constant that had already drifted once, so it counts what ran now - a false *28 of 28* became a true *30 of 30*. Looking at the fixed slide 10 found a third defect on the same figure, raised as [T-210](T-210-the-drawdown-figures-shaded-band-is-emitted-at-zero-height.md). |

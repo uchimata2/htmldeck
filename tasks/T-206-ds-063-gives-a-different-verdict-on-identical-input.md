@@ -13,7 +13,7 @@ business_value: high
 effort: m
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/deck/render.py]
 ---
 
@@ -224,5 +224,6 @@ which is the failure mode worth ruling out by eye, and it is ruled out.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → done, review | Cause found and fixed. `render.PROBE` never asked for its own motion pin, which sat behind `quiet` and so reached `shots` but not `measure` — the only consumer that issues a verdict. Every DS-063 reading was taken at **frame zero** of a 340 ms entrance: 27 of 132 readings at each of the three resolutions sat exactly **18.00 du** from settled, which is `--rise-dist` to the digit. The gate passed anyway, because all three renderings were frozen equally — so the intermittency was the rule occasionally *noticing*, not occasionally failing. The pin is now unconditional and `quiet` keeps only the title suppression. Ten consecutive measurements and three full `check.py` runs agree exactly; the seeded violator still fails four times out of four at 102.41 du; 8 of 8 variants behave as specified. The load hypothesis was tested and **refuted** — 0.00 du spread across 396 readings under eight-way CPU load. Raised [T-209](T-209-six-more-probes-measure-a-page-whose-entrance-never-ran.md): six other probes build their own and none pins motion. |
 | 2026-08-21 | → proposed | Raised while closing T-203, which could not tell whether its own change had broken the gate. Six runs of one command on one unchanged file: four FAIL at 4.16, 4.57, 5.65 and 18.00 du, two pass. `render.py measure` is repeatable on the same deck — single-slide readings identical three times over, and a whole-deck read identical on this deck and on the one committed at `2475ee5` — so the noise is in how the gate drives it rather than in the instrument. **Filed against T-183 rather than as a new discovery**: that task repaired the pairing and named the trigger as beyond its reach at 0 drops in 30 reads. The magnitudes rule out the old bug returning — a shifted pairing gave 314 and 816 du, this gives 4 to 18 — and the trigger it could not catch now reproduces in a handful of runs. `PH3` on T-183's own reasoning, quoted in §1. |

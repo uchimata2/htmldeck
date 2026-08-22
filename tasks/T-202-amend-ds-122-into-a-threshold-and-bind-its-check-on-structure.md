@@ -13,7 +13,7 @@ business_value: medium
 effort: m
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [docs/DESIGN-SYSTEM.md, docs/COMPONENT-CONTRACT.md, tools/deck/audit.py, tools/deck/static_variants.py]
 ---
 
@@ -152,5 +152,6 @@ never on chart count. DS-122 currently reads as a flat ban, which is not what th
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Raised from [T-113](T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md)'s R9 §8. The parent found DS-122 enforced by a five-name substring blocklist that four real chart libraries walk past, and re-derived the rule's text as a threshold rather than a ban. Both changes are recorded here rather than made there, because the parent's recommendation is *no library yet* and a door nobody needs should not be opened first. |
 | 2026-08-21 | proposed → done | DS-122 is the threshold and its check binds on **when the marks exist** rather than on who wrote them — SVG shapes built from script, a canvas context, or a `<canvas>`. **Calibrating before writing the rule is what saved it**: bound on `createElementNS` alone it fails all five shipped decks, because the shell makes two such calls to build one icon reference, so the signal is the shape argument. Both directions seeded — 9 fixtures in `audit.self_test`, 2 new static variants taking that suite to 29 of 29 — and three regressions seeded into the check itself, each caught. `check_all.py` green at 0 failures, 0 unclassified, 0 stale. The open question is answered for the head, because a per-chart declaration would make the check decide which chart each one governs before it could say anything. |

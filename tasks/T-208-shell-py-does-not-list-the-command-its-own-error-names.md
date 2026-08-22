@@ -13,7 +13,7 @@ business_value: low
 effort: xs
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/deck/shell.py]
 ---
 
@@ -111,5 +111,6 @@ the other, which is the same fault class as a stale reference, at a smaller size
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Raised from T-203's rebuild, where the printed chain's third step failed and the working command turned out to be named only inside an error message. The generator's stale line was fixed under T-203; this is the tool's own usage block. |
 | 2026-08-21 | proposed → done | Fixed, and **the gap was twice the size of the report**. The dispatch accepts eight commands and the usage list named six: `preflight` as reported, and `tail`, which was named in no list, no `USAGE` entry, and only inside its own argument error. Deriving the list from the dispatch is what found it — adding the one reported line would have left it as undiscoverable as `preflight` was. Three fixtures now derive both sets from the file itself (**L-08**), and all four defects they claim to catch were seeded and proved red. 69 of 69 fixtures pass. L-08 gains the instance, because the rule already existed and what was new is the measurement of what a stored copy hides. |

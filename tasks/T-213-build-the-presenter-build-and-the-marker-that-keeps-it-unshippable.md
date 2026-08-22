@@ -13,7 +13,7 @@ business_value: medium
 effort: l
 created: 2026-08-21
 updated: 2026-08-22
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/deck/presenter.py, docs/lessons/L-132.md]
 ---
 
@@ -213,5 +213,6 @@ below it is unchanged. That render is what caught the escape defect above.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-22 | → done | **The presenter build exists and T-211 §4's central sentence has now been executed.** *The only build that can pass a gate is the one with no notes in it* was a claim about a checker for a day; it is a run with a verdict now — 1 failure, DS-088, on a build generated from a shipped deck. Nothing was added to the ruleset, no checker changed, and the shipped deck is byte-identical by construction rather than by comparison. The open question was settled from its own argument during specify, not asked. **L-132** is the finding: make the forbidden thing its own marker, and make it the only failure. |
 | 2026-08-21 | → proposed | Raised by [T-211](T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md), which scoped speaker notes and ruled that DS-088 stands unchanged because it governs the **shipped** deck. `PH3`, `l`: a build path, the shell, the contract and a gate at once, and a second output artifact where there has always been one. |

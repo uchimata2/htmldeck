@@ -13,7 +13,7 @@ business_value: medium
 effort: m
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [docs/DESIGN-SYSTEM.md, docs/BRIEF.md, docs/research/R1-rules-candidate.md]
 ---
 
@@ -162,5 +162,6 @@ presenter gets the note and the recipient cannot.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Raised on the owner's ruling against `docs/BRIEF.md` open question 4, which had said *scope now, build later* and was never revisited. The question was surfaced by a resume sweep asking every remaining open question in the project rather than only the ones a handoff named. `PH3` because PH2 has shipped and this is not a defect in the published plugin. The PDF-export half of Q4 was left deferred in the same ruling and is not in this task. |
 | 2026-08-21 | proposed → done | Scoped, and **DS-088 needed no amendment** — which is the finding rather than a non-decision. The row already read *in the shipped deck*, and it is `default`, so DS-000 already licensed a stated departure; **this task was raised on the premise that scoping notes makes DS-088 amendable and that premise was wrong.** What was missing was a scope, and it is: notes live in a **presenter build**, a second self-contained artifact from the same specification, carrying a marker DS-088's own check fails on — so the only build that can pass a gate is the one with no notes in it. The privacy argument is stated as the reason the row exists: rule 1 makes the deck one file, so a note inside it is readable by everyone it reaches. A sidecar was the open question's proposal and loses on the presenter's side. R1's A10 marker reads **keep**; BRIEF Q4's speaker-notes half is closed and its PDF half untouched. Building it is [T-213](T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md), `l`. |

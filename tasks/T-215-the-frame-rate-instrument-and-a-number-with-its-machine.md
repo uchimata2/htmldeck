@@ -13,7 +13,7 @@ business_value: medium
 effort: m
 created: 2026-08-22
 updated: 2026-08-22
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/deck/fps.py, docs/lessons/L-131.md]
 ---
 
@@ -227,6 +227,7 @@ Recorded in [`docs/EVALUATION.md`](../docs/EVALUATION.md) §6.3, which takes a r
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-22 | → done | **The figure exists, and this repository has never had one before.** 144.1 against a 144 ceiling on the reference deck's slide 8, with the machine beside it. All four criteria met. **Three runs, two of them defects in the instrument rather than in the deck**, and the second was caught by the owner counting animations on screen against what the card claimed - a green gate, a passing self-test and a correct number, with the label wrong. Kept as **L-131**. The baseline this leaves is what [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md)'s 3D visual gets measured against, on this machine, as a second row. |
 | 2026-08-22 | (still in_progress) | **The first reading found two defects in the instrument and was not recorded.** The walk and the ranking axis were both wrong, and each independently guaranteed the wrong slide: `.rise` only exists on a played slide, and entry animations are finished before a six-second window starts. Both fixed and verified headlessly — the ranking now picks slide 8, the deck's only looping motion. **A correctly measured number about the wrong subject is the outcome this task was raised to prevent**, and it took a real machine to surface it: no self-test would have, because the logic was internally consistent. Re-run owed. |
 | 2026-08-22 | → in_progress | **Instrument built; the reading is the only thing outstanding.** Both open questions settled at specify - the owner runs it in Chrome or Edge on the development machine, and the heaviest slide is counted at run time rather than proxied. Three of four criteria met. Held open rather than closed `not met`, because the owner's answer has arrived and only the number has not; closing now would make a one-command wait look like a limit of the task. |

@@ -13,7 +13,7 @@ business_value: high
 effort: s
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/examples/portfolio_charts.py, examples/portfolio-review/portfolio-review.html]
 ---
 
@@ -206,6 +206,7 @@ twelve is what this task exists to correct, so the count is part of the result a
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Raised from the owner's review of the deck T-113 closed the same day. Four defects across slides 6, 7, 9 and 11; three are relational geometry — where a connector attaches, whether a label crosses a line, whether an axis stops at a node — and one is the body-spreading layout bug already fixed on two other slides and not carried to this one. Every gate was green on all four. |
 | 2026-08-21 | proposed → specified | **Re-specified against the source before planning**, as the three-task order asks. All four mechanisms in §1 hold as written. One correction, recorded there: slide 6 is three dead assignments and a tautology rather than one wrong expression, so the fix deletes the block instead of editing it. The one open question is settled by the owner — the connector fix stays local, because the reusable part is a check rather than a helper. `deliverables` declared, which a task at `specified` owes (TOOLING §3). |
 | 2026-08-21 | specified → planned | Eight steps, one per slide for the four fixes plus a self-test step, the rebuild chain and the two bars. **Slide 9 was planned against a measurement rather than a reading**: `.sum` is 726 px in a 543 px body, and the fix that fits without deleting any authored copy is the total at `--fs-title` with `line-height:.9` plus a tightened rhythm — 498 px, 45 px of headroom. Tightening alone leaves 59 px over, and keeping `--fs-figure` fits only by dropping the note. §1's *spreads its rows to both ends* is corrected there too: the body is a block in a `1fr` row with `min-height:0`, so the content simply overflows downward — there is no spreading, and `align-content:center` on `.sum` was inert. |

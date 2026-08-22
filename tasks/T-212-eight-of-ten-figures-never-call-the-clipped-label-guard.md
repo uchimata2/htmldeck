@@ -13,7 +13,7 @@ business_value: medium
 effort: m
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/assets/chart_probe.py, tools/examples/portfolio_charts.py]
 ---
 
@@ -169,6 +169,7 @@ calls**, which is why the anchor comes first and the call sites second.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Raised by [T-210](T-210-the-drawdown-figures-shaded-band-is-emitted-at-zero-height.md), whose lengthened annotation printed clipped while the generator's 33 identities, `check.py` and the deck's own annotation identity were all green. The guard for exactly this exists and two of ten figures call it. `PH3`: the shipped deck is correct, and the exposure is the next label somebody lengthens. |
 | 2026-08-21 | proposed → planned | §1 and §2 written together, because the measurement that decides the design was taken while T-210 was open. **The guard cannot be switched on as it stands**: handed `fig_drawdown`'s own viewBox width it refuses the clipped label *and* the correct one, because it assumes a centre anchor and that label is `start`-anchored. So the anchor is step 1 and the call sites are step 4, with the false-alarm count as the thing that decides whether it stays on. |
 | 2026-08-21 | planned → done | The guard moved into `svg()`, so a figure cannot decline it (**L-128**), and `read_labels` stopped being a second copy of the box arithmetic — the copy that was wrong was the guard's, which never read the anchor. **The false-alarm count is the part worth keeping**: 7 of 10 figures refused with the inherited margin, 1 of 10 with the margin at zero, 0 of 10 with a slack of 2% of the viewBox width. That threshold has both sides measured — the real defect overran by 23% and the tightest correct label by 1%, with nothing between — and the correct label was looked at on the rendered slide before the number was chosen. T-210's clipped label is refused when seeded back. **The deck's bytes are unchanged.** `chart_probe`'s declared tally was found wrong on the way through, 12 claimed against 11 run, and is now counted at 16. |

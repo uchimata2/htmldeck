@@ -13,7 +13,7 @@ business_value: high
 effort: s
 created: 2026-08-22
 updated: 2026-08-22
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: []
 ---
 
@@ -188,5 +188,6 @@ banner reads correctly, the panel names slide 10, and the note is the one writte
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-22 | → done | **Three examples, three defects; one example had found none of them.** Notes now attach by title with no position fallback, a slide section ends at the next heading of any level, and a separator between slides stays out of the note. All three presenter builds place their note correctly and fail `check.py` on DS-088 alone; all three shipped decks are byte-identical. **The generalisable part is already written down** - this is **L-131** in a second place inside one day, so no new lesson was raised for it. |
 | 2026-08-22 | → proposed | **Found by doing the thing T-213 declined to do.** That task authored one worked note and argued that three would be copy; the owner asked for the other two, and the second deck it touched has a title slide and a `Sources` slide its specification does not number. `high` because a presenter reading the wrong slide's note is the exact situation the artifact exists to serve, and `s` because the fix is a lookup. **The argument for one worked instance was wrong in a way worth recording**: a single example cannot show that a mapping is a mapping. |

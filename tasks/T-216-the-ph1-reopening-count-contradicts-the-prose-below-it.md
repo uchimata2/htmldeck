@@ -13,7 +13,7 @@ business_value: low
 effort: s
 created: 2026-08-22
 updated: 2026-08-22
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: []
 ---
 
@@ -154,5 +154,6 @@ turned out to state four things twice.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-22 | → proposed | **Raised on the second sighting, not the first.** The 2026-08-21 session found the count inconsistent, judged it pre-existing rather than caused by its own work, and recorded it as *worth an audit, not a guess* — correctly, since guessing is what produced the disagreement. The 2026-08-22 session found the same thing while reconciling after [T-214](T-214-ds-142s-checker-is-an-allow-list-of-one-class-name.md), which is itself a `PH1` reopening and therefore makes the figure one further out of date. `s` because the work is reading one section and deriving one number; `low` because nothing consumes it, which is also the open question. |
 | 2026-08-22 | → done | **The audit ended by deleting its subject, which its own §1 named as a legitimate outcome.** Two owner rulings: the count and the ordinals both go, and the scope widens to `RELEASE-HISTORY.md` §2's own copy of the same figure. What settled the first is that **the existing groupings satisfy no single event rule** — `0.2.1` holds two reopenings split by origin and `0.2.3` holds one of six tasks across two days and two sources — so *derive the correct number* had no correct number to reach. Two precedents pointed the same way: `findings.py` records this document's execution-order notes already losing their row numbers to task ids after an insertion cascaded, and `CLAUDE.md` already losing two counts on 2026-08-14 for not being re-derivable. Three defects beyond the reported one turned up in the same section. **The title lost its own figure in the same pass** — it read *and T-214 made it a tenth*, which is the claim this audit found undecidable, and it was the one place a reader meets the task without the correction. The filename never carried the clause, so nothing was renamed. |

@@ -13,7 +13,7 @@ business_value: high
 effort: l
 created: 2026-08-12
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md, examples/portfolio-review/portfolio-review.html, tools/examples/portfolio_charts.py]
 ---
 
@@ -454,6 +454,7 @@ shim's real cost, estimated as equal across candidates and never built.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-12 | → proposed | Created from the first adopting project's feedback on published `0.2.2`. The request assumed a built-in chart capability to compare against; there is none, and the correction is scoped as the first finding rather than as a footnote. |
 | 2026-08-19 | (no change) | **Re-specified from the owner's restated steer**, recorded in §1. The task keeps both halves of the 2026-08-12 instruction and swaps which is the default: hand-authored SVG wins the ordinary chart and DS-122 stands, while a library is wanted for chart-heavy decks the repository has never built — financial, trading, scientific, UI demo. Three consequences: the threshold is now a **class of deck** rather than a property of one chart; **a chart-intensive deck becomes an input** to this task rather than its child, because evaluating candidates against the reference deck's one line chart measures the case SVG already wins; and a **seventh gate** is added for maintenance health, which the six existing gates do not cover. Priority set by the owner: *"not crucial, but keep it scheduled."* |
 | 2026-08-21 | proposed → specified | **Re-specified and re-planned in one session.** Four changes. (a) A fifth premise finding: **DS-122**, the `hard`/`auto`/owned rule that forbids the outcome the owner asked for, is enforced by a five-name substring blocklist in `audit.py`'s `STATIC` table — `uPlot`, `tanstack charts`, `apexcharts` and `frappe-charts` all pass a rule reading *no chart library*, probed against the row itself. **Amending DS-122 therefore moves into scope**, where §1 had put it out. (b) **DS-146's re-derivation of the same day** by T-187 changes how gate 5 is applied: a candidate's own draw-in is now measured against DS-140's admission test rather than against a closed four-name vocabulary. (c) The note's number moves **R8 → R9**; R8 was taken on 2026-08-18 while this task held it in prose. (d) `effort` **m → l**, because the 2026-08-19 restatement made a chart-intensive deck an input rather than a child, and a 12-slide deck is not an `m`. |

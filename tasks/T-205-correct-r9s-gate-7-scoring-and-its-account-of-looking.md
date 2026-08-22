@@ -13,7 +13,7 @@ business_value: medium
 effort: s
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [docs/research/R9-embeddable-chart-library-versus-hand-authored-svg.md]
 ---
 
@@ -167,6 +167,7 @@ threshold should not move — which is the whole reason that task is ranked ahea
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Raised from the owner's review of T-113's output on the day it closed. Three corrections: gate 7 scored per clause rather than as one verdict, because two candidates fail it for opposite reasons; the archived predecessor as a better reason to wait than the 23 days; and R9 §6's defect count restated as a coverage figure, since the look it describes covered ten slides of twelve. Ranked behind T-203 and T-204 because the fourth change — whether the threshold gains a second trigger — is decided by what the checker turns out to catch. |
 | 2026-08-21 | (no change) | **The count in correction 3 moves thirteen to fifteen, and that changes what the correction should say.** T-203's closing look covered all twelve slides and found two more defects on slides 4 and 10 — slides the owner's review had also passed (T-207). Two moves in one day on an unchanged deck means a total is a reading of the last look's reach, not a property of the deck, so R9 should carry coverage-and-yield per look and derive any total. The fourth change is still held for T-204. |
 | 2026-08-21 | proposed → done | All three corrections made in place and marked, which is what the open question predicted. **The recommendation was wrong in both halves**: it said gate 7 failed on age while §3 said the missing track record, and *time fixes it by itself* is what the archived predecessor refutes — `TanStack/react-charts`, last pushed 2025-03-10, npm `2.0.0-beta.7` in November 2023. **§6 now states no total at all**, because the number moved nine → thirteen → fifteen in one day without the deck changing, so a total reads the last look's reach rather than the deck. **§7 keeps one trigger**, decided against T-204 rather than assumed: a checker caught the class unseeded, so it is a detection gap in our instruments, not a capability only a library supplies. T-113 restated, not reopened. |

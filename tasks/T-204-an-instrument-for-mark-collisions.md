@@ -13,7 +13,7 @@ business_value: high
 effort: m
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/deck/markhits.py, docs/DESIGN-SYSTEM.md]
 ---
 
@@ -247,6 +247,7 @@ checker at two false alarms against one hit; this would have been fifteen.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Raised from the owner's review of the portfolio-review deck. The deck passed every gate this repository owns while carrying thirteen chart defects, nine found by one look and four by a second — so the instrument for a mark overlapping a mark is a person, and a person missed four including a whole slide. Ranked `high` because it is the cheaper of the two answers on the table: R9 §6 reads the same evidence as an argument for a chart library, and a detector costs a fraction of one. |
 | 2026-08-21 | (no change) | **Two more subjects and a starting sketch, from T-203's closing look.** The count in §1 goes thirteen to fifteen: slides 4 and 10 carry the same class of defect and had been passed by two earlier looks (T-207). T-203 also left five working geometry identities and their SVG readers in the portfolio generator, proven against seeded defects — narrow on purpose, but the arithmetic this task needs, so it starts from a sketch rather than a blank page. |
 | 2026-08-21 | → done, review | Built as `tools/deck/markhits.py` and landed as **DS-244**, gathered by `check.py` on every deck. It renders and extracts typed geometry - segments through `getScreenCTM`, curves sampled with `getPointAtLength`, text as real glyph boxes - because a label's width is a fact about the face and only a browser with that face loaded knows it. **Calibrated on all four shipped decks, 30 slides**: text-against-text is 1 hit and 0 false alarms and gates; text-against-line is 16 firings for 1 real defect and reports. The obvious rescue for the second - *only count a crossing through the middle* - was implemented and **inverts**, at depth 0.951 for the real defect against 0.001 for the deliberate placements, so a label on its own line is not separable from a label a line ran over. **The one gating hit was real and unseeded**: pointed at the shipped deck it independently named T-207's slide 4, which is the argument this task was raised to make. T-207 was then fixed so the rule lands green, on `figgrid`/T-184's precedent. |

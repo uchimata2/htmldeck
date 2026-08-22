@@ -13,7 +13,7 @@ business_value: high
 effort: m
 created: 2026-08-22
 updated: 2026-08-22
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables:
   - docs/AUDIT-METHOD.md
   - tasks/_audit-umbrella-template.md
@@ -165,6 +165,7 @@ workflow — so that *run a pre-release audit* is a complete instruction.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-22 | → proposed | Created, from a request to run a pre-release audit and to improve the audit requirements behind it. |
 | 2026-08-22 | → specified | Four decisions put to the owner and answered before any file was written. |
 | 2026-08-22 | → planned | Seven steps. Step 7 exists because adding to `TASK-WORKFLOW.md` moves one term of the tier-1 bound. |

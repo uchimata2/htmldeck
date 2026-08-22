@@ -13,7 +13,7 @@ business_value: medium
 effort: m
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/deck/render.py, tools/deck/audit.py]
 ---
 
@@ -233,6 +233,7 @@ verdict.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Raised by [T-206](T-206-ds-063-gives-a-different-verdict-on-identical-input.md), which fixed the same fault in `render.PROBE` and found the other six by asking what else builds a probe. The subject is present — the deck's figures and headlines carry `.rise`, worth 18.00 du at frame zero — but whether each probe reads an axis that class moves is unmeasured, so this is six subjects rather than six defects. `PH3`: no adopter is affected, the exposure is this repository's confidence in its own instruments. |
 | 2026-08-21 | proposed → planned | §2 written. **Both open questions settled, and the census corrected from six to eight.** The fault is `make_probe` composing `(PROBE if not extra else extra)`, so asking who passes `extra` — rather than who defines a probe — found `contract.py` `:82`, missed outright, and split the two `SHEET_PROBE`s that §1 counted as one. Two rows are answerable without a browser and both are *unpinned, and correct*: `SHEET_PROBE` reads counts rather than geometry, and `REDUCED_PROBE` is settled by the deck under `--force-prefers-reduced-motion`, with the emulation asserted rather than assumed. The print-stylesheet hypothesis was true and irrelevant — that probe never renders under print media. The pin goes into `make_probe` with `MOTION_PROBE` excepted by identity rather than by a flag, on **L-128**. |
 | 2026-08-21 | planned → done | The pin is `make_probe`'s and the exception is a declaration the probe carries. **§2's design was wrong and the seeded-variant suite is what said so**: pinned unconditionally it fell from 8/8 and 2/2 rendered variants caught to 7/8 and 1/2, because `animation:none` erases the `animationIterationCount` that DS-140, DS-142 and DS-218 read, and because `REDUCED_PROBE`'s subject is what the deck does under reduced motion. **The rules did not fail, they lost their subject** — the eighth time this repository has met that class (**L-57**). With `MEASURES_MOTION` declared by the three probes that measure motion, the suite is back to 27/27, 8/8 and 2/2. **Six pinned, two unpinned with the reason, and not one verdict moved**: five tools run before and after, 0 changed lines each. §1's caution held exactly — eight subjects, no defects. |

@@ -13,7 +13,7 @@ business_value: medium
 effort: s
 created: 2026-08-21
 updated: 2026-08-21
-shipped_in: unreleased
+shipped_in: 0.6.0
 deliverables: [tools/examples/portfolio_charts.py, examples/portfolio-review/portfolio-review.html]
 ---
 
@@ -163,6 +163,7 @@ the question rather than answering it.*
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-22 | (shipped) | **Shipped in `0.6.0`.** The release note carries `docs/PUBLISHING.md` §8.1's row for this version, which names what an adopter must change and the smallest edit that satisfies it. |
 | 2026-08-21 | → proposed | Found by looking at slide 10 after T-207's annotation fix landed on the same figure. The emitted rectangle carries `height="0.0"`: `ry - ty` is negative because `y` grows downward, and `rect()`'s `max(h, 0.0)` turns the sign error into a legal invisible mark. Two faults, and the clamp is the wider one — it protects every caller from discovering a wrong sign. Not a one-line fix, because 5.1 of 6.8 measured from the trough is 1.7 points and measured from zero is a different band, so what the shading means has to be decided first. `PH3`: the deck is shipped and the missing mark is an omission rather than a wrong statement. |
 | 2026-08-21 | (no change) | **The owner ruled what the band means: 5.1 points measured from zero**, spanning the zero line to the `-5.1` level. The alternative - the span between `-5.1` and the trough - shades 1.7 points and contradicts the caption, which is what decided it. §1 and the first acceptance criterion updated; the task stays `proposed` because nothing has been built. The two open questions about `rect()`'s clamp are untouched and are still the wider half. |
 | 2026-08-21 | (no change) | **The owner ruled on the clamp: `rect()` refuses a non-positive extent and the build fails.** A silent wrong picture is worse than a broken build, and the clamp's only effect is to hide one. Two consequences: the caller count §1 asked for becomes a **precondition** of the change rather than a record of it, and the second open question stops being a question — it is the measurement the ruling requires. The task stays `proposed` because nothing has been built. |
