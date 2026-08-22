@@ -23,7 +23,9 @@ deliverables:
 
 **Trigger**
 
-The owner asked for one on 2026-08-22, before the next release after `0.5.1`. The reason given: the
+The owner asked for one on 2026-08-22. **Reordered the same day: the release is cut first and the
+audit follows it**, so this run precedes the release after next rather than the next one. The reason
+for the audit is unchanged — the
 project has accumulated features, generated files, changed documents, updated statuses and settled
 decisions faster than any one pass has reconciled them, and that is the condition under which
 contradictions survive unnoticed.
@@ -195,4 +197,5 @@ Counts only; the statements live in the register.
 | 2026-08-22 | → proposed | Requested by the owner before the next release after `0.5.1`. |
 | 2026-08-22 | → specified | Scope, grades and the register fixed against [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md)'s method. Three questions left open, each with who answers it. |
 | 2026-08-22 | → planned | Forty-three cycles in nine stages, measured from the tree. **Left here deliberately**: the owner asked for the audit to be specified and planned, and not executed. |
-| 2026-08-22 | (no change) | The method moved to taskmd ([T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md)); §2's cycle programme stays here, because taskmd's `audit.md` puts a given audit's procedure in its own plan. Running the cycles is better done once that release lands, so the run reads one method rather than a local draft of it. |
+| 2026-08-22 | (no change) | The method moved to taskmd ([T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md)); §2's cycle programme stays here, because taskmd's `audit.md` puts a given audit's procedure in its own plan. |
+| 2026-08-22 | (no change) | **The owner reordered it: cut the release first, run the audit after.** So this task no longer gates the next release, and its findings are expected to carry the one after — the owner's expectation is a **minor**, which [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8's digit rule decides at the time and §8.1's row is the evidence for. The side effect is welcome: the run now starts after taskmd [PR #2](https://github.com/uchimata2/taskmd/pull/2) is settled, so it reads one method rather than a local draft. |

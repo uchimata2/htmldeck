@@ -15,7 +15,7 @@ audited, not because nothing was found.
 | | |
 | :--- | :--- |
 | Requested | 2026-08-22, by the owner |
-| Target release | the next one after `0.5.1` |
+| Target release | **the release after the next one.** Reordered by the owner on 2026-08-22: cut the release first, audit afterward. The number is [`PUBLISHING.md`](PUBLISHING.md) §8's to decide at the time, not this document's to predict |
 | Baseline | to be recorded by cycle 0 — `python tools/check_all.py` and `python tools/tasks/lint.py`, both green, on a frozen tree |
 | Id space | `PR-nn`, never reused, never renumbered |
 
