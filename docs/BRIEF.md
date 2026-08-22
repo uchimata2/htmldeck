@@ -430,8 +430,16 @@ and the second was growing with every closure — finding `CE-05`,
    Notes live in a **presenter build**: a second artifact from the same specification, carrying a
    marker the gate fails on, so it cannot be the file that ships. DS-088 already said *in the
    shipped deck* and stands unchanged; R1's candidate rule **A10** carried the marker *amend —
-   BRIEF Q4* from the day it was written and now reads **keep**. Building it is
-   [T-213](../tasks/T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md).
+   BRIEF Q4* from the day it was written and now reads **keep**. **Built 2026-08-22 by
+   [T-213](../tasks/T-213-build-the-presenter-build-and-the-marker-that-keeps-it-unshippable.md)**:
+   `python tools/deck/presenter.py <deck> <slug>.slides.md` writes `<slug>-presenter.html`
+   from an optional tenth `Notes` field, and that artifact fails `check.py` on DS-088 and
+   nothing else. **The marker turned out to be the notes themselves rather than a flag beside
+   them**, which is the half of the scope nobody had written down: a build that lost a flag
+   would have passed ([L-132](lessons/L-132.md)). Attaching a note to the *right* slide took a
+   second task —
+   [T-217](../tasks/T-217-notes-attach-by-position-and-position-is-not-identity.md) — because
+   two of the three example decks number their slides differently from their specifications.
    *PDF export* is **unchanged and still deferred** — [R7](research/R7-printable-mode.md) covers
    the printed page, and an explicit export path was not raised.
 7. ~~**The fixed stage versus the accessibility floor.**~~ **Answered 2026-08-06 by the owner: keep
