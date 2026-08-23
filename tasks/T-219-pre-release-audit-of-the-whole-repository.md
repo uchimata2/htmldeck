@@ -143,7 +143,7 @@ what it cost to find out.
 | 16 | The shell and the themes | 9 | 272,593 | 85 KB of CSS and 51 KB of JavaScript that every shipped deck embeds. Dead selectors, tokens nothing reads, a theme value that is not parametric. | **done** |
 | | *Stage 4 — the decks.* | | | | |
 | 17 | The shipped decks and the blindness fixture | 5 | 1,773,568 | **Grade C, and two instruments.** The four decks `check_all.py`'s `DECKS` names, 1,451,311 bytes: render each offline and look at it; `check.py`, `audit.py`, `printgeom.py`, `glitchfree.py`; print two and read the paper. The fixture, 322,257: `seed_defects.py --check` and nothing else — it is seeded to score 0 on every dimension, so a deck gate's reds are it working. No `.html` is opened as a file. [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) is why the brief has two halves. | **done** |
-| 18 | The deck specifications and sources | 25 | 301,861 | Each specification against the deck built from it, and each source against what the deck claims it says. The sanitisation rule on the adopter deck. | pending |
+| 18 | The deck specifications and sources | 25 | 301,861 | Each specification against the deck built from it, and each source against what the deck claims it says. The sanitisation rule on the adopter deck. | **done** |
 | | *Stage 5 — the record.* | | | | |
 | 19 | The prior audits | 2 | 119,302 | `CONTEXT-AUDIT.md` and `RULESET-AUDIT.md`: is every row that reads closed actually closed, and does every open row still describe the tree? `findings.py --check` decides part of this and not all of it. | pending |
 | 20 | The design rationale | 1 | 69,194 | **Grade B.** A decision recorded here that the product no longer implements. | pending |
@@ -201,9 +201,9 @@ Counts only; the statements live in the register.
 
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
-| High | 7 | 0 | 0 | 7 |
-| Medium | 51 | 2 | 0 | 49 |
-| Low | 23 | 0 | 0 | 23 |
+| High | 8 | 0 | 0 | 8 |
+| Medium | 54 | 2 | 0 | 52 |
+| Low | 26 | 0 | 0 | 26 |
 
 **Child tasks raised**
 
@@ -230,6 +230,7 @@ Counts only; the statements live in the register.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-23 | (no change) | **Cycle 18 done: the deck specifications and sources, and stage 4 closes.** Seven findings, and the High is `PR-83` - `examples/portfolio-review/portfolio-review.html` carries **eleven byte-identical copies** of one quick view, where `quickview.py`'s `wire()` and [`../shell/deck.js`](../shell/deck.js) state in the same words that a source cited by six slides gets one. Ten are unreachable, because `deck.js` keys the lookup by `data-qv` and the last one wins: **84,510 bytes, 21.3% of the deck**. The waste is the smaller half - `rewire()` substitutes with `count=1`, so `refresh --write` repairs the copy on slide 1 while the reader opens the one on slide 12, and `check_all.py`'s `_quickview_args` dedupes by title, so the gate compares one of eleven and exits 0. **Both directions were measured on scratch copies rather than argued** (**L-05**), which is what turned a size observation into a defeated detection: [T-181](T-181-nothing-detects-that-a-decks-embedded-quick-view-has-drifted-from-its-source.md) shipped `check` for exactly this drift. `PR-84` and `PR-85` are `PR-81`'s class on the other two decks - sort-window prints a sort finish its own 3,100-an-hour rate puts two hours later, and the tripwire resting on it is already breached at about 16,800 parcels a day against an 18,400 baseline; portfolio-review counts a transmission asset's $29M inside the $131M it calls renewables, on the slide that is its concentration argument. `PR-86` is the adopter deck's seventh sanitisation class: the `D6` filename [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) removed still opens `measure-first.slides.md`, five `deliverables/` and `tools/bpmn/bpmnlay.py` paths resolve to nothing here, and `D-004` dangles seven times - a class cleared by enumerating the ids somebody had already found, which is `PR-06`'s failure a third time. **The rest of the sanitisation holds and was re-run rather than cited**, over every file type including both BPMN `targetNamespace` values. Three Lows: two wrong counts in the adopter foundation, `D1` citing the monthly meeting as step 5 where its own table says 6, and sort-window's slide 12 `Sources` sitting below the closing rule where `SPEC-1` passes it anyway. **Stage 5 - the record - opens at cycle 19.** |
 | 2026-08-22 | → proposed | Requested by the owner before the next release after `0.5.1`. |
 | 2026-08-22 | → specified | Scope, grades and the register fixed against [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md)'s method. Three questions left open, each with who answers it. |
 | 2026-08-22 | → planned | Forty-three cycles in nine stages, measured from the tree. **Left here deliberately**: the owner asked for the audit to be specified and planned, and not executed. |
