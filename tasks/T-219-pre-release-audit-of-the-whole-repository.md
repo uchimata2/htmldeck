@@ -2,7 +2,7 @@
 id: T-219
 title: Pre-release audit of the whole repository, project and product
 type: audit
-status: planned
+status: in_progress
 phase: implement
 parent: null
 blocked_by: []
@@ -97,7 +97,7 @@ be run alone, and it ends at a commit with the register written.
 
 | # | Subject | Files | Bytes | Brief | Status |
 | :-- | :--- | ---: | ---: | :--- | :--- |
-| **0** | **Instruments and baseline** | 4 | 61,356 | Freeze the tree. `check_all.py` and `lint.py` green, both recorded with their elapsed time. Generalise `findings.py` to discover registers, or record `parent:` as the fallback and why. | pending |
+| **0** | **Instruments and baseline** | 4 | 61,356 | Freeze the tree. `check_all.py` and `lint.py` green, both recorded with their elapsed time. Generalise `findings.py` to discover registers, or record `parent:` as the fallback and why. | **done** |
 | | *Stage 1 — what an adopter receives.* Highest density: it is the oldest text about the fastest-moving tree. | | | | |
 | 1 | The human-facing set | 7 | 54,585 | Every claim in `README.md` against the tree — it says *two decks* and three are shipped. The install lines run. The humanizer test of `PUBLISHING.md` §2 still holds. `LICENSE` and the marketplace manifest agree with the plugin manifest. | pending |
 | 2 | The skill and the prompt | 6 | 58,890 | What an adopter's tier 1 receives through the skill description. Every `${CLAUDE_PLUGIN_ROOT}` path resolves in a copied directory. The four reference documents agree with the tools they describe. | pending |
@@ -161,7 +161,11 @@ be run alone, and it ends at a commit with the register written.
 
 **Decisions & assumptions**
 
-- <decision — rationale — date>
+- **`parent:` is the fallback for the finding-to-task link, and no task may carry `finding: PR-nn`** — `tools/docs/findings.py` is bound to [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md)'s table *shape*, not merely its path: closure is a struck-through rank cell and the bands are read from fixed column positions, where [`../docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) section 3 signals closure in a `Status` column and carries different columns entirely. Generalising is a second reader, and it would be written against a table that has never held a row. Proven rather than assumed — a task carrying `finding: PR-01` yields exactly one problem and `lint.py`'s fourth step exits 1:
+  `python -c "import importlib.util;s=importlib.util.spec_from_file_location('f','tools/docs/findings.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);print(m.link(m.findings(m.read(m.AUDIT)),{'T-900':('proposed','PR-01')},m.open_statuses())[1])"`.
+  The cost is the one [`../docs/AUDIT-METHOD.md`](../docs/AUDIT-METHOD.md) section 3 already states: the register's `Task` column stays hand-kept and drifts. Revisit at cycle 40, where the child tasks are actually raised and the table's shape is settled by real rows — 2026-08-23
+- **The gate timings are a dated record, not a stated figure** — section 2's brief for cycle 0 asks for the elapsed time, and `check_all.py` prints its own seconds precisely so that no document holds them (**L-95**, `CE-08`). [`../docs/lessons/L-95.md`](../docs/lessons/L-95.md) point 4 resolves it: a dated measurement in a byproduct register is history and stays true, where *the gate takes N s* in a live document decays. So the register's baseline row names the commit and the date and says to re-run rather than cite. Measured 294.5 s today against the 154 s L-95 records for 2026-08-14 — the drift is the rule working — 2026-08-23
+- **`taskmd check`'s eleven advisories are baselined, not raised** — it exits 0 and still prints a duplicate-index line for [`../docs/RELEASE-PHASES.md`](../docs/RELEASE-PHASES.md) and ten unresolved section references. By subject they are cycles 5 and 6's; recording them in the baseline is what lets a later cycle tell a new advisory from an old one — 2026-08-23
 
 **Findings raised**
 
@@ -170,12 +174,12 @@ Counts only; the statements live in the register.
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
 | High | 0 | 0 | 0 | 0 |
-| Medium | 0 | 0 | 0 | 0 |
+| Medium | 1 | 0 | 0 | 1 |
 | Low | 0 | 0 | 0 | 0 |
 
 **Child tasks raised**
 
-- none yet.
+- none yet. Child tasks are raised at cycle 40, which is where section 2 puts the triage. `PR-01` is the exception in waiting: its remedy has to land before cycle 17 runs, not at cycle 40.
 
 ## 4. Review
 
@@ -202,3 +206,4 @@ Counts only; the statements live in the register.
 | 2026-08-22 | (no change) | **The owner reordered it: cut the release first, run the audit after.** So this task no longer gates the next release, and its findings are expected to carry the one after — the owner's expectation is a **minor**, which [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8's digit rule decides at the time and §8.1's row is the evidence for. The side effect is welcome: the run now starts after taskmd [PR #2](https://github.com/uchimata2/taskmd/pull/2) is settled, so it reads one method rather than a local draft. |
 | 2026-08-23 | (no change) | **That precondition is settled.** [PR #2](https://github.com/uchimata2/taskmd/pull/2) merged 2026-08-22 and its `pre-release-audit.md` shipped in taskmd `0.6.0` on 2026-08-23, at 11,371 bytes — so a run reads one method, upstream, and the six rules §2's programme was written against are now fixed text rather than a draft. **Still not started; the owner's request opens it.** Two things a session must check first: the installed taskmd must be `0.6.0` or later, and the `finding:` tool gap was **not** closed upstream, so cycle 0 still owns it. |
 | 2026-08-23 | (no change) | **The release position moved, because the release it was reordered behind has been cut.** §1 read *the release after next*, written when `0.6.0` was next; `0.6.0` shipped 2026-08-23, so §1 and [`../docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) §1 now both say **the next one**, and §1's open question names `0.6.0` as what is published. Cycle 4 gained `0.6.0` to its list: a cycle auditing the release machinery against every release but the newest one is a gap the plan would have carried in silently. The dated rows above keep their words. |
+| 2026-08-23 | — in_progress | **Cycle 0 is done and the run is open.** Tree frozen at `62c3ab3`; `check_all.py` and `tools/tasks/lint.py` both green and recorded in [`../docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) section 1. The cycle re-measured its own four files and they came to the planned 61,356 bytes exactly, so the count the handoff warned might have moved did not move here. The `finding:` gap is settled locally rather than upstream — [taskmd T-247](https://github.com/uchimata2/taskmd/blob/master/tasks/T-247-decide-whether-taskmd-validates-a-finding-field-against-a-register.md) is still `proposed` — and section 3 carries the decision, its proof and the trigger to revisit. One Medium finding, `PR-01`, and its subject is this task's own section 2. |

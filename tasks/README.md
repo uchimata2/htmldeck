@@ -34,7 +34,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
-| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `planned` | `implement` | - | - | - | T-042, T-119, T-130, T-153, T-218, T-222 |
+| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | - | - | T-042, T-119, T-130, T-153, T-218, T-222 |
 | [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216 |
 
 ## Closed
