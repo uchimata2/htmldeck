@@ -142,7 +142,7 @@ what it cost to find out.
 | 15 | The remaining tools | 9 | 265,632 | Assets, portability, examples, kb, plugin scaffold. `check_all.py`'s partition says every one of these is classified — verify that against what each actually does. | **done** |
 | 16 | The shell and the themes | 9 | 272,593 | 85 KB of CSS and 51 KB of JavaScript that every shipped deck embeds. Dead selectors, tokens nothing reads, a theme value that is not parametric. | **done** |
 | | *Stage 4 — the decks.* | | | | |
-| 17 | The shipped decks and the blindness fixture | 5 | 1,773,568 | **Grade C, and two instruments.** The four decks `check_all.py`'s `DECKS` names, 1,451,311 bytes: render each offline and look at it; `check.py`, `audit.py`, `printgeom.py`, `glitchfree.py`; print two and read the paper. The fixture, 322,257: `seed_defects.py --check` and nothing else — it is seeded to score 0 on every dimension, so a deck gate's reds are it working. No `.html` is opened as a file. [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) is why the brief has two halves. | pending |
+| 17 | The shipped decks and the blindness fixture | 5 | 1,773,568 | **Grade C, and two instruments.** The four decks `check_all.py`'s `DECKS` names, 1,451,311 bytes: render each offline and look at it; `check.py`, `audit.py`, `printgeom.py`, `glitchfree.py`; print two and read the paper. The fixture, 322,257: `seed_defects.py --check` and nothing else — it is seeded to score 0 on every dimension, so a deck gate's reds are it working. No `.html` is opened as a file. [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) is why the brief has two halves. | **done** |
 | 18 | The deck specifications and sources | 25 | 301,861 | Each specification against the deck built from it, and each source against what the deck claims it says. The sanitisation rule on the adopter deck. | pending |
 | | *Stage 5 — the record.* | | | | |
 | 19 | The prior audits | 2 | 119,302 | `CONTEXT-AUDIT.md` and `RULESET-AUDIT.md`: is every row that reads closed actually closed, and does every open row still describe the tree? `findings.py --check` decides part of this and not all of it. | pending |
@@ -201,9 +201,9 @@ Counts only; the statements live in the register.
 
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
-| High | 6 | 0 | 0 | 6 |
-| Medium | 50 | 2 | 0 | 48 |
-| Low | 22 | 0 | 0 | 22 |
+| High | 7 | 0 | 0 | 7 |
+| Medium | 51 | 2 | 0 | 49 |
+| Low | 23 | 0 | 0 | 23 |
 
 **Child tasks raised**
 
