@@ -374,6 +374,30 @@ def open_statuses():
     return set(v.strip() for v in m.group(1).split(",") if v.strip())
 
 
+def header(text):
+    """The front-matter block, or `None` - the fence is a **whole line**, never a substring.
+
+    **Splitting on `---` is wrong and looked right for a day.** `T-107`'s title is *quickview.py's
+    Markdown renderer drops thematic breaks, shipping "---" as body text*, so a split on the first
+    three occurrences ended the block inside the title and returned a header with no `status:` and
+    no `work_package:` in it. The record then read as an unclassified closed task and landed in the
+    band for the two stubs that predate the field, instead of with the `PH1` work it belongs to.
+    Cycle 6 found it by cross-checking the plan's rows against the record and getting one answer it
+    could not explain (2026-08-23).
+
+    The partition stayed a partition throughout - the file was assigned exactly once, to the wrong
+    cycle - which is why nothing failed. A membership can be complete and wrong, and only a second
+    reading of the same fact catches that.
+    """
+    lines = text.split("\n")
+    if not lines or lines[0].strip() != "---":
+        return None
+    for i in range(1, len(lines)):
+        if lines[i].strip() == "---":
+            return "\n".join(lines[1:i])
+    return None
+
+
 def front_matter(path, opens):
     """`{work_package, state}` for a task record, or `None` for a file that is not one.
 
@@ -387,10 +411,9 @@ def front_matter(path, opens):
         text = open(os.path.join(ROOT, path), encoding="utf-8").read()
     except IOError:
         return None
-    if not text.startswith("---"):
+    head = header(text)
+    if head is None:
         return {"work_package": None, "shipped_in": None, "state": "closed"}
-    body = text.split("---", 2)
-    head = body[1] if len(body) > 2 else ""
     def field(name):
         m = re.search(r"^%s:\s*(.*)$" % name, head, re.M)
         if not m:
@@ -577,6 +600,13 @@ def self_test():
         if [n for n, _r in stale] != [3]:
             sys.exit("SELF-TEST FAILED: a rule matching nothing reported %r, wanted cycle 3 - the "
                      "hand-kept half going stale without a word" % (stale,))
+        fence = '---\ntitle: a title quoting "---" in it\nstatus: done\nwork_package: PH1\n---\nbody'
+        got = header(fence)
+        if got is None or "work_package: PH1" not in got:
+            sys.exit("SELF-TEST FAILED: front matter whose title quotes the fence parsed as %r. "
+                     "That is T-107, and splitting on the substring put a PH1 record in the band "
+                     "for the two stubs with no work package at all - a complete partition with "
+                     "one file in the wrong cycle, which nothing else here can see" % (got,))
     finally:
         CYCLES[:] = real
     return True
