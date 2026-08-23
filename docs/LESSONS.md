@@ -161,6 +161,7 @@ comes here.
 | [L-122](lessons/L-122.md) | A frozen clock makes a finished thing and an unstarted thing read alike | Tooling |
 | [L-130](lessons/L-130.md) | An idiom carries the guarantees of the instrument that reads it, not the ones its syntax suggests | Tooling |
 | [L-132](lessons/L-132.md) | Make the forbidden thing its own marker, and make it the only failure | Tooling |
+| [L-135](lessons/L-135.md) | A list of the homes to check is a second copy of what the homes are, and it goes stale on the day one is added | Tooling |
 
 ### Writing
 
