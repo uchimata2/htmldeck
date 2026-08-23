@@ -7,9 +7,11 @@ htmldeck's own and cannot be written in a document every adopter receives.
 
 *The generic half was written here on 2026-08-22 and handed upstream the same day
 ([T-218](../tasks/T-218-record-the-pre-release-audit-method-and-its-machinery.md)), because most of it
-either already existed in taskmd's `audit.md` or contradicted a rule in it. `pre-release-audit.md`
-arrives with a taskmd release; until it does, this file names what it will carry so a session can tell
-the two apart.*
+either already existed in taskmd's `audit.md` or contradicted a rule in it. **It has arrived:
+`pre-release-audit.md` ships in taskmd `0.6.0`, tagged 2026-08-23, at 11,371 bytes** — their T-223,
+merged as [PR #2](https://github.com/uchimata2/taskmd/pull/2). This file stopped describing what the
+upstream document would carry; read it instead. A session whose installed taskmd is older than `0.6.0`
+will not find it.*
 
 ---
 
@@ -55,4 +57,6 @@ are hardcoded, and `tools/tasks/lint.py` runs it — so a task carrying `finding
 today. Generalising it is the first step of any second audit; until then a child task is tied to its
 finding by `parent:` alone, and a register's task column is hand-kept and known to drift.
 
-*Raised upstream as well: validating a `finding:` field against a register is schema work, not method.*
+*Raised upstream as well: validating a `finding:` field against a register is schema work, not method.
+**It is not in taskmd `0.6.0`** — no `finding` field in its schema — so the gap above is still this
+project's to close, and cycle 0 of the run still owns it.*

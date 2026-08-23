@@ -12,7 +12,7 @@ owner: the project owner
 business_value: high
 effort: m
 created: 2026-08-22
-updated: 2026-08-22
+updated: 2026-08-23
 shipped_in: 0.6.0
 deliverables:
   - docs/AUDIT-METHOD.md
@@ -106,8 +106,10 @@ workflow — so that *run a pre-release audit* is a complete instruction.
   *Procedure* refuses a standing checklist, and taskmd's `SCOPE.md` R-9 forbids method content that
   assumes code or version control. The owner ruled the pre-release audit should be a taskmd feature so
   every adopter gets it. `docs/AUDIT-METHOD.md` is now the **local binding** — which audits run here,
-  what the decks are exempt from reading, and the one tool gap — and is 3,450 bytes rather than 12,302.
-  What went up is on taskmd's branch `audit/pre-release-audit-method` as their T-223.
+  what the decks are exempt from reading, and the one tool gap — and was 3,450 bytes on delivery
+  rather than 12,302.
+  What went up is their T-223, and it **shipped in taskmd `0.6.0` on 2026-08-23** as
+  `pre-release-audit.md`, 11,371 bytes.
 - **Two tasks, not one — 2026-08-22.** The machinery outlives the run. Merging them would leave a
   `done` audit whose method is only recoverable by reading a closed record.
 - **The register is scaffolded here and owned by T-219 — 2026-08-22.** It has to exist before the
@@ -172,3 +174,4 @@ workflow — so that *run a pre-release audit* is a complete instruction.
 | 2026-08-22 | → in_progress | Method, register scaffold, template, entry point and the §8 exclusion written. |
 | 2026-08-22 | → done | Every criterion met. The run is T-219 and is deliberately left unstarted. |
 | 2026-08-22 | (no change) | The generic half handed to taskmd; this document thinned to the local binding. The criteria are unchanged and still met — a binding that defers is still an entry point — but the outcome above overstates what stayed here. |
+| 2026-08-23 | (no change) | **The upstream half landed.** taskmd [PR #2](https://github.com/uchimata2/taskmd/pull/2) merged 2026-08-22 and `pre-release-audit.md` shipped in taskmd `0.6.0` on 2026-08-23, at 11,371 bytes. What this task deferred is now readable, so [`../docs/AUDIT-METHOD.md`](../docs/AUDIT-METHOD.md) stopped describing it. **The second thing raised upstream was not taken**: taskmd `0.6.0` has no `finding` field in its schema, so the tool gap that document's §3 names is still this project's. |

@@ -12,7 +12,7 @@ owner: the project owner
 business_value: high
 effort: xl
 created: 2026-08-22
-updated: 2026-08-22
+updated: 2026-08-23
 deliverables:
   - docs/PRE-RELEASE-AUDIT.md
 ---
@@ -24,7 +24,8 @@ deliverables:
 **Trigger**
 
 The owner asked for one on 2026-08-22. **Reordered the same day: the release is cut first and the
-audit follows it**, so this run precedes the release after next rather than the next one. The reason
+audit follows it.** That release was `0.6.0` and it was cut on 2026-08-23, so **this run now precedes
+the next release**, whichever digit it takes. The reason
 for the audit is unchanged — the
 project has accumulated features, generated files, changed documents, updated statuses and settled
 decisions faster than any one pass has reconciled them, and that is the condition under which
@@ -84,7 +85,7 @@ runs**, and the figures below are for sizing sessions rather than for citation.
   least current subject.** The program is ordered so that stopping after cycle 26 leaves the audit
   complete over everything a reader, an adopter or the next release touches. Whether to spend
   stage 7 is a checkpoint decision, not a planning one. Owner answers, at cycle 26.
-- **Which release this precedes.** `0.5.1` is published; the digit the next one takes is
+- **Which release this precedes.** `0.6.0` is published; the digit the next one takes is
   [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8's rule and is not this audit's to set.
 
 ## 2. Plan
@@ -102,7 +103,7 @@ be run alone, and it ends at a commit with the register written.
 | 2 | The skill and the prompt | 6 | 58,890 | What an adopter's tier 1 receives through the skill description. Every `${CLAUDE_PLUGIN_ROOT}` path resolves in a copied directory. The four reference documents agree with the tools they describe. | pending |
 | | *Stage 2 — how this project governs itself.* | | | | |
 | 3 | Tier 1 and the brief | 2 | 60,103 | The tier definitions against each other and against what a session is actually given. The bound's two terms re-measured. `BRIEF.md`'s *Decisions taken* against what shipped. | pending |
-| 4 | The release machinery | 6 | 69,189 | `PUBLISHING.md` §8's eight steps against how `0.5.0` and `0.5.1` actually ran. §8.1's `*next*` row. `RELEASE-HISTORY.md` against the tags. What `.gitignore` hides that should ship, and what it fails to hide. | pending |
+| 4 | The release machinery | 6 | 69,189 | `PUBLISHING.md` §8's eight steps against how `0.5.0`, `0.5.1` and `0.6.0` actually ran. §8.1's `*next*` row. `RELEASE-HISTORY.md` against the tags. What `.gitignore` hides that should ship, and what it fails to hide. | pending |
 | 5 | The tracker's own rules | 7 | 108,839 | `TASK-WORKFLOW.md`, `TOOLING.md`, the two templates and the schema against each other and against 219 task files. Which conventions are gated and which are only written down. | pending |
 | 6 | The release plan | 1 | 177,442 | 177 KB of phase decision against the phases as they ran. Rows for tasks that changed shape, counts that moved, and the PH3-takes-everything rule against what PH3 now holds. | pending |
 | 7 | The unreleased work | 18 | 296,551 | What the next release contains, read as an adopter would meet it. Every `shipped_in: unreleased` record against the code that closed it. *T-218 and this file join this cycle.* | pending |
@@ -199,3 +200,5 @@ Counts only; the statements live in the register.
 | 2026-08-22 | → planned | Forty-three cycles in nine stages, measured from the tree. **Left here deliberately**: the owner asked for the audit to be specified and planned, and not executed. |
 | 2026-08-22 | (no change) | The method moved to taskmd ([T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md)); §2's cycle programme stays here, because taskmd's `audit.md` puts a given audit's procedure in its own plan. |
 | 2026-08-22 | (no change) | **The owner reordered it: cut the release first, run the audit after.** So this task no longer gates the next release, and its findings are expected to carry the one after — the owner's expectation is a **minor**, which [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8's digit rule decides at the time and §8.1's row is the evidence for. The side effect is welcome: the run now starts after taskmd [PR #2](https://github.com/uchimata2/taskmd/pull/2) is settled, so it reads one method rather than a local draft. |
+| 2026-08-23 | (no change) | **That precondition is settled.** [PR #2](https://github.com/uchimata2/taskmd/pull/2) merged 2026-08-22 and its `pre-release-audit.md` shipped in taskmd `0.6.0` on 2026-08-23, at 11,371 bytes — so a run reads one method, upstream, and the six rules §2's programme was written against are now fixed text rather than a draft. **Still not started; the owner's request opens it.** Two things a session must check first: the installed taskmd must be `0.6.0` or later, and the `finding:` tool gap was **not** closed upstream, so cycle 0 still owns it. |
+| 2026-08-23 | (no change) | **The release position moved, because the release it was reordered behind has been cut.** §1 read *the release after next*, written when `0.6.0` was next; `0.6.0` shipped 2026-08-23, so §1 and [`../docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) §1 now both say **the next one**, and §1's open question names `0.6.0` as what is published. Cycle 4 gained `0.6.0` to its list: a cycle auditing the release machinery against every release but the newest one is a gap the plan would have carried in silently. The dated rows above keep their words. |
