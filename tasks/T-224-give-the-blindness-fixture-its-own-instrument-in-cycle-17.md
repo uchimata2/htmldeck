@@ -154,7 +154,7 @@ document is edited.
 
 Nothing this task produced renders. The outputs are three Markdown documents and a lessons file;
 `CLAUDE.md` rule 6 and [`TASK-WORKFLOW.md`](TASK-WORKFLOW.md) §7 step 3 bind a task that produces
-something renderable, and this one does not. **The deck side of cycle 17 is unchanged and unrun** —
+something renderable, and this one does not. **The deck side of cycle 17 was unchanged and unrun when this task closed** —
 looking at the four decks offline is cycle 17's own work, not this task's, and that is exactly the
 boundary `PR-01` was blocking.
 
