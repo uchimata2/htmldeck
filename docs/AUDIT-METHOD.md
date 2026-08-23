@@ -54,9 +54,16 @@ are the plan's to decide, and this list is what has been decided *here*, not a r
 
 **`tools/docs/findings.py` reads a single register.** `docs/CONTEXT-AUDIT.md` and the `CE-nn` pattern
 are hardcoded, and `tools/tasks/lint.py` runs it — so a task carrying `finding: PR-nn` fails the lint
-today. Generalising it is the first step of any second audit; until then a child task is tied to its
-finding by `parent:` alone, and a register's task column is hand-kept and known to drift.
+today. Generalising it was to be the first step of any second audit; **cycle 0 decided against it**,
+below — so a child task is tied to its finding by `parent:` alone, and a register's task column
+is hand-kept and known to drift.
 
 *Raised upstream as well: validating a `finding:` field against a register is schema work, not method.
-**It is not in taskmd `0.6.0`** — no `finding` field in its schema — so the gap above is still this
-project's to close, and cycle 0 of the run still owns it.*
+**It is not in taskmd `0.6.0`** — no `finding` field in its schema — and their
+[T-247](https://github.com/uchimata2/taskmd/blob/master/tasks/T-247-decide-whether-taskmd-validates-a-finding-field-against-a-register.md)
+was still `proposed` on 2026-08-23, so the remedy stays local. **Cycle 0 settled it that day:
+`parent:` is the fallback and no task may carry `finding: PR-nn`**, because the tool binds to
+`CONTEXT-AUDIT.md`'s table *shape* rather than to its path, and a second reader would be written
+against a table that has never held a row.
+[T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) section 3 carries the argument,
+the command that proves the lint fails on one, and the trigger to revisit at cycle 40.*
