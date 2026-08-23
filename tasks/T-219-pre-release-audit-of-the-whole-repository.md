@@ -139,7 +139,7 @@ what it cost to find out.
 | 13 | The rest of `tools/deck/` | 14 | 270,560 | Fourteen tools. Which are reachable from a documented command, which are only reachable from a task record, and which are neither. | **done** |
 | 14 | `tools/docs/` | 5 | 188,895 | The four checkers that read documents. `figures.py` is 99 KB and every pasted figure in the tree depends on it. `refcheck.py`'s skip list. | **done** |
 | 15 | The remaining tools | 9 | 265,632 | Assets, portability, examples, kb, plugin scaffold. `check_all.py`'s partition says every one of these is classified — verify that against what each actually does. | **done** |
-| 16 | The shell and the themes | 9 | 272,593 | 85 KB of CSS and 51 KB of JavaScript that every shipped deck embeds. Dead selectors, tokens nothing reads, a theme value that is not parametric. | pending |
+| 16 | The shell and the themes | 9 | 272,593 | 85 KB of CSS and 51 KB of JavaScript that every shipped deck embeds. Dead selectors, tokens nothing reads, a theme value that is not parametric. | **done** |
 | | *Stage 4 — the decks.* | | | | |
 | 17 | The five shipped decks | 5 | 1,773,568 | **Grade C.** Render each offline and look at it. `check.py`, `audit.py`, `printgeom.py`, `glitchfree.py`. Print two and read the paper. No deck is opened as a file. | pending |
 | 18 | The deck specifications and sources | 25 | 301,861 | Each specification against the deck built from it, and each source against what the deck claims it says. The sanitisation rule on the adopter deck. | pending |
@@ -201,8 +201,8 @@ Counts only; the statements live in the register.
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
 | High | 6 | 0 | 0 | 6 |
-| Medium | 49 | 1 | 0 | 48 |
-| Low | 21 | 0 | 0 | 21 |
+| Medium | 51 | 1 | 0 | 50 |
+| Low | 22 | 0 | 0 | 22 |
 
 **Child tasks raised**
 
