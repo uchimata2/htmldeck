@@ -58,9 +58,13 @@ Today the test resolves to three things:
 
 **The test is the rule; those two are only today's answer.** A list of filenames goes stale the first
 time a document is added, and it goes stale *silently* — nothing fails, the new document simply is
-not covered. This repository has already paid for that once: `reconcile_targets` in
-`.handoff/config.md` is an enumeration, and what it had quietly stopped covering is what
-[T-042](../tasks/T-042-audit-the-whole-repository-against-itself.md) found.
+not covered. This repository has already paid for that twice, in the same place: `reconcile_targets`
+in `.handoff/config.md` was an enumeration, and what it had quietly stopped covering is what
+[T-042](../tasks/T-042-audit-the-whole-repository-against-itself.md) found. It was *still* an
+enumeration on 2026-08-23, by then missing thirteen documents and three subdirectories — including
+this file. [T-222](../tasks/T-222-derive-the-reconcile-sweeps-membership-instead-of-enumerating-it.md)
+replaced it with patterns and **L-135** records the shape. The paragraph above survived two releases
+stating the right rule beside a mechanism that was breaking it.
 
 **Applying the test to a document that does not exist yet.** Ask where the reader is standing, not
 what the file is called. A `CONTRIBUTING.md` is read after cloning by someone who has already decided:

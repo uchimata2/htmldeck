@@ -175,7 +175,9 @@ plausible one (**L-03**).
 - **The rule is written as a test, not as a list of files.** A list goes stale the first time a
   document is added, and it would go stale silently. *Rejected: enumerating `README.md` and the
   description.* This project has already paid for that once — `reconcile_targets` in
-  [`.handoff/config.md`](../.handoff/config.md) is an enumeration, and the audit
+  [`.handoff/config.md`](../.handoff/config.md) was an enumeration until
+  [T-222](T-222-derive-the-reconcile-sweeps-membership-instead-of-enumerating-it.md) on
+  2026-08-23, and the audit
   ([T-042](T-042-audit-the-whole-repository-against-itself.md)) is what found what it had stopped
   covering.
 
