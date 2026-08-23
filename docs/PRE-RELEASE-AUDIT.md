@@ -5,7 +5,7 @@
 [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md), whose §2 holds the cycle
 program this document records the results of.
 
-**Status: running.** Cycles 0 to 16 of 43 are done — stages 1 and 2 complete and stage 3 begun — and the baseline is below. The tables carry what one
+**Status: running.** Cycles 0 to 16 of 43 are done — stages 1, 2 and 3 complete, so the whole of the product has been read — and the baseline is below. The tables carry what one
 cycle found and nothing more — a subject with no row has not been audited, it has not been
 reached.
 
