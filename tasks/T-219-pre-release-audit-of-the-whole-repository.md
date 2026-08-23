@@ -145,7 +145,7 @@ what it cost to find out.
 | 17 | The shipped decks and the blindness fixture | 5 | 1,773,568 | **Grade C, and two instruments.** The four decks `check_all.py`'s `DECKS` names, 1,451,311 bytes: render each offline and look at it; `check.py`, `audit.py`, `printgeom.py`, `glitchfree.py`; print two and read the paper. The fixture, 322,257: `seed_defects.py --check` and nothing else — it is seeded to score 0 on every dimension, so a deck gate's reds are it working. No `.html` is opened as a file. [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) is why the brief has two halves. | **done** |
 | 18 | The deck specifications and sources | 25 | 301,861 | Each specification against the deck built from it, and each source against what the deck claims it says. The sanitisation rule on the adopter deck. | **done** |
 | | *Stage 5 — the record.* | | | | |
-| 19 | The prior audits | 2 | 119,302 | `CONTEXT-AUDIT.md` and `RULESET-AUDIT.md`: is every row that reads closed actually closed, and does every open row still describe the tree? `findings.py --check` decides part of this and not all of it. | pending |
+| 19 | The prior audits | 2 | 119,302 | `CONTEXT-AUDIT.md` and `RULESET-AUDIT.md`: is every row that reads closed actually closed, and does every open row still describe the tree? `findings.py --check` decides part of this and not all of it. | **done** |
 | 20 | The design rationale | 1 | 69,194 | **Grade B.** A decision recorded here that the product no longer implements. | pending |
 | 21 | Lessons `L-01`–`L-77`, and the index | 78 | 167,650 | **Grade B.** A lesson whose mechanism the tree no longer has. The index against the files. | pending |
 | 22 | Lessons `L-78`–`L-133` | 59 | 158,429 | **Grade B.** As cycle 21. | pending |
