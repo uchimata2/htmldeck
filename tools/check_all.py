@@ -135,6 +135,14 @@ NOT_RUN = {
         "is days after the edit that caused it. Its listing mode is a question, not a check: it "
         "answers which finding is which task in 1,317 bytes against the 325,695 the same answer "
         "cost by hand (T-151)",
+    "tools/docs/cycles.py":
+        "the pre-release audit's coverage partition, and deliberately not a gate here. It fails "
+        "when a tracked file belongs to no audit cycle - which is a defect in T-219's coverage, not "
+        "in the release - and docs/AUDIT-METHOD.md section 1 says no audit is a release step. "
+        "Wiring it in would block a release over a document that had not been assigned a reader. "
+        "Its failing half rides on the command a cycle already runs: python tools/docs/cycles.py "
+        "--cycle <n> answers which files that cycle reads, and reports the whole partition's "
+        "verdict before it answers. Cycle 42 decides whether it outlives the audit",
     "tools/tasks/query.py":
         "a question, not a check. It asks the tracker what to work on next and what one task "
         "points at, so a session pays 1,901 bytes instead of reading the 33,676-byte board "

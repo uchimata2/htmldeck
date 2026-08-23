@@ -34,8 +34,8 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
-| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | - | - | T-042, T-119, T-130, T-153, T-218, T-222 |
-| [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216 |
+| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223 | - | T-042, T-119, T-130, T-153, T-218, T-222 |
+| [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216, T-223 |
 
 ## Closed
 
@@ -257,8 +257,9 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-215](T-215-the-frame-rate-instrument-and-a-number-with-its-machine.md) | The frame-rate instrument, and a number with the machine it was measured on | `PH3` | `0.6.0` | `done` | `review` | T-057 | - | - | T-016, T-057, T-185 |
 | [T-216](T-216-the-ph1-reopening-count-contradicts-the-prose-below-it.md) | The PH1 reopening count contradicts the prose below it | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-105, T-143, T-214, T-220 |
 | [T-217](T-217-notes-attach-by-position-and-position-is-not-identity.md) | Speaker notes attach by position, and the second example proves position is not identity | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-211, T-213 |
-| [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md) | Record the pre-release audit method, and the machinery a run needs | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-042, T-119, T-130, T-153, T-219, T-222 |
+| [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md) | Record the pre-release audit method, and the machinery a run needs | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-042, T-119, T-130, T-153, T-219, T-222, T-223 |
 | [T-221](T-221-answer-the-three-defects-taskmd-0-6-0s-wider-check-set-found.md) | Answer the three defects taskmd 0.6.0's wider check set found | `PH3` | - | `done` | `review` | - | - | - | T-098, T-161, T-163 |
-| [T-222](T-222-derive-the-reconcile-sweeps-membership-instead-of-enumerating-it.md) | Derive the reconcile sweep's membership instead of enumerating it | `PH3` | - | `done` | `review` | - | - | - | T-218, T-219 |
+| [T-222](T-222-derive-the-reconcile-sweeps-membership-instead-of-enumerating-it.md) | Derive the reconcile sweep's membership instead of enumerating it | `PH3` | - | `done` | `review` | - | - | - | T-218, T-219, T-223 |
+| [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) | Derive each audit cycle's membership instead of counting it | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | T-218, T-220, T-222 |
 
 <!-- taskmd:end -->

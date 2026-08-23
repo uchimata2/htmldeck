@@ -46,7 +46,14 @@ are the plan's to decide, and this list is what has been decided *here*, not a r
 - **Two surfaces outside git are in scope**: the working directories `.gitignore` names, and this
   project's memory and handoff record.
 - **The coverage partition is `tools/check_all.py`'s, one altitude up** — read, skipped with a stated
-  reason, or produced a finding, and an item in none of the three is a gap in the audit.
+  reason, or produced a finding, and an item in none of the three is a gap in the audit. **The
+  membership behind it is `python tools/docs/cycles.py`**, which assigns every tracked path to
+  exactly one cycle of the pre-release run and fails when a path belongs to none, or when a rule
+  names a path that is gone. It is deliberately **not** wired into `tools/check_all.py`: a file with
+  no audit cycle is a defect in the audit's coverage, not in the release, and §1 says no audit is a
+  release step. It runs at each cycle's step 2 instead —
+  [T-223](../tasks/T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md), and **L-136**
+  is why a count was not enough.
 
 ---
 

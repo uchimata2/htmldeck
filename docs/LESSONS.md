@@ -105,6 +105,7 @@ comes here.
 | [L-128](lessons/L-128.md) | Two instruments agreeing proves they agree, and a shared error is the cheapest way to get that | Evidence and verification |
 | [L-129](lessons/L-129.md) | A check for something the corpus does not contain is never seen to pass, and that looks exactly like working | Evidence and verification |
 | [L-131](lessons/L-131.md) | A correct measurement of the wrong subject passes every check you have | Evidence and verification |
+| [L-136](lessons/L-136.md) | A count with no membership cannot be audited, and its errors cancel instead of showing | Evidence and verification |
 
 ### Tooling
 
