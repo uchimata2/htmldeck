@@ -99,7 +99,7 @@ be run alone, and it ends at a commit with the register written.
 | :-- | :--- | ---: | ---: | :--- | :--- |
 | **0** | **Instruments and baseline** | 4 | 61,356 | Freeze the tree. `check_all.py` and `lint.py` green, both recorded with their elapsed time. Generalise `findings.py` to discover registers, or record `parent:` as the fallback and why. | **done** |
 | | *Stage 1 — what an adopter receives.* Highest density: it is the oldest text about the fastest-moving tree. | | | | |
-| 1 | The human-facing set | 7 | 54,585 | Every claim in `README.md` against the tree — it says *two decks* and three are shipped. The install lines run. The humanizer test of `PUBLISHING.md` §2 still holds. `LICENSE` and the marketplace manifest agree with the plugin manifest. | pending |
+| 1 | The human-facing set | 7 | 54,585 | Every claim in `README.md` against the tree — it says *two decks* and three are shipped. The install lines run. The humanizer test of `PUBLISHING.md` §2 still holds. `LICENSE` and the marketplace manifest agree with the plugin manifest. | **done** |
 | 2 | The skill and the prompt | 6 | 58,890 | What an adopter's tier 1 receives through the skill description. Every `${CLAUDE_PLUGIN_ROOT}` path resolves in a copied directory. The four reference documents agree with the tools they describe. | pending |
 | | *Stage 2 — how this project governs itself.* | | | | |
 | 3 | Tier 1 and the brief | 2 | 60,103 | The tier definitions against each other and against what a session is actually given. The bound's two terms re-measured. `BRIEF.md`'s *Decisions taken* against what shipped. | pending |
@@ -173,9 +173,9 @@ Counts only; the statements live in the register.
 
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
-| High | 0 | 0 | 0 | 0 |
-| Medium | 1 | 0 | 0 | 1 |
-| Low | 0 | 0 | 0 | 0 |
+| High | 1 | 0 | 0 | 1 |
+| Medium | 3 | 0 | 0 | 3 |
+| Low | 1 | 0 | 0 | 1 |
 
 **Child tasks raised**
 
@@ -207,3 +207,4 @@ Counts only; the statements live in the register.
 | 2026-08-23 | (no change) | **That precondition is settled.** [PR #2](https://github.com/uchimata2/taskmd/pull/2) merged 2026-08-22 and its `pre-release-audit.md` shipped in taskmd `0.6.0` on 2026-08-23, at 11,371 bytes — so a run reads one method, upstream, and the six rules §2's programme was written against are now fixed text rather than a draft. **Still not started; the owner's request opens it.** Two things a session must check first: the installed taskmd must be `0.6.0` or later, and the `finding:` tool gap was **not** closed upstream, so cycle 0 still owns it. |
 | 2026-08-23 | (no change) | **The release position moved, because the release it was reordered behind has been cut.** §1 read *the release after next*, written when `0.6.0` was next; `0.6.0` shipped 2026-08-23, so §1 and [`../docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) §1 now both say **the next one**, and §1's open question names `0.6.0` as what is published. Cycle 4 gained `0.6.0` to its list: a cycle auditing the release machinery against every release but the newest one is a gap the plan would have carried in silently. The dated rows above keep their words. |
 | 2026-08-23 | — in_progress | **Cycle 0 is done and the run is open.** Tree frozen at `62c3ab3`; `check_all.py` and `tools/tasks/lint.py` both green and recorded in [`../docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) section 1. The cycle re-measured its own four files and they came to the planned 61,356 bytes exactly, so the count the handoff warned might have moved did not move here. The `finding:` gap is settled locally rather than upstream — [taskmd T-247](https://github.com/uchimata2/taskmd/blob/master/tasks/T-247-decide-whether-taskmd-validates-a-finding-field-against-a-register.md) is still `proposed` — and section 3 carries the decision, its proof and the trigger to revisit. One Medium finding, `PR-01`, and its subject is this task's own section 2. |
+| 2026-08-23 | (no change) | **Cycle 1 done: the human-facing set.** Four findings, and the one that matters is `PR-02` — `examples/portfolio-review/` is a tracked, gated, 397,867-byte deck that appears in neither `README.md` nor `examples/README.md`, while the front page's table promises *every shipped deck* and sends the reader to the second. `0.6.0` shipped with that claim already false, which is why it is the run's first High. `PR-03` and `PR-04` are the front page's other stale numbers, `PR-05` a Low batched from [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) section 2 while it was being applied as the authority for the covered set. **The cycle's own subject moved**: 54,585 bytes at the plan's commit against 55,103 today, because both READMEs grew on 2026-08-22 after the plan was measured — the re-measure section 2 requires is what caught it, and cycle 0's list had not moved at all. |
