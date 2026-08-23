@@ -136,7 +136,7 @@ what it cost to find out.
 | 10 | The gate's code | 9 | 240,446 | 122 rules, 92 decided. Whether each undecided rule's stated reason is still true, and whether any decided rule decides something other than what it says. | **done** |
 | 11 | `audit.py` and `critique.py` | 2 | 198,718 | 182 KB in one file. What is dead, what is duplicated from `check.py`, and whether the stage-1/stage-2 split still matches `EVALUATION.md`. | **done** |
 | 12 | The build path | 7 | 268,414 | Spec to shell to render to deck. Where a failure is silent, where a path is assumed, and what the presenter build shares with the deck build. | **done** |
-| 13 | The rest of `tools/deck/` | 14 | 270,560 | Fourteen tools. Which are reachable from a documented command, which are only reachable from a task record, and which are neither. | pending |
+| 13 | The rest of `tools/deck/` | 14 | 270,560 | Fourteen tools. Which are reachable from a documented command, which are only reachable from a task record, and which are neither. | **done** |
 | 14 | `tools/docs/` | 5 | 188,895 | The four checkers that read documents. `figures.py` is 99 KB and every pasted figure in the tree depends on it. `refcheck.py`'s skip list. | pending |
 | 15 | The remaining tools | 9 | 265,632 | Assets, portability, examples, kb, plugin scaffold. `check_all.py`'s partition says every one of these is classified — verify that against what each actually does. | pending |
 | 16 | The shell and the themes | 9 | 272,593 | 85 KB of CSS and 51 KB of JavaScript that every shipped deck embeds. Dead selectors, tokens nothing reads, a theme value that is not parametric. | pending |
@@ -201,8 +201,8 @@ Counts only; the statements live in the register.
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
 | High | 5 | 0 | 0 | 5 |
-| Medium | 41 | 1 | 0 | 40 |
-| Low | 10 | 0 | 0 | 10 |
+| Medium | 44 | 1 | 0 | 43 |
+| Low | 15 | 0 | 0 | 15 |
 
 **Child tasks raised**
 
