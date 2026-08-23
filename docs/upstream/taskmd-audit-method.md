@@ -1,0 +1,63 @@
+# Audit-method notes for taskmd — from the first run of `pre-release-audit.md`
+
+**What this is.** [T-219](../../tasks/T-219-pre-release-audit-of-the-whole-repository.md) is the first
+audit anywhere to run taskmd's `pre-release-audit.md`. This document collects what did not go as
+planned **and belongs to that method rather than to this project**, so it can be handed over once as
+a single task when the run finishes. The owner asked for it on 2026-08-23, after stage 2.
+
+**It is not the retired register, and it is not the branch route.**
+[`taskmd.md`](taskmd.md) beside this file was closed to new rows on 2026-08-15 by
+[T-164](../../tasks/T-164-retire-the-cross-repo-register-in-favour-of-a-branch.md): a **defect** this
+project finds in taskmd now travels as a branch with a failing test and a three-line pull request.
+That route is right for a defect and cannot carry any row below. **These are observations about a
+written method** — a rule that is right and unenforceable, a worked example that models the shape the
+rule forbids, a template that does not ship. None of them has a failing test to send, and sending
+seven pull requests against one document would be seven round trips where the owner's standing rule
+is one.
+
+**Id space `AM-nn`**, new because `O-Tn` belongs to the retired register and its ids are spent.
+
+**How a row earns its place.** It has to be the *method's*, not this project's. Where this project
+simply failed to follow a rule the method states clearly, the finding is in
+[`../PRE-RELEASE-AUDIT.md`](../PRE-RELEASE-AUDIT.md) and not here. Two rows below are the sharper
+case — this project failed to follow a rule **and** the method's own worked example fails to follow
+it too, which makes the rule the thing to look at.
+
+**Mitigation is recorded, because the audit could not wait.** Where a row blocked the run, this
+project worked around it and the workaround is named. That is information for whoever fixes it: it
+says what a first adopter had to build to get past the gap.
+
+---
+
+## The observations
+
+| # | What the method says | What happened on the first run | Blocked us | What might close it |
+| :-- | :--- | :--- | :--- | :--- |
+| `AM-01` | §2, *Coverage is a partition, and it fails*: every item ends in exactly one of three states and **the record says which**; an item in none of them is a gap. | **A count per cycle cannot support that claim, and the method never asks for a membership.** This project's plan sized 37 cycles by file count and byte total, and the two tables did not reconcile — one file short. Deriving the membership showed the plan covered at most **488 distinct files of 492**: one counted twice, two an entire cycle's subject line cannot name. **Four files were in no cycle and the discrepancy read as one**, because the errors ran in opposite directions. The method's own **worked example states counts too** — *the eight participant handouts*, *the three recorded lectures* — so the shape that failed is the shape the example teaches. | **Yes.** Every cycle's step *re-measure this cycle's file list* had no list to measure. | Say that *what it examines* is a **membership**, derivable by a command, and that a count is its output rather than its statement. The partition is the method's one falsifiable claim and it is the one thing an adopter cannot check without building an instrument first. **Mitigated here** by writing one: `tools/docs/cycles.py`, which assigns every tracked path to exactly one cycle and fails on a path that belongs to none. |
+| `AM-02` | §3: *A cycle names what it examines, the brief for that subject, **the instrument**, and what it produced.* | **The instrument is the one of the four that gets lost, and the worked example loses it too.** Its cycle table carries `Subject`, `Grade` and `Outcome` as columns and puts the instrument inside cycle 3's prose. This project's umbrella template carried an `Instrument` column; the audit built from that template dropped it, and the first consequence was a cycle graded *instrument only* whose instrument sat in a sentence — where it named four deck gates and a fixture built on purpose to fail them. | No, but it produced the run's first finding. | Give the instrument a column in the worked example, or drop it from §3's list of four. A rule stated in prose and modelled in prose is one an adopter reproduces in prose. |
+| `AM-03` | §5 of `METHOD.md` and this document describe an umbrella task with a specific shape: four phases, a coverage-grade table, a findings-count table, a cycle programme. | **No umbrella template ships with the plugin.** This project wrote its own and it is where `AM-02`'s column came from and where it was lost. A first adopter reconstructs the shape from prose and gets it slightly wrong in a way nothing reports. | No. | Ship the umbrella template beside the method, the way this project ships one beside its own task template. It is the cheapest of these rows and it is upstream of `AM-02`. |
+| `AM-04` | §4: **Medium** obliges *a child task, closed or explicitly deferred with a recorded reason before the release*. **Low** is batched, and the section explains at length why batching Low is deliberate. | **Medium is where the findings land, and Medium has no batch.** After 8 of 43 cycles this run holds **2 High, 21 Medium, 5 Low**. §4's own escape — *if most findings are Low, the threshold was set too low* — does not apply: the threshold is fine and the mass is one level up. On the present rate the triage cycle raises upward of a hundred child tasks, which is the cost §4 identifies for Low, at a level it does not offer the remedy for. | Not yet. It becomes real at the triage cycle. | Either extend batching to Medium under a stated condition — *a Medium whose remedy is one line* — or say why Medium must not be batched. The section argues the Low case so thoroughly that its silence on Medium reads as an omission rather than a decision. |
+| `AM-05` | §3: *Re-examine a cycle whose subject later changed*, in a list whose other three rules are about remedies. | **A subject can move without anyone editing anything.** A release shipped on the morning of cycle 1 and closed 18 tasks: cycle 7, *the unreleased work*, fell from 18 files to 5, and the band those 13 moved into reached **465,531 bytes against the ~300 KB a cycle is sized to**. No plan was edited and no remedy landed; the world moved under a plan measured two days earlier. | No — caught by re-measuring. | Widen the rule from *a remedy changed it* to *anything changed it*, and say that a cycle re-measures its own subject before it runs. That is what caught this, and it is currently a habit rather than a rule. |
+| `AM-06` | The schema carries a task's fields; a register's findings are tied to tasks by one of them. | **There is no `finding:` field and no register-aware check.** This project's `findings.py` is bound to one register's table shape, so a task carrying `finding: PR-nn` fails its lint. Cycle 0 had to rule locally that `parent:` is the link and **no task may carry `finding:`**, which leaves every register's task column hand-kept and known to drift. Already open upstream as taskmd's own `T-247`, `proposed` on 2026-08-23. | **Yes**, at cycle 0. | Their `T-247`. Listed here only so the first run's cost is attached to it: one ruling, and a hand-kept column in a register that will hold on the order of a hundred rows. |
+| `AM-07` | `check` validates every enumerated field against its vocabulary. A field the schema does not name is **carried, never interpreted**. | **A carried field cannot be required, so a field that only matters at close is validated by nothing.** This project records the shipping version in `shipped_in`, carried rather than enumerated because versions are open-ended. Two tasks have now closed with the field **absent**, and the same thing happened to eight tasks in one release and to one in the next — three recurrences, each found by hand afterwards. `check` was green every time. | No. | A way to say *this field must be present when status is one of these*. It is the same shape as the `blocked`-implies-a-dependency check the schema already describes, which is the precedent that makes it look like a gap rather than a feature request. |
+
+---
+
+## What is deliberately not here
+
+- **Anything this project simply got wrong.** The method says a cycle names its instrument and this
+  project's table dropped the column: that half is
+  [`../PRE-RELEASE-AUDIT.md`](../PRE-RELEASE-AUDIT.md)'s `PR-21`. Only the half the worked example
+  also gets wrong is `AM-02`.
+- **A defect with a reproducible test.** That goes as a branch and a pull request,
+  [T-164](../../tasks/T-164-retire-the-cross-repo-register-in-favour-of-a-branch.md)'s route, and
+  does not wait for the audit to finish.
+- **Praise.** Six of the method's rules held under a run it was never tested against, and the
+  handover will say so once, in a sentence, rather than in rows.
+
+## Provenance
+
+Written 2026-08-23 after stage 2 of
+[T-219](../../tasks/T-219-pre-release-audit-of-the-whole-repository.md), on the owner's instruction,
+and **appended to as the run continues**. The handover is one task on taskmd's board when the audit
+closes; nothing here is sent before then.
