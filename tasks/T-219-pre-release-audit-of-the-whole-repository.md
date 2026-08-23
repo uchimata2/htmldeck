@@ -146,7 +146,7 @@ what it cost to find out.
 | 18 | The deck specifications and sources | 25 | 301,861 | Each specification against the deck built from it, and each source against what the deck claims it says. The sanitisation rule on the adopter deck. | **done** |
 | | *Stage 5 — the record.* | | | | |
 | 19 | The prior audits | 2 | 119,302 | `CONTEXT-AUDIT.md` and `RULESET-AUDIT.md`: is every row that reads closed actually closed, and does every open row still describe the tree? `findings.py --check` decides part of this and not all of it. | **done** |
-| 20 | The design rationale | 1 | 69,194 | **Grade B.** A decision recorded here that the product no longer implements. | pending |
+| 20 | The design rationale | 1 | 69,194 | **Grade B.** A decision recorded here that the product no longer implements. | **done** |
 | 21 | Lessons `L-01`–`L-77`, and the index | 78 | 167,650 | **Grade B.** A lesson whose mechanism the tree no longer has. The index against the files. | pending |
 | 22 | Lessons `L-78`–`L-133` | 59 | 158,429 | **Grade B.** As cycle 21. | pending |
 | 23 | Research `R1`–`R4` | 5 | 153,311 | **Grade B.** A finding the build later contradicted, and a candidate rule that never became one. | pending |
