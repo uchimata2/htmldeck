@@ -34,7 +34,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
-| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223 | - | T-042, T-119, T-130, T-153, T-218, T-222 |
+| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223, T-224 | - | T-042, T-119, T-130, T-153, T-218, T-222 |
 | [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216, T-223 |
 
 ## Closed
@@ -84,7 +84,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-041](T-041-implement-the-nine-glitch-free-conditions.md) | Implement the nine glitch-free conditions R6 defined and nothing adopted | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-005, T-016, T-019, T-042, T-097, T-111, T-112, T-185 |
 | [T-042](T-042-audit-the-whole-repository-against-itself.md) | Audit the repository against itself — stale claims, unreachable rules, and unchecked references | - | `0.1.0` | `done` | `review` | - | T-043, T-044, T-045, T-046, T-047, T-048, T-049, T-050 | - | T-004, T-005, T-008, T-036, T-037, T-039, T-041, T-056, T-218, T-219, T-220 |
 | [T-043](T-043-make-the-gates-coverage-account-provable.md) | Make the gate's coverage account provable, and derive the counts the documents state | - | `0.1.0` | `done` | `review` | T-042 | - | - | T-005, T-037, T-038, T-051, T-054 |
-| [T-044](T-044-restore-the-seeded-defect-fixture-and-its-claims.md) | Restore the seeded-defect fixture, and re-measure everything examples/README claims | - | `0.1.0` | `done` | `review` | T-042 | T-051 | - | T-023, T-024, T-028, T-032, T-034, T-035, T-040, T-045, T-052 |
+| [T-044](T-044-restore-the-seeded-defect-fixture-and-its-claims.md) | Restore the seeded-defect fixture, and re-measure everything examples/README claims | - | `0.1.0` | `done` | `review` | T-042 | T-051 | - | T-023, T-024, T-028, T-032, T-034, T-035, T-040, T-045, T-052, T-224 |
 | [T-045](T-045-sweep-the-stale-claims-across-the-live-documents.md) | Sweep the nine stale claims the audit found across the live documents | - | `0.1.0` | `done` | `review` | T-042 | - | - | T-028, T-037, T-044, T-046, T-047 |
 | [T-046](T-046-extend-task-py-to-what-it-cannot-see.md) | Extend task.py to the three things it cannot currently see | - | `0.1.0` | `done` | `review` | T-042 | - | - | T-029, T-031, T-037, T-039, T-045, T-062 |
 | [T-047](T-047-give-the-rationale-conflicts-their-own-id-namespace.md) | Give the rationale's conflicts their own ID namespace, and fix the mis-citation it has already caused | - | `0.1.0` | `done` | `review` | T-042 | - | - | T-004, T-005, T-014, T-025, T-045 |
@@ -260,6 +260,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md) | Record the pre-release audit method, and the machinery a run needs | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-042, T-119, T-130, T-153, T-219, T-222, T-223 |
 | [T-221](T-221-answer-the-three-defects-taskmd-0-6-0s-wider-check-set-found.md) | Answer the three defects taskmd 0.6.0's wider check set found | `PH3` | - | `done` | `review` | - | - | - | T-098, T-161, T-163 |
 | [T-222](T-222-derive-the-reconcile-sweeps-membership-instead-of-enumerating-it.md) | Derive the reconcile sweep's membership instead of enumerating it | `PH3` | - | `done` | `review` | - | - | - | T-218, T-219, T-223 |
-| [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) | Derive each audit cycle's membership instead of counting it | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | T-218, T-220, T-222 |
+| [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) | Derive each audit cycle's membership instead of counting it | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | T-218, T-220, T-222, T-224 |
+| [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) | Give the blindness fixture its own instrument in cycle 17 | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | T-044, T-223 |
 
 <!-- taskmd:end -->

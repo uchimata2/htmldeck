@@ -106,6 +106,7 @@ comes here.
 | [L-129](lessons/L-129.md) | A check for something the corpus does not contain is never seen to pass, and that looks exactly like working | Evidence and verification |
 | [L-131](lessons/L-131.md) | A correct measurement of the wrong subject passes every check you have | Evidence and verification |
 | [L-136](lessons/L-136.md) | A count with no membership cannot be audited, and its errors cancel instead of showing | Evidence and verification |
+| [L-137](lessons/L-137.md) | Deriving what a check reads does not derive how it reads it | Evidence and verification |
 
 ### Tooling
 

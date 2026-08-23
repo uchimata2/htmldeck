@@ -40,9 +40,17 @@ standing checklist examines each new subject for the last subject's problems. So
 are the plan's to decide, and this list is what has been decided *here*, not a rule for anywhere else.
 
 - **Aspects.** Project method, project documentation, product documentation, and the product.
-- **The instrument-only grade applies to the decks.** `CLAUDE.md` rule 6 forbids reading a deck whole;
-  five tracked `.html` files are 1,773,568 bytes, measured 2026-08-22. They are rendered, looked at
-  offline, and measured with the tools in `tools/deck/`. Their specifications are read.
+- **The instrument-only grade applies to the decks and to the blindness fixture, and the two do not
+  share an instrument.** `CLAUDE.md` rule 6 forbids reading a deck whole. Cycle 17 holds five of the
+  six tracked `.html` files, 1,773,568 bytes — the four decks `check_all.py`'s `DECKS` names, at
+  1,451,311, and `examples/reference-deck-seeded-defects.html` at 322,257; the sixth is
+  `shell/shell.html`, which is cycle 16's. The decks are rendered, looked at offline, and measured
+  with the tools in `tools/deck/`, and their specifications are read. **The fixture is not.** It
+  carries one seeded defect per evaluation dimension on purpose, at score 0, so a deck gate pointed
+  at it reports the fixture working rather than a finding; its instrument is `python
+  tools/examples/seed_defects.py --check`, which proves it is still derived from the reference deck
+  rather than edited. The figures here are a dated snapshot for sizing — re-derive them with
+  `python tools/docs/cycles.py --cycle 17`, measured 2026-08-23.
 - **Two surfaces outside git are in scope**: the working directories `.gitignore` names, and this
   project's memory and handoff record.
 - **The coverage partition is `tools/check_all.py`'s, one altitude up** — read, skipped with a stated

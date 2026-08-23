@@ -43,8 +43,9 @@ recorded decision against every Low, and a graded account of whether the ranking
   project documentation, product documentation, and the product — plus the cross-cutting sweep.
 - In: every tracked file, plus two surfaces outside git — the working directories `.gitignore` names,
   and this project's memory and handoff record.
-- Out: nothing is out by subject. Cycle 17 is out by *method*: the five shipped decks are audited by
-  rendering and measurement, not by reading, because `CLAUDE.md` rule 6 forbids reading a deck whole.
+- Out: nothing is out by subject. Cycle 17 is out by *method*: its five files — four shipped decks
+  and the blindness fixture — are audited by rendering, measurement and their own gates, not by
+  reading, because `CLAUDE.md` rule 6 forbids reading a deck whole.
 - Out: fixing what is found. Remedies are child tasks, and a remedy is a hypothesis until it is
   measured (**L-90**).
 
@@ -141,7 +142,7 @@ what it cost to find out.
 | 15 | The remaining tools | 9 | 265,632 | Assets, portability, examples, kb, plugin scaffold. `check_all.py`'s partition says every one of these is classified — verify that against what each actually does. | **done** |
 | 16 | The shell and the themes | 9 | 272,593 | 85 KB of CSS and 51 KB of JavaScript that every shipped deck embeds. Dead selectors, tokens nothing reads, a theme value that is not parametric. | **done** |
 | | *Stage 4 — the decks.* | | | | |
-| 17 | The five shipped decks | 5 | 1,773,568 | **Grade C.** Render each offline and look at it. `check.py`, `audit.py`, `printgeom.py`, `glitchfree.py`. Print two and read the paper. No deck is opened as a file. | pending |
+| 17 | The shipped decks and the blindness fixture | 5 | 1,773,568 | **Grade C, and two instruments.** The four decks `check_all.py`'s `DECKS` names, 1,451,311 bytes: render each offline and look at it; `check.py`, `audit.py`, `printgeom.py`, `glitchfree.py`; print two and read the paper. The fixture, 322,257: `seed_defects.py --check` and nothing else — it is seeded to score 0 on every dimension, so a deck gate's reds are it working. No `.html` is opened as a file. [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) is why the brief has two halves. | pending |
 | 18 | The deck specifications and sources | 25 | 301,861 | Each specification against the deck built from it, and each source against what the deck claims it says. The sanitisation rule on the adopter deck. | pending |
 | | *Stage 5 — the record.* | | | | |
 | 19 | The prior audits | 2 | 119,302 | `CONTEXT-AUDIT.md` and `RULESET-AUDIT.md`: is every row that reads closed actually closed, and does every open row still describe the tree? `findings.py --check` decides part of this and not all of it. | pending |
@@ -201,14 +202,15 @@ Counts only; the statements live in the register.
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
 | High | 6 | 0 | 0 | 6 |
-| Medium | 50 | 1 | 0 | 49 |
+| Medium | 50 | 2 | 0 | 48 |
 | Low | 22 | 0 | 0 | 22 |
 
 **Child tasks raised**
 
 - [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) — `PR-06`, raised and closed ahead of cycle 40 on the owner's instruction of 2026-08-23. **The rule that triage waits for cycle 40 is unchanged**; what makes this one an exception is the same clause `PR-01` carries, that the finding gates cycles rather than only the run's closing claim. `PR-06` gated *every* remaining cycle, because section 2's step 2 asks for a file list the document did not hold.
 - **One row was withdrawn as a duplicate.** `PR-66`, raised at cycle 14, is `PR-01` raised a second time; its id is spent and not reused, and the evidence it added is on `PR-01`'s row. Fifty Medium counts it out. The cost is a rule this run did not have and now does: **a cycle searches the register for its own finding before raising one** - recorded upstream as `AM-12`, because the method tells a cycle to read the register and never to search it.
-- Everything else waits for cycle 40, which is where section 2 puts the triage. `PR-01` is the remaining exception in waiting: its remedy has to land before cycle 17 runs.
+- [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) — `PR-01`, the second and last remedy taken ahead of cycle 40, on the same clause as `PR-06`: it gates a cycle rather than the run's closing claim, and the cycle it gates is 17. **Half of its remedy was priced and refused.** *Give the fixture a row of its own* means a cycle number, and 99 citations of cycles 18 to 43 sit in tracked files — 85 of them `cycle 40`, one per open finding — so a renumber falsifies more than the finding costs. The membership `cycles.py` derives was already right; the **instrument** was the half that was wrong, and splitting it is what landed.
+- Everything else waits for cycle 40, which is where section 2 puts the triage. No exception remains: both of the run's mid-run remedies are closed.
 
 ## 4. Review
 
