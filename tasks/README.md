@@ -33,10 +33,9 @@ first reached an installed copy, derived from the first tag containing the commi
 
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | T-016 | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
+| [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
 | [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `planned` | `implement` | - | - | - | T-042, T-119, T-130, T-153, T-218 |
 | [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216 |
-| [T-221](T-221-answer-the-three-defects-taskmd-0-6-0s-wider-check-set-found.md) | Answer the three defects taskmd 0.6.0's wider check set found | `PH3` | - | `proposed` | `specify` | - | - | - | T-098, T-161, T-163 |
 
 ## Closed
 
@@ -57,7 +56,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-013](T-013-research-offline-safe-assets-and-licences.md) | Research offline-safe assets — icons, illustration, fonts, diagram tooling | `WP1` | `0.1.0` | `done` | `review` | - | - | - | T-001, T-006, T-014, T-017 |
 | [T-014](T-014-synthesise-research-into-the-design-system-reference.md) | Synthesise the research into the htmldeck design-system reference | `WP1` | `0.1.0` | `done` | `review` | - | T-022 | - | T-009, T-010, T-011, T-012, T-013, T-020, T-021, T-023, T-024, T-025, T-037, T-038, T-039, T-047, T-049 |
 | [T-015](T-015-plugin-scaffold-and-the-two-question-interface.md) | Plugin scaffold and the two-question interface | `WP2` | `0.1.0` | `done` | `review` | - | - | - | T-002, T-003, T-012, T-020, T-027, T-050, T-061 |
-| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | `PH1` | `0.1.0` | `done` | `review` | - | T-057 | - | T-002, T-005, T-006, T-007, T-017, T-021, T-024, T-032, T-035, T-041, T-057, T-058, T-069, T-092, T-104, T-111, T-112, T-117, T-187, T-215 |
+| [T-016](T-016-the-interaction-and-motion-layer.md) | The interaction and motion layer | `PH1` | `0.1.0` | `done` | `review` | - | - | - | T-002, T-005, T-006, T-007, T-017, T-021, T-024, T-032, T-035, T-041, T-057, T-058, T-069, T-092, T-104, T-111, T-112, T-117, T-187, T-215 |
 | [T-017](T-017-define-the-portability-contract.md) | Define the portability contract — what "opens anywhere and works" actually permits | `WP1` | `0.1.0` | `done` | `review` | - | - | - | T-002, T-005, T-006, T-013, T-016, T-018, T-019, T-049, T-097 |
 | [T-018](T-018-measure-the-printable-mode-what-printing-from-fi.md) | Measure the printable mode — what printing a deck from `file://` actually costs | `WP1` | `0.1.0` | `done` | `review` | - | - | - | T-002, T-005, T-017, T-021, T-029, T-032, T-034 |
 | [T-019](T-019-build-the-capability-preflight-the-deck-ships-wit.md) | Build the capability preflight every deck ships with | `PH3` | `0.2.1` | `done` | `review` | - | - | - | T-005, T-017, T-041, T-057, T-070, T-093, T-094, T-097, T-165 |
@@ -259,5 +258,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-216](T-216-the-ph1-reopening-count-contradicts-the-prose-below-it.md) | The PH1 reopening count contradicts the prose below it | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-105, T-143, T-214, T-220 |
 | [T-217](T-217-notes-attach-by-position-and-position-is-not-identity.md) | Speaker notes attach by position, and the second example proves position is not identity | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-211, T-213 |
 | [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md) | Record the pre-release audit method, and the machinery a run needs | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-042, T-119, T-130, T-153, T-219 |
+| [T-221](T-221-answer-the-three-defects-taskmd-0-6-0s-wider-check-set-found.md) | Answer the three defects taskmd 0.6.0's wider check set found | `PH3` | - | `done` | `review` | - | - | - | T-098, T-161, T-163 |
 
 <!-- taskmd:end -->

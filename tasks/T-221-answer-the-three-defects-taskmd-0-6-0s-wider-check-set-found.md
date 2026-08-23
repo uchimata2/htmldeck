@@ -2,8 +2,8 @@
 id: T-221
 title: Answer the three defects taskmd 0.6.0's wider check set found
 type: fix
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-098, T-161, T-163]
@@ -13,7 +13,8 @@ business_value: high
 effort: s
 created: 2026-08-23
 updated: 2026-08-23
-deliverables: []
+deliverables:
+  - docs/lessons/L-134.md
 ---
 
 # T-221 — Answer the three defects taskmd 0.6.0's wider check set found
@@ -90,24 +91,53 @@ later and without a line of code here.
 
 **Decisions & assumptions**
 
-- Not started.
+- **Finding 1 — the owner ruled T-057 is not a child, 2026-08-23.** `parent: T-016` became
+  `parent: null`; T-016 was already in `related` and stays `done`. The record corroborates the ruling
+  without being asked to: T-057's own 2026-08-09 log row says it was *split out of* T-016, which is
+  the shape of a spin-off rather than of a part.
+- **Finding 2 — fixed, and no rule written.** Both of T-003's §3 slots now read *none*, with the
+  reason. One occurrence in 221 task files does not argue for a convention, and the checker is now
+  the thing that would catch a second.
+- **Finding 3 — the pipe is escaped, not the sentence rewritten.** The table parser consumes the
+  escape, so `harness.md`'s reader sees the command exactly as it was run and the quoted evidence
+  stays exact. The backslash is visible in this bullet only because a bullet is not a table row,
+  which is the whole mechanism in one line.
+- **The damage was larger than the checker said, and only a renderer could show it.** `WIDE ROW`
+  reports a third cell that renders nowhere. Put through GitHub's own engine, GFM emits **only the
+  two cells the header declares and discards the rest**: cell 2 ended mid-sentence at *and `env`*,
+  and roughly four fifths of `O-C3` — the measurement, the 67 commands, the 87 hardcoded paths and
+  the recommendation — was invisible. Reading the source cannot show this, because the source is the
+  only place the text still existed. Generalised as **L-134**.
+- **It was never sent, and that is the answer to the fourth criterion.**
+  [`../docs/upstream/harness.md`](../docs/upstream/harness.md) carries an explicit disposition —
+  *not sent, 2026-08-14, no route found* — and `O-C3` was added on 2026-08-20, six days later. So
+  the invisible text never reached the audience it was written for. It was public in this repository
+  for three days.
 
 **Outputs produced**
 
-- Not started.
+- `docs/lessons/L-134.md` — the generalisation, indexed by `tools/docs/lessons.py index`.
+- Repairs in [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md),
+  [T-003](T-003-brief-mode-elicit-the-six-section-prompt.md) and
+  [`../docs/upstream/harness.md`](../docs/upstream/harness.md), each with a log row where the record
+  has one.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| | | Not started. |
+| `lint.py` exits 0, and the record pastes what it printed | met | `taskmd check` OK over 221 tasks and 7,752 table rows; `refcheck` OK over 3,406 pointers; `findings` OK. All four passed |
+| Finding 1 closes on a decision, not on the cheaper field | met | The owner answered on 2026-08-23. T-057 loses `parent`; T-016 keeps `done` and is not reopened |
+| Finding 3's cell is moved somewhere it renders, or deleted on purpose | met by a third route | Neither was needed. Escaping the pipe makes the text render where it was always meant to be, and changes nothing a reader sees |
+| Whether the document was ever sent is stated either way | met | Never sent. Its own preamble records *not sent, 2026-08-14, no route found*, and the offending row postdates that by six days |
 
 **Child fix tasks raised**
 
-- none yet.
+- none. All three were repaired here; the transferable half is **L-134**.
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-23 | → done | **All three repaired and the gate is green.** The owner answered finding 1 the same day, which was the only thing this task could not decide for itself. Finding 3 turned out to be the expensive one and the checker understated it: the loss is total rather than partial, and it is invisible to every instrument this project owns except a renderer. **No `shipped_in`** — the next release's step 8 sets it. |
 | 2026-08-23 | → proposed | **Raised at a session close, by the gate turning red under the session's feet.** The session installed nothing and edited none of the three files; taskmd `0.6.0` arrived in the plugin cache and `lint.py` found what had been there all along. `PH3` by [`../CLAUDE.md`](../CLAUDE.md)'s rule: PH2 has shipped and none of the three is a defect in the published plugin, so size does not put it in PH1. `high` rather than `medium` because a red `lint.py` is the gate every task edit owes, so this blocks the next edit to any task, not only to these. |
