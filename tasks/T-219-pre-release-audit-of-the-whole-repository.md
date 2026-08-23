@@ -201,12 +201,13 @@ Counts only; the statements live in the register.
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
 | High | 6 | 0 | 0 | 6 |
-| Medium | 51 | 1 | 0 | 50 |
+| Medium | 50 | 1 | 0 | 49 |
 | Low | 22 | 0 | 0 | 22 |
 
 **Child tasks raised**
 
 - [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) — `PR-06`, raised and closed ahead of cycle 40 on the owner's instruction of 2026-08-23. **The rule that triage waits for cycle 40 is unchanged**; what makes this one an exception is the same clause `PR-01` carries, that the finding gates cycles rather than only the run's closing claim. `PR-06` gated *every* remaining cycle, because section 2's step 2 asks for a file list the document did not hold.
+- **One row was withdrawn as a duplicate.** `PR-66`, raised at cycle 14, is `PR-01` raised a second time; its id is spent and not reused, and the evidence it added is on `PR-01`'s row. Fifty Medium counts it out. The cost is a rule this run did not have and now does: **a cycle searches the register for its own finding before raising one** - recorded upstream as `AM-12`, because the method tells a cycle to read the register and never to search it.
 - Everything else waits for cycle 40, which is where section 2 puts the triage. `PR-01` is the remaining exception in waiting: its remedy has to land before cycle 17 runs.
 
 ## 4. Review
