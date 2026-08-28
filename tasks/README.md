@@ -36,6 +36,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
 | [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223, T-224 | - | T-042, T-119, T-130, T-153, T-218, T-222 |
 | [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216, T-223 |
+| [T-225](T-225-triage-the-claimai-adopter-report.md) | Triage the ClaimAI adopter report and decide each of its twenty-seven findings | `PH3` | - | `proposed` | `specify` | - | - | - | T-063 |
 
 ## Closed
 
@@ -102,7 +103,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-060](T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md) | Check that the README's pasted figures still match the commands that produced them | `PH2` | `0.1.4` | `done` | `review` | - | - | - | T-050, T-056, T-067, T-068, T-077, T-088 |
 | [T-061](T-061-the-scaffold-check-passed-a-manifest-the-installer-rejects.md) | The scaffold check passed a manifest the installer rejects | `PH1` | `0.1.1` | `done` | `review` | - | - | - | T-008, T-015, T-062, T-064, T-067 |
 | [T-062](T-062-retire-the-pre-split-task-tool-and-repoint-what-points-at-it.md) | Retire the pre-split task tool and repoint what points at it | `PH2` | `0.1.2` | `done` | `review` | - | - | - | T-046, T-061, T-063, T-073, T-079, T-081 |
-| [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `PH2` | `0.1.2` | `done` | `review` | - | - | - | T-062, T-073, T-079, T-080, T-098 |
+| [T-063](T-063-improvements-to-propose-upstream-to-taskmd.md) | Improvements to propose upstream to taskmd | `PH2` | `0.1.2` | `done` | `review` | - | - | - | T-062, T-073, T-079, T-080, T-098, T-225 |
 | [T-064](T-064-the-tools-crash-when-the-deck-is-on-another-drive.md) | The tools crash when the deck is on a different drive from the plugin | `PH1` | `0.1.2` | `done` | `review` | - | - | - | T-008, T-061, T-065, T-101, T-189 |
 | [T-065](T-065-four-rules-still-fail-a-deck-for-not-having-their-subject.md) | Four rules still fail a deck for not having their subject | `PH1` | `0.1.2` | `done` | `review` | - | - | - | T-051, T-064, T-066, T-075, T-090 |
 | [T-066](T-066-make-the-absent-subject-rule-a-fixture-instead-of-a-sweep.md) | Make the absent-subject rule a fixture instead of a sweep | `PH1` | `0.1.3` | `done` | `review` | - | - | - | T-051, T-065, T-075, T-090, T-095, T-193 |
