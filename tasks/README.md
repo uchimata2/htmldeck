@@ -34,9 +34,37 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
-| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223, T-224 | - | T-042, T-119, T-130, T-153, T-218, T-222 |
+| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223, T-224, T-226, T-227, T-228, T-229, T-230, T-231, T-232, T-233, T-234, T-235, T-236, T-237, T-238, T-239, T-240, T-241, T-242, T-243, T-244, T-245, T-246, T-247, T-248, T-249, T-250, T-251, T-252, T-253 | - | T-042, T-119, T-130, T-153, T-218, T-222 |
 | [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216, T-223 |
 | [T-225](T-225-triage-the-claimai-adopter-report.md) | Triage the ClaimAI adopter report and decide each of its twenty-seven findings | `PH3` | - | `proposed` | `specify` | - | - | - | T-063 |
+| [T-226](T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | Give the portfolio-review deck a home in both human-facing documents | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | Correct the copy-into-your-own-plugin route, or withdraw it | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-228](T-228-the-second-theme-fails-the-contract-it-demonstrates.md) | Bring lattice.css up to the theme contract, and put a theme in a gate's subject | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-229](T-229-ds-106s-check-omits-a-word-the-rule-names.md) | Derive DS-106's banned-terminology list from the rule instead of restating it | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-230](T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md) | Derive DS-063's slide sample from the deck instead of fixing it at four indices | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-231](T-231-two-packaging-checks-have-no-subject-at-all.md) | Teach the scaffold gate the placeholder the skill actually writes | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-232](T-232-two-entrance-motions-do-not-collapse-for-print.md) | Collapse every content entrance motion for print, not one selector at a time | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-233](T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md) | Remove the ten dead quick-view payloads, and fix the verb that writes them | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-234](T-234-the-front-pages-own-figures-and-claims.md) | Correct the front page's figures and its two false claims | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-235](T-235-the-skills-documents-against-the-tools-they-describe.md) | Reconcile the skill's documents with the tools and rules they describe | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-236](T-236-tier-1-and-the-brief-against-what-they-measure.md) | Correct tier 1's three figures and settle the tier-2 set the owner already ruled on | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-237](T-237-the-release-machinery-and-its-record.md) | Reconcile the release documents with the releases that actually ran | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-238](T-238-the-trackers-own-rules-against-its-own-records.md) | Fix the board header that routes work into a shipped phase, and two silent closures | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-239](T-239-the-audits-own-record-against-what-it-did.md) | Reconcile the audit's plan, its ledger and the document binding it to its method | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-240](T-240-the-evaluation-document-against-itself-and-the-code.md) | Correct EVALUATION.md's four internal contradictions and its account of the stage split | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-241](T-241-the-design-system-and-the-rationale-against-what-shipped.md) | Close three statements the ruleset and its rationale still record as open | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-242](T-242-the-contracts-against-the-checkers-that-decide-them.md) | Reconcile the component and theme contracts with what their checkers read | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | Re-bind five checks on what is true at run time instead of on a name | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-244](T-244-the-gates-own-coverage-account.md) | Derive the clause-level account, and correct two excusals that name the wrong decider | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-245](T-245-seven-tool-defects-in-tools-deck.md) | Fix seven defects in the deck tools, each with its own seeded proof | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-246](T-246-two-docs-instruments-misdescribe-their-own-behaviour.md) | Correct what the cycle and figure instruments say they do | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-247](T-247-the-portfolio-generators-documents-against-the-deck.md) | Correct the generator's account of a chart it no longer draws and a count stated three ways | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-248](T-248-four-content-errors-in-three-shipped-decks.md) | Correct four numbers a shipped deck asserts and its own source contradicts | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-249](T-249-the-two-prior-audits-registers.md) | Correct three claims the ruleset and context audits make about their own coverage | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-250](T-250-two-lessons-state-a-figure-and-two-link-to-a-dead-anchor.md) | Fix four lessons in the folder whose own rule is that a lesson outlives its instance | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-251](T-251-a-research-note-and-a-memory-entry-describe-a-state-that-changed.md) | Correct R9's account of DS-122 and a memory entry recording an edit never made | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-252](T-252-the-ignore-rules-come-from-three-files-and-one-ships.md) | Put this repository's ignore rules where a clone receives them | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-253](T-253-the-low-findings-batch.md) | Correct the audit's forty-nine Low findings, or accept each with a reason and a date | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 
 ## Closed
 

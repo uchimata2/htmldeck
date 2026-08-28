@@ -82,8 +82,11 @@ right at the moment it runs and the table is right at the moment it was pasted, 
 - [ ] Every tracked file is read, skipped with a stated reason, or produced a finding, and the
       register's coverage ledger says which for every cycle.
 - [ ] Every finding carries the command that proves it.
-- [ ] Every High and Medium finding has a child task; every Low is batched or accepted with a reason
-      and a date.
+- [ ] Every High and Medium finding is **covered by** a child task; every Low is batched or accepted
+      with a reason and a date. *Amended 2026-08-29 by the owner at cycle 40. The method's section 4
+      obliges a disposition before the release, not a file count, and it already accepts many findings
+      to one task at `Low` — so the 67 open `Med` findings are grouped into nineteen records by shared
+      subject and shared remedy. Every finding keeps its id and its statement in the register.*
 - [ ] No High finding is open when the release is tagged.
 - [ ] Cycles 1, 3 and 5 are re-run after the last remedy lands, and what the remedies broke is
       recorded.
@@ -172,7 +175,7 @@ what it cost to find out.
 | 38 | `WP3`, `final`, `none`, and the two cancelled stubs | 19 | 311,202 | | `skipped` |
 | | *Stage 8 — synthesis.* | | | | |
 | 39 | The figure and version sweep | - | - | Every number, count and version string in the tree against what the tree is. Scripted first, then read: `figures.py` decides the fenced ones and **L-05** is the family it cannot see. | **done** |
-| 40 | Triage, rank, raise the tasks | - | - | Severity and its obligations per the taskmd skill's `pre-release-audit.md`. Child tasks for High and Medium; one batch task or an accepted row for each Low. | pending |
+| 40 | Triage, rank, raise the tasks | - | - | Severity and its obligations per the taskmd skill's `pre-release-audit.md`. Child tasks for High and Medium; one batch task or an accepted row for each Low. | **done** |
 | 41 | Re-read what the remedies changed | - | - | Cycles 1, 3 and 5 again, plus every cycle a remedy touched. **This is where an audit's own damage shows.** | pending |
 | 42 | Phase 2 | - | - | Predicted against measured, per finding. It has to name at least one prediction the measurement refused, or it was not run honestly. | pending |
 
@@ -189,7 +192,7 @@ is for.
 | 2 | ~~*the stage 7 checkpoint*~~ | **Taken 2026-08-29, with 39's result rather than before it - which is what the deferral bought.** Cycle 39 found both of its findings in prose that no instrument binds, and stage 7 is 3,366,873 bytes of exactly that about work already closed. The owner ruled **cycle 34 only** |
 | 3 | ~~**34**~~, and stage 7 stops there | **Done 2026-08-29.** The one stage-7 cycle whose records live documents actually cite - it holds the 25 tasks `0.6.0` shipped. 301,841 bytes against the stage's 3,366,873, so **9% of stage 7's reading covers the only part of it a live document cites** |
 | 4 | ~~27 to 33, and 35 to 38~~ | **Not run**, by the checkpoint above. Eleven cycles and 194 files whose subject is closed `PH1`, `PH2`, `PH3`, `WP1`, `WP2`, `WP3` and the two cancelled stubs. They are **skipped with a stated reason**, which is the coverage partition's own third bucket rather than a gap in it: a contradiction there cannot reach the release, and cycle 41 still re-reads whatever the remedies break |
-| 5 | **40** | Unmovable. Triage follows every finding-producing cycle, or it splits in two and the second half cannot merge duplicates against the first |
+| 5 | ~~**40**~~ | **Done 2026-08-29.** Unmovable. Triage follows every finding-producing cycle, or it splits in two and the second half cannot merge duplicates against the first |
 | 6 | **41**, then **42** | After the remedies **exist**, not after the ranking - section 4 already says so for 42, and 41 is where the run's own damage shows |
 
 **The ordering principle changes at 27, and that is the reason for the change.** Stages 1 to 6 were
@@ -225,9 +228,9 @@ Counts only; the statements live in the register.
 
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
-| High | 8 | 0 | 0 | 8 |
-| Medium | 69 | 2 | 0 | 67 |
-| Low | 50 | 0 | 0 | 50 |
+| High | 8 | 8 | 0 | 8 |
+| Medium | 69 | 69 | 0 | 67 |
+| Low | 49 | 49 | 0 | 49 |
 
 **Child tasks raised**
 
@@ -235,6 +238,48 @@ Counts only; the statements live in the register.
 - **One row was withdrawn as a duplicate.** `PR-66`, raised at cycle 14, is `PR-01` raised a second time; its id is spent and not reused, and the evidence it added is on `PR-01`'s row. Fifty Medium counts it out. The cost is a rule this run did not have and now does: **a cycle searches the register for its own finding before raising one** - recorded upstream as `AM-12`, because the method tells a cycle to read the register and never to search it.
 - [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) — `PR-01`, the second and last remedy taken ahead of cycle 40, on the same clause as `PR-06`: it gates a cycle rather than the run's closing claim, and the cycle it gates is 17. **Half of its remedy was priced and refused.** *Give the fixture a row of its own* means a cycle number, and 99 citations of cycles 18 to 43 sit in tracked files — 85 of them `cycle 40`, one per open finding — so a renumber falsifies more than the finding costs. The membership `cycles.py` derives was already right; the **instrument** was the half that was wrong, and splitting it is what landed.
 - Everything else waits for cycle 40, which is where section 2 puts the triage. No exception remains: both of the run's mid-run remedies are closed.
+
+
+**Twenty-eight more, raised 2026-08-29 by cycle 40 — the triage.** Eight for the `High` band, one each; nineteen for the `Med` band, grouped by shared subject and shared remedy; one batch for `Low`. **No finding's statement is restated in any of them** - each record names the `PR-nn` rows it closes and points here, which is the method's umbrella condition 2.
+
+*The `High` band - the method gives this level one obligation beyond a child task: the release does not go out while it is open.*
+
+- [T-226](T-226-a-shipped-deck-is-in-neither-human-facing-document.md) — `PR-02`, `PH3`
+- [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) — `PR-07`, `PH1`
+- [T-228](T-228-the-second-theme-fails-the-contract-it-demonstrates.md) — `PR-37`, `PH1`
+- [T-229](T-229-ds-106s-check-omits-a-word-the-rule-names.md) — `PR-48`, `PH1`
+- [T-230](T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md) — `PR-53`, `PH1`
+- [T-231](T-231-two-packaging-checks-have-no-subject-at-all.md) — `PR-70`, `PH1`
+- [T-232](T-232-two-entrance-motions-do-not-collapse-for-print.md) — `PR-80`, `PH1`
+- [T-233](T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md) — `PR-83`, `PH1`
+
+*The `Med` band, grouped. The owner ruled on 2026-08-29 that a severity obliges a **disposition before the release** rather than a file count, on the precedent that the method already accepts many findings to one task at `Low`.*
+
+- [T-234](T-234-the-front-pages-own-figures-and-claims.md) — `PR-03`, `PR-04`, `PR-124`
+- [T-235](T-235-the-skills-documents-against-the-tools-they-describe.md) — `PR-08`, `PR-09`, `PR-10`, `PR-13`
+- [T-236](T-236-tier-1-and-the-brief-against-what-they-measure.md) — `PR-11`, `PR-12`, `PR-14`, `PR-112`
+- [T-237](T-237-the-release-machinery-and-its-record.md) — `PR-16`, `PR-17`, `PR-24`, `PR-25`, `PR-26`
+- [T-238](T-238-the-trackers-own-rules-against-its-own-records.md) — `PR-19`, `PR-20`, `PR-27`
+- [T-239](T-239-the-audits-own-record-against-what-it-did.md) — `PR-21`, `PR-101`, `PR-102`, `PR-115`
+- [T-240](T-240-the-evaluation-document-against-itself-and-the-code.md) — `PR-30`, `PR-31`, `PR-32`, `PR-33`, `PR-50`
+- [T-241](T-241-the-design-system-and-the-rationale-against-what-shipped.md) — `PR-29`, `PR-97`, `PR-98`
+- [T-242](T-242-the-contracts-against-the-checkers-that-decide-them.md) — `PR-34`, `PR-35`, `PR-36`, `PR-39`, `PR-77`
+- [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) — `PR-44`, `PR-45`, `PR-49`, `PR-54`, `PR-57`
+- [T-244](T-244-the-gates-own-coverage-account.md) — `PR-43`, `PR-46`
+- [T-245](T-245-seven-tool-defects-in-tools-deck.md) — `PR-38`, `PR-42`, `PR-55`, `PR-56`, `PR-58`, `PR-59`, `PR-78`
+- [T-246](T-246-two-docs-instruments-misdescribe-their-own-behaviour.md) — `PR-65`, `PR-67`
+- [T-247](T-247-the-portfolio-generators-documents-against-the-deck.md) — `PR-71`, `PR-72`
+- [T-248](T-248-four-content-errors-in-three-shipped-decks.md) — `PR-81`, `PR-84`, `PR-85`, `PR-86`
+- [T-249](T-249-the-two-prior-audits-registers.md) — `PR-90`, `PR-91`, `PR-92`
+- [T-250](T-250-two-lessons-state-a-figure-and-two-link-to-a-dead-anchor.md) — `PR-103`, `PR-104`
+- [T-251](T-251-a-research-note-and-a-memory-entry-describe-a-state-that-changed.md) — `PR-114`, `PR-120`
+- [T-252](T-252-the-ignore-rules-come-from-three-files-and-one-ships.md) — `PR-15`, `PR-122`
+
+*The `Low` band, batched, which is the method's own rule for the level.*
+
+- [T-253](T-253-the-low-findings-batch.md) — the whole band, 49 findings
+
+**One finding was withdrawn rather than tasked.** `PR-96` is `PR-65` raised a second time, at a lower rank, by a later cycle that did not search the register first — the same four documents and the same code path. Its id is spent and not reused, on `PR-66`'s precedent, and the one observation it added is on `PR-65`'s row. **That is twice in this run** that `AM-12` has caught a duplicate, and both times the second raising was cheaper to withdraw than the first was to find.
 
 ## 4. Review
 
@@ -254,6 +299,7 @@ Counts only; the statements live in the register.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-29 | (no change) | **Cycle 40 done: the triage. 125 open findings, 28 child tasks, one withdrawal.** No tracked file - `cycles.py --cycle 40` names none, which is the third cycle with no membership by construction. **The shape was the owner's decision and it is the cycle's most consequential output.** The method obliges a child task per `High` and per `Med`; taken as a file count that is 75 records, of which 41 would carry one `xs` correction each - the exact cost the method's own batching paragraph refuses one level down. The owner ruled on 2026-08-29 that a severity obliges a **disposition before the release** rather than a file count, on the precedent that `Low` already batches many findings into one task. So: **eight `High` records one-for-one**, seven of them `PH1` because an adopter meets the defect and one `PH3` because it is a completeness claim rather than a behaviour; **nineteen `Med` records grouped** by shared subject *and* shared remedy, the largest being seven tool defects and the smallest two; **one `Low` batch** of 49. Section 1's third acceptance criterion is amended to *covered by* a child task, in the same edit, because a criterion that no longer describes what the run does is worse than one that is hard. **`AM-12` caught a duplicate for the second time in this run**: `PR-96` is `PR-65` raised again at a lower rank by a later cycle that did not search the register first - same four documents, same code path - so it is **withdrawn**, its id spent and not reused on `PR-66`'s precedent, and the one observation it added is on `PR-65`'s row. That is the second withdrawal of this run and both were cheaper to withdraw than the original was to find. **Nothing was re-ranked.** Demoting a `Med` to avoid writing a record is the one bad reason to demote, and cycle 42 grades exactly that - so the band was grouped rather than thinned, and the register's ranks stand as the cycles wrote them. **The counts are re-derived from the register, not incremented**: `High` 8 raised and 8 tasked, `Med` 69 and 69, `Low` 49 and 49 - `Low` falls from 50 by the withdrawal. Every open row's `Task` cell now names the record that closes it, filled from the same table the records were generated from, so the two cannot drift. **What cycle 40 did not do**: it raised no finding of its own, which is correct - triage ranks what the cycles found and is not a cycle. Next is 41, which re-reads cycles 1, 3 and 5 **after the remedies exist**, not after this ranking. |
 | 2026-08-29 | (no change) | **Cycle 34 done: the `PH3` records `0.6.0` shipped, and stage 7 stops here by the owner's checkpoint.** 25 files, 301,841 bytes, three findings, all `Low`. **Cycle 39 handed this cycle the right instruction and it held**: stage 7 is prose, so the reading was for sentences rather than numerals, and not one finding came from a numeral. `PR-126` is a rule id the ruleset has never declared - `DS-108`, one character from the `T-108` that built the stage the sentence describes, and the only such miss in 25 files. `PR-127` is a task closed with its own open question unanswered and the task it promised unraised, whose condition still holds. `PR-128` is three records stating one section twice, with an exact mechanism: every task carrying an ad-hoc *what this task found* block duplicates the template's label, 3 of 3, and no other task does. **`AM-12` paid for itself twice, which is the cycle's most useful result.** Searching the register before raising found `PR-33` already holding the two-sections-numbered-6.3 defect that `T-215` cites four times, and `PR-27` already naming `T-221` and `T-222` as the only two `done` tasks in the repository carrying no `shipped_in` - a row that had **predicted** both would fall into a stage-7 band, which this cycle confirms from the other side. Two would-be findings became zero rows. **Five checks passed and are worth as much as the findings.** No cycle-34 record cites a dead path, in a link or in inline code: 0 dead link targets, and the 9 separator-carrying code spans partition into 7 non-paths and 2 shorthand under a stated `skills/` scope. Every `DS-nnn`, `L-nnn` and `T-nnn` cited resolves but the one above. `T-206`'s tolerances are unchanged at 0.25 du and 2.0 px and its pin guard is still in `render.self_test`; `T-209`'s three probes still declare `htmldeck:measures-motion` and no fourth copy of the pin exists; `T-216`'s deleted reopening totals have not returned and `RELEASE-PHASES.md` still carries the paragraph saying why. **One instrument was rebound mid-cycle**, the same lesson cycle 39 paid for: bound on a source extension it called `check.py` a path and returned 222 hits, and rebound on the path separator it returned 9. **The counts table is re-derived from the register, not incremented** - `Low` 47 to 50 raised and open; `High` 8 and `Medium` 69 unmoved. |
 | 2026-08-28 | (no change) | **Cycle 24 done: research `R5` to `R9`, the upstream registers, the sketch and the twenty-seven adopter findings. Stage 5 closes.** Five findings, and the cycle's shape is that **the brief was short in two of its four clauses and the reading found what the brief did not ask for**. *The three upstream reports* is four - `taskmd-audit-method.md` was added by this run on 2026-08-23, which is `AM-08`'s cycle-14 case arriving a second time - and *what T-225 decided about each* has no subject, because [T-225](T-225-triage-the-claimai-adopter-report.md) is still `proposed`. Both are recorded in the ledger rather than corrected in the plan. **The two Mediums are the same shape at two altitudes**: `PR-114` is R9 describing `DS-122`'s check as the five-name blocklist that [T-202](T-202-amend-ds-122-into-a-threshold-and-bind-its-check-on-structure.md) replaced in `0.6.0` - with R9's own section 8 still reading *That change is not made here* about a task that is done - and `PR-115` is [`../docs/AUDIT-METHOD.md`](../docs/AUDIT-METHOD.md) naming a method for one of the three audits it exists to bind, while `R8`'s banner says the context-economy method is now the `ecoctx` skill in its own repository. Three Lows are hand-kept counts and stale present tense: `harness.md` saying *all three rows* over four, the adopter README citing a version caveat *stated in the index* that the index does not carry, and the chrome-row sketch calling the pre-`0.4.0` row *what ships today*. **The strongest result is a pass, and it is about the received set**: every adopter claim naming a file, a line or a symbol reproduces on the tree today, line numbers included, and running `check.py` on the shipped `portfolio-review` deck confirms record `018` - `DS-218` passes it with `0 looping` where the other three decks pass on the merits, so the shipped example satisfies that rule vacuously. That belongs to cycle 17 and is recorded there (`AM-09`) for its triage. **Stage 6 - the two surfaces outside git - opens at cycle 25, and section 2's row for cycle 26 says the owner decides there.** |
 | 2026-08-28 | (no change) | **Cycle 23 done: research `R1` to `R4`.** Three findings, and the subject re-measured to the plan exactly - the first cycle in four whose figure has not moved. **Both halves of the brief were answered and neither was where it was expected.** *A candidate rule that never became one* is `PR-111`: the rules register's summary says 110 keep and 17 amend against its own 111 and 16, because [T-211](T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md) moved `A10` in a one-line commit and the count four screens up was never touched - and the same box breaks 26 defers into components summing to 27. *A finding the build later contradicted* is `PR-112`, and it is the sharper one: `CLAUDE.md` rule 1 states *every deck in the source corpus failed this, 2-7 external references each*, while `BRIEF.md` carries a banner saying both figures are wrong and to use R1's numbers - in tier 1, under a dated amendment made the same day. `PR-113` is R2's evidence-grade population, stated three ways in one document. **The instruments decided the pointers and none of the arithmetic**: `refcheck.py` is clean over 3,917 pointers and `figures.py` watches no research document at all, so all three findings are hand counts. **The cycle's strongest result is a pass**: R4's 154-rule provenance partition sums exactly in four columns and fourteen sections, and every section total matches the register's own rule count. |
