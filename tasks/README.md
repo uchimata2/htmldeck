@@ -36,7 +36,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
 | [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223, T-224, T-226, T-227, T-228, T-229, T-230, T-231, T-232, T-233, T-234, T-235, T-236, T-237, T-238, T-239, T-240, T-241, T-242, T-243, T-244, T-245, T-246, T-247, T-248, T-249, T-250, T-251, T-252, T-253 | - | T-042, T-119, T-130, T-153, T-218, T-222 |
 | [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216, T-223 |
-| [T-225](T-225-triage-the-claimai-adopter-report.md) | Triage the ClaimAI adopter report and decide each of its twenty-seven findings | `PH3` | - | `proposed` | `specify` | - | - | - | T-063 |
 | [T-226](T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | Give the portfolio-review deck a home in both human-facing documents | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | Correct the copy-into-your-own-plugin route, or withdraw it | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-228](T-228-the-second-theme-fails-the-contract-it-demonstrates.md) | Bring lattice.css up to the theme contract, and put a theme in a gate's subject | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
@@ -65,6 +64,24 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-251](T-251-a-research-note-and-a-memory-entry-describe-a-state-that-changed.md) | Correct R9's account of DS-122 and a memory entry recording an edit never made | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-252](T-252-the-ignore-rules-come-from-three-files-and-one-ships.md) | Put this repository's ignore rules where a clone receives them | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-253](T-253-the-low-findings-batch.md) | Correct the audit's forty-nine Low findings, or accept each with a reason and a date | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
+| [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) | Fix set_var's self-closing tag insertion, and have write verify what it wrote | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-255](T-255-render-py-motion-seeks-past-the-delay.md) | Add the delay in the report branch and drop the subtraction in the capture branch | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-256](T-256-ds-219-cannot-see-a-painted-svg-ancestor.md) | Walk the full ancestor chain for DS-219's ground, and settle the doubt the rationale records | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-257](T-257-ds-218-passes-the-shipped-example-vacuously.md) | Make portfolio-review pass DS-218 for a reason, and say why a control is not persistent | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-258](T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | Report a readability measurement over drawn slide copy, and name the hardest lines | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-259](T-259-nothing-prints-what-a-slide-actually-contains.md) | Ship a per-slide fact printer, so a specification and its deck stop drifting silently | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-260](T-260-ds-244-tests-proximity-where-it-means-obstruction.md) | Decide what DS-244 measures, from the two findings that contradict each other | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-261](T-261-ds-035-measures-a-text-run-through-its-transform.md) | Re-derive whether audit.PROBE can stay unpinned, on a deck whose entrance moves the axis | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-262](T-262-ds-092-counts-a-sources-box-as-prose.md) | Exclude provenance from DS-092's paragraph half, and give any source ceiling its own rule | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-263](T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md) | Give regularScale a tolerance, so a long deck can satisfy DS-217 | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-264](T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | Give a licensed long motion somewhere to state its duration | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-265](T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md) | Decide whether DS-110 narrows by where a raster sits | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-266](T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md) | Say what to do when a class fails DS-229, and decide whether a deck gets a local prefix | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | Give render.py a capture path for a deck's disclosed states | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-268](T-268-three-chrome-and-timing-defects-in-deck-js.md) | Guard the single-letter shortcuts, dismiss the sources box, and land data-played on arrival | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-269](T-269-three-build-path-defects-the-adopter-worked-around.md) | Unwrap a provenance row, read a rich Sources field, and convert bold across a line break | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | Decide what DS-100 and DS-202 should measure, and say the reason in each failure | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 
 ## Closed
 
@@ -291,5 +308,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-222](T-222-derive-the-reconcile-sweeps-membership-instead-of-enumerating-it.md) | Derive the reconcile sweep's membership instead of enumerating it | `PH3` | - | `done` | `review` | - | - | - | T-218, T-219, T-223 |
 | [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) | Derive each audit cycle's membership instead of counting it | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | T-218, T-220, T-222, T-224 |
 | [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) | Give the blindness fixture its own instrument in cycle 17 | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | T-044, T-223 |
+| [T-225](T-225-triage-the-claimai-adopter-report.md) | Triage the ClaimAI adopter report and decide each of its twenty-seven findings | `PH3` | - | `done` | `review` | - | - | - | T-063, T-254, T-255, T-256, T-257, T-258, T-259, T-260, T-261, T-262, T-263, T-264, T-265, T-266, T-267, T-268, T-269, T-270, T-271 |
 
 <!-- taskmd:end -->
