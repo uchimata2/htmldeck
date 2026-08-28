@@ -269,10 +269,11 @@ CYCLES = [
         "docs/research/R3*",
         "docs/research/R4*",
     ], None),
-    (24, "Research R5 to R9, upstream, sketches", "B", [
+    (24, "Research R5 to R9, upstream, sketches, adopter reports", "B", [
         "docs/research/*",
         "docs/upstream/*",
         "docs/sketches/*",
+        "docs/adopter-reports/*",
     ], None),
     (25, "Memory and the handoff record", "-", [],
      "outside git. The agent memory store and the handoff archive are not tracked paths; the one "
