@@ -95,12 +95,14 @@ right at the moment it runs and the table is right at the moment it was pasted, 
   [`../docs/AUDIT-METHOD.md`](../docs/AUDIT-METHOD.md) a term of the bound. The floor becomes its 5,024 bytes
   and tier 1's debt **10,548** against the 2,248 the file states. The definition was the question; the
   edit is a remedy and waits for cycle 40 with the rest.
-- **Stage 7 is 3,366,873 bytes of closed record across twelve cycles — 47% of the reading for the
+- **Stage 7 is 3,366,873 bytes of closed record across twelve cycles — 36% of the reading for the
   least current subject.** The program is ordered so that stopping after cycle 26 leaves the audit
   complete over everything a reader, an adopter or the next release touches. Whether to spend
-  stage 7 is a checkpoint decision, not a planning one. Owner answers, at cycle 26. *It read
+  stage 7 is a checkpoint decision, not a planning one. **Owner answers now**: cycle 26 put the
+  decision here and the owner deferred it one cycle on 2026-08-29, to be taken with cycle 39's
+  result. Cycle 39 is done. *It read
   3,046,859 and 44% when the plan was written; `0.6.0` closed eighteen tasks into it on 2026-08-23,
-  which is the share growing while nobody decided anything.*
+  which is the share growing while nobody decided anything. **The share itself was the third figure cycle 39 corrected in this run's own record**: it read 47% and the plan is now 9,359,208 bytes over 532 files, of which stage 7's 219 files are **36%**. The bytes never moved and the denominator did — cycle 7 alone grew to 420,677, and 88,610 bytes of adopter report arrived on 2026-08-28. A share falls while its subject stands still, which is the one direction nobody re-checks. Re-derive with `python tools/docs/cycles.py --plan`, never cite this.*
 - **Which release this precedes.** `0.6.0` is published; the digit the next one takes is
   [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8's rule and is not this audit's to set.
 
