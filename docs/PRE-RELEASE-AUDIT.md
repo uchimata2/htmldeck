@@ -5,7 +5,7 @@
 [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md), whose §2 holds the cycle
 program this document records the results of.
 
-**Status: running, and at its checkpoint.** Cycles 0 to 26 of 43 are done - **stages 1 to 6 complete**, so what an adopter receives, how this project governs itself, the product, the decks and the specifications they were built from, the whole written record and both surfaces outside git have all been read. **Stage 7 is the owner's to open**: T-219 section 2 puts that decision at cycle 26, which is now done, and stage 7 is twelve cycles of closed task records at Grade B. The baseline is below. The tables carry what one
+**Status: running.** Cycles 0 to 26 of 43 are done - **stages 1 to 6 complete**, so what an adopter receives, how this project governs itself, the product, the decks and the specifications they were built from, the whole written record and both surfaces outside git have all been read. **Cycle 39 runs next, not 27.** The owner ruled the run order on 2026-08-29 and [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) section 2 carries it: the figure and version sweep first, because it is the only remaining cycle whose subject is the live tree, and the stage 7 checkpoint taken with its result rather than before it. The baseline is below. The tables carry what one
 cycle found and nothing more — a subject with no row has not been audited, it has not been
 reached.
 
