@@ -19,7 +19,7 @@ had an owner.
 > `docs/RELEASE-PHASES.md`, `docs/CONTEXT-AUDIT.md` and `docs/upstream/`. Measured 2026-08-23,
 > `docs/` held fifteen top-level documents and four subdirectories, so thirteen documents and three
 > subdirectories were outside every Create and Close sweep — including
-> `docs/PRE-RELEASE-AUDIT.md`, the register forty-three audit cycles write into, and
+> `docs/PRE-RELEASE-AUDIT.md`, the register this project's audit cycles write into, and
 > `docs/AUDIT-METHOD.md`, which went stale that day and was repaired by hand rather than by a
 > sweep. An enumerated list of homes is a second copy of *what the durable homes are*, and it goes
 > stale exactly when a home is added, which is the moment the sweep matters most.
