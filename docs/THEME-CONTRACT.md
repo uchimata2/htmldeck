@@ -51,6 +51,13 @@ seeded variants.
 | **primitive** | A dial. The value is a choice this theme makes. | set it freely, inside the *Legal* column |
 | **derived** | `calc()` over primitives. Its value is a consequence of the dials. | copy it unchanged; editing one is departing from the scale, which `validate` reports |
 | **fixed** | Declared in the region but not the theme's to vary — a rule owns the number. | declare it and leave it |
+| **optional** | A dial for something a deck may not do at all. Absent is a legal state; declared, it is held to its *Legal* column like a primitive. | leave it out, or set it freely inside *Legal* |
+
+**`optional` is the only kind DS-013 does not require, and it exists for one shape**: a value that
+has to be nameable so a deck can supply it legally, for a thing most decks never do. Requiring every
+theme to declare one puts a dial in every theme that nothing reads — the defect `PR-77` is already
+tracking in the colour band — and leaving it unnamed is worse, because then the deck writes a
+literal and DS-010 refuses it. *Added 2026-08-29 by [T-264](../tasks/T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) for §3.6's licensed long band. **A token is `optional` because nothing in the deck may need it, never because a theme could not be bothered**: everything a deck always has stays required.*
 
 **Derivation is used where a scale exists, and nowhere else.** Two places qualify: the **text
 scale**, from `--fs-base` and `--type-ratio`, and the **spacing scale**, from `--sp-unit` and
@@ -237,6 +244,16 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--slide-shift` | motion | primitive | How far the outgoing slide travels, as a percentage of the stage (T-111). | — |
 | `--slide-scale` | motion | primitive | What the outgoing slide shrinks to. Below 1, or it grows. | — |
 | `--slide-leave-shadow` | motion | primitive | The drop shadow the outgoing slide gains, which is what makes it read as lifting away rather than fading. | — |
+| `--long-dur` | motion | optional | **The licensed long band's duration**: what a rule declaring `--motion-long` runs for (DS-141). | ms 500- |
+| `--long-ease` | motion | optional | The licensed long band's easing. §3.6's own rule — every named motion carries a curve — and a licensed motion is a motion. | — |
+| `--long-delay` | motion | optional | How long a licensed long motion waits before it starts. | — |
+
+**The licensed long band is three tokens and is `optional` for the reason §2 gives**: most decks
+never run a motion past DS-141's cap, and a theme should not carry a dial for one that does not
+exist. **A deck that does run one declares these in its own theme region** — which is what makes the
+value a generator can find, and is the whole argument DS-013 rests on.
+
+*Added 2026-08-29 by [T-264](../tasks/T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md), from ClaimAI adopter report [`005`](adopter-reports/claimai/005-a-deck-cannot-express-an-author-requested-duration.md). DS-141 grants four licences to exceed the 500 ms cap, one of them `request` — the deck's author asked for it — and until this row existed **there was no legal way to write the number**: DS-013 refused a token the contract did not name, DS-010 refused the literal, and the nearest declared dial was Pulse-once's, whose band is paced for an emphasis mark. The adopter shipped the third route and recorded the deviation. **The easing token is not in the record's proposal and is required by this section's own sentence**: a curve is as much a choice as a duration, and a licensed motion that had to write `cubic-bezier()` outside the region would trip DS-010 on the curve half instead. Reversible on the owner's word (DS-000).*
 
 ---
 

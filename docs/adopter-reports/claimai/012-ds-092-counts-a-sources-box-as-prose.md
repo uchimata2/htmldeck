@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-262](../../../tasks/T-262-ds-092-counts-a-sources-box-as-prose.md). **The proposed fix is taken, in its more precise form**: `.sources-box` text is subtracted from the paragraph before its sentences are counted, so a verification line beside the box is still prose and still capped. The twenty-word sentence cap keeps reading the whole run, source items included, exactly as the record asks. **The second suggestion is refused for now** — a source ceiling as its own rule. Nobody has asked for one, `.sources-item` is `1+` in the component contract, and a number invented here would be the same undecided ceiling with a better message; it stays a `DS-000` question. **Reproducing it needed one thing the record does not say**: this repository's own deck authors its source items with no whitespace between the spans, so `textContent` runs them together and the sentence split — which needs whitespace after a full stop — sees one sentence however many items there are. With the items on separate lines and each ending in a full stop, six of them reproduce the record's verdict line exactly. |
 | **Found while** | Adding repeated source controls to `D4 — Executive Board Presentation`, on 2026-08-25 |
 | **Version seen** | `0.6.0` |
 

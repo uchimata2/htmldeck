@@ -109,6 +109,7 @@ comes here.
 | [L-137](lessons/L-137.md) | Deriving what a check reads does not derive how it reads it | Evidence and verification |
 | [L-138](lessons/L-138.md) | A run count is evidence about the fix only if it is large against the defect's rate; ten clean runs against a one-in-ten fault is a coin that came up heads | Evidence and verification |
 | [L-139](lessons/L-139.md) | A measurement taken on one subject and written down as general is a claim nothing will re-check; name the subject in the sentence or the conclusion outlives it | Evidence and verification |
+| [L-141](lessons/L-141.md) | A threshold found by varying one thing names that thing as the cause only if nothing else changes with it | Evidence and verification |
 
 ### Tooling
 

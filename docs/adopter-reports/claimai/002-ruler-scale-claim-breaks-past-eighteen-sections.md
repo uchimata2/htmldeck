@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-263](../../../tasks/T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md). **The finding is real and is fixed; both proposed remedies were refused, and so was the stated cause.** Measured on this repository's own reference deck spliced to 43 slides: the widths differ by **1e-4 CSS px**, four orders of magnitude below the half-pixel bucket the old test rounded into, so sub-pixel rounding never produced a third cluster and *give it a tolerance* would have changed nothing. What does produce one is **two mark sizes sitting side by side**: minor/minor, minor/major and major/major are three centre-to-centre distances, and the ruler shows the third wherever a stage holds a single slide. `regularScale()` now accepts either lattice a scale can be — evenly spaced centres, or evenly spaced edges — with at most two mark sizes, and the tolerance is there as well. Reproduced by `python tools/deck/longdeck.py examples/reference-deck.html 25 --solo-stage`, which fails at 30 items before the change and passes at 6 after; three seeded irregularities still fire. |
 | **Found while** | Building `D4 — Executive Board Presentation` at htmldeck stage 6, on 2026-08-24 |
 | **Version seen** | `0.6.0` |
 

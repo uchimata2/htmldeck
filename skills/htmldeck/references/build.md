@@ -100,8 +100,11 @@ will not tell you, because they are this stage's judgement:
   and survives reduced motion, print and the stop control is admissible whether or not it has a name
   in the ruleset. What DS-141 still holds is the clock: over 500 ms, add `--motion-long` to the same
   rule, valued `loop`, `illustration`, `emphasis` or `request`. Without it `check.py` fails DS-141,
-  and with a value outside those four it fails the same way. `MOTION-GUIDE.md` is how to decide
-  whether the motion is worth having at all.
+  and with a value outside those four it fails the same way. **The duration itself goes in the
+  licensed long band** — `--long-dur`, `--long-ease`, `--long-delay`, declared in the deck's own
+  theme region and left out entirely by a deck that runs no long motion. A literal there fails
+  DS-010 and an invented token name fails DS-013, which is why the band exists.
+  `MOTION-GUIDE.md` is how to decide whether the motion is worth having at all.
 - **A content motion carries a rank, and the rank is derived rather than chosen.** Run
   `python $HTMLDECK/tools/deck/density.py write <slug>.html` and it writes them; run
   `check` and it recomputes the whole set and tells you whether the deck's numbers are the ones the

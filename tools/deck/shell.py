@@ -546,8 +546,11 @@ def undeclared_tokens(html, theme_css=DEFAULT_THEME):
     here = theme_mod.declarations(region)
     bands = shipped_bands(theme_css)
     out = []
-    for name in sorted(contract_tokens()):
-        if name in here:
+    toks = contract_tokens()
+    for name in sorted(toks):
+        # An `optional` token is not one the contract *requires* (T-264), so a deck that declares
+        # none of them is not short of anything and must not be told to run `tokens --write`.
+        if name in here or toks[name].kind == "optional":
             continue
         out.append((name, {b: v[name] for b, v in bands.items() if name in v}))
     return out

@@ -1554,8 +1554,23 @@ PROBE = r"""
       var txt = (el.textContent||'').replace(/\s+/g,' ').trim();
       if (!txt) continue;
       var ss = sentences(txt);
-      if (el.tagName.toLowerCase() === 'p' && ss.length > 4)
-        out.longParagraphs.push([(el.closest('.slide')||{dataset:{}}).dataset.name, ss.length]);
+      // **The paragraph half reads PROSE, and a sources box is a list of pointers** (T-262). The
+      // provenance mark is authored as a `<p>` (COMPONENT-CONTRACT §`.provenance`) with the box
+      // inside it, so a deck whose house style ends each source with a full stop had six sources
+      // counted as six sentences and failed for the length of its prose - a ceiling of about
+      // three sources nobody decided on, invisible until it fired (adopter report 012). The box
+      // is subtracted from the paragraph rather than the whole mark skipped, because a verification
+      // line beside the box IS prose and stays under the cap. The twenty-word SENTENCE cap below
+      // still reads the whole run, source items included: a source description past twenty words
+      // is a real defect, and that half of the rule was never the complaint.
+      var paraSs = ss;
+      if (el.querySelector('.sources-box')){
+        var bare = el.cloneNode(true), boxes = bare.querySelectorAll('.sources-box');
+        for (var b=0;b<boxes.length;b++) boxes[b].parentNode.removeChild(boxes[b]);
+        paraSs = sentences((bare.textContent||'').replace(/\s+/g,' ').trim());
+      }
+      if (el.tagName.toLowerCase() === 'p' && paraSs.length > 4)
+        out.longParagraphs.push([(el.closest('.slide')||{dataset:{}}).dataset.name, paraSs.length]);
       for (var q=0;q<ss.length;q++){
         var w = ss[q].trim().split(/\s+/).filter(Boolean).length;
         if (w > 20) out.longSentences.push(
@@ -1740,33 +1755,60 @@ PROBE = r"""
     // as one object. The claim is verified, never trusted - otherwise `data-scale` is a loophole
     // any evenly spaced row of controls could use to escape the budget entirely.
     // The owner's definition, 2026-08-08: uniform mark, uniform pitch, no per-item label at rest.
-    // Two pitch/width clusters are allowed, because major and minor graduations are what makes a
-    // ruler a ruler - but a labelled item disqualifies it outright.
+    // Two mark SIZES are allowed, because major and minor graduations are what makes a ruler a
+    // ruler - but a labelled item disqualifies it outright.
+    //
+    // **Uniform pitch is read two ways and either satisfies it** (T-263). Two mark sizes produce
+    // three centre-to-centre distances - minor/minor, minor/major, major/major - so a test that
+    // counted centre distances and allowed two refused any ruler whose two major marks ever sat
+    // side by side. On this deck's ruler that is a stage holding one slide: nothing an author can
+    // edit, and past the dense threshold the whole tick array then counted as n against a budget
+    // of twelve, with no route back (adopter report 002). What a scale claims is a REPEATING UNIT,
+    // and there are two lattices that are one: evenly spaced centres - the classic ruler, whose
+    // marks differ in weight rather than in cell - or evenly spaced EDGES, which is this deck's
+    // dense ruler, where the cell is the hit target and the cells pack flush. Two gap values
+    // explained by neither is not a scale, and the old test admitted exactly that.
     function regularScale(el){
       var kids = Array.prototype.slice.call(el.children);
-      if (kids.length < 3) return false;
-      var gaps = [], widths = [], prev = null;
+      if (kids.length < 3) return 'fewer than three marks';
+      var widths = [], centres = [];
       for (var s=0;s<kids.length;s++){
+        if ((kids[s].textContent || '').trim()) return 'a mark carries a label at rest';
         var r = kids[s].getBoundingClientRect();
-        if ((kids[s].textContent || '').trim()) return false;   // a label at rest
-        widths.push(Math.round(r.width * 2) / 2);
-        var c = r.left + r.width / 2;
-        if (prev !== null) gaps.push(Math.round((c - prev) * 2) / 2);
-        prev = c;
+        widths.push(r.width);
+        centres.push(r.left + r.width / 2);
       }
+      // Sub-pixel layout rounding is not a difference a reader can see, so values are clustered
+      // with a tolerance rather than rounded into fixed buckets. Half a design unit: under the
+      // 4 du mark floor DS-217 states, and four orders of magnitude above the rounding measured
+      // across 43 ticks, which was 1e-4 CSS px and never reached the old half-pixel bucket.
+      var tol = k / 2;
+      // Single linkage would let a slow drift across forty marks pass as one cluster, so each
+      // value is compared with its cluster's FIRST, which bounds every cluster's spread by `tol`.
       function clusters(a){
-        var u = []; for (var t=0;t<a.length;t++) if (u.indexOf(a[t]) < 0) u.push(a[t]); return u;
+        var v = a.slice().sort(function(x,y){ return x - y; }), n = 1, base = v[0];
+        for (var t=1;t<v.length;t++) if (v[t] - base > tol){ n++; base = v[t]; }
+        return n;
       }
-      return clusters(gaps).length <= 2 && clusters(widths).length <= 2;
+      var gaps = [], edges = [];
+      for (var g=1;g<centres.length;g++){
+        gaps.push(centres[g] - centres[g-1]);
+        edges.push((centres[g] - centres[g-1]) - (widths[g] + widths[g-1]) / 2);
+      }
+      if (clusters(widths) > 2) return 'more than two mark sizes';
+      if (clusters(gaps) > 1 && clusters(edges) > 1)
+        return 'neither the centres nor the edges are evenly spaced';
+      return null;
     }
     out.chromeLabelled = 0;
     out.scaleVerdict = null;
     if (chrome){
       var scaleEl = chrome.querySelector('[data-scale]');
-      var scaleOk = scaleEl ? regularScale(scaleEl) : false;
+      var scaleWhy = scaleEl ? regularScale(scaleEl) : null;
+      var scaleOk = !!scaleEl && scaleWhy === null;
       if (scaleEl) out.scaleVerdict = scaleOk
         ? 'regular scale, counted as 1'
-        : 'claims data-scale but is not regular - counted as n';
+        : 'claims data-scale but is not regular (' + scaleWhy + ') - counted as n';
       var items = chrome.querySelectorAll('button,[aria-label]');
       for (var q=0;q<items.length;q++){
         if (items[q].querySelector('button')) continue;   // a wrapper, not an item

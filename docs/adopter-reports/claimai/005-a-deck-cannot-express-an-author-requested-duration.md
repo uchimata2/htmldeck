@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-264](../../../tasks/T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md). **Both findings taken, and the first by the better of the two candidates the record offers.** The theme contract names a licensed long band — `--long-dur`, `--long-ease`, `--long-delay` — under a new `optional` kind, so a deck that runs such a motion declares them in its own theme region and a deck that does not declares nothing. **The easing token is this repository's addition**: §3.6 requires every named motion to carry a curve, and without it a `cubic-bezier()` outside the region would trip DS-010's other half, so the record's *1000 ms with an ease-in-out curve* would still have been unwritable. **The asymmetry is closed the other way round from the obvious one**: a custom property is now scanned like any other declaration and §5's exemption table decides it, rather than every custom property being skipped on a comment claiming another rule owned the defect — no rule did. All three routes this record names were re-run as fixtures and each reproduces its verdict: the literal fails DS-010 on the same declaration, the invented token fails DS-013 with the same message, and the band route passes DS-013, DS-010 and DS-141 while the same rule without `--motion-long` fails DS-141. |
 | **Found while** | Building the slide 2 entrance on `D4 — Executive Board Presentation`, on 2026-08-24 |
 | **Version seen** | `0.6.0` |
 

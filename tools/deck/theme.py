@@ -45,7 +45,11 @@ FACES = os.path.join(ROOT, "themes", "faces")
 THEMED = os.path.join(".assets-cache", "deck", "themed")
 
 AXES = ("colour", "type", "geometry", "shape", "motion")
-KINDS = ("primitive", "derived", "fixed")
+# `optional` is a dial a theme may leave out entirely, and it is the only kind DS-013 does not
+# require (T-264). It exists for a value only a deck that needs it can supply a number for - the
+# licensed long motion band - where requiring every theme to declare one would put a dial in two
+# themes that nothing reads. Declared, it is checked exactly like a primitive.
+KINDS = ("primitive", "derived", "fixed", "optional")
 
 REGION_OPEN = '<style id="theme">'
 REGION = re.compile(r'<style\s+id="theme"\s*>(.*?)</style>', re.S)
@@ -302,6 +306,11 @@ def validate(source, tokens=None):
     for name in sorted(tokens):
         tok = tokens[name]
         problem = check_legal(tok, decls)
+        # **An `optional` token that is absent is absent, not missing** (T-264). Present, it is
+        # held to its band like any other - which is the half that matters, because the reason to
+        # name it at all is that a value a deck invents has nowhere legal to go.
+        if problem == "not declared" and tok.kind == "optional":
+            continue
         if problem:
             # A missing token is the contract's problem whatever the rule behind its range.
             bad.append((None if problem == "not declared" else tok.rule,
@@ -478,8 +487,16 @@ def literals(html):
                 continue                # an at-rule prelude: keyframe stops carry no selector
             for decl in body.split(";"):
                 d = " ".join(decl.split())
-                if not d or d.startswith("--") or ":" not in d:
-                    continue            # a component-scoped custom property is its own defect
+                # **A custom property is scanned like any other declaration** (T-264). It was
+                # skipped outright until 2026-08-29, on a comment saying the defect belonged to
+                # another rule - and no rule owned it, so `--x:1000ms` written beside a policed
+                # `animation:1000ms` passed while the literal failed. That asymmetry was nobody's
+                # decision. What decides it now is §5's exemption table, the same as for every
+                # other property: composition scopes stay exempt, and everywhere else a value a
+                # theme cannot reach is a value a theme cannot reach. Measured on the five tracked
+                # decks the day the skip was removed: 18 declarations newly scanned, 0 offending.
+                if not d or ":" not in d:
+                    continue
                 prop = d.split(":")[0].strip()
                 for m in LITERAL.finditer(d):
                     mag = float(m.group(1) or m.group(2))
@@ -531,9 +548,13 @@ def verdicts(html):
         ("DS-011", "one theme region: %d declared, %d :root and %d @font-face outside it"
          % (regions, stray_roots, stray_faces),
          regions == 1 and not stray_roots and not stray_faces),
+        # The two counts are separate because they are two different obligations, and one number
+        # covering both would hide an optional token becoming required (T-264).
         ("DS-013", "every token THEME-CONTRACT.md names is declared and derives as it says: "
-         "%d token(s) required, %d problem(s)%s"
-         % (len(tokens), len(own), "" if not own else " - " + "; ".join(own[:3])),
+         "%d token(s) required, %d optional, %d problem(s)%s"
+         % (sum(1 for t in tokens.values() if t.kind != "optional"),
+            sum(1 for t in tokens.values() if t.kind == "optional"),
+            len(own), "" if not own else " - " + "; ".join(own[:3])),
          not own),
     ]
     # **One row per rule the contract cites, always** - not one per rule currently violated. A row

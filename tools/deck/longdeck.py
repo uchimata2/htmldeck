@@ -10,6 +10,7 @@ out of a comment (**L-36**). This makes the fixture a command.
     python tools/deck/longdeck.py examples/reference-deck.html 25
     python tools/deck/longdeck.py examples/reference-deck.html 43 --css candidate.css
     python tools/deck/longdeck.py examples/reference-deck.html 17 --name probe-a
+    python tools/deck/longdeck.py examples/reference-deck.html 25 --solo-stage
     python tools/deck/longdeck.py --self-test
 
 **What it does not do, deliberately.** The spliced deck is a *fixture*, not a deck this repository
@@ -24,6 +25,13 @@ should say why.
 belong to, never as a new stage, so a deck spliced from 13 to 43 still has seven section marks. That
 is what makes the fixture answer the question it was built for: what changes with length is the
 number of *small* marks competing with a fixed number of large ones.
+
+**`--solo-stage` moves where one stage ends, and changes nothing else.** It leaves the
+second-to-last stage holding a single slide, which is the only arrangement that puts two section
+marks side by side on the ruler - and it is a shape length alone never reaches, however long the
+deck gets. `T-263` needs it: past the dense threshold two adjacent section marks were what made the
+ruler's own `data-scale` claim unverifiable, and the fixture proving that has to be a command for
+the same reason this whole tool is one.
 
 Pure standard library (**L-07**). Output goes to the **deck's own project** (T-074), via `paths`.
 """
@@ -94,7 +102,39 @@ def stage_of(slide):
     return m.group(1) if m else ""
 
 
-def build(html, target):
+def solo_stage(content):
+    """`content` with one stage left holding a single slide, so two section marks sit side by side.
+
+    The ruler marks the **first** slide of each stage, so two marks are adjacent only where a stage
+    holds exactly one slide - and nothing else about a deck produces that arrangement. That makes
+    it a shape a fixture has to ask for rather than one a longer deck arrives at, which is why it
+    is a flag here instead of a length (T-263).
+
+    The stage **set** is unchanged, which is the property `--solo-stage` shares with the splice
+    itself: the tail of the second-to-last stage is reassigned to the last one, so the same stages
+    exist and the same slides are in the same order. Only where one stage ends and the next begins
+    moves.
+    """
+    order = []
+    for s in content:
+        st = stage_of(s)
+        if st not in order:
+            order.append(st)
+    if len(order) < 2:
+        raise ValueError("a solo stage needs at least two stages; this deck has %d" % len(order))
+    donor, host = order[-2], order[-1]
+    seen = 0
+    out = []
+    for s in content:
+        if stage_of(s) == donor:
+            seen += 1
+            if seen > 1:
+                s = STAGE_ATTR.sub('data-stage="%s"' % host, s, count=1)
+        out.append(s)
+    return out
+
+
+def build(html, target, solo=False):
     """The deck respliced to `target` slides. Raises `ValueError` when that is fewer than it has.
 
     Shortening is refused rather than implemented: dropping authored slides would silently change
@@ -134,6 +174,8 @@ def build(html, target):
             sname = names[int(st)] if st.isdigit() and int(st) < len(names) else "Stage %s" % st
             out.append(FILLER % {"name": "Filler slide %02d" % n, "stage": st, "n": n,
                                  "nn": "%02d" % n, "stagename": sname})
+    if solo:
+        out = solo_stage(out)
     for s in back:
         n += 1
         out.append(renumber(s, n))
@@ -161,9 +203,9 @@ def inject_css(html, css):
     return html[:i] + "\n/* ---- longdeck.py: candidate treatment ---- */\n" + css + "\n" + html[i:]
 
 
-def write(deck, target, out=None, css=None, name=None):
+def write(deck, target, out=None, css=None, name=None, solo=False):
     html = open(deck, encoding="utf-8").read()
-    spliced = build(html, target)
+    spliced = build(html, target, solo=solo)
     if css:
         spliced = inject_css(spliced, css)
     dest_dir = out or os.path.join(paths.output_root(deck), ".assets-cache", "deck")
@@ -206,6 +248,32 @@ def self_test():
         if got.count('data-stage="back"') != html.count('data-stage="back"'):
             fail.append("splicing to %d changed the back-matter count" % target)
 
+    # `--solo-stage` produces the one arrangement length never reaches: two adjacent section marks.
+    # Asserted on the SEQUENCE rather than on the flag, because what the fixture claims is a
+    # property of the ruler the deck builds, not of the option that asked for it.
+    def firsts(seq):
+        out, seen = [], set()
+        for i, st in enumerate(seq):
+            if st != "back" and st not in seen:
+                seen.add(st)
+                out.append(i)
+        return out
+
+    plain = [stage_of(s) for s in split_slides(build(html, 25))[1]]
+    solo = [stage_of(s) for s in split_slides(build(html, 25, solo=True))[1]]
+    if len(plain) != len(solo):
+        fail.append("--solo-stage changed the slide count %d -> %d" % (len(plain), len(solo)))
+    if sorted(set(plain)) != sorted(set(solo)):
+        fail.append("--solo-stage changed the stage set %r -> %r" % (sorted(set(plain)),
+                                                                    sorted(set(solo))))
+    f = firsts(solo)
+    if not any(b - a == 1 for a, b in zip(f, f[1:])):
+        fail.append("--solo-stage left no two section marks adjacent; stage firsts are %r in %r"
+                    % (f, solo))
+    if any(b - a == 1 for a, b in zip(firsts(plain), firsts(plain)[1:])):
+        fail.append("the plain splice ALREADY has two adjacent section marks, so the assertion "
+                    "above passes without --solo-stage doing anything")
+
     # Shortening is refused, not silently ignored.
     try:
         build(html, base - 1)
@@ -223,7 +291,8 @@ def self_test():
     if fail:
         sys.exit("SELF-TEST FAILED:\n  - " + "\n  - ".join(fail))
     print("self-test OK - spliced %d-slide deck to 17, 25 and 43 with the stage set unchanged, "
-          "refused to splice down, and placed candidate CSS inside the last style block" % base)
+          "put two section marks side by side with --solo-stage and not without it, refused to "
+          "splice down, and placed candidate CSS inside the last style block" % base)
 
 
 def main(argv):
@@ -232,26 +301,28 @@ def main(argv):
     if len(argv) < 2:
         sys.exit(__doc__.strip().splitlines()[0] + "\n\n"
                  "    python tools/deck/longdeck.py <deck> <slides> "
-                 "[--out <dir>] [--css <file>] [--name <stem>]\n"
+                 "[--out <dir>] [--css <file>] [--name <stem>] [--solo-stage]\n"
                  "    python tools/deck/longdeck.py --self-test")
     deck, rest = argv[0], argv[1:]
     try:
         target = int(rest[0])
     except ValueError:
         sys.exit("second argument is the target slide count, got %r" % rest[0])
-    opts, rest = {}, rest[1:]
+    opts, rest, solo = {}, rest[1:], False
     while rest:
         a = rest.pop(0)
         if a in ("--out", "--css", "--name"):
             if not rest:
                 sys.exit("%s needs a value" % a)
             opts[a.lstrip("-")] = rest.pop(0)
+        elif a == "--solo-stage":
+            solo = True
         else:
             sys.exit("unknown option %r" % a)
     css = None
     if "css" in opts:
         css = open(opts["css"], encoding="utf-8").read()
-    dest = write(deck, target, out=opts.get("out"), css=css, name=opts.get("name"))
+    dest = write(deck, target, out=opts.get("out"), css=css, name=opts.get("name"), solo=solo)
     print("%s  (%d slides)" % (paths.display_path(dest, ROOT), target))
     return dest
 

@@ -65,9 +65,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-258](T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | Report a readability measurement over drawn slide copy, and name the hardest lines | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-259](T-259-nothing-prints-what-a-slide-actually-contains.md) | Ship a per-slide fact printer, so a specification and its deck stop drifting silently | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-260](T-260-ds-244-tests-proximity-where-it-means-obstruction.md) | Decide what DS-244 measures, from the two findings that contradict each other | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
-| [T-262](T-262-ds-092-counts-a-sources-box-as-prose.md) | Exclude provenance from DS-092's paragraph half, and give any source ceiling its own rule | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
-| [T-263](T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md) | Give regularScale a tolerance, so a long deck can satisfy DS-217 | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
-| [T-264](T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | Give a licensed long motion somewhere to state its duration | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-265](T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md) | Decide whether DS-110 narrows by where a raster sits | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-266](T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md) | Say what to do when a class fails DS-229, and decide whether a deck gets a local prefix | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | Give render.py a capture path for a deck's disclosed states | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
@@ -309,6 +306,9 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) | Fix set_var's self-closing tag insertion, and have write verify what it wrote | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-225, T-261 |
 | [T-255](T-255-render-py-motion-seeks-past-the-delay.md) | Add the delay in the report branch and drop the subtraction in the capture branch | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-225, T-272 |
 | [T-261](T-261-ds-035-measures-a-text-run-through-its-transform.md) | Re-derive whether audit.PROBE can stay unpinned, on a deck whose entrance moves the axis | `PH1` | - | `done` | `review` | - | - | - | T-225, T-254 |
+| [T-262](T-262-ds-092-counts-a-sources-box-as-prose.md) | Exclude provenance from DS-092's paragraph half, and give any source ceiling its own rule | `PH1` | - | `done` | `review` | - | - | - | T-225 |
+| [T-263](T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md) | Give regularScale a tolerance, so a long deck can satisfy DS-217 | `PH1` | - | `done` | `review` | - | - | - | T-225 |
+| [T-264](T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | Give a licensed long motion somewhere to state its duration | `PH1` | - | `done` | `review` | - | - | - | T-225 |
 | [T-272](T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md) | Make render.py motion enumerate the same animation set on every run of one deck | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-255 |
 
 <!-- taskmd:end -->

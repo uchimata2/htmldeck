@@ -108,6 +108,12 @@ What the test does not tell you, and this guide does:
 - **If it runs long, write down why.** `--motion-long` takes `loop`, `illustration`, `emphasis` or
   `request`. The value is a claim on the artifact, so the critique pass can disagree with it — which
   is the point, and is more than a name ever offered.
+- **And write the number where a theme can reach it.** The duration goes in the licensed long band —
+  `--long-dur`, `--long-ease`, `--long-delay` — declared in the deck's own theme region
+  ([`THEME-CONTRACT.md`](THEME-CONTRACT.md) §3.6). They are `optional`, so a deck that runs no long
+  motion declares none of them. **Do not borrow a neighbouring dial**: `--pulse-dur` is paced for an
+  emphasis mark, and a motion wearing another motion's band is the defect
+  [T-198](../tasks/T-198-give-affordance-motion-its-own-band-faster-than-content-motion.md) recorded.
 - **Check it with motion off.** DS-143, DS-218, DS-221 and DS-224 all reduce to one question: does
   the deck still say what it says when nothing moves? If the answer is no, the motion is carrying
   content and the content needs somewhere else to live.
