@@ -608,6 +608,23 @@ def set_token(source, name, value):
     return out
 
 
+def drop_token(source, name):
+    """`source` with `name`'s whole declaration removed, for the missing-token fixture (T-228).
+
+    The sibling of `set_token`, and it refuses a no-op for the same reason: a substitution that
+    matched nothing hands the validator the CONFORMING theme and calls its clean verdict a
+    defect. Here the trap is worse, because *removing nothing* looks exactly like *removing
+    something the validator did not mind*.
+    """
+    pat = re.compile(r"\n\s*" + re.escape(name) + r"\s*:[^;}]*;")
+    out, n = pat.subn("", source, count=1)
+    if not n:
+        sys.exit("SELF-TEST FAILED: %s is not declared in the theme, so the fixture that drops "
+                 "it removed nothing. The token was renamed or dropped from the contract - fix "
+                 "the fixture, do not delete it" % name)
+    return out
+
+
 def self_test():
     tokens, exemptions = load()
     for t in tokens.values():
@@ -664,6 +681,15 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a line height outside DS-034's band validated clean")
     if not validate(set_token(ok, "--fs-lead", "calc(30*var(--du))"), tokens):
         sys.exit("SELF-TEST FAILED: a derived token rewritten as a literal validated clean")
+    # **A token that is simply MISSING is the third failing branch, and it had no fixture until
+    # T-228** - which is how `themes/lattice.css` came to sit fifteen undeclared tokens behind
+    # the contract. The two fixtures above both seed a value the validator can read and object
+    # to; nothing seeded the absence, so `not declared` was a verdict only ever produced by a
+    # real theme being wrong, never by a test. It is also the branch that decays on its own: a
+    # token added to the contract is undeclared everywhere by construction.
+    if not validate(drop_token(ok, "--lh-body"), tokens):
+        sys.exit("SELF-TEST FAILED: a theme missing a required token validated clean. That is "
+                 "the branch T-228 closed - fix it, do not delete this fixture")
 
     # The exemption list is applied, not merely parsed: a literal it covers and one it does not
     # must be told apart, or every literal in the deck is exempt and the count means nothing.

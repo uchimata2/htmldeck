@@ -75,6 +75,31 @@ WIDE = [
     ("tools/deck/contents_bound.py", []),
 ]
 
+# Per-theme gates: `path -> builder`, the builder taking the theme's repo-relative path.
+#
+# **The themes are discovered, never listed** (T-228). `theme.py check <deck>` was in PER_DECK from
+# the start and asks whether a DECK declares what it uses; nothing asked whether a THEME declares
+# what the contract requires, so `themes/lattice.css` sat fifteen tokens behind for as long as it
+# took anyone to run `validate` by hand - every one of them a token that arrived after the file did.
+# A hand-kept list would have gone stale at exactly the same moment, which is why this globs.
+PER_THEME = [
+    ("tools/deck/theme.py", lambda theme: ["validate", theme]),
+]
+
+
+def themes_tracked():
+    """Every tracked theme, discovered.
+
+    **A theme is a `.css` directly in `themes/`; anything deeper is a resource a theme uses.**
+    `themes/faces/` holds the three embedded font faces, which have no contract to validate
+    against and would fail on every token in it.
+
+    The depth filter is explicit because `tracked()` takes a **git pathspec**, not a shell glob,
+    and `themes/*.css` matches across directories there - it returned the three faces, and the
+    self-test below is what said so rather than a failing run three steps later.
+    """
+    return [t for t in tracked("themes/*.css") if t.count("/") == 1]
+
 # Per-deck gates: `path -> builder`. The builder takes `(deck, sources)` - both repo-relative -
 # and returns the argv tail, or a string, which is a refusal with its reason.
 PER_DECK = [
@@ -376,9 +401,14 @@ def run_one(path, argv_tail, verbose):
     return Result(label, "ran" if done.returncode == 0 else "failed", done.returncode, out)
 
 
-def plan(decks):
+def plan(decks, themes=()):
     """Every command this run will issue, in order, as `(section, path, argv-tail-or-reason)`."""
     steps = [("repository-wide", path, tail) for path, tail in WIDE]
+    # Themes before decks: a deck is built against a theme, so a theme that does not conform is
+    # the more useful failure to read first.
+    for theme in themes:
+        for path, builder in PER_THEME:
+            steps.append((theme, path, builder(theme)))
     for deck in decks:
         src = DECKS[deck]
         for path, builder in PER_DECK:
@@ -415,7 +445,9 @@ def report(results, classified, unclassified, stale, tools, decks, not_a_deck):
     for sect, res in results:
         if sect != section:
             section = sect
-            print("\n  %s" % ("gates" if sect == "repository-wide" else "per deck - " + sect))
+            print("\n  %s" % ("gates" if sect == "repository-wide"
+                              else ("per theme - " if sect.startswith("themes/")
+                                    else "per deck - ") + sect))
         mark = {"ran": "pass", "failed": "FAIL", "skipped": "skip"}[res.state]
         print("    %-4s %s" % (mark, res.label))
         if res.why:
@@ -505,6 +537,18 @@ def self_test():
         sys.exit("SELF-TEST FAILED: an entry naming a deleted file reported %r, wanted "
                  "['tools/c.py'] - the hand-kept list going stale silently" % (stale,))
 
+    # The theme glob's one distinction is depth, and depth is not self-evident (T-228). Assert
+    # both directions: it reaches the themes, and it does not reach the font faces one level
+    # down - a face has no contract to validate against and would fail every token in it.
+    found = themes_tracked()
+    if "themes/lattice.css" not in found or "themes/quarto.css" not in found:
+        sys.exit("SELF-TEST FAILED: the theme glob found %r - it must reach every theme, or a "
+                 "theme falls out of the gate silently, which is the defect T-228 closed" % (found,))
+    if any(f.startswith("themes/faces/") for f in found):
+        sys.exit("SELF-TEST FAILED: the theme glob reached %r - `themes/faces/` holds font faces, "
+                 "which have no contract to validate and would fail on every token"
+                 % ([f for f in found if f.startswith("themes/faces/")],))
+
     if "examples/reference-deck.html" not in DECKS:
         sys.exit("SELF-TEST FAILED: no --sources declared for the reference deck. Guessing it "
                  "wrong does not error, it reports a content failure that reads like a defect in "
@@ -541,8 +585,9 @@ def main(argv):
         return 2
 
     decks = [d for d in html if d in DECKS]
+    themes = themes_tracked()
 
-    steps = plan(decks)
+    steps = plan(decks, themes)
     if listing:
         for sect, path, tail in steps:
             if isinstance(tail, str):

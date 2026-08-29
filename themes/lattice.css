@@ -144,6 +144,41 @@
   --pulse-delay:420ms;
   --slide-dur:400ms;
   --slide-ease:ease-out;
+  /* the inter-slide transition's other half: which keyframe runs, how far the outgoing scene
+     goes, and what it casts. The two names are identifiers `shell/components.css` defines and
+     are the same in every theme - a theme choosing its own would name a keyframe nothing
+     declares. The shadow is composed from this theme's own dials, so lattice's flat shadow
+     follows without restating a number. */
+  --slide-leave-fwd:slide-leave-fwd;
+  --slide-leave-back:slide-leave-back;
+  --slide-leave-shadow:0 var(--shadow-y) var(--shadow-blur) var(--shadow);
+  --slide-scale:.94;
+  --slide-shift:6%;
+
+  /* ---- affordance and press. These answer the reader's hand rather than the deck's argument,
+     so DS-238's density never reaches them. Scaled to this theme's tempo, not copied: lattice
+     runs at 0.59 of quarto's clock - 200 ms against 340 for Rise, 35 against 60 for the stagger -
+     and these follow it. `linear` on the affordance is the mechanism rather than a look; the
+     press keeps the overshoot curve this theme already spends on Turn. */
+  --afford-dur:120ms;
+  --afford-ease:linear;
+  --press-dur:60ms;
+  --press-ease:cubic-bezier(.34,1.56,.64,1);
+  --pager-pinch:.94;
+  --pager-tilt:3deg;
+
+  /* ---- the two figure motions (T-112). Both are one motion per figure, ranked once, so their
+     dials are shape and arrival order rather than tempo - the overshoot and the pinch are the
+     same in both themes on purpose, and only the clock moves. Thirty dots at 5 ms stay inside
+     DS-141's cap. */
+  --arrow-pop-delay:70ms;
+  --dot-stagger:5ms;
+  --dot-overshoot:1.18;
+
+  /* how much content motion runs (DS-238). 100 is the shipped default and not a theme's
+     choice to make - a theme that quietly ran less would be answering a question DS-238 has
+     already answered for every deck. */
+  --motion-density:100;
 
   /* ---- the reading view, on the same ratios */
   --doc-fs:1rem;
