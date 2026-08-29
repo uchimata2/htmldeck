@@ -460,7 +460,16 @@ def wired_pattern(title):
 
 
 def rewire(html, title, body):
-    """`(html, old_body)` - the deck with this quick view's rendering replaced, and what it was.
+    """`(html, old_body, copies)` - the deck with this rendering replaced, what it was, and how
+    many templates carried it.
+
+    **Every copy, not the first** (T-233). This substituted with `count=1` until a shipped deck was
+    found carrying eleven templates for one source: `deck.js` builds `qvSrc[data-qv] = tpl` while
+    walking them in document order, so the **last** wins and the repair went into the first - the
+    verb reported a successful refresh and the deck went on rendering the stale copy. On a
+    conformant deck the two are the same template and this changes nothing; on a drifted one it is
+    the difference between a repair and a report of one. `check` now fails a deck carrying more
+    than one, so this is the belt to that brace rather than a licence to carry duplicates.
 
     Pure, and separated from `refresh` for the reason `wire` is separate from `plan`: the two
     refusals below are the whole of this verb's guard, and a branch reachable only through a file
@@ -478,7 +487,8 @@ def rewire(html, title, body):
         raise Refused(UNCITED % title)
     # A function, not a string: a rendered source carries backslashes, and `sub` would read them
     # as group escapes.
-    return pat.sub(lambda m: m.group(1) + body + m.group(3), html, count=1), match.group(2)
+    out, copies = pat.subn(lambda m: m.group(1) + body + m.group(3), html)
+    return out, match.group(2), copies
 
 
 def carried(html):
@@ -626,7 +636,7 @@ def refresh(deck, sources, write=False, out=None):
     for title, path in sources:
         try:
             body, kind, removed = render(path)
-            html, was = rewire(html, title, body)
+            html, was, copies = rewire(html, title, body)
         except Refused as exc:
             refused.append((title, str(exc)))
             print("  REFUSED  %-28s %s" % (title, exc))
@@ -642,6 +652,11 @@ def refresh(deck, sources, write=False, out=None):
             print("  %-8s %-28s %s -> %d bytes (was %d, %+d)"
                   % (kind, title, paths.display_path(path, ROOT), new_bytes, old_bytes,
                      new_bytes - old_bytes))
+        if copies > 1:
+            # Repaired, and said out loud: the deck is malformed, and a verb that quietly fixed
+            # eleven copies would hide the finding that produced this line (T-233).
+            print("           %d templates carried this title - all %d replaced. A deck should "
+                  "carry one; `quickview.py check` fails this" % (copies, copies))
         for what in removed:
             print("           neutralised %s" % what)
     after = len(html.encode("utf-8"))
@@ -722,6 +737,17 @@ def check(deck, sources):
     held = [title for title, _cost in carried(html)]
     print("deck: %s - %d quick view(s) carried, %d named here"
           % (paths.display_path(deck, ROOT), len(held), len(sources)))
+    # **A title carried twice is named, never absorbed into the denominator** (T-233).
+    # `portfolio-review.html` shipped eleven templates for one source and every line here read
+    # cleanly: the count above said 12, the comparison below reads whichever copy `search` finds
+    # first, and `uncompared` excludes the title because `--source` did name it. So ten dead
+    # payloads - 84,750 bytes, 20.8% of that deck - were invisible to the check that reads them.
+    dupes = sorted({t for t in held if held.count(t) > 1})
+    for tit in dupes:
+        n = held.count(tit)
+        print("  DUPLICATE %-31s %d templates carry this title. `deck.js` keys on `data-qv`, so "
+              "one is read and the other %d are bytes nobody can open"
+              % (tit[:31], n, n - 1))
     drifted = refused = missing = same = 0
     named = set()
     for title, path in sources:
@@ -765,7 +791,12 @@ def check(deck, sources):
         print("")
         print("A quick view showing raw Markdown is a renderer gap, not a source defect: fix the "
               "renderer, then `quickview.py refresh <deck> --source ... --write`.")
-    if drifted or refused or missing or leaks:
+    if dupes:
+        print("")
+        print("A duplicated quick view is removed by hand - the copies are byte-identical, so "
+              "keeping the first is a deletion. `wire` writes one; a deck with more got them some "
+              "other way (T-233).")
+    if drifted or refused or missing or leaks or dupes:
         print("")
         print("A drifted quick view is repaired by `quickview.py refresh <deck> --source ... "
               "--write` where the renderer moved, and by a decision where the source document did.")
@@ -955,6 +986,24 @@ def self_test():
     except Refused:
         pass
 
+    # **T-233: a deck carrying two templates for one title.** The fault is silent - the old
+    # `count=1` repaired the first while `deck.js` reads the last, so `refresh` reported a
+    # successful write over a deck that still rendered the stale copy. Built by duplicating a
+    # wired template rather than by hand, so the fixture cannot drift away from what `wire` emits.
+    _one = ('<span class="sources-box"><span class="sources-item">Cost model</span></span>')
+    _wired1 = wire(_one, "Cost model", "<p>old</p>", "cost-model.md")
+    _tpl = '<template class="qv-src" data-qv="Cost model"><p>old</p></template>'
+    if _wired1.count(_tpl) != 1:
+        sys.exit("SELF-TEST FAILED: the duplicate fixture could not be built - `wire` no longer "
+                 "emits %r" % _tpl)
+    _dupe = _wired1.replace(_tpl, _tpl + _tpl, 1)
+    _fixed, _was, _copies = rewire(_dupe, "Cost model", "<p>new</p>")
+    if _copies != 2:
+        sys.exit("SELF-TEST FAILED: rewire saw %d copies in a deck carrying 2" % _copies)
+    if "<p>old</p>" in _fixed:
+        sys.exit("SELF-TEST FAILED: refreshing a deck with two templates left one stale. That is "
+                 "the T-233 fault exactly, and it reports success while doing it - %r" % _fixed)
+
     # T-109. The identifier and the kind glyph belong to the component, not to the route, so wiring
     # carries them through untouched; the file name is a base name, because a directory would
     # describe the author's machine. Both are asserted by breaking them, like everything above.
@@ -974,7 +1023,10 @@ def self_test():
     # T-179. Refreshing, and its two refusals. `wired` above is a deck that already carries a quick
     # view for "Cost model" - which is exactly the state `add` cannot act on, so it is the right
     # fixture for the verb that can.
-    again, was = rewire(wired, "Cost model", "<p>y</p>")
+    again, was, copies = rewire(wired, "Cost model", "<p>y</p>")
+    if copies != 1:
+        sys.exit("SELF-TEST FAILED: refreshing a deck with one template reported %d copies"
+                 % copies)
     if was != "<p>x</p>":
         sys.exit("SELF-TEST FAILED: refreshing did not report what the quick view held before - "
                  "%r. The byte delta is the only thing standing between this verb and a shipped "
@@ -995,7 +1047,7 @@ def self_test():
                      "<template> is this verb's to touch - %r" % (what, again))
     # **A refresh that agrees with what is embedded must be a no-op, byte for byte.** This is the
     # control case T-179 named: without it, "refreshed" and "rewritten" are indistinguishable.
-    noop, _ = rewire(again, "Cost model", "<p>y</p>")
+    noop, _, _copies = rewire(again, "Cost model", "<p>y</p>")
     if noop != again:
         sys.exit("SELF-TEST FAILED: refreshing with an identical rendering changed the deck. A "
                  "no-op that writes bytes cannot be told from a defect")

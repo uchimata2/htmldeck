@@ -1,6 +1,6 @@
 # Larkfield Dental Group — Demand Planning — slide-by-slide specification
 
-Expanded from the outline in `D6-executive-board-presentation.foundation.md`, page by page. Nine
+Expanded from the outline in `measure-first.foundation.md`, page by page. Nine
 fields per slide.
 
 **Version 2**, built on htmldeck 0.2.2 in a rebuild against consolidated requirements.

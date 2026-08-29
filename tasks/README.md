@@ -38,7 +38,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216, T-223 |
 | [T-226](T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | Give the portfolio-review deck a home in both human-facing documents | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | Correct the copy-into-your-own-plugin route, or withdraw it | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
-| [T-233](T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md) | Remove the ten dead quick-view payloads, and fix the verb that writes them | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-234](T-234-the-front-pages-own-figures-and-claims.md) | Correct the front page's figures and its two false claims | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-235](T-235-the-skills-documents-against-the-tools-they-describe.md) | Reconcile the skill's documents with the tools and rules they describe | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-236](T-236-tier-1-and-the-brief-against-what-they-measure.md) | Correct tier 1's three figures and settle the tier-2 set the owner already ruled on | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
@@ -47,8 +46,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-239](T-239-the-audits-own-record-against-what-it-did.md) | Reconcile the audit's plan, its ledger and the document binding it to its method | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-240](T-240-the-evaluation-document-against-itself-and-the-code.md) | Correct EVALUATION.md's four internal contradictions and its account of the stage split | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-241](T-241-the-design-system-and-the-rationale-against-what-shipped.md) | Close three statements the ruleset and its rationale still record as open | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
-| [T-247](T-247-the-portfolio-generators-documents-against-the-deck.md) | Correct the generator's account of a chart it no longer draws and a count stated three ways | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
-| [T-248](T-248-four-content-errors-in-three-shipped-decks.md) | Correct four numbers a shipped deck asserts and its own source contradicts | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-249](T-249-the-two-prior-audits-registers.md) | Correct three claims the ruleset and context audits make about their own coverage | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-250](T-250-two-lessons-state-a-figure-and-two-link-to-a-dead-anchor.md) | Fix four lessons in the folder whose own rule is that a lesson outlives its instance | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-251](T-251-a-research-note-and-a-memory-entry-describe-a-state-that-changed.md) | Correct R9's account of DS-122 and a memory entry recording an edit never made | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
@@ -59,8 +56,9 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-259](T-259-nothing-prints-what-a-slide-actually-contains.md) | Ship a per-slide fact printer, so a specification and its deck stop drifting silently | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | Give render.py a capture path for a deck's disclosed states | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
-| [T-275](T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | Retire --accent-ink from the contract, both themes and every deck that carries it | `PH3` | - | `proposed` | `specify` | - | - | - | T-242, T-274 |
 | [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md) | Write the clause rows for the nine conjunctions the sweep found owing | `PH3` | - | `proposed` | `specify` | T-219 | - | - | T-054, T-244 |
+| [T-281](T-281-the-sort-windows-capacity-story-cannot-hold-its-own-failure-table.md) | The sort-window deck's capacity story cannot hold its own failure table, and the fix changes its headline | `PH3` | - | `proposed` | `specify` | - | - | - | T-248 |
+| [T-282](T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | The portfolio deck's opening slide carries one of the two figures its specification calls the whole argument | `PH3` | - | `proposed` | `specify` | - | - | - | T-233 |
 
 ## Closed
 
@@ -293,11 +291,14 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-230](T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md) | Derive DS-063's slide sample from the deck instead of fixing it at four indices | `PH1` | - | `done` | `review` | T-219 | - | - | - |
 | [T-231](T-231-two-packaging-checks-have-no-subject-at-all.md) | Teach the scaffold gate the placeholder the skill actually writes | `PH1` | `unreleased` | `done` | `review` | T-219 | - | - | - |
 | [T-232](T-232-two-entrance-motions-do-not-collapse-for-print.md) | Collapse every content entrance motion for print, not one selector at a time | `PH1` | - | `done` | `review` | T-219 | - | - | - |
+| [T-233](T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md) | Remove the ten dead quick-view payloads, and fix the verb that writes them | `PH1` | - | `done` | `review` | T-219 | - | - | T-282 |
 | [T-242](T-242-the-contracts-against-the-checkers-that-decide-them.md) | Reconcile the component and theme contracts with what their checkers read | `PH3` | - | `done` | `review` | T-219 | - | - | T-274, T-275 |
 | [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | Re-bind five checks on what is true at run time instead of on a name | `PH3` | - | `done` | `review` | T-219 | - | - | - |
 | [T-244](T-244-the-gates-own-coverage-account.md) | Derive the clause-level account, and correct two excusals that name the wrong decider | `PH3` | - | `done` | `review` | T-219 | - | - | T-278 |
 | [T-245](T-245-seven-tool-defects-in-tools-deck.md) | Fix seven defects in the deck tools, each with its own seeded proof | `PH3` | - | `done` | `review` | T-219 | - | - | - |
 | [T-246](T-246-two-docs-instruments-misdescribe-their-own-behaviour.md) | Correct what the cycle and figure instruments say they do | `PH3` | - | `done` | `review` | T-219 | - | - | - |
+| [T-247](T-247-the-portfolio-generators-documents-against-the-deck.md) | Correct the generator's account of a chart it no longer draws and a count stated three ways | `PH3` | - | `done` | `review` | T-219 | - | - | - |
+| [T-248](T-248-four-content-errors-in-three-shipped-decks.md) | Correct four numbers a shipped deck asserts and its own source contradicts | `PH3` | - | `done` | `review` | T-219 | - | - | T-281 |
 | [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) | Fix set_var's self-closing tag insertion, and have write verify what it wrote | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-225, T-261 |
 | [T-255](T-255-render-py-motion-seeks-past-the-delay.md) | Add the delay in the report branch and drop the subtraction in the capture branch | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-225, T-272 |
 | [T-256](T-256-ds-219-cannot-see-a-painted-svg-ancestor.md) | Walk the full ancestor chain for DS-219's ground, and settle the doubt the rationale records | `PH1` | - | `done` | `review` | - | - | - | T-225 |
@@ -314,6 +315,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-272](T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md) | Make render.py motion enumerate the same animation set on every run of one deck | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-255 |
 | [T-273](T-273-the-owed-looks-have-no-queue-to-accumulate-in.md) | Give the owed looks a queue, so the pass before the release has something to run | `PH3` | - | `done` | `review` | - | - | - | T-219 |
 | [T-274](T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | Build the card reveal, so DS-140's Turn is a component rather than two dials | `PH3` | - | `done` | `review` | - | - | - | T-242, T-275 |
+| [T-275](T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | Retire --accent-ink from the contract, both themes and every deck that carries it | `PH3` | - | `done` | `review` | - | - | - | T-242, T-274 |
 | [T-276](T-276-narrow-ds-100-to-the-question-a-slide-puts-in-its-header.md) | Narrow DS-100 to the question a slide puts in its header | `PH3` | - | `done` | `review` | - | - | - | T-225, T-270 |
 | [T-277](T-277-put-motion-back-inside-the-more-menu.md) | Put Motion back inside the More menu, and let DS-218 count a persistent menu button as reachable | `PH3` | - | `done` | `review` | - | - | - | T-114, T-180, T-257 |
 | [T-279](T-279-check-all-reports-one-number-for-thirty-seven-commands.md) | Time each command check_all runs, so the gate's cost is measured rather than guessed | `PH3` | - | `done` | `review` | - | - | - | T-131, T-132, T-280 |

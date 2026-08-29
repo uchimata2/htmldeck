@@ -36,7 +36,7 @@ committee would raise it.
 | Archetypes | A-01, A-03, A-04, A-05, A-06, A-09, A-10, A-11, A-12, A-14 | DESIGN-SYSTEM §3.2 |
 | Disclosure | Tier two on slides 4, 5, 6, 7 and 9, each a `derivation` — how a plotted figure was produced. Nothing the argument needs sits behind a click. | DESIGN-SYSTEM §5.3 |
 | Motion | `Rise` for every chart's marks, staggered, encoding reading order; `Pulse-once` on the one headline figure per slide; no `Current`, because the deck carries no flow diagram; no looping motion anywhere, so DS-218's stop control has no subject. | DESIGN-SYSTEM §5.2 |
-| Visuals | Seven charts, all hand-authored SVG: a stacked area (4), a diverging contribution bar (5), a waterfall (6), a risk-return scatter (7), a stacked share bar (8), a drawdown line (10), and a gated timeline (11). Two single-number slides carry no chart. | DESIGN-SYSTEM §4 |
+| Visuals | Seven charts, all hand-authored SVG: a stacked area (4), a diverging contribution bar (5), a waterfall (6), a risk-return scatter (7), a stacked share bar (8), a drawdown line (10), and a gated timeline (11). Two single-number slides carry no chart. **As built: ten, and slide 4 is not stacked.** The reviewed wording stands as the record of what was reviewed; what shipped is `FIGURES` in `tools/examples/portfolio_charts.py`, which the self-test counts and prints — a truncated curve (2), a limit bar (3), **five lines rather than a stacked area** (4), a diverging contribution bar (5), a waterfall (6), a risk-return scatter (7), a top-three bar (8), a drawdown line and tranche bars (10, one each side), and a gated timeline (11). The three the row omitted are the curve, the limit bar and the tranche bars; the deviation on slide 4 is `PR-71` and its reason is beside that slide in `portfolio-review.slides.md`. Raised as `PR-71` and `PR-72`, written by [T-247](../../tasks/T-247-the-portfolio-generators-documents-against-the-deck.md). | DESIGN-SYSTEM §4 |
 
 **Why every chart is hand-authored, in the deck that exists to question that.** DS-122 requires it
 today, and T-113 has not reported yet. Building the subject under the incumbent rule is also what
@@ -73,7 +73,7 @@ go missing (**L-62**).
 | Figure | Value | Origin | Used on |
 | :--- | :--- | :--- | :--- |
 | Renewables share of NAV, 2026 | 52% | portfolio-model | 1, 3, 4 |
-| Renewables share of FY26 return | 65% | portfolio-model | 1, 5 |
+| Renewables contribution to FY26 return | +8.1 points | portfolio-model | 5 |
 | Net asset value | $2.40B | portfolio-model | 3 |
 | Single-sector policy limit | 45% | portfolio-model | 3, 11 |
 | Forward curve, 2026 | $78 | market-outlook | 2 |
@@ -85,7 +85,7 @@ go missing (**L-62**).
 | Renewables contribution | +8.1 pp | portfolio-model | 5 |
 | Transport contribution | −0.7 pp | portfolio-model | 5 |
 | Unrealised revaluation | $172M | portfolio-model | 6 |
-| Revaluation sitting in renewables | $131M | portfolio-model | 6 |
+| Revaluation sitting in renewables | $102M | portfolio-model | 6 |
 | Closing NAV | 2,400 | portfolio-model | 6 |
 | Transport net IRR | 5.9% | portfolio-model | 7 |
 | Transport volatility | 9.6% | portfolio-model | 7 |
@@ -100,7 +100,7 @@ go missing (**L-62**).
 | Cost as a share of NAV | 0.9% | portfolio-model | 9 |
 | Worst FY26 drawdown | −6.8% | portfolio-model | 10 |
 | Drawdown carried by renewables | 5.1 points | portfolio-model | 10 |
-| Tranche one | $70M, Q1 2027 | portfolio-model | 11, 12 |
+| Tranche one | $70M | portfolio-model | 11, 12 |
 
 ## Outline
 
@@ -114,7 +114,7 @@ are the ones that ship (DS-211).
 | 3 | A-03 | Renewables reached 52% of NAV | The policy limit is 45%, and no purchase caused the breach. |
 | 4 | A-05 | Five years of quiet drift | Renewables rose 21 points in five years without a single allocation decision. |
 | 5 | A-06 | Two sectors carried the year | Renewables and digital produced 92% of FY26's 12.4% return, and transport subtracted. |
-| 6 | A-10 | The best year is a mark | Unrealised revaluation is $172M of the movement, and $131M of it is renewables. |
+| 6 | A-10 | The best year is a mark | Unrealised revaluation is $172M of the movement, and $102M of it is renewables. |
 | 7 | A-06 | Return does not track risk | Transport returns 5.9% at 9.6% volatility; water returns 7.4% at 4.8%. |
 | 8 | A-03 | Top three assets hold 34% | The second limit is breached as well, against a 30% policy ceiling. |
 | 9 | A-12 | Rebalancing costs $22.5M | Selling $170M forgoes $7.7M on discount and $14.8M idle, 0.9% of NAV. |

@@ -5,7 +5,7 @@
 [T-113] needs a chart-intensive deck to measure chart-library candidates against; the repository
 had none, and every deck it ships carries at most one chart - the case hand-authored SVG already
 wins. DS-122 requires those charts to be hand-written SVG *borrowing scale arithmetic as a few
-lines*, and this file is what that sentence looks like when a deck needs seven charts instead of
+lines*, and this file is what that sentence looks like when a deck needs ten charts instead of
 one: the arithmetic is computed here, once, and the marks it produces are ordinary SVG.
 
 **So it is also the measurement.** T-113 step 7 costs hand-authored SVG honestly, and an estimate
@@ -16,8 +16,8 @@ the chart's.
 `tools/assets/chart_probe.py` already owns the three guards a chart in a slide must pass - the
 558 px chart that pushed its own title off screen, the 1.4 px bar, and the label clipped by its own
 viewBox. They are imported rather than restated (L-08), and the three chart kinds this deck needs
-that the probe does not have - stacked area, waterfall and scatter - are added here rather than
-there, because the probe's four are the ones a *business* deck needs and these three are the ones a
+that the probe does not have - a multi-series line chart, a waterfall and a scatter - are added
+here rather than there, because the probe's four are the ones a *business* deck needs and these three are the ones a
 *financial* deck adds. That difference is itself a T-113 finding.
 
 Every figure below comes from `examples/portfolio-review/sources/`, and every one of them is
@@ -223,7 +223,7 @@ def rect(x, y, w, h, cls):
             % (cls, x, y, w, h))
 
 
-# --- The seven figures --------------------------------------------------------------------------
+# --- The figures, and `FIGURES` at the foot of this file is how many --------------------------------------------------------------------------
 
 def fig_curve():
     """Slide 2. Five points, one series, a deliberately truncated axis that says so."""
@@ -279,8 +279,10 @@ def fig_area():
     claimed five; the key labels then collided, because four bands' mid-points sit within a few
     units of each other at the top of a 100% stack. Looking at it is what found that - the gate
     passed the slide (CLAUDE.md rule 6, L-05). One line per sector separates on position instead of
-    on colour, which is the comparison the slide is making anyway, and the deviation from the
-    reviewed specification is recorded in `portfolio-review.slides.md`."""
+    on colour, which is the comparison the slide is making anyway, and the deviation is recorded
+    **beside the reviewed wording** in slide 4 of `portfolio-review.slides.md` and in the Visuals
+    row of `portfolio-review.foundation.md`. It was not recorded anywhere until T-247; this
+    sentence claimed it was, which is the half of `PR-71` that mattered."""
     xs = band(len(YEARS), 300, 1180, inset=0.0)
     keyx = 1215.0
     lo, hi = 0.0, 56.0
@@ -775,7 +777,11 @@ def selftest():
     # went stale again the moment two identities were added here. A total that counts what actually
     # ran cannot disagree with it (**L-13**: one home for one quantity).
     total = len(ran)
-    print("\n%d of %d checks passed." % (total - len(fails), total))
+    # **The figure count printed rather than written down** (PR-72, T-247). Three documents said
+    # seven when `FIGURES` held ten, and one of them fed T-113's denominator. `len(FIGURES)` is the
+    # only home for that quantity now, and this is where a reader gets it without opening the file.
+    print("\n%d figure builder(s) in FIGURES." % len(FIGURES))
+    print("%d of %d checks passed." % (total - len(fails), total))
     return 1 if fails else 0
 
 

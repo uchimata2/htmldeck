@@ -1,9 +1,11 @@
 # Larkfield Dental Group - Demand Planning, current process (As-Is)
 #
-# Source: deliverables/D1-current-business-process-analysis.md section 1.1
+# Source: sources/D1-current-business-process-analysis.md section 1.1
 # Risks come from D1 section 2 and section 5.1.
-# Generated with: python tools/bpmn/bpmnlay.py build <this> -o deliverables/diagrams --html
-# Never hand-edit the .bpmn or .svg - change this file and rebuild.
+# The .bpmn and .svg beside this file were laid out by a BPMN tool this repository does
+# not ship. They are published as the exercise produced them; this YAML is the readable
+# record of what they say. Do not hand-edit the .bpmn or .svg - edit this file, and
+# regenerate them with whatever BPMN tool you use.
 
 id: demand-planning-as-is
 name: Demand Planning (As-Is)

@@ -190,6 +190,14 @@ the bands narrow until the models have been through a bad quarter.
 | **Payback** | The month when the money the project has earned catches up with what it has cost `[D4]` |
 | **Tolerance band** | An agreed limit. Inside it the system may act alone; outside it a person must approve `[D3]` |
 
+### Decisions referenced by mark
+
+`[D-004]` is cited in D3, D4 and in the to-be process diagram, and this is where it is recorded.
+
+| Mark | The decision | Taken |
+| :--- | :--- | :--- |
+| `[D-004]` | **Analytics recommends; a person approves.** No forecast, order or replenishment is executed by the system alone where the decision is large or hard to undo. Inside an agreed tolerance band the system may act; outside it, a named person approves and the reason is recorded | With the future process, D3 §1 |
+
 ---
 
 ## Check against the requirements

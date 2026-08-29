@@ -54,7 +54,7 @@ Three, and each comes from something this project has already paid for.
 
 **Each of the five is carried inside the deck as a quick view** and opens from the provenance mark of
 any slide that cites it, which is `DS-105`'s answer where a `file://` link would be a defect. Read
-from `deliverables/`, the project's own five work-package deliverables. The deck introduces no
+from `sources/`, the project's own five work-package deliverables. The deck introduces no
 figure of its own: every value below already exists in one of them, with its own `[example]`,
 `[case]` or `[D-n]` mark. **The subject is fictional and every figure illustrative**, which the deck
 states on its own surface.

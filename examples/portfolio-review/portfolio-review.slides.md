@@ -16,6 +16,13 @@ the count-ups print their final value (DS-143); for print they hold nothing back
 - **Archetype.** A-11 — Manifesto Line.
 - **Title.** Concentration, not performance
 - **Bottom line.** Renewables is 52% of the fund and produced 65% of the year's return.
+- **As built — the deck carries one of these two figures, not both.** `65%` appears nowhere a
+  reader can see: the built slide shows `52%` alone, and the only `65%` in the file is inside the
+  quick view's copy of `portfolio-model.md`. Everything above is the reviewed wording and stays as
+  the record of what was reviewed; this note records what shipped, and
+  [T-282](../../tasks/T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md)
+  carries the repair. Found in B12 by removing ten dead quick-view payloads, which is what had been
+  making `spec.py`'s SPEC-5 report the figure as shown.
 - **Structure.** One declarative line set at display size, upper two thirds. Below it, two figures
   side by side on the content column — `52%` and `65%` — each with a four-word label beneath. No body
   copy. Both figures are tier one.
@@ -93,6 +100,16 @@ the count-ups print their final value (DS-143); for print they hold nothing back
   not purchases, produced the drift, with the sector's own revaluation line. Tier one already says
   no decision moved it; the disclosure says what did.
 - **Sources.** portfolio-model
+- **As built — deviation from the wording above.** The stacked form was built, looked at and
+  rejected: DS-020 allows one accent hue, so four of the five bands rendered in the same quiet fill
+  and the chart showed two shapes where it claimed five, with the key labels colliding because four
+  bands' mid-points sit within a few units of each other at the top of a 100% stack. **The deck
+  carries five lines, one per sector, separating on position instead of on colour** — which is the
+  comparison this slide makes anyway. Everything above is the reviewed wording and stays as the
+  record of what was reviewed; this note is the record of what shipped. `fig_area` in
+  `tools/examples/portfolio_charts.py` is the builder, and its own docstring points back here.
+  Raised as `PR-71`, written by
+  [T-247](../../tasks/T-247-the-portfolio-generators-documents-against-the-deck.md).
 
 ## Slide 5 — Two sectors carried the year
 

@@ -43,8 +43,11 @@ VARIANTS = [
         # A quantity with a subject no source document mentions. This is the shape the corpus
         # failure actually had: not a wrong number, an *unattributable* one that nobody could
         # trace back and everybody assumed someone had.
-        ("<b>Spend the $5.6M grant on bus frequency, and hold",
-         "<b>Funded by 47,000 parking permits. Spend the $5.6M grant on bus frequency, and hold")]),
+        # Re-anchored 2026-08-30 for T-248's correction to this line. The seeded break is
+        # unchanged: an unattributable quantity prepended to the deck's own claim sentence.
+        ("<b>Spend $4.1M of the $5.6M grant on bus frequency,",
+         "<b>Funded by 47,000 parking permits. Spend $4.1M of the $5.6M grant on bus "
+         "frequency,")]),
 
     ("figure-disagrees-with-source", "FIG-2", [
         # The dangerous one. The subject is right, the sentence is right, the number is not - and

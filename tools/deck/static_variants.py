@@ -235,9 +235,12 @@ RENDER_VARIANTS = [
         ('is half the headway.</b></p>\n  ' + MARK21 + '\n</section>',
          'is half the headway.</b></p>\n  ' + MARK21 + '\n</div>')]),
     ("sentence-over-twenty-words", "DS-092", [
-        ("<b>Spend the $5.6M grant on bus frequency, and hold",
+        # Re-anchored 2026-08-30: T-248 corrected this line, which asserted $5.6M spent plus
+        # $1.5M held out of a $5.6M grant. The seeded break is unchanged - a sentence past DS-092's
+        # twenty words - and it is still made out of the deck's own claim sentence.
+        ("<b>Spend $4.1M of the $5.6M grant on bus frequency,",
          "<b>Spend the whole of the $5.6M state corridor grant on bus frequency across the six "
-         "trunk routes, and hold")]),
+         "trunk routes, and hold $1.5M back,")]),
     ("icon-nobody-uses", "DS-113", [
         ('<symbol id="i-ask"',
          '<symbol id="i-unused" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></symbol>\n '

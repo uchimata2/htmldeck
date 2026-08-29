@@ -66,6 +66,23 @@ SLIDE_SECTION = re.compile(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>(.*?)
 # the longer name is the better one, so the pattern was what needed widening.
 SLIDE_NUMBER = re.compile(r'aria-label="Slide\s+(\d+)\b', re.I)
 
+# **A `<template>` is markup a reader never sees, so its text is not something a slide shows**
+# (T-233, found in B12). `portfolio-review.html` carried eleven copies of one quick-view payload,
+# one inside each slide's section, and SPEC-5 read them: the ledger's *Renewables share of FY26
+# return - 65%* passed on slides 1 and 5 because the SOURCE DOCUMENT quoted inside the slide says
+# 65%, while no slide prints it anywhere. Removing the ten dead copies is what exposed it - with
+# HEAD's deck and nothing changed but the deduplication, this rule fails on exactly the two rows
+# the batch's gate reported. **A checker reading inert markup cannot fail**, which is the same
+# shape as `quickview.py check` comparing the first template while the deck renders the last.
+# **Matched on the exact form `quickview.py` writes, never on `<template` alone.** Written the loose
+# way first and it was wrong within the hour: `portfolio-review.html` holds **eight** `<template`
+# openings and **two** closings - six of them are the contract quoted in the shell's own prose - so
+# `<template\b.*?</template>` ran from one of those to the first real closing tag and swallowed
+# slide 1's `<section>` opening with it. SPEC-5 then reported *slide 1 does not exist* against a
+# deck that has one. The narrow pattern is `carried()`'s in `quickview.py`, and it is narrow on
+# purpose: a rule that reads too little fails loudly, and one that reads too much fails silently.
+INERT = re.compile(r'<template class="qv-src" data-qv="[^"]*">.*?</template>', re.S)
+
 WORD_NUMBERS = "one two three four five six seven eight nine ten eleven twelve".split()
 MONTHS = ("january february march april may june july august september october "
           "november december").split()
@@ -181,7 +198,9 @@ def slide_text(deck_html):
     into the figure beside it - the mistake it carries its own comment about.
     """
     out = {}
-    for m in SLIDE_SECTION.finditer(content.strip_comments(deck_html)):
+    # `INERT` first: a quick view's payload sits inside the slide's own section, and its text is
+    # not on the slide (T-233).
+    for m in SLIDE_SECTION.finditer(INERT.sub(" ", content.strip_comments(deck_html))):
         number = SLIDE_NUMBER.search(m.group(0))
         if number:
             out[int(number.group(1))] = canonical(" ".join(content.runs(m.group(1))))
@@ -344,6 +363,35 @@ def self_test():
     if [r for r, ok in without.items() if ok is not (None if r == "SPEC-5" else True)]:
         sys.exit("SELF-TEST FAILED: the run with no deck did not leave SPEC-1..4 alone and "
                  "SPEC-5 undecided - %r" % without)
+
+    # **A value that appears only inside a `<template>` does not count as shown** (T-233, B12).
+    # `portfolio-review.html` carried a quick view's payload inside each slide's section, and the
+    # payload is the source document - so a ledger figure the source states and no slide prints
+    # read as shown, on two rows, for as long as the copies were there. Seeded the way the real
+    # deck was shaped: the value moved out of the slide's own markup and into a template beside it.
+    inert = ('<section class="slide" aria-label="Slide 1"><h2>a</h2></section>'
+             '<section class="slide" aria-label="Slide 2"><p>The grant is large.</p>'
+             '<template class="qv-src" data-qv="Cost model"><p>The grant is <b>$1</b>.</p>'
+             '</template></section>')
+    # **The word `<template>` in a deck's own prose must not eat the slide after it.** A shell that
+    # documents this feature writes the tag as text, unclosed, and a loose pattern then runs from
+    # there to the next real closing tag - which is how the first version of this reported *slide 1
+    # does not exist*. Seeded exactly that way: an unclosed mention ahead of slide 1.
+    prosy = '<p>the &lt;template&gt; goes on the first: <template></p>' + inert
+    if sorted(slide_text(prosy)) != [1, 2]:
+        sys.exit("SELF-TEST FAILED: an unclosed <template> written as prose swallowed a slide - "
+                 "%r. The pattern must match what quickview.py writes, not the word"
+                 % sorted(slide_text(prosy)))
+    hidden = dict((r, ok) for r, _w, ok in verdicts(foundation, good, inert))
+    if hidden["SPEC-5"] is not False:
+        sys.exit("SELF-TEST FAILED: a ledger value carried only by a <template> inside the slide "
+                 "reported SPEC-5 %r. A template is markup nobody sees, and a rule that reads it "
+                 "cannot fail (T-233)" % hidden["SPEC-5"])
+    # The mirror: the same template beside a slide that DOES print the value must not spoil it.
+    both = inert.replace("<p>The grant is large.</p>", "<p>The grant is <b>$1</b>.</p>")
+    if dict((r, ok) for r, _w, ok in verdicts(foundation, good, both))["SPEC-5"] is not True:
+        sys.exit("SELF-TEST FAILED: stripping templates also removed the slide's own copy of the "
+                 "value")
 
     # **A two-source row, and a derived one** (T-194). Both are what a cross-check deck produces
     # and neither parsed before 2026-08-20: the first arrived as one slug named after both, the

@@ -1,9 +1,11 @@
 # Larkfield Dental Group - Demand Planning, redesigned process (To-Be)
 #
-# Source: deliverables/D3-future-business-process.md sections 1 and 2.
+# Source: sources/D3-future-business-process.md sections 1 and 2.
 # Decision authority follows D-004 (analytics recommends, a human approves).
-# Generated with: python tools/bpmn/bpmnlay.py build <this> -o deliverables/diagrams --html
-# Never hand-edit the .bpmn or .svg - change this file and rebuild.
+# The .bpmn and .svg beside this file were laid out by a BPMN tool this repository does
+# not ship. They are published as the exercise produced them; this YAML is the readable
+# record of what they say. Do not hand-edit the .bpmn or .svg - edit this file, and
+# regenerate them with whatever BPMN tool you use.
 #
 # Read against demand-planning-as-is.yaml, three things changed:
 #   1. As-Is steps 1, 3 and 4 (calculate draft / merge eight sheets / compare against the draft)

@@ -82,17 +82,19 @@ been allowed to run down to 3% rather than being rebalanced up.
 | Fees and carried interest | −52 |
 | **Closing NAV, 2026-06-30** | **2,400** |
 
-Unrealised revaluation of **$172M** is the largest single line and **$131M** of it sits in
+Unrealised revaluation of **$172M** is the largest single line, and **$102M** of it sits in
 renewables. The fund's best year in three is mostly a mark, not a realisation.
 
-Where that $131M sits, and what moved each valuation:
+The three largest revaluation lines total **$131M**. Two of them are renewables and the third is
+not, which is why the sector figure is $102M and not $131M:
 
 | Asset | Revaluation | Basis of the move |
 | :--- | ---: | :--- |
 | Calder wind | **$58M** | a revised merchant tail beyond the contracted period |
 | Norbeck solar | **$44M** | a discount-rate change, not operating performance |
 | Aldis transmission | **$29M** | the regulated asset base reset |
-| **Total** | **$131M** | none of the three was sold, refinanced or partially exited in the year |
+| **Total, three assets** | **$131M** | none of the three was sold, refinanced or partially exited in the year |
+| *of which renewables* | *$102M* | *Calder and Norbeck. Aldis is transmission - see the top-three table below* |
 
 ## The two limits, and the breach
 

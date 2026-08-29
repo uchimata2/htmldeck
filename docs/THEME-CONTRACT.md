@@ -100,7 +100,6 @@ fit one deck is worse than no threshold (**L-38**).
 | `--shadow-soft` | colour | primitive | A panel's shadow colour. | colour |
 | `--scrim` | colour | primitive | The wash the quick view lays over the slide it covers (T-070). A layer rather than a shade of one: it darkens `--paper` and `--field` alike, and a dark theme sets it *more* opaque rather than darker. | colour |
 | `--accent` | colour | primitive | The one accent (DS-020). It means something wherever it appears. | colour |
-| `--accent-ink` | colour | primitive | The accent as text on the ground. **Ruled for retirement 2026-08-29** — no surface renders it; T-275 removes this row, both themes' four values and every deck's two in one change. | colour |
 | `--accent-wash` | colour | primitive | The accent as a ground. | colour |
 | `--pos` | colour | primitive | The positive role, deck-wide (DS-026). | colour |
 | `--neg` | colour | primitive | The negative role. | colour |
@@ -264,10 +263,14 @@ card is at rest with nothing running before the slide arrives, and once it has, 
 is `turn`, `animationDuration` is `0.42s` and `animationTimingFunction` is `ease-in-out` — the two
 dials, reaching the animation.
 
-**`--accent-ink` was the same question in the colour band and is ruled the other way** (`PR-77`):
+**`--accent-ink` was the same question in the colour band and was ruled the other way** (`PR-77`):
 four hand-chosen values across two themes, a contract row typing it *the accent as text on the
-ground*, and no surface that renders it. **Ruled 2026-08-29: retire the row and its values**, by
-[T-275](../tasks/T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md). The register
+ground*, and no surface that renders it. **Ruled 2026-08-29: retire the row and its values**, and
+[T-275](../tasks/T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) carried it
+out the same day — the row is gone from §3.2, the four theme declarations with it, and the two
+each tracked deck carried. **The name now appears nowhere a theme is read from**, which is the
+state `theme.validate` enforces in both directions: a documented dial nobody declares fails as
+surely as an undeclared one. The register
 asked for the two to be decided together and they were; **they were answered differently on purpose**
 — Turn is a named member of a set a rule publishes, and this is a colour role nothing publishes.
 *Both were deferred by [T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md)

@@ -36,10 +36,14 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-Empty. Nothing outstanding.
+Three rows, all from **B12**. Two are copy a reader has to judge; one is a control a reader has to
+open.
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
+| 1 | [`examples/portfolio-review/portfolio-review.html`](../examples/portfolio-review/portfolio-review.html) | any slide carrying a provenance mark — the `Portfolio model` control, on more than one slide | The deck carried **eleven** copies of that source and now carries one, shared by all eleven controls through `data-qv`. Ten were unreachable and nothing rendered differently, which is why removing them was a deletion. *Open the quick view from **two different slides** and confirm both show the document, and that closing one does not leave the other empty.* Machine-checked: the payloads were byte-identical and `quickview.py check` compares 2 of 2 | [T-233](../tasks/T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md) |
+| 2 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 1, *Waiting is the trip*, the bottom line — and slide 10, *Holding is not the cheap option*, the third cost | The claim slide asserted a package its own ask prices differently: it now reads *Spend $4.1M of the $5.6M grant on bus frequency, and hold $1.5M for bike-share until month 18*, one word-group longer than before, and the contents sheet derives from it. Slide 10's third cost changed from *The city takes $1.5M less from the state than it could have taken* to *The whole $5.6M is committed now or it lapses, so the $1.5M is locked to the gate.* *Does the longer bottom line still sit on one or two lines as the layout intends, does the contents entry still read as a sentence rather than a fragment, and does slide 10's cost still read as a cost?* | [T-248](../tasks/T-248-four-content-errors-in-three-shipped-decks.md) |
+| 3 | [`examples/portfolio-review/portfolio-review.html`](../examples/portfolio-review/portfolio-review.html) | slide 6, *The best year is a mark* — the annotation, the bottom line and the disclosure's heading | `$131M` became `$102M` in three places and the disclosure heading changed from *What the $131M is* to *The three largest lines*, because the third asset in that table is transmission and not renewables. The disclosure still lists all three assets. *Does the heading still say what the panel contains now that it names no figure, and does the slide still read as a concentration argument at $102M of $172M?* | [T-248](../tasks/T-248-four-content-errors-in-three-shipped-decks.md) |
 
 ## What has already been looked at
 

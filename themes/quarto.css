@@ -42,7 +42,6 @@
   /* ---- colour: exactly one accent, and it means something wherever it appears
      (DS-020/021/025). */
   --accent:#5A4B8F;
-  --accent-ink:#4A3D78;
   --accent-wash:#EBE7F5;
 
   /* ---- colour: semantic roles, fixed deck-wide, legend on the slide that uses them
@@ -222,7 +221,6 @@
   --shadow-soft:rgba(0,0,0,.30);
   --scrim:rgba(0,0,0,.62);
   --accent:#AC9FE6;
-  --accent-ink:#C4BAF0;
   --accent-wash:#2B2545;
   --pos:#74C288;
   --neg:#E58F80;

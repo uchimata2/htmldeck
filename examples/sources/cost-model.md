@@ -27,7 +27,9 @@ the two. That is the comparison's strongest point for the proposal and it is sta
 | Grant left over | **$1.5M** | held for bike-share in the corridors where it wins |
 | Operating | **$6.8M** a year | driver hours at the frequency the schedule needs |
 
-Frequency capital of **$4.1M** leaves **$1.5M** of the grant uncommitted. The operating line is the
+Frequency capital of **$4.1M** leaves **$1.5M** of the grant. That **$1.5M** is **committed at
+approval and drawn at the month-18 gate**, not left uncommitted: the grant lapses if it is not
+committed, so an uncommitted balance is a forfeited one. The operating line is the
 uncomfortable one: the general fund carries **$6.8M** a year, and no grant covers operating.
 
 ## The operating ceiling
@@ -38,6 +40,9 @@ the review gate. The modelled operating cost is **$6.8M** a year against that ce
 
 ## What the city forgoes
 
-Taking the frequency package means the city takes **$1.5M** less from the state than it could have
-taken, because the bike-share proposal would have absorbed the whole **$5.6M**. Stated plainly
-rather than left for someone to work out.
+Taking the frequency package means the city does not build the 62-station network now. The whole
+**$5.6M** is committed either way — **$4.1M** to frequency and **$1.5M** to the bike-share gate —
+so **none of the grant goes back to the state**. What is forgone is stations and time: **$1.5M** at
+the vendor's per-station price buys **16** stations at month 18 against the 62 the bike-share
+proposal would have built at once, so the cost is **46 stations and eighteen months**. Stated
+plainly rather than left for someone to work out.
