@@ -194,9 +194,21 @@ python tools/deck/density.py check <deck>          # write only if a rank actual
 python tools/docs/figures.py                       # every deck's byte and KB figures just changed
 ```
 
-**`figures.py` is the one that gets forgotten.** It goes red whenever a deck's bytes move or a
-document is added, it is the **last** checker `check_all.py` runs, and a sync always moves the
-bytes. Re-derive each figure from the command the figure itself names, never by hand.
+**`figures.py` is the one that gets forgotten.** It goes red whenever a deck's bytes move, it is the
+**last** checker `check_all.py` runs, and a sync always moves the bytes. Re-derive each figure from
+the command the figure itself names, never by hand.
+
+**But most of its drift is not a failure, and chasing it is the expensive mistake.** A **floor
+block** — the `refcheck.py` output pasted in `README.md` is the one that bites — passes whenever the
+live run is **at or above** the pasted number, and fails only when it has **fallen below**. Measured
+2026-08-29 by pushing the pasted count either side of the live one: below → exit **0**, *grew above
+what is pasted, which is reported rather than failed*; above → exit **1**. *This paragraph read
+`goes red whenever a deck's bytes move **or a document is added**`, and the second half is false — a
+document adds pointers, which grows the count, which passes.* So **writing anything grows it**, and
+every task record, lesson and register row a session writes moves that number. One session chased it
+**five** times in one batch and only **one** of those was a real failure: a markdown link became
+plain text, so the count *dropped*. **Update a floor figure when the run drops, and leave it alone
+when it grows.**
 
 **Two anchors break on a shell change and neither is a defect.** `static_variants.py`'s variant
 literals and `seed_defects.py`'s seeds both say so in their own failure text — *fix the variant, do

@@ -36,14 +36,7 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-| # | Deck | Where | What to look for | Owed by |
-| :-- | :--- | :--- | :--- | :--- |
-| 1 | [`examples/reference-deck.html`](../examples/reference-deck.html), and the same row on `sort-window` and `measure-first` | the chrome row, on any slide — the `More` menu open, and the row with it shut | *Motion* moved back inside the menu, so the row loses a button and the menu gains a second item. Two questions, and the second is the one a gate cannot reach: *does the open menu read with two rows where it had one* — and *does the chrome row still balance now that only `More` sits outside the navigation box?* **T-114 was raised because the row read wrong**, and the complaint was about company and weight rather than about any one control, which is why this is asked of the row and not of the button | [T-277](../tasks/T-277-put-motion-back-inside-the-more-menu.md) |
-
-*Written 2026-08-29 by `T-277`. It was looked at once during implementation — the menu opens upward
-with `Read` and `Motion on` as two rows, clear of the chrome and of the bottom line, and the row
-reads balanced — and the row is still owed, because the question T-114 settled was a judgement about
-this row's weight that the owner made and reversed once already.*
+Empty. Nothing outstanding.
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
@@ -59,3 +52,4 @@ look nobody can show was taken.
 | 2 | [`examples/measure-first/measure-first.html`](../examples/measure-first/measure-first.html) | slide 5, *Poor exactly where we decide* — the six-dimension scale | The thirty dots printed **absent** before the fix: they animate from `scale(0)` with `fill:both`, print never advances an animation, and the print block did not switch them off. *Are all thirty on the paper, at their right size?* — **Yes.** The owner printed it: all 30 dots visible, and they read well | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) | 2026-08-29, by the owner |
 | 3 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 9, *Month eighteen stays reversible* — the flow's arrowheads | The same defect on the other motion: `.arrow-pop marker path` scales from `scaleX(0)`, so the arrowheads printed as nothing. *Is every arrowhead there?* — **Yes.** The owner printed it and saw one highlighted head and one plain one, **which is every arrowhead the slide has**: it defines two markers, `ar9` and `ar9q`, and uses each once. Counted after the look rather than assumed, because *two* would read as a shortfall against a flow diagram anyone would expect to carry more | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) | 2026-08-29, by the owner |
 | 4 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 12, *Approve the frequency package* — the ask itself | The first card reveal. Turn replaced Rise on the closing headline: it scales up from its own centre line over 420 ms instead of rising. *Does turning the ask face-up land the deck, or read as a flourish on the slide that should be plainest?* — **It reads correctly.** The owner looked and passed it, so the placement stands | [T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | 2026-08-29, by the owner |
+| 5 | [`examples/reference-deck.html`](../examples/reference-deck.html), and the same row on `sort-window` and `measure-first` | the chrome row, on any slide — the `More` menu open, and the row with it shut | *Motion* moved back inside the menu, so the row lost a button and the menu gained a second item. *Does the open menu read with two rows where it had one, and does the row still balance with only `More` outside the navigation box?* — **Yes, both.** The owner looked: *exactly how I wanted, perfect like this*. **And they ruled the wider point in the same breath — this is not an exception, it is how it should be**, which is the menu form as the norm rather than a tolerated placement | [T-277](../tasks/T-277-put-motion-back-inside-the-more-menu.md) | 2026-08-29, by the owner |
