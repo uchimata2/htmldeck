@@ -25,6 +25,9 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths                                                        # noqa: E402
 import render                                                       # noqa: E402
+# The ruleset is read rather than restated: DS-106's banned words are its own row's (T-229), and
+# `check.py` already loads this module for the coverage account, so the dependency is not new.
+import ruleset                                                      # noqa: E402
 import contrast                                                     # noqa: E402
 import contract                                                     # noqa: E402
 import theme                                                        # noqa: E402
@@ -889,16 +892,92 @@ def ds110_no_produced_raster(h):
 # DS-044 (heading levels reset) and DS-118 (literal colour in fill=) would both be defensible either
 # way, and neither has a case behind it - a rule moved on a hunch is the same defect facing the
 # other direction.
+# **A comment is not copy, and neither is a stylesheet** (T-229). The cut above removes a quoted
+# source; this removes the deck's own machinery. `components.css` and `deck.js` argue their own
+# decisions in prose and every deck embeds both, so the word `actually` sat in seven CSS and script
+# comments per deck against one instance of it in slide copy - which made DS-106's own missing word
+# unfixable, because adding it to the list would have failed all five tracked decks for words nobody
+# wrote as copy. The shell's HTML comments are the same case and are cut with them.
+#
+# **What this gives up, stated:** the presenter build carries its speaker notes as a JavaScript
+# literal, so they leave the subject with the rest of the script. Notes are copy and this cannot see
+# them - acceptable because a presenter build fails the deck gate by design and its notes' source is
+# `<slug>.slides.md`, which `spec.py` reads.
+STYLE_OR_SCRIPT = re.compile(r"<(style|script)\b[^>]*>.*?</\1>", re.S | re.I)
+HTML_COMMENT = re.compile(r"<!--.*?-->", re.S)
+
+
+def copy_of(h):
+    """The deck's copy: what a reader reads, less quoted sources, machinery and comments."""
+    return HTML_COMMENT.sub(" ", STYLE_OR_SCRIPT.sub(" ", QUICK_VIEW.sub("", h)))
+
+
 def ds100_no_rhetorical_questions(h):
     """DS-100 over slide copy. A question a SOURCE asks is not a question the deck asks."""
-    return not re.search(r"\?\s*<", QUICK_VIEW.sub("", h))
+    return not re.search(r"\?\s*<", copy_of(h))
+
+
+# --------------------------------------------------------------------------- DS-106's own words
+# **The list is DS-106's sentence, read out of it** (T-229). It was restated here as a regex, the two
+# copies disagreed, and the rule's own `actually` was missing from the check that decides it - so a
+# `hard` rule the gate reported as checked passed the word in two shipped decks. **A list written
+# twice drifts on the first amendment** (**L-08**), and adding the missing word would have closed the
+# instance and left the class, which is the register's own hypothesis for `PR-48` and is why this
+# derives instead.
+#
+# **The row's italics are the list**, which is the coupling and is stated in the row as well. A span
+# carrying markup or running past six words is not a term and is skipped, so an italicised aside
+# added to that row later does not silently become a banned word.
+_EMPHASIS = re.compile(r"(?<!\*)\*([^*]+)\*(?!\*)")
+_BANNED_CACHE = {}
+
+
+def banned_terms(path=None):
+    """Every term DS-106's row names, in the order it names them."""
+    row = ruleset.load(path or ruleset.SPEC)["DS-106"].text
+    terms = []
+    for span in _EMPHASIS.findall(row):
+        if re.search(r"[`\[\]()]", span):
+            continue
+        for part in re.split(r"[,/]", span):
+            t = part.strip().strip('"“”').strip()
+            if t and len(t.split()) <= 6 and t not in terms:
+                terms.append(t)
+    if len(terms) < 8:
+        sys.exit("DS-106: only %d term(s) parsed from the rule's own row - the row's format moved "
+                 "under the parser, and a shorter list is a quieter rule rather than an error "
+                 "anyone would see" % len(terms))
+    return terms
+
+
+def banned_pattern(path=None):
+    """The terms as one expression. A single word matches **from its stem**.
+
+    `synergy` has to catch `synergies` - the restated regex spelled that `synerg\\w*`, and dropping
+    it would have narrowed the rule while looking like a tidy-up. So the stem is the word less a
+    trailing `y` or `e`, which is the smallest rule that recovers it and gives `leverage` ->
+    `leveraging` and `delve` -> `delving` for nothing. It is deliberately not a stemmer: an
+    inflection this misses is a term the row can name outright.
+
+    A multi-word term matches across any run of whitespace, because copy wraps.
+    """
+    key = path or ruleset.SPEC
+    if key not in _BANNED_CACHE:
+        parts = []
+        for t in banned_terms(path):
+            words = t.split()
+            if len(words) > 1:
+                parts.append(r"\b" + r"\s+".join(re.escape(w) for w in words) + r"\b")
+            else:
+                stem = t[:-1] if len(t) > 4 and t[-1] in "ye" else t
+                parts.append(r"\b" + re.escape(stem) + r"\w*")
+        _BANNED_CACHE[key] = re.compile("|".join(parts), re.I)
+    return _BANNED_CACHE[key]
 
 
 def ds106_no_banned_terminology(h):
     """DS-106 over slide copy, for the same reason. The deck does not choose a source's words."""
-    return not re.search(r"\b(crucial|pivotal|seamless|leverage|synerg\w*|friction|"
-                         r"genuinely|arguably|precisely|delve)\b",
-                         QUICK_VIEW.sub("", h), re.I)
+    return not banned_pattern().search(copy_of(h))
 
 
 # --------------------------------------------------------------------------- DS-009, the preflight
@@ -3036,6 +3115,41 @@ def self_test():
         if _got != _want:
             sys.exit("SELF-TEST FAILED: DS-122 on %r wanted %s and gave %s (%s)"
                      % (_label, "pass" if _want else "fail", "pass" if _got else "fail", _why))
+
+    # ---- DS-106, every term the rule names, both directions (T-229, **L-125**) ----------------
+    #
+    # **The list is derived, so the fixture asks the rule rather than a copy of it.** Every term
+    # comes back from `banned_terms()` and each one is seeded into copy: a word the row names and
+    # the check does not decide is exactly the defect `PR-48` recorded, and it went unseen because
+    # nothing ever asked the two lists whether they agreed.
+    _terms = banned_terms()
+    if "actually" not in _terms:
+        sys.exit("SELF-TEST FAILED: DS-106's row no longer names `actually`. That word is the whole "
+                 "of PR-48 - it was in the rule and missing from the check, and two shipped decks "
+                 "carried it past a hard rule the gate reported as checked (T-229)")
+    for _t in _terms:
+        if ds106_no_banned_terminology("<p>Copy that says %s here.</p>" % _t):
+            sys.exit("SELF-TEST FAILED: DS-106's row names %r and the check does not decide it. "
+                     "A list written twice drifts on the first amendment (**L-08**)" % _t)
+    if not ds106_no_banned_terminology("<p>Two suppliers cause half the late deliveries.</p>"):
+        sys.exit("SELF-TEST FAILED: DS-106 fired on copy carrying none of its terms")
+    # A single word also matches what it starts, which is what `synerg\w*` bought before the list
+    # was derived and is kept for every term rather than for one.
+    if ds106_no_banned_terminology("<p>The synergies are obvious.</p>"):
+        sys.exit("SELF-TEST FAILED: `synergies` walked past a rule that names `synergy` - the stem "
+                 "behaviour of the regex this replaced was dropped rather than generalised")
+    # **And the subject: a comment is not copy.** Each of these carries a banned word in a place a
+    # reader never reads, and every one of them fired before T-229 narrowed the cut - seven times
+    # per deck from the shell's own prose, which is what made the missing word unfixable.
+    for _label, _doc in (
+            ("a stylesheet comment", "<style>/* what the ruler actually has */</style>"),
+            ("a script comment", "<script>/* where you actually are */</script>"),
+            ("an HTML comment", "<!-- the pager was actually about company -->"),
+            ("a quoted source", '<template class="qv-src">what actually sold</template>')):
+        if not ds106_no_banned_terminology(_doc):
+            sys.exit("SELF-TEST FAILED: DS-106 fired on %s. The rule reads the deck's COPY, and "
+                     "the shell argues its own decisions in prose inside every deck (T-229)"
+                     % _label)
 
     # **What did the rows actually ask for?** A key in neither table is one the fixture has no model
     # of, so whatever a row reads it with is fiction. This is DS-217's whole story: `chromeHeightDu`

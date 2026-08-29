@@ -104,8 +104,8 @@ deliverables mark each value `[example]`, `[case]` or `[D-n]`. The deck says so 
   forecast high, consumables low` · `4½ of the 5 standard failure modes`. Standfirst: *This is
   diagnostic analytics — why did it happen.*
 - **Visuals.** Inline SVG. Four nodes in a cycle: `Forecast` → `A manager adjusts it` → `The plan
-  ships` → `What actually sold`. Three edges are solid, labelled and directional, with arrowheads
-  meeting their targets. **The fourth edge, from `What actually sold` back to `Forecast`, is drawn
+  ships` → `What sold`. Three edges are solid, labelled and directional, with arrowheads
+  meeting their targets. **The fourth edge, from `What sold` back to `Forecast`, is drawn
   dashed and quiet, with no arrowhead and the label *never happens*** — an absent edge asserts no
   direction, and drawing it as an arrow would claim the loop closes. A small annotation on the second
   node reads *reason not recorded*. The gap in the ring is the whole slide.

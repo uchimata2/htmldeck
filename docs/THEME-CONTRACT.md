@@ -220,10 +220,10 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--open-ease` | motion | primitive | Open's easing. | — |
 | `--open-rise` | motion | primitive | How far an opening panel travels. | — |
 | `--open-squash` | motion | primitive | The scale an opening panel starts at. | — |
-| `--turn-dur` | motion | primitive | Turn: a card reveal (DS-140), inside the cap (DS-141). | ms 0-500 |
-| `--turn-ease` | motion | primitive | Turn's easing. | — |
+| `--turn-dur` | motion | primitive | Turn: a card reveal (DS-140), inside the cap (DS-141). **No shipped component reads it** — see below. | ms 0-500 |
+| `--turn-ease` | motion | primitive | Turn's easing. **No shipped component reads it** — see below. | — |
 | `--scale-dur` | motion | primitive | Scale: a reveal (DS-140), inside the cap (DS-141). | ms 0-500 |
-| `--scale-ease` | motion | primitive | Scale's easing, and the ruler ring's, which borrows the pair. | — |
+| `--scale-ease` | motion | primitive | Scale's easing. Read by the arrowhead and the matrix dot, which are the two components Scale is built from. | — |
 | `--pulse-dur` | motion | primitive | Pulse-once. Never loops (DS-140). | ms 800-1600 |
 | `--pulse-ease` | motion | primitive | Pulse-once's easing. | — |
 | `--pulse-delay` | motion | primitive | How long Pulse-once waits for the slide to settle. | — |
@@ -247,6 +247,21 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--long-dur` | motion | optional | **The licensed long band's duration**: what a rule declaring `--motion-long` runs for (DS-141). | ms 500- |
 | `--long-ease` | motion | optional | The licensed long band's easing. §3.6's own rule — every named motion carries a curve — and a licensed motion is a motion. | — |
 | `--long-delay` | motion | optional | How long a licensed long motion waits before it starts. | — |
+
+**Two dials in this table are wired to nothing, and the row says so rather than the reader finding
+out.** `--turn-dur` and `--turn-ease` are declared by both themes and carried by all five tracked
+decks, and `var(--turn-dur)` appears nowhere in the tree — so DS-140's starter set, which that rule
+calls *what a deck gets without designing anything*, ships one of its four names as a pair of dials
+no component reads. [`COMPONENT-CONTRACT.md`](COMPONENT-CONTRACT.md) §5 still tells an author
+wanting an overshoot on a card reveal to reach for `--turn-ease`. **The choice is the owner's and it
+is deliberately not taken here** (`PR-36`, deferred by
+[T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md) 2026-08-29): either a
+component implements the reveal DS-140 names and no deck has ever built, or the two tokens go and
+DS-140's set loses a name — a `DS-000` question, and deleting is the cheaper answer that loses
+something. **`--accent-ink` is the same question in the colour band** (`PR-77`): four hand-chosen
+values across two themes, a contract row typing it *the accent as text on the ground*, and no surface
+that renders it. The register asks for the two to be decided together and they are recorded together
+here.
 
 **The licensed long band is three tokens and is `optional` for the reason §2 gives**: most decks
 never run a motion past DS-141's cap, and a theme should not carry a dial for one that does not

@@ -225,14 +225,41 @@ def shared_css(html):
 
 def drop_at_rule(css, media):
     """`css` with `@media <media>{...}` removed, matched to its own closing brace."""
-    found = re.search(r"@media\s+%s\s*\{" % re.escape(media), css)
+    found = at_rule_span(css, media)
     if not found:
         return css
+    return css[:found[0]] + css[found[2]:]
+
+
+def at_rule_span(css, media):
+    """`(start, inner_start, end)` of `@media <media>{...}`, or None.
+
+    Matched to the block's own closing brace rather than to the next one, because the print block
+    nests `@page` - the reason `drop_at_rule` exists in this shape, kept in one place now that the
+    inside of the block is wanted as well as the outside (T-242).
+    """
+    found = re.search(r"@media\s+%s\s*\{" % re.escape(media), css)
+    if not found:
+        return None
     depth, i = 1, found.end()
     while i < len(css) and depth:
         depth += 1 if css[i] == "{" else -1 if css[i] == "}" else 0
         i += 1
-    return css[:found.start()] + css[i:]
+    return (found.start(), found.end(), i)
+
+
+def print_css(html):
+    """The `@media print` block's own rules - what `shared_css` cuts out.
+
+    Section 2.1 says a `print` row is checked for its rule existing, and the rule it means is one in
+    this block. Nothing read it until T-242.
+    """
+    for attrs, body in re.findall(r"<style([^>]*)>(.*?)</style>", html, re.S):
+        if "id=" in attrs:
+            continue
+        span = at_rule_span(body, "print")
+        return "" if not span else CSS_COMMENT.sub("", body[span[1]:span[2] - 1])
+    return ""
 
 
 CSS_COMMENT = re.compile(r"/\*.*?\*/", re.S)
@@ -522,6 +549,64 @@ def motion_gaps(css, motions):
     return bad
 
 
+def unstyled_rows(parts, styled, printed):
+    """`script` and `print` rows whose class no rule declares - section 2.1's stated check.
+
+    **The document said this was checked and nothing checked it** (`PR-34`, T-242). `structure`
+    opens by skipping both sources, and `missing_rows` runs the other way - it iterates the STYLED
+    classes and asks which have a row - so a contracted class with no rule at all was examined by
+    nobody. Section 2.1's own reason for the `vocabulary` source is this one: *declared and unused
+    is otherwise unfalsifiable*, and `script` and `print` were declared-and-unverified in exactly
+    that shape. Four rows carry the two sources and all four happen to be styled, which is why
+    nothing surfaced.
+    """
+    bad = []
+    for name in sorted(parts):
+        source = parts[name].source
+        if source == "script" and name not in styled:
+            bad.append(".%s is `script` and no rule in the shared block styles it" % name)
+        elif source == "print" and name not in printed:
+            bad.append(".%s is `print` and no rule in the print block styles it" % name)
+    return bad
+
+
+MOTION_DECL = re.compile(r"(?:^|;)\s*(?:animation|transition)(?:-[a-z-]+)?\s*:\s*([^;]+)", re.I)
+
+
+def unrowed_motions(css, motions):
+    """CSS rules that start a motion on a token and have no row in §3.8 - the other direction.
+
+    **`motion_gaps` iterates the CONTRACT and asks whether the CSS agrees; nothing iterated the
+    CSS.** So a rule with no row at all was invisible to the table that calls itself *that sentence
+    made checkable*, and `.arrow-pop marker path` and `.dot-pop circle` animated on `--scale-dur`
+    with no row here - the same defect T-198 fixed once by hand, recurring because nothing looked
+    this way round (`PR-35`, T-242). Section 1's parts table has had a completeness half from the
+    start, for exactly this reason.
+
+    **A motion is a declaration that starts one**: `animation` or `transition`, or one of their
+    longhands, valued something other than `none` and reading at least one token. A rule switching
+    motion off reads `none` and is not one, so the reduced-motion collapse, the preflight and the
+    density gate stay quiet without being named here. **A rule the contract's selector covers is
+    accounted for** - `:where(.slide[data-played]) .pulse` is `.pulse`'s row, which is the same
+    scope rule `motion_gaps` reads in the other direction.
+    """
+    rowed = [sel for sel, _toks in motions]
+    seen, out = set(), []
+    for sel, body in rules(css):
+        if sel in seen:
+            continue
+        for value in MOTION_DECL.findall(body):
+            v = value.strip()
+            if v.startswith("none") or "var(" not in v:
+                continue
+            if any(selector_covers(r, sel) for r in rowed):
+                break
+            seen.add(sel)
+            out.append(sel)
+            break
+    return out
+
+
 def scoped_rows(css, motions):
     """Contract rows that only their SCOPED form satisfies - `[(row, [selector])]`.
 
@@ -565,6 +650,8 @@ def verdicts(html):
     missing = missing_rows(parts, styled)
     gaps = motion_gaps(css, motions)
     scoped = scoped_rows(css, motions)
+    unrowed = unrowed_motions(css, motions)
+    unstyled = unstyled_rows(parts, styled, styled_classes(print_css(html)))
 
     place = [m for m in bad if "sit outside" in m or "carry it alone" in m]
     vocabbad = [m for m in bad if "is `vocabulary`" in m]
@@ -588,9 +675,24 @@ def verdicts(html):
             "contracted selector - %s" % (len(scoped),
                                           "; ".join("%s via %s" % (r, h[0]) for r, h in scoped[:2]))),
          not gaps),
+        # **The completeness half of the motion table** (T-242, `PR-35`). Its own row rather than a
+        # clause on the one above, because the two are different obligations: a row whose rule has
+        # stopped reading its tokens, and a rule with no row at all. One number covering both would
+        # have let the second hide inside the first, which is how it stayed invisible.
+        ("DS-229", "every rule that starts a motion on a token has a row: %d unrowed%s"
+         % (len(unrowed), "" if not unrowed else " - " + "; ".join(unrowed[:3])),
+         not unrowed),
         ("DS-229", "every class the shared block styles has a row: %d styled, %d uncontracted%s"
          % (len(styled), len(missing), "" if not missing else " - ." + " .".join(missing[:6])),
          not missing),
+        # Section 2.1 states this check for its `script` and `print` sources and nothing ran it
+        # (`PR-34`, T-242). The count of rows carrying those sources travels with the verdict, so
+        # *0 problems* over four rows and *0 problems* over none are not the same fact (**L-36**).
+        ("DS-229", "every `script` and `print` row's class is styled where its source says: "
+         "%d row(s), %d problem(s)%s"
+         % (len([p for p in parts.values() if p.source in ("script", "print")]),
+            len(unstyled), "" if not unstyled else " - " + "; ".join(unstyled[:3])),
+         not unstyled),
         ("DS-229", "every `vocabulary` row is still unused: %d declared, %d now in the deck%s"
          % (len(vocab), len(vocabbad), "" if not vocabbad else " - " + "; ".join(vocabbad[:3])),
          not vocabbad),
@@ -708,6 +810,39 @@ def self_test():
                  "truncated at rather than cut out")
     if "b" in seen:
         sys.exit("SELF-TEST FAILED: a print-only rule was counted as a component")
+
+    # ---- T-242: the two directions the contracts stated and nothing decided ------------------
+    #
+    # **`unrowed_motions` is the completeness half of the motion table.** Both directions, because
+    # a check that only ever reports is as useless as one that only ever passes (**L-125**).
+    _rows = [(".pulse", ["--pulse-dur"])]
+    if unrowed_motions(".gizmo{animation:spin var(--scale-dur) linear}", _rows) != [".gizmo"]:
+        sys.exit("SELF-TEST FAILED: a rule animating on a token with no row in section 3.8 was not "
+                 "reported - that is `.arrow-pop marker path` and two others, which animated "
+                 "unrowed because nothing iterated the CSS (`PR-35`)")
+    if unrowed_motions(".gizmo{animation:none}", _rows):
+        sys.exit("SELF-TEST FAILED: a rule switching motion OFF was read as starting one. The "
+                 "reduced-motion collapse, the preflight and the density gate are all that shape "
+                 "and would each need a row they should not have")
+    if unrowed_motions(".gizmo{animation:spin 300ms linear}", _rows):
+        sys.exit("SELF-TEST FAILED: a rule animating on a LITERAL was reported here. That is "
+                 "DS-010's defect and this table's positive claim is about tokens")
+    if unrowed_motions(":where(.slide[data-played]) .pulse{transition:opacity var(--pulse-dur)}",
+                       _rows):
+        sys.exit("SELF-TEST FAILED: a rule the contract's own selector covers was reported as "
+                 "unrowed - the scope rule `motion_gaps` reads has to hold in both directions")
+
+    # **`unstyled_rows` is section 2.1's stated check**, and each source looks in its own block.
+    _parts = {"disc-lead": Part("disc-lead", None, None, False, 0, None, (), "script"),
+              "contents": Part("contents", None, None, False, 0, None, (), "print")}
+    if unstyled_rows(_parts, {"disc-lead"}, {"contents"}):
+        sys.exit("SELF-TEST FAILED: two rows styled exactly where their source says were reported")
+    if len(unstyled_rows(_parts, set(), set())) != 2:
+        sys.exit("SELF-TEST FAILED: a `script` and a `print` row with no rule anywhere were not "
+                 "reported - section 2.1 states this check and nothing ran it (`PR-34`)")
+    if not unstyled_rows(_parts, {"disc-lead", "contents"}, set()):
+        sys.exit("SELF-TEST FAILED: a `print` row styled in the SHARED block passed. Its source "
+                 "says the print block, and a rule in the wrong block is what the row claims about")
     return True
 
 

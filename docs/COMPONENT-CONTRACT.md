@@ -70,12 +70,21 @@ reporting a script's work as missing markup — and to stop *unused* being a shr
 | :--- | :--- | :--- |
 | `author` | In the file as delivered. | Element, place, count, attributes. |
 | `script` | The deck's own script creates it at runtime. | Its **rule** exists in the shared block; instances are not counted here. |
-| `print` | Generated into `@media print` only. | The same. |
+| `print` | Generated into `@media print` only. | The same, in the **print** block. |
 | `vocabulary` | Styled, emittable, and **this deck contains none.** | **Zero instances** — one appearing means the row is misfiled and must become `author`. |
 
 `vocabulary` is checked in the opposite direction on purpose. *Declared and unused* is otherwise
 unfalsifiable, and the deck already carries the lesson: a stale `.ribbon button::before` survived
 T-035 because **a rule that matches nothing looks exactly like a rule that passed**.
+
+*The `script` and `print` rows above stated a check that did not exist until 2026-08-29 (`PR-34`,
+closed by [T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md)). The
+structural pass skips both sources, and the completeness pass runs the other way — it iterates the
+**styled** classes and asks which have a row — so a contracted class with no rule at all was
+examined by nobody, in exactly the shape `vocabulary`'s reason describes. Four rows carry the two
+sources and all four happen to be styled, which is why nothing had surfaced; `component.py` now
+decides it, and the count of rows travels with the verdict so* 0 problems *over four rows and over
+none are not the same fact.*
 
 **No row below is `vocabulary` today, and that is the correct number rather than a gap.** Five were
 until 2026-08-12, and every one of them turned out to be a class this document defines *for a deck
@@ -116,19 +125,29 @@ that omits one goes missing from the navigation rather than looking wrong.
 correctly, and has no ruler and no arrow keys. It said only `data-stage` here until 2026-08-12, and
 the reference deck was the sole place the value was written down (T-102).
 
-**`data-stage="back"` is the one value that is not a position.** It marks a slide as **back matter**
-— outside the argument rather than late in it — and a colophon, an appendix, a sources page or a
-glossary may carry it. Nothing else may: a slide the reader is meant to be argued *to* is in a
-stage, however near the end it sits. What it changes, in every rendering of the manifest at once:
+**Two values are not positions: `data-stage="back"` and `data-stage="front"`.** `back` marks a slide
+as **back matter** — outside the argument rather than late in it — and a colophon, an appendix, a
+sources page or a glossary may carry it. `front` marks a **lobby** (DS-242), the slide an audience
+looks at while the room fills. Nothing else may be either: a slide the reader is meant to be argued
+*to* is in a stage, however near the beginning or the end it sits. What they change, in every
+rendering of the manifest at once:
 
-| | A slide in a stage | `data-stage="back"` |
-| :--- | :--- | :--- |
-| Ruler tick | a section tick where it opens a stage | never a section tick |
-| Ruler label at rest | the stage's name | **the slide's own name** |
-| Ruler label on hover | the slide's name | unchanged |
-| Any stage's slide count | counted | counted in none |
-| Contents box label | the stage's name | `Back matter` |
-| Contents box mark | the stage's mark | **none** — DS-113/114 key the mark to the stage, and there is no stage |
+| | A slide in a stage | `data-stage="back"` | `data-stage="front"` |
+| :--- | :--- | :--- | :--- |
+| Ruler tick | a section tick where it opens a stage | never a section tick | never a section tick |
+| Ruler label at rest | the stage's name | **the slide's own name** | **the slide's own name** |
+| Ruler label on hover | the slide's name | unchanged | unchanged |
+| Any stage's slide count | counted | counted in none | counted in none |
+| Contents box label | the stage's name | `Back matter` | `Front matter` |
+| Contents box mark | the stage's mark | **none** — DS-113/114 key the mark to the stage, and there is no stage | **none**, for the same reason |
+
+**The two differ in exactly one row, the contents box label**, and that is the whole of the
+difference — `deck.js` binds them together as a `matter` flag and every other site reads the flag
+rather than either value. *The sentence above read `back` is the one value that is not a position
+until 2026-08-29, thirty-four lines before this section's own note granting `front` the same
+standing. `PR-39`, closed by [T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md).
+**Stated as a table with a column rather than as a corrected sentence**, because a third value would
+need the sentence corrected again and needs only a column here.*
 
 The constant is the shell's rather than the deck's because there is no stage entry to read a word
 from, and *Back matter* is true of all four of the things that may carry it where *Colophon* is true
@@ -567,8 +586,12 @@ remembered to tokenise.
 | `.disc-mark::after` | a control answering the hand (DS-240) | `--afford-dur` `--afford-ease` |
 | `.ruler-ticks button::before` | a control answering the hand (DS-240) | `--afford-dur` `--afford-ease` |
 | `.ruler[data-ticks="dot"] .ruler-ring` | a control answering the hand (DS-240) | `--afford-dur` `--afford-ease` |
+| `.ruler[data-dense] .ruler-ring` | the same ring past the capacity bound (DS-217, DS-240) | `--afford-dur` `--afford-ease` |
 | `.btn` | a control answering the hand (DS-240) | `--afford-dur` `--afford-ease` |
 | `.btn.btn--pager:active` | the press (DS-240) | `--press-dur` `--press-ease` |
+| `.arrow-pop marker path` | an arrowhead arriving after its line (DS-140, DS-141) | `--scale-dur` `--scale-ease` `--arrow-pop-delay` |
+| `.dot-pop circle` | a matrix's dots arriving one at a time (DS-140, DS-141) | `--scale-dur` `--scale-ease` `--dot-stagger` |
+| `@keyframes dotpop` | the dot's overshoot | `--dot-overshoot` |
 
 *The first three read Turn's and Scale's pairs until 2026-08-20. They were never reveals — each is
 a control saying* this is the thing you are pointing at *— and borrowing a reveal's clock is what
@@ -576,6 +599,19 @@ made the pager's press take 420 ms.
 [T-198](../tasks/T-198-give-affordance-motion-its-own-band-faster-than-content-motion.md) moved
 them onto the band DS-240 states, and added the two rows below them, which were animating with no
 row here at all.*
+
+**This table has a completeness half, and it is the direction the check could not see.** Section 1
+says a class styled in the shared block and absent from the tables below fails the gate; the same
+holds here: **a CSS rule that starts a motion on a token and has no row is a gap in this table**, not
+only a row whose rule has stopped reading its tokens. *Added 2026-08-29 by
+[T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md), closing `PR-35`.
+`component.motion_gaps` iterated **this table** and asked whether the CSS agreed, so a rule with no
+row at all was invisible to a table that calls itself* that sentence made checkable *— which is the
+defect T-198 fixed once by hand and nothing stopped recurring. **Three rules were animating unrowed
+when the check was written**: `.arrow-pop marker path` and `.dot-pop circle`, which the finding
+named, and `.ruler[data-dense] .ruler-ring`, which it did not and the new direction found on its
+first run. A rule switching motion **off** reads `none` and is not a motion, so the reduced-motion
+collapse, the preflight and the density gate need no rows and are not named as exceptions.*
 
 **Durations are covered from the other side and are not re-checked here.**
 `theme.py check` scans every length, duration and easing curve written outside the theme region and
@@ -618,7 +654,9 @@ applies to lengths.
 easing, and a zero-duration `visibility` step has nothing to ease. Those are the deck's only two,
 and they are the mechanism's word rather than a choice. **Every other easing is a dial** — each of
 DS-140's named motions has one, and so does the slide transition — so a component wanting an
-overshoot on a card reveal reaches for `--turn-ease` rather than writing a curve into itself. A
+overshoot on a card reveal reaches for `--turn-ease` rather than writing a curve into itself —
+**though no shipped component reads that pair today, and whether Turn is built or retired is an open
+question the theme contract's §3.6 records**. A
 `cubic-bezier()` outside the region is not a forbidden effect; it is an effect in the wrong place,
 and `theme.py check` says so under DS-010.
 
