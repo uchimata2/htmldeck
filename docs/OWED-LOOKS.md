@@ -28,14 +28,24 @@ nobody owed, and the honesty of the queue is the discipline rather than a green 
 six of B5, B6 and B7's seven tasks did exactly that. An empty queue after a batch of checker work is
 the correct answer, not a gap.
 
+**Name the slide, and give its number the way the deck numbers itself.** The first row written here
+said *slide 7* for a slide the deck calls 4, and the owner corrected it. Counting `<section>`
+elements would have given 5 — a lobby (`data-stage="front"`) is front matter and is counted in no
+stage, so the element index and the reader's number differ by one from the first lobby onwards. **A
+`data-name` cannot be off by one**, so lead with it and let the number follow.
+
 ## The queue
 
-| # | Deck | Where | What to look for | Owed by | Done |
-| :-- | :--- | :--- | :--- | :--- | :--- |
-| 1 | [`examples/measure-first/measure-first.html`](../examples/measure-first/measure-first.html) | slide 7, the four-node cycle diagram — the node at the left of the lower row | Its label is now **one line**, `What sold`, where it was two, `What` / `actually sold`. It sits at the midpoint of the two old lines, which is where its three sibling nodes' single lines sit. **Does the single line read as well as the pair did, and does the node still balance against its three siblings?** | [T-229](../tasks/T-229-ds-106s-check-omits-a-word-the-rule-names.md) | — |
+Empty. Nothing outstanding.
+
+| # | Deck | Where | What to look for | Owed by |
+| :-- | :--- | :--- | :--- | :--- |
 
 ## What has already been looked at
 
-Nothing yet. **The first pass has not run**, and this section exists so that a look which *has*
-happened stops being owed without the row being deleted — a deleted row is a look nobody can show
-was taken.
+A look that has happened stops being owed **without its row being deleted** — a deleted row is a
+look nobody can show was taken.
+
+| # | Deck | Where | The question, and the answer | Owed by | Looked |
+| :-- | :--- | :--- | :--- | :--- | :--- |
+| 1 | [`examples/measure-first/measure-first.html`](../examples/measure-first/measure-first.html) | slide 4, *The loop that never closes* — the four-node cycle diagram, the node at the left | Its label became **one line**, `What sold`, where it was two, `What` / `actually sold`, set at the midpoint of the two old lines where its three sibling nodes' single lines sit. *Does the single line read as well as the pair did, and does the node still balance against its three siblings?* — **Yes.** The owner looked and confirmed it reads correctly | [T-229](../tasks/T-229-ds-106s-check-omits-a-word-the-rule-names.md) | 2026-08-29, by the owner |
