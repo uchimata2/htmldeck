@@ -79,7 +79,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-269](T-269-three-build-path-defects-the-adopter-worked-around.md) | Unwrap a provenance row, read a rich Sources field, and convert bold across a line break | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | Decide what DS-100 and DS-202 should measure, and say the reason in each failure | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
-| [T-272](T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md) | Make render.py motion enumerate the same animation set on every run of one deck | `PH1` | - | `proposed` | `specify` | - | - | - | T-255 |
 
 ## Closed
 
@@ -310,5 +309,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-231](T-231-two-packaging-checks-have-no-subject-at-all.md) | Teach the scaffold gate the placeholder the skill actually writes | `PH1` | `unreleased` | `done` | `review` | T-219 | - | - | - |
 | [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) | Fix set_var's self-closing tag insertion, and have write verify what it wrote | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-225, T-261 |
 | [T-255](T-255-render-py-motion-seeks-past-the-delay.md) | Add the delay in the report branch and drop the subtraction in the capture branch | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-225, T-272 |
+| [T-272](T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md) | Make render.py motion enumerate the same animation set on every run of one deck | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-255 |
 
 <!-- taskmd:end -->

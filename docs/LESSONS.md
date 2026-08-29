@@ -107,6 +107,7 @@ comes here.
 | [L-131](lessons/L-131.md) | A correct measurement of the wrong subject passes every check you have | Evidence and verification |
 | [L-136](lessons/L-136.md) | A count with no membership cannot be audited, and its errors cancel instead of showing | Evidence and verification |
 | [L-137](lessons/L-137.md) | Deriving what a check reads does not derive how it reads it | Evidence and verification |
+| [L-138](lessons/L-138.md) | A run count is evidence about the fix only if it is large against the defect's rate; ten clean runs against a one-in-ten fault is a coin that came up heads | Evidence and verification |
 
 ### Tooling
 

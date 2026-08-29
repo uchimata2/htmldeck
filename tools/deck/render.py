@@ -663,6 +663,38 @@ def report_seeks(delay, duration, offs):
     return [delay + duration * (float(p) / 100) for p in offs]
 
 
+def animation_set(anims):
+    """`{label: how many}` over one read's animations - the thing two reads have to agree on."""
+    counts = {}
+    for a in anims:
+        label = "%s on %s" % (a.get("name") or "(effect)", a["target"]["sel"])
+        counts[label] = counts.get(label, 0) + 1
+    return counts
+
+
+def set_disagreement(first, second):
+    """`[(label, in the first read, in the second)]` where two reads of one page disagree.
+
+    **One read cannot say what it could not promise** (T-272). A CSS transition is created only
+    when the browser recomputes style, and whether a load-time one is still live when the probe
+    takes its `before` set is a race with the page rather than a fact about the deck. Measured on
+    `examples/reference-deck.html --into 3`: the ruler ring's 200 ms transition appeared in **one
+    run of ten**, then **two of twelve**, so the same command reported seventeen animations or
+    eighteen with nothing changed.
+
+    **Two hypotheses were tried and the measurement refused both.** Settling the page before the
+    snapshot made the ruler ring no more stable and silently added a second `button` transition to
+    every report; forcing a style flush after each click looked clean over ten runs and was not
+    over twenty. So the tool stops claiming determinism it does not have and reports the
+    uncertainty instead, which is the honest half of this task's own acceptance criterion.
+    """
+    out = []
+    for label in sorted(set(first) | set(second)):
+        if first.get(label, 0) != second.get(label, 0):
+            out.append((label, first.get(label, 0), second.get(label, 0)))
+    return out
+
+
 def motion_verdict(moved, delay, reads):
     """What the report says about one animation - and **whose finding it is**.
 
@@ -720,6 +752,26 @@ def cmd_motion(deck, into=1, at=None, shots=False, back=False, out=None, w=1920,
           "started, %d already-finished one(s) put at their end"
           % ("back into" if back else "into", data["into"] + 1,
              "Previous" if back else "Next", data["count"], data.get("settled", 0)))
+    # **The page is read twice and the two reads are compared** (T-272). Membership is object
+    # identity: an animation already live when `before` was taken counts as the page's, and
+    # whether a load-time transition is still live at that moment is a race. A single read cannot
+    # see it, so this one asks the same question twice and says where the answers differ. It costs
+    # a second Chrome invocation on a tool `check_all.py` classifies as an instrument rather than
+    # a gate, which is the right place to spend it.
+    again, _again_err = read_result(url, w, h)
+    differ = (set_disagreement(animation_set(data["anims"]), animation_set(again["anims"]))
+              if again else None)
+    if differ is None:
+        print("    the second read produced nothing, so this set is UNCONFIRMED")
+    elif differ:
+        print("    NOT PROMISED - a second read of the same page disagreed on %d animation(s):"
+              % len(differ))
+        for label, one, two in differ:
+            print("      %-46s %d in the first read, %d in the second" % (label[:46], one, two))
+        print("      Object identity decides membership, so a transition already live when the "
+              "set\n      was taken counts as the page's. Rerun to see which answer you get.")
+    else:
+        print("    a second read of the same page agreed, animation for animation")
     if not data["count"]:
         print("\nNothing is animating. Either the transition is `immediate` for this deck, or the "
               "navigation did not happen - and those are different, so check which.")
@@ -1009,6 +1061,25 @@ def self_test():
                  % capture_seek(600, 300, 675))
     if capture_seek(600, 300, 1200) != 900 or capture_seek(600, 300, -5) != 0:
         sys.exit("SELF-TEST FAILED: the capture no longer clamps to the animation's own span")
+    # **Two reads of one page, compared** (T-272). The comparison is what the tool says instead of
+    # a promise it cannot keep, so it has to be right about agreement and disagreement alike - a
+    # comparator that never disagrees is the same silence in a new place.
+    _one = animation_set([{"name": "rise", "target": {"sel": "p.a"}},
+                          {"name": "rise", "target": {"sel": "p.a"}},
+                          {"name": None, "target": {"sel": "i#rulerRing"}}])
+    if _one != {"rise on p.a": 2, "(effect) on i#rulerRing": 1}:
+        sys.exit("SELF-TEST FAILED: the animation set lost a duplicate or misnamed a transition: "
+                 "%r. Two rises on one selector are two animations, and an unnamed effect is a "
+                 "transition rather than a missing name" % (_one,))
+    if set_disagreement(_one, dict(_one)):
+        sys.exit("SELF-TEST FAILED: two identical reads were reported as disagreeing, so every "
+                 "run would carry a NOT PROMISED it has not earned")
+    _two = dict(_one)
+    del _two["(effect) on i#rulerRing"]
+    if set_disagreement(_one, _two) != [("(effect) on i#rulerRing", 1, 0)]:
+        sys.exit("SELF-TEST FAILED: an animation present in one read and absent from the other "
+                 "was not reported. That is the exact shape T-272 measured - one run of ten, then "
+                 "two of twelve - and a comparator that misses it says nothing at all")
     # **The verdict names whose finding it is**, which is the half of T-255 that costs a reviewer
     # a session rather than a wrong number. The adopter's case is delay 600 against duration 300:
     # every offset inside the delay, `fill: both` holding the FROM keyframe, and a sentence about
