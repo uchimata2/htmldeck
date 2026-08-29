@@ -9,9 +9,11 @@ Eight checks, all mechanical:
   1. `.claude-plugin/plugin.json` exists, parses, and its `name` is kebab-case.
   2. Component directories sit at the plugin **root**, never inside `.claude-plugin/`.
   3. Every skill has a `SKILL.md` with a `name` and a `description` in its front matter.
-  4. Every intra-plugin path in a skill file goes through `${CLAUDE_PLUGIN_ROOT}` - no absolute
-     paths, no `~`, nothing working-directory-relative. This is L-09 as a packaging rule.
-  5. Every `${CLAUDE_PLUGIN_ROOT}/...` path resolves in a fresh clone.
+  4. Every intra-plugin path in a skill file goes through the base that skill declares - no
+     absolute paths, no `~`, nothing working-directory-relative. This is L-09 as a packaging rule.
+     **The base is read from the skill's own section 0**, falling back to `${CLAUDE_PLUGIN_ROOT}`;
+     a second copy of the name here is what let checks 4, 5 and 7 empty out silently (T-231).
+  5. Every based path resolves in a fresh clone, and the count of them is printed.
   6. The always-loaded skill body stays under the budget below (**L-12**).
   7. Every command a skill documents names a tool that exists, and a subcommand and flags that
      tool's source knows. **A documented invocation is a claim like any other** - `build.md` told
@@ -22,9 +24,12 @@ Eight checks, all mechanical:
     python tools/plugin/check_scaffold.py --self-test
 
 **The self-test is not optional decoration.** A scan that looks like a tool gets believed; this one
-runs first against nineteen fixtures whose answers are known, one per failure mode it claims to
+runs first against twenty-three fixtures whose answers are known, one per failure mode it claims to
 catch and one per case it must not flag (**L-04**). It got believed anyway: the count was ten and
-none of them typed a field, so the manifest that shipped v0.1.0 passed (T-061).
+none of them typed a field, so the manifest that shipped v0.1.0 passed (T-061). **And a fixture set
+that grows only with the failures it has met cannot see a check going blind** - the four T-231 added
+are about the check's own subject rather than about a plugin, because that is the fault fixtures of
+the first kind cannot have.
 
 Pure standard library (**L-07**).
 """
@@ -60,6 +65,37 @@ MANIFEST_TYPES = {
 }
 TYPE_NAMES = {str: "string", dict: "object", list: "array"}
 ROOT_VAR = "${CLAUDE_PLUGIN_ROOT}"
+
+# **The base a skill writes its paths from is read from the skill, not kept here** (T-231, `PR-70`).
+# `${CLAUDE_PLUGIN_ROOT}` is Claude Code's manifest placeholder and stays valid for a plugin that
+# uses it, so it remains the fallback and is always accepted. But it is not exported into the
+# shell, and this plugin's skill says so in its own section 0 and writes every command from
+# `$HTMLDECK` instead. A check holding a second copy of the name went on reading the old one after
+# commit `2e31c20` moved the skill: **check 7 read nought of eighteen documented commands and check
+# 5 one path of forty-eight**, and both reported green from 2026-08-20 onwards. The name now has
+# one home - the heading that declares it - which is the same rule this repository applies to every
+# other derived fact.
+PLACEHOLDER_RE = re.compile(r"^#{1,6}[^\n]*?\bResolve\s+`?(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)`?",
+                            re.M)
+
+# Any base a path or a command is written from, so the check can say how big its subject was and
+# whether it read all of it. **An instrument whose subject can empty out has to print its
+# denominator**; nothing else distinguishes *nothing to check* from *nothing checked*.
+ANY_BASE_RE = re.compile(r"(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)"
+                         r"/(?:docs|skills|examples|tools|reference)/")
+ANY_COMMAND_RE = re.compile(r"^\s*python\s+(\S*?)/?(tools/[A-Za-z0-9_./-]+\.py)", re.M)
+
+
+def placeholder(body):
+    """The base variable a skill writes its paths from, read from the skill's own heading."""
+    match = PLACEHOLDER_RE.search(body)
+    return match.group(1) if match else ROOT_VAR
+
+
+def command_re(var):
+    """Check 7's pattern, bound to the base the skill declared."""
+    return re.compile(r"^\s*python\s+" + re.escape(var) + r"/(tools/[A-Za-z0-9_./-]+\.py)"
+                      r"(.*)$", re.M)
 
 # The body is read on every invocation, so its cost is paid whether or not a deck is built.
 # 8 KB is roughly two screens of prose - enough to route, far too little to restate a ruleset.
@@ -173,42 +209,87 @@ def check(root):
         else:
             notes.append("skills/%s/SKILL.md is %d bytes of %d" % (skill, size, BODY_BUDGET))
 
+        # **The base every path and command in this skill is written from, read from the skill.**
+        # It is `${CLAUDE_PLUGIN_ROOT}` unless the skill's own heading declares another (T-231).
+        var = placeholder(body)
+
         # Every markdown file the skill owns, body and references alike.
+        n_paths = n_bound = n_seen = n_files = 0
         for dirpath, _, files in os.walk(os.path.join(skills_dir, skill)):
             for fname in sorted(f for f in files if f.endswith(".md")):
                 path = os.path.join(dirpath, fname)
                 rel = os.path.relpath(path, root).replace("\\", "/")
                 text = read(path)
-                problems.extend(check_paths(root, rel, text))
-                problems.extend(check_commands(root, rel, text))
+                n_files += 1
+                found, read_count = check_paths(root, rel, text, var)
+                problems.extend(found)
+                n_paths += read_count
+                found, bound, seen = check_commands(root, rel, text, var)
+                problems.extend(found)
+                n_bound += bound
+                n_seen += seen
+
+        # **The denominator, printed.** `static_variants.py` is the precedent: an instrument whose
+        # subject can empty out has to say how big the subject was, because *nothing to check* and
+        # *nothing checked* print the same green otherwise. Both of these emptied out on
+        # 2026-08-20 and nothing said so for nine days (T-231, `PR-70`).
+        notes.append("skills/%s: %d markdown file(s), base %s - checks 4-5 read %d path(s), "
+                     "check 7 read %d of %d documented command(s)"
+                     % (skill, n_files, var, n_paths, n_bound, n_seen))
+        if n_seen and not n_bound:
+            problems.append("EMPTY SUBJECT skills/%s: check 7 read none of %d documented "
+                            "command(s). Its subject is not empty - it is unreadable, which is "
+                            "the one state a green run must not cover" % (skill, n_seen))
 
     return problems, notes
 
 
-def check_paths(root, rel, text):
-    """Checks 4 and 5 over one markdown file."""
+def check_paths(root, rel, text, var=ROOT_VAR):
+    """Checks 4 and 5 over one markdown file, bound to the base `var` the skill declared.
+
+    Returns `(problems, read)` - **and the count is half the answer.** A check that resolved one
+    path of forty-eight printed the same green as one that resolved all of them (T-231).
+    """
     problems = []
     body = strip_fences(text)
+    # The manifest placeholder is accepted alongside the declared base: it stays valid for a
+    # plugin that uses it, and this skill's own section 0 quotes it to say why it must not appear
+    # in a command.
+    bases = [var] if var == ROOT_VAR else [var, ROOT_VAR]
 
     for match in ABSOLUTE_RE.finditer(body):
         problems.append("ABSOLUTE PATH %s: `%s...` - use %s (L-09)"
-                        % (rel, body[match.start():match.start() + 24].strip(), ROOT_VAR))
+                        % (rel, body[match.start():match.start() + 24].strip(), var))
     for match in TILDE_RE.finditer(body):
         problems.append("HOME PATH     %s: `%s...` - use %s"
-                        % (rel, body[match.start():match.start() + 20].strip(), ROOT_VAR))
+                        % (rel, body[match.start():match.start() + 20].strip(), var))
 
     # Check 5: what the skill says it loads must exist.
-    for target in re.findall(re.escape(ROOT_VAR) + r"/([A-Za-z0-9_./-]+)", body):
-        target = target.rstrip(".,;:`")
-        if not os.path.exists(os.path.join(root, target)):
-            problems.append("DEAD POINTER  %s: %s/%s does not exist" % (rel, ROOT_VAR, target))
+    read_count = 0
+    for base in bases:
+        for target in re.findall(re.escape(base) + r"/([A-Za-z0-9_./-]+)", body):
+            read_count += 1
+            target = target.rstrip(".,;:`")
+            if not os.path.exists(os.path.join(root, target)):
+                problems.append("DEAD POINTER  %s: %s/%s does not exist" % (rel, base, target))
+
+    # **A path written from a base this check does not know is not checked, and must say so.**
+    # That is the shape of the finding itself: the skill moved to a new base and the check went on
+    # resolving the old one, reading one pointer where there were forty-eight.
+    for other in set(ANY_BASE_RE.findall(body)) - set(bases):
+        problems.append("UNBOUND BASE  %s: paths are written from `%s`, which this skill's "
+                        "section 0 does not declare - it declares %s, so they are not read"
+                        % (rel, other, var))
 
     # Every bare repo-relative path is working-directory-relative at runtime, which is what the
     # criterion forbids - whether the sentence around it says "load" or not.
-    for target in BARE_RE.findall(body.replace(ROOT_VAR + "/", "\x00")):
-        problems.append("UNBASED PATH  %s: `%s` - write it from %s" % (rel, target, ROOT_VAR))
+    masked = body
+    for base in bases:
+        masked = masked.replace(base + "/", "\x00")
+    for target in BARE_RE.findall(masked):
+        problems.append("UNBASED PATH  %s: `%s` - write it from %s" % (rel, target, var))
 
-    return problems
+    return problems, read_count
 
 
 def strip_fences(text):
@@ -216,14 +297,13 @@ def strip_fences(text):
     return re.sub(r"```.*?```", "", text, flags=re.S)
 
 
-# A command line the skill tells a build to run. Only inside fences, which is exactly where checks
-# 4 and 5 do not look - so until T-074 the one part of a skill file that is meant to be executed
-# verbatim was the one part nothing read.
-COMMAND_RE = re.compile(r"^\s*python\s+" + re.escape(ROOT_VAR) + r"/(tools/[A-Za-z0-9_./-]+\.py)"
-                        r"(.*)$", re.M)
+# A command line the skill tells a build to run lives only inside fences, which is exactly where
+# checks 4 and 5 do not look - so until T-074 the one part of a skill file that is meant to be
+# executed verbatim was the one part nothing read. The pattern is built per skill now, from the
+# base that skill declares: see `command_re`.
 
 
-def check_commands(root, rel, text):
+def check_commands(root, rel, text, var=ROOT_VAR):
     """Check 7: every documented invocation names a tool that exists, and a subcommand and flags
     that tool's source knows.
 
@@ -242,14 +322,30 @@ def check_commands(root, rel, text):
     heard of, which is the shape all four found so far have had.
     """
     problems = []
+    bound = seen = 0
+    # The same two bases `check_paths` accepts, and for the same reason: the manifest placeholder
+    # stays valid for a plugin that uses it.
+    bases = [var] if var == ROOT_VAR else [var, ROOT_VAR]
+    patterns = [command_re(b) for b in bases]
     for block in re.findall(r"```(.*?)```", text, flags=re.S):
+        flat = re.sub(r"\\\n\s*", " ", block)
+        # **How many commands are here at all, whatever base they carry.** Without it the check
+        # cannot tell an empty subject from one it has stopped being able to see, and that is the
+        # whole of T-231: it read nought of eighteen and printed green.
+        for other, _tool in ANY_COMMAND_RE.findall(flat):
+            seen += 1
+            if other not in bases:
+                problems.append("UNBOUND CMD   %s: `python %s/...` is documented, and this skill's "
+                                "section 0 declares %s - the command is not read"
+                                % (rel, other or ".", var))
         # A trailing backslash continues the command onto the next line, as in `shell.py new`.
-        for match in COMMAND_RE.finditer(re.sub(r"\\\n\s*", " ", block)):
+        for match in [m for pattern in patterns for m in pattern.finditer(flat)]:
+            bound += 1
             tool, rest = match.group(1), match.group(2)
             path = os.path.join(root, tool)
             if not os.path.isfile(path):
                 problems.append("NO SUCH TOOL  %s: %s/%s is invoked and does not exist"
-                                % (rel, ROOT_VAR, tool))
+                                % (rel, var, tool))
                 continue
             known = literals(read(path))
             # `<...>` is a placeholder the caller fills in, `[...]` marks an optional group, and
@@ -267,7 +363,7 @@ def check_commands(root, rel, text):
                     problems.append(
                         "UNKNOWN %-6s%s: `%s` is documented for %s, which has no such literal"
                         % (what, rel, wanted, tool))
-    return problems
+    return problems, bound, seen
 
 
 def literals(src):
@@ -322,6 +418,16 @@ TOOL_SRC = ('"""A fixture tool."""\n'
             'if sys.argv[1] == "shots":\n'
             '    sources = "--sources" in sys.argv\n')
 FENCE = "\n```\npython " + ROOT_VAR + "/%s %s\n```\n"
+
+# T-231's fixtures. `DECLARES` is a skill body that names its own base in a section-0 heading, the
+# way this plugin's does; `OTHER_FENCE` writes a command from that base. The two together are what
+# the check must follow, and `FENCE` under `DECLARES` is the state that read nothing.
+BASE_VAR = "$" + "PLUGINBASE"
+DECLARES = HEAD + "\n## 0. Resolve `%s` first\n\nEvery path is written from it.\n" % BASE_VAR
+OTHER_FENCE = "\n```\npython " + BASE_VAR + "/%s %s\n```\n"
+# A base the skill declared once and moved off - the shape of the finding itself. It is neither
+# the declared base nor the manifest placeholder, so nothing reads the command written from it.
+STALE_FENCE = "\n```\npython " + "$" + "STALEBASE" + "/%s %s\n```\n"
 
 FIXTURES = [
     # (label, files, must_fail_with)
@@ -418,6 +524,33 @@ FIXTURES = [
         MANIFEST: '{"name": "example"}',
         SKILL: HEAD + FENCE % (TOOL, "shots <slug>.html"),
     }, "NO SUCH TOOL"),
+    # ---- T-231, and the defect it was built from: the skill moved its base and the check did not.
+    # These four are the whole finding. The first two prove the binding FOLLOWS the declaration in
+    # both directions; the third is the state that went green for nine days; the fourth is the
+    # path half of the same fault.
+    ("a base declared in section 0 is the one the command check binds on", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: DECLARES + OTHER_FENCE % (TOOL, "shots <slug>.html --out <dir>"),
+        TOOL: TOOL_SRC,
+    }, "UNKNOWN FLAG"),
+    ("a command written from the declared base and correct", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: DECLARES + OTHER_FENCE % (TOOL, "shots <slug>.html [--sources <dir>]"),
+        TOOL: TOOL_SRC,
+    }, None),
+    # **The seeded defect.** Section 0 declares one base and every command is written from
+    # another, so check 7 reads nothing at all - which is exactly the state this repository was in
+    # from 2026-08-20, and it printed `OK - manifest valid` throughout.
+    ("commands written from a base section 0 does not declare", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: DECLARES + STALE_FENCE % (TOOL, "shots <slug>.html"),
+        TOOL: TOOL_SRC,
+    }, "UNBOUND CMD"),
+    ("a path written from a base section 0 does not declare", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: DECLARES + "Load `$OTHER/%s`.\n" % DOC,
+        DOC: "thing",
+    }, "UNBOUND BASE"),
 ]
 
 def self_test():
@@ -471,8 +604,9 @@ def main(argv):
         print("\n%d problem(s)." % len(problems))
         return 1
 
-    print("OK - manifest valid, components at the root, every ${CLAUDE_PLUGIN_ROOT} pointer "
-          "resolves,\n     skill body within budget.")
+    print("OK - manifest valid, components at the root, every based pointer resolves,\n"
+          "     every documented command read, skill body within budget.\n"
+          "     The counts above are the denominators: read them before reading the OK.")
     print("""
 This checks the **package**, not the plugin's behaviour. It cannot tell you the skill asks two
 questions, stops where it should, or writes the files it promises - those are traced by hand in

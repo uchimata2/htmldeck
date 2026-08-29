@@ -517,8 +517,14 @@ MOTION_PROBE = r"""
      180, 240 - and run for 340, 420, 1200 and 4500 ms. Seeking each to the same FRACTION of its
      own duration composites five moments that never co-occur, and the result looks exactly like a
      frame, which is **L-110**'s failure with a new face. So the capture takes an absolute
-     millisecond `t` and puts each animation at `t - delay`, clamped to its own duration - which is
-     where it would be if the page had been photographed at `t`. */
+     millisecond `t` and puts each animation at `t`, clamped to its own `delay + duration` - which
+     is where it would be if the page had been photographed at `t`.
+
+     **`currentTime` is that absolute clock already** (T-255). It is measured from the start of the
+     delay, not from the start of the active phase, so `t - delay` is an active-phase offset
+     written to a property that is not one - and this comment said `t - delay` while stating the
+     right goal in the same sentence, which is why the arithmetic below read as correct for as
+     long as it did. */
   var seek = P.get('seekms');
   var offs = (P.get('at') || '0,25,50,75,100').split(',');
   function css(el){
@@ -592,14 +598,20 @@ MOTION_PROBE = r"""
                  inNav: (tm.iterations === 1) && (!sl || sl === cur || sl === leaving),
                  stateBefore: a.playState, at: []};
       a.pause();
-      var want;
+      var want, dly = tm.delay || 0;
       if (seek !== null && seek !== undefined) {
-        var at = parseFloat(seek) - (tm.delay || 0);
-        want = [Math.max(0, Math.min(dur, at))];
+        /* **The clock arrives absolute and stays absolute.** `motion_span` runs the capture to
+           `delay + duration` over the navigation's own animations, so the moment handed in here
+           is already on `currentTime`'s scale. Subtracting the delay from it - which this branch
+           did until T-255 - moves every frame a delay too early, and with `fill: both` all five
+           photograph the FROM keyframe. */
+        want = [Math.max(0, Math.min(dly + dur, parseFloat(seek)))];
       } else {
         /* The report is per animation and stays a fraction of each one's own duration: it
-           describes one animation's lifecycle, where a fraction is the right unit. */
-        want = offs.map(function(p){ return dur * (parseFloat(p) / 100); });
+           describes one animation's lifecycle, where a fraction is the right unit. **The delay is
+           where that life starts.** `currentTime` is measured from the start of the delay, so a
+           bare fraction of duration samples the delay instead of the animation (T-255). */
+        want = offs.map(function(p){ return dly + dur * (parseFloat(p) / 100); });
       }
       want.forEach(function(ms){
         a.currentTime = ms;
@@ -633,6 +645,48 @@ def motion_span(anims):
     if not innav:
         return None
     return max(a["delay"] + a["duration"] for a in innav)
+
+
+def report_seeks(delay, duration, offs):
+    """Where the report samples one animation, on `currentTime`'s scale - `delay + duration*p/100`.
+
+    **The same rule the probe applies, stated where it can be seeded** (**L-07**). The seek lives
+    in a JavaScript string that only a browser can run, so without this there is nothing to drive
+    in the failing direction and the fix would rest on one green run. `cmd_motion` checks the reads
+    the browser sent back against this, which is what keeps the two statements from drifting apart.
+
+    **`currentTime` is measured from the start of the delay, not from the start of the active
+    phase.** Dropping the `delay` term - which the probe did until T-255 - samples the delay rather
+    than the animation, and with `fill: both` every offset then reads the FROM keyframe. On this
+    repository's own reference deck that was 12 of 17 animations.
+    """
+    return [delay + duration * (float(p) / 100) for p in offs]
+
+
+def motion_verdict(moved, delay, reads):
+    """What the report says about one animation - and **whose finding it is**.
+
+    Three answers, not two (record `017` item 3). An animation that interpolates to nothing is a
+    finding about the deck. One whose sampled range never left its delay is a finding about this
+    tool, and until T-255 both printed the same sentence: *the computed style DOES NOT MOVE*. That
+    sentence sent a reviewer to the deck for a fault in the seek, and the delay was printed two
+    lines above it.
+    """
+    if moved:
+        return "MOVES"
+    if delay and reads and max(reads) <= delay:
+        return ("DOES NOT MOVE - but every offset fell inside the %s ms delay, so this is the "
+                "seek's reading and not the deck's" % delay)
+    return "DOES NOT MOVE - the seek reached nothing"
+
+
+def capture_seek(delay, duration, at):
+    """Where `--shots` photographs one animation, given a moment on the navigation's clock.
+
+    The moment arrives absolute, from `motion_span`, so it is clamped to the animation's own span
+    and nothing is subtracted from it (T-255).
+    """
+    return max(0.0, min(float(delay) + float(duration), float(at)))
 
 
 def cmd_motion(deck, into=1, at=None, shots=False, back=False, out=None, w=1920, h=1234):
@@ -673,16 +727,30 @@ def cmd_motion(deck, into=1, at=None, shots=False, back=False, out=None, w=1920,
     for a in data["anims"]:
         print("\n  %s on %s%s" % (a["name"] or "(unnamed effect)", a["target"]["sel"],
                                   ("  [slide %s]" % a["target"]["slide"]) if a["target"]["slide"] else ""))
-        print("    %s ms, %s, fill %s, delay %s, iterations %s"
-              % (a["duration"], a["easing"], a["fill"], a["delay"], a["iterations"]))
+        delay, dur = a["delay"], a["duration"]
+        # **The window is stated, not left to be inferred from the seek column** - the same reason
+        # `motion_span` prints its clock. A reader who cannot see where the sampling started cannot
+        # tell a dead animation from one measured in the wrong place (T-255).
+        want = report_seeks(delay, dur, at)
+        print("    %s ms, %s, fill %s, delay %s, iterations %s, sampled %g-%g ms"
+              % (dur, a["easing"], a["fill"], delay, a["iterations"], want[0], want[-1]))
         print("    %8s %8s %-10s %-9s %s" % ("seek", "read", "state", "opacity", "transform"))
         for s in a["at"]:
             print("    %8s %8s %-10s %-9s %s"
                   % (s["ms"], s["read"], s["state"], s["css"]["opacity"],
                      s["css"]["transform"][:44]))
         moved = len(set(json.dumps(s["css"]) for s in a["at"])) > 1
+        reads = [s["read"] for s in a["at"] if isinstance(s["read"], (int, float))]
         print("    the computed style %s across the offsets"
-              % ("MOVES" if moved else "DOES NOT MOVE - the seek reached nothing"))
+              % motion_verdict(moved, delay, reads))
+        # **The probe's arithmetic against this module's, on every run.** They are two statements
+        # of one rule in two languages, and nothing but a run can tell whether they still agree.
+        drift = [(w, s["ms"]) for w, s in zip(want, a["at"]) if abs(w - s["ms"]) > 0.5]
+        if drift:
+            print("    SEEK DISAGREES with `report_seeks` at %d of %d offset(s) - wanted %s, the "
+                  "probe sought %s. The rows above are this tool's reading, not the deck's"
+                  % (len(drift), len(want), [round(w, 2) for w, _g in drift],
+                     [g for _w, g in drift]))
     if shots:
         # **One clock, and its span is stated rather than assumed.** The span runs to the last
         # moment anything this navigation started is still moving - `delay + duration`, over the
@@ -699,13 +767,19 @@ def cmd_motion(deck, into=1, at=None, shots=False, back=False, out=None, w=1920,
               "moving, over %d of %d animation(s)" % (span, len(innav), len(data["anims"])))
         for pct in at:
             ms = span * (float(pct) / 100)
+            # **How much of the navigation this frame actually shows.** An animation still inside
+            # its delay contributes its FROM keyframe, which photographs as a page that has not
+            # started - indistinguishable from a broken one unless the count is said out loud.
+            started = sum(1 for a in innav
+                          if capture_seek(a["delay"], a["duration"], ms) > a["delay"])
             dest = os.path.join(where, "motion-%s%03d.png" % ("back-" if back else "", int(pct)))
             chrome_run(file_url(probe) + "?into=%d&seekms=%s%s"
                        % (into, ms, "&back=1" if back else ""), w, h,
                        ["--screenshot=" + dest])
             if os.path.isfile(dest) and os.path.getsize(dest):
-                print("  %s  %.0f KB  the page at %.0f ms"
-                      % (os.path.basename(dest), os.path.getsize(dest) / 1024, ms))
+                print("  %s  %.0f KB  the page at %.0f ms, %d of %d animation(s) past their delay"
+                      % (os.path.basename(dest), os.path.getsize(dest) / 1024, ms,
+                         started, len(innav)))
             else:
                 print("  %s  FAILED - no image at %s" % (os.path.basename(dest), dest))
         print("\n%s" % where)
@@ -908,6 +982,55 @@ def self_test():
     if motion_span([{"delay": 0, "duration": 4500, "inNav": False}]) is not None:
         sys.exit("SELF-TEST FAILED: a navigation that started nothing returned a clock. There is "
                  "no moment to sample, and a span invented here is a capture of nothing")
+    # **Where the report samples, and where the capture does** (T-255). Both seeks were off by the
+    # delay: the report never added it, the capture subtracted it from a clock that already had
+    # it, and with `fill: both` every offset then read the FROM keyframe. The tool printed *the
+    # computed style DOES NOT MOVE* - a sentence about the deck, produced by the seek. On this
+    # repository's own `examples/reference-deck.html`, 12 of 17 animations were sampled that way.
+    _last_rise = report_seeks(240, 340, [0, 25, 50, 75, 100])
+    if _last_rise != [240, 325, 410, 495, 580]:
+        sys.exit("SELF-TEST FAILED: the report samples %s, not 240-580. `currentTime` is measured "
+                 "from the start of the DELAY, so a bare fraction of duration lands a delay early "
+                 "- for the reference stagger's last rise, three of five offsets inside it"
+                 % (_last_rise,))
+    if min(_last_rise) < 240 or max(_last_rise) != 580:
+        sys.exit("SELF-TEST FAILED: the sampled window is not the animation's own life. It starts "
+                 "at the delay and ends at delay + duration; %s does neither" % (_last_rise,))
+    # The failing direction (**L-125**): the arithmetic this fix replaced, stated so the guard can
+    # be seen to fail rather than merely to exist.
+    _before = [340 * (p / 100.0) for p in [0, 25, 50, 75, 100]]
+    if sum(1 for s in _before if s < 240) != 3:
+        sys.exit("SELF-TEST FAILED: the fixture no longer reproduces the defect, so the assertion "
+                 "above proves nothing about it")
+    if capture_seek(600, 300, 675) != 675:
+        sys.exit("SELF-TEST FAILED: the capture moved a moment that arrived on the navigation's "
+                 "own clock. `motion_span` runs it to delay + duration, so subtracting the delay "
+                 "here puts every frame a delay too early - 675 ms became %s"
+                 % capture_seek(600, 300, 675))
+    if capture_seek(600, 300, 1200) != 900 or capture_seek(600, 300, -5) != 0:
+        sys.exit("SELF-TEST FAILED: the capture no longer clamps to the animation's own span")
+    # **The verdict names whose finding it is**, which is the half of T-255 that costs a reviewer
+    # a session rather than a wrong number. The adopter's case is delay 600 against duration 300:
+    # every offset inside the delay, `fill: both` holding the FROM keyframe, and a sentence about
+    # the deck printed for a fault in the seek.
+    if motion_verdict(True, 600, [600, 675, 750, 825, 900]) != "MOVES":
+        sys.exit("SELF-TEST FAILED: an animation that moves was reported as dead")
+    _theirs = motion_verdict(False, 600, [0, 75, 150, 225, 300])
+    if "delay" not in _theirs or "not the deck's" not in _theirs:
+        sys.exit("SELF-TEST FAILED: an animation sampled entirely inside its own delay was "
+                 "reported as a finding about the deck: %r. That is the sentence that sent the "
+                 "adopter looking for a race in their own motion (T-255)" % _theirs)
+    _real = motion_verdict(False, 0, [0, 50, 100, 150, 200])
+    if "delay" in _real:
+        sys.exit("SELF-TEST FAILED: an animation with no delay that genuinely interpolates to "
+                 "nothing was excused as the tool's own fault: %r. That direction loses a real "
+                 "finding, which is worse than the one this task fixed" % _real)
+    if "parseFloat(seek) - (tm.delay" in MOTION_PROBE:
+        sys.exit("SELF-TEST FAILED: the capture branch subtracts the delay again. That is T-255's "
+                 "fault exactly, and it photographs five FROM keyframes without saying so")
+    if "dly + dur * (parseFloat(p) / 100)" not in MOTION_PROBE:
+        sys.exit("SELF-TEST FAILED: the report branch no longer adds the delay, so it samples the "
+                 "delay instead of the animation (T-255)")
     if "before" not in MOTION_PROBE or "getAnimations" not in MOTION_PROBE:
         sys.exit("SELF-TEST FAILED: the motion probe no longer takes the animation set BEFORE the "
                  "click. Without it, animations that finished long ago are rewound to their start "

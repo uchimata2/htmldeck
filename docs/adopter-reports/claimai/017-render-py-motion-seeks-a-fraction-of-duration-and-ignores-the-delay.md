@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-255](../../../tasks/T-255-render-py-motion-seeks-past-the-delay.md). All three items implemented and measured on this repository own reference deck: 12 of 17 animations sampled inside their delay before, 0 after |
 | **Severity** | High — the tool states a conclusion about the deck in a sentence, and the conclusion is about its own seek |
 | **Found while** | Reviewing `E68 — Decide whether figure motion should play on arrival` on `D4 — Executive Board Presentation`, on 2026-08-26. Reproduced 2026-08-28 |
 | **Version seen** | htmldeck `0.6.0` |

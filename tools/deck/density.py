@@ -66,6 +66,10 @@ TAG = re.compile(r'<(\w+)([^>]*\bclass="([^"]*)"[^>]*)>')
 RANK_ATTR = re.compile(r'--m-rank:\s*(\d+)')
 DP_ATTR = re.compile(r'--dp:\s*(\d+)')
 CIRCLE = re.compile(r'<circle\b[^>]*>')
+# The slash that closes an SVG element, and the whitespace a formatter may have put before it. A
+# tag ending `/>` has no attribute space at its last character, which is the assumption `set_var`
+# used to make.
+SELF_CLOSING = re.compile(r'\s*/\s*>$')
 FIG_OPEN = re.compile(r'<svg\b[^>]*\bclass="[^"]*\bdot-pop\b[^"]*"[^>]*>')
 
 # **The scramble, and why a number rather than a shuffle.** A matrix whose dots arrive left
@@ -167,6 +171,12 @@ def set_var(tag, name, value):
     Merging rather than replacing is the whole of it: a risen element already carries `--i`, its
     stagger index, and a writer that replaced the attribute would drop it - silently, because the
     element still animates and only its timing is wrong.
+
+    **The new attribute goes before the tag's closing punctuation, which is not always one
+    character** (T-254). `<circle ... />` closes on `/>`, and inserting before the final `>` alone
+    put the attribute outside the element: `<circle ... /  style="--dp:0">`. The browser reparents
+    the broken subtree, and what the gate then reports is `DS-035` failing three untouched labels
+    at `0.0 du` - a rule that names neither this tool nor the tag it damaged.
     """
     pat = re.compile(re.escape(name) + r":\s*[^;\"]*")
     if pat.search(tag):
@@ -176,7 +186,31 @@ def set_var(tag, name, value):
         val = m.group(1).rstrip().rstrip(";")
         joined = ("%s;%s:%s" % (val, name, value)) if val else "%s:%s" % (name, value)
         return tag[:m.start(1)] + joined + tag[m.end(1):]
-    return tag[:-1] + ' style="%s:%s"' % (name, value) + tag[-1]
+    close = SELF_CLOSING.search(tag)
+    cut = close.start() if close else len(tag) - 1
+    return tag[:cut].rstrip() + ' style="%s:%s"' % (name, value) + tag[cut:]
+
+
+def written_ok(before, after, name):
+    """`set_var`'s post-condition, or the reason it was broken - what `write` refuses to save on.
+
+    Stated as what must still be true of the tag rather than as the shape of the one defect T-254
+    found: a guard that recognises only the bug it was written for reports green on the next one.
+    An edit here changes an attribute's text and nothing else, so the element, the way it closes
+    and the fact that it is a single tag all survive it.
+    """
+    b, a = re.match(r"<(\w+)", before), re.match(r"<(\w+)", after)
+    if not a or not b or a.group(1) != b.group(1):
+        return "the element name changed"
+    if bool(SELF_CLOSING.search(before)) != bool(SELF_CLOSING.search(after)):
+        return "the tag stopped closing the way it did - the attribute landed outside the element"
+    if not after.endswith(">") or "<" in after[1:] or ">" in after[:-1]:
+        return "the edit produced something that is not one tag"
+    if after.count('"') % 2:
+        return "an unbalanced quote"
+    if not re.search(re.escape(name) + r":\s*[^;\"]", after):
+        return "%s is not in the tag that was written" % name
+    return None
 
 
 def set_rank(tag, rank):
@@ -386,6 +420,32 @@ def self_test():
         sys.exit("SELF-TEST FAILED: --dp was not added to a circle with no style attribute")
     if set_var('<p style="--i:1;--m-rank:3">', "--m-rank", 9) != '<p style="--i:1;--m-rank:9">':
         sys.exit("SELF-TEST FAILED: setting one custom property disturbed another beside it")
+
+    # ---- the self-closing tag (T-254) -----------------------------------------------------------
+    # Every circle in a `dot-pop` figure is one, so this is the ordinary case rather than an edge.
+    for tag, want in [('<circle class="quiet-s" cx="1"/>',
+                       '<circle class="quiet-s" cx="1" style="--dp:4"/>'),
+                      ('<circle class="quiet-s" cx="1" />',
+                       '<circle class="quiet-s" cx="1" style="--dp:4" />'),
+                      ('<circle class="quiet-s" style="--i:1" r="2"/>',
+                       '<circle class="quiet-s" style="--i:1;--dp:4" r="2"/>')]:
+        got = set_var(tag, "--dp", 4)
+        if got != want:
+            sys.exit("SELF-TEST FAILED: --dp was written outside the element. %r became %r, wanted "
+                     "%r. The attribute lands after the closing slash, the browser reparents the "
+                     "subtree, and DS-035 reports the damage on text nobody touched" %
+                     (tag, got, want))
+        if written_ok(tag, got, "--dp") is not None:
+            sys.exit("SELF-TEST FAILED: `written_ok` refused a correct edit of %r" % (tag,))
+    # The other direction (**L-125**): the insertion this task replaced must be caught, not merely
+    # absent. `write` refuses to save on exactly this verdict.
+    broke = '<circle class="quiet-s" cx="1"/ style="--dp:4">'
+    if written_ok('<circle class="quiet-s" cx="1"/>', broke, "--dp") is None:
+        sys.exit("SELF-TEST FAILED: `written_ok` passed a tag whose attribute is outside the "
+                 "element - %r. A guard that cannot fail cannot protect the deliverable" % broke)
+    if written_ok('<p class="pulse">', '<p class="pulse" style="--i:1">', "--dp") is None:
+        sys.exit("SELF-TEST FAILED: `written_ok` passed an edit that did not set the property it "
+                 "was asked for")
     return True
 
 
@@ -417,14 +477,33 @@ def main(argv):
     if cmd == "write":
         html = io.open(deck, encoding="utf-8").read()
         ranks, rows = wanted(html)
+        bad = []
+
+        def kept(tag, new, name):
+            """One edit, held to `set_var`'s post-condition before it goes into the document."""
+            why = written_ok(tag, new, name)
+            if why:
+                bad.append((why, tag, new))
+            return new
+
         for r in sorted(rows, key=lambda x: -x[1]):
             tag = html[r[1]:r[2]]
-            html = html[:r[1]] + set_rank(tag, ranks[r[1]]) + html[r[2]:]
+            html = html[:r[1]] + kept(tag, set_rank(tag, ranks[r[1]]), "--m-rank") + html[r[2]:]
         for _fs, _fe, circles in sorted(dot_figures(html), key=lambda f: -f[0]):
             n = len(circles)
             for i, (cs, ce) in reversed(list(enumerate(circles))):
                 tag = html[cs:ce]
-                html = html[:cs] + set_var(tag, "--dp", dot_place(i, n)) + html[ce:]
+                html = html[:cs] + kept(tag, set_var(tag, "--dp", dot_place(i, n)), "--dp") + html[ce:]
+        # **Nothing is saved until every tag this run wrote still parses as the tag it was.** The
+        # defect T-254 fixed wrote invalid markup into the deliverable and the gate then reported
+        # it under an unrelated rule, so the run that caused the damage is the only cheap place to
+        # catch it (adopter record 015, item 2).
+        if bad:
+            print("REFUSED to write %s - %d tag(s) came out malformed"
+                  % (paths.display_path(deck, ROOT), len(bad)))
+            for why, before, after in bad:
+                print("  %s\n      was  %s\n      now  %s" % (why, before[:96], after[:96]))
+            return 1
         out = deck
         if "-o" in argv:
             out = argv[argv.index("-o") + 1]

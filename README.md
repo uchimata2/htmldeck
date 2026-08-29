@@ -171,8 +171,9 @@ python tools/plugin/check_scaffold.py
 ```
 
 ```
-19 of 19 fixtures behaved as specified.
-OK - manifest valid, components at the root, every ${CLAUDE_PLUGIN_ROOT} pointer resolves,
+23 of 23 fixtures behaved as specified.
+  skills/htmldeck: 5 markdown file(s), base $HTMLDECK - checks 4-5 read 49 path(s), check 7 read 18 of 18 documented command(s)
+OK - manifest valid, components at the root, every based pointer resolves,
 ```
 
 `check.py` drives **real Chrome or Edge**, headless, with a throwaway profile and every DNS lookup

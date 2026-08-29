@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-254](../../../tasks/T-254-density-py-write-corrupts-every-self-closing-svg-tag.md). Items 1 and 2 implemented and measured; item 3 deferred to [T-261](../../../tasks/T-261-ds-035-measures-a-text-run-through-its-transform.md), which already owns that measurement |
 | **Severity** | High — it writes invalid markup into the deliverable, and the gate reports the damage under an unrelated rule |
 | **Found while** | Building round 2's motion on `D4 — Executive Board Presentation`, on 2026-08-26 — `E66 — Build round 2's motion` |
 | **Version seen** | `0.6.0` |
