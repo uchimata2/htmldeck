@@ -1,4 +1,4 @@
-# Remediation order — the 47 open tasks, batched for unattended sessions
+# Remediation order — the 47 tasks, batched for unattended sessions
 
 **Tier 3. Loaded by nothing**; opened when a session asks *what do I work next*. It is a schedule,
 not a decision: what each task does is its own record, and this file never restates one.
@@ -10,6 +10,8 @@ scope by the owner's instruction** — the 3D visual is deferred, not scheduled 
 tasks plus [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md)'s two remaining
 cycles.
 
+**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 landed 2026-08-29.**
+
 ---
 
 ## 1. The three rules that decide the order
@@ -17,10 +19,12 @@ cycles.
 Everything below follows from these. They are stated first because a batch that violates one costs
 more than it saves.
 
-1. **An instrument is fixed before anything it measures.** Three instruments are currently producing
-   wrong answers — `density.py write` writes invalid markup, `render.py motion` reports a working
-   motion as dead, and the scaffold gate reads nought of the skill's eighteen commands. Work
-   verified against a lying instrument has to be verified again.
+1. **An instrument is fixed before anything it measures.** Three were producing wrong answers when
+   this file was written — `density.py write` wrote invalid markup, `render.py motion` reported a
+   working motion as dead, and the scaffold gate read nought of the skill's eighteen commands. Work
+   verified against a lying instrument has to be verified again. **All three were fixed in B1 on
+   2026-08-29**, which is what makes wave 2 onwards worth running; the rule stands for whatever the
+   later batches find.
 2. **A rule changes before any document that counts it.** Sixteen open tasks state a figure that a
    rule change moves — rule totals, `auto`/`judge` splits, coverage counts. Fix the documents first
    and every one of them moves twice. **This is why every documentation task is in the last third**,

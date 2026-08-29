@@ -230,9 +230,11 @@ Counts only; the statements live in the register.
 
 | Severity | Raised | Tasked | Accepted | Open |
 | :--- | ---: | ---: | ---: | ---: |
-| High | 8 | 8 | 0 | 8 |
+| High | 8 | 8 | 0 | 7 |
 | Medium | 69 | 69 | 0 | 67 |
 | Low | 49 | 49 | 0 | 49 |
+
+**`High` open falls to 7 on 2026-08-29**, the first row this run has closed: `PR-70` is struck through in the register and [T-231](T-231-two-packaging-checks-have-no-subject-at-all.md) carries what was measured. Re-derived from the register rather than decremented, on cycles 34 and 40's precedent — the register is the count's one home and this table is a view of it.
 
 **Child tasks raised**
 

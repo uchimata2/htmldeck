@@ -144,6 +144,19 @@ rule that survived a tool swap unnoticed is the thing to recognise faster next t
   file, 22 left behind against a threshold of 76, so `BRIEF.md` stopped firing and the new file
   started. **Still one named file, so T-098's reopening condition — a *second* document legitimately
   tripping the advisory — is still not met** and no upstream exclusion is due.
+- **The whole advisory baseline is eleven lines, and the number is here so a session can tell a new
+  one from the standing set.** One `DUPLICATE INDEX`, above, and **ten `SECTION REF`** — a citation
+  naming a section a document does not have. Re-derive it rather than trusting this sentence:
+
+  ```bash
+  python tools/tasks/lint.py 2>&1 | grep -c "^DUPLICATE INDEX\|^SECTION REF"
+  ```
+
+  **A green run says nothing about which eleven they are**, so a session that adds one and removes
+  another sees the same total. The point of the figure is that a *twelfth* is new and worth reading;
+  chasing the standing ten is [T-250](T-250-two-lessons-state-a-figure-and-two-link-to-a-dead-anchor.md)'s
+  and B20's, not a passing session's. *Measured 2026-08-29 while B1 ran, and unchanged across the
+  five runs of that batch.*
 - `refcheck.py` — every markdown link, **every repo-relative `.md` path written in prose or printed by
   a tool**, **every `<named document> §n` reference** (§2 below), and **every link *label* that names a
   `.md` file the link does not open** (§2.1). Two things are skipped and it prints
