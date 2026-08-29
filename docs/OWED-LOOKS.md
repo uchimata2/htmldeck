@@ -36,19 +36,10 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-**All three are answerable now.** *This paragraph said they were owed after B12, and it was
-written before B9 synced the shell into the tracked decks — which that batch had to do, because the
-new `DS-224` check failed a deck built before its own fix and `static_variants.py` refuses to run
-against a red baseline. The decks carry the repairs, so the looks are due.*
-
-Rows 2 and 3 are looks at **paper** and need the deck printed, not rendered. Row 4 is a look at the
-screen.
+Empty. Nothing outstanding.
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
-| 2 | [`examples/measure-first/measure-first.html`](../examples/measure-first/measure-first.html) | slide 5, *Poor exactly where we decide* — the six-dimension scale | **Print it.** All thirty dots printed **absent** under a caption describing them: the dots animate from `scale(0)` with `fill:both`, print never advances an animation, and the print block did not switch them off. *Are all thirty on the paper, at their right size, and does the scale read as a scale rather than as a row of gaps?* | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) |
-| 3 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 9, *Month eighteen stays reversible* — the flow's arrowheads | **Print it.** The same defect on the other motion: `.arrow-pop marker path` scales from `scaleX(0)`, so the arrowheads printed as nothing and the flow printed as plain lines. *Is every arrowhead there, and does each still point the way the flow goes?* | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) |
-| 4 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 12, *Approve the frequency package* — the ask itself | **The first card reveal.** Turn replaced Rise on the closing headline: it now scales up from its own centre line over 420 ms instead of rising. Measured to run and to read both dials; **how it reads is what nobody has seen.** *Does turning the ask face-up land the deck, or does it read as a flourish on the one slide that should be plainest? And does it still settle before a presenter starts speaking?* If the answer is no, the fix is the placement rather than the component — Turn is built and contracted either way. | [T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) |
 
 ## What has already been looked at
 
@@ -58,3 +49,6 @@ look nobody can show was taken.
 | # | Deck | Where | The question, and the answer | Owed by | Looked |
 | :-- | :--- | :--- | :--- | :--- | :--- |
 | 1 | [`examples/measure-first/measure-first.html`](../examples/measure-first/measure-first.html) | slide 4, *The loop that never closes* — the four-node cycle diagram, the node at the left | Its label became **one line**, `What sold`, where it was two, `What` / `actually sold`, set at the midpoint of the two old lines where its three sibling nodes' single lines sit. *Does the single line read as well as the pair did, and does the node still balance against its three siblings?* — **Yes.** The owner looked and confirmed it reads correctly | [T-229](../tasks/T-229-ds-106s-check-omits-a-word-the-rule-names.md) | 2026-08-29, by the owner |
+| 2 | [`examples/measure-first/measure-first.html`](../examples/measure-first/measure-first.html) | slide 5, *Poor exactly where we decide* — the six-dimension scale | The thirty dots printed **absent** before the fix: they animate from `scale(0)` with `fill:both`, print never advances an animation, and the print block did not switch them off. *Are all thirty on the paper, at their right size?* — **Yes.** The owner printed it: all 30 dots visible, and they read well | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) | 2026-08-29, by the owner |
+| 3 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 9, *Month eighteen stays reversible* — the flow's arrowheads | The same defect on the other motion: `.arrow-pop marker path` scales from `scaleX(0)`, so the arrowheads printed as nothing. *Is every arrowhead there?* — **Yes.** The owner printed it and saw one highlighted head and one plain one, **which is every arrowhead the slide has**: it defines two markers, `ar9` and `ar9q`, and uses each once. Counted after the look rather than assumed, because *two* would read as a shortfall against a flow diagram anyone would expect to carry more | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) | 2026-08-29, by the owner |
+| 4 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 12, *Approve the frequency package* — the ask itself | The first card reveal. Turn replaced Rise on the closing headline: it scales up from its own centre line over 420 ms instead of rising. *Does turning the ask face-up land the deck, or read as a flourish on the slide that should be plainest?* — **It reads correctly.** The owner looked and passed it, so the placement stands | [T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | 2026-08-29, by the owner |
