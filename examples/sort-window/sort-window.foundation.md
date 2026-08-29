@@ -82,7 +82,8 @@ the completeness claim checkable by a reader, who can hold one source document b
 | Sort rate tolerance | 4% across a shift | throughput-model | 5 |
 | First trunk arrival | 19:40 | throughput-model | 5 |
 | First trunk parcels | 20,400 | throughput-model | 5 |
-| First trunk sort finishes | 00:14 | throughput-model | 5 |
+| First trunk sort finishes | 22:57 | throughput-model | 5 |
+| Sort rate, both lines | 6,200 | throughput-model | 5 |
 | Second trunk arrival | 23:40 | throughput-model | 5, 7 |
 | Second trunk parcels | 7,200 | throughput-model | 5 |
 | Second trunk sort finishes | 01:59 | throughput-model | 5, 7 |

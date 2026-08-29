@@ -19,8 +19,14 @@ bottom line in the outline to be the one that ships.
 - **Structure.** Title slide. Eyebrow, the headline at display size, and a foot block holding the
   illustrative-subject note. Tier one is the whole slide; no tier two.
 - **Text.** Eyebrow *Marnfield network · operations board · 4 September*. Standfirst names the
-  window, because the headline uses the word as a term: *One depot, one sorter line, and a nightly
-  window that closes at 01:00.*
+  window, because the headline uses the word as a term: *One depot, two sorter lines until 23:00,
+  and a nightly window that closes at 01:00.*
+- **Amended 2026-08-30, by the owner's ruling on
+  [T-281](../../tasks/T-281-the-sort-windows-capacity-story-cannot-hold-its-own-failure-table.md).**
+  This line read *one sorter line* and was reviewed that way. It is amended rather than annotated
+  because what changed is the model underneath it: one line at 3,100 an hour cannot sort a peak
+  night by the cut-off at all, so the reviewed sentence and the deck's own failure table could not
+  both be true. `PR-84` carries the arithmetic.
 - **Visuals.** None. A manifesto line that shares the stage is not one.
 - **Animations.** Rise, five steps.
 - **Interactive elements.** None.
@@ -89,15 +95,18 @@ bottom line in the outline to be the one that ships.
 - **Structure.** The hinge slide. One night on a horizontal time axis from 19:00 to 03:00, two trunk
   lanes with a sort bar in each, the 01:00 cut-off as a vertical rule, and two labelled exits: *made
   the day* and *missed — 84% of these were still on the belt*.
-- **Text.** Connector labels *unload*, *sort at 3,100/hr*, *load*. The second lane carries **7,200
-  parcels**, because the bottom line cites it and DS-231 will not have a bottom line resting on a
+- **Text.** Connector labels *unload*, the first lane's rate **6,200/hr** on both lines, *load*.
+  The second lane carries **7,200 parcels**, because the bottom line cites it and DS-231 will not have a bottom line resting on a
   figure that lives behind the click. The rule is labelled **01:00 cut-off**.
 - **Visuals.** SVG night-flow. Two lanes, labelled connectors, one accented vertical rule.
 - **Animations.** Current on the second lane's sort bar, the path that runs past the rule. Rise on
   the lanes. Pulse-once on the cut-off rule.
 - **Interactive elements.** Disclosure, `data-disc="derivation"` — *Where 01:59 comes from*: 7,200
-  parcels at 3,100 an hour is 2h 19m, sorting cannot start before the trunk is unloaded, and 23:40
-  plus 2h 19m is 01:59.
+  parcels at 3,100 an hour on the night line is 2h 19m, sorting cannot start before the trunk is
+  unloaded, and 23:40 plus 2h 19m is 01:59.
+- **Amended 2026-08-30**, with slide 1 and for the same reason: the first lane sorts on both lines
+  and clears at 22:57, where this slide showed 00:14 — a time the stated rate contradicted by two
+  hours. [T-281](../../tasks/T-281-the-sort-windows-capacity-story-cannot-hold-its-own-failure-table.md).
 - **Sources.** throughput-model
 
 ## Slide 6 — Loading order, not distance
@@ -189,8 +198,11 @@ bottom line in the outline to be the one that ships.
 - **Animations.** Rise, two steps. Nothing else: this is the slide where ambient motion reads as
   evasion.
 - **Interactive elements.** Disclosure, `data-disc="condition"` — *When this goes wrong*: the slot
-  is missed on more than 5% of nights, peak volume passes 31,900, or the sorter drops below 3,100 an
-  hour.
+  is missed on more than 5% of nights, peak volume passes **33,500**, or a line drops below 3,100 an
+  hour. **Amended 2026-08-30**: the threshold was 31,900, the observed busiest day, which is not
+  where the overlap starts. Both lines sort 24,800 in the four hours before the second trunk lands,
+  which at the modelled split is a day of about 33,500.
+  [T-281](../../tasks/T-281-the-sort-windows-capacity-story-cannot-hold-its-own-failure-table.md).
 - **Sources.** throughput-model, fleet-and-cost-model
 
 ## Slide 11 — $120k waits for January

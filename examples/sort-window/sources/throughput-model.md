@@ -17,21 +17,32 @@ not change with it.
 
 ## The sort
 
-One sorter line. Rated at **3,100** parcels per hour and it holds that rate to within 4% across a
-full shift, so the model treats it as constant.
+**Two sorter lines, each rated at 3,100 parcels per hour**, holding that rate to within 4% across
+a full shift, so the model treats it as constant. **Both run the evening shift, which ends at
+23:00; one runs the night.** That is why the two trunks sort at different rates, and it is the whole
+of the depot's capacity story.
 
 Inbound arrives on two trunk services:
 
 | Trunk | Arrives | Parcels, peak | Sort finishes |
 | :--- | :--- | ---: | :--- |
-| First | 19:40 | 20,400 | 00:14 |
+| First | 19:40 | 20,400 | 22:57 |
 | Second | 23:40 | 7,200 | 01:59 |
 
-The second trunk's 7,200 parcels take **2h 19m** at 3,100 per hour. Sorting cannot start before the
-trunk is unloaded, so the finish time is arrival plus sort time and nothing compresses it.
+The first trunk's 20,400 parcels take **3h 17m** on both lines at 6,200 an hour, so 19:40 plus
+3h 17m is **22:57** — clear of the second trunk by 43 minutes. The second trunk's 7,200 take
+**2h 19m** on the night line alone at 3,100 an hour, so 23:40 plus 2h 19m is **01:59**. Sorting
+cannot start before the trunk is unloaded, so the finish time is arrival plus sort time and nothing
+compresses it.
 
 **The outbound cut-off is 01:00.** A parcel sorted after it waits a day. The second trunk therefore
-clears **59 minutes** past the cut-off.
+clears **59 minutes** past the cut-off, and at the modelled peak **3,067** of its 7,200 parcels are
+still on the belt when the cut-off passes — the night line does 1h 20m of its 2h 19m before 01:00.
+
+**Where the overlap starts.** The first trunk has four hours before the second lands, and both lines
+sort **24,800** in four hours. At the modelled split — the first trunk carries 73.9% of the night —
+that is a day of about **33,500** parcels, 5% past December's busiest. Above it the first trunk's
+sort runs into the second's, and every finish time in this model moves later.
 
 ## Failure
 

@@ -57,7 +57,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | Give render.py a capture path for a deck's disclosed states | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md) | Write the clause rows for the nine conjunctions the sweep found owing | `PH3` | - | `proposed` | `specify` | T-219 | - | - | T-054, T-244 |
-| [T-281](T-281-the-sort-windows-capacity-story-cannot-hold-its-own-failure-table.md) | The sort-window deck's capacity story cannot hold its own failure table, and the fix changes its headline | `PH3` | - | `proposed` | `specify` | - | - | - | T-248 |
 | [T-282](T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | The portfolio deck's opening slide carries one of the two figures its specification calls the whole argument | `PH3` | - | `proposed` | `specify` | - | - | - | T-233 |
 
 ## Closed
@@ -320,5 +319,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-277](T-277-put-motion-back-inside-the-more-menu.md) | Put Motion back inside the More menu, and let DS-218 count a persistent menu button as reachable | `PH3` | - | `done` | `review` | - | - | - | T-114, T-180, T-257 |
 | [T-279](T-279-check-all-reports-one-number-for-thirty-seven-commands.md) | Time each command check_all runs, so the gate's cost is measured rather than guessed | `PH3` | - | `done` | `review` | - | - | - | T-131, T-132, T-280 |
 | [T-280](T-280-every-render-pays-a-fresh-chrome-launch.md) | Every render pays a fresh Chrome launch, and the launch is most of the render | `PH3` | - | `done` | `review` | - | - | - | T-279 |
+| [T-281](T-281-the-sort-windows-capacity-story-cannot-hold-its-own-failure-table.md) | The sort-window deck's capacity story cannot hold its own failure table, and the fix changes its headline | `PH3` | - | `done` | `review` | - | - | - | T-248 |
 
 <!-- taskmd:end -->
