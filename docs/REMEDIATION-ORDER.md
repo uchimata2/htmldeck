@@ -10,7 +10,7 @@ scope by the owner's instruction** — the 3D visual is deferred, not scheduled 
 tasks plus [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md)'s two remaining
 cycles.
 
-**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1, B2 and B3 landed 2026-08-29.**
+**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1, B2, B3 and B4 landed 2026-08-29.**
 
 ---
 
@@ -64,7 +64,7 @@ is blocked.
 
 | Batch | Tasks | Eff | Why here |
 | :--- | :--- | :--- | :--- |
-| **B4** | [T-243](../tasks/T-243-five-checks-bound-on-a-name-rather-than-on-structure.md), [T-230](../tasks/T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md) | `m`,`s` | Five checks re-bound on structure, plus the adopter's `DS-229` and `DS-239` records. **Needs B1** — `T-243`'s `DS-239` half is unverifiable while `density.py write` corrupts what it writes |
+| **B4** — landed 2026-08-29 | [T-243](../tasks/T-243-five-checks-bound-on-a-name-rather-than-on-structure.md), [T-230](../tasks/T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md) | `m`,`s` | Five checks re-bound on structure, plus the adopter's `DS-229` and `DS-239` records. **Needed B1** — `T-243`'s `DS-239` half was unverifiable while `density.py write` corrupted what it wrote. **Six register rows and two adopter records closed across seven files**, and the batch found two more defects in code it had to read: a CSS comment reaching a selector in two modules, and an `rstrip` taking a character set rather than a suffix ([L-140](lessons/L-140.md)). **`PR-49`'s stated remedy was refused by its own measurement, and so were two of the replacements** - the pattern the register's section 5 predicts, now in a fifth consecutive batch |
 | **B5** | [T-263](../tasks/T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md), [T-262](../tasks/T-262-ds-092-counts-a-sources-box-as-prose.md), [T-264](../tasks/T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | `s`·3 | Three rules that a correct deck cannot satisfy. Independent of each other; all three change `audit.py` and a rule row. **`T-264`'s question is ruled** — §3 |
 | **B6** | [T-256](../tasks/T-256-ds-219-cannot-see-a-painted-svg-ancestor.md), [T-260](../tasks/T-260-ds-244-tests-proximity-where-it-means-obstruction.md) | `m`·2 | The two rules whose *scope* is in question rather than their code. **Both questions are ruled** (§3). Held together because both re-open what a rule measures and both are gated by `T-204`'s calibration precedent |
 | **B7** | [T-229](../tasks/T-229-ds-106s-check-omits-a-word-the-rule-names.md), [T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md) | `s`,`m` | Deriving a check from its rule row, and reconciling the two contracts with their checkers. Both are *derive rather than restate* work and share the idiom |
