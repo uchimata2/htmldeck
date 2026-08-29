@@ -980,9 +980,36 @@ def copy_of(h):
     return HTML_COMMENT.sub(" ", STYLE_OR_SCRIPT.sub(" ", QUICK_VIEW.sub("", h)))
 
 
+# **The slide's header, as the three parts the contract names rather than as `<header>`** (T-276).
+# The element is not reliable: some slides wrap the three in `<header>` and some do not, and this
+# deck contains both. The classes are contracted, so they are the structure.
+HEADER_PART = re.compile(
+    r'<(\w+)[^>]*\bclass="[^"]*\b(?:eyebrow|headline|standfirst)\b[^"]*"[^>]*>(.*?)</\1>', re.S)
+
+
 def ds100_no_rhetorical_questions(h):
-    """DS-100 over slide copy. A question a SOURCE asks is not a question the deck asks."""
-    return not re.search(r"\?\s*<", copy_of(h))
+    """DS-100 over the slide's HEADER copy. Two narrowings, and each has a measurement behind it.
+
+    **By scope** (T-167): a question a SOURCE asks is not a question the deck asks, so a quoted
+    source is cut before anything is read.
+
+    **By place** (T-276): a `?` in a slide's `.eyebrow`, `.headline` or `.standfirst` fails, and a
+    `?` anywhere else in the deck's own copy passes. A rhetorical question on a slide is a headline
+    device - *Why does this matter?*, *What's next?* - and a question inside body copy is one the
+    face is about to answer. Before this, the rule fired on any `?` meeting a tag, which is every
+    question anywhere in slide text: an adopter drew the word *Why?* as SVG shapes to make a deck
+    build, so a rule about rhetoric pushed a word out of the text layer entirely.
+
+    **A question in body copy is now unpoliced, and that is the decision rather than an oversight.**
+    The alternative on the table was report `023`'s own condition - a `?` followed within the slide
+    by a declarative bottom line - and it was refused by measurement: it holds on 38 of 38 slides,
+    because the contract puts one bottom line on every slide and DS-202 makes it a plain sentence.
+    That is an off switch wearing a plausible sentence ([L-144](../../docs/lessons/L-144.md)).
+
+    **The limit, stated where the code is:** this is not calibrated. All three tracked decks carry
+    zero `?` in copy, so there is no firing rate to compare and this rests on the argument above.
+    """
+    return not any("?" in body for _tag, body in HEADER_PART.findall(copy_of(h)))
 
 
 # --------------------------------------------------------------------------- DS-106's own words
@@ -3476,19 +3503,52 @@ def self_test():
     own = '<section class="slide"><div class="body">%s%s</div></section>' % (asks, banned)
     cited = ('<span class="sources-item"><template class="qv-src" data-qv="D1">%s%s</template>'
              '</span>' % (asks, banned))
-    if ds100_no_rhetorical_questions(own):
-        sys.exit("SELF-TEST FAILED: a question in the deck's own slide copy passed DS-100. T-167 "
-                 "narrows the rule by scope and does not relax it")
-    if not ds100_no_rhetorical_questions(cited):
+    # **DS-100's scope pair now runs on a HEADLINE** (T-276). The fixture above puts its question
+    # in `.body`, where the rule deliberately no longer looks - so testing the quoted/own boundary
+    # with it would assert nothing and pass for the wrong reason. The boundary is unchanged and is
+    # what these two still test; only the place the question sits has moved.
+    head = '<h2 class="headline">Where are the delays?</h2>'
+    own_head = '<section class="slide">%s</section>' % head
+    cited_head = ('<span class="sources-item"><template class="qv-src" data-qv="D1">%s</template>'
+                  '</span>' % head)
+    if ds100_no_rhetorical_questions(own_head):
+        sys.exit("SELF-TEST FAILED: a question in the deck's own HEADLINE passed DS-100. T-167 "
+                 "narrows the rule by scope and T-276 by place; neither relaxes it")
+    if not ds100_no_rhetorical_questions(cited_head):
         sys.exit("SELF-TEST FAILED: a question a quoted SOURCE asks failed DS-100, which is the "
                  "defect T-167 exists to fix - a deck does not write its sources' headings")
+    # **T-276's own boundary, in both directions.** The allowance is the whole point of the change
+    # and the three refusals either side of it are what stop it being a hole: the rule still fails
+    # a question in any of the three header parts the contract names.
+    if ds100_no_rhetorical_questions(own):
+        pass                                  # a question in `.body` passes - see the next line
+    else:
+        sys.exit("SELF-TEST FAILED: a question in BODY copy failed DS-100. That is the case T-276 "
+                 "exists to admit - the adopter drew the word `Why?` as SVG shapes to get past it, "
+                 "which is a rule about rhetoric pushing a word out of the text layer")
+    for part, tag in (("eyebrow", "p"), ("headline", "h2"), ("standfirst", "p")):
+        one = ('<section class="slide"><%s class="%s">Where are the delays?</%s></section>'
+               % (tag, part, tag))
+        if ds100_no_rhetorical_questions(one):
+            sys.exit("SELF-TEST FAILED: a question in `.%s` passed DS-100. All three header parts "
+                     "are the rule's subject, not the headline alone" % part)
+    # The parts are read as CLASSES and not as `<header>`, because this deck wraps them both ways -
+    # slide 5 of the reference deck has a `<header>` and slide 11 does not. A check bound on the
+    # element would decide half the deck.
+    if ds100_no_rhetorical_questions('<section class="slide"><header>'
+                                     '<h2 class="headline">Why?</h2></header></section>'):
+        sys.exit("SELF-TEST FAILED: a question in a headline INSIDE `<header>` passed DS-100, so "
+                 "the check is binding on the wrapper rather than on the contracted part")
     if ds106_no_banned_terminology(own):
         sys.exit("SELF-TEST FAILED: banned terminology in the deck's own copy passed DS-106")
     if not ds106_no_banned_terminology(cited):
         sys.exit("SELF-TEST FAILED: banned terminology inside a quoted source failed DS-106 - the "
                  "deck did not choose that word, and DS-106 is a rule about the words it chose")
-    if (ds100_no_rhetorical_questions(own + cited)
-            or not ds100_no_rhetorical_questions(cited + cited)):
+    # The same pair on the header fixtures (T-276): `own` puts its question in `.body`, where the
+    # rule no longer looks, so the combined case has to be built from the headline ones or it
+    # asserts nothing.
+    if (ds100_no_rhetorical_questions(own_head + cited_head)
+            or not ds100_no_rhetorical_questions(cited_head + cited_head)):
         sys.exit("SELF-TEST FAILED: DS-100 cannot tell the two apart in one deck, which is the only "
                  "case that matters - a deck carries both")
     return True

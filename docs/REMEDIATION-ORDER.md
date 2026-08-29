@@ -150,7 +150,7 @@ failing** — the batch finished, and the questions reached the owner with their
 **Both are reversible on the owner's word and each is recorded as a `DS-000` change with its stated
 reason**, on the same terms as the eight above.
 
-### One more, raised in B8 — and this one is a ruling that cannot be carried out as written
+### One more, raised in B8 — a ruling that could not be carried out, and the one that replaced it
 
 **`T-270`'s `DS-100` half is refused by its own measurement.** The ruling above accepts report
 [`023`](adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md)'s proposal 1,
@@ -166,13 +166,23 @@ already.
 here** — the same escape `PR-36` and `PR-77` used above, and for the same reason: the mechanism is a
 new rule question, not a detail of the one ruled.
 
-| Batch | Task | The question | Recommendation |
+| Batch | Task | The question | **Ruled** |
 | :--- | :--- | :--- | :--- |
-| B8 | [`T-270`](../tasks/T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | *A question the slide answers* has no checkable form — the one the report offers exempts every slide. What should `DS-100` measure instead? | **Narrow by where the question sits: a `?` in a slide's `<header>` fails, one anywhere else in slide copy passes.** A rhetorical question on a slide is a headline device, which is what the corpus measured; a question inside body copy is one the face is about to answer. It admits both of the adopter's cases and still fails *Why does this matter?* as a headline. **Its stated limit: it cannot be calibrated here.** All three decks carry **zero** `?` in copy, so there is no firing rate to compare — the recommendation rests on the argument, not on a count, and `T-204`'s *report, calibrate, then decide* is the cheaper alternative if that is not enough |
+| B8 | [`T-270`](../tasks/T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | *A question the slide answers* has no checkable form — the one the report offers exempts every slide. What should `DS-100` measure instead? | **Narrow by where the question sits: a `?` in a slide's `<header>` fails, one anywhere else in slide copy passes.** A rhetorical question on a slide is a headline device, which is what the corpus measured; a question inside body copy is one the face is about to answer. It admits both of the adopter's cases and still fails *Why does this matter?* as a headline. **Its stated limit: it cannot be calibrated here.** All three decks carry **zero** `?` in copy, so there is no firing rate to compare — the recommendation rests on the argument, not on a count, and `T-204`'s *report, calibrate, then decide* is the cheaper alternative if that is not enough . **Ruled 2026-08-29: take the recommendation**, [T-276](../tasks/T-276-narrow-ds-100-to-the-question-a-slide-puts-in-its-header.md), landed the same day. The owner read the limit and took it anyway; a question in body copy is now unpoliced and that is the decision |
 
-**The refusal costs nothing yet.** `DS-100` is unchanged, so no deck's verdict moves and the escape
-hatch the report objects to — draw the word as a shape — is exactly as open as it was. What has
-changed is that it is written down.
+**Answered 2026-08-29, and the escape hatch is closed.**
+[T-276](../tasks/T-276-narrow-ds-100-to-the-question-a-slide-puts-in-its-header.md) implements the
+recommendation: a `?` in a slide's `.eyebrow`, `.headline` or `.standfirst` fails, one anywhere else
+in the deck's own copy passes. Seeded both ways on `measure-first.html` — headline `1 failure(s)`,
+body copy `0 failure(s)`, control green — and no tracked deck's verdict moved. **The limit went to
+the owner with the recommendation and was accepted rather than waved past**: there is no firing rate
+to calibrate against, so this rests on the argument.
+
+**What the escape from §4 bought, twice over.** `PR-36` and `PR-77` reached the owner with their
+measurements and came back as `T-274` and `T-275`. This one reached the owner as a *refusal of a
+ruling he had already given*, with the number that refuted it, and came back as `T-276`. A batch
+that had implemented the sentence as written would have shipped a `hard` rule that decided
+nothing.
 
 ---
 
