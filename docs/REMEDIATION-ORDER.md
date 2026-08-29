@@ -10,7 +10,7 @@ scope by the owner's instruction** — the 3D visual is deferred, not scheduled 
 tasks plus [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md)'s two remaining
 cycles.
 
-**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 landed 2026-08-29.**
+**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 and B2 landed 2026-08-29.**
 
 ---
 
@@ -57,7 +57,7 @@ is blocked.
 | Batch | Tasks | Eff | Why here |
 | :--- | :--- | :--- | :--- |
 | **B1** — landed 2026-08-29 | [T-254](../tasks/T-254-density-py-write-corrupts-every-self-closing-svg-tag.md), [T-255](../tasks/T-255-render-py-motion-seeks-past-the-delay.md), [T-231](../tasks/T-231-two-packaging-checks-have-no-subject-at-all.md), **+[T-272](../tasks/T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md)** | `s`·4 | Three instruments that answer wrongly today. `density.py write` is refused outright by the adopter's launcher and is the tool `DS-239` makes necessary; `render.py motion` prints a verdict about its own seek as a finding about the deck; the scaffold gate has read nothing since 2026-08-20. Files are disjoint: `density.py`, `render.py`, `check_scaffold.py`. **`T-272` was found while closing `T-255` and absorbed into the batch under §4** — the same instrument enumerating a different animation set across runs of one unchanged deck |
-| **B2** | [T-261](../tasks/T-261-ds-035-measures-a-text-run-through-its-transform.md) | `s` | **Alone, because it changes what every geometry rule measures.** The probe must be pinned for `DS-035` and unpinned for `DS-140`, `DS-142` and `DS-218`, so it is a split rather than a flag, and its blast radius wants its own gate run |
+| **B2** — landed 2026-08-29 | [T-261](../tasks/T-261-ds-035-measures-a-text-run-through-its-transform.md) | `s` | **Alone, because it changes what every geometry rule measures.** The probe must be pinned for `DS-035` and unpinned for `DS-140`, `DS-142` and `DS-218`, so it is a split rather than a flag, and its blast radius wants its own gate run. **The split is in time rather than in a flag**: the probe reads its motion facts, pins, then measures. T-209's *identical both ways* was re-derived and does not generalise — two geometry rows move on a deck whose entrance moves the axis |
 | **B3** | [T-246](../tasks/T-246-two-docs-instruments-misdescribe-their-own-behaviour.md) | `s` | `figures.py`'s `bind()` decides every pasted figure in the tree, and sixteen later tasks paste figures. Fixing what it actually pairs before they run is the difference between one sweep and two |
 
 ### Wave 2 — rules and checks (they move the counts, so they precede every document)

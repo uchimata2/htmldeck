@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-261](../../../tasks/T-261-ds-035-measures-a-text-run-through-its-transform.md). **Proposal 1 taken, by a different mechanism**: the probe is pinned rather than swept with `getAnimations().finish()`, so audit's geometry is settled the same way every other probe in the package already settles its own. **Proposal 2 taken as well** — the raw `font-size` travels beside the design units and a scale under 1 is named. The `DS-035` row says the measurement is taken through the transform. |
 | **Found while** | Building the slide 2 entrance on `D4 — Executive Board Presentation`, on 2026-08-24 |
 | **Version seen** | `0.6.0` |
 

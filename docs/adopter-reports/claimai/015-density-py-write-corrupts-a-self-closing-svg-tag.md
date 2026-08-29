@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `closed` — closed 2026-08-29 by [T-254](../../../tasks/T-254-density-py-write-corrupts-every-self-closing-svg-tag.md). Items 1 and 2 implemented and measured; item 3 deferred to [T-261](../../../tasks/T-261-ds-035-measures-a-text-run-through-its-transform.md), which already owns that measurement |
+| **Status** | `closed` — closed 2026-08-29 by [T-254](../../../tasks/T-254-density-py-write-corrupts-every-self-closing-svg-tag.md). Items 1 and 2 implemented and measured; item 3 deferred to [T-261](../../../tasks/T-261-ds-035-measures-a-text-run-through-its-transform.md), which already owns that measurement. **Item 3 closed 2026-08-29 by T-261**: `DS-035` now counts and names a degenerate screen CTM separately from small type, with the raw `font-size` beside it. **What the remedy does not claim**: re-seeding this record's own shape — an attribute written after the closing slash, beside `<text>` siblings, on `examples/reference-deck.html` — produced **no** degenerate CTM in this tree, 0 of 258 runs. So the new branch is proved on a directly seeded static `scale(0)` instead, and the `0.0 du` this record observed is covered by the pin T-261 added for record `006` rather than demonstrated to be the degenerate case. |
 | **Severity** | High — it writes invalid markup into the deliverable, and the gate reports the damage under an unrelated rule |
 | **Found while** | Building round 2's motion on `D4 — Executive Board Presentation`, on 2026-08-26 — `E66 — Build round 2's motion` |
 | **Version seen** | `0.6.0` |

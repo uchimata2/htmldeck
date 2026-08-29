@@ -138,6 +138,16 @@ RESOLUTIONS = [(3840, 2000, "3840x2000"), (1280, 634, "1280x634"), (1280, 720, "
 # (**L-57**).
 MEASURES_MOTION = "htmldeck:measures-motion"
 #
+# **A probe that measures motion may still need a settled page for its geometry rows** - and until
+# T-261 there was no way to have both, so `audit.PROBE` took every geometry measurement it owns off
+# an unsettled page. `PINS_LOCALLY` is the second half of the same idiom: the probe declares that it
+# pins itself, `make_probe` gives it `MOTION_PIN_FN` - the installer without the call - and the probe
+# applies it at the moment it chooses, after its motion facts are read. Measured on a deck whose
+# `scaleY(0)` entrance has not started: unpinned, `DS-035` reports three display-size runs at 0 du
+# and `DS-117`'s gaps move; pinned, `DS-140`/`DS-142`/`DS-218` lose their only looping subject. The
+# split is in **time**, not in a flag, which is why it is a declaration and not a parameter (L-128).
+PINS_LOCALLY = "htmldeck:pins-locally"
+#
 # `*` DOES NOT MATCH PSEUDO-ELEMENTS, so the selector names them: the ruler's tick marks are
 # `::before`, and a capture taken while one was mid-transition read its animated height and colour
 # instead of its settled ones. Found 2026-08-08 building the ruler's dot variant.
@@ -190,17 +200,34 @@ ERROR_TRAP = r"""
 """
 
 
-MOTION_PIN = r"""
+# **One installer, two moments** (T-261). The CSS below is the pin and it has one home; what
+# changed is that applying it is now a call rather than the act of injecting it. `MOTION_PIN` is
+# still installer-plus-call and is what every ordinary probe gets, unchanged. A probe declaring
+# `PINS_LOCALLY` gets `MOTION_PIN_FN` alone and calls it itself. Copying the CSS into the second
+# caller instead would give the pin the second home the sweep below exists to refuse.
+MOTION_PIN_FN = r"""
 <script>
-(function(){
+window.__htmldeckPinMotion = function(){
+  if (window.__htmldeckMotionPinned) return true;
+  window.__htmldeckMotionPinned = true;
   document.documentElement.setAttribute('data-motion','off');
   var s = document.createElement('style');
   s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}' +
                   '.rise,.pulse,.opening{opacity:1!important;transform:none!important}';
   (document.head || document.documentElement).appendChild(s);
-})();
+  /* **No forced reflow here.** One was written and the seeded-variant suite refused it: GF-6 went
+     from CAUGHT to MISSED, 7 of 7 to 6 of 7, because the pin runs in every probe and reading
+     layout before the fonts settle gives GF-6's comparison a baseline it is supposed to take
+     later. It bought nothing either - the first getBoundingClientRect below forces the same
+     layout - so the reflow was a cost with no purchase (T-261). */
+  return true;
+};
 </script>
 """
+
+MOTION_PIN_CALL = "<script>window.__htmldeckPinMotion();</script>\n"
+
+MOTION_PIN = MOTION_PIN_FN + MOTION_PIN_CALL
 
 
 PROBE = r"""
@@ -342,7 +369,12 @@ def make_probe(deck, name="probe.html", extra="", out=None):
     # **Every probe is pinned except the one whose subject is motion** (T-209). The pin goes in
     # ahead of the probe body, so it is a property of `make_probe` rather than of any caller.
     body = PROBE if not extra else extra
-    pin = "" if MEASURES_MOTION in body else MOTION_PIN
+    # Three cases, not two (T-261): pinned, unpinned, and **unpinned with the installer available**
+    # for a probe that pins itself once its motion facts are read.
+    if MEASURES_MOTION in body:
+        pin = MOTION_PIN_FN if PINS_LOCALLY in body else ""
+    else:
+        pin = MOTION_PIN
     html = html.replace("</body>", pin + body + "\n</body>")
     # **And every probe carries the console trap, with no exemption at all** (T-041). It goes in
     # after the pin so the two seams never contend for one anchor, and lands first in the document.
@@ -986,6 +1018,29 @@ def self_test():
         if "data-motion" in _mtext:
             sys.exit("SELF-TEST FAILED: MOTION_PROBE was pinned. Measuring motion is its "
                      "declared subject; pinning it makes it report a page with none (T-185)")
+
+        # **The fourth case, and the one the other three cannot see** (T-261): a probe that measures
+        # motion AND pins itself afterwards. It must receive the installer and NOT the call - get
+        # the call and its motion rows lose their subject exactly as T-209 measured; get neither and
+        # its geometry rows read a page mid-entrance, which is the fault this case was added for.
+        # Asserted on the two constants rather than on `data-motion`, because both cases contain it
+        # and only the call distinguishes them.
+        # The markers are written OUT, not interpolated from the constants. Built from them, the
+        # fixture and `make_probe` move together and the case can never fail: seeded 2026-08-29 by
+        # renaming `PINS_LOCALLY`, it stayed green. A real probe writes the literal into its own
+        # source, so the fixture writing one is the case rather than a shortcut past it.
+        _local = make_probe(deck, name="local.html",
+                            extra="<!-- htmldeck:measures-motion htmldeck:pins-locally -->"
+                                  + MOTION_PROBE,
+                            out=os.path.join(fixture, "out"))
+        with open(_local, "r", encoding="utf-8") as _fh:
+            _ltext = _fh.read()
+        if MOTION_PIN_FN not in _ltext:
+            sys.exit("SELF-TEST FAILED: a probe declaring PINS_LOCALLY got no motion pin to call. "
+                     "Its geometry rows measure whatever the entrance was showing (T-261)")
+        if MOTION_PIN_CALL in _ltext:
+            sys.exit("SELF-TEST FAILED: a probe declaring PINS_LOCALLY was pinned at injection "
+                     "time anyway, so its motion rows have no subject left to read (T-209, T-261)")
 
         # **The trap, proved on the written page and in all three cases** (T-041). The pin has one
         # declared exemption and the trap has none, so `MOTION_PROBE` is here as a case that must

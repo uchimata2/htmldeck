@@ -1265,14 +1265,24 @@ def provenance_verdicts(html):
 
 # ---------------------------------------------------------------------------- stage 2: rendered
 PROBE = r"""
-<!-- htmldeck:measures-motion - DS-140, DS-142 and DS-218 are decided below by reading
-     `animationIterationCount` for `infinite`, and `make_probe`'s pin sets `animation:none`, which
-     erases it. Measured under T-209: pinned, the seeded DS-218 variant that hides its stop control
-     inside a shut menu goes from CAUGHT to MISSED, because the rule loses its subject rather than
-     its verdict. Its geometry rows were measured both ways on the portfolio deck and are identical,
-     so nothing is bought by pinning this one and three rules are lost. **A geometry row added here
-     inherits an unsettled page** - read `render.PROBE`, which is pinned, or pin locally after the
-     motion facts are read. -->
+<!-- htmldeck:measures-motion htmldeck:pins-locally - this probe declares BOTH, and the pair is
+     the point. DS-140, DS-142 and DS-218 are decided below by reading `animationIterationCount`
+     for `infinite`, and a pin sets `animation:none`, which erases it. Measured under T-209: pinned,
+     the seeded DS-218 variant that hides its stop control inside a shut menu goes from CAUGHT to
+     MISSED, because the rule loses its subject rather than its verdict.
+
+     **T-209 then added that the geometry rows were identical both ways on the portfolio deck, so
+     pinning bought nothing. That was true of that deck and is not true generally** - re-derived
+     under T-261 and the correction matters more than the fix it led to. Same measurement, one deck
+     later: on a deck whose `scaleY(0)` entrance has not started, `underFloor` (DS-035) reports three
+     display-size runs at 0 du that pinning empties, and `connectorLabelGap` (DS-117) moves as well.
+     Two geometry rows, in the opposite direction from the motion row. A count of decks that agreed
+     is not evidence about decks that were never measured.
+
+     So the probe is split in TIME rather than by a flag: the motion facts are read first, then
+     `window.__htmldeckPinMotion()` - `render.MOTION_PIN_FN`, injected because of the second
+     declaration above - then every geometry row below. **A row added here belongs below that seam**;
+     one added above it inherits an unsettled page, and nothing in its number will say so. -->
 <script>
 (function(){
   function tabbables(root){
@@ -1310,21 +1320,14 @@ PROBE = r"""
     var k = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 1;
     out.slideCount = slides.length;
 
-    // DS-035 - nothing below 16 design units, anywhere (amended from 18, 2026-08-06)
-    out.underFloor = [];
     var all = stage.querySelectorAll('*');
-    for (var i=0;i<all.length;i++){
-      var el = all[i];
-      if (el.children.length || !el.textContent || !el.textContent.trim()) continue;
-      var fs = parseFloat(getComputedStyle(el).fontSize), du = fs;
-      if (el.namespaceURI === 'http://www.w3.org/2000/svg'){
-        var m = el.getScreenCTM(); if (!m) continue;
-        du = fs * (Math.sqrt(Math.abs(m.a*m.d - m.b*m.c)) / k);
-      }
-      if (du < 15.5) out.underFloor.push([+du.toFixed(1),
-        el.textContent.replace(/\s+/g,' ').trim().slice(0,32),
-        (el.closest('.slide')||{dataset:{}}).dataset.name || '']);
-    }
+
+    // **The motion facts come first, and the page is pinned immediately after them** (T-261).
+    // Everything above this point reads a page mid-entrance on purpose; everything below it reads a
+    // settled one. The order is the whole fix: `animation:none` erases `animationIterationCount`,
+    // which is what the three rules here read, and NOT pinning leaves every geometry row below
+    // measuring whatever the entrance was showing. T-209 measured only the first half and left a
+    // comment saying the second cost nothing - true of its deck and of no other (see the header).
 
     // DS-140/142 - a flow may loop, and the shipped theme's `Current` is the instance every deck
     // carries. What decides the rows below is whether a looping thing's subject is static content,
@@ -1361,6 +1364,47 @@ PROBE = r"""
     var motionEl = document.getElementById('motion');
     out.motionControl = !!motionEl;
     out.motionPersistent = !!motionEl && !motionEl.closest('.more-menu');
+
+    // DS-140 - `Current` is a dashed flow, and this render says whether it is dashed. It is NOT
+    // DS-143: that rule is about what survives `prefers-reduced-motion`, and this render is taken
+    // in the default state, so a deck dropping the dasharray under reduced motion passes here.
+    // Deciding DS-143 needs a second render under the media feature - a new check, which is T-005's
+    // (T-038).
+    // **Read here rather than after the walk** (T-261): a dasharray a keyframe is animating reverts
+    // to its base value under the pin below, and this row's subject is the default state.
+    var cur = document.querySelector('.current');
+    if (cur) out.currentDasharray = getComputedStyle(cur).strokeDasharray;
+
+    // ---- the seam. Motion facts above, settled geometry below. ----
+    if (!window.__htmldeckPinMotion) throw new Error(
+      'no motion pin to call - `make_probe` did not honour htmldeck:pins-locally (T-261)');
+    window.__htmldeckPinMotion();
+
+    // DS-035 - nothing below 16 design units, anywhere (amended from 18, 2026-08-06).
+    // **Two conditions, not one** (T-261, adopter record `015` item 3). An SVG run is measured
+    // through its screen CTM, so the number reports the transform as much as the type. A run whose
+    // CTM is DEGENERATE - determinant 0 - has no rendered geometry at all: that is not small type,
+    // it is no type, and it comes from markup rather than from a font size. Reported as `0.0 du`
+    // under a row reading *text below 16 design units*, it cost the better part of a session and
+    // pointed at nothing. It is counted and named separately now, and every row carries the raw
+    // `font-size` beside the design units so the two can never be confused again.
+    out.underFloor = []; out.noGeometry = [];
+    for (var i=0;i<all.length;i++){
+      var el = all[i];
+      if (el.children.length || !el.textContent || !el.textContent.trim()) continue;
+      var fs = parseFloat(getComputedStyle(el).fontSize), du = fs, sc = null;
+      if (el.namespaceURI === 'http://www.w3.org/2000/svg'){
+        var m = el.getScreenCTM(); if (!m) continue;
+        sc = Math.sqrt(Math.abs(m.a*m.d - m.b*m.c));
+        du = fs * (sc / k);
+      }
+      var label = el.textContent.replace(/\s+/g,' ').trim().slice(0,32);
+      var slide = (el.closest('.slide')||{dataset:{}}).dataset.name || '';
+      if (sc === 0) out.noGeometry.push([+fs.toFixed(1), label, slide]);
+      else if (du < 15.5) out.underFloor.push([+du.toFixed(1), label, slide,
+                                               +fs.toFixed(1), sc === null ? null : +sc.toFixed(3)]);
+    }
+
 
     // DS-091 - **one** headline of six words or fewer. DS-085 - the last slide is a close.
     // The count is measured as well as the length, because the rule's first clause is that the
@@ -1781,14 +1825,6 @@ PROBE = r"""
       document.getElementById('toStage').click();
       out.backOnSlide = document.querySelector('.slide[data-current]').dataset.name;
     }
-
-    // DS-140 - `Current` is a dashed flow, and this render says whether it is dashed. It is NOT
-    // DS-143: that rule is about what survives `prefers-reduced-motion`, and this render is taken
-    // in the default state, so a deck dropping the dasharray under reduced motion passes here.
-    // Deciding DS-143 needs a second render under the media feature - a new check, which is T-005's
-    // (T-038).
-    var cur = document.querySelector('.current');
-    if (cur) out.currentDasharray = getComputedStyle(cur).strokeDasharray;
 
     // DS-214/215 - the colour that RENDERS, not the colour the palette intended. A palette audit
     // compares pairs an author nominates; it cannot see a pair nobody thought to nominate.
@@ -2248,6 +2284,7 @@ ALWAYS_MEASURED = {
     # ---- the deck, its text and its slides
     "slideCount": 0,
     "underFloor": [],
+    "noGeometry": [],
     "longHeadlines": [],
     "headlineCounts": [],
     "longSentences": [],
@@ -2408,8 +2445,15 @@ def render_verdicts(data):
     """
     return [
         ("DS-081", "slides: %d" % data["slideCount"], 6 <= data["slideCount"]),
-        ("DS-035", "text below 16 design units: %d" % len(data["underFloor"]),
-         not data["underFloor"]),
+        # **`0.0 du` is no type, not small type** (T-261). A degenerate screen CTM means the run
+        # has no rendered geometry - broken markup that made the browser reparent a subtree, in the
+        # case this came from - and reporting it under *text below 16 design units* sent a reader
+        # looking for a font size for the better part of a session. Same rule, same failure, but the
+        # row says which of the two it is, because the fixes have nothing in common.
+        ("DS-035", "text below 16 design units: %d" % len(data["underFloor"])
+         + ("; with no rendered geometry: %d" % len(data.get("noGeometry") or [])
+            if data.get("noGeometry") else ""),
+         not data["underFloor"] and not data.get("noGeometry")),
         # DS-091 has three clauses and the gate reaches two. **The first is that the headline
         # exists** - checked here since T-053, because until then a slide carrying none satisfied
         # the word bound over an empty set and nothing else objected.
@@ -3034,8 +3078,17 @@ def main(deck, skip_contract=False):
     # until T-038 - a check that fails the all-canvas deck DS-111 explicitly permits, and passes a
     # deck whose other eleven figures are card grids.
     print("      inline SVG figures: %d  (measured, not gated)" % data["figures"])
-    for du, text, slide in data["underFloor"][:6]:
-        print("      %5.1f du  %-32s  [%s]" % (du, text, slide))
+    # The raw `font-size` travels beside the design units, and a scale under 1 is named. One extra
+    # field is the difference between a glance and a hunt - the adopter's own words (T-261).
+    for row in data["underFloor"][:6]:
+        du, text, slide = row[0], row[1], row[2]
+        fs, sc = (row[3], row[4]) if len(row) > 4 else (None, None)
+        why = "" if sc is None or sc >= 1 else "  (scaled %.3f by its transform)" % sc
+        print("      %5.1f du  %-32s  [%s]%s%s"
+              % (du, text, slide, "" if fs is None else "  font-size %.1fpx" % fs, why))
+    for fs, text, slide in (data.get("noGeometry") or [])[:6]:
+        print("      NO GEOMETRY  %-32s  [%s]  font-size %.1fpx - degenerate screen CTM, so this "
+              "is markup, not type size" % (text, slide, fs))
     for slide, text, fg, bg, r in data.get("renderedLowContrast", [])[:8]:
         print("      %-30s %-24s %s on %s = %.2f:1" % (slide[:30], text, fg, bg, r))
     for slide, text, attr, actual in data.get("deadFillAttributes", [])[:8]:
