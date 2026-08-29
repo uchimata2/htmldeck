@@ -20,7 +20,7 @@ post-B7 questions, and `T-276` from the third. **Three more have joined since B1
 what B12 measured while closing `PR-84`, and
 [T-282](../tasks/T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md)
 from what B12's own gate exposed once ten dead quick-view payloads stopped answering for a slide.
-**`T-279` and `T-280` are done; `T-278`, `T-281` and `T-282` are unbatched**, and §4's standing authorities do not reach them — they were asked for
+**`T-279`, `T-280` and `T-281` are done; `T-278` and `T-282` are unbatched**, and §4's standing authorities do not reach them — they were asked for
 directly, which outranks a standing authority rather than needing one. *The title said* the 47 tasks *until 2026-08-29,
 which is a count of what the triage put on the board and reads as a count of what this file holds.
 The sentence below forbids exactly that, and the title was the one place nobody applied it.*
