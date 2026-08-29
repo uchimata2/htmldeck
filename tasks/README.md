@@ -34,7 +34,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
-| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223, T-224, T-226, T-227, T-228, T-229, T-230, T-231, T-232, T-233, T-234, T-235, T-236, T-237, T-238, T-239, T-240, T-241, T-242, T-243, T-244, T-245, T-246, T-247, T-248, T-249, T-250, T-251, T-252, T-253 | - | T-042, T-119, T-130, T-153, T-218, T-222, T-273 |
+| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223, T-224, T-226, T-227, T-228, T-229, T-230, T-231, T-232, T-233, T-234, T-235, T-236, T-237, T-238, T-239, T-240, T-241, T-242, T-243, T-244, T-245, T-246, T-247, T-248, T-249, T-250, T-251, T-252, T-253, T-278 | - | T-042, T-119, T-130, T-153, T-218, T-222, T-273 |
 | [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216, T-223 |
 | [T-226](T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | Give the portfolio-review deck a home in both human-facing documents | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | Correct the copy-into-your-own-plugin route, or withdraw it | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
@@ -47,7 +47,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-239](T-239-the-audits-own-record-against-what-it-did.md) | Reconcile the audit's plan, its ledger and the document binding it to its method | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-240](T-240-the-evaluation-document-against-itself-and-the-code.md) | Correct EVALUATION.md's four internal contradictions and its account of the stage split | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-241](T-241-the-design-system-and-the-rationale-against-what-shipped.md) | Close three statements the ruleset and its rationale still record as open | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
-| [T-244](T-244-the-gates-own-coverage-account.md) | Derive the clause-level account, and correct two excusals that name the wrong decider | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-247](T-247-the-portfolio-generators-documents-against-the-deck.md) | Correct the generator's account of a chart it no longer draws and a count stated three ways | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-248](T-248-four-content-errors-in-three-shipped-decks.md) | Correct four numbers a shipped deck asserts and its own source contradicts | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-249](T-249-the-two-prior-audits-registers.md) | Correct three claims the ruleset and context audits make about their own coverage | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
@@ -61,6 +60,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | Give render.py a capture path for a deck's disclosed states | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-275](T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | Retire --accent-ink from the contract, both themes and every deck that carries it | `PH3` | - | `proposed` | `specify` | - | - | - | T-242, T-274 |
+| [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md) | Write the clause rows for the nine conjunctions the sweep found owing | `PH3` | - | `proposed` | `specify` | T-219 | - | - | T-054, T-244 |
 
 ## Closed
 
@@ -119,7 +119,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-051](T-051-a-check-with-no-subject-must-not-report-a-pass.md) | A check whose subject is absent must not report a pass | - | `0.1.0` | `done` | `review` | T-044 | - | - | T-005, T-038, T-043, T-053, T-054, T-065, T-066, T-075, T-090, T-165, T-180, T-190 |
 | [T-052](T-052-two-hard-judge-failures-in-the-reference-deck.md) | Settle the two hard-judge failures the checklist's first run found in the reference deck | - | `0.1.0` | `done` | `review` | T-048 | - | - | T-024, T-028, T-040, T-044, T-056 |
 | [T-053](T-053-enforce-the-headline-ds-091-requires.md) | Enforce the headline DS-091 requires, and excuse the fragment count no check can reach | - | `0.1.0` | `done` | `review` | - | T-054, T-055 | - | T-005, T-037, T-038, T-051 |
-| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `PH3` | `0.5.0` | `done` | `review` | T-053 | - | - | T-005, T-037, T-043, T-051, T-119, T-183 |
+| [T-054](T-054-record-which-clauses-of-a-rule-the-gate-decides.md) | Record which clauses of a rule the gate decides, not only which rules it reaches | `PH3` | `0.5.0` | `done` | `review` | T-053 | - | - | T-005, T-037, T-043, T-051, T-119, T-183, T-278 |
 | [T-055](T-055-a-variant-that-leaves-malformed-markup.md) | Close the slide-is-not-a-section variant's open tag, so it tests the tag and not parser repair | `PH2` | `0.1.5` | `done` | `review` | T-053 | - | - | T-005, T-038 |
 | [T-056](T-056-humanize-the-human-facing-documents-before-publishing.md) | Humanize the human-facing documents before publishing | `PH1` | `0.1.0` | `done` | `review` | - | - | - | T-042, T-050, T-052, T-060, T-067, T-078, T-154 |
 | [T-058](T-058-the-seeded-defect-generator-reports-edits-that-never-matched.md) | The seeded-defect generator reports edits that never matched | `PH2` | `0.1.5` | `done` | `review` | - | - | - | T-005, T-016 |
@@ -295,6 +295,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-232](T-232-two-entrance-motions-do-not-collapse-for-print.md) | Collapse every content entrance motion for print, not one selector at a time | `PH1` | - | `done` | `review` | T-219 | - | - | - |
 | [T-242](T-242-the-contracts-against-the-checkers-that-decide-them.md) | Reconcile the component and theme contracts with what their checkers read | `PH3` | - | `done` | `review` | T-219 | - | - | T-274, T-275 |
 | [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | Re-bind five checks on what is true at run time instead of on a name | `PH3` | - | `done` | `review` | T-219 | - | - | - |
+| [T-244](T-244-the-gates-own-coverage-account.md) | Derive the clause-level account, and correct two excusals that name the wrong decider | `PH3` | - | `done` | `review` | T-219 | - | - | T-278 |
 | [T-245](T-245-seven-tool-defects-in-tools-deck.md) | Fix seven defects in the deck tools, each with its own seeded proof | `PH3` | - | `done` | `review` | T-219 | - | - | - |
 | [T-246](T-246-two-docs-instruments-misdescribe-their-own-behaviour.md) | Correct what the cycle and figure instruments say they do | `PH3` | - | `done` | `review` | T-219 | - | - | - |
 | [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) | Fix set_var's self-closing tag insertion, and have write verify what it wrote | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-225, T-261 |

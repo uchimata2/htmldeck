@@ -33,6 +33,7 @@ Pure standard library (**L-07**), real Chrome offline through `render.py`.
 """
 
 import inspect
+import hashlib
 import io
 import json
 import os
@@ -147,9 +148,14 @@ DEFERRED = {
                "with descriptions, 24 without - in a real browser, and exercises the split that "
                "keeps every sheet inside it; run separately because it sweeps seventeen sheet "
                "sizes and eight stage shapes rather than reading the deck in front of it. "
-               "**And since T-123 the printed page itself is measured**: PRINT-2 and PRINT-3 above "
-               "read the card rectangles out of the printed PDF and assert that none intersects "
-               "and none reaches the footnote. What is still excused is the rest of the rule - "
+               "**And since T-123 the printed page itself is measured under `--print-pages`**: "
+               "PRINT-2 and PRINT-3 above read the card rectangles out of the printed PDF and "
+               "assert that none intersects and none reaches the footnote. *That clause said the "
+               "geometry was measured, flat, while the same run printed `NOT RUN - opt-in` for "
+               "those two rows three lines above it - so a default run's account claimed an "
+               "instrument it had not used. DS-222's neighbouring entry had the conditional form "
+               "right all along, which is what made the omission a slip rather than a question "
+               "(`PR-46`, T-244).* What is still excused is the rest of the rule - "
                "whether the compression reads as a compact mode rather than as damage - which is "
                "the judgement the 2026-08-08 ruling left with the person who prints.",
                ("look", None)),
@@ -196,9 +202,17 @@ DEFERRED = {
     "DS-139": ("Triage: `default`. The assumption marker's edge placement is measurable; nothing "
                "has needed it.",
                ("work", "an assumption-marker edge-placement measurement")),
-    "DS-145": ("Triage: `default`. Reveal motions are DS-140's starter set, checked statically "
-               "there; *flows use dashed arrows* is the DS-140 row.",
-               ("work", "a check for dashed arrows on flow connectors")),
+    "DS-145": ("Triage: `default`. This rule is two clauses and only the second is decided. "
+               "*Flows use dashed arrows, slowly animated* is DS-140's `Current renders dashed` "
+               "row, which reads the dasharray off the render. **The reveal clause is decided by "
+               "nothing.** *This entry used to excuse it on the ground that reveal motions are "
+               "DS-140's starter set, checked statically there - wrong twice by the time it was "
+               "read. DS-140's rows test the duration bands and the dash, and neither asks which "
+               "motion a reveal uses; and T-187 opened the vocabulary on 2026-08-21, so there is "
+               "no closed starter set left to check against. The entry also contradicted itself: "
+               "it called the dashed-arrow clause covered while its closing condition asked for "
+               "work on exactly that clause* (`PR-46`, T-244).",
+               ("work", "a check that a hidden element's reveal opens, turns or scales")),
     "DS-147": ("Triage: `default`. Count-up and the single pulse are present; *one per slide* is "
                "the DS-101 obstacle in miniature.",
                ("amendment", "DS-147")),
@@ -250,8 +264,13 @@ CLOSING_PHRASE_MIN = 12
 #
 # **This table declares only rules whose statement is a conjunction of separately checkable
 # clauses.** A second sentence restating the first (DS-081's *under 6 is a memo*) is rationale,
-# not a clause, and listing it would inflate the account rather than sharpen it. The sweep that
-# produced this list read all 120 `hard` rules, 2026-08-18.
+# not a clause, and listing it would inflate the account rather than sharpen it.
+#
+# **Which rules have been read is `SWEPT` below, tied to the ruleset** (T-244). This comment used
+# to end *the sweep that produced this list read all 120 `hard` rules, 2026-08-18* - a dated
+# sentence about a moving set, which is `L-136`'s shape: the ruleset held **130** `hard` rules by
+# the time anyone checked, and **24** of them carried a later date, so the account's own statement
+# of its coverage was the part that had gone stale. A sentence cannot notice that; `SWEPT` does.
 CLAUSES = {
     "DS-020": (("neutral ground", True),
                ("exactly one accent", True)),
@@ -304,7 +323,290 @@ CLAUSES = {
                 "dashes per paragraph in slide copy, on the same subject `ds100` already reads.",
                 ("work", "count em dashes per paragraph over the deck's own slide copy")),
                ("no rhetorical questions", True)),
+    # ---- added by T-244 (`PR-43`), the two the register named -----------------------------------
+    # Both reported `checked` on the strength of a row deciding one clause, which is the device
+    # this table exists to see through: rule-level coverage is true of a partly-decided rule.
+    "DS-073": (("carries all content, tier two included", True),
+               ("carries it inlined - every panel open in normal flow", True),
+               ("the disclosure control not rendered at all",
+                "The two rows above decide what the reflow view CONTAINS; nothing decides what it "
+                "must not contain. A control printed with nothing to reveal is the half of this "
+                "rule that names a defect rather than a requirement, and it is unreached - the "
+                "subject is in the DOM and cheap to read, which is why this is `work` and not an "
+                "amendment. CLOSES WHEN: a check asserts no disclosure control renders in the "
+                "reflow view, on the same subject `ds073_reflow` already walks.",
+                ("work", "assert no disclosure control renders in the reflow view")),
+               ),
+    "DS-242": (("a lobby is single, first, and in front of an argument", True),
+               ("the counter counts the argument rather than the file",
+                "The row above decides the lobby's shape and says nothing about the counter. "
+                "DS-216 counts *encodings of position* and finds two, which is a different "
+                "question - that there are two, not that either is right. So a deck could number "
+                "its lobby as slide 1 of 13 and pass both. CLOSES WHEN: a check reads the "
+                "counter's total against the count of slides that are argument rather than "
+                "matter, which the stage table already distinguishes.",
+                ("work", "read the counter's total against the argument-slide count")),
+               ("matter keeps its box on the printed contents page",
+                "Print-only, and unlike DS-226's geometry no instrument reaches it: PRINT-2 and "
+                "PRINT-3 measure card rectangles for collision, not whether a card is marked as "
+                "matter. DS-225's excusal already says the page count reaches half of its own "
+                "rule and no more, and this is the same boundary one rule along. CLOSES WHEN: a "
+                "check under `--print-pages` asserts the contents page marks matter as matter, or "
+                "the 2026-08-08 ruling is read as leaving this with the person who prints.",
+                ("work", "assert matter is marked as matter on the printed contents page")),
+               ),
 }
+
+
+# **What has been read, and the exact statement that was read** (T-244, `PR-43`). One entry per
+# `hard` rule; the value is a digest of that rule's whole row in the ruleset at the moment somebody
+# swept it and decided whether its statement is a conjunction.
+#
+# **The digest covers the whole row, amendment notes included, and that is deliberate.** A rule
+# acquires a second testable assertion in exactly that prose - DS-218 gained one the day this was
+# written - so a hash over some tidier slice of the row would go quiet at the moment the question
+# matters. The cost is that any edit to a rule re-opens it, which is the intended friction: an edit
+# is when to re-ask *did this become a conjunction?*
+#
+# **There is no `--sweep` writer, on purpose.** The failure prints the line to paste. A command that
+# re-recorded the digest would let a rule be swept by running it, which is the one thing this
+# structure exists to prevent - it would be the dated sentence again, with a nicer interface.
+SWEPT = {
+    "DS-001": "6b4c660297",
+    "DS-002": "e158695597",
+    "DS-003": "622428e293",
+    "DS-005": "6caa275b79",
+    "DS-006": "76618ad3ed",
+    "DS-008": "6dae42fc7d",
+    "DS-009": "e803f1f81a",
+    "DS-010": "8ec58c5e4c",
+    "DS-011": "abc73633b8",
+    "DS-012": "633364d4c1",
+    "DS-020": "ccda8ed425",
+    "DS-021": "523ccc9311",
+    "DS-026": "8e4d3c8480",
+    "DS-027": "347f53242d",
+    "DS-028": "f4c996952c",
+    "DS-030": "bebf5098be",
+    "DS-031": "c3f954be9d",
+    "DS-032": "41ce762eda",
+    "DS-033": "f5fb419124",
+    "DS-034": "5fd9da0329",
+    "DS-035": "295575bd77",
+    "DS-036": "ca6e9090ca",
+    "DS-040": "bf4859ead5",
+    "DS-041": "db57ccba08",
+    "DS-042": "96035ddf80",
+    "DS-043": "084335da4e",
+    "DS-044": "f0bc1a9508",
+    "DS-045": "9263627110",
+    "DS-060": "9d6ec81c4e",
+    "DS-061": "97cfd160ad",
+    "DS-062": "0ac68c6549",
+    "DS-063": "e8a0bdf1ec",
+    "DS-064": "3c6058e5d5",
+    "DS-065": "511bb602f8",
+    "DS-070": "004a6ed3b2",
+    "DS-072": "1d5ae7eef0",
+    "DS-073": "203165a5d2",
+    "DS-074": "069716e374",
+    "DS-075": "847b4a27c5",
+    "DS-080": "66007ebf2d",
+    "DS-081": "b2d96cb25e",
+    "DS-084": "1cc1b86fc6",
+    "DS-085": "40c2509277",
+    "DS-090": "33c3591364",
+    "DS-091": "d9a933935f",
+    "DS-092": "8af674db55",
+    "DS-093": "c8f4d7621c",
+    "DS-097": "a2f334adfe",
+    "DS-099": "13e91de6d5",
+    "DS-100": "f49b6a7b3f",
+    "DS-101": "1ef6a27347",
+    "DS-102": "21f09dd01c",
+    "DS-106": "73c9912936",
+    "DS-107": "c84c20a9a6",
+    "DS-110": "d3cec982ca",
+    "DS-111": "eaef5cd7b5",
+    "DS-112": "f7fb6dea85",
+    "DS-113": "ef6c49615a",
+    "DS-114": "5510649d43",
+    "DS-116": "fc382f6aa7",
+    "DS-117": "eae85236fb",
+    "DS-118": "d2ff4f804e",
+    "DS-119": "e9fde7cac3",
+    "DS-120": "732da3a5e0",
+    "DS-121": "8e0c6df3af",
+    "DS-122": "16a1cf4073",
+    "DS-123": "460e066d73",
+    "DS-130": "b83cf68fe2",
+    "DS-132": "6b909e6fa2",
+    "DS-135": "8b9f2f112c",
+    "DS-136": "dca68b60a0",
+    "DS-137": "189e12c311",
+    "DS-138": "041b5234a0",
+    "DS-140": "aaf4830ee8",
+    "DS-141": "c98bb96d44",
+    "DS-142": "481a4a62c1",
+    "DS-143": "22d9795e1a",
+    "DS-144": "369c62ee3f",
+    "DS-146": "f4a592f9e7",
+    "DS-149": "dbd06a9f97",
+    "DS-150": "5f63df59e6",
+    "DS-160": "c176005ce9",
+    "DS-161": "15bc84e731",
+    "DS-162": "91e6518b4e",
+    "DS-163": "3ebcfaaaf6",
+    "DS-164": "29ac90f3c1",
+    "DS-165": "5ad4f97ff2",
+    "DS-166": "153d03bb00",
+    "DS-167": "e7025afa05",
+    "DS-168": "08e69e8e54",
+    "DS-190": "24b6600b91",
+    "DS-191": "45bd03b75f",
+    "DS-200": "01e0869f9e",
+    "DS-201": "1a0dc46927",
+    "DS-202": "dd67289a12",
+    "DS-203": "be76461730",
+    "DS-204": "7cade605c9",
+    "DS-205": "cc0ed7cbfb",
+    "DS-207": "29e7c1a55d",
+    "DS-208": "baf126a4b2",
+    "DS-209": "183ca713ec",
+    "DS-210": "004dabd0ba",
+    "DS-211": "1d8f91e2e8",
+    "DS-214": "528846f9cc",
+    "DS-215": "f5e3501eda",
+    "DS-218": "0b43febb2a",
+    "DS-219": "a2b3e36c18",
+    "DS-220": "ff318bdb81",
+    "DS-221": "ed8dca05dc",
+    "DS-222": "2636751626",
+    "DS-223": "1c5ab18cda",
+    "DS-224": "2298231b8f",
+    "DS-225": "5ea5e93909",
+    "DS-226": "9478b4cb39",
+    "DS-227": "f5733e555e",
+    "DS-229": "b6c7605edc",
+    "DS-230": "dc2a8d0544",
+    "DS-231": "11db18d1a1",
+    "DS-232": "75ae632f71",
+    "DS-233": "11b9ee7ac4",
+    "DS-235": "58ddad15f0",
+    "DS-236": "648c32a0de",
+    "DS-237": "266ea37604",
+    "DS-238": "ea2430582b",
+    "DS-239": "98c011e87a",
+    "DS-240": "102cea8a8a",
+    "DS-241": "f972c08048",
+    "DS-242": "2cd3e89a8d",
+    "DS-243": "9796e90016",
+    "DS-244": "d4388e88b1",
+}
+
+
+# **Read, judged a conjunction, and its clause rows not written yet** (T-244).
+#
+# Without this set `SWEPT` says only *somebody read this*, and a reader takes that for *and found
+# it states one thing* - so a conjunction could be swept into silence by the very record built to
+# prevent it. The sweep of the 24 rules that had arrived under the dated sentence found **nine**
+# conjunctions beyond the two the register named, which is four times the remedy's estimate and
+# why they are a queue rather than an afternoon: each clause needs somebody to decide whether a
+# check reaches it and to write a closing condition where none does.
+#
+# **This does not fail the run, and that is a decision rather than a softness.** It is a backlog of
+# work with a named owner, in the shape `OWED-LOOKS.md` already uses; failing on it would make the
+# gate red for as long as the queue is non-empty, which turns an honest count into a reason to
+# stop counting. What DOES fail is a rule in here that is also in `CLAUSES` - the row exists, so
+# the debt does not - or one nothing has swept.
+CONJUNCTIONS_OWED = {
+    "DS-110": "no rasterised diagram / no raster carrying the argument",
+    "DS-122": "charts are hand-written SVG / a declared engine must emit SVG",
+    "DS-141": "the 500 ms cap / eased rather than linear / the declared licence",
+    "DS-146": "charts draw in once / the draw-in is Rise, not a stroke-dash",
+    "DS-202": "one sentence / factual / not the headline restated",
+    "DS-218": "the stop control is reachable / the deck still reads with motion off",
+    "DS-229": "every part matches its contract row / every styled class has a row",
+    "DS-230": "tier two answers a question the face provokes / it is one of four kinds",
+    "DS-238": "density never reaches affordance motion / a content motion runs at or above its rank",
+}
+
+
+def sweep_debt(swept=None, clauses=None, owed=None):
+    """`(faults, owed)` - the conjunctions read but not yet given rows, and any contradiction.
+
+    The count is the point. A rule read and judged a conjunction is a known hole in the account
+    until its clauses are written down, and the difference between a known hole and an unknown one
+    is whether anybody wrote the number.
+    """
+    swept = SWEPT if swept is None else swept
+    clauses = CLAUSES if clauses is None else clauses
+    owed = CONJUNCTIONS_OWED if owed is None else owed
+    faults = []
+    for rid in sorted(owed):
+        if rid in clauses:
+            faults.append("SWEEP %s is owed clause rows and already has them - it is in CLAUSES, "
+                          "so the debt is paid and the entry is stale" % rid)
+        if rid not in swept:
+            faults.append("SWEEP %s is recorded as a conjunction owing rows and has never been "
+                          "swept - the two records disagree about whether anyone read it" % rid)
+    return faults, sorted(owed)
+
+
+def rule_rows(path=None):
+    """`{rule id: the row's whole line}` for every rule the ruleset tabulates."""
+    out = {}
+    for line in io.open(path or ruleset.SPEC, encoding="utf-8"):
+        if line.startswith("| DS-"):
+            out[line.split("|")[1].strip()] = line.rstrip("\n")
+    return out
+
+
+def rule_digest(line):
+    return hashlib.sha1(line.encode("utf-8")).hexdigest()[:10]
+
+
+def sweep_faults(swept=None, rules=None, rows_by_id=None):
+    """`[fault]` - every `hard` rule the clause sweep has not read, or has not read as it stands.
+
+    Two kinds, and they are different failures. **UNSWEPT** is a rule that arrived after the last
+    sweep: nobody has asked whether its statement is a conjunction, so a clause of it can be
+    unreached without anything saying so. **CHANGED** is a rule whose row has moved since it was
+    read, which is the same question re-opened rather than a new one.
+
+    This is what replaces the dated sentence. A sweep recorded as prose cannot notice the ruleset
+    growing under it; 24 rules had arrived or moved under the last one before anybody counted.
+
+    **The population is every `hard` rule, not the ones this gate owns**, and the two differ by 34.
+    The sweep asks *does this rule's statement carry more than one testable assertion*, which is a
+    question about the rule; whether some check here reaches it is the next question and the one
+    `CLAUSES` answers. Scoping the sweep to the jurisdiction would have excused a conjunction from
+    being noticed on the ground that nothing checks it - which is the reasoning this whole account
+    exists to refuse.
+    """
+    swept = SWEPT if swept is None else swept
+    rows_by_id = rule_rows() if rows_by_id is None else rows_by_id
+    rules = ruleset.load() if rules is None else rules
+    hard = {r for r, v in rules.items() if getattr(v, "label", "") == "hard"}
+    faults = []
+    for rid in sorted(hard):
+        line = rows_by_id.get(rid)
+        if line is None:
+            continue
+        now = rule_digest(line)
+        if rid not in swept:
+            faults.append("SWEEP %s UNSWEPT - nobody has asked whether its statement is a "
+                          "conjunction. Read it, add a CLAUSES row if it is, then record it: "
+                          '"%s": "%s",' % (rid, rid, now))
+        elif swept[rid] != now:
+            faults.append("SWEEP %s CHANGED since it was read - re-read it and either add a "
+                          'CLAUSES row or re-record: "%s": "%s",' % (rid, rid, now))
+    # A recorded rule the ruleset no longer owns is the mirror fault, and it is the one that makes
+    # this a partition rather than a floor.
+    for rid in sorted(set(swept) - hard):
+        faults.append("SWEEP %s recorded and not a `hard` rule the ruleset owns - the id was "
+                      "renamed or its label changed" % rid)
+    return faults
 
 
 def clause_account(clauses=None, checked=(), owned=None):
@@ -693,7 +995,8 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
                           for rid, what in closing_faults(checked=acct["checked"])]
                        + ["CLAUSE %s" % what for what in clauses["clauseExcusalFaults"]]
                        + ["CLAUSE TABLE %s - the ruleset does not own it" % rid
-                          for rid in clauses["clausesForRulesNotOwned"]])
+                          for rid in clauses["clausesForRulesNotOwned"]]
+                       + sweep_faults() + sweep_debt()[0])
     if acct["partitionError"]:
         coverage_faults = coverage_faults + [
             "PARTITION %+d (buckets %d, owned %d)"
@@ -845,6 +1148,22 @@ def self_test():
                  % (len(live), "y" if len(live) == 1 else "ies",
                     "; ".join("%s %s" % (r, w) for r, w in live[:3])))
 
+    # **The sweep has to be able to fail, in both of its directions** (T-244). It is silent on a
+    # tree where nothing has moved, which is the state it will be in on almost every run - so
+    # without these two it is indistinguishable from a function that returns nothing (**L-36**,
+    # and the same argument `theme.py`'s negative fixtures answer one file along).
+    _rules, _rows = ruleset.load(), rule_rows()
+    if sweep_faults(swept={k: v for k, v in SWEPT.items() if k != "DS-218"},
+                    rules=_rules, rows_by_id=_rows) == []:
+        sys.exit("SELF-TEST FAILED: a `hard` rule with no sweep record raised nothing. That is "
+                 "the dated-sentence failure this replaced - a rule can arrive and no clause of "
+                 "it is ever asked about")
+    _moved = dict(_rows)
+    _moved["DS-218"] = _moved["DS-218"] + " a second testable assertion."
+    if sweep_faults(swept=SWEPT, rules=_rules, rows_by_id=_moved) == []:
+        sys.exit("SELF-TEST FAILED: a rule whose row changed since it was swept raised nothing. "
+                 "An amendment is exactly where a rule acquires a second clause")
+
     # **`--quiet` must never be able to swallow a red run.** The whole objection to a quiet gate is
     # that it hides something, so the one thing it must not hide is asserted rather than reviewed.
     red = {"deck": "x", "notes": [], "account": account([]), "ok": False,
@@ -930,6 +1249,17 @@ def report(res, verbose=True, quiet=False):
     # invisible inside a rule the run calls covered.
     c = res.get("clauses")
     if c:
+        # **Printed at zero, like everything else in this account** (L-36). The sweep is silent on
+        # a tree where no rule has moved, which is most runs - so the line that says how many
+        # rules it read is the only evidence it is still reading them (T-244).
+        print("\n  clause sweep       %3d `hard` rule(s) read, statement by statement"
+              % len(SWEPT))
+        _owed = sweep_debt()[1]
+        print("    conjunctions owing rows %3d   %s" % (len(_owed), " ".join(_owed)))
+        if _owed:
+            print("      Read and judged conjunctions; their clause rows are not written yet, so "
+                  "a clause of each\n      is unreached without this account being able to say "
+                  "which. A counted backlog, not a\n      fault - it does not fail the run.")
         print("\n  clause-level, for the %d rule(s) whose statement is a conjunction"
               % len(c["rulesWithClauses"]))
         print("    clauses declared   %3d" % c["clausesTotal"])
