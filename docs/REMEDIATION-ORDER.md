@@ -11,7 +11,13 @@ tasks plus [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md)'
 cycles.
 
 **Three tasks have joined it since, each following a ruling** — `T-274` and `T-275` from §3's two
-post-B7 questions, and `T-276` from the third. *The title said* the 47 tasks *until 2026-08-29,
+post-B7 questions, and `T-276` from the third. **Three more have joined since B11, and none of them from a ruling** —
+[T-278](../tasks/T-278-write-the-clause-rows-the-sweep-found-owing.md) from what `T-244` found, and
+[T-279](../tasks/T-279-check-all-reports-one-number-for-thirty-seven-commands.md) and
+[T-280](../tasks/T-280-every-render-pays-a-fresh-chrome-launch.md) from the owner asking on
+2026-08-29 whether a batch could be made faster without giving up quality. **`T-279` is done; the
+other two are unbatched**, and §4's standing authorities do not reach them — they were asked for
+directly, which outranks a standing authority rather than needing one. *The title said* the 47 tasks *until 2026-08-29,
 which is a count of what the triage put on the board and reads as a count of what this file holds.
 The sentence below forbids exactly that, and the title was the one place nobody applied it.*
 
@@ -208,7 +214,7 @@ closes.
 | **Commit and push each batch** | Per task where the task is the unit, and push at the end of the batch — the same shape every audit cycle used |
 | **Amend a `DESIGN-SYSTEM.md` rule row** | Only where the task calls for it, with `DS-000`'s stated reason, and marked reversible. §3's eight are already ruled; a *ninth* rule question is not covered and stops the batch |
 | **Rebuild and commit the five tracked decks** | They are gated byte-for-byte, so every rebuild is a reviewable diff. Rebuild in B12 where it can be done once; earlier, only where a task's own proof needs it |
-| **Absorb what a batch finds** | **A small fix in place is made in place.** Anything with potential impact on other work becomes a task — **and that task is added to the running batch and worked in it**, rather than filed for later. A batch is elastic: it finishes what it started and what it found |
+| **Absorb what a batch finds** | **A small fix in place is made in place.** Anything with potential impact on other work becomes a task — **and that task is added to the running batch and worked in it**, rather than filed for later. A batch is elastic: it finishes what it started and what it found. **Deviated from once, in B11, and recorded rather than glossed**: `T-244` found **nine** rules owing clause rows — about twenty clauses, each needing somebody to decide whether a check reaches it and to defend a closing condition where none does. Written at the end of a batch they would have been nine excusals reading *not checked*, which inflates the gate's account rather than sharpening it, and that is the failure `check.py`'s own `CLAUSES` preamble names. So they went to [T-278](../tasks/T-278-write-the-clause-rows-the-sweep-found-owing.md) and were left **counted and printed on every run** rather than invisible, which is the half of this rule that actually matters. *The rule is not amended; one batch judged the elastic too long and said so.* |
 
 **The one thing a session may not do is look.** `CLAUDE.md` rule 6 is a person, and three of this
 audit's findings were passed by every machine and caught by an eye. So:
