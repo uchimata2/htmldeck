@@ -10,7 +10,7 @@ scope by the owner's instruction** — the 3D visual is deferred, not scheduled 
 tasks plus [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md)'s two remaining
 cycles.
 
-**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 to B7 landed 2026-08-29.**
+**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 to B8 landed 2026-08-29.**
 
 ---
 
@@ -68,7 +68,7 @@ is blocked.
 | **B5** — landed 2026-08-29 | [T-263](../tasks/T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md), [T-262](../tasks/T-262-ds-092-counts-a-sources-box-as-prose.md), [T-264](../tasks/T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | `s`·3 | Three rules that a correct deck cannot satisfy. Independent of each other; all three change `audit.py` and a rule row. **`T-264`'s question is ruled** — §3. **Three adopter records closed, and `T-263`'s stated cause refused by measurement**: the sub-pixel rounding it blames is 1e-4 CSS px, and what actually breaks the ruler is two mark sizes sitting side by side. Kept as [L-141](lessons/L-141.md). `T-264` needed a **fourth token kind** — `optional` — because *unset by default* and DS-013 could not both hold, and it closed a DS-010 hole after measuring that closing it costs nothing (18 declarations newly scanned, 0 offending). **A sixth consecutive batch refusing a proposed remedy** |
 | **B6** — landed 2026-08-29 | [T-256](../tasks/T-256-ds-219-cannot-see-a-painted-svg-ancestor.md), [T-260](../tasks/T-260-ds-244-tests-proximity-where-it-means-obstruction.md) | `m`·2 | The two rules whose *scope* is in question rather than their code. **Both questions are ruled** (§3). Held together because both re-open what a rule measures and both are gated by `T-204`'s calibration precedent. **Both rulings held under measurement and neither rule lost force.** `DS-219`'s ground now composites every painted layer under the mark, and the adopter's *the rule is wrong* was refused: the rule was asking the right two numbers against the wrong surface ([L-142](lessons/L-142.md)). `DS-244` reads opacity before pairing and measures a label across the box it names — **reporting, because the calibration came back empty**: zero firings on five decks, so there is no false-alarm rate to gate on. The batch's own worst moment is [L-143](lessons/L-143.md): the first opacity guard silenced the rule entirely, and what caught it was re-running `T-204`'s count rather than reading the diff |
 | **B7** — landed 2026-08-29 | [T-229](../tasks/T-229-ds-106s-check-omits-a-word-the-rule-names.md), [T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md), **+[T-273](../tasks/T-273-the-owed-looks-have-no-queue-to-accumulate-in.md)** | `s`,`m`,`xs` | Deriving a check from its rule row, and reconciling the two contracts with their checkers. Both are *derive rather than restate* work and share the idiom. **Both tasks found the subject wrong before the list was.** DS-106's check read the whole file, so `actually` sat in **seven** shell comments per deck against one in slide copy, and adding the word the rule names would have failed all five decks; `component.py` iterated the contract and never the CSS, so a rule with **no row at all** was invisible — and the new direction found a third unrowed motion on its first run. **Three findings closed, two deferred**: `PR-36`'s Turn half and `PR-77` are one `DS-000` question and are recorded together where it will be taken, rather than answered as a ninth. **`T-273` was raised while closing the batch and worked in it** under §4: the owed looks had no queue to accumulate in, so the pass this order promises before the release had nothing to run |
-| **B8** | [T-265](../tasks/T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md), [T-266](../tasks/T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md), [T-270](../tasks/T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | `s`·3 | The three rule **decisions**. Grouped because each is a `DS-000` ruleset change with a stated reason, and one session can hold that frame once. **All three are ruled** (§3), so the session writes the change rather than deciding it |
+| **B8** — landed 2026-08-29 | [T-265](../tasks/T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md), [T-266](../tasks/T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md), [T-270](../tasks/T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | `s`·3 | The three rule **decisions**. Grouped because each is a `DS-000` ruleset change with a stated reason, and one session can hold that frame once. **All three are ruled** (§3), so the session writes the change rather than deciding it. **Two written as ruled, and one ruling refused by its own measurement.** `DS-110` narrows by place on top of T-070's by scope, and `DS-229` reserves `.d-` for a deck's own repeated treatments — both proved on `measure-first.html` rather than on a fixture. **`T-270`'s `DS-100` half was refused**: the ruled condition holds on 38 of 38 slides, so it is an off switch rather than a narrowing, and the question went back to §3 with a recommendation ([L-144](lessons/L-144.md)). A seventh consecutive batch refusing a proposed remedy, and the first to refuse a **ruling** |
 
 ### Wave 3 — the product (shell, tools, themes)
 
@@ -149,6 +149,30 @@ failing** — the batch finished, and the questions reached the owner with their
 
 **Both are reversible on the owner's word and each is recorded as a `DS-000` change with its stated
 reason**, on the same terms as the eight above.
+
+### One more, raised in B8 — and this one is a ruling that cannot be carried out as written
+
+**`T-270`'s `DS-100` half is refused by its own measurement.** The ruling above accepts report
+[`023`](adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md)'s proposal 1,
+whose condition the report states as *a `?` followed, within the slide, by a declarative bottom
+line*. Measured on this repository's three decks before a line of it was written: **38 slides, 38
+with a bottom line, 38 declarative — the condition holds on 100% of them.** The component contract
+puts exactly one `.bottom-line` on every slide and `DS-202` requires it to be one factual sentence,
+so the guard is satisfied by construction. It is not a narrowing; it is an off switch, and it would
+have taken a `hard` rule to zero findings behind a green verdict — **L-143**, which B6 paid for once
+already.
+
+**So the batch implemented `T-270`'s `DS-202` half, refused the `DS-100` half, and put the question
+here** — the same escape `PR-36` and `PR-77` used above, and for the same reason: the mechanism is a
+new rule question, not a detail of the one ruled.
+
+| Batch | Task | The question | Recommendation |
+| :--- | :--- | :--- | :--- |
+| B8 | [`T-270`](../tasks/T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | *A question the slide answers* has no checkable form — the one the report offers exempts every slide. What should `DS-100` measure instead? | **Narrow by where the question sits: a `?` in a slide's `<header>` fails, one anywhere else in slide copy passes.** A rhetorical question on a slide is a headline device, which is what the corpus measured; a question inside body copy is one the face is about to answer. It admits both of the adopter's cases and still fails *Why does this matter?* as a headline. **Its stated limit: it cannot be calibrated here.** All three decks carry **zero** `?` in copy, so there is no firing rate to compare — the recommendation rests on the argument, not on a count, and `T-204`'s *report, calibrate, then decide* is the cheaper alternative if that is not enough |
+
+**The refusal costs nothing yet.** `DS-100` is unchanged, so no deck's verdict moves and the escape
+hatch the report objects to — draw the word as a shape — is exactly as open as it was. What has
+changed is that it is written down.
 
 ---
 
