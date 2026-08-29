@@ -36,10 +36,16 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-Empty. Nothing outstanding.
+**Both rows below are owed *after* B12.** They are looks at **paper**, and the fix is in
+`shell/components.css` while the tracked decks still carry the shell as it was — so printing one
+today would show the defect and prove nothing about the repair.
+[`REMEDIATION-ORDER.md`](REMEDIATION-ORDER.md) rebuilds the five decks once, in B12; these become
+answerable then.
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
+| 2 | [`examples/measure-first/measure-first.html`](../examples/measure-first/measure-first.html) | slide 5, *Poor exactly where we decide* — the six-dimension scale | **Print it.** All thirty dots printed **absent** under a caption describing them: the dots animate from `scale(0)` with `fill:both`, print never advances an animation, and the print block did not switch them off. *Are all thirty on the paper, at their right size, and does the scale read as a scale rather than as a row of gaps?* | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) |
+| 3 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 9, *Month eighteen stays reversible* — the flow's arrowheads | **Print it.** The same defect on the other motion: `.arrow-pop marker path` scales from `scaleX(0)`, so the arrowheads printed as nothing and the flow printed as plain lines. *Is every arrowhead there, and does each still point the way the flow goes?* | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) |
 
 ## What has already been looked at
 

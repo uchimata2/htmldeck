@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-268](../../../tasks/T-268-three-chrome-and-timing-defects-in-deck-js.md). **Taken as proposed.** The keydown handler returns on `ctrlKey`, `metaKey` or `altKey` before it reads the key, so every browser chord built on the six letters reaches the browser. **Shift is deliberately not one of the three**: the handler accepts `R` as well as `r`, so Shift is part of how these shortcuts are typed and guarding on it would break the capital form of all six. `DS-131` now says the shortcuts are unmodified keys, so the rule carries the reason rather than the code alone. Measured in a browser on a deck built from the edited shell: Ctrl-R neither entered the reading view nor was `preventDefault`ed, Ctrl-F neither went fullscreen nor was prevented, and bare `r` still enters the reading view and still leaves it. |
 | **Found while** | Round 2 of the deck review on `D4 — Executive Board Presentation`, on 2026-08-25. Reported by the presenter, who uses Ctrl-R to refresh while building |
 | **Version seen** | `0.6.0` |
 

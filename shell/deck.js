@@ -43,7 +43,7 @@
 
   /* the deck's argument, lit stage by stage (DS-134) */
   var STAGES = [{{STAGES}}];
-  var idx = 0, played = {}, inDoc = false;
+  var idx = 0, played = {}, arrived = {}, inDoc = false;
 
   /* ---------------------------------------------------------- stage scaling (DS-060/062) */
   function fit(){
@@ -350,6 +350,17 @@
     box.hidden = !open;
     if (open) box.classList.add('opening');
   }
+  /* **A click anywhere else dismisses**, which is the rule the More menu beside it already keeps
+     and argues for in its own comment (adopter report `009`). Bound on the document rather than on
+     a scrim, for the More menu's reason: a scrim over the deck would block the stage to close
+     itself.
+
+     **Keyed to `.sources` and not to `.sources-btn`.** The button's own handler runs first and
+     opens the box; a listener that spared only the button would then see this same click as
+     outside and shut what it had just opened. */
+  document.addEventListener('click', function(e){
+    if (!e.target.closest || !e.target.closest('.sources')) closeAllSources(null);
+  });
 
   /* ------------------------------------------------ the quick view (DS-105, T-070) */
   /* One surface for the whole deck; what it shows is cloned from the cited slide's own
@@ -470,6 +481,7 @@
     });
     /* charts and entrances draw in once, never on the way back (DS-146) */
     if (!played[i]) { played[i] = true; slides[i].setAttribute('data-played',''); }
+    markArrived(i, prev !== i ? slides[prev] : null);
 
     /* **The counter counts the ARGUMENT, not the file** (T-200). A lobby and a colophon are covers
        on the topic rather than content, so counting them told a presenter they were on 15 of 16
@@ -504,6 +516,51 @@
     if (opts && opts.focus) slides[i].focus();
   }
 
+  /* **`data-played` lands at t = 0 of the transition, and `data-arrived` lands when the slide has
+     actually arrived** (adopter report `010`, T-268). An entrance gated on `data-played` - the gate
+     DS-146 tells authors to use - starts while the outgoing slide is still on screen, so its first
+     frames play underneath it and the reader sees a motion that has already half happened.
+
+     **`data-played` is unchanged and this is a second attribute, which is the report's own safer
+     option.** Decks in the field gate on it; moving when it lands would change what those decks do,
+     where adding an attribute changes nothing that does not ask for it.
+
+     **Once-only, exactly like `data-played`** - a reader coming back does not replay it (DS-146),
+     which is why `arrived` is a map rather than an attribute swept on the way out.
+
+     **What is waited on is the OUTGOING slide, and that is the whole of the fix.** The arriving
+     slide runs no animation of its own - `.slide[data-current]` only sets `opacity` and
+     `visibility`, and every transition rule in `components.css` is keyed to `[data-leaving]`. So
+     *arrived* means *the slide that was on top has finished leaving*, which is exactly the moment
+     the report describes: the outgoing slide holds `z-index:1` while it goes, and an entrance
+     started before then plays underneath it. Measured on a built deck: asking the arriving slide
+     what it is running answers **0**, so an implementation that waited on it would mark arrival at
+     t = 0 and be `data-played` under a second name.
+
+     The element is asked what is running rather than the token being re-derived: a deck may set
+     `--slide-dur` to anything the contract allows, and where the transition is `immediate`, under
+     reduced motion, or with motion off there is no animation at all - the same three cases the
+     `data-leaving` note below names. Those arrive immediately instead of waiting for an
+     `animationend` that never fires, and so does the first slide, which nothing leaves for. A
+     cancelled animation - a reader advancing before the transition finishes - rejects, and the
+     slide stays unmarked until it is next arrived at. */
+  function land(i){
+    if (arrived[i] || idx !== i) return;
+    arrived[i] = true; slides[i].setAttribute('data-arrived','');
+  }
+  function markArrived(i, leaving){
+    if (arrived[i]) return;
+    var running = (leaving && leaving.getAnimations ? leaving.getAnimations() : [])
+      .filter(function(a){ return a.playState === 'running'; });
+    if (!running.length) land(i);
+    /* Otherwise the `animationend` listener below lands it, and that is not a style choice.
+       **An `Animation.finished` promise loses a race this file creates**: that listener removes
+       `data-leaving` the moment the animation ends, which unmatches the CSS rule and *cancels*
+       the animation, and a cancelled animation rejects `finished` instead of resolving it.
+       Measured on a built deck - `data-arrived` never landed at all. The event the deck already
+       listens for is the same signal without the race. */
+  }
+
   /* The mark comes off when the effect finishes, so a slide is never left painted by an animation
      that has already run. `animationend` rather than a timer: the timer would have to know the
      token's value, and a deck may set `--slide-dur` to anything the contract allows. Where the
@@ -513,11 +570,22 @@
     if (e.target.classList && e.target.classList.contains('slide') &&
         e.target.hasAttribute('data-leaving') && !e.target.hasAttribute('data-current')) {
       e.target.removeAttribute('data-leaving');
+      /* The outgoing slide is off, so the current slide has arrived (T-268). */
+      land(idx);
     }
   });
 
   document.addEventListener('keydown', function(e){
     if (e.target.matches('input,textarea')) return;
+    /* **Every shortcut here is a bare letter, so every browser chord built on one was being
+       swallowed** - Ctrl-R entered the reading view and cancelled the reload, Ctrl-F went
+       fullscreen instead of opening find (adopter report `009`'s sibling, `008`). A deck is a
+       page in a browser and the browser's chords are not the deck's to take.
+
+       **Shift is deliberately absent from this guard.** The handler accepts `R` as well as `r`,
+       so Shift is already part of how these shortcuts are typed; adding it here would break the
+       capital form of all six. Ctrl, Meta and Alt are the three that build a browser chord. */
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     var k = e.key;
     /* DS-137, the stated half of the precedence rule. The ruler's own handler already stops these
        propagating, and this says the same thing again on purpose: the rule is that the ruler owns

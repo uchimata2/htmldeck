@@ -130,10 +130,15 @@ DEFERRED = {
                "is observable only in the printed output, where a panel that escaped its slide "
                "shows up scattered across a break - which is a look at paper, not a page count.",
                ("look", None)),
-    "DS-224": ("The same ruling as DS-222. A slide that printed blank because its entrance "
-               "animation never played still counts as a page, so the count cannot see it; what "
-               "sees it is a person turning the sheet over.",
-               ("look", None)),
+    # DS-224's excusal was CLOSED by T-232 (2026-08-29), on DS-143's precedent above.
+    # `component.uncollapsed_motions` reads the deck's own keyframes and fails any motion whose
+    # first painted frame is empty and which `@media print` does not switch off - which is what
+    # made the printed page blank. It caught three: the two in `PR-80`, and `.opening` on its
+    # first run. Kept as a comment rather than deleted, because the entry it replaces claimed the
+    # whole rule was a look and a reader should be able to see which half stopped being one.
+    # **The other half is still a person turning the sheet over** - a slide the reader never
+    # advanced to, and whether what printed reads as a page - and that is CLAUDE.md rule 6 rather
+    # than an excusal, which is exactly what DS-222's ruling says.
     "DS-225": ("The same ruling as DS-222. The count does reach half of it: a contents "
                "page that never rendered shows up as `n` rather than `n` + `k`.",
                ("look", None)),

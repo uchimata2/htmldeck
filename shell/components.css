@@ -1093,8 +1093,26 @@ svg{display:block}
   section.slide:last-of-type{break-after:auto}
 
   /* Entrance animations hold their pre-animation state until played, so an unplayed slide
-     prints blank or half-risen (DS-224). */
+     prints blank or half-risen (DS-224). A print rendering never advances an animation, so the
+     FROM keyframe is what lands on the paper - and for a motion that scales from zero, the FROM
+     keyframe is nothing at all.
+
+     **T-112's two content motions belong here for the same reason, and were missing** (`PR-80`,
+     T-232). `measure-first.html`'s *Poor exactly where we decide* - slide 5 as the deck numbers
+     it, `PR-80` says 6 - printed its six-dimension scale with all 30 dots gone, under a caption
+     describing them. This is the **third** time these two have been added to a
+     collapse list one list late: they were written into the motion-control collapse and not into
+     the reduced-motion one, which the comment beside that block records, and then into both and
+     not into this one. `component.uncollapsed_motions` is what now compares the three lists, so a
+     fourth list-shaped miss is a red run rather than a discovery on paper. */
   .rise{opacity:1!important;transform:none!important;animation:none!important}
+  .arrow-pop marker path,.dot-pop circle{animation:none!important;transform:none!important}
+  /* **`.opening` is the third instance, and the new check found it on its first run.** The class
+     is on a sources box while its open animation plays, `@keyframes open` starts at `opacity:0`,
+     and the print block sets `.sources-box{display:block!important}` - so a box the reader had
+     just opened printed as an empty space where the deck's sources should be. Both other collapse
+     lists already named it; print did not. */
+  .opening{opacity:1!important;transform:none!important;animation:none!important}
 
   /* Tier two does not survive this rendering: the panels are absolutely positioned overlays on a
      fixed 1920x1080 box, and opening them onto it covers the content they explain. So the whole

@@ -33,7 +33,7 @@ study, company or place. See *Provenance*, below.
 *Buy frequency before bikes*, a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-[`reference-deck.html`](reference-deck.html) is **307 KB in one file**, 314 396 bytes. Three embedded
+[`reference-deck.html`](reference-deck.html) is **313 KB in one file**, 320 612 bytes. Three embedded
 typefaces (97 KB of it as base64), eleven Lucide icons in one sprite, eight hand-written SVG figures,
 and the deck shell. No libraries, no build step, no network.
 
@@ -263,8 +263,8 @@ python tools/deck/check.py examples/reference-deck.html
 ```
 
 It runs the auto gate, the contrast audit, the render gate and the resolution contract in one pass,
-then declares what it did **not** check: 92 of the 122 rules a gate owns are decided, and the other
-30 are named with a reason each. The four commands after it still exist because each is useful
+then declares what it did **not** check: 93 of the 122 rules a gate owns are decided, and the other
+29 are named with a reason each. The four commands after it still exist because each is useful
 alone. `audit.py` and `contract.py` are for when you want one stage's output without the account, and the
 two variant suites are separate because they build decks rather than read one.
 
@@ -347,7 +347,7 @@ edited without regenerating is a red run rather than a discovery two audits late
 
 [`sort-window/`](sort-window) holds all four artifacts a build run leaves behind: the deck, the
 foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
-reconciled against. It is **305 KB in one file**, 312 384 bytes, 12 slides, six hand-written SVG
+reconciled against. It is **311 KB in one file**, 318 600 bytes, 12 slides, six hand-written SVG
 figures, ten disclosure panels, zero external references.
 
 ```bash
@@ -411,7 +411,7 @@ first one. Nothing but a person saw the other two.**
 [`measure-first/measure-first.html`](measure-first/measure-first.html) is *Demand Planning: what
 Business Analytics can do first*, and it runs to 14 slides: a lobby, twelve of argument, and a
 colophon. It is
-**417 KB in one file**, 426 566 bytes, zero external references. It argues that measurement and
+**423 KB in one file**, 432 782 bytes, zero external references. It argues that measurement and
 discipline fix demand planning before any AI is bought, for an invented dental group deciding what
 to do first.
 

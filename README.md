@@ -91,10 +91,10 @@ python tools/deck/check.py examples/reference-deck.html
 
 ```
   owned by a gate      122
-  checked               92
+  checked               93
   failing                0
   excused in the rules   3   DS-072 DS-210 DS-211
-  excused here          27
+  excused here          26
   undecided, no subject  0
   SILENT                 0
   ------------------------
@@ -103,8 +103,8 @@ python tools/deck/check.py examples/reference-deck.html
 0 failure(s): none
 ```
 
-**Read the account, not just the failure count.** A gate that checks 92 of 122 rules and says nothing
-about the other 30 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each
+**Read the account, not just the failure count.** A gate that checks 93 of 122 rules and says nothing
+about the other 29 is making a claim it has not earned. Every rule in a gate's jurisdiction ends each
 run **checked**, **excused in writing** (with what would close the excusal), or **failing**, and a
 rule in none of those three states *fails the run*. So a rule added to the ruleset with nothing behind
 it is a red run the same afternoon, not a discovery two months later.
@@ -149,8 +149,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 4695 document pointer(s) checked, 0 broken
-     1066 section reference(s) resolved, 0 dead; 3192 not bound to a document and skipped.
+OK - 4717 document pointer(s) checked, 0 broken
+     1067 section reference(s) resolved, 0 dead; 3193 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -187,7 +187,7 @@ and need nothing but Python.
 
 ## The reference deck
 
-[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **307 KB
+[`examples/reference-deck.html`](examples/reference-deck.html) is 12 slides and a colophon, **313 KB
 in one file, zero external references**, three embedded typefaces, eleven icons and eight hand-written
 SVG figures. Download it, disconnect, double-click it. Every measurement behind it, and how to
 reproduce each, is in [`examples/README.md`](examples/README.md).
@@ -204,7 +204,7 @@ names every one it misses.
 ## The deck nobody authored by hand
 
 [`examples/sort-window/`](examples/sort-window) holds *Move the window, not the fleet*: 12 slides,
-**307 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
+**313 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
 panels. It was built through the pipeline rather than written, assembled from
 [`shell/`](shell), which is the reference deck with its content cut out, then authored three slides
 at a time with the gate run per batch.

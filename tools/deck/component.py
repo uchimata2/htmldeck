@@ -597,6 +597,95 @@ def unstyled_rows(parts, styled, printed):
 
 MOTION_DECL = re.compile(r"(?:^|;)\s*(?:animation|transition)(?:-[a-z-]+)?\s*:\s*([^;]+)", re.I)
 
+REDUCED = "(prefers-reduced-motion:reduce)"
+
+
+def collapses(css):
+    """Selectors this CSS switches motion OFF for - `animation` or `transition` set to `none`.
+
+    The mirror of the test in `unrowed_motions`, which reads the same declarations and keeps the
+    ones that START a motion. Together they partition every motion declaration into the two things
+    a rule can be doing with one.
+    """
+    out = []
+    for sel, body in rules(css):
+        for value in MOTION_DECL.findall(body):
+            if value.strip().startswith("none"):
+                out.append(sel)
+                break
+    return out
+
+
+INVISIBLE = re.compile(r"opacity\s*:\s*0(?!\.\d*[1-9])|scale[XY]?\s*\(\s*0\s*[,)]|scale3d\s*\(\s*0\s*,")
+KEYFRAMES = re.compile(r"@keyframes\s+([\w-]+)\s*\{", re.I)
+ANIM_NAME = re.compile(r"(?:^|;)\s*animation(?:-name)?\s*:\s*([^;]+)", re.I)
+
+
+def opening_state(css):
+    """`{name: True}` for every `@keyframes` whose FIRST frame paints nothing.
+
+    `animation-fill-mode:both` paints the FROM keyframe before the animation runs, so this is the
+    state a medium that never advances an animation puts on the page.
+    """
+    out = {}
+    for m in KEYFRAMES.finditer(css):
+        depth, i = 1, m.end()
+        while i < len(css) and depth:
+            depth += 1 if css[i] == "{" else -1 if css[i] == "}" else 0
+            i += 1
+        block = css[m.end():i - 1]
+        first = re.search(r"(?:^|\})\s*(?:from|0%)\s*\{([^}]*)\}", block, re.I)
+        out[m.group(1)] = bool(first and INVISIBLE.search(first.group(1)))
+    return out
+
+
+def uncollapsed_motions(html):
+    """`[selector]` - every motion that prints as nothing because print never advances it.
+
+    **The subject is a pre-animation state that paints NOTHING**, which is DS-224's own sentence.
+    A print rendering never advances an animation, so what lands on the paper is the resting state
+    or, under `fill:both`, the FROM keyframe - and where that is `opacity:0` or a zero scale, the
+    mark is simply absent. `measure-first.html` slide 6 printed its six-dimension scale with all
+    thirty dots gone, under a caption describing them (`PR-80`, T-232).
+
+    **The first form of this check compared the three collapse lists** - the motion control,
+    reduced motion, and print - on the theory that they are one list. Measured on a shipped deck,
+    that reported **nine** selectors of which **two** were real: print hides the whole chrome, so it
+    owes no collapse for the ruler or the pager, and a looping dash whose first frame is an
+    ordinary dashed line prints correctly without one. A 7-to-2 false-alarm rate is a check nobody
+    would keep, and the theory was wrong rather than the code (**L-142**).
+
+    So it binds on the hazard instead of on the symmetry, and the hazard is derived from the
+    deck's own keyframes. A motion added later carries its obligation with it: if its first frame
+    paints nothing and print does not switch it off, this fires without anyone editing this file.
+
+    Read from the deck rather than from `shell/`, because what ships is what a reader prints.
+    """
+    shared = shared_css(html)
+    blank = opening_state(shared)
+    off = collapses(print_css(html))
+    out = []
+    for sel, body in rules(shared):
+        if any(selector_covers(p, sel) for p in off):
+            continue
+        hazard = INVISIBLE.search(body)
+        if not hazard:
+            for value in ANIM_NAME.findall(body):
+                if "both" not in value and "backwards" not in value:
+                    continue
+                if any(blank.get(w) for w in re.findall(r"[\w-]+", value)):
+                    hazard = True
+                    break
+        if hazard and MOTION_DECL.search(body):
+            out.append(sel)
+    return sorted(set(out))
+
+
+def at_rule_body(css, media):
+    """The inside of `@media <media>{...}`, or `""`."""
+    found = at_rule_span(css, media)
+    return "" if not found else css[found[1]:found[2] - 1]
+
 
 def unrowed_motions(css, motions):
     """CSS rules that start a motion on a token and have no row in §3.8 - the other direction.
@@ -677,6 +766,7 @@ def verdicts(html):
     scoped = scoped_rows(css, motions)
     unrowed = unrowed_motions(css, motions)
     unstyled = unstyled_rows(parts, styled, styled_classes(print_css(html)))
+    unprinted = uncollapsed_motions(html)
 
     place = [m for m in bad if "sit outside" in m or "carry it alone" in m]
     vocabbad = [m for m in bad if "is `vocabulary`" in m]
@@ -731,6 +821,13 @@ def verdicts(html):
          % (len([p for p in parts.values() if p.source in ("script", "print")]),
             len(unstyled), "" if not unstyled else " - " + "; ".join(unstyled[:3])),
          not unstyled),
+        # **DS-224, and it is the only half of that rule a program can reach** (T-232). The rest
+        # of it is a person turning the sheet over, which is `check.py`'s excusal and CLAUDE.md
+        # rule 6. What a check CAN decide is whether a motion whose first painted frame is empty
+        # is switched off for a medium that never advances an animation.
+        ("DS-224", "entrance motions whose print state paints nothing: %d%s"
+         % (len(unprinted), "" if not unprinted else " - " + "; ".join(unprinted[:4])),
+         not unprinted),
         ("DS-229", "every `vocabulary` row is still unused: %d declared, %d now in the deck%s"
          % (len(vocab), len(vocabbad), "" if not vocabbad else " - " + "; ".join(vocabbad[:3])),
          not vocabbad),

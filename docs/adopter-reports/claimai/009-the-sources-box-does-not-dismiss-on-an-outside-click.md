@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-268](../../../tasks/T-268-three-chrome-and-timing-defects-in-deck-js.md). **Taken as proposed**, and by the three-line document listener this report points at — the More menu's, applied to the component beside it. **Keyed to `.sources` rather than to `.sources-btn`**, which is the detail that makes it work: the button's own handler runs first and opens the box, so a listener sparing only the button would read the same click as outside and shut what it had just opened. Measured in a browser on a deck built from the edited shell, both directions: the box survives the click that opens it, and a click on the stage dismisses it. |
 | **Found while** | Round 2 of the deck review on `D4 — Executive Board Presentation`, on 2026-08-25 |
 | **Version seen** | `0.6.0` |
 

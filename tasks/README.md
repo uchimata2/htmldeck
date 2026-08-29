@@ -39,7 +39,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-226](T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | Give the portfolio-review deck a home in both human-facing documents | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | Correct the copy-into-your-own-plugin route, or withdraw it | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-228](T-228-the-second-theme-fails-the-contract-it-demonstrates.md) | Bring lattice.css up to the theme contract, and put a theme in a gate's subject | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
-| [T-232](T-232-two-entrance-motions-do-not-collapse-for-print.md) | Collapse every content entrance motion for print, not one selector at a time | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-233](T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md) | Remove the ten dead quick-view payloads, and fix the verb that writes them | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-234](T-234-the-front-pages-own-figures-and-claims.md) | Correct the front page's figures and its two false claims | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-235](T-235-the-skills-documents-against-the-tools-they-describe.md) | Reconcile the skill's documents with the tools and rules they describe | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
@@ -62,7 +61,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-258](T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | Report a readability measurement over drawn slide copy, and name the hardest lines | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-259](T-259-nothing-prints-what-a-slide-actually-contains.md) | Ship a per-slide fact printer, so a specification and its deck stop drifting silently | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | Give render.py a capture path for a deck's disclosed states | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
-| [T-268](T-268-three-chrome-and-timing-defects-in-deck-js.md) | Guard the single-letter shortcuts, dismiss the sources box, and land data-played on arrival | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-269](T-269-three-build-path-defects-the-adopter-worked-around.md) | Unwrap a provenance row, read a rich Sources field, and convert bold across a line break | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-274](T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | Build the card reveal, so DS-140's Turn is a component rather than two dials | `PH3` | - | `proposed` | `specify` | - | - | - | T-242, T-275 |
@@ -297,6 +295,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-229](T-229-ds-106s-check-omits-a-word-the-rule-names.md) | Derive DS-106's banned-terminology list from the rule instead of restating it | `PH1` | - | `done` | `review` | T-219 | - | - | - |
 | [T-230](T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md) | Derive DS-063's slide sample from the deck instead of fixing it at four indices | `PH1` | - | `done` | `review` | T-219 | - | - | - |
 | [T-231](T-231-two-packaging-checks-have-no-subject-at-all.md) | Teach the scaffold gate the placeholder the skill actually writes | `PH1` | `unreleased` | `done` | `review` | T-219 | - | - | - |
+| [T-232](T-232-two-entrance-motions-do-not-collapse-for-print.md) | Collapse every content entrance motion for print, not one selector at a time | `PH1` | - | `done` | `review` | T-219 | - | - | - |
 | [T-242](T-242-the-contracts-against-the-checkers-that-decide-them.md) | Reconcile the component and theme contracts with what their checkers read | `PH3` | - | `done` | `review` | T-219 | - | - | T-274, T-275 |
 | [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | Re-bind five checks on what is true at run time instead of on a name | `PH3` | - | `done` | `review` | T-219 | - | - | - |
 | [T-246](T-246-two-docs-instruments-misdescribe-their-own-behaviour.md) | Correct what the cycle and figure instruments say they do | `PH3` | - | `done` | `review` | T-219 | - | - | - |
@@ -310,6 +309,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-264](T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | Give a licensed long motion somewhere to state its duration | `PH1` | - | `done` | `review` | - | - | - | T-225 |
 | [T-265](T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md) | Decide whether DS-110 narrows by where a raster sits | `PH3` | - | `done` | `review` | - | - | - | T-225 |
 | [T-266](T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md) | Say what to do when a class fails DS-229, and decide whether a deck gets a local prefix | `PH3` | - | `done` | `review` | - | - | - | T-225 |
+| [T-268](T-268-three-chrome-and-timing-defects-in-deck-js.md) | Guard the single-letter shortcuts, dismiss the sources box, and land data-played on arrival | `PH1` | - | `done` | `review` | - | - | - | T-225 |
 | [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | Decide what DS-100 and DS-202 should measure, and say the reason in each failure | `PH3` | - | `done` | `review` | - | - | - | T-225 |
 | [T-272](T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md) | Make render.py motion enumerate the same animation set on every run of one deck | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-255 |
 | [T-273](T-273-the-owed-looks-have-no-queue-to-accumulate-in.md) | Give the owed looks a queue, so the pass before the release has something to run | `PH3` | - | `done` | `review` | - | - | - | T-219 |

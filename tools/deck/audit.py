@@ -2453,6 +2453,15 @@ ABSENCE_IS_A_PASS = {
                               "sources are named in plain text has no link to be dead (T-069)"),
     "DS-132": ("prohibition", "nothing tabbable on an off-screen slide"),
     "DS-142": ("prohibition", "no looping motion on static content"),
+    # T-232. The subject is the deck's own animated rules, and a deck may legitimately have none -
+    # a deck with no entrance motion at all has nothing that can print as nothing. So the shape is
+    # the prohibition rather than a guard: what is forbidden is a motion whose first painted frame
+    # is empty and which `@media print` does not switch off.
+    "DS-224": ("prohibition", "no motion whose print state paints nothing - `opacity:0` or a zero "
+                              "scale, held by `fill:both` in a medium that never advances an "
+                              "animation. The subject is the shared block's animated rules; a deck "
+                              "that animates nothing satisfies it, and so does one whose print "
+                              "block collapses every motion it starts"),
     # The first rule to reach this table by two routes at once, and the reason the shape field
     # accepts a `+`. DS-143 emits three rows from `reduced_verdicts` - a family that was outside
     # this fixture until T-066, which is why none of them had ever been declared.
