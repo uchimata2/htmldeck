@@ -63,7 +63,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | Give render.py a capture path for a deck's disclosed states | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-269](T-269-three-build-path-defects-the-adopter-worked-around.md) | Unwrap a provenance row, read a rich Sources field, and convert bold across a line break | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
-| [T-274](T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | Build the card reveal, so DS-140's Turn is a component rather than two dials | `PH3` | - | `proposed` | `specify` | - | - | - | T-242, T-275 |
 | [T-275](T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | Retire --accent-ink from the contract, both themes and every deck that carries it | `PH3` | - | `proposed` | `specify` | - | - | - | T-242, T-274 |
 
 ## Closed
@@ -313,5 +312,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | Decide what DS-100 and DS-202 should measure, and say the reason in each failure | `PH3` | - | `done` | `review` | - | - | - | T-225 |
 | [T-272](T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md) | Make render.py motion enumerate the same animation set on every run of one deck | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-255 |
 | [T-273](T-273-the-owed-looks-have-no-queue-to-accumulate-in.md) | Give the owed looks a queue, so the pass before the release has something to run | `PH3` | - | `done` | `review` | - | - | - | T-219 |
+| [T-274](T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | Build the card reveal, so DS-140's Turn is a component rather than two dials | `PH3` | - | `done` | `review` | - | - | - | T-242, T-275 |
 
 <!-- taskmd:end -->

@@ -171,9 +171,15 @@ def build():
     # ---------------------------------------------------------------- whole-deck dimensions
     # D3 Close - the ask becomes a recap and a thank-you.
     # Retargeted by T-028: the ask moved out of `.close-sub` and into the shared bottom-line slot.
-    html = sub(html, "D3", "slide 12 ends on a summary and a thank-you, not an ask",
-               '<h2 class="headline close-h rise" style="--i:1">Approve the frequency package</h2>',
-               '<h2 class="headline close-h rise" style="--i:1">Thank you</h2>')
+    # **The rank is matched rather than named** (T-274). The ask carries Turn now, and DS-239
+    # derives `--m-rank` from the whole deck - so adding any content motion anywhere renumbers this
+    # one, and a literal here would go stale on a change that has nothing to do with slide 12. It
+    # was `rise` with `--i:1` until the card reveal replaced it, and the literal broke on that same
+    # day: this pattern is what stops the next one costing a run.
+    html = subre(html, "D3", "slide 12 ends on a summary and a thank-you, not an ask",
+                 r'(<h2 class="headline close-h turn" style="--m-rank:\d+">)'
+                 r'Approve the frequency package</h2>',
+                 r'\1Thank you</h2>')
     html = sub(html, "D3", "and the ask becomes a recap",
                '''<b>On 12 March: $4.1M of the grant,
     $6.8M a year from the general fund, $1.5M held for the gate.</b>''',

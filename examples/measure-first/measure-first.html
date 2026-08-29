@@ -946,7 +946,8 @@ svg{display:block}
 /* The fallback is in the `var()` and not in a `:root` block, which would be a second theme region
    and is what DS-011 counts. 101 outranks every density, so an element the build did not rank does
    not move - a content motion nobody placed is not a content motion the deck chose. */
-.pulse,.arrow-pop,.dot-pop{--m-on:max(0,min(1,calc(var(--motion-density) - var(--m-rank,101) + 1)))}
+.pulse,.arrow-pop,.dot-pop,.turn{
+  --m-on:max(0,min(1,calc(var(--motion-density) - var(--m-rank,101) + 1)))}
 
 /* **The arrowhead scales out of its line.** T-112's first content motion, and it is DS-140's Scale
    reused rather than a new motion invented: a reveal, applied to the mark that says *this way*.
@@ -995,6 +996,32 @@ svg{display:block}
   62%{transform:scale(var(--dot-overshoot))}
   to{transform:scale(1)}}
 
+/* **Turn: the card reveal DS-140 names, and the last member of that set to get a body** (T-274).
+   Both themes have declared `--turn-dur` and `--turn-ease` since the set was written and no rule
+   read either, so a starter set the rule calls *what a deck gets without designing anything*
+   shipped one of its four names as a pair of dials. Ruled 2026-08-29: build it.
+
+   **It turns on its own centre line, from nothing to full**, which is what a card does when it is
+   turned face-up. The endpoints are 0 and 1 rather than tokens, on `dotpop` and `arrowpop`'s
+   precedent: a magnitude that is a design choice takes a token - `--rise-dist`, `--open-squash` -
+   and an endpoint that means *absent* or *itself* does not. So Turn is exactly its two dials and
+   adds no third.
+
+   **It is gated on `data-arrived`, not on `data-played`, and it is that attribute's first
+   reader** (T-268, DS-146). A reveal is the motion that gate was built for: `data-played` lands at
+   t = 0 of the transition, so a card starting to turn there does most of its turning underneath
+   the outgoing slide.
+
+   Content motion, so it is ranked and density gates it - the `--m-on` list above. Inside DS-141's
+   cap without a licence: `--turn-dur` is typed `ms 0-500` in the theme contract, so the cap holds
+   by construction rather than by anyone checking. */
+.turn{opacity:0;transform:scaleY(0);transform-origin:center}
+.slide[data-arrived] .turn{
+  animation:turn var(--turn-dur) var(--turn-ease) both;
+  animation-duration:calc(var(--m-on,0) * var(--turn-dur));
+  --motion-kind:content;--motion-subject:static}
+@keyframes turn{from{opacity:0;transform:scaleY(0)}to{opacity:1;transform:scaleY(1)}}
+
 .slide[data-played] .rise{animation:rise var(--rise-dur) var(--rise-ease) both;
   animation-delay:calc(var(--i,0) * var(--rise-stagger));
   --motion-kind:affordance}
@@ -1026,7 +1053,8 @@ svg{display:block}
 :root[data-motion="off"] .arrow-pop marker path,
 :root[data-motion="off"] .dot-pop circle{animation:none;transform:none}
 :root[data-motion="off"] .rise,:root[data-motion="off"] .pulse,
-:root[data-motion="off"] .opening{animation:none;opacity:1;transform:none}
+:root[data-motion="off"] .opening,
+:root[data-motion="off"] .turn{animation:none;opacity:1;transform:none}
 /* The motion control turns the transition off with everything else (DS-221), which is also what a
    headless capture leans on: `render.py` pins motion off before it shoots, so a capture can never
    catch a slide mid-leave. */
@@ -1035,7 +1063,7 @@ svg{display:block}
 /* reduced motion keeps the semantics: the dashed arrows stay dashed (DS-143) */
 @media (prefers-reduced-motion:reduce){
   .current{animation:none}
-  .rise,.pulse,.opening{animation:none;opacity:1;transform:none}
+  .rise,.pulse,.opening,.turn{animation:none;opacity:1;transform:none}
   /* DS-143 outranks density, which is T-112's own rule: at 100 with the preference set, nothing
      moves. Caught by the gate rather than by reading - the two new motions were written into the
      motion-control collapse and not into this one, and every other check passed. */
@@ -1322,6 +1350,7 @@ svg{display:block}
 :root[data-preflight] .rise,
 :root[data-preflight] .pulse,
 :root[data-preflight] .opening,
+:root[data-preflight] .turn,
 :root[data-preflight] .current{opacity:1;transform:none;animation:none}
 :root[data-preflight] .figwrap,
 :root[data-preflight] .fig{width:100%;height:auto}
@@ -1401,6 +1430,10 @@ svg{display:block}
      just opened printed as an empty space where the deck's sources should be. Both other collapse
      lists already named it; print did not. */
   .opening{opacity:1!important;transform:none!important;animation:none!important}
+  /* Turn is a reveal that starts at `scaleY(0)`, so it prints as nothing without this - and the
+     DS-224 check written in T-232 said so on the component's first run, before it had shipped
+     anywhere. That is the check doing the job the three-times-late history asked for. */
+  .turn{opacity:1!important;transform:none!important;animation:none!important}
 
   /* Tier two does not survive this rendering: the panels are absolutely positioned overlays on a
      fixed 1920x1080 box, and opening them onto it covers the content they explain. So the whole

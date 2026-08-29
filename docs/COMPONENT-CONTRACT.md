@@ -564,8 +564,12 @@ a quiet gate is deleting the notes.
 
 ### 3.8 Motion
 
-Three classes carry DS-140's suggested starter set onto elements the rest of these tables already
-name, so they sit on anything and contract only *where* they may sit. **They are what a deck gets
+Four classes carry DS-140's suggested starter set onto elements the rest of these tables already
+name, so they sit on anything and contract only *where* they may sit. *`.turn` joined them
+2026-08-29 by [T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md):
+`--turn-dur` and `--turn-ease` were declared by both themes and read by no rule, so the set shipped
+one of its four names as a pair of dials. It is the only one of the four that is a **content**
+motion, so it carries `--m-rank` and density gates it (DS-238, DS-239).* **They are what a deck gets
 without designing a motion, not the set it is held to** — DS-140 admits a motion that passes its
 test, and a deck adding one adds a row here rather than arguing an exemption.
 
@@ -574,6 +578,7 @@ test, and a deck adding one adds a row here rather than arguing an exemption.
 | `.rise` | — | `.slide` | `0+` | `style:--i` | author |
 | `.current` | — | `.fig` | `0+` | — | author |
 | `.pulse` | — | `.slide` | `0+` | — | author |
+| `.turn` | — | `.slide` | `0+` | `style:--m-rank` | author |
 
 **A rule that starts a motion declares `--motion-subject`, and a looping one is failed without it.**
 `live` says the motion's subject is genuinely in flight, `static` says it is not, and DS-142 reads
@@ -595,6 +600,8 @@ remembered to tokenise.
 | `.slide[data-leaving="back"]` | the same, going back | `--slide-leave-back` |
 | `@keyframes slide-leave-fwd` | the `slide` transition's travel | `--slide-shift` `--slide-scale` `--slide-leave-shadow` |
 | `@keyframes slide-leave-back` | the same, mirrored | `--slide-shift` `--slide-scale` `--slide-leave-shadow` |
+| `.turn` | Turn's rest state (DS-140) — a card before it is turned | — |
+| `.slide[data-arrived] .turn` | Turn, the card reveal | `--turn-dur` `--turn-ease` |
 | `.rise` | Rise's rest state (DS-140) | `--rise-dist` |
 | `.slide[data-played] .rise` | Rise | `--rise-dur` `--rise-ease` `--rise-stagger` |
 | `@keyframes rise` | Rise | `--rise-dist` |

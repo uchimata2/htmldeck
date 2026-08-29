@@ -361,10 +361,16 @@ REDUCED_VARIANTS = [
         # `matchMedia` on load. Seeding only the media query changed nothing measurable - the
         # attribute rules carry higher specificity and put the opacity back. A variant that
         # breaks one of two redundant paths proves the check cannot see the OTHER path.
-        (":root[data-motion=\"off\"] .opening{animation:none;opacity:1;transform:none}",
-         ":root[data-motion=\"off\"] .opening{animation:none}"),
-        (".rise,.pulse,.opening{animation:none;opacity:1;transform:none}",
-         ".rise,.pulse,.opening{animation:none}")]),
+        # **Both anchors gained `.turn` when T-274 built the card reveal**, and the suite caught
+        # it: an anchor is a literal, so a component joining a collapse list moves it. That is the
+        # variant working - a seeded defect that stopped matching is a suite reporting on a deck it
+        # no longer describes, which is exactly what its own failure message says.
+        (":root[data-motion=\"off\"] .opening,\n:root[data-motion=\"off\"] .turn"
+         "{animation:none;opacity:1;transform:none}",
+         ":root[data-motion=\"off\"] .opening,\n:root[data-motion=\"off\"] .turn"
+         "{animation:none}"),
+        (".rise,.pulse,.opening,.turn{animation:none;opacity:1;transform:none}",
+         ".rise,.pulse,.opening,.turn{animation:none}")]),
     ("reduced-motion-solidifies-the-flow", "DS-143", [
         # The semantics half. The arrows stop moving AND stop being dashed, so the diagram no
         # longer says *flow* - motion removed, and meaning with it.

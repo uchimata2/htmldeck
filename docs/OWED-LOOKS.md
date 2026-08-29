@@ -36,16 +36,19 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-**Both rows below are owed *after* B12.** They are looks at **paper**, and the fix is in
-`shell/components.css` while the tracked decks still carry the shell as it was — so printing one
-today would show the defect and prove nothing about the repair.
-[`REMEDIATION-ORDER.md`](REMEDIATION-ORDER.md) rebuilds the five decks once, in B12; these become
-answerable then.
+**All three are answerable now.** *This paragraph said they were owed after B12, and it was
+written before B9 synced the shell into the tracked decks — which that batch had to do, because the
+new `DS-224` check failed a deck built before its own fix and `static_variants.py` refuses to run
+against a red baseline. The decks carry the repairs, so the looks are due.*
+
+Rows 2 and 3 are looks at **paper** and need the deck printed, not rendered. Row 4 is a look at the
+screen.
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
 | 2 | [`examples/measure-first/measure-first.html`](../examples/measure-first/measure-first.html) | slide 5, *Poor exactly where we decide* — the six-dimension scale | **Print it.** All thirty dots printed **absent** under a caption describing them: the dots animate from `scale(0)` with `fill:both`, print never advances an animation, and the print block did not switch them off. *Are all thirty on the paper, at their right size, and does the scale read as a scale rather than as a row of gaps?* | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) |
 | 3 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 9, *Month eighteen stays reversible* — the flow's arrowheads | **Print it.** The same defect on the other motion: `.arrow-pop marker path` scales from `scaleX(0)`, so the arrowheads printed as nothing and the flow printed as plain lines. *Is every arrowhead there, and does each still point the way the flow goes?* | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) |
+| 4 | [`examples/reference-deck.html`](../examples/reference-deck.html) | slide 12, *Approve the frequency package* — the ask itself | **The first card reveal.** Turn replaced Rise on the closing headline: it now scales up from its own centre line over 420 ms instead of rising. Measured to run and to read both dials; **how it reads is what nobody has seen.** *Does turning the ask face-up land the deck, or does it read as a flourish on the one slide that should be plainest? And does it still settle before a presenter starts speaking?* If the answer is no, the fix is the placement rather than the component — Turn is built and contracted either way. | [T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) |
 
 ## What has already been looked at
 

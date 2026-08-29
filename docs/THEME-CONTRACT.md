@@ -220,8 +220,8 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--open-ease` | motion | primitive | Open's easing. | — |
 | `--open-rise` | motion | primitive | How far an opening panel travels. | — |
 | `--open-squash` | motion | primitive | The scale an opening panel starts at. | — |
-| `--turn-dur` | motion | primitive | Turn: a card reveal (DS-140), inside the cap (DS-141). **No shipped component reads it yet** — the reveal is ruled and is T-274's. | ms 0-500 |
-| `--turn-ease` | motion | primitive | Turn's easing. **No shipped component reads it yet** — the reveal is ruled and is T-274's. | — |
+| `--turn-dur` | motion | primitive | Turn: a card reveal (DS-140), inside the cap (DS-141) — which the band holds by construction rather than by anyone checking. Read by `.slide[data-arrived] .turn` since 2026-08-29. | ms 0-500 |
+| `--turn-ease` | motion | primitive | Turn's easing. Read by the same rule since 2026-08-29. | — |
 | `--scale-dur` | motion | primitive | Scale: a reveal (DS-140), inside the cap (DS-141). | ms 0-500 |
 | `--scale-ease` | motion | primitive | Scale's easing. Read by the arrowhead and the matrix dot, which are the two components Scale is built from. | — |
 | `--pulse-dur` | motion | primitive | Pulse-once. Never loops (DS-140). | ms 800-1600 |
@@ -248,17 +248,21 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--long-ease` | motion | optional | The licensed long band's easing. §3.6's own rule — every named motion carries a curve — and a licensed motion is a motion. | — |
 | `--long-delay` | motion | optional | How long a licensed long motion waits before it starts. | — |
 
-**Two dials in this table are wired to nothing today, and both are ruled.** `--turn-dur` and
+**Two dials in this table were wired to nothing, and both were ruled. The first is now built.** `--turn-dur` and
 `--turn-ease` are declared by both themes and carried by all five tracked decks, and
 `var(--turn-dur)` appears nowhere in the tree — so DS-140's starter set, which that rule calls *what
 a deck gets without designing anything*, ships one of its four names as a pair of dials no component
 reads. **Ruled 2026-08-29: build the reveal.** The question was put to the owner as *build the
 component, or retire the two tokens and let DS-140's set lose a name*, with retirement recommended as
 the cheaper answer, and the owner priced the lost name higher than the build. The set keeps its
-fourth member and gains a body;
-[T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) carries it, and
-[`COMPONENT-CONTRACT.md`](COMPONENT-CONTRACT.md) §5's advice about reaching for `--turn-ease` becomes
-true when it lands.
+fourth member and has a body: **built 2026-08-29** by
+[T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md), as `.turn` in
+the shared block, and
+[`COMPONENT-CONTRACT.md`](COMPONENT-CONTRACT.md) §5's advice about reaching for `--turn-ease` is
+true. Measured on the reference deck's closing slide, which carries the first card reveal: the
+card is at rest with nothing running before the slide arrives, and once it has, `animationName`
+is `turn`, `animationDuration` is `0.42s` and `animationTimingFunction` is `ease-in-out` — the two
+dials, reaching the animation.
 
 **`--accent-ink` was the same question in the colour band and is ruled the other way** (`PR-77`):
 four hand-chosen values across two themes, a contract row typing it *the accent as text on the
