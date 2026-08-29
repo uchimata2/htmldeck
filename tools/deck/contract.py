@@ -331,15 +331,59 @@ def verdicts(rows):
     return out
 
 
-# Which slides the two-resolution comparison samples. DS-063 is a claim about the whole stage, so
-# a sample is a compromise and is named as one: four slides spanning the deck's archetypes, at
-# roughly 12 Chrome launches. `--all` measures every slide.
-SAMPLE = [0, 4, 7, 11]
+# How many slides the two-resolution comparison samples. DS-063 is a claim about the whole stage,
+# so a sample is a compromise and is named as one: four slides spanning the deck, at roughly 12
+# Chrome launches. `--all` measures every slide.
+SAMPLE_SIZE = 4
+
+
+def sample_for(n):
+    """`SAMPLE_SIZE` slide indices spread across a deck of `n` slides, 0-based.
+
+    **The indices are derived from the deck, not fixed** (`PR-53`). They used to be
+    `SAMPLE = [0, 4, 7, 11]`, and the probe reaches a slide by clicking `next`, which `deck.js`
+    clamps at the last slide - so an eight-slide deck measured slides 1, 5, 8 and **8**, the
+    duplicate guard correctly refused to compare it, and DS-063 read *undecided* while advising a
+    re-run that would recur forever because nothing had been dropped. DS-082's default deck length
+    is 8-12 and DS-081's floor is 6, so most of the legitimate band lost the rule on every run.
+
+    **On a twelve-slide deck this returns `[0, 4, 7, 11]`** - the constant it replaces, which is
+    the strongest evidence available that the derivation is the right one and not merely a
+    different one. The self-test asserts it, so the two can never drift apart silently.
+
+    A deck with fewer slides than `SAMPLE_SIZE` is sampled whole. The result is sorted and
+    duplicate-free by construction at every length, which is what makes the duplicate the guard
+    reports unambiguously the render's doing.
+    """
+    if n <= 0:
+        return []
+    k = min(SAMPLE_SIZE, n)
+    if k == 1:
+        return [0]
+    return sorted({int(round(i * (n - 1) / float(k - 1))) for i in range(k)})
 
 
 def scale_verdicts(deck, which=None, quiet=True):
     """DS-063 and DS-064 - measured by `render.py` since T-024, gated here for the first time."""
-    return scale_verdicts_from(render.measure(deck, which or SAMPLE, quiet=quiet))
+    if which is None:
+        # `render.slide_count` reads the file and treats zero as fatal rather than rendering a
+        # guess. Taking the length from there is the whole of the fix: four indices spread across
+        # THIS deck cost the same renders and cannot fall off the end of it.
+        which = sample_for(render.slide_count(deck))
+    # **A duplicate the SAMPLER caused and one a dropped render caused need opposite fixes**, and
+    # until now the message stated only the second. `sample_for` cannot produce one, so the only
+    # way to get here is a caller passing a list with a repeat - and that is answered by fixing the
+    # call, not by re-running. Said here, where the sample is known, rather than downstream where
+    # only its consequence is.
+    repeated = sorted({i for i in which if list(which).count(i) > 1})
+    if repeated:
+        return [("DS-063", "the sample asks for slide(s) %s twice, so the comparison is undecided "
+                           "rather than failed. This is the sample and not the render: re-running "
+                           "reproduces it exactly. Pass distinct indices, or none and let "
+                           "`sample_for` derive them from the deck's own slide count"
+                 % ", ".join(str(i + 1) for i in repeated), None),
+                ("DS-064", "not measured: the sample DS-063 refused is the same sample", None)]
+    return scale_verdicts_from(render.measure(deck, which, quiet=quiet))
 
 
 def scale_verdicts_from(results):
@@ -444,6 +488,40 @@ def nothing_found_results():
 
 def self_test():
     """Refuse to gate if the gate's own arithmetic is wrong (L-04)."""
+    # **The sample is derived, and the derivation has to reproduce the constant it replaced.**
+    # `[0, 4, 7, 11]` was `SAMPLE` for a twelve-slide deck; if a later edit to `sample_for` moves
+    # it, that is a change to what DS-063 measures on every deck in this repository and it must
+    # not happen quietly (`PR-53`).
+    if sample_for(12) != [0, 4, 7, 11]:
+        sys.exit("SELF-TEST FAILED: the derived sample for a 12-slide deck is %r, and the fixed "
+                 "sample it replaced was [0, 4, 7, 11]. Every figure this repository quotes for a "
+                 "routine run was measured on those four slides" % (sample_for(12),))
+    # **Duplicate-free and in range at every length**, which is what makes a duplicate the pairing
+    # guard reports unambiguously the RENDER's doing. The floor is DS-081's 6 and the band is
+    # DS-082's 8-12; the range below covers both and the long decks T-178 tests at.
+    for n in range(1, 61):
+        got = sample_for(n)
+        if len(got) != len(set(got)):
+            sys.exit("SELF-TEST FAILED: the sample for a %d-slide deck repeats a slide - %r. The "
+                     "pairing guard would refuse the comparison and advise a re-run that cannot "
+                     "help, which is the defect PR-53 named" % (n, got))
+        if any(i < 0 or i >= n for i in got):
+            sys.exit("SELF-TEST FAILED: the sample for a %d-slide deck leaves the deck - %r. The "
+                     "probe clamps at the last slide, so an index past the end silently measures "
+                     "the last one again" % (n, got))
+        if len(got) != min(SAMPLE_SIZE, n):
+            sys.exit("SELF-TEST FAILED: a %d-slide deck was sampled at %d slide(s), not %d - %r"
+                     % (n, len(got), min(SAMPLE_SIZE, n), got))
+    if sample_for(0) != []:
+        sys.exit("SELF-TEST FAILED: a deck with no slides returned a sample")
+
+    # A caller passing a repeated index is the SAMPLER's fault and re-running cannot help, so it
+    # reads differently from the render dropping one. The two need opposite fixes (T-230).
+    rows = dict((r[0], (r[1], r[2])) for r in scale_verdicts("(never read)", which=[0, 4, 4, 7]))
+    if rows["DS-063"][1] is not None or "not the render" not in rows["DS-063"][0]:
+        sys.exit("SELF-TEST FAILED: a sample asking for one slide twice was not refused as the "
+                 "sample's fault: %r" % (rows["DS-063"],))
+
     for (w, h, k, _engage) in VIEWPORTS:
         computed = min(w / 1920.0, h / 1080.0)
         if abs(computed - k) > 0.0005:

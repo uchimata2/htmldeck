@@ -137,10 +137,12 @@ In real Chrome, from `file://`, with every DNS lookup black-holed:
 | Chrome | **5 labelled or interactive items, 52 design units tall** — was 23 and 96 before T-028, and 11 until T-035 replaced seven stage names with one ruler, which DS-217 counts as a single item |
 | Encodings of position | **2** — the ruler and the slide counter — and they answer different questions (DS-216 permits a second only then) |
 
-**Both two-resolution figures come from a four-slide sample**, not the whole deck: slides 1, 5, 8
-and 12, chosen to span the archetypes. `contract.py` names the sample in its own source and it is
-a compromise, so a larger figure quoted elsewhere for the same rule is a different run over more
-slides rather than a contradiction.
+**Both two-resolution figures come from a four-slide sample**, not the whole deck. For this
+twelve-slide deck the sample is slides 1, 5, 8 and 12; **it is derived from the deck's own slide
+count rather than fixed**, so a deck of another length is sampled at four slides spread across
+*it* ([T-230](../tasks/T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md)).
+`contract.sample_for` is the derivation and it is a compromise, so a larger figure quoted elsewhere
+for the same rule is a different run over more slides rather than a contradiction.
 
 The layout is identical across a 3.15× scale ratio: every box lands on the same design-unit
 coordinate. The 1.07-unit disagreement is text, and it is glyph-advance rounding rather than
