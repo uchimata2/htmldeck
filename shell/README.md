@@ -68,11 +68,17 @@ Twelve, and nowhere else may a deck differ:
 `DOC_TITLE` · `DOC_SUB` · `COMPOSITION` · `SCRIPT`
 
 **`CHROME_TAIL` is the twelfth and the odd one (T-114).** The others hold what a deck *says*; this
-one holds where one control *sits*. DS-218 wants a persistent stop for motion that loops and a
-control behind a click is not persistent, so `Motion` is inside the `More` menu in a deck with
-nothing looping and beside it in a deck that loops. That is a varying **parent**, not varying
-content, and a slot bounded to one element cannot express it — so the slot is the region holding
-both positions.
+one holds the chrome row's tail — `More`, its menu, and `Read` and `Motion` inside it. It is a
+region rather than an element because it was built to hold a control whose **parent** varied:
+DS-218 read *persistent* as forbidding a stop one click inside a shut menu, so a looping deck
+lifted `Motion` out beside `.more`.
+
+**The parent stopped varying on 2026-08-29** ([T-277](../tasks/T-277-put-motion-back-inside-the-more-menu.md)),
+when the owner reversed that clause — 2.2.2 asks the stop be reachable while the motion runs, not
+that it be zero clicks. **The slot stays, and the reason is now a different one**: a deck may reword
+these three labels, so this is the one region `shell.py check`'s byte comparison must not own. What
+guards it instead is `component.py`'s table and DS-218's surviving half, that the control and its
+opener are present and reachable.
 
 **Three of them nest inside `SCRIPT`**, and finding them is what this cut was worth: `DECK_NAME`,
 `STAGES` and `STAGE_ICON` are per-deck facts that had been sitting in the middle of 560 invariant

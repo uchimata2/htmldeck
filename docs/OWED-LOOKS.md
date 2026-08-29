@@ -36,7 +36,14 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-Empty. Nothing outstanding.
+| # | Deck | Where | What to look for | Owed by |
+| :-- | :--- | :--- | :--- | :--- |
+| 1 | [`examples/reference-deck.html`](../examples/reference-deck.html), and the same row on `sort-window` and `measure-first` | the chrome row, on any slide — the `More` menu open, and the row with it shut | *Motion* moved back inside the menu, so the row loses a button and the menu gains a second item. Two questions, and the second is the one a gate cannot reach: *does the open menu read with two rows where it had one* — and *does the chrome row still balance now that only `More` sits outside the navigation box?* **T-114 was raised because the row read wrong**, and the complaint was about company and weight rather than about any one control, which is why this is asked of the row and not of the button | [T-277](../tasks/T-277-put-motion-back-inside-the-more-menu.md) |
+
+*Written 2026-08-29 by `T-277`. It was looked at once during implementation — the menu opens upward
+with `Read` and `Motion on` as two rows, clear of the chrome and of the bottom line, and the row
+reads balanced — and the row is still owed, because the question T-114 settled was a judgement about
+this row's weight that the owner made and reversed once already.*
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |

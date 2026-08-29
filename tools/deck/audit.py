@@ -1547,8 +1547,11 @@ PROBE = r"""
 <!-- htmldeck:measures-motion htmldeck:pins-locally - this probe declares BOTH, and the pair is
      the point. DS-140, DS-142 and DS-218 are decided below by reading `animationIterationCount`
      for `infinite`, and a pin sets `animation:none`, which erases it. Measured under T-209: pinned,
-     the seeded DS-218 variant that hides its stop control inside a shut menu goes from CAUGHT to
-     MISSED, because the rule loses its subject rather than its verdict.
+     the seeded DS-218 variant goes from CAUGHT to MISSED, because the rule loses its subject
+     rather than its verdict. *That variant seeded a stop control shut inside the menu when the
+     reading was taken; it seeds an unreachable menu opener since T-277 reversed the placement
+     clause. The mechanism is unchanged - both variants keep the deck's looping motion, and both
+     lose their subject when the pin erases it.*
 
      **T-209 then added that the geometry rows were identical both ways on the portfolio deck, so
      pinning bought nothing. That was true of that deck and is not true generally** - re-derived
@@ -1635,14 +1638,48 @@ PROBE = r"""
       var subj = (c.getPropertyValue('--motion-subject') || '').trim();
       if (subj !== 'live') out.ambient.push(row);
     }
-    // DS-218 asks for a PERSISTENT control, and T-114 put a `More` menu on the chrome row -
-    // so existence stopped being the test. A stop button one click inside a shut menu is not
-    // reachable while the motion runs, which is the thing the rule is for. Placement is a static
-    // fact about the built markup, decided by `shell.py`'s CHROME_TAIL slot at build time, which
-    // is exactly why this can be read here rather than inferred.
+    // DS-218 asks for a control the reader can REACH while the motion runs. That was read as
+    // `not inside .more-menu` from T-114 until the owner reversed it on 2026-08-29 (T-277):
+    // 2.2.2 asks for reachability, not for zero clicks, so one click inside a menu counts -
+    // PROVIDED the button that opens the menu is itself persistent and keyboard-operable.
+    //
+    // So the walk is from the control outward to whatever conceals it, and then to that thing's
+    // opener. Reading it here rather than inferring it is unchanged: the tail is a static fact
+    // about the built markup, which is why a probe can settle it at all.
     var motionEl = document.getElementById('motion');
     out.motionControl = !!motionEl;
-    out.motionPersistent = !!motionEl && !motionEl.closest('.more-menu');
+    out.motionPersistent = false;
+    out.motionReach = motionEl ? 'unreached' : 'no control';
+    if (motionEl) {
+      var hider = motionEl.closest('[hidden], [aria-hidden="true"]');
+      if (!hider) {
+        // In the chrome itself. Nothing has to be opened, so there is nothing to qualify.
+        out.motionPersistent = true;
+        out.motionReach = 'in the chrome row';
+      } else {
+        // One step of concealment is what the rule now admits. The opener is whatever declares
+        // itself to control the concealed thing - `aria-controls` rather than a hard-coded
+        // `#moreBtn`, because the rule is about a menu button and not about this deck's ids.
+        var opener = hider.id
+          ? document.querySelector('[aria-controls="' + hider.id + '"]') : null;
+        if (!opener) {
+          out.motionReach = 'concealed by #' + (hider.id || '(unnamed)') + ', which nothing opens';
+        } else if (opener.closest('[hidden], [aria-hidden="true"]')) {
+          // An opener that is itself concealed is not persistent, and it also means the control
+          // is two steps in rather than one.
+          out.motionReach = 'opener is itself concealed';
+        } else if (!opener.getClientRects().length) {
+          out.motionReach = 'opener is not rendered';
+        } else if (opener.disabled || opener.getAttribute('tabindex') === '-1'
+                   || (opener.tagName !== 'BUTTON' && !opener.hasAttribute('tabindex'))) {
+          out.motionReach = 'opener is not keyboard-operable';
+        } else {
+          out.motionPersistent = true;
+          out.motionReach = 'one click inside #' + hider.id + ', opened by a persistent '
+                          + 'keyboard-operable ' + opener.tagName.toLowerCase();
+        }
+      }
+    }
 
     // DS-140 - `Current` is a dashed flow, and this render says whether it is dashed. It is NOT
     // DS-143: that rule is about what survives `prefers-reduced-motion`, and this render is taken
@@ -2690,9 +2727,12 @@ ALWAYS_MEASURED = {
     "infinite": [],
     "ambient": [],
     "motionControl": False,          # `!!getElementById('motion')`
-    # Placement, not existence: the shell builds the control into every deck, so what a
-    # looping deck owes is a control NOT shut inside `.more-menu` (DS-218, T-114).
+    # Reachability, not placement and not existence (DS-218, T-277). The shell builds the control
+    # into every deck, so existence decided nothing; placement stopped being the test when the
+    # owner reversed that clause. What is left is the walk from the control to its opener, and
+    # `motionReach` is the sentence the verdict prints so a pass says why it passed.
     "motionPersistent": False,
+    "motionReach": "not measured",
     # ---- chrome, targets and position
     "chromeLabelled": 0,
     "chromeHeightDu": 0,             # `chromeRect ? … : 0` - no chrome measures zero, not 999
@@ -2922,11 +2962,14 @@ def render_verdicts(data):
         ("DS-142", "looping motion on static content: %d%s"
          % (len(data.get("ambient", [])), _naming(data.get("ambient"))),
          not data.get("ambient")),
-        # `persistent` rather than `present`: the control exists in every deck the shell builds,
-        # so existence decided nothing. What a looping deck owes is a control not shut inside the
-        # chrome menu (T-114 step 7a).
-        ("DS-218", "persistent control for motion over 5s: %s (present: %s, %d looping)"
-         % (data["motionPersistent"], data["motionControl"], len(data["infinite"])),
+        # `reachable` rather than `present`: the control exists in every deck the shell builds, so
+        # existence decided nothing - and placement stopped being the test when the owner reversed
+        # DS-218's placement clause (T-277). The row prints `motionReach` because a rule that
+        # passes has to say what it passed on; *True* over a condition nothing else guards is the
+        # shape L-144 warns about, and the sentence is what makes it checkable by eye.
+        ("DS-218", "control reachable while motion runs: %s - %s (present: %s, %d looping)"
+         % (data["motionPersistent"], data.get("motionReach", "not measured"),
+            data["motionControl"], len(data["infinite"])),
          len(data["infinite"]) == 0 or data["motionPersistent"]),
         # **The instance T-051 was raised for.** `.current` is the only subject this row has, the
         # probe emits the key only when it finds one, and `None != "none"` is `True` - so the rule

@@ -114,6 +114,7 @@ comes here.
 | [L-143](lessons/L-143.md) | A guard added to narrow a rule can silence it, and the number that catches that is the rule's own prior count | Evidence and verification |
 | [L-144](lessons/L-144.md) | When a rule has never fired, the number that catches a bad guard is the population the guard would exempt | Evidence and verification |
 | [L-145](lessons/L-145.md) | A rule's clean record is only as wide as the selector its instrument used, and the two are written in different files | Evidence and verification |
+| [L-146](lessons/L-146.md) | A guard true of every case is only half an off switch; what settles it is whether another document already mandates it | Evidence and verification |
 
 ### Tooling
 

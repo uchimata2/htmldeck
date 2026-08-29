@@ -264,27 +264,27 @@ RENDER_VARIANTS = [
         ('<button class="disc-btn" aria-expanded="false" aria-controls="p2">',
          '<button class="disc-btn" aria-expanded="false" aria-controls="p2"><i></i></button>'
          '<button class="disc-btn" aria-expanded="false" hidden aria-controls="p2x">')]),
-    ("motion-stop-shut-inside-the-menu", "DS-218", [
-        # **The control MOVES; it is not deleted, and the motion is untouched.** DS-218's predicate
-        # is `no looping motion OR the control is persistent`, so the lazy seed - drop the deck's
-        # `Current` - satisfies the first disjunct and passes, which would read as a catch and be
-        # the opposite of one. That is T-051's trap in this rule's shape, and the reason the edit
-        # below is a move rather than a removal: `motionControl` stays True, `infinite` stays 1,
-        # and `motionPersistent` is the only thing that flips.
+    ("motion-stop-behind-an-unreachable-opener", "DS-218", [
+        # **The seed took `#motion` out of the chrome and shut it in the menu until 2026-08-29.**
+        # That was the failing branch DS-218 had then, and the owner's reversal (T-277) made it a
+        # PASSING deck - so the variant went on running and stopped catching anything, which is
+        # the state L-145 was written about one batch earlier. Re-seeded here against the rule as
+        # it now reads.
         #
-        # Shut inside `.more-menu` the button still exists, still toggles and is still keyboard
-        # operable - it is simply one click away while the thing it stops is running, which is
-        # exactly the reading of *persistent* T-114 forced when it put a menu on the chrome row.
-        ('<button class="btn" id="motion" aria-pressed="false">Motion on</button>\n'
-         '  <div class="more" id="more">\n'
-         '    <button class="btn" id="moreBtn" aria-expanded="false" '
-         'aria-controls="moreMenu">More</button>\n'
-         '    <div class="more-menu" id="moreMenu" hidden>\n',
-         '  <div class="more" id="more">\n'
-         '    <button class="btn" id="moreBtn" aria-expanded="false" '
-         'aria-controls="moreMenu">More</button>\n'
-         '    <div class="more-menu" id="moreMenu" hidden>\n'
-         '      <button class="btn" id="motion" aria-pressed="false">Motion on</button>\n')]),
+        # **One attribute moves, and it is the one the new clause names.** DS-218's predicate is
+        # `no looping motion OR the control is reachable`, so the lazy seed - drop the deck's
+        # `Current` - satisfies the first disjunct and passes, reading as a catch while being the
+        # opposite of one (T-051's trap in this rule's shape). So the motion is untouched and the
+        # control is neither moved nor deleted: `motionControl` stays True, `infinite` stays 1, and
+        # what flips is whether the menu's opener can be reached from the keyboard.
+        #
+        # `tabindex="-1"` rather than deleting `#moreBtn`, because deleting it also moves
+        # `component.py`'s counts and `PR-78`'s preflight crash - and a variant that fails three
+        # ways proves nothing about which rule was watching.
+        ('<button class="btn" id="moreBtn" aria-expanded="false" '
+         'aria-controls="moreMenu">More</button>',
+         '<button class="btn" id="moreBtn" aria-expanded="false" '
+         'aria-controls="moreMenu" tabindex="-1">More</button>')]),
     # ---- DS-142, both directions (T-214) ------------------------------------------------------
     # **This rule had no seed at all until T-214**, in either direction, so its green on four
     # shipped decks was the absence of a subject rather than a verdict - T-051's reading, and

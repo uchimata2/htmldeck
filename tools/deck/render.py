@@ -141,8 +141,9 @@ RESOLUTIONS = [(3840, 2000, "3840x2000"), (1280, 634, "1280x634"), (1280, 720, "
 # `getComputedStyle(el).animationIterationCount` for `infinite`, and `audit.REDUCED_PROBE` asks what
 # the *deck* does under `prefers-reduced-motion`. **`animation:none!important` erases exactly the
 # property both of them read.** Pinned unconditionally, the seeded-variant suite went from 8 of 8 and
-# 2 of 2 caught to 7 of 8 and 1 of 2: a deck that hides its stop control inside a shut menu passed
-# DS-218, and a deck that leaves a slide blank under reduced motion passed DS-143 - both because the
+# 2 of 2 caught to 7 of 8 and 1 of 2: the seeded DS-218 deck passed DS-218 - it hid its stop control
+# inside a shut menu when that reading was taken, and seeds an unreachable menu opener since T-277 -
+# and a deck that leaves a slide blank under reduced motion passed DS-143 - both because the
 # rule had no subject left to fail on. **A pin that silences a rule is worse than a probe that reads
 # an unsettled page**, and this is the absent-subject defect this repository has now met eight times
 # (**L-57**).

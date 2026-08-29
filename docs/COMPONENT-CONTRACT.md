@@ -402,13 +402,25 @@ rule's first sentence binds every panel to open fully inside the stage, and its 
 *below* for tier two and the provenance box only. At the foot of a 1080-unit stage, up is the
 direction that satisfies the first.
 
-**Where `Motion` sits is decided at build time, and the gate reads it (DS-218, T-114 step 7a).** A
-persistent stop control is what DS-218 asks for, and a control one click inside a shut menu is not
-reachable while the motion runs. So `#motion` sits **inside `.more-menu`** in a deck with nothing
-looping, and **as a sibling of `.more`** in a deck that loops. That is the `CHROME_TAIL` slot in
-[`../shell/README.md`](../shell/README.md), and `audit.py` fails a looping deck whose control is in
-the menu — the placement is a static fact about the built markup, which is the whole reason it is
-decided at build time and not by the script.
+**`#motion` sits inside `.more-menu`, on every deck, looping or not (DS-218,
+[T-277](../tasks/T-277-put-motion-back-inside-the-more-menu.md)).** There is one form of the
+`CHROME_TAIL` slot and nothing about it varies with the deck's motion.
+
+*It varied until 2026-08-29.* T-114 step 7a read DS-218's *persistent* as forbidding a stop one
+click inside a shut menu, so a looping deck lifted `#motion` out to sit beside `.more` and
+`audit.py` failed it until someone did. **The owner reversed that clause the same day the ruling
+behind it was made**: 2.2.2 asks that the stop be reachable while the motion runs, not that it be
+zero clicks, and `#moreBtn` is persistent, labelled and keyboard-operable. The hazard T-114 named is
+real and is not denied — a stop behind a click is worse than one in the open — it is simply not
+disqualifying.
+
+**What the gate still reads off this region is that the control and its opener are there and
+reachable.** `audit.py` walks from `#motion` to whatever conceals it and then to that thing's
+`aria-controls` opener, and fails a looping deck where the walk does not arrive. That is worth a
+check even though every deck built by the shell passes it, because **nothing else here mandates it**:
+the table above binds `.btn` to `.chrome` as `1+` and names no opener, and `PR-78` measured that a
+tail with one button removed produces a deck that refuses to start while `shell.py check` and
+`component.py` both pass it.
 
 **`.is-back` is on the Previous pager and nowhere else, and it exists so a motion can carry a direction.** T-112's pager tilt leans the control toward where it goes; without a class saying which of the two this is, both would lean the same way and the tilt would encode nothing, which is DS-150's test failed by a motion that looks fine. It is a modifier on `.btn--pager` rather than a match on `#prev`, because an id is a handle for the script and a class is what a stylesheet is allowed to know.
 

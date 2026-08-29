@@ -2381,23 +2381,25 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     <button class="btn btn--pager is-back" id="prev" aria-label="Previous slide"><span class="chev l"></span></button>
     <button class="btn btn--pager" id="next" aria-label="Next slide"><span class="chev r"></span></button>
   </div>
-  <!-- The chrome row's TAIL, and a SLOT because what sits here varies by deck (T-114 step 7a).
-       DS-218 wants a persistent, keyboard-operable stop for motion that loops, and a control
-       behind a click is not persistent - so `Motion` sits inside the menu where the deck has
-       nothing looping, and as a sibling of `.more` where it does. The slot is the REGION rather
-       than the control because `Motion` has no varying content, it has a varying PARENT, and no
-       slot bounded to one element can express a move between two parents. `shell.py new` writes
-       the menu form, because a fresh deck has no motion yet; `audit.py` decides correctness off
-       the built markup, which is why the placement is made at build time and not at run time.
+  <!-- The chrome row's TAIL, and a SLOT because what a deck calls these controls is its own
+       (T-114 step 7a). `Motion` sits INSIDE the menu, on every deck, looping or not.
+
+       It varied by deck until 2026-08-29: DS-218 read `persistent` as forbidding a stop one click
+       inside a shut menu, so a looping deck lifted `Motion` out beside `.more`. The owner reversed
+       that (T-277) - 2.2.2 asks the stop be reachable while the motion runs, not that it be zero
+       clicks, and a persistent keyboard-operable menu button is reachable. So there is one form.
+       What `audit.py` still decides here is that the control and its opener EXIST and are
+       reachable, which no other gate covers: this is the region a deck may reword, so `shell.py
+       check`'s byte comparison does not own it.
 
        The anchor below is the slot's opening delimiter and is compared rather than found: a deck
        whose tail has drifted has to fail `shell.py check` rather than be re-anchored around. -->
   <!-- chrome-tail -->
-  <button class="btn" id="motion" aria-pressed="false">Motion on</button>
   <div class="more" id="more">
     <button class="btn" id="moreBtn" aria-expanded="false" aria-controls="moreMenu">More</button>
     <div class="more-menu" id="moreMenu" hidden>
       <button class="btn" id="toDoc">Read</button>
+      <button class="btn" id="motion" aria-pressed="false">Motion on</button>
     </div>
   </div>
 </nav>

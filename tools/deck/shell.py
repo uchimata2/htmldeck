@@ -13,7 +13,7 @@ this tool is what puts it back.
     python tools/deck/shell.py preflight <deck> [--check]
     python tools/deck/shell.py sync <deck> [--write]
     python tools/deck/shell.py tokens <deck> [--write]
-    python tools/deck/shell.py tail <deck> --loops|--still [--write]
+    python tools/deck/shell.py tail <deck> [--write]
     python tools/deck/shell.py check <deck>
     python tools/deck/shell.py parts
 
@@ -83,15 +83,14 @@ SLOTS = (
     ("SLIDES", '<main class="stage" id="stage" aria-label="Presentation">\n',
      "\n<!-- ============================================================ chrome -->",
      "every <section class=\"slide\">"),
-    # Twelfth, added by T-114. `Motion` has no varying CONTENT - it has a varying PARENT: inside
-    # `.more-menu` where the deck has nothing looping, a sibling of `.more` where it does (DS-218,
-    # which wants a persistent control and does not get one behind a click). `cut()` replaces what
-    # lies between two literal delimiters, so no slot bounded to one element can express a move
-    # between two parents. The slot is therefore the smallest region containing both positions -
-    # the chrome row's tail - and it is named for the region rather than for the control that
-    # moves inside it.
+    # Twelfth, added by T-114 for a control with a varying PARENT, and now carrying one form
+    # (T-277). DS-218's placement clause was reversed on 2026-08-29: a control one click inside a
+    # persistent, keyboard-operable menu button counts as reachable, so `Motion` sits inside
+    # `.more-menu` on every deck and nothing about it varies. **The slot stays**, because it is the
+    # region a deck may reword and `shell.py check`'s byte comparison must not own - which is what
+    # T-114 spent to buy it, and is unrelated to the placement question that has since gone away.
     ("CHROME_TAIL", "<!-- chrome-tail -->\n", "\n</nav>",
-     "the chrome row's tail: `More`, and `Motion` when the deck loops (DS-218)"),
+     "the chrome row's tail: `More`, and `Motion` inside its menu (DS-218)"),
     ("DOC_TITLE", '<h1 class="t">', "</h1>", "the reading view's heading"),
     ("DOC_SUB", '<p class="s">', "</p>", "the reading view's standfirst"),
     ("COMPOSITION", '<style id="slides">', "</style>", "this deck's own layout"),
@@ -175,12 +174,19 @@ NOTE_DEFAULT = """  Built by htmldeck. One self-contained file: every font, icon
   inlined, and it renders with the network disabled (DS-001)."""
 
 
-# The tail a fresh deck gets: `Motion` INSIDE the menu, because a new deck has no motion yet and
-# DS-218 owes a persistent control only where something loops. A deck that grows looping motion
-# moves `Motion` out to sit beside `.more`; `audit.py` fails it until it does, which is the whole
-# reason the placement is a build-time fact rather than something the script decides at run time
-# (T-114 step 7a).
-CHROME_TAIL_MENU = """  <div class="more" id="more">
+# The tail every deck gets, looping or not (T-277). There was a second form until 2026-08-29, for
+# a deck with looping motion, which lifted `Motion` out to sit beside `.more` - DS-218's placement
+# clause, added by T-114 step 7a on the reading that a stop one click inside a shut menu is not
+# reachable. **The owner reversed that ruling the same day it was made**: WCAG 2.2.2 asks that the
+# stop be reachable while the motion runs, not that it be zero clicks, and a persistent,
+# keyboard-operable menu button satisfies it. So the parent stopped varying and the two forms
+# collapsed here - a flag selecting between identical forms being worse than no flag.
+#
+# What DS-218 still decides about this markup is the other half, and it is not vacuous: the
+# control must exist and its opener must be a real, reachable button. `PR-78` measured what a tail
+# missing one of these does - the deck refuses to start - and neither `shell.py check` nor
+# `component.py` catches it, because the tail is the one region a deck may reword.
+CHROME_TAIL = """  <div class="more" id="more">
     <button class="btn" id="moreBtn" aria-expanded="false" aria-controls="moreMenu">More</button>
     <div class="more-menu" id="moreMenu" hidden>
       <button class="btn" id="toDoc">Read</button>
@@ -189,29 +195,16 @@ CHROME_TAIL_MENU = """  <div class="more" id="more">
   </div>"""
 
 
-# The other form, for a deck that loops. DS-218 wants a control the reader can reach WHILE the
-# motion runs, and one inside a shut menu is not that - so `Motion` comes out and sits beside
-# `More`, which stays last because it is the overflow. `audit.py` decides which form a deck owes;
-# this file only holds the two, so that the shell, the `tail` command and the contract cannot
-# drift into three descriptions of the same markup (T-114 step 7a).
-CHROME_TAIL_LOOPING = """  <button class="btn" id="motion" aria-pressed="false">Motion on</button>
-  <div class="more" id="more">
-    <button class="btn" id="moreBtn" aria-expanded="false" aria-controls="moreMenu">More</button>
-    <div class="more-menu" id="moreMenu" hidden>
-      <button class="btn" id="toDoc">Read</button>
-    </div>
-  </div>"""
+def tail(html):
+    """The deck, with the chrome tail in the one form DS-218 now asks for.
 
-
-def tail(html, looping):
-    """The deck, with the chrome tail in the form its own motion earns (DS-218).
-
-    `looping` is the caller's answer to *does anything in this deck loop or run past 5 s* - which
-    `audit.py` measures and this tool cannot, because it reads bytes and the question is about
-    rendered animation. Idempotent: a deck already in the asked-for form is returned unchanged.
+    Takes no answer about the deck's motion any more. It used to: the placement depended on
+    whether anything looped, which only `audit.py` can measure - and that dependency is what the
+    2026-08-29 reversal removed (T-277). Idempotent: a deck already carrying the form is returned
+    unchanged, which is what makes this safe to run over the tracked decks in a sweep.
     """
     skeleton, parts = cut(migrate(html))
-    parts["CHROME_TAIL"] = CHROME_TAIL_LOOPING if looping else CHROME_TAIL_MENU
+    parts["CHROME_TAIL"] = CHROME_TAIL
     return fill(skeleton, parts)
 
 
@@ -248,11 +241,10 @@ def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_
         # this tool is not carrying the trap in the first place.
         "SLIDES": "\n<!-- slides go here, one section.slide each "
                   "(COMPONENT-CONTRACT.md 3.2) -->\n",
-        # The menu form, because a fresh deck has no motion yet and DS-218 owes a persistent
-        # control only where something loops. A deck that grows looping motion moves `Motion` out
-        # of the menu; `audit.py` fails it until it does, which is the whole point of deciding
-        # this in the markup rather than at run time (T-114 step 7a).
-        "CHROME_TAIL": CHROME_TAIL_MENU,
+        # One form, whatever the deck goes on to animate (T-277). What `audit.py` still decides
+        # about this region is that the control and its opener are there and reachable, not where
+        # they sit.
+        "CHROME_TAIL": CHROME_TAIL,
         "DOC_TITLE": escape(title),
         "DOC_SUB": escape(subtitle),
         "COMPOSITION": "\n/* this deck's own layout. The look is the theme region's; "
@@ -406,14 +398,14 @@ def migrate(html):
     runs this before `cut`; `check` does NOT, so an un-migrated deck still reports rather than
     being quietly read as current.
 
-    **The migrated tail is the default form, and that is a decision rather than a fallback**:
-    `Read` and `Motion` both move into the menu. A deck with looping motion then fails DS-218 in
-    `audit.py` until someone moves `Motion` back out beside `.more` - which is the correct
-    outcome, because this tool cannot see the deck's motion and the gate can.
+    **The migrated tail puts `Read` and `Motion` both into the menu**, which since 2026-08-29 is
+    the only form there is (T-277). It was the default of two until then, and a deck with looping
+    motion failed DS-218 until someone moved `Motion` back out; the reversal removed the second
+    form, so migrating now lands a deck in its final shape rather than in a shape a gate objects to.
     """
     for old, new, _why in MIGRATIONS:
         if "%s" in new:
-            new = new % CHROME_TAIL_MENU
+            new = new % CHROME_TAIL
         if old in html:
             html = html.replace(old, new, 1)
     return html
@@ -1102,9 +1094,9 @@ USAGE = {
     "preflight": "usage: shell.py preflight <deck> [--check]\n"
                  "  Writes the preflight rows this deck's own content needs (DS-009).\n"
                  "  --check  reports whether they are already exactly the needed set",
-    "tail": "usage: shell.py tail <deck> --loops|--still [--write]\n"
-            "  Places the `Motion` control DS-218 requires: beside `More` when the deck\n"
-            "  loops, inside the menu when it does not.",
+    "tail": "usage: shell.py tail <deck> [--write]\n"
+            "  Puts the `Motion` control where DS-218 asks for it: inside the `More`\n"
+            "  menu, whether or not the deck loops.",
     "parts": "usage: shell.py parts\n  Lists the regions the shell is cut into.",
 }
 
@@ -1287,26 +1279,29 @@ instead: a sync writes the shipped shell over whatever that generator added (L-7
 
     if cmd == "tail":
         if not rest:
-            sys.exit("usage: shell.py tail <deck> --loops|--still [--write]")
+            sys.exit("usage: shell.py tail <deck> [--write]")
         deck = rest[0]
         rel = paths.display_path(deck, ROOT).replace("\\", "/")
-        if ("--loops" in rest) == ("--still" in rest):
-            sys.exit("%s: say --loops or --still, exactly one. It is `audit.py`'s DS-218 row "
-                     "that answers it: this tool reads bytes, and the question is about "
-                     "rendered animation." % rel)
-        looping = "--loops" in rest
+        # `--loops` / `--still` selected between two tail forms until 2026-08-29. The forms
+        # collapsed to one (T-277), so the flags are refused rather than ignored: a script still
+        # passing one is asking for a placement this tool no longer decides, and silently doing
+        # the right thing would leave it asking.
+        for gone in ("--loops", "--still"):
+            if gone in rest:
+                sys.exit("%s: `%s` is gone. DS-218's placement clause was reversed on 2026-08-29 "
+                         "(T-277) and there is one tail form now - `Motion` inside the menu, "
+                         "looping or not. Run `tail %s [--write]`." % (rel, gone, rel))
         html = read(deck)
-        fresh = tail(html, looping)
-        want = "beside `More`" if looping else "inside the menu"
+        fresh = tail(html)
         if fresh == html:
-            print("OK - %s already carries `Motion` %s." % (rel, want))
+            print("OK - %s already carries `Motion` inside the menu." % rel)
             return 0
         if "--write" not in rest:
-            print("%s - `Motion` would move %s (DS-218)." % (rel, want))
+            print("%s - `Motion` would move inside the menu (DS-218)." % rel)
             print("Nothing written. Run again with --write.")
             return 1
         write(deck, fresh)
-        print("%s - `Motion` now sits %s." % (rel, want))
+        print("%s - `Motion` now sits inside the menu." % rel)
         print("Next: python tools/deck/audit.py %s - the DS-218 row is what settles it." % rel)
         return 0
 
