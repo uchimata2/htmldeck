@@ -100,14 +100,23 @@ deliverables:
 | One animation still reads `DOES NOT MOVE` after the fix — `(effect) on button`, delay 0 | Correct and left alone. Its seek window is right, so the verdict is about the deck. It is not this task's |
 | `--shots`, end to end | Five frames written; the new line reads `0, 8, 12, 12, 12 of 12 animation(s) past their delay` and the images grow 39 → 94 → 168 KB before settling. That is a transition rather than five settled pages |
 
-**Look owed**
+**Look owed — taken by the owner 2026-08-29, and it passed**
 
-- **Deck** `examples/reference-deck.html`, **navigation** into slide 4 (`--into 3`), the five frames
-  `motion-000.png` … `motion-100.png` written by `--shots`.
-- **What to look for:** that the frames show the staggered entrance arriving — the eyebrow, then
-  the headline, then the standfirst, then the figure, then the bottom line — rather than five
-  copies of one moment. The counts and the file sizes both say they do; **whether it reads as a
-  transition is a person's**, and this session may not look ([`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) §4).
+- **Deck** `examples/reference-deck.html`, **navigation** into slide 4, *Waiting is the trip*
+  (`--into 3`), the five frames `motion-000.png` … `motion-100.png` written by `--shots` into
+  `.assets-cache/deck/`.
+- **What was looked for**, and both answers were *fine*:
+  1. **A stagger rather than a fade** — the eyebrow, then the headline, then the standfirst, then
+     the figure, then the bottom line, arriving one after another rather than together.
+  2. **`075` against `100` specifically.** Their file sizes are 113,183 and 113,082 bytes, a
+     hundred apart, and the arithmetic puts the bottom line still 57% risen at 435 ms — so two
+     frames that looked identical would have been a real finding about the tail of the stagger.
+     They did not.
+- **This is the thing the machines could not answer.** The counts (`0, 8, 12, 12, 12 of 12 past
+  their delay`) and the sizes (39 → 94 → 168 KB) both said the seek was landing in the right
+  place; whether it *reads* as a transition is `CLAUDE.md` rule 6's, and
+  [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) §4 is why this session recorded
+  it as owed and closed rather than deciding it.
 
 ## 4. Review
 
@@ -129,6 +138,7 @@ deliverables:
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-08-29 | (no change) | **The owed look was taken by the owner and passed.** Both questions answered *fine*: the five frames read as a stagger rather than a fade, and `motion-075.png` and `motion-100.png` are distinguishable — the one place the numbers left room for a real finding, since they differ by 101 bytes. `T-255` closed on 2026-08-29 with this outstanding under [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) §4, and **the queue that section describes is now empty for this task**. The verdict is unchanged; what changes is that rule 6 is satisfied rather than deferred. |
 | 2026-08-29 | → done | Every criterion met, all three of record `017`'s items implemented. **12 of 17 animations sampled inside their own delay before, 0 after**, on this repository's own reference deck; the seeded arithmetic is caught on 12 of 12 even where the row still says MOVES. One look is **owed** and recorded in §3 — the five `--shots` frames, which this session may not open. |
 | 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
 | 2026-08-29 | → specified | Batch B1 of [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md). **Reproduced on this repository's own `examples/reference-deck.html` before anything was written**, which the record could not do: **12 of its 17 animations were sampled inside their own delay**. The reference stagger is htmldeck's, so the adopter's deck was not a special case — this deck has been measured this way since the stagger existed. |
