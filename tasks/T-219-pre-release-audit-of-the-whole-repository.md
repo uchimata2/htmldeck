@@ -200,6 +200,8 @@ ordered by expected finding density. From 27 on the cycles differ on something d
 capture - whether a finding can still change anything - and stage 7 audits the closed record, where
 it cannot.
 
+**The order the child tasks are worked in is [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md)**, written 2026-08-29 once cycle 40 and T-225 put 49 tasks on the board at once. It batches 47 of them for unattended sessions, carries the owner's eight rulings and the standing authority a session works under, and puts cycles 41 and 42 at the end where they belong. **It is a schedule and never a second statement of what a task does.**
+
 **How to run one cycle in a fresh session**
 
 1. Read [`../docs/AUDIT-METHOD.md`](../docs/AUDIT-METHOD.md), this section, and the register.

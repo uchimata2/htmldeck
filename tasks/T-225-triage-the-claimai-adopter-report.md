@@ -239,6 +239,8 @@ Four passes, in this order, and the order is the point.
   between them, because a defect an adopter met in the published `0.6.0` is `CLAUDE.md`'s one
   condition for reopening the phase.
 
+**The order the child tasks are worked in is [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md)**, written 2026-08-29 once cycle 40 and T-225 put 49 tasks on the board at once. It batches 47 of them for unattended sessions, carries the owner's eight rulings and the standing authority a session works under, and puts cycles 41 and 42 at the end where they belong. **It is a schedule and never a second statement of what a task does.**
+
 **What this triage found that it was not looking for**
 
 - **The audit and the adopter report agree on a class neither could have named alone.** The audit's
