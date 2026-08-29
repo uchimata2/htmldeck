@@ -376,8 +376,12 @@ def classify(tools, wide, per_deck, not_run):
 class Result(object):
     """One row of the report: a command that ran, was skipped, or failed."""
 
-    def __init__(self, label, state, code=None, output="", why=""):
+    def __init__(self, label, state, code=None, output="", why="", seconds=None):
         self.label, self.state, self.code, self.output, self.why = label, state, code, output, why
+        # `None` for a skipped command, and that is the distinction (T-279): a command that did not
+        # run took no time in a different sense from one that ran fast, and `0.0s` says the wrong
+        # one. The report prints `-` rather than a number.
+        self.seconds = seconds
 
 
 def run_one(path, argv_tail, verbose):
@@ -390,15 +394,20 @@ def run_one(path, argv_tail, verbose):
     """
     label = "python %s%s" % (path, "".join(" " + a for a in argv_tail))
     argv = [PY, path] + list(argv_tail)
+    # Timed here because this is the one place every command goes through, so the durations are a
+    # partition of the run by construction rather than by anybody remembering to add one (T-279).
+    started_one = time.time()
     if verbose:
         print("\n=== %s" % label)
         sys.stdout.flush()
         code = subprocess.run(argv, cwd=ROOT).returncode
-        return Result(label, "ran" if code == 0 else "failed", code)
+        return Result(label, "ran" if code == 0 else "failed", code,
+                      seconds=time.time() - started_one)
     done = subprocess.run(argv, cwd=ROOT, capture_output=True, text=True,
                           errors="replace")
     out = (done.stdout or "") + (done.stderr or "")
-    return Result(label, "ran" if done.returncode == 0 else "failed", done.returncode, out)
+    return Result(label, "ran" if done.returncode == 0 else "failed", done.returncode, out,
+                  seconds=time.time() - started_one)
 
 
 def plan(decks, themes=()):
@@ -628,8 +637,43 @@ def main(argv):
     # nothing could check it and it drifted freely - it was quoted as 7-11 minutes against a real
     # 154 seconds (`BP-2`). A figure with no home cannot be stale and cannot be corrected either.
     # The number belongs to the run, not to a document: **L-95**.
+    # **Where that time went, ranked** (T-279). The line above was the whole account of cost until
+    # 2026-08-29, and one number over 37 commands cannot answer *what is slow* - the first person to
+    # ask had to write a harness outside the repository to rank them. Printed on every run, at any
+    # size, for the reason everything else here is: a figure that appears only when somebody is
+    # already suspicious is a figure nobody checks (**L-36**).
+    wall = time.time() - started
+    timed_rows = sorted(((r.seconds, r.label) for _s, r in results if r.seconds is not None),
+                        reverse=True)
+    measured = sum(sec for sec, _l in timed_rows)
+    if timed_rows:
+        print("\n  where the time went")
+        shown, cum = 0, 0.0
+        for sec, label in timed_rows:
+            cum += sec
+            shown += 1
+            print("    %7.1fs  %5.1f%%  cum %5.1f%%  %s"
+                  % (sec, 100 * sec / measured, 100 * cum / measured, label))
+            # The tail is a long list of sub-second commands and naming each buys nothing; the cut
+            # is at the share, so what prints is *the commands that dominate* rather than a fixed
+            # count that would flatter a faster machine. **The row that crosses the line is shown
+            # before breaking**: cutting above it put a 41 s command into a bucket whose own label
+            # says none of them is the reason a run is slow, which was a lie the first time it ran.
+            if cum / measured > 0.95:
+                break
+        rest = timed_rows[shown:]
+        if rest:
+            tail = sum(s for s, _l in rest)
+            print("    %7.1fs  %5.1f%%              the other %d command(s), none of them the "
+                  "reason a run is slow" % (tail, 100 * tail / measured, len(rest)))
+        # The commands are a partition of the run, so their times must reconcile with the clock.
+        # The difference is this file's own work - discovery, classification, the report - and it
+        # is printed rather than absorbed, because an unexplained gap is where a slow step hides.
+        print("    ------------------------")
+        print("    %7.1fs  in commands, against %.1fs on the clock - %.1fs is this file's own "
+              "discovery and report" % (measured, wall, wall - measured))
     print("\n%d failure(s), %d unclassified, %d stale  -  %.0f s"
-          % (failed, un, st, time.time() - started))
+          % (failed, un, st, wall))
     if failed or un or st:
         print("\nThis is step 1 of docs/PUBLISHING.md section 8, and it is red. Nothing after it "
               "runs until it is green.")

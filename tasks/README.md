@@ -61,6 +61,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-275](T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | Retire --accent-ink from the contract, both themes and every deck that carries it | `PH3` | - | `proposed` | `specify` | - | - | - | T-242, T-274 |
 | [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md) | Write the clause rows for the nine conjunctions the sweep found owing | `PH3` | - | `proposed` | `specify` | T-219 | - | - | T-054, T-244 |
+| [T-280](T-280-every-render-pays-a-fresh-chrome-launch.md) | Every render pays a fresh Chrome launch, and the launch is most of the render | `PH3` | - | `proposed` | `specify` | - | - | - | T-279 |
 
 ## Closed
 
@@ -195,8 +196,8 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-128](T-128-publish-the-adopter-deck-as-a-worked-example.md) | Publish the adopting project's D6 deck as a third worked example, sanitized on the way in | `PH3` | `0.3.0` | `done` | `review` | - | - | - | T-085, T-123, T-124, T-125, T-129, T-130, T-166, T-167, T-168, T-169, T-172, T-174, T-175, T-182 |
 | [T-129](T-129-the-reference-decks-figures-in-examples-readme-are-unwatched-and-two-are-wrong.md) | The reference deck's figures in examples/README.md are bound to nothing, and two of them are wrong on the published page | `PH3` | `0.3.0` | `done` | `review` | - | - | - | T-085, T-088, T-127, T-128, T-155, T-172, T-173 |
 | [T-130](T-130-audit-the-context-economy-of-an-agent-driven-repository.md) | Audit the context economy of an agent-driven repository, and rank the savings | `PH3` | `0.3.0` | `done` | `review` | - | T-131, T-132, T-133, T-134, T-135, T-136, T-137, T-138, T-143, T-144, T-145, T-146, T-147, T-148, T-149, T-150, T-152, T-153, T-158, T-159 | - | T-096, T-128, T-131, T-132, T-133, T-134, T-135, T-136, T-137, T-138, T-140, T-141, T-143, T-144, T-145, T-146, T-147, T-148, T-149, T-150, T-151, T-152, T-153, T-154, T-156, T-157, T-158, T-159, T-160, T-162, T-164, T-218, T-219 |
-| [T-131](T-131-expose-the-trackers-query-commands-so-the-board-is-not-read-whole.md) | Expose the tracker's query commands so the board is not read whole | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-137, T-139, T-140 |
-| [T-132](T-132-give-the-deck-gate-a-quiet-mode-for-its-green-run.md) | Give the deck gate a quiet mode for its green run | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-137 |
+| [T-131](T-131-expose-the-trackers-query-commands-so-the-board-is-not-read-whole.md) | Expose the tracker's query commands so the board is not read whole | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-137, T-139, T-140, T-279 |
+| [T-132](T-132-give-the-deck-gate-a-quiet-mode-for-its-green-run.md) | Give the deck gate a quiet mode for its green run | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-137, T-279 |
 | [T-133](T-133-write-down-that-a-deck-is-never-read-whole.md) | Write down that a deck is never read whole | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-134, T-137 |
 | [T-134](T-134-state-the-tier-model-and-bound-tier-1-as-a-relation.md) | State the tier model and bound tier 1 as a relation | `PH3` | `0.2.4` | `done` | `review` | T-130 | - | - | T-130, T-133, T-135, T-143, T-144, T-149, T-152, T-158 |
 | [T-135](T-135-cut-the-load-path-this-project-cannot-use.md) | Cut the load path this project cannot use | `PH3` | `0.3.0` | `done` | `review` | T-130 | - | - | T-130, T-134, T-136, T-137, T-138 |
@@ -316,5 +317,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-274](T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | Build the card reveal, so DS-140's Turn is a component rather than two dials | `PH3` | - | `done` | `review` | - | - | - | T-242, T-275 |
 | [T-276](T-276-narrow-ds-100-to-the-question-a-slide-puts-in-its-header.md) | Narrow DS-100 to the question a slide puts in its header | `PH3` | - | `done` | `review` | - | - | - | T-225, T-270 |
 | [T-277](T-277-put-motion-back-inside-the-more-menu.md) | Put Motion back inside the More menu, and let DS-218 count a persistent menu button as reachable | `PH3` | - | `done` | `review` | - | - | - | T-114, T-180, T-257 |
+| [T-279](T-279-check-all-reports-one-number-for-thirty-seven-commands.md) | Time each command check_all runs, so the gate's cost is measured rather than guessed | `PH3` | - | `done` | `review` | - | - | T-280 | T-131, T-132, T-280 |
 
 <!-- taskmd:end -->
