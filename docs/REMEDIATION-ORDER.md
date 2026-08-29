@@ -29,6 +29,11 @@ more than it saves.
    the shell, a theme, a rule's check or a generator invalidates them, so the deck work sits after
    all of it and the rebuild happens in one batch.
 
+**The release is cut after all forty-seven**, ruled by the owner 2026-08-29. So no finding
+needs a deferral reason, cycle 41 re-reads a settled tree, and the eighteen `PH1` tasks are
+worked where this order puts them rather than pulled forward — which is the whole reason the
+corollary below is affordable.
+
 **The corollary nobody likes:** the `High` and `critical` bands do **not** run first. Severity
 measures the audience's cost; this order measures rework. Where they disagree, a `critical`
 documentation fix waits behind a `medium` instrument fix, because the instrument decides whether the
@@ -39,8 +44,9 @@ documentation fix can be verified at all.
 ## 2. The batches
 
 Each batch is one unattended session: one subject area, no file conflicts inside it, and no decision
-that is the owner's. **A batch ends at a commit.** Where a batch is blocked on an answer it says so
-and names the question.
+that is still the owner's. **A batch ends at a commit.** Six batches carried a question when this
+file was written; all eight questions were ruled the same day and §3 holds the answers, so no batch
+is blocked.
 
 ### Wave 1 — the instruments (nothing downstream is trustworthy until these land)
 
@@ -55,10 +61,10 @@ and names the question.
 | Batch | Tasks | Eff | Why here |
 | :--- | :--- | :--- | :--- |
 | **B4** | [T-243](../tasks/T-243-five-checks-bound-on-a-name-rather-than-on-structure.md), [T-230](../tasks/T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md) | `m`,`s` | Five checks re-bound on structure, plus the adopter's `DS-229` and `DS-239` records. **Needs B1** — `T-243`'s `DS-239` half is unverifiable while `density.py write` corrupts what it writes |
-| **B5** | [T-263](../tasks/T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md), [T-262](../tasks/T-262-ds-092-counts-a-sources-box-as-prose.md), [T-264](../tasks/T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | `s`·3 | Three rules that a correct deck cannot satisfy. Independent of each other; all three change `audit.py` and a rule row. **`T-264` carries a question** — see §3 |
-| **B6** | [T-256](../tasks/T-256-ds-219-cannot-see-a-painted-svg-ancestor.md), [T-260](../tasks/T-260-ds-244-tests-proximity-where-it-means-obstruction.md) | `m`·2 | The two rules whose *scope* is in question rather than their code. **Both blocked on an answer** — see §3. Held together because both re-open what a rule measures and both are gated by `T-204`'s calibration precedent |
+| **B5** | [T-263](../tasks/T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md), [T-262](../tasks/T-262-ds-092-counts-a-sources-box-as-prose.md), [T-264](../tasks/T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | `s`·3 | Three rules that a correct deck cannot satisfy. Independent of each other; all three change `audit.py` and a rule row. **`T-264`'s question is ruled** — §3 |
+| **B6** | [T-256](../tasks/T-256-ds-219-cannot-see-a-painted-svg-ancestor.md), [T-260](../tasks/T-260-ds-244-tests-proximity-where-it-means-obstruction.md) | `m`·2 | The two rules whose *scope* is in question rather than their code. **Both questions are ruled** (§3). Held together because both re-open what a rule measures and both are gated by `T-204`'s calibration precedent |
 | **B7** | [T-229](../tasks/T-229-ds-106s-check-omits-a-word-the-rule-names.md), [T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md) | `s`,`m` | Deriving a check from its rule row, and reconciling the two contracts with their checkers. Both are *derive rather than restate* work and share the idiom |
-| **B8** | [T-265](../tasks/T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md), [T-266](../tasks/T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md), [T-270](../tasks/T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | `s`·3 | The three rule **decisions**. Grouped because each is a `DS-000` ruleset change with a stated reason, and one session can hold that frame once. **All three blocked on an answer** — see §3 |
+| **B8** | [T-265](../tasks/T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md), [T-266](../tasks/T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md), [T-270](../tasks/T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | `s`·3 | The three rule **decisions**. Grouped because each is a `DS-000` ruleset change with a stated reason, and one session can hold that frame once. **All three are ruled** (§3), so the session writes the change rather than deciding it |
 
 ### Wave 3 — the product (shell, tools, themes)
 
@@ -73,14 +79,14 @@ and names the question.
 | Batch | Tasks | Eff | Why here |
 | :--- | :--- | :--- | :--- |
 | **B12** | [T-233](../tasks/T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md), [T-248](../tasks/T-248-four-content-errors-in-three-shipped-decks.md), [T-247](../tasks/T-247-the-portfolio-generators-documents-against-the-deck.md) | `s`,`m`,`s` | Every change that invalidates a deck has landed, so the five tracked decks are rebuilt **once** here. Ten dead quick-view payloads removed, four content errors corrected against their source models, and the generator's documents reconciled |
-| **B13** | [T-257](../tasks/T-257-ds-218-passes-the-shipped-example-vacuously.md), [T-226](../tasks/T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | `s`·2 | The example's own defects: a rule it passes vacuously, and a deck missing from both human-facing documents. **`T-257` carries a question** — see §3 |
+| **B13** | [T-257](../tasks/T-257-ds-218-passes-the-shipped-example-vacuously.md), [T-226](../tasks/T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | `s`·2 | The example's own defects: a rule it passes vacuously, and a deck missing from both human-facing documents. **`T-257`'s question is ruled** — §3 |
 
 ### Wave 5 — new capability
 
 | Batch | Tasks | Eff | Why here |
 | :--- | :--- | :--- | :--- |
 | **B14** | [T-259](../tasks/T-259-nothing-prints-what-a-slide-actually-contains.md), [T-258](../tasks/T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | `m`·2 | Two printers that report rather than gate, built against a tree whose rules have settled. `T-259` first: the fact printer is what a later verdict would rest on |
-| **B15** | [T-267](../tasks/T-267-render-py-cannot-capture-a-decks-interactive-states.md), [T-271](../tasks/T-271-a-quick-view-scoped-to-a-document-section.md) | `m`·2 | Interactive capture, and the per-section quick view. **`T-271` is currently deferred** and is here only if the answer in §3 schedules it |
+| **B15** | [T-267](../tasks/T-267-render-py-cannot-capture-a-decks-interactive-states.md), [T-271](../tasks/T-271-a-quick-view-scoped-to-a-document-section.md) | `m`·2 | Interactive capture, and the per-section quick view. **`T-271` stays deferred past the release** by §3's ruling, so B15 is `T-267` alone unless the owner reschedules it |
 
 ### Wave 6 — documentation and counts (last, because every figure depends on everything above)
 
@@ -103,13 +109,17 @@ and names the question.
 
 ---
 
-## 3. What blocks unattended execution
+## 3. The eight rulings — answered 2026-08-29, before B1
 
-Six batches carry a question that is the owner's rather than a session's. **A session that reaches
-one of these stops and does not guess** — a rule changed on an agent's preference is the failure
-`DS-000` exists to prevent.
+Six batches carried a question that was the owner's rather than a session's. **All eight are ruled
+and none of them stops a batch.** Each was put with its recommendation and the owner took the
+recommendation in every case, so the column below is the ruling rather than a proposal.
 
-| Batch | Task | The question | My recommendation |
+**Each is reversible on the owner's word, and the task that implements it records it as a `DS-000`
+change with the stated reason** — which is the ordinary route for a ruleset change, not an exception
+bought by the authority in §5.
+
+| Batch | Task | The question | **Ruled** |
 | :--- | :--- | :--- | :--- |
 | B5 | `T-264` | A per-deck motion band the theme contract names, or a `DS-010` exemption for a duration inside a `--motion-long` rule? | **The band.** It keeps the value where a generator can find it, which is the argument `DS-013` rests on |
 | B6 | `T-256` | Once the ground walk is fixed, does `DS-219` keep its force, or does `DESIGN-RATIONALE.md` §5.7's doubt retire it? | **Fix the walk, keep the rule, re-measure.** The doubt is about over-firing, and a corrected walk is the only thing that can settle whether it still does |
@@ -122,7 +132,31 @@ one of these stops and does not guess** — a rule changed on an agent's prefere
 
 ---
 
-## 4. What this order costs if it is wrong
+## 4. What an unattended session may do
+
+Ruled by the owner 2026-08-29, in the same pass as §3. **These are standing authorities for this
+programme of work, not general ones**: they are scoped to the 47 tasks in §2 and expire when B24
+closes.
+
+| May | Bound |
+| :--- | :--- |
+| **Commit and push each batch** | Per task where the task is the unit, and push at the end of the batch — the same shape every audit cycle used |
+| **Amend a `DESIGN-SYSTEM.md` rule row** | Only where the task calls for it, with `DS-000`'s stated reason, and marked reversible. §3's eight are already ruled; a *ninth* rule question is not covered and stops the batch |
+| **Rebuild and commit the five tracked decks** | They are gated byte-for-byte, so every rebuild is a reviewable diff. Rebuild in B12 where it can be done once; earlier, only where a task's own proof needs it |
+| **Absorb what a batch finds** | **A small fix in place is made in place.** Anything with potential impact on other work becomes a task — **and that task is added to the running batch and worked in it**, rather than filed for later. A batch is elastic: it finishes what it started and what it found |
+
+**The one thing a session may not do is look.** `CLAUDE.md` rule 6 is a person, and three of this
+audit's findings were passed by every machine and caught by an eye. So:
+
+- a task owing a look does **everything measurable**, records the look as **owed** — naming the deck,
+  the slide and what to look for — and **closes**;
+- the owed looks accumulate as a queue, and the owner runs **one looking pass** over it;
+- **that pass happens before the release is cut**, which is what keeps rule 6 true rather than
+  merely deferred. B12, B13 and B9 are the batches that will owe most of it.
+
+---
+
+## 5. What this order costs if it is wrong
 
 **The risk is concentrated in wave 2.** If a rule decision in B6 or B8 comes back the other way, the
 documents in wave 6 move again — which is the rework this order exists to avoid, arriving through
