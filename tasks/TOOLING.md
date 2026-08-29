@@ -181,6 +181,31 @@ rule that survived a tool swap unnoticed is the thing to recognise faster next t
 wrong, a plan is thin, or a deliverable is bad — and both say so in their own output rather than
 reporting a clean pass (**L-05**).
 
+### 1.1 After an edit to `shell/`, in this order
+
+**A shell edit makes four gates red at once**, on every deck, until the decks are synced —
+`shell.py check`, `component.py check`, `check.py` and `static_variants.py`. The order below is not
+a preference: each step reads what the one before it wrote.
+
+```
+python tools/deck/shell.py sync <deck> --write     # once per deck in check_all.py's DECKS
+python tools/examples/seed_defects.py --write      # the fixture derives from the reference deck
+python tools/deck/density.py check <deck>          # write only if a rank actually moved
+python tools/docs/figures.py                       # every deck's byte and KB figures just changed
+```
+
+**`figures.py` is the one that gets forgotten.** It goes red whenever a deck's bytes move or a
+document is added, it is the **last** checker `check_all.py` runs, and a sync always moves the
+bytes. Re-derive each figure from the command the figure itself names, never by hand.
+
+**Two anchors break on a shell change and neither is a defect.** `static_variants.py`'s variant
+literals and `seed_defects.py`'s seeds both say so in their own failure text — *fix the variant, do
+not delete it*. `seed_defects.py`'s D3 is a pattern rather than a literal because DS-239 renumbers
+that rank whenever a content motion is added anywhere.
+
+*Written here 2026-08-29 after this procedure had been copied forward in four consecutive handoffs
+with no durable home — which is the shape a handoff is supposed to route out, not carry.*
+
 ## 2. Section references
 
 A `§` is a pointer like any other, and until T-046 nothing resolved one — **1394 of them, against 614
