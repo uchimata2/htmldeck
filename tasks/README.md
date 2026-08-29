@@ -61,7 +61,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-275](T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | Retire --accent-ink from the contract, both themes and every deck that carries it | `PH3` | - | `proposed` | `specify` | - | - | - | T-242, T-274 |
 | [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md) | Write the clause rows for the nine conjunctions the sweep found owing | `PH3` | - | `proposed` | `specify` | T-219 | - | - | T-054, T-244 |
-| [T-280](T-280-every-render-pays-a-fresh-chrome-launch.md) | Every render pays a fresh Chrome launch, and the launch is most of the render | `PH3` | - | `proposed` | `specify` | - | - | - | T-279 |
 
 ## Closed
 
@@ -317,6 +316,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-274](T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | Build the card reveal, so DS-140's Turn is a component rather than two dials | `PH3` | - | `done` | `review` | - | - | - | T-242, T-275 |
 | [T-276](T-276-narrow-ds-100-to-the-question-a-slide-puts-in-its-header.md) | Narrow DS-100 to the question a slide puts in its header | `PH3` | - | `done` | `review` | - | - | - | T-225, T-270 |
 | [T-277](T-277-put-motion-back-inside-the-more-menu.md) | Put Motion back inside the More menu, and let DS-218 count a persistent menu button as reachable | `PH3` | - | `done` | `review` | - | - | - | T-114, T-180, T-257 |
-| [T-279](T-279-check-all-reports-one-number-for-thirty-seven-commands.md) | Time each command check_all runs, so the gate's cost is measured rather than guessed | `PH3` | - | `done` | `review` | - | - | T-280 | T-131, T-132, T-280 |
+| [T-279](T-279-check-all-reports-one-number-for-thirty-seven-commands.md) | Time each command check_all runs, so the gate's cost is measured rather than guessed | `PH3` | - | `done` | `review` | - | - | - | T-131, T-132, T-280 |
+| [T-280](T-280-every-render-pays-a-fresh-chrome-launch.md) | Every render pays a fresh Chrome launch, and the launch is most of the render | `PH3` | - | `done` | `review` | - | - | - | T-279 |
 
 <!-- taskmd:end -->

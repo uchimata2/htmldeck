@@ -15,8 +15,8 @@ post-B7 questions, and `T-276` from the third. **Three more have joined since B1
 [T-278](../tasks/T-278-write-the-clause-rows-the-sweep-found-owing.md) from what `T-244` found, and
 [T-279](../tasks/T-279-check-all-reports-one-number-for-thirty-seven-commands.md) and
 [T-280](../tasks/T-280-every-render-pays-a-fresh-chrome-launch.md) from the owner asking on
-2026-08-29 whether a batch could be made faster without giving up quality. **`T-279` is done; the
-other two are unbatched**, and §4's standing authorities do not reach them — they were asked for
+2026-08-29 whether a batch could be made faster without giving up quality. **`T-279` and `T-280`
+are done; `T-278` is unbatched**, and §4's standing authorities do not reach them — they were asked for
 directly, which outranks a standing authority rather than needing one. *The title said* the 47 tasks *until 2026-08-29,
 which is a count of what the triage put on the board and reads as a count of what this file holds.
 The sentence below forbids exactly that, and the title was the one place nobody applied it.*

@@ -160,9 +160,17 @@ def sweep(deck, quiet=False):
     probe = render.make_probe(deck, name="contract.html", extra=PROBE,
                               out=render.out_dir(deck))
     rows = []
-    for (w, h, k_expected, engage) in VIEWPORTS:
-        cw, ch = render.calibrate(probe, w, h)
-        data, err = render.read_result(render.file_url(probe), cw, ch)
+
+    # One worker per viewport (T-280). Each still calibrates and renders in Chrome processes of its
+    # own; only the four viewports overlap, and they are independent - the probe is written once
+    # above and every job reads it. `in_parallel` returns them in VIEWPORTS order, so the log and
+    # `rows` are what the serial sweep produced.
+    def one_viewport(v):
+        cw, ch = render.calibrate(probe, v[0], v[1])
+        return render.read_result(render.file_url(probe), cw, ch)
+
+    for (w, h, k_expected, engage), (data, err) in zip(
+            VIEWPORTS, render.in_parallel(VIEWPORTS, one_viewport)):
         if not data:
             print("  !! no result at %dx%d\n%s" % (w, h, err[:300]))
             continue

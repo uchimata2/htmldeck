@@ -61,6 +61,14 @@ closing evidence, finish every edit first, start it last, and touch nothing unti
 edit turns out to be necessary, the run is void, and re-running is cheaper than reasoning about which
 steps were affected.
 
+**`HTMLDECK_RENDER_WORKERS` decides how many Chrome launches overlap; it does not decide anything
+else.** Renders that fan out are independent processes with their own throwaway profiles, so the
+verdicts are the same either way - proved by `check.py`'s output being byte-identical at `1` and at
+`4`, and by both seeded-variant suites printing byte-identical runs (T-280). The default is `4`,
+measured rather than derived from the core count. **Set it to `1` when a render result is what you
+are diagnosing**, so a browser problem is not also a concurrency problem; a malformed value falls
+back to the default rather than failing, because a typo in a knob must not decide a gate.
+
 **A bulk edit of a task field must match the front-matter block, never the whole file.** Task records quote field syntax in their own prose, so a script testing `"shipped_in: unreleased" in text` edits records that do not carry the field at all. **Measured 2026-08-22 while recording `0.6.0`**: twenty tasks were in the release and twenty-one files changed, because [`T-219`](T-219-pre-release-audit-of-the-whole-repository.md) —2's cycle table names the field in a cell. It is `planned`, and it was handed a shipping version. Nothing failed: the lint passed, the index rendered, and the only thing that caught it was counting the files written against the tasks expected. **So split the file at its front matter and match only there, then read back and assert the field landed in front matter and once.**
 
 `lint.py` is the four checks a task edit owes: it stops at the first failure and exits with that

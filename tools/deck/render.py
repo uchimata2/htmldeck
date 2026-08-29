@@ -38,6 +38,7 @@ an adopter's screenshots and a copy of their deck inside the package cache (T-07
 Pure standard library (**L-07**).
 """
 
+import concurrent.futures
 import json
 import os
 import re
@@ -415,6 +416,55 @@ def chrome_run(url, w, h, extra=None, timeout=120):
         shutil.rmtree(profile, ignore_errors=True)
 
 
+# How many Chrome launches run at once. **Measured, never taken from the core count** (T-280): on
+# a 16-core machine blank-page launches ran 1.49x at two workers, 1.45x at four, 1.53x at eight and
+# 1.37x at twelve - flat inside noise from two upward, because starting Chrome is not CPU-bound.
+# Real deck renders reach 1.74x at four, better than blank ones because the page work parallelises
+# where the process startup does not. Above about four the number is decoration.
+DEFAULT_WORKERS = 4
+WORKERS_ENV = "HTMLDECK_RENDER_WORKERS"
+
+
+def workers():
+    """The fan-out width, or 1 to take the fan-out out of the picture while diagnosing something.
+
+    A bad value falls back to the default rather than failing: this is a knob on an instrument, and
+    a typo in it must not decide a gate.
+    """
+    try:
+        n = int(os.environ.get(WORKERS_ENV, DEFAULT_WORKERS))
+    except ValueError:
+        n = DEFAULT_WORKERS
+    return max(1, n)
+
+
+def in_parallel(jobs, fn):
+    """Run `fn` over `jobs` concurrently and return the results **in job order**.
+
+    **Every job still gets its own Chrome process, its own throwaway `--user-data-dir` and its own
+    blackholed resolver.** This overlaps launches; it does not share a browser, so none of the
+    isolation `chrome_run` provides is given up. That is why this is the hypothesis that got built
+    (T-280 section 2): the throwaway profile was measured at 0.0003 s to create and remove, and a
+    launch reusing one profile saved 0.05 s of 0.345 s - the cost is process startup, not the
+    profile, and only sharing the process would reach it.
+
+    **Order is preserved, and that is not cosmetic.** Callers append to lists a later comparison
+    pairs by index, and one row arriving out of order reads as a catastrophic disagreement on a
+    deck with nothing wrong with it (T-183).
+
+    **The caller must be fanning out over one already-written probe.** Probe names are per-tool
+    constants and `out_dir` is per-project, so two renders of *different* decks through the same
+    tool write one path - concurrent, they would read each other's deck. Every use here is one
+    probe read by many launches.
+    """
+    jobs = list(jobs)
+    n = min(workers(), len(jobs))
+    if n <= 1:
+        return [fn(j) for j in jobs]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=n) as ex:
+        return list(ex.map(fn, jobs))
+
+
 def read_result(url, w, h, extra=None):
     out, err = chrome_run(url, w, h, ["--dump-dom"] + (extra or []))
     m = re.search(r"RESULT(\{.*?\})ENDRESULT", out, re.S)
@@ -457,8 +507,15 @@ def measure(deck, which, quiet=False, out=None):
     for (w, h, label) in RESOLUTIONS:
         cw, ch = calibrate(probe, w, h)
         results[label] = []
-        for s in which:
-            data, err = read_result(file_url(probe) + "?s=%d" % s, cw, ch)
+
+        # One launch per slide, overlapped (T-280). The probe is already on disk and every job only
+        # reads it, so the slides are independent; `in_parallel` returns them in `which` order, so
+        # the log below and the list `contract.geometry` pairs by slide are what the serial run
+        # produced.
+        def one_slide(s, _cw=cw, _ch=ch):
+            return s, read_result(file_url(probe) + "?s=%d" % s, _cw, _ch)[0]
+
+        for s, data in in_parallel(which, one_slide):
             if not data:
                 print("  !! no result for %s slide %d" % (label, s))
                 continue
@@ -1083,6 +1140,42 @@ def self_test():
     if counted != 4:
         sys.exit("SELF-TEST FAILED: slide_count read %d slides out of a fixture holding 4 - it no "
                  "longer matches `slide` as a class token, so it and the DOM count disagree" % counted)
+    # ---- the render fan-out (T-280) -----------------------------------------------------------
+    # **The property under test is order, not speed.** `in_parallel` exists so several Chrome
+    # launches overlap, and its one dangerous failure is silent: results arriving in completion
+    # order instead of job order. Callers append to lists a later comparison pairs by index, and a
+    # single displaced row reports a catastrophic disagreement on a deck with nothing wrong with it
+    # (T-183) - a red gate that re-running clears, which is the shape that teaches a reader to
+    # re-run until green.
+    #
+    # The jobs finish in reverse, so completion order and job order are opposites and a pass cannot
+    # be luck. No Chrome and no repository state are involved: this asserts the helper, not a deck.
+    import time as _time
+
+    def _slow(i):
+        _time.sleep((8 - i) * 0.005)
+        return i
+
+    _prev = os.environ.get(WORKERS_ENV)
+    try:
+        os.environ[WORKERS_ENV] = "4"
+        if in_parallel(range(8), _slow) != list(range(8)):
+            sys.exit("SELF-TEST FAILED: in_parallel returned results in completion order, not job "
+                     "order. Every caller indexes what it gets back (T-183)")
+        os.environ[WORKERS_ENV] = "1"
+        if workers() != 1 or in_parallel(range(8), _slow) != list(range(8)):
+            sys.exit("SELF-TEST FAILED: %s=1 did not give a plain serial run - the one knob that "
+                     "takes the fan-out out of a diagnosis" % WORKERS_ENV)
+        os.environ[WORKERS_ENV] = "not a number"
+        if workers() != DEFAULT_WORKERS:
+            sys.exit("SELF-TEST FAILED: a malformed %s did not fall back to %d. A typo in a knob "
+                     "must not decide a gate" % (WORKERS_ENV, DEFAULT_WORKERS))
+    finally:
+        if _prev is None:
+            os.environ.pop(WORKERS_ENV, None)
+        else:
+            os.environ[WORKERS_ENV] = _prev
+
     # ---- `motion`'s clock (T-185) ------------------------------------------------------------
     # **The span is taken over the navigation's own animations and nothing else.** A deck carries
     # DS-140's `Current` looping at 4500 ms on a slide nobody is looking at; letting it into the
