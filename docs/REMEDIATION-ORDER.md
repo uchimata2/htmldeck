@@ -1,4 +1,4 @@
-# Remediation order — the 47 tasks, batched for unattended sessions
+# Remediation order — the pre-release backlog, batched for unattended sessions
 
 **Tier 3. Loaded by nothing**; opened when a session asks *what do I work next*. It is a schedule,
 not a decision: what each task does is its own record, and this file never restates one.
@@ -9,6 +9,11 @@ Written 2026-08-29, after the pre-release audit's triage (cycle 40) and the Clai
 scope by the owner's instruction** — the 3D visual is deferred, not scheduled here. That leaves 47
 tasks plus [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md)'s two remaining
 cycles.
+
+**Three tasks have joined it since, each following a ruling** — `T-274` and `T-275` from §3's two
+post-B7 questions, and `T-276` from the third. *The title said* the 47 tasks *until 2026-08-29,
+which is a count of what the triage put on the board and reads as a count of what this file holds.
+The sentence below forbids exactly that, and the title was the one place nobody applied it.*
 
 **A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 to B9 landed 2026-08-29.**
 
@@ -189,7 +194,7 @@ nothing.
 ## 4. What an unattended session may do
 
 Ruled by the owner 2026-08-29, in the same pass as §3. **These are standing authorities for this
-programme of work, not general ones**: they are scoped to the 47 tasks in §2 and expire when B24
+programme of work, not general ones**: they are scoped to **the batches in §2 and whatever a ruling in §3 adds to them** — which is three tasks so far, and is why this reads as the schedule rather than as a count — and they expire when B24
 closes.
 
 | May | Bound |
