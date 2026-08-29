@@ -100,7 +100,7 @@ fit one deck is worse than no threshold (**L-38**).
 | `--shadow-soft` | colour | primitive | A panel's shadow colour. | colour |
 | `--scrim` | colour | primitive | The wash the quick view lays over the slide it covers (T-070). A layer rather than a shade of one: it darkens `--paper` and `--field` alike, and a dark theme sets it *more* opaque rather than darker. | colour |
 | `--accent` | colour | primitive | The one accent (DS-020). It means something wherever it appears. | colour |
-| `--accent-ink` | colour | primitive | The accent as text on the ground. | colour |
+| `--accent-ink` | colour | primitive | The accent as text on the ground. **Ruled for retirement 2026-08-29** — no surface renders it; T-275 removes this row, both themes' four values and every deck's two in one change. | colour |
 | `--accent-wash` | colour | primitive | The accent as a ground. | colour |
 | `--pos` | colour | primitive | The positive role, deck-wide (DS-026). | colour |
 | `--neg` | colour | primitive | The negative role. | colour |
@@ -220,8 +220,8 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--open-ease` | motion | primitive | Open's easing. | — |
 | `--open-rise` | motion | primitive | How far an opening panel travels. | — |
 | `--open-squash` | motion | primitive | The scale an opening panel starts at. | — |
-| `--turn-dur` | motion | primitive | Turn: a card reveal (DS-140), inside the cap (DS-141). **No shipped component reads it** — see below. | ms 0-500 |
-| `--turn-ease` | motion | primitive | Turn's easing. **No shipped component reads it** — see below. | — |
+| `--turn-dur` | motion | primitive | Turn: a card reveal (DS-140), inside the cap (DS-141). **No shipped component reads it yet** — the reveal is ruled and is T-274's. | ms 0-500 |
+| `--turn-ease` | motion | primitive | Turn's easing. **No shipped component reads it yet** — the reveal is ruled and is T-274's. | — |
 | `--scale-dur` | motion | primitive | Scale: a reveal (DS-140), inside the cap (DS-141). | ms 0-500 |
 | `--scale-ease` | motion | primitive | Scale's easing. Read by the arrowhead and the matrix dot, which are the two components Scale is built from. | — |
 | `--pulse-dur` | motion | primitive | Pulse-once. Never loops (DS-140). | ms 800-1600 |
@@ -248,20 +248,27 @@ under anything but `linear`, which makes it the mechanism's number rather than a
 | `--long-ease` | motion | optional | The licensed long band's easing. §3.6's own rule — every named motion carries a curve — and a licensed motion is a motion. | — |
 | `--long-delay` | motion | optional | How long a licensed long motion waits before it starts. | — |
 
-**Two dials in this table are wired to nothing, and the row says so rather than the reader finding
-out.** `--turn-dur` and `--turn-ease` are declared by both themes and carried by all five tracked
-decks, and `var(--turn-dur)` appears nowhere in the tree — so DS-140's starter set, which that rule
-calls *what a deck gets without designing anything*, ships one of its four names as a pair of dials
-no component reads. [`COMPONENT-CONTRACT.md`](COMPONENT-CONTRACT.md) §5 still tells an author
-wanting an overshoot on a card reveal to reach for `--turn-ease`. **The choice is the owner's and it
-is deliberately not taken here** (`PR-36`, deferred by
-[T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md) 2026-08-29): either a
-component implements the reveal DS-140 names and no deck has ever built, or the two tokens go and
-DS-140's set loses a name — a `DS-000` question, and deleting is the cheaper answer that loses
-something. **`--accent-ink` is the same question in the colour band** (`PR-77`): four hand-chosen
-values across two themes, a contract row typing it *the accent as text on the ground*, and no surface
-that renders it. The register asks for the two to be decided together and they are recorded together
-here.
+**Two dials in this table are wired to nothing today, and both are ruled.** `--turn-dur` and
+`--turn-ease` are declared by both themes and carried by all five tracked decks, and
+`var(--turn-dur)` appears nowhere in the tree — so DS-140's starter set, which that rule calls *what
+a deck gets without designing anything*, ships one of its four names as a pair of dials no component
+reads. **Ruled 2026-08-29: build the reveal.** The question was put to the owner as *build the
+component, or retire the two tokens and let DS-140's set lose a name*, with retirement recommended as
+the cheaper answer, and the owner priced the lost name higher than the build. The set keeps its
+fourth member and gains a body;
+[T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) carries it, and
+[`COMPONENT-CONTRACT.md`](COMPONENT-CONTRACT.md) §5's advice about reaching for `--turn-ease` becomes
+true when it lands.
+
+**`--accent-ink` was the same question in the colour band and is ruled the other way** (`PR-77`):
+four hand-chosen values across two themes, a contract row typing it *the accent as text on the
+ground*, and no surface that renders it. **Ruled 2026-08-29: retire the row and its values**, by
+[T-275](../tasks/T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md). The register
+asked for the two to be decided together and they were; **they were answered differently on purpose**
+— Turn is a named member of a set a rule publishes, and this is a colour role nothing publishes.
+*Both were deferred by [T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md)
+on 2026-08-29 as `DS-000` questions a batch's standing authority did not cover, and ruled the same
+day.*
 
 **The licensed long band is three tokens and is `optional` for the reason §2 gives**: most decks
 never run a motion past DS-141's cap, and a theme should not carry a dial for one that does not

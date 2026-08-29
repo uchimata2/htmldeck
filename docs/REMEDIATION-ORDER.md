@@ -74,7 +74,7 @@ is blocked.
 
 | Batch | Tasks | Eff | Why here |
 | :--- | :--- | :--- | :--- |
-| **B9** | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md), [T-268](../tasks/T-268-three-chrome-and-timing-defects-in-deck-js.md) | `s`·2 | The shell: the print block's entrance collapse, and three chrome and timing defects the presenter reported. `components.css` and `deck.js`, and both end in a print or a look |
+| **B9** | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md), [T-268](../tasks/T-268-three-chrome-and-timing-defects-in-deck-js.md), **+[T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md)** | `s`·2,`m` | The shell: the print block's entrance collapse, and three chrome and timing defects the presenter reported. `components.css` and `deck.js`, and both end in a print or a look. **`T-274` joins them from §3's ninth ruling** — the card reveal is a new component in the same file, and it has to land before B12 rebuilds the decks that will carry it |
 | **B10** | [T-269](../tasks/T-269-three-build-path-defects-the-adopter-worked-around.md), [T-245](../tasks/T-245-seven-tool-defects-in-tools-deck.md) | `s`,`m` | Ten small defects across the build path and the deck tools. Each carries its own reproduction, so the batch is ten independent seeded proofs |
 | **B11** | [T-228](../tasks/T-228-the-second-theme-fails-the-contract-it-demonstrates.md), [T-244](../tasks/T-244-the-gates-own-coverage-account.md) | `s`,`m` | The theme validation step, and deriving the gate's clause-level account. **`T-244` must follow every rule change above** — it derives what the gate decides, and a table derived before the rules settle is derived twice |
 
@@ -82,7 +82,7 @@ is blocked.
 
 | Batch | Tasks | Eff | Why here |
 | :--- | :--- | :--- | :--- |
-| **B12** | [T-233](../tasks/T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md), [T-248](../tasks/T-248-four-content-errors-in-three-shipped-decks.md), [T-247](../tasks/T-247-the-portfolio-generators-documents-against-the-deck.md) | `s`,`m`,`s` | Every change that invalidates a deck has landed, so the five tracked decks are rebuilt **once** here. Ten dead quick-view payloads removed, four content errors corrected against their source models, and the generator's documents reconciled |
+| **B12** | [T-233](../tasks/T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md), [T-248](../tasks/T-248-four-content-errors-in-three-shipped-decks.md), [T-247](../tasks/T-247-the-portfolio-generators-documents-against-the-deck.md), **+[T-275](../tasks/T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md)** | `s`,`m`,`s`,`s` | Every change that invalidates a deck has landed, so the five tracked decks are rebuilt **once** here. Ten dead quick-view payloads removed, four content errors corrected against their source models, and the generator's documents reconciled |
 | **B13** | [T-257](../tasks/T-257-ds-218-passes-the-shipped-example-vacuously.md), [T-226](../tasks/T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | `s`·2 | The example's own defects: a rule it passes vacuously, and a deck missing from both human-facing documents. **`T-257`'s question is ruled** — §3 |
 
 ### Wave 5 — new capability
@@ -133,6 +133,22 @@ bought by the authority in §5.
 | B8 | `T-270` | Accept only the two narrow halves of `DS-100` and `DS-202`, rejecting *make the rule reviewable* and *replace the sentence count*? | **Yes**, for the reasons in `T-225` §3 |
 | B13 | `T-257` | Is a control one click inside a shut menu genuinely disqualifying? | **Yes, keep the rule** — and fix the example by giving it one looping motion, so it passes for a reason |
 | B15 | `T-271` | Build the per-section quick view now, or keep it deferred past the release? | **Keep it deferred.** It is the only record asking for a new component and it competes with nothing else |
+
+### Two more, answered after B7
+
+**The eight above were answered before B1 and none of them stopped a batch.** These two were raised
+*by* a batch: [T-242](../tasks/T-242-the-contracts-against-the-checkers-that-decide-them.md) met them
+while closing `PR-36` and `PR-77`, deferred both as `DS-000` questions §4's authority does not cover,
+and recorded them where the decision would be taken. **That is the escape working rather than
+failing** — the batch finished, and the questions reached the owner with their measurements attached.
+
+| Batch | Finding | The question | **Ruled** |
+| :--- | :--- | :--- | :--- |
+| B9 | `PR-36` | Turn's two dials are read by nothing. Build the card reveal DS-140 names, or retire them and let its starter set lose a name? | **Build it**, [T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md). Put with *retire* recommended as the cheaper answer; the owner priced the lost name higher than the build |
+| B12 | `PR-77` | `--accent-ink` is four hand-chosen values with no surface. Give it one, or retire the row? | **Retire it**, [T-275](../tasks/T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md). The register asked for this and `PR-36` to be decided together and they were — **answered differently on purpose**: Turn is a named member of a set a rule publishes, and this is a colour role nothing publishes |
+
+**Both are reversible on the owner's word and each is recorded as a `DS-000` change with its stated
+reason**, on the same terms as the eight above.
 
 ---
 

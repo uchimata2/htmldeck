@@ -655,8 +655,8 @@ easing, and a zero-duration `visibility` step has nothing to ease. Those are the
 and they are the mechanism's word rather than a choice. **Every other easing is a dial** — each of
 DS-140's named motions has one, and so does the slide transition — so a component wanting an
 overshoot on a card reveal reaches for `--turn-ease` rather than writing a curve into itself —
-**though no shipped component reads that pair today, and whether Turn is built or retired is an open
-question the theme contract's §3.6 records**. A
+**though no shipped component reads that pair yet: the reveal was ruled to be built on 2026-08-29 and
+is [T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md)'s**. A
 `cubic-bezier()` outside the region is not a forbidden effect; it is an effect in the wrong place,
 and `theme.py check` says so under DS-010.
 

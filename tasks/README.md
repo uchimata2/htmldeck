@@ -68,6 +68,8 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-269](T-269-three-build-path-defects-the-adopter-worked-around.md) | Unwrap a provenance row, read a rich Sources field, and convert bold across a line break | `PH1` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | Decide what DS-100 and DS-202 should measure, and say the reason in each failure | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
+| [T-274](T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | Build the card reveal, so DS-140's Turn is a component rather than two dials | `PH3` | - | `proposed` | `specify` | - | - | - | T-242, T-275 |
+| [T-275](T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | Retire --accent-ink from the contract, both themes and every deck that carries it | `PH3` | - | `proposed` | `specify` | - | - | - | T-242, T-274 |
 
 ## Closed
 
@@ -298,7 +300,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-229](T-229-ds-106s-check-omits-a-word-the-rule-names.md) | Derive DS-106's banned-terminology list from the rule instead of restating it | `PH1` | - | `done` | `review` | T-219 | - | - | - |
 | [T-230](T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md) | Derive DS-063's slide sample from the deck instead of fixing it at four indices | `PH1` | - | `done` | `review` | T-219 | - | - | - |
 | [T-231](T-231-two-packaging-checks-have-no-subject-at-all.md) | Teach the scaffold gate the placeholder the skill actually writes | `PH1` | `unreleased` | `done` | `review` | T-219 | - | - | - |
-| [T-242](T-242-the-contracts-against-the-checkers-that-decide-them.md) | Reconcile the component and theme contracts with what their checkers read | `PH3` | - | `done` | `review` | T-219 | - | - | - |
+| [T-242](T-242-the-contracts-against-the-checkers-that-decide-them.md) | Reconcile the component and theme contracts with what their checkers read | `PH3` | - | `done` | `review` | T-219 | - | - | T-274, T-275 |
 | [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | Re-bind five checks on what is true at run time instead of on a name | `PH3` | - | `done` | `review` | T-219 | - | - | - |
 | [T-246](T-246-two-docs-instruments-misdescribe-their-own-behaviour.md) | Correct what the cycle and figure instruments say they do | `PH3` | - | `done` | `review` | T-219 | - | - | - |
 | [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) | Fix set_var's self-closing tag insertion, and have write verify what it wrote | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-225, T-261 |
