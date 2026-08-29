@@ -2130,7 +2130,12 @@ PROBE = r"""
       // **The elements, not just how many** (T-193). This kept `.length` and threw the elements
       // away inside the probe, so the verdict row could not name the wide one however it was
       // worded - and DS-075 is the rule an author is most likely to hit and least able to act on.
-      var wide = Array.prototype.filter.call(doc.querySelectorAll('#docBody *'),
+      // **And it scans what the number measures** (T-269, adopter report `003`). `scrollWidth` is
+      // read off `#doc`; the count used to be taken over `#docBody *`, so an element between the
+      // two - a provenance row is the one that bit - failed the rule while the row read
+      // `overflowing: 0`, and `_widest` printed nothing beside it. A count over a smaller subtree
+      // than the measurement can contradict it, which is worse than not counting at all.
+      var wide = Array.prototype.filter.call(doc.querySelectorAll('*'),
         function(el){ return el.getBoundingClientRect().width > 321; })
         .map(function(el){
           var cls = (typeof el.className === 'string' && el.className.trim())

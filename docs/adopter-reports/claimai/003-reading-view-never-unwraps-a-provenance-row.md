@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` |
 | **Found while** | Building `D4 — Executive Board Presentation` at htmldeck stage 6, on 2026-08-24 |
 | **Version seen** | `0.6.0` |
 
@@ -67,3 +67,16 @@ classifies every table cell at build time and carries `td.nb,th.nb{white-space:n
 does **not** overlap this one: it governs cells inside a quick view, where the browser was splitting
 `CR-03` at the hyphen and `ISO/IEC` at the slash. The `.doc .sources-item` repair this note reports
 is still carried by the deck and still belongs in the shared block.
+
+## Closed
+
+**2026-08-29 by [T-269](../../../tasks/T-269-three-build-path-defects-the-adopter-worked-around.md),
+both halves, remedy as proposed.** `.doc .sources-item{white-space:normal}` sits beside the
+`.doc .sources-box` rule it belongs with, so a deck no longer has to repair the reading view.
+
+**And the failure message, which is the half that cost the time.** The probe scanned `#docBody *`
+while the number it reported was `scrollWidth` read off `#doc` - so a wide element between the two
+failed the rule while the row said `overflowing: 0` and `_widest` printed nothing beside it. The
+scan is now taken over the same subtree as the measurement. **A count over a smaller subtree than
+the number it accompanies can contradict it, which is worse than not counting at all**, and that is
+the general form of this record rather than one selector.

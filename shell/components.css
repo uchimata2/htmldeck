@@ -832,6 +832,12 @@ svg{display:block}
    list rather than as a box, and is what looking at the reading view showed. */
 .doc .sources-box{position:static;display:block;min-width:0;margin-top:var(--doc-sp-xs);
   box-shadow:none;font-size:var(--doc-fs-sm);white-space:normal}
+/* The box's `white-space` does not reach the item, which sets its own `nowrap` - right on the
+   stage, where the box is a fixed design-unit width and a wrapped row would read as two. In a
+   document that has to fold to 320 CSS px it holds the page open: one row of about forty
+   characters was enough (T-269, adopter report `003`). A provenance row is a run in a document
+   and wraps like every other one. */
+.doc .sources-item{white-space:normal}
 /* The item's own parts are sized in DESIGN UNITS, which the reading view is not (DS-074). Left
    alone they arrive at stage scale inside document type: measured at a 14.5 px title with an 18 px
    identifier and a 23 px glyph beside it, and a control 93 px tall from `--disc-hit`. The label

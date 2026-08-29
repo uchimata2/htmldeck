@@ -637,12 +637,21 @@
   }, {passive:true});
 
   /* ---------------------------------------------------------- motion and theme toggles */
+  /* **The tail is a slot, so nothing in it is guaranteed** (`PR-78`). `shell.html` calls this
+     region a slot because what sits here varies by deck; three of its five ids were guarded and
+     these two were not, and `setMotion` runs at module scope - so a deck whose chrome row omits
+     the button died before its first slide, reporting `data-preflight="fail"` and 0 of 13 slides
+     current. The state still has to be set when the button is absent: motion is a property of the
+     deck, and only the label is a property of the control. */
   function setMotion(on){
     root.dataset.motion = on ? 'on' : 'off';
+    if (!motionBtn) return;
     motionBtn.textContent = on ? 'Motion on' : 'Motion off';
     motionBtn.setAttribute('aria-pressed', on ? 'false' : 'true');
   }
-  motionBtn.addEventListener('click', function(){ setMotion(root.dataset.motion === 'off'); });
+  if (motionBtn){
+    motionBtn.addEventListener('click', function(){ setMotion(root.dataset.motion === 'off'); });
+  }
   function setTheme(t){ root.dataset.theme = t; }
   setMotion(!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
@@ -996,8 +1005,11 @@
       fit();
     }
   }
-  toDoc.addEventListener('click', function(){ setView(true); });
-  toStage.addEventListener('click', function(){ setView(!inDoc ? true : false); });
+  /* `PR-78` again, and `toStage` beside it: the register names `toDoc`, and its twin one line
+     below is the same dereference on the same slot. Guarding one and not the other would leave the
+     identical crash reachable by removing the other button. */
+  if (toDoc){ toDoc.addEventListener('click', function(){ setView(true); }); }
+  if (toStage){ toStage.addEventListener('click', function(){ setView(!inDoc ? true : false); }); }
 
   /* Auto-engage when the stage scales below 0.5 - the point where 24-unit body text renders
      under 12 CSS px - and never in fullscreen (DS-071/072).

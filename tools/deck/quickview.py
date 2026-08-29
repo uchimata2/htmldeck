@@ -99,6 +99,19 @@ def esc(text):
     return (text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
 
+def unesc(text):
+    """`esc` undone, for reading a title back out of the markup it was written into.
+
+    **The raw title is this tool's currency** (`PR-59`). It is what an author types after
+    `--source`, so it is the form every comparison uses; the escaped form exists only inside
+    markup, and is produced at the boundary and undone at it. Before that ruling the tool escaped
+    the title in three places and not in two, and a source titled with an ampersand was matched
+    against markup that must carry the entity - no item was found, and `wire()` blamed the
+    specification for a citation that was there.
+    """
+    return (text.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&"))
+
+
 def inline(text):
     """Emphasis, code and links inside one line of Markdown.
 
@@ -191,9 +204,30 @@ def markdown(text):
             out.append("<table>%s</table>" % "".join(body))
             del rows[:]
 
+    def settle(frame):
+        """Convert the item's open text run, if one is open, and close it.
+
+        **A wrapped line is part of the run, not a run of its own** (T-269, adopter report `007`).
+        A list item used to convert each of its lines the moment it read one, so `**four CRITICAL
+        and` / `eight HIGH**` met the inline pass as two halves and neither matched - the reader saw
+        the asterisks. `flush_para` never had the fault because it joins first and converts once;
+        this is that same order, applied where an item accumulates instead of a paragraph.
+        """
+        if frame[4]:
+            frame[3][-1] = frame[4][0] + inline(" ".join(frame[4][1:]))
+            del frame[4][:]
+
+    def open_run(frame, raw):
+        """Start (or extend) the item's text run with one raw line."""
+        if frame[4]:
+            frame[4].append(raw)
+        else:
+            frame[4].extend([frame[3][-1], raw])
+
     def emit(html):
         """Into the innermost open list item, or into the document when no list is open."""
         if stack:
+            settle(stack[-1])
             stack[-1][3][-1] += html
         else:
             out.append(html)
@@ -201,7 +235,9 @@ def markdown(text):
     def close_lists(depth=0):
         """Close open levels until `depth` remain, nesting each into the item that contains it."""
         while len(stack) > depth:
-            tag, items = stack.pop()[2:]
+            settle(stack[-1])
+            frame = stack.pop()
+            tag, items = frame[2], frame[3]
             emit("<%s>%s</%s>" % (tag, "".join("<li>%s</li>" % i for i in items), tag))
 
     def flush_code():
@@ -279,16 +315,18 @@ def markdown(text):
             while len(stack) > 1 and mark < stack[-1][0]:
                 close_lists(len(stack) - 1)
             if stack and mark > stack[-1][0]:
-                stack.append([mark, content, tag, []])
+                stack.append([mark, content, tag, [], []])
             elif stack and stack[-1][2] != tag:
                 # A changed marker at the same level starts a new list rather than continuing one.
                 close_lists(len(stack) - 1)
-                stack.append([mark, content, tag, []])
+                stack.append([mark, content, tag, [], []])
             elif not stack:
-                stack.append([mark, content, tag, []])
+                stack.append([mark, content, tag, [], []])
             else:
                 stack[-1][0], stack[-1][1] = mark, content
-            stack[-1][3].append(inline(item.group(3)))
+            settle(stack[-1])
+            stack[-1][3].append("")
+            open_run(stack[-1], item.group(3))
             continue
         if line.lstrip().startswith(">"):
             flush_para(); flush_rows(); close_lists()
@@ -305,7 +343,7 @@ def markdown(text):
                 continue
             if stack and indent:
                 flush_rows()
-                stack[-1][3][-1] += " " + inline(line.strip())
+                open_run(stack[-1], line.strip())
                 continue
         close_lists()
         rows and flush_rows()
@@ -394,8 +432,11 @@ ITEM_HEAD = (r'(?:<span class="sources-id">[^<]*</span>)?'
 
 
 def item_pattern(title):
-    return re.compile(r'<span class="sources-item">(%s)%s</span>' % (ITEM_HEAD, re.escape(title)),
-                      re.S)
+    # The markup carries the escaped title, so the pattern must too (`PR-59`). This matched the
+    # raw one while `data-qv`, `data-file` and `wired_pattern` all escaped, so a title with an
+    # ampersand matched nothing and the author was sent to fix a correct specification.
+    return re.compile(r'<span class="sources-item">(%s)%s</span>'
+                      % (ITEM_HEAD, re.escape(esc(title))), re.S)
 
 
 # **One sentence, two callers.** `wire` refuses a source no slide cites; so does `refresh`, and
@@ -442,9 +483,49 @@ def rewire(html, title, body):
 
 def carried(html):
     """`[(title, bytes)]` - the quick views a deck already carries, one row per source."""
-    return [(m.group(1), len(m.group(2).encode("utf-8")))
+    # Read back as the raw title (`PR-59`), because that is the form `--source` names and every
+    # comparison here uses. `data-qv` holds the escaped one; unescaping at this boundary is what
+    # stops `check` reporting a carried view as MISSING because its title has an ampersand in it.
+    return [(unesc(m.group(1)), len(m.group(2).encode("utf-8")))
             for m in re.finditer(r'<template class="qv-src" data-qv="([^"]*)">(.*?)</template>',
                                  html, re.S)]
+
+
+LEAKS = (
+    ("**", re.compile(r"\*\*[^*]{1,120}\*\*")),
+    ("__", re.compile(r"(?<![_\w])__[^_]{1,120}__(?!\w)")),
+    ("#", re.compile(r"^\s*#{1,6}\s+\S")),
+)
+
+
+def leaked(body):
+    """`[(construct, sample)]` - Markdown the renderer left on screen, in one rendered body.
+
+    **A reader of a quick view sees raw asterisks, and no gate said so** (T-269, adopter report
+    `007`). Three occurrences shipped in one deck, in two passages, and `check.py`, `component.py`,
+    `theme.py` and `spec.py` all passed on it: the renderer's output is HTML, so nothing that reads
+    HTML has a reason to look for Markdown in it.
+
+    This is the general form of that fault rather than a test for the one construct that caused it.
+    The renderer will keep meeting shapes it does not handle - it implements enough Markdown to
+    read a source document and says so - and the point of a gate here is that the next one costs a
+    minute instead of a shipped deck.
+
+    **Scanned over text runs, not over the body** - the tags are split out first. Written against
+    the body, the `**` pattern fired on `data-t="a**b**c"`: a leak is what a reader sees, and an
+    attribute is not that. The first draft's docstring claimed it could not happen, and the seeded
+    fixture said otherwise, which is why the claim is a split rather than a sentence. A heading is
+    matched at the start of a run, where a converted one would never be.
+    """
+    runs = [t for t in re.split(r"<[^>]*>", body) if t.strip()]
+    hits = []
+    for name, pattern in LEAKS:
+        for run in runs:
+            m = pattern.search(run)
+            if m:
+                hits.append((name, " ".join(m.group(0).split())[:60]))
+                break
+    return hits
 
 
 def wire(html, title, body, file=""):
@@ -465,7 +546,9 @@ def wire(html, title, body, file=""):
         raise Refused(UNCITED % title)
     control = ('<span class="sources-item">%%s<button class="sources-open" type="button" '
                'data-qv="%s" data-file="%s">%s</button>%%s</span>'
-               % (esc(title), esc(os.path.basename(file)), title))
+               # The label was the one raw use left (`PR-59`): a title carrying an angle bracket
+               # went into the deck as markup rather than as text.
+               % (esc(title), esc(os.path.basename(file)), esc(title)))
     first = [True]
 
     def swap(m):
@@ -668,7 +751,21 @@ def check(deck, sources):
           % (same + drifted, len(held), same, drifted, refused, missing))
     for tit in uncompared:
         print("  NOT COMPARED  %-32s no --source named it, so nothing here checked it" % tit[:32])
-    if drifted or refused or missing:
+    # **Every carried view, not only the compared ones.** A leak is a property of the rendering the
+    # deck holds, so it needs no source file and must not inherit the drift check's denominator -
+    # the views `--source` did not name are exactly the ones nothing else here reads.
+    leaks = 0
+    for m in re.finditer(r'<template class="qv-src" data-qv="([^"]*)">(.*?)</template>',
+                         html, re.S):
+        for name, sample in leaked(m.group(2)):
+            leaks += 1
+            print("  MARKDOWN %-32s unconverted %s on screen: %s"
+                  % (unesc(m.group(1))[:32], name, sample))
+    if leaks:
+        print("")
+        print("A quick view showing raw Markdown is a renderer gap, not a source defect: fix the "
+              "renderer, then `quickview.py refresh <deck> --source ... --write`.")
+    if drifted or refused or missing or leaks:
         print("")
         print("A drifted quick view is repaired by `quickview.py refresh <deck> --source ... "
               "--write` where the renderer moved, and by a decision where the source document did.")
@@ -717,6 +814,60 @@ def self_test():
             sys.exit("SELF-TEST FAILED: the Markdown renderer flattened %s - wanted %r, got %r. "
                      "Two levels rendering as one is the T-121 defect, in 125 of 355 corpus "
                      "documents" % (construct, want, nested))
+
+    # T-269's construct, and the gate that would have named it. A list item used to convert each
+    # line as it read it, so emphasis opening on one and closing on the next met the inline pass in
+    # halves and neither half matched - three occurrences reached a presented deck. The renderer
+    # and the gate are tested together on purpose: either alone passes a deck the pair would fail.
+    wrapped = markdown("- residual risk is inherent risk: **four CRITICAL and\n"
+                       "  eight HIGH** (`D1`).\n\nA paragraph with *emphasis that\nwraps* too.\n")
+    if "<b>four CRITICAL and eight HIGH</b>" not in wrapped:
+        sys.exit("SELF-TEST FAILED: emphasis spanning a wrapped list item stayed literal - got %r. "
+                 "That is the T-269 defect, three occurrences in one shipped deck" % wrapped)
+    if "<i>emphasis that wraps</i>" not in wrapped:
+        sys.exit("SELF-TEST FAILED: emphasis spanning a wrapped paragraph stayed literal - got %r"
+                 % wrapped)
+    if leaked(wrapped):
+        sys.exit("SELF-TEST FAILED: the leak gate fired on correctly rendered output - %r"
+                 % (leaked(wrapped),))
+    # Both directions (**L-125**). A gate that never fires and a gate that always fires read the
+    # same from a green run, so the seeded body is checked beside the clean one.
+    for body, want, construct in (
+            ("<li>risk is: **four CRITICAL and eight HIGH** (<code>D1</code>).</li>", "**",
+             "the exact body the renderer produced before T-269"),
+            ("<p>__also strong__ here</p>", "__", "underscore emphasis"),
+            ("<p>## A heading that never converted</p>", "#", "an unconverted ATX heading")):
+        if want not in [name for name, _sample in leaked(body)]:
+            sys.exit("SELF-TEST FAILED: the leak gate missed %s in %r" % (construct, body))
+    for body, construct in (
+            ('<a class="x" data-t="a**b**c">t</a>', "an attribute, which no reader sees"),
+            ("<p>a variable named my__name is not emphasis</p>", "a snake_case identifier"),
+            ("<p>see issue #42 and #43 here</p>", "a # that is not a heading"),
+            ("<p>a <b>b</b> and <code>x**y</code></p>", "a lone asterisk pair inside code")):
+        if leaked(body):
+            sys.exit("SELF-TEST FAILED: the leak gate fired on %s - %r would be a false alarm on "
+                     "every deck carrying one" % (construct, body))
+
+    # `PR-59` - the title's two forms, and the one boundary between them. The fixture carries an
+    # ampersand because that is the character a correct deck must write as an entity, so a tool
+    # that matches the raw title against correct markup finds nothing and blames the specification.
+    amp = "Fleet & cost model"
+    cited = ('<span class="sources-item"><span class="sources-id">D1</span>'
+             '<svg class="sources-icon"></svg>%s</span>' % esc(amp))
+    if not item_pattern(amp).search(cited):
+        sys.exit("SELF-TEST FAILED: a source titled %r does not match the markup a correct deck "
+                 "carries for it. That is `PR-59`: the author is sent to fix a citation that is "
+                 "already right" % amp)
+    wired = wire(cited, amp, "<p>body</p>", file="d1.md")
+    if [t for t, _c in carried(wired)] != [amp]:
+        sys.exit("SELF-TEST FAILED: %r did not read back as itself - got %r. The raw title is this "
+                 "tool's currency and `check` compares against it"
+                 % (amp, [t for t, _c in carried(wired)]))
+    if ">%s<" % amp in wired:
+        sys.exit("SELF-TEST FAILED: the control's label went into the deck raw, so a title with an "
+                 "angle bracket would ship as markup")
+    if unesc(esc(amp)) != amp:
+        sys.exit("SELF-TEST FAILED: esc/unesc does not round-trip on %r" % amp)
 
     blocks = markdown("intro\n\n    code one\n    code two\n\n- an item that wraps\n"
                       "    onto the next line\n- an item with code\n\n      indented under it\n")

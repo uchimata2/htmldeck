@@ -324,8 +324,12 @@ def main(argv):
         css = open(opts["css"], encoding="utf-8").read()
     dest = write(deck, target, out=opts.get("out"), css=css, name=opts.get("name"), solo=solo)
     print("%s  (%d slides)" % (paths.display_path(dest, ROOT), target))
-    return dest
+    # `PR-58`, the uniform half. Nothing is lost here today, because every failure in this file is
+    # already a `sys.exit`; it changes so the idiom is one idiom - twelve of the fourteen tools in
+    # this cycle already end this way - and so the next failure path added here is not discarded in
+    # silence the way `rulerstrip.py`'s five were.
+    return 0
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    sys.exit(main(sys.argv[1:]))

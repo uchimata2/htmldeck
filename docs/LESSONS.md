@@ -113,6 +113,7 @@ comes here.
 | [L-142](lessons/L-142.md) | A rule failing a correct artifact in bulk is evidence about the rule or about what its check looks at, and from inside the failing artifact the two read identically | Evidence and verification |
 | [L-143](lessons/L-143.md) | A guard added to narrow a rule can silence it, and the number that catches that is the rule's own prior count | Evidence and verification |
 | [L-144](lessons/L-144.md) | When a rule has never fired, the number that catches a bad guard is the population the guard would exempt | Evidence and verification |
+| [L-145](lessons/L-145.md) | A rule's clean record is only as wide as the selector its instrument used, and the two are written in different files | Evidence and verification |
 
 ### Tooling
 

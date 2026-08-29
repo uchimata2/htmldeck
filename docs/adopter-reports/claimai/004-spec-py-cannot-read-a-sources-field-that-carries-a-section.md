@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` |
 | **Found while** | Building `D4 — Executive Board Presentation` at htmldeck stage 6, on 2026-08-24 |
 | **Version seen** | `0.6.0` |
 
@@ -57,3 +57,23 @@ table ``.
 
 Whichever separator wins, `artifacts.md` should state the field's grammar, because at present the
 only statement of it is this regular expression.
+
+## Closed
+
+**2026-08-29 by [T-269](../../../tasks/T-269-three-build-path-defects-the-adopter-worked-around.md),
+and the proposed remedy was refused as stated.**
+
+The record proposed splitting on `;` alone. **Measured against the tracked specifications first:**
+all three separate their slugs with **commas** and never a semicolon, and `artifacts.md` states the
+comma - so `;`-only reads `D5-management-decision-matrix, D2-predictive-analytics-assessment` as one
+slug and fails every deck this repository ships. The report was right about the defect and wrong
+about the fix, which is what *a remedy is a hypothesis* is for.
+
+**What landed instead is decided by the entry's own shape.** A `;` always separates; inside a part,
+the comma separates only while nothing marks that part as carrying prose - once an entry says where
+in the source it looked, after ` — `, ` – ` or ` §`, the rest of that part is prose and its commas
+are prose too. Both forms now read: the field in this record yields `D4-decision-record` and `Exam`,
+and `` `D1-risk-assessment` §8.2 — the residual table `` yields one slug.
+
+**The grammar is now stated** in `skills/htmldeck/references/artifacts.md`, which this record asked
+for: until today the only statement of it was the regular expression.

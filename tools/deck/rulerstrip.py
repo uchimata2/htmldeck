@@ -419,7 +419,12 @@ def run(deck=DECK, slides=25, at=8, ticks="dot", out=None, w=1920, h=1234):
     print("  The treatment column is design units; multiply by %.3f for what the screen got."
           % k)
     print("\n%s" % paths.display_path(strip, ROOT))
-    return strip
+    # **The path goes to stdout, the exit code goes to the shell** (`PR-58`). This returned the
+    # path and `__main__` called `main` bare, so the five failure codes this function builds - no
+    # Chrome, and four ways a capture can come back unusable - were discarded, and a run that
+    # found no browser printed its reason and exited 0. Returning the path AND wrapping the call
+    # would have exited 1 on success, which is why this is two edits rather than one word.
+    return 0
 
 
 def self_test():
@@ -487,4 +492,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    sys.exit(main(sys.argv[1:]))

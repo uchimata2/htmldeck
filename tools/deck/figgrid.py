@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure how far each diagram's **ink** sits from the slide's text column.
+"""Measure how far each diagram's **ink** sits from the text column it sits in.
 
     python tools/deck/figgrid.py <deck> [<deck> ...]
 
@@ -21,8 +21,16 @@ it.
 on every slide of every deck, exactly where the headline, the body and the bottom line sit. What is
 inset is the drawing *inside* the viewBox: a diagram declares its own (`0 0 1900 430`), the element
 is scaled to the content column, and the leftmost drawn thing lands wherever the author left it. So
-the measurement is the leftmost **ink** against the slide's text left edge, both read from the laid
-out page - not from the markup, which cannot know the scale factor.
+the measurement is the leftmost **ink** against the text left edge of the column the diagram sits
+in, both read from the laid out page - not from the markup, which cannot know the scale factor.
+
+**Which column, and why it is not a class name.** On a one-column slide there is one text column and
+it is the slide's, which is what this measured until 2026-08-29. A multi-column slide has one per
+column, and a figure in the second answers to the second - DS-236 as amended, because the hazard the
+rule names is a row of text reading as a step *under the diagram*, and that text is its column's.
+The column is found by geometry, the outermost ancestor still materially narrower than `.body`;
+`.col` is a deck's own vocabulary and the shell defines nothing of the sort, so matching it would be
+reading one deck's markup and calling it a rule.
 
 Real Chrome, offline, through `render.py`'s runner, so the flags and the viewport calibration are
 the shipped ones. Pure standard library (**L-07**).
@@ -56,33 +64,83 @@ window.addEventListener('load', function () {
     var vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
     var out = [];
     var slides = document.querySelectorAll('.slide');
+    /* **Every diagram on the slide, not the first one** (`PR-42`). This took
+       `querySelector('.body svg.fig')`, so a slide holding two was measured once and counted once:
+       portfolio-review carries ten and read as nine, with the denominator saying it had looked at
+       the whole deck. `markhits.py`, gated in the same run over the same slides, already iterates
+       and skips only nested svgs and icons - the correct idiom was in the cycle beside the defect.
+       What the filters decline is counted rather than dropped, so the two numbers cannot again
+       describe a population smaller than the deck. */
+    var skippedIcon = 0, skippedNested = 0, skippedNoInk = 0;
     for (var i = 0; i < slides.length; i++) {
       var s = slides[i], st = s.getBoundingClientRect();
       if (st.width < 2) { continue; }
-      var svg = s.querySelector('.body svg.fig') || s.querySelector('.body svg');
-      if (!svg) { continue; }
-      var box = svg.getBoundingClientRect();
-      if (box.width < st.width / 4) { continue; }   /* an icon, not a diagram */
+      var figs = s.querySelectorAll('.body svg.fig');
+      if (!figs.length) { figs = s.querySelectorAll('.body svg'); }
+      if (!figs.length) { continue; }
       var text = s.querySelector('.headline') || s.querySelector('.body');
       if (!text) { continue; }
-      var tl = text.getBoundingClientRect().left - st.left;
-      var min = null;
-      var kids = svg.querySelectorAll('rect,path,polygon,circle,ellipse,line,text,image,use');
-      for (var k = 0; k < kids.length; k++) {
-        var r = kids[k].getBoundingClientRect();
-        if (r.width <= 0.5 && r.height <= 0.5) { continue; }
-        var left = r.left - st.left;
-        if (min === null || left < min) { min = left; }
+      var slideTL = text.getBoundingClientRect().left - st.left;
+      var bodyEl = s.querySelector('.body');
+      var bodyW = bodyEl ? bodyEl.getBoundingClientRect().width : st.width;
+      var nth = 0;
+      for (var f = 0; f < figs.length; f++) {
+        var svg = figs[f];
+        if (svg.parentNode && svg.parentNode.closest && svg.parentNode.closest('svg')) {
+          skippedNested++; continue;            /* a nested <svg> is part of its parent diagram */
+        }
+        var box = svg.getBoundingClientRect();
+        if (box.width < st.width / 4) { skippedIcon++; continue; }   /* an icon, not a diagram */
+        var min = null;
+        var kids = svg.querySelectorAll('rect,path,polygon,circle,ellipse,line,text,image,use');
+        for (var k = 0; k < kids.length; k++) {
+          var r = kids[k].getBoundingClientRect();
+          if (r.width <= 0.5 && r.height <= 0.5) { continue; }
+          var left = r.left - st.left;
+          if (min === null || left < min) { min = left; }
+        }
+        if (min === null) { skippedNoInk++; continue; }
+        /* **The text column the figure sits in, not the slide's** - DS-236 as the owner ruled it
+           on 2026-08-29. The rule's hazard is a row of text sitting directly under the diagram and
+           reading as a step, and on a multi-column slide that text is the column's. Bound on
+           geometry and never on a class name: `.col` is the deck's own vocabulary and the shell
+           defines nothing of the sort, so a probe matching it would be reading one deck's markup.
+           The column is the outermost ancestor still materially narrower than the body; a
+           one-column slide has none, and falls back to the slide's text edge unchanged. */
+        var col = null, up = svg.parentNode;
+        while (up && up !== bodyEl && up.getBoundingClientRect) {
+          var uw = up.getBoundingClientRect().width;
+          if (uw > 0 && uw < bodyW * 0.9) { col = up; up = up.parentNode; } else { break; }
+        }
+        var tl = slideTL;
+        if (col) {
+          var ct = null, leaves = col.querySelectorAll('*');
+          for (var c = 0; c < leaves.length; c++) {
+            var le = leaves[c];
+            if (le.children.length) { continue; }          /* leaf text elements only */
+            if (le.closest('svg')) { continue; }            /* ink inside a diagram is not text */
+            if (!le.textContent || !le.textContent.trim()) { continue; }
+            var lr = le.getBoundingClientRect();
+            if (lr.width <= 0.5 && lr.height <= 0.5) { continue; }
+            var ll = lr.left - st.left;
+            if (ct === null || ll < ct) { ct = ll; }
+          }
+          tl = ct === null ? (col.getBoundingClientRect().left - st.left) : ct;
+        }
+        nth++;
+        out.push({slide: s.dataset.name || ('slide ' + (i + 1)),
+                  i: i + 1,
+                  nth: nth,
+                  onSlide: figs.length,
+                  inCol: !!col,
+                  textL: Math.round(tl * 100) / 100,
+                  inkL: Math.round(min * 100) / 100,
+                  svgL: Math.round((box.left - st.left) * 100) / 100});
       }
-      if (min === null) { continue; }
-      out.push({slide: s.dataset.name || ('slide ' + (i + 1)),
-                i: i + 1,
-                textL: Math.round(tl * 100) / 100,
-                inkL: Math.round(min * 100) / 100,
-                svgL: Math.round((box.left - st.left) * 100) / 100});
     }
     var el = document.createElement('div');
-    el.textContent = 'RESULT' + JSON.stringify({vw: vw, vh: vh, figs: out}) + 'ENDRESULT';
+    el.textContent = 'RESULT' + JSON.stringify({vw: vw, vh: vh, figs: out,
+      skipped: {icon: skippedIcon, nested: skippedNested, noInk: skippedNoInk}}) + 'ENDRESULT';
     document.body.appendChild(el);
   }, 700);
 });
@@ -90,8 +148,17 @@ window.addEventListener('load', function () {
 """
 
 
+class Figures(list):
+    """The measured rows, with what the probe declined attached.
+
+    A list so every existing caller is unchanged; the attribute exists because a count of what was
+    examined is only honest beside a count of what was not (`PR-42`, **L-36**).
+    """
+    skipped = {}
+
+
 def measure(deck):
-    """`[{slide, i, textL, inkL, svgL, off}]` - one row per diagram, or `None` if nothing rendered."""
+    """`[{slide, i, nth, onSlide, textL, inkL, svgL, off}]` - one row per diagram, or `None`."""
     probe = render.make_probe(deck, name="figgrid.html", extra=PROBE, out=render.out_dir(deck))
     cw, ch = render.calibrate(probe, 1920, 1234)
     data, err = render.read_result(render.file_url(probe), cw, ch)
@@ -100,7 +167,29 @@ def measure(deck):
         return None
     for row in data["figs"]:
         row["off"] = round(row["inkL"] - row["textL"], 2)
-    return data["figs"]
+    # **What the probe declined travels with what it measured** (`PR-42`). Carried on the list so
+    # `report` can say it without a second return value: a figure the filters dropped used to be
+    # invisible in both numbers, which is how *0 of 9* read as the whole of a ten-diagram deck.
+    figs = Figures(data["figs"])
+    figs.skipped = data.get("skipped", {})
+    return figs
+
+
+def _declined(rows):
+    """` (declined 2: 1 icon, 1 nested)`, or empty. `PR-42`'s half that is not the selector.
+
+    Every measuring tool in this cycle prints *n of m* where `m` is what it examined, and none of
+    them printed what it **skipped** - so a figure the probe declined was absent from both numbers
+    and the row read as the whole deck. The skip is the more useful half of this fix.
+    """
+    counts = getattr(rows, "skipped", None) or {}
+    parts = [(n, k) for k, n in (("icon", counts.get("icon", 0)),
+                                 ("nested", counts.get("nested", 0)),
+                                 ("no ink", counts.get("noInk", 0))) if n]
+    if not parts:
+        return ""
+    return "  (declined %d: %s)" % (sum(n for n, _k in parts),
+                                    ", ".join("%d %s" % (n, k) for n, k in parts))
 
 
 def report(deck, rows):
@@ -113,8 +202,8 @@ def report(deck, rows):
         print("%s - no diagram measured" % name)
         return (0, 0)
     off = [r for r in rows if abs(r["off"]) > TOLERANCE_DU]
-    print("%s - %d diagram(s), %d off the text column by more than %.0f du"
-          % (name, len(rows), len(off), TOLERANCE_DU))
+    print("%s - %d diagram(s), %d off the text column by more than %.0f du%s"
+          % (name, len(rows), len(off), TOLERANCE_DU, _declined(rows)))
     for r in rows:
         print("   slide %-3d %-42s text %6.1f  ink %6.1f  %+7.1f%s"
               % (r["i"], r["slide"][:42], r["textL"], r["inkL"], r["off"],
@@ -188,7 +277,7 @@ def _verdict_from(rows):
     off = [r for r in rows if abs(r["off"]) > TOLERANCE_DU]
     detail = "" if not off else " - " + "; ".join(
         "slide %d %+.1f du" % (r["i"], r["off"]) for r in off[:4])
-    return (RULE, "diagrams starting their ink off the slide's text column by more than %.0f du: "
+    return (RULE, "diagrams starting their ink off their text column by more than %.0f du: "
                   "%d of %d%s" % (TOLERANCE_DU, len(off), len(rows), detail), not off)
 
 
@@ -205,7 +294,7 @@ def main(argv):
         total_off += o
         total += n
         print("")
-    print("%d of %d diagram(s) sit off the slide's text column by more than %.0f du."
+    print("%d of %d diagram(s) sit off their text column by more than %.0f du."
           % (total_off, total, TOLERANCE_DU))
     print("%s: the same measurement check.py gates on, run here on its own." % RULE)
     return 0

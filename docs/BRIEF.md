@@ -499,7 +499,7 @@ and the second was growing with every closure — finding `CE-05`,
 remain are both about the build and critique modes, not about the deck.***
 
 - ~~A deck renders correctly with the network disabled.~~ **Met.**
-  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 315 KB, zero
+  [`examples/reference-deck.html`](../examples/reference-deck.html) — 12 slides, 316 KB, zero
   external references, rendered in real Chrome with DNS black-holed and all three embedded faces
   reporting `loaded`.
 - ~~The build check demonstrated failing on each class of problem it claims to catch.~~ **Met

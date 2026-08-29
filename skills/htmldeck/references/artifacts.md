@@ -121,7 +121,20 @@ Expanded from the outline in `<slug>.foundation.md`, page by page. Nine fields p
   (DS-105), so a slide resting on two documents cannot say what a slide resting on one says.
   A slide rests on a source it quotes no number from — a date, a definition, a threshold, a
   redrawn diagram — so this field is wider than the figure ledger and is **checked against** it,
-  never derived from it: where the two disagree the ledger wins and the disagreement is reported.>
+  never derived from it: where the two disagree the ledger wins and the disagreement is reported.
+
+  **The grammar, stated here because until T-269 the only statement of it was a regular
+  expression.** An entry is a slug, optionally followed by the section or clause the slide was
+  verified against. The two separators are not interchangeable:
+
+  - `;` **always** separates entries;
+  - `,` separates entries **only inside a part that carries no section**. Once an entry says
+    where in the source it looked — after ` — `, ` – ` or ` §` — the rest of that part is prose,
+    and its commas are prose too.
+
+  So `d1-risk, d2-controls` is two slugs; `` `d1-risk` §8.2 — the residual table `` is one; and
+  `` `d1-risk` — §8.2, and the table under it; `d2-controls` `` is two. Backticks and emphasis are
+  stripped before any of this, so marking a slug up changes nothing.>
 - **Notes.** <*Optional, and the only optional field.* What the presenter says, watches for, or
   concedes — addressed to the person presenting and never to the audience. **It does not render
   into the shipped deck, ever.** DS-088 forbids notes there and the gate enforces it, so a note

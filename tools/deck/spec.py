@@ -95,12 +95,40 @@ def rows(text, first_column):
     return out
 
 
+# A rich entry names the section or clause behind the slug, after a dash or a section sign. Three
+# separators rather than one because the corpus writes all three, and the space is part of each: a
+# hyphenated slug must not split, and `§` binds without a following space.
+RICH_ENTRY = re.compile(r"\s+[—–]\s+|\s+§")
+
+
 def slugs(cell):
-    """The slugs in one `Sources` answer. `none` is empty, and so is a blank."""
+    """The slugs in one `Sources` answer. `none` is empty, and so is a blank.
+
+    **The comma is a separator until an entry is rich, and then it is prose** (T-269, adopter
+    report `004`). Splitting on `[,;]` and calling every fragment a slug broke `SPEC-2`, `SPEC-3`
+    and `SPEC-4` at once on a field naming the section a claim came from - each fragment was
+    reported as a slug with no row in the foundation, and every real source as unused.
+
+    The report proposed splitting on `;` alone. **Refused, measured against the tracked specs**:
+    all three separate their slugs with commas and never a semicolon, and `artifacts.md` states
+    the comma - so `;`-only reads `D5-…, D2-…` as one slug and fails every deck this repository
+    ships. The split is decided by the entry's own shape instead: a `;` always separates, and
+    inside a part the comma separates only while nothing marks that part as carrying prose.
+    """
     cell = re.sub(r"[`*]", "", cell).strip().rstrip(".")
     if not cell or cell.lower() == "none":
         return []
-    return [s.strip() for s in re.split(r"[,;]", cell) if s.strip()]
+    out = []
+    for part in cell.split(";"):
+        part = part.strip()
+        if not part:
+            continue
+        rich = RICH_ENTRY.search(part)
+        if rich:
+            out.append(part[:rich.start()].strip())
+        else:
+            out.extend(s.strip() for s in part.split(",") if s.strip())
+    return [s for s in out if s]
 
 
 def slides(text):

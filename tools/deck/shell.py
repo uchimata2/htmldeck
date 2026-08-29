@@ -17,7 +17,7 @@ this tool is what puts it back.
     python tools/deck/shell.py check <deck>
     python tools/deck/shell.py parts
 
-**`check` is the reason the other commands are trustworthy.** It cuts the same ten regions out of
+**`check` is the reason the other commands are trustworthy.** It cuts the same regions `SLOTS` names out of
 the deck and compares what is left with `shell/shell.html` byte for byte, so a batch edit that
 strayed into the shared block is a red run rather than a discovery two decks later. The stale
 fixture (**L-05**) is the same failure in a different file.
@@ -60,7 +60,12 @@ DECK_JS = os.path.join(SHELL, "deck.js")
 ICONS = os.path.join(SHELL, "icons.svg")
 DEFAULT_THEME = os.path.join(ROOT, "themes", "quarto.css")
 
-# The twelve regions a deck varies in. Everything else is the shell.
+# The regions a deck varies in. Everything else is the shell.
+# **The count lives here and is derived everywhere it is read** (`PR-55`). It used to be
+# written out in four other places and they disagreed: a docstring said ten, `parts` printed
+# eleven directly above a list of twelve, and the SKELETON refusal an adopter reads said
+# ten. Both additions labelled themselves at the definition - *Eleventh, added by T-019*,
+# *Twelfth, added by T-114* - so the count moved here and nowhere a reader meets it.
 #
 # The delimiters are literals rather than patterns on purpose: they are compared, not merely
 # found, so a deck whose chrome comment has drifted has to fail rather than be re-anchored around.
@@ -416,7 +421,7 @@ def migrate(html):
 
 
 def sync(html):
-    """The deck, with the **installed** shell under its own twelve regions (T-124).
+    """The deck, with the **installed** shell under its own regions (T-124).
 
     `cut` gives the deck's parts and throws its shell away; filling `shell/shell.html` with those
     parts is the same operation in the other direction, and that is the whole upgrade. The script
@@ -651,8 +656,9 @@ def check(html, path="the deck"):
 
     expected = read(SHELL_HTML)
     if skeleton != expected:
-        problems.append("SKELETON      %s: the markup outside the ten regions differs from "
-                        "shell/shell.html%s" % (path, first_difference(skeleton, expected)))
+        problems.append("SKELETON      %s: the markup outside the %d regions differs from "
+                        "shell/shell.html%s"
+                        % (path, len(SLOTS), first_difference(skeleton, expected)))
 
     if parts["COMPONENTS"] != read(COMPONENTS):
         problems.append("COMPONENTS    %s: differs from shell/components.css%s"
@@ -1071,7 +1077,7 @@ def parts_report():
             ("themes/quarto.css", os.path.getsize(DEFAULT_THEME), "the theme, faces resolved in")]
     for name, size, what in rows:
         print("  %-22s %7d bytes   %s" % (name, size, what))
-    print("\nThe deck varies in eleven regions, and nowhere else:\n")
+    print("\nThe deck varies in %d regions, and nowhere else:\n" % len(SLOTS))
     for slot, _o, _c, what in SLOTS:
         print("  %-12s %s" % ("{{%s}}" % slot, what))
 

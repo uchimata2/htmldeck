@@ -812,8 +812,13 @@ def main(argv):
         src = io.open(theme, encoding="utf-8").read()
         bad = validate(src)
         if bad:
+            # `validate` returns `(rule, message)` and this joined the pairs, so the refusal it
+            # exists to print raised `TypeError` instead - and nothing noticed, because the path
+            # is only reachable with a non-conforming theme and the one in the tree had never been
+            # run over. `PR-38`; the refusal itself was always right, the deck is not written.
             sys.exit("%s does not satisfy the contract:\n  %s"
-                     % (paths.display_path(theme, ROOT), "\n  ".join(bad)))
+                     % (paths.display_path(theme, ROOT),
+                        "\n  ".join("%-9s %s" % (rule or "-", msg) for rule, msg in bad)))
         new = swap(html, resolve(src))
         if os.path.dirname(out):
             os.makedirs(os.path.dirname(out), exist_ok=True)

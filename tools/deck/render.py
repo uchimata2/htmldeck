@@ -75,12 +75,22 @@ def out_dir(deck, override=None):
         return os.path.abspath(override)
     return os.path.join(paths.output_root(deck), ".assets-cache", "deck")
 
+# **Every platform the repository claims to run on** (`PR-56`). The Windows patterns and the
+# `which` fallback below left macOS with nothing: Chrome installs into an application bundle there
+# and puts none of those four names on `PATH`, so a macOS adopter with Chrome installed was told
+# there is no Chrome and every render gate refused. `README.md` states the tooling as *pure Python
+# standard library plus real Chrome* with no platform caveat, and `CLAUDE.md`'s publishing rules
+# require clone and run with no path editing - so the search is what was short, not the claim.
 BROWSERS = [
     r"%ProgramFiles%\Google\Chrome\Application\chrome.exe",
     r"%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe",
     r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe",
     r"%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe",
     r"%ProgramFiles%\Microsoft\Edge\Application\msedge.exe",
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+    os.path.expanduser("~/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
 ]
 
 
