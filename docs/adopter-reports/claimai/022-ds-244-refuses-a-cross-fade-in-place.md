@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-260](../../../tasks/T-260-ds-244-tests-proximity-where-it-means-obstruction.md). **Item 1 implemented**: the opacity chain is read before two labels are paired, so a cross-fade in place is no longer a collision. Proved both ways on a seeded deck — the pair at `opacity:0`/`1` stops gating and is counted as *hidden at rest*, and the same pair with both visible still gates. **Item 2 is answered rather than implemented, and the answer is a stated limit**: `render.MOTION_PIN` forces `transition:none` and `animation:none` before the probe reads anything, so there is exactly one frame, it is at rest, and a pair that overlaps only mid-transition is not measured at all. The row says so now. A per-element *this one is animated* would be a guess: the pin also erases `animation-name`, so nothing in the page can tell an animated opacity from a static one afterwards. **The first form of this guard was wrong in a way worth recording**: `visibility` is inherited and every off-screen slide carries `visibility:hidden`, so reading it absolutely reported **129 hidden labels** on the reference deck and took T-204's fifteen label-on-line placements to zero — a guard swallowing the rule it was meant to narrow. It is measured against the slide now. |
 | **Severity** | Medium — it refuses a standard technique three times running, and the deck has to be redesigned around the instrument |
 | **Found while** | Building slide 5's banded axis and residual-risk toggle, on 2026-08-26 — `E44` |
 | **Version seen** | 0.6.0 |

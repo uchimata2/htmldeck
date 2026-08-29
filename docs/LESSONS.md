@@ -110,6 +110,8 @@ comes here.
 | [L-138](lessons/L-138.md) | A run count is evidence about the fix only if it is large against the defect's rate; ten clean runs against a one-in-ten fault is a coin that came up heads | Evidence and verification |
 | [L-139](lessons/L-139.md) | A measurement taken on one subject and written down as general is a claim nothing will re-check; name the subject in the sentence or the conclusion outlives it | Evidence and verification |
 | [L-141](lessons/L-141.md) | A threshold found by varying one thing names that thing as the cause only if nothing else changes with it | Evidence and verification |
+| [L-142](lessons/L-142.md) | A rule failing a correct artifact in bulk is evidence about the rule or about what its check looks at, and from inside the failing artifact the two read identically | Evidence and verification |
+| [L-143](lessons/L-143.md) | A guard added to narrow a rule can silence it, and the number that catches that is the rule's own prior count | Evidence and verification |
 
 ### Tooling
 

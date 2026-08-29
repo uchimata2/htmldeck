@@ -77,7 +77,26 @@ OVERLAP_FRACTION = 0.30
 #
 # Against that, `text/text` over the same 30 slides is **1 true hit and 0 false alarms**, which is
 # the other side of the same calibration and why half of this tool gates.
+#
+# *Re-run 2026-08-29 on the same four decks and the same 30 slides: **15**, not 16. The decks have
+# been rebuilt several times since, and the figure moved with them - the pre-T-260 tool answers 15
+# on today's tree too, so nothing here moved it. The ratio the decision rests on is unchanged and
+# the historical number is left as it was measured rather than quietly restated.*
+#
+# **`text/shape` is new in T-260 and reports for the same reason `text/line` does.** It is the
+# adopter's finding that this tool sees a label over a label and never a label over the box it
+# names (report 013), and the owner's ruling was *report, calibrate, then decide* - T-204's own
+# precedent, taken here rather than argued again. A kind that gates the day it is written has no
+# false-alarm rate anybody has measured, and this one has the shape that produces them: a diagram is
+# made of labels sitting in and beside boxes. The calibration is in T-260 section 3, and moving this
+# kind into the tuple is that decision rather than this one.
 GATED_KINDS = ("text/text",)
+
+# How much of a label has to fall OUTSIDE a filled rectangle before it counts as crossing its edge.
+# A glyph box carries ascender and descender space, so a label centred in its box can exceed it by a
+# few per cent in height alone without a reader seeing anything; 15% of the label's own area is well
+# clear of that and well under the third-of-the-label a crossing shows.
+STRADDLE_FRACTION = 0.15
 
 # A text run this long is a paragraph the figure happens to contain rather than a label, and its box
 # is a line box rather than a glyph box. Measuring one against a line reports the leading, not ink.
@@ -104,6 +123,39 @@ PROBE = r"""
     };
   }
 
+  /* **What the reader can actually see of this label** (T-260). Two labels at one point, one of
+     them at `opacity:0`, are a cross-fade in place - the ordinary way to animate a value changing
+     - and reading them as a collision refused a standard technique three times on one slide
+     (adopter report 022). Opacity multiplies down the tree and `visibility`/`display` end it, so
+     the whole chain is walked rather than the element read alone.
+
+     **The frame is at rest, and there is only one.** `render.MOTION_PIN` forces `transition:none`
+     and `animation:none` before this runs, so every computed opacity here is the settled value and
+     a pair that overlaps only mid-transition is not measured at all. That is stated in the verdict
+     rather than detected per element: the pin also erases `animation-name`, so nothing in this page
+     can tell an animated opacity from a static one afterwards, and a per-element claim would be a
+     guess dressed as a measurement. */
+  /* **`visibility` is measured against the slide, not against the document** - it is an inherited
+     property, and every slide but the current one is `visibility:hidden`, so reading it absolutely
+     reported every label on eleven slides of twelve as invisible. The first run of this guard did
+     exactly that: 129 hidden labels on the reference deck and T-204's sixteen label-on-line
+     placements gone to zero, which is a guard swallowing the rule it was meant to narrow. What it
+     costs is that a label hidden by `visibility` ON an off-screen slide cannot be told from the
+     slide's own hiding; `opacity` is not inherited and carries the cross-fade this exists for. */
+  function seen(el, top, slideVis) {
+    var o = 1, n = el;
+    while (n && n.nodeType === 1) {
+      var cs = getComputedStyle(n);
+      if (cs.display === 'none') { return 0; }
+      if (cs.visibility === 'hidden' && slideVis !== 'hidden') { return 0; }
+      var v = parseFloat(cs.opacity);
+      if (isFinite(v)) { o *= v; }
+      if (n === top) { break; }
+      n = n.parentNode;
+    }
+    return o;
+  }
+
   function go() {
     setTimeout(function () {
       var stage = document.getElementById('stage');
@@ -112,9 +164,10 @@ PROBE = r"""
       var slides = document.querySelectorAll('.slide');
       for (var i = 0; i < slides.length; i++) {
         var sl = slides[i], sr = sl.getBoundingClientRect();
+        var slideVis = getComputedStyle(sl).visibility;
         if (sr.width < 2) { continue; }
         var figs = sl.querySelectorAll('svg');
-        var texts = [], segs = [], discs = [];
+        var texts = [], segs = [], discs = [], rects = [];
         for (var f = 0; f < figs.length; f++) {
           var fig = figs[f];
           /* **A nested `<svg>` is the same drawing seen twice.** `querySelectorAll` returns the
@@ -132,8 +185,28 @@ PROBE = r"""
             if (r.width <= 0.5 || r.height <= 0.5) { continue; }
             texts.push({s: (el.textContent || '').trim(),
                         cls: el.getAttribute('class') || '',
+                        op: +seen(el, fig, slideVis).toFixed(3),
                         box: [(r.left - sr.left) / k, (r.top - sr.top) / k,
                               (r.right - sr.left) / k, (r.bottom - sr.top) / k]});
+          }
+
+          /* **Filled rectangles, and only rectangles** (T-260). A label running across the box it
+             names is the commonest way a hand-built figure goes wrong, and three of them shipped
+             past a green gate in one evening (adopter report 013). A `rect` is the one shape whose
+             bounding box IS the shape, which is why the comparison stops here: for a filled
+             `<path>`, box-versus-box is precisely the false alarm this tool's own self-test exists
+             to refuse, and a claim about a path's interior needs its geometry rather than its
+             extent. Stroked, unfilled marks are already `text/line` and are not collected twice. */
+          var rl = fig.querySelectorAll('rect');
+          for (var q2 = 0; q2 < rl.length; q2++) {
+            var rc = rl[q2], rr = rc.getBoundingClientRect();
+            if (rr.width < 2 || rr.height < 2) { continue; }
+            var rcs = getComputedStyle(rc);
+            if (!rcs.fill || rcs.fill === 'none' || rcs.fill === 'rgba(0, 0, 0, 0)') { continue; }
+            if (seen(rc, fig, slideVis) <= 0.05) { continue; }
+            rects.push({cls: rc.getAttribute('class') || 'rect',
+                        box: [(rr.left - sr.left) / k, (rr.top - sr.top) / k,
+                              (rr.right - sr.left) / k, (rr.bottom - sr.top) / k]});
           }
 
           /* Segments. `getScreenCTM` maps the element's own user space to the screen, which is the
@@ -189,7 +262,7 @@ PROBE = r"""
         }
         if (!texts.length) { continue; }
         out.push({slide: sl.dataset.name || ('slide ' + (i + 1)), i: i + 1,
-                  texts: texts, segs: segs, discs: discs});
+                  texts: texts, segs: segs, discs: discs, rects: rects});
       }
       /* `vw` and `vh` are not decoration: `render.calibrate` reads them back to correct the
          outer-window shortfall, so a probe that omits them cannot be calibrated at all. */
@@ -277,6 +350,25 @@ def core(box, fraction):
     return (x0 + dx, y0 + dy, x1 - dx, y1 - dy)
 
 
+def outside_fraction(box, rect):
+    """How much of `box` lies outside `rect`, as a fraction of `box`'s own area.
+
+    **The test is *crosses an edge*, never *touches the shape*** (T-260). A label centred in the box
+    it names is the correct placement and is what a diagram is made of, so any test that fires on
+    contact fires on every well-built figure. `0.0` means wholly inside - nothing to say - and `1.0`
+    means wholly outside, which `hits_in` separates by requiring an intersection first.
+    """
+    bx0, by0, bx1, by1 = box
+    area = (bx1 - bx0) * (by1 - by0)
+    if area <= 0:
+        return 0.0
+    ox = min(bx1, rect[2]) - max(bx0, rect[0])
+    oy = min(by1, rect[3]) - max(by0, rect[1])
+    if ox <= 0 or oy <= 0:
+        return 1.0
+    return max(0.0, 1.0 - (ox * oy) / area)
+
+
 # ---------------------------------------------------------------------------- the measurement
 
 def hits_in(row, fraction=OVERLAP_FRACTION):
@@ -288,23 +380,48 @@ def hits_in(row, fraction=OVERLAP_FRACTION):
     """
     out = []
     labels = [t for t in row["texts"] if t["s"] and len(t["s"]) <= MAX_LABEL_CHARS]
-    for i in range(len(labels)):
-        for j in range(i + 1, len(labels)):
-            by = overlap(labels[i]["box"], labels[j]["box"])
+    # **A label nobody can see is not colliding with anything** (T-260). `op` is the opacity chain
+    # at rest, and a cross-fade in place - two labels at one point, one at zero - is the ordinary
+    # way to animate a value changing. A row measured before `op` existed carries no key, and the
+    # default of 1 keeps such a row readable rather than silently dropping every label in it.
+    visible = [t for t in labels if t.get("op", 1) > 0.05]
+    for i in range(len(visible)):
+        for j in range(i + 1, len(visible)):
+            by = overlap(visible[i]["box"], visible[j]["box"])
             if by > fraction:
-                out.append({"kind": "text/text", "a": labels[i]["s"], "b": labels[j]["s"],
+                out.append({"kind": "text/text", "a": visible[i]["s"], "b": visible[j]["s"],
                             "by": round(by, 3)})
-    for t in labels:
+    for t in visible:
         box = tuple(t["box"])
         for s in row["segs"]:
             if seg_hits_box(s["a"][0], s["a"][1], s["b"][0], s["b"][1], box):
                 out.append({"kind": "text/line", "a": t["s"], "b": s["cls"] or "line", "by": 0.0})
                 break
+        # **A label that straddles the edge of a filled rectangle**, which is what *label over the
+        # box it names* looks like from outside the author's head. It has to intersect and to leave:
+        # wholly inside is the correct placement, wholly outside is no relation at all.
+        worst, worst_cls = 0.0, None
+        for rc in row.get("rects", []):
+            off = outside_fraction(box, rc["box"])
+            if 0.0 < off < 1.0 and off > worst:
+                worst, worst_cls = off, rc["cls"]
+        if worst >= STRADDLE_FRACTION:
+            out.append({"kind": "text/shape", "a": t["s"], "b": worst_cls or "rect",
+                        "by": round(worst, 3)})
     return out
 
 
 def gated(hits):
     return [h for h in hits if h["kind"] in GATED_KINDS]
+
+
+def noted_of(rows, kind):
+    """How many hits of one kind were measured and not gated - counted per kind since T-260.
+
+    One number covering every ungated kind would have hidden a new kind's firing rate inside an old
+    kind's, which is the figure the calibration this rule is waiting on consists of.
+    """
+    return sum(1 for r in rows for h in r["hits"] if h["kind"] == kind and kind not in GATED_KINDS)
 
 
 def measure(deck):
@@ -318,7 +435,11 @@ def measure(deck):
     rows = []
     for row in data["slides"]:
         rows.append({"slide": row["slide"], "i": row["i"], "hits": hits_in(row),
-                     "marks": len(row["texts"]) + len(row["segs"]) + len(row["discs"])})
+                     # Labels the reader cannot see travel as their own count, so *nothing collided*
+                     # and *nothing was visible to collide* stay different answers (T-260, L-36).
+                     "hidden": sum(1 for t in row["texts"] if t.get("op", 1) <= 0.05),
+                     "marks": len(row["texts"]) + len(row["segs"]) + len(row["discs"])
+                     + len(row.get("rects", []))})
     return rows
 
 
@@ -332,9 +453,11 @@ def report(deck, rows):
         print("%s - no diagram measured" % name)
         return (0, 0)
     bad = [r for r in rows if gated(r["hits"])]
-    noted = sum(len(r["hits"]) - len(gated(r["hits"])) for r in rows)
     print("%s - %d slide(s) with a diagram, %d setting a label over another label, "
-          "%d label-on-line placement(s)" % (name, len(rows), len(bad), noted))
+          "%d label-on-line and %d label-across-a-box placement(s); %d label(s) hidden at rest "
+          "and not paired"
+          % (name, len(rows), len(bad), noted_of(rows, "text/line"), noted_of(rows, "text/shape"),
+             sum(r.get("hidden", 0) for r in rows)))
     for r in rows:
         if not r["hits"]:
             continue
@@ -357,15 +480,24 @@ def _verdict_from(rows):
     if rows is None:
         return (RULE, "no render result - every diagram's marks are unmeasured, not passing", False)
     bad = [r for r in rows if gated(r["hits"])]
-    noted = sum(len(r["hits"]) - len(gated(r["hits"])) for r in rows)
     detail = "" if not bad else " - " + "; ".join(
         "slide %d %r over %r" % (r["i"], gated(r["hits"])[0]["a"][:24],
                                  gated(r["hits"])[0]["b"][:24]) for r in bad[:3])
-    # **The label-on-line count travels even though it cannot fail the deck.** A measurement taken
-    # and then dropped from the row is a measurement nobody can ever check, and *0 of 9* would read
-    # as *nothing touches anything* on a deck where twelve labels sit on their own lines (**L-36**).
-    return (RULE, "slides setting one diagram label over another: %d of %d%s; %d label-on-line "
-                  "placement(s) measured and not gated" % (len(bad), len(rows), detail, noted),
+    # **Every ungated count travels even though none of them can fail the deck.** A measurement
+    # taken and then dropped from the row is a measurement nobody can ever check, and *0 of 9* would
+    # read as *nothing touches anything* on a deck where twelve labels sit on their own lines
+    # (**L-36**). Since T-260 they are counted per kind, because a new kind's firing rate hidden
+    # inside an old kind's is exactly the number its calibration needs.
+    #
+    # **And the frame is named.** Everything here is read at rest, with motion pinned, so a pair
+    # that overlaps only part-way through a transition is not measured at all - which is a limit to
+    # state rather than a gap to leave a reader to infer from a green row (adopter report 022).
+    return (RULE, "slides setting one diagram label over another: %d of %d%s; measured at rest, "
+                  "motion pinned; %d label-on-line and %d label-across-a-box placement(s) measured "
+                  "and not gated; %d label(s) hidden at rest and not paired"
+                  % (len(bad), len(rows), detail,
+                     noted_of(rows, "text/line"), noted_of(rows, "text/shape"),
+                     sum(r.get("hidden", 0) for r in rows)),
             not bad)
 
 
@@ -477,6 +609,57 @@ def self_test():
     if "1 label-on-line" not in what:
         sys.exit("SELF-TEST FAILED: the label-on-line count was measured and then dropped from the "
                  "row, so nothing downstream can ever see it (**L-36**)")
+
+    # ---- T-260: opacity, and the box a label runs across ------------------------------------
+    # The same partition assertion `text/line` carries, for the same reason: a kind joins the gate
+    # because someone re-ran the corpus, never because a tuple grew a member.
+    if "text/shape" in GATED_KINDS:
+        sys.exit("SELF-TEST FAILED: text/shape is gating with no calibration behind it. The ruling "
+                 "was report, calibrate, then decide - T-204's precedent - and the count lives in "
+                 "T-260 section 3 (T-260)")
+
+    # `outside_fraction` is the whole of *crosses an edge* rather than *touches the shape*.
+    if outside_fraction((10, 10, 20, 20), (0, 0, 100, 100)) != 0.0:
+        sys.exit("SELF-TEST FAILED: a label centred in its own box read as leaving it - that is the "
+                 "correct placement, and every diagram is made of it")
+    if outside_fraction((200, 200, 210, 210), (0, 0, 100, 100)) != 1.0:
+        sys.exit("SELF-TEST FAILED: a label nowhere near a box did not read as wholly outside it")
+    if abs(outside_fraction((90, 0, 110, 10), (0, 0, 100, 100)) - 0.5) > 1e-9:
+        sys.exit("SELF-TEST FAILED: a label half over a box's right edge was not measured at half")
+
+    inbox = dict(clean, texts=[{"s": "No rung fits", "cls": "lab", "box": (20, 20, 80, 40)}],
+                 segs=[], rects=[{"cls": "rung", "box": (0, 0, 100, 100)}])
+    if hits_in(inbox):
+        sys.exit("SELF-TEST FAILED: a label sitting wholly inside the box it names was reported. "
+                 "The test is *crosses an edge*, and this is what a correct diagram looks like")
+    across = dict(inbox, texts=[{"s": "No rung fits", "cls": "lab", "box": (60, 20, 160, 40)}])
+    got = hits_in(across)
+    if len(got) != 1 or got[0]["kind"] != "text/shape":
+        sys.exit("SELF-TEST FAILED: a label running out of the box it names was not measured - "
+                 "that is adopter report 013's slide 8, and it shipped past a green gate")
+    if gated(got):
+        sys.exit("SELF-TEST FAILED: a label-across-a-box placement reached the gate before anyone "
+                 "measured how often it is wrong")
+
+    # A cross-fade in place: two labels at one point, one of them invisible at rest. Reading them
+    # as a collision refused a standard technique three times on one slide (report 022).
+    fade = dict(clean, segs=[],
+                texts=[{"s": "62", "cls": "v", "op": 1, "box": (0, 0, 100, 28)},
+                       {"s": "71", "cls": "v", "op": 0, "box": (0, 0, 100, 28)}])
+    if hits_in(fade):
+        sys.exit("SELF-TEST FAILED: a cross-fade in place was reported as two labels colliding - "
+                 "only one of the pair is ever visible (report 022)")
+    both = dict(fade, texts=[dict(t, op=1) for t in fade["texts"]])
+    if not [h for h in hits_in(both) if h["kind"] == "text/text"]:
+        sys.exit("SELF-TEST FAILED: two labels that ARE both visible at one point stopped being a "
+                 "collision, so the opacity guard swallowed the rule it was meant to narrow")
+
+    # The frame is named in the row, because a limit a reader has to infer from a green verdict is
+    # not a stated limit.
+    _rid, what, _ok = _verdict_from(rows=[])
+    if "at rest" not in what:
+        sys.exit("SELF-TEST FAILED: the row does not say which frame it measured, so a pair that "
+                 "overlaps only mid-transition reads as a pair that does not overlap (report 022)")
     return True
 
 
@@ -496,8 +679,9 @@ def main(argv):
         total += n
         print("")
     print("%d of %d slide(s) with a diagram set one label over another." % (total_bad, total))
-    print("%s gates on %s, at an overlap fraction of %.2f. Label-on-line placements are "
-          "measured and reported; T-204 section 3 has the count that decided that."
+    print("%s gates on %s, at an overlap fraction of %.2f, measured at rest with motion pinned.\n"
+          "Label-on-line and label-across-a-box placements are measured and reported: T-204 "
+          "section 3\nhas the count that decided the first, T-260 section 3 the second."
           % (RULE, "/".join(GATED_KINDS), OVERLAP_FRACTION))
     return 0
 

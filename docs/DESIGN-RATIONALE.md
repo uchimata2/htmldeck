@@ -554,6 +554,27 @@ mark` is a number. The check is stricter than the old blanket ban in one directi
 also catches a mark that is too *pale* to clear the ground, which *never set text on a mark* never
 looked at because it assumed nobody would try.
 
+**Re-opened by evidence 2026-08-29, and the doubt turned out to be about the instrument.** An
+adopting project read this section as an open question about DS-219 and offered its own deck as the
+case for settling it: **40 of 46 labels failing since the build**, and every attempt to fix them
+making the slide worse (ClaimAI adopter report
+[`019`](adopter-reports/claimai/019-ds-219-cannot-see-a-painted-svg-ancestor.md)). That is what a
+rule outrunning its argument looks like, so it was worth taking seriously twice. It was not what had
+happened. **The rule was asking for the right two numbers against the wrong surface**: the ground
+walk stopped at the first CSS background it met and could not see a painted panel *inside* the
+figure, so a pale card resting on a dark panel was measured against the page. Once the walk
+composites what is actually under the mark, the deck's shape passes and a pale card with nothing
+behind it still fails — the rule's force is intact and its subject is now the surface a reader sees.
+[T-256](../tasks/T-256-ds-219-cannot-see-a-painted-svg-ancestor.md) carries the measurement; the
+owner's ruling was **fix the walk, keep the rule, re-measure**
+([`REMEDIATION-ORDER.md`](REMEDIATION-ORDER.md) §3).
+
+**The general form is worth more than the instance.** A rule failing a correct artifact in bulk is
+evidence about the rule *or* about what the check is looking at, and the two read identically from
+inside the failing deck. `PR-97` records this section's conflicts as unresolved and
+[T-241](../tasks/T-241-the-design-system-and-the-rationale-against-what-shipped.md) is where that is
+closed; what it inherits here is a measurement rather than two documents disagreeing.
+
 **Both rules gained coverage by being corrected.** They were the last two of T-005's 31 written-off
 rules that were written off for a reason other than *this needs a reading of the content*, and
 closing them took the gate to 78 of the 111 rules owned at the time.

@@ -2012,15 +2012,66 @@ PROBE = r"""
     // (1.4.3). The old blanket ban was wider than its own reason, which is about NEUTRALS - and
     // the amended rule is stricter in one direction the ban never looked at, because it also
     // catches a mark too PALE to clear the ground under a label that reads perfectly well.
-    out.textOnDataMark = []; out.markPairsFailing = [];
-    function groundOf(el){
-      var n = el.ownerSVGElement || el;
+    out.textOnDataMark = []; out.markPairsFailing = []; out.markPairsUnmeasurable = [];
+    // **The ground is what a reader sees under the mark, composited** (T-256). The walk this
+    // replaces started at the `<svg>` and read CSS backgrounds only, so a mark resting on a painted
+    // panel INSIDE the figure was measured against the page instead. A card on a panel is not a
+    // rare shape, and an adopter's deck failed **40 of 46** labels on it with no edit able to move
+    // the verdict: the panel is the contrast the reader uses, and a rule that cannot see it asks
+    // for a difference the design deliberately does not have at that level (report 019).
+    //
+    // Three things this does that the old walk did not:
+    //   - **reads the figure's own shapes**, taking the ones painted BEFORE the mark - paint order,
+    //     so those are the ones behind it - nearest first;
+    //   - **composites alpha** rather than reading three channels and stopping, so a layer that
+    //     does not cover is not treated as a ground;
+    //   - **says when there is no ground to read** - a gradient or a pattern fill has no single
+    //     colour, and `null` here is reported as unmeasurable rather than as a failure, which are
+    //     different findings and read differently.
+    function rgba(c){
+      var m = (c||'').match(/-?\d+(\.\d+)?/g);
+      if (!m || m.length < 3) return null;
+      return [+m[0], +m[1], +m[2], m.length > 3 ? +m[3] : 1];
+    }
+    function over(top, bottom){
+      var a = top[3];
+      return [top[0]*a + bottom[0]*(1-a), top[1]*a + bottom[1]*(1-a),
+              top[2]*a + bottom[2]*(1-a), 1];
+    }
+    function groundOf(el, stopAt){
+      var layers = [], svg = el.ownerSVGElement;
+      if (svg){
+        var r = el.getBoundingClientRect();
+        var cx = r.left + r.width/2, cy = r.top + r.height/2, behind = [];
+        var shapes = svg.querySelectorAll('rect,circle,ellipse,polygon,path');
+        for (var i=0;i<shapes.length;i++){
+          // 4 is DOCUMENT_POSITION_FOLLOWING: keep a shape only where the mark comes AFTER it.
+          if (stopAt && (shapes[i] === stopAt ||
+                         !(shapes[i].compareDocumentPosition(stopAt) & 4))) continue;
+          var sr = shapes[i].getBoundingClientRect();
+          if (sr.width < 2 || sr.height < 2) continue;
+          if (!(cx >= sr.left && cx <= sr.right && cy >= sr.top && cy <= sr.bottom)) continue;
+          var f = getComputedStyle(shapes[i]).fill;
+          if (!f || f === 'none' || f === 'rgba(0, 0, 0, 0)') continue;
+          var c = rgba(f);
+          if (c !== null && c[3] > 0) behind.push(c);
+        }
+        for (var b=behind.length-1;b>=0;b--) layers.push(behind[b]);   // nearest first
+      }
+      var n = svg || (el.nodeType === 1 ? el : el.parentElement);
       while (n && n !== document.documentElement){
-        var bg = getComputedStyle(n).backgroundColor;
-        if (bg && bg !== 'rgba(0, 0, 0, 0)') return bg;
+        var c2 = rgba(getComputedStyle(n).backgroundColor);
+        if (c2 && c2[3] > 0) layers.push(c2);
         n = n.parentElement;
       }
-      return getComputedStyle(document.body).backgroundColor;
+      var body = rgba(getComputedStyle(document.body).backgroundColor);
+      if (body && body[3] > 0) layers.push(body);
+      var k = -1;
+      for (var q=0;q<layers.length;q++) if (layers[q][3] >= 0.999){ k = q; break; }
+      if (k < 0) return null;          // nothing under it covers: there is no ground to measure
+      var acc = layers[k];
+      for (var j=k-1;j>=0;j--) acc = over(layers[j], acc);
+      return 'rgb(' + acc[0] + ', ' + acc[1] + ', ' + acc[2] + ')';
     }
     var figs2 = stage.querySelectorAll('svg.fig');
     for (var f2=0; f2<figs2.length; f2++){
@@ -2029,7 +2080,8 @@ PROBE = r"""
         var te = ftexts[t3];
         if (!(te.textContent||'').trim()) continue;
         var r3 = te.getBoundingClientRect();
-        var cx3 = r3.left + r3.width/2, cy3 = r3.top + r3.height/2, on = null, onFill = null;
+        var cx3 = r3.left + r3.width/2, cy3 = r3.top + r3.height/2;
+        var on = null, onFill = null, onEl = null;
         var shapes3 = figs2[f2].querySelectorAll('rect,circle,ellipse,polygon');
         for (var s3=0; s3<shapes3.length; s3++){
           var sr3 = shapes3[s3].getBoundingClientRect();
@@ -2039,20 +2091,24 @@ PROBE = r"""
           if (cx3 >= sr3.left && cx3 <= sr3.right && cy3 >= sr3.top && cy3 <= sr3.bottom){
             on = shapes3[s3].getAttribute('class') || shapes3[s3].tagName;
             onFill = fill3;
+            onEl = shapes3[s3];         // the element, so its own ground can exclude it (T-256)
           }
         }
         if (!on) continue;
         var name3 = (te.closest('.slide')||{dataset:{}}).dataset.name;
         var label3 = (te.textContent||'').trim().slice(0,20);
         var onText = contrastOf(getComputedStyle(te).fill, onFill);
-        var onGround = contrastOf(onFill, groundOf(te));
-        out.textOnDataMark.push([name3, label3, on,
-                                 onText === null ? null : +onText.toFixed(2),
-                                 onGround === null ? null : +onGround.toFixed(2)]);
-        if (onText === null || onGround === null || onText < 4.5 || onGround < 3)
-          out.markPairsFailing.push([name3, label3, on,
-                                     onText === null ? null : +onText.toFixed(2),
-                                     onGround === null ? null : +onGround.toFixed(2)]);
+        var ground3 = groundOf(te, onEl);
+        var onGround = ground3 === null ? null : contrastOf(onFill, ground3);
+        var row3 = [name3, label3, on,
+                    onText === null ? null : +onText.toFixed(2),
+                    onGround === null ? null : +onGround.toFixed(2)];
+        out.textOnDataMark.push(row3);
+        // **Unmeasurable and failing are different findings** (T-256). A mark filled with a
+        // gradient, or one with nothing opaque under it, has no number to compare - and reporting
+        // that as a failure told an author to fix a contrast that was never measured.
+        if (onText === null || onGround === null) out.markPairsUnmeasurable.push(row3);
+        else if (onText < 4.5 || onGround < 3) out.markPairsFailing.push(row3);
       }
     }
 
@@ -2469,6 +2525,7 @@ ALWAYS_MEASURED = {
     "renderedLowContrast": [],
     "textOnDataMark": [],
     "markPairsFailing": [],
+    "markPairsUnmeasurable": [],
     # ---- the second render, with the motion preference forced. `mediaMatches` is True because the
     # nothing-was-found case is a render that SUCCEEDED and found nothing; a render where the
     # preference never took is a different failure and `reduced_verdicts` reports it as one.
@@ -2755,9 +2812,20 @@ def render_verdicts(data):
         ("DS-160", "third-tier disclosure inside a panel: %d, over %d panel(s)"
          % (data.get("thirdTier", 0), data.get("panelCount", 0)),
          None if not data.get("panelCount") else not data.get("thirdTier")),
-        ("DS-219", "labels on a data mark failing 3:1 to ground or 4.5:1 to text: %d of %d"
-         % (len(data.get("markPairsFailing", [])), len(data.get("textOnDataMark", []))),
-         not data.get("markPairsFailing")),
+        # The unmeasurable count travels with the verdict rather than inside it (T-256): a pair with
+        # no ground to read is not a pair that failed, and a row that hid the two in one number told
+        # an author to fix a contrast nothing had measured. It is named so it cannot go quiet.
+        ("DS-219", "labels on a data mark failing 3:1 to ground or 4.5:1 to text: %d of %d%s"
+         % (len(data.get("markPairsFailing", [])), len(data.get("textOnDataMark", [])),
+            "" if not data.get("markPairsUnmeasurable") else
+            "; %d unmeasurable%s" % (len(data["markPairsUnmeasurable"]),
+                                     _naming(data["markPairsUnmeasurable"]))),
+         # Pairs that exist and none of which can be read is UNDECIDED, not a pass on nothing
+         # (**L-36**). No pairs at all is the absent subject, which is declared and unchanged.
+         (not data.get("markPairsFailing"))
+         if (not data.get("textOnDataMark")
+             or len(data["textOnDataMark"]) > len(data.get("markPairsUnmeasurable", [])))
+         else None),
     ]
 
 

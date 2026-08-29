@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-260](../../../tasks/T-260-ds-244-tests-proximity-where-it-means-obstruction.md). **Both options taken, and the first in the form the record specifies**: the test is *crosses an edge*, not *touches a shape* — a label wholly inside the box it names is the correct placement and is silent, and a label whose own area falls 15% or more outside a filled rectangle is reported. **It reports and does not gate**, which is the owner's ruling and T-204's own precedent: *report, calibrate, then decide*. The calibration is the reason and not a hedge — across the five tracked decks the new kind fires **0 times**, so there is no false-alarm rate to have, and a kind that gates the day it is written has none by construction. **Narrowed to a filled `rect`**: the record names `rect`, `path` and `line`, but a `path`'s bounding box is not the path, and box-versus-box is the exact false alarm this tool's own self-test refuses; stroked marks are already `text/line`. Proved on a seeded deck: a label straddling a filled rect reports at **90% outside**, and the same label centred in the box reports nothing. |
 | **Found while** | Rebuilding slides 8, 18 and 21 of `D4 — Executive Board Presentation`, on 2026-08-25 |
 | **Version seen** | `0.6.0` |
 
