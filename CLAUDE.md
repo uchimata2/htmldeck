@@ -39,12 +39,12 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is still over its own bound** — 15,572 bytes against `tasks/TASK-WORKFLOW.md`'s 13,324,
-measured 2026-08-22 with the command above. *The floor rose 1,399 bytes because `TASK-WORKFLOW.md`
+**This file is still over its own bound** — 15,597 bytes against `tasks/TASK-WORKFLOW.md`'s 13,324,
+measured 2026-08-29 with the command above. *The floor rose 1,399 bytes because `TASK-WORKFLOW.md`
 gained §8, the audit entry point
 ([T-218](tasks/T-218-record-the-pre-release-audit-method-and-its-machinery.md)), so the debt fell from
-3,301 to 2,248 without a word being cut here — which is what a bound measured against a moving term
-does, and why the rule below says re-measure both.* That day's cuts took it **19,035 → 15,208, −20.1%**,
+3,301 to 2,248 that day without a word being cut here — which is what a bound measured against a
+moving term does, and why the rule below says re-measure both.* That day's cuts took it **19,035 → 15,208, −20.1%**,
 closing 57% of the debt before later edits added back: `CE-01` as
 [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and `CE-04` as
 [T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), both ranked in
@@ -121,8 +121,8 @@ direction, not quietly worked around.
    interaction, animation and 3D. There is no JavaScript budget. The corpus habit of 1–3 script
    tags describes past work, not this.
 3. **Use whatever renders best.** SVG, `<canvas>` and WebGL are all permitted, for diagrams
-   included. Still never raster images, and never an *external* library — rule 1 settles that.
-   When SVG is as good, prefer it: it scales, themes and diffs.
+   included. Still never a rasterised diagram (DS-110), and never an *external* library — rule 1
+   settles that. When SVG is as good, prefer it: it scales, themes and diffs.
 4. **One theme, every layer parametric.** Ship one fully-resolved look, not several and not a
    per-topic palette. Every value that could differ between themes is a token. Variety comes later,
    from a tool that generates new templates — design for it now, do not build it yet.

@@ -112,6 +112,7 @@ comes here.
 | [L-141](lessons/L-141.md) | A threshold found by varying one thing names that thing as the cause only if nothing else changes with it | Evidence and verification |
 | [L-142](lessons/L-142.md) | A rule failing a correct artifact in bulk is evidence about the rule or about what its check looks at, and from inside the failing artifact the two read identically | Evidence and verification |
 | [L-143](lessons/L-143.md) | A guard added to narrow a rule can silence it, and the number that catches that is the rule's own prior count | Evidence and verification |
+| [L-144](lessons/L-144.md) | When a rule has never fired, the number that catches a bad guard is the population the guard would exempt | Evidence and verification |
 
 ### Tooling
 

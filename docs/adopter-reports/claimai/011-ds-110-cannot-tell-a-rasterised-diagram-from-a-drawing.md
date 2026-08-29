@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Feature — narrow an existing rule |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-265](../../../tasks/T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md). **The finding is taken and the deck's failure is gone; the weaker form was implemented and the primary refused.** Allowing any raster in a `front`/`back` section names a slide kind, and both `DS-085` and `DS-242` warn that a kind allowed to relax a rule hands the next kind the same argument — so the escape is granted by **place**: a raster outside a slide's `.body` carrying no `role="img"`. That admits this drawing without naming a stage, and a raster in a lobby's `.body` still fails. **`role="img"` is read as the literal attribute**, because the wider reading — an element with the img role carrying a label — refuses this report's own `<img … alt="A pencil drawing">`. **Two things were taken that this report did not ask for**: the `DS-110` row now says it protects legibility and consistency rather than portability, which is the half this report identified; and a raster in the style block or a script keeps failing, because a background paints on any element and so sits in no place at all. Reproduced on htmldeck's own `examples/measure-first/measure-first.html` before anything was written: the same raster inside `.body` gives `1 failure(s): DS-110`, outside it the whole gate passes, and the untouched deck is green. |
 | **Found while** | Putting the presenter's own drawing on the lobby of `D4 — Executive Board Presentation`, on 2026-08-25 |
 | **Version seen** | `0.6.0` |
 

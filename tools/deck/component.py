@@ -455,18 +455,43 @@ def structure(root, parts, styled, arrays=None):
 ADAPTATIONS = (".doc ", ":root[data-preflight] ")
 
 
+# **The deck-local prefix** (T-266, adopter report `014`). A class under it is the deck's own, and
+# DS-229 does not hold it to a contract it could never be in - the contract ships in the plugin, so
+# *uncontracted* named a row a builder had nowhere to add.
+#
+# **It reserves a name; it does not hide a component.** A contracted class stays contracted however
+# it is reached: `.d-x .slide{...}` puts `slide` in `styled`, where its row and every structural
+# DS-229 check still decide it. What the prefix does buy a deck is an ancestor of its own to scope
+# such a rule from - measured while this landed, `.d-x .headline{color:red}` passes where
+# `.x .headline{color:red}` failed. **That is a smaller change than it looks**: `.slide .headline`
+# scoped from a contracted ancestor has always passed, so the deck could already restyle a component
+# and this only spares it borrowing a name. Restyling was never what this check decides; it decides
+# whether a component nobody contracted has been invented, and that is unchanged.
+#
+# `d-` was the report's own proposal and nothing in the tree starts with it - checked against the
+# contract and the shell's stylesheets when this landed. Short on purpose: it is typed on every
+# figure-internal class a deck writes.
+DECK_LOCAL = "d-"
+
+
 def missing_rows(parts, styled):
     """Classes the shared block styles and the contract does not name.
 
     A class every one of whose rules sits under one of the ADAPTATIONS above is `#slides`' class
     reached from another rendering, and not a component. A class with even one unscoped rule is.
+
+    A class under `DECK_LOCAL` is neither: it is the deck naming its own repeated treatment, which
+    is what a class is for and which no component contract can anticipate.
     """
-    out = []
+    out, local = [], []
     for c, sels in sorted(styled.items()):
         if c in parts or all(s.startswith(ADAPTATIONS) for s in sels):
             continue
+        if c.startswith(DECK_LOCAL):
+            local.append(c)
+            continue
         out.append(c)
-    return out
+    return out, local
 
 
 PSEUDO_FN = re.compile(r":(?:where|is|matches|any)\s*\(")
@@ -647,7 +672,7 @@ def verdicts(html):
     authored = [p for p in parts.values() if p.source == "author"]
     vocab = [p for p in parts.values() if p.source == "vocabulary"]
     bad = structure(root, parts, styled, script_arrays(html))
-    missing = missing_rows(parts, styled)
+    missing, deck_local = missing_rows(parts, styled)
     gaps = motion_gaps(css, motions)
     scoped = scoped_rows(css, motions)
     unrowed = unrowed_motions(css, motions)
@@ -682,8 +707,21 @@ def verdicts(html):
         ("DS-229", "every rule that starts a motion on a token has a row: %d unrowed%s"
          % (len(unrowed), "" if not unrowed else " - " + "; ".join(unrowed[:3])),
          not unrowed),
-        ("DS-229", "every class the shared block styles has a row: %d styled, %d uncontracted%s"
-         % (len(styled), len(missing), "" if not missing else " - ." + " .".join(missing[:6])),
+        # **The message names the remedy and not only the failure** (T-266, adopter report `014`).
+        # *Uncontracted* was read as *not yet in the contract*; the contract ships in the plugin, so
+        # the builder went looking for the row to add and the search ended nowhere. That cost one
+        # full check cycle there and would have cost every deck the same one.
+        #
+        # The deck-local count travels for the reason every denominator here does (**L-36**):
+        # *0 uncontracted* over a deck that names nothing of its own, and over one that names
+        # eleven figure treatments, are the same boolean and not the same fact.
+        ("DS-229", "every class the shared block styles has a row: %d styled, %d deck-local, "
+         "%d uncontracted%s"
+         % (len(styled), len(deck_local), len(missing),
+            "" if not missing else " - ." + " .".join(missing[:6])
+            + "; a deck may not add a contracted class - carry the properties as presentation "
+              "attributes on the element, or name it `.%s...` if it is the deck's own repeated "
+              "treatment" % DECK_LOCAL),
          not missing),
         # Section 2.1 states this check for its `script` and `print` sources and nothing ran it
         # (`PR-34`, T-242). The count of rows carrying those sources travels with the verdict, so
@@ -787,15 +825,37 @@ def self_test():
         sys.exit("SELF-TEST FAILED: the deck's STAGES array was not counted")
 
     # The completeness check has to notice a component nobody contracted, or it is decoration.
-    if not missing_rows({}, {"invented": [".invented"]}):
+    if not missing_rows({}, {"invented": [".invented"]})[0]:
         sys.exit("SELF-TEST FAILED: an uncontracted class was not reported")
-    if missing_rows({}, {"ledger": [".doc .ledger"]}):
+    if missing_rows({}, {"ledger": [".doc .ledger"]})[0]:
         sys.exit("SELF-TEST FAILED: a reading-view adaptation was reported as a component")
-    if missing_rows({}, {"figwrap": [":root[data-preflight] .figwrap"]}):
+    if missing_rows({}, {"figwrap": [":root[data-preflight] .figwrap"]})[0]:
         sys.exit("SELF-TEST FAILED: a degraded-state adaptation was reported as a component")
     # And the half that keeps the exemption narrow: one unscoped rule and it IS a component.
-    if not missing_rows({}, {"preflight": [".preflight", ":root[data-preflight] .preflight"]}):
+    if not missing_rows({}, {"preflight": [".preflight", ":root[data-preflight] .preflight"]})[0]:
         sys.exit("SELF-TEST FAILED: a class with an unscoped rule was exempted as an adaptation")
+
+    # **The deck-local prefix, both directions** (T-266). The allowance and the thing it must not
+    # become are asserted together, because a prefix that exempted anything NEAR it would give away
+    # the rule the report explicitly did not ask to weaken.
+    bad, local = missing_rows({}, {"d-ico": [".fig .d-ico"]})
+    if bad or local != ["d-ico"]:
+        sys.exit("SELF-TEST FAILED: a deck-local class was reported as uncontracted, so T-266's "
+                 "prefix bought nothing - naming a repeated figure treatment once IS the request")
+    if not missing_rows({}, {"ico": [".fig .ico"]})[0]:
+        sys.exit("SELF-TEST FAILED: an unprefixed class was exempted. The prefix is opt-in on "
+                 "purpose - a deck that has not asked for the escape does not get it")
+    bad, local = missing_rows({}, {"drop": [".drop"], "d": [".d"]})
+    if len(bad) != 2 or local:
+        sys.exit("SELF-TEST FAILED: `.drop` or `.d` was taken for a deck-local class. The prefix "
+                 "is `%s` and the hyphen is what makes it a prefix rather than a first letter"
+                 % DECK_LOCAL)
+    # The one thing the prefix must never do: take a contracted class out of the check because the
+    # rule reaching it is deck-local. The class is what is decided, never the selector around it.
+    if not missing_rows({}, {"slide": [".d-x .slide"]})[0]:
+        sys.exit("SELF-TEST FAILED: a contracted class styled from a deck-local rule escaped the "
+                 "contract. The prefix reserves a name; a component stays a component however it "
+                 "is reached")
     if not motion_gaps(".rise{opacity:0}", [(".rise", ["--rise-dist"])]):
         sys.exit("SELF-TEST FAILED: a rule that reads no motion token was not reported")
 

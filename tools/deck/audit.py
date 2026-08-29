@@ -866,12 +866,80 @@ def ds122_charts(h):
                                                      fields["licence"])
 
 
+RASTER = re.compile(r"<img\b|data:image/(?:png|jpeg|gif|webp)")
+
+
+def _class_tokens(tag):
+    """The class attribute of one start tag, split into tokens.
+
+    Read as tokens rather than as a substring because `\\bbody\\b` matches inside
+    `qv-body` - the quick view's own sheet is a different region and empty until script
+    fills it, so a substring test would take it for a slide's content area.
+    """
+    m = re.search(r'\bclass\s*=\s*"([^"]*)"', tag)
+    return m.group(1).split() if m else []
+
+
+def _body_spans(h):
+    """Every `.body` region, as (start, end) offsets into `h`, with nesting counted.
+
+    A regex cannot answer *is this inside `.body`*. `.body` is where a slide's content
+    sits, so it holds `<div>`s of its own and the first `</div>` after it is almost never
+    its own; the scan counts opens and closes from the tag that starts the region.
+    """
+    spans = []
+    for m in re.finditer(r"<div\b[^>]*>", h):
+        if "body" not in _class_tokens(m.group(0)):
+            continue
+        depth, end = 1, len(h)
+        for t in re.finditer(r"</?div\b", h[m.end():]):
+            depth += 1 if t.group(0) == "<div" else -1
+            if not depth:
+                end = m.end() + t.end()
+                break
+        spans.append((m.start(), end))
+    return spans
+
+
 def ds110_no_produced_raster(h):
-    """DS-110 as narrowed by scope. A quick view's contents are removed, then nothing may remain."""
+    """DS-110 as narrowed by scope (T-070) and then by place (T-265).
+
+    Scope first: a quick view's contents are removed, because a raster there is a source
+    the deck **quotes**. What remains is what the deck **produces**, and one escape is
+    allowed in it - a raster that sits inside a slide, **outside that slide's `.body`**,
+    on an element carrying no `role="img"`.
+
+    **Both halves of the escape are load-bearing, and the second is the one that keeps
+    the rule.** Outside `.body` is where a slide carries nothing from its argument, so a
+    drawing there is decoration; `role="img"` is how an author dresses a raster as a
+    figure that names data, which is the rasterised diagram this rule was written to stop.
+    An author who wants the escape must not claim both.
+
+    **A raster in no place at all keeps failing.** A `data:` URI in the style block or a
+    script is not *outside `.body`* - it is a background that can paint on any element,
+    `.body` included, so it cannot claim an escape granted by where it sits. Only a match
+    inside a slide's markup is considered at all. That is T-070's discipline: a rule
+    narrowed everywhere it is not measured has been lost rather than narrowed.
+    """
     outside = QUICK_VIEW.sub("", h)
-    return (not re.search(r"<img\b", outside) and "data:image/png" not in outside
-            and "data:image/jpeg" not in outside and "data:image/gif" not in outside
-            and "data:image/webp" not in outside)
+    for slide in re.finditer(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>.*?</section>',
+                             outside, re.S):
+        block = slide.group(0)
+        bodies = _body_spans(block)
+        for m in RASTER.finditer(block):
+            at = m.start()
+            if any(s <= at < e for s, e in bodies):
+                return False
+            start = block.rfind("<", 0, at + 1)
+            stop = block.find(">", at)
+            tag = block[start:stop + 1] if 0 <= start < stop else ""
+            if re.search(r'\brole\s*=\s*["\']img["\']', tag):
+                return False
+    # Everything outside every slide - the style block, the scripts, the head - is judged
+    # by the rule as it stood before T-265, because none of it sits anywhere.
+    swept = re.sub(r'<section[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>.*?</section>', "",
+                   outside, flags=re.S)
+    return not RASTER.search(swept)
 
 
 # **The same cut, for the two rules that judge what the deck SAYS** (T-167). DS-110 was given the
@@ -1090,7 +1158,8 @@ STATIC = [
      lambda h: not re.search(r"@media[^{]*max-width", h)),
     ("DS-088", "no speaker notes in the shipped deck",
      lambda h: "speaker-note" not in h and 'class="notes' not in h),
-    ("DS-110", "no raster the deck produces; a quoted source may be raster inside a quick view",
+    ("DS-110", "no raster the deck produces; a quoted source may be raster inside a quick view, "
+               "and decoration may be raster outside a slide's `.body` if it carries no role=img",
      lambda h: ds110_no_produced_raster(h)),
     ("DS-122", "charts are built at build time, or the engine that draws them is declared",
      lambda h: ds122_charts(h)[0]),
@@ -2754,8 +2823,21 @@ def render_verdicts(data):
         ("DS-202", "slides with no bottom line: %d%s"
          % (len(data.get("noBottomLine", [])), _naming(data.get("noBottomLine"))),
          not data.get("noBottomLine")),
-        ("DS-202", "bottom lines that are not one sentence: %d%s"
-         % (len(data.get("multiSentence", [])), _naming(data.get("multiSentence"))),
+        # **The failure says why the count is one** (T-270, adopter report `024`). *Not one
+        # sentence: 1* is a verdict an author works around - the two sentences there were joined
+        # with `and`, which changed the form the author had chosen in review and made the line
+        # longer. *A bottom line is one sentence so it cannot become an argument* is a verdict an
+        # author accepts, or argues with on the merits.
+        #
+        # **The count stayed and the reason travels with it, which is the whole of the change.**
+        # The report's other proposal - replace the count with a word or clause cap - was refused:
+        # it trades a crisp rule for a fuzzy one, and the same task that raised this found eight
+        # bottom lines restating their own headline, which is the work the count is doing.
+        ("DS-202", "bottom lines that are not one sentence: %d%s%s"
+         % (len(data.get("multiSentence", [])), _naming(data.get("multiSentence")),
+            "" if not data.get("multiSentence")
+            else " - one sentence is the rule so the line cannot become an argument; shorten it "
+                 "rather than joining the two with `and`"),
          not data.get("multiSentence")),
         ("DS-205", "bottom lines behind a disclosure: %d%s"
          % (len(data.get("bottomLineHidden", [])), _naming(data.get("bottomLineHidden"))),
@@ -3336,6 +3418,43 @@ def self_test():
     if ds110_no_produced_raster(produced + quoted) or not ds110_no_produced_raster(quoted + quoted):
         sys.exit("SELF-TEST FAILED: DS-110 cannot tell the two apart in one deck, which is the only "
                  "case that matters - a deck carries both")
+
+    # **T-265's boundary, and it is a narrowing by PLACE on top of T-070's by scope.** The same
+    # raster in three positions inside one slide. The allowance is the adopter's case - a drawing
+    # on a lobby, carrying nothing from the argument - and the two refusals either side of it are
+    # what stops the allowance being a hole: a raster in `.body` is a slide's content, and one
+    # dressed with `role="img"` is a figure naming data, which is the rasterised diagram the rule
+    # exists to stop.
+    def lobby(inner):
+        return ('<section class="slide" data-name="Lobby" data-stage="front">'
+                '<header><h2 class="headline">x</h2></header>%s'
+                '<div class="body"><p class="lobbyline">y</p></div>'
+                '<p class="bottom-line"><b>z</b></p></section>' % inner)
+    if not ds110_no_produced_raster(lobby(raster)):
+        sys.exit("SELF-TEST FAILED: a raster outside `.body` and carrying no `role=\"img\"` failed "
+                 "DS-110, so T-265's narrowing bought nothing - that position IS the allowance, "
+                 "and it is the only thing the adopter's lobby drawing asked for")
+    labelled = '<img src="data:image/png;base64,iVBORw0KGgo=" role="img" alt="Revenue by quarter">'
+    if ds110_no_produced_raster(lobby(labelled)):
+        sys.exit("SELF-TEST FAILED: a raster carrying `role=\"img\"` passed DS-110 outside `.body`. "
+                 "That is a rasterised figure naming data wearing the decoration escape, and it is "
+                 "the defect the rule was written for")
+    if ds110_no_produced_raster(lobby("") .replace('<p class="lobbyline">y</p>',
+                                                   '<p class="lobbyline">y</p>' + raster)):
+        sys.exit("SELF-TEST FAILED: a raster inside `.body` passed DS-110 on a front-stage slide. "
+                 "T-265 narrows by place and not by stage - the ruling took the weaker form, so a "
+                 "lobby earns no blanket exemption")
+    # A raster that sits in no place at all cannot claim a place-based escape. This is the loss
+    # T-070's discipline forbids, and nothing else in the gate would catch it.
+    if ds110_no_produced_raster('<style>.x{background-image:url("%s")}</style>%s'
+                                % ("data:image/png;base64,iVBORw0KGgo=", lobby(""))):
+        sys.exit("SELF-TEST FAILED: a raster in the style block passed DS-110. A background paints "
+                 "on any element, `.body` included, so it sits nowhere and T-265's escape - which "
+                 "is granted by where a raster sits - cannot reach it")
+    if ds110_no_produced_raster(lobby(raster) + produced):
+        sys.exit("SELF-TEST FAILED: DS-110 cannot tell the allowed position from the banned one in "
+                 "one deck, which is the only case that matters - a deck with a lobby drawing "
+                 "still has eleven slides that must not rasterise their content")
 
     # **T-167's boundary, on the same pattern and for the same reason.** DS-110 was given the
     # quoted/produced distinction in T-070 and these two were not, so an adopter's deck was failed

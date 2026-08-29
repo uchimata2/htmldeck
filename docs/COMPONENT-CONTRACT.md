@@ -50,6 +50,25 @@ components** — `.doc .figwrap`, `.doc .stat-figure`, `.doc .ledger`. The readi
 different rendering of the same slides (DS-070), so it has to undo the stage's composition to
 reflow it. Those rules belong to the reading view, and the classes they name stay `#slides`'.
 
+**A deck names its own repeated treatments under `.d-`, and that prefix is reserved.** A class whose
+name begins `d-` is the deck's, not a component: the completeness check skips it, and no row here
+describes it or ever will. It exists for the case this contract cannot anticipate — a hand-built
+figure whose eleven marks share one stroke width, one cap and one join, which is what a class is for
+and which was the one mechanism closed to a deck. Two limits, and both are checked:
+
+- **The prefix reserves a name, not an exemption.** A contracted class stays contracted however it
+  is reached, so `.d-x .slide{…}` styles `.slide` and every check in this document still decides it.
+- **It is opt-in.** An unprefixed class the shared block styles is still a component with a missing
+  row, and still fails. A deck that has not asked for the escape does not get it by accident.
+
+*Added 2026-08-29 by [T-266](../tasks/T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md),
+from ClaimAI adopter report [`014`](adopter-reports/claimai/014-a-deck-cannot-name-a-repeated-figure-treatment-once.md).
+Before it, the gate reported such a class as **uncontracted** — which reads as* not yet in the
+contract, *and the contract ships in the plugin, so the builder went looking for the row to add and
+the search ended nowhere. The report's third proposal, a figure-internals section here, was refused
+by the report itself and again on reading it: the set of treatments a hand-built figure needs is
+open, so this document would chase it forever.*
+
 ## 2. What a row says
 
 | Column | Means |

@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Feature |
-| **Status** | `open` |
+| **Status** | `closed` — closed 2026-08-29 by [T-270](../../../tasks/T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md). **Proposal 2 taken, proposal 1 refused.** The count stays: replacing it with a word or clause cap trades a crisp rule for a fuzzy one, and the task that raised this report found eight bottom lines restating their own headline, which is the work the count does. What changes is the verdict, which now reads *one sentence is the rule so the line cannot become an argument; shorten it rather than joining the two with `and`* — **the second clause names the workaround this report actually took**, so the message answers the thing an author is about to do rather than only the thing they did. The `DS-202` row says the same. Proved on htmldeck's `examples/measure-first/measure-first.html`: control `bottom lines that are not one sentence: 0` pass, a bottom line seeded to two sentences `1 - Larkfield Dental Group - one sentence is the rule so the line cannot become an argument…` FAIL. |
 | **Severity** | Low — the joined sentence is acceptable, but the author's wording was changed to satisfy a count |
 | **Found while** | Making round 2's copy fixes, on 2026-08-25 — `E55`, from the survey answers registered in `E52` |
 | **Version seen** | 0.6.0 |
