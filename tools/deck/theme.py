@@ -569,6 +569,24 @@ def verdicts(html):
 # ---------------------------------------------------------------------------- self-test
 
 
+def set_token(source, name, value):
+    """`source` with `name` declared as `value` - or a hard failure if it was not there.
+
+    **A fixture builder that can silently do nothing is not a fixture builder.** The two
+    negative fixtures in `self_test` exist to make the validator prove it can fail; a
+    substitution that matches nothing hands the validator the CONFORMING theme and calls its
+    clean verdict a defect. So the token is found by name and a miss is fatal here, where it
+    names the real cause, rather than three lines later where it does not.
+    """
+    pat = re.compile(r"(" + re.escape(name) + r")\s*:\s*[^;}]*")
+    out, n = pat.subn(lambda m: "%s:%s" % (m.group(1), value), source, count=1)
+    if not n:
+        sys.exit("SELF-TEST FAILED: %s is not declared in the theme, so the fixture that "
+                 "depends on it was never built. The token was renamed or dropped - fix the "
+                 "fixture, do not delete it" % name)
+    return out
+
+
 def self_test():
     tokens, exemptions = load()
     for t in tokens.values():
@@ -611,10 +629,19 @@ def self_test():
     if validate(ok, tokens):
         sys.exit("SELF-TEST FAILED: the shipping theme does not satisfy its own contract - %s"
                  % "; ".join(m for _r, m in validate(ok, tokens)[:3]))
-    if not validate(ok.replace("--lh-body:1.55", "--lh-body:2.6"), tokens):
+    # **The negative fixtures are built by naming the token, never by matching its current
+    # value** (`PR-54`). They used to read the tracked theme and `.replace("--lh-body:1.55",
+    # ...)`: move the line height to 1.60 - inside DS-034's own band, and exactly the change
+    # the parametric layer exists to permit - and the replace matched nothing, the fixture was
+    # the unmodified theme, and the test accused the validator of passing a defect nobody had
+    # seeded. `main()` runs this before every command, so the release gate went red four times
+    # naming the wrong thing. `shell.py` fixed the same shape under T-176.
+    #
+    # `set_token` refuses a substitution that changed nothing, which is the half that matters:
+    # a fixture that failed to be seeded must fail loudly here rather than pass quietly there.
+    if not validate(set_token(ok, "--lh-body", "2.6"), tokens):
         sys.exit("SELF-TEST FAILED: a line height outside DS-034's band validated clean")
-    if not validate(ok.replace("--fs-lead:calc(var(--fs-base)*var(--type-ratio)*var(--du))",
-                               "--fs-lead:calc(30*var(--du))"), tokens):
+    if not validate(set_token(ok, "--fs-lead", "calc(30*var(--du))"), tokens):
         sys.exit("SELF-TEST FAILED: a derived token rewritten as a literal validated clean")
 
     # The exemption list is applied, not merely parsed: a literal it covers and one it does not

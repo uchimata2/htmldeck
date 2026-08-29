@@ -46,10 +46,17 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 
 RULE = "DS-239"
 
-# **The content-motion vocabulary, with the tier that orders it.** Adding a content motion adds a
-# row here, and the ordering rule does not change - which is the point of a table rather than a
-# sort key spread through the code. Affordance motions are deliberately absent: they are not
-# ranked, and `check` fails a rank found on one.
+# **The tier table orders the content motions; it no longer decides which ones there are**
+# (`PR-44`). It used to be both, and the denominator was therefore the list rather than the deck:
+# [T-187](../../tasks/T-187-open-the-motion-vocabulary-into-a-style-guide.md) opened DS-140's
+# vocabulary on 2026-08-21, so a conformant motion may now carry a name no table holds - it would
+# get no rank, run at every density, and DS-239's row would still have read *0 of n*. What the
+# deck contains is now read off the `--motion-kind` declarations, which is the idiom
+# [T-214](../../tasks/T-214-ds-142s-checker-is-an-allow-list-of-one-class-name.md) restored twenty
+# lines further down this same file for DS-237 and DS-238.
+#
+# A derived class the table does not name still ranks - after every class it does, because the
+# table is an order and an unnamed motion has no place in it yet. Adding a row here moves it.
 CONTENT_CLASSES = [
     ("pulse", 1, "DS-147's one emphasis pulse on the number the slide is about - the argument's "
                  "key figure, so it outranks everything decorative"),
@@ -59,7 +66,8 @@ CONTENT_CLASSES = [
                    "it is the first to go as density falls"),
 ]
 
-AFFORDANCE_CLASSES = ["rise", "current", "opening"]
+# `AFFORDANCE_CLASSES` was here and was read by nothing in the tree - a second list of names, dead
+# since it was written. Half of `PR-44`'s subject was therefore a deletion rather than a re-binding.
 
 SLIDE = re.compile(r'<section[^>]*\bclass="[^"]*\bslide\b[^"]*"[^>]*>', re.I)
 TAG = re.compile(r'<(\w+)([^>]*\bclass="([^"]*)"[^>]*)>')
@@ -78,6 +86,46 @@ FIG_OPEN = re.compile(r'<svg\b[^>]*\bclass="[^"]*\bdot-pop\b[^"]*"[^>]*>')
 # recompute: 7 is coprime with the counts a matrix comes in, so `(i * 7) % n` visits every
 # position exactly once rather than most of them.
 DOT_STEP = 7
+
+
+# The class a motion rule ranks: the RIGHTMOST compound that bears a class. `.pulse` gives `pulse`,
+# `.arrow-pop marker path` gives `arrow-pop` and `.dot-pop circle` gives `dot-pop` - in both of the
+# last two the animation runs on an inner ELEMENT and the ranked thing is the figure that carries
+# the class. It reads a scoped rule the same way: `:where(.slide[data-played]) .pulse` is still
+# `pulse`, which is the construction the adopter's `020` asked DS-229 to accept.
+CLASS_TOKEN = re.compile(r"\.([A-Za-z_][\w-]*)")
+PSEUDO_FN = re.compile(r":(?:where|is|matches|any)\s*\(")
+
+
+def ranked_classes(selector):
+    """The class names the rightmost class-bearing compound of `selector` carries."""
+    out = []
+    for branch in selector.split(","):
+        # A functional pseudo-class is a bracket around part of the chain, not a step in it.
+        flat = PSEUDO_FN.sub(" ", branch).replace(")", " ")
+        for compound in reversed(flat.split()):
+            names = CLASS_TOKEN.findall(compound)
+            if names:
+                out.extend(names)
+                break
+    return out
+
+
+def content_classes(html):
+    """`{class: tier}` - the content-motion vocabulary THIS deck declares.
+
+    The denominator is the deck (`PR-44`). `CONTENT_CLASSES` supplies the order for the classes it
+    names and nothing else; a declared class it does not name sorts after all of them.
+    """
+    named = dict((c, t) for c, t, _why in CONTENT_CLASSES)
+    unnamed_tier = len(CONTENT_CLASSES) + 1
+    out = {}
+    for sel, _body, kind in motion_rules(html):
+        if kind != "content":
+            continue
+        for c in ranked_classes(sel):
+            out[c] = named.get(c, unnamed_tier)
+    return out
 
 
 def slide_bounds(html):
@@ -102,7 +150,7 @@ def eligible(html):
     Returns `[(pos, tag_start, tag_end, classes, tier, slide_index, slide_name)]`. `pos` is the
     element's place in the ranking order, 1-based.
     """
-    tiers = dict((c, t) for c, t, _why in CONTENT_CLASSES)
+    tiers = content_classes(html)
     bounds = slide_bounds(html)
     found = []
     for m in TAG.finditer(html):
@@ -220,12 +268,12 @@ def set_rank(tag, rank):
 
 def stray_ranks(html):
     """Ranks written on something that carries no content motion - a rank that governs nothing."""
-    out = []
+    out, tiers = [], content_classes(html)
     for m in TAG.finditer(html):
         if not RANK_ATTR.search(m.group(0)):
             continue
         cls = classes(m.group(3))
-        if not any(c in dict((c, t) for c, t, _w in CONTENT_CLASSES) for c in cls):
+        if not any(c in tiers for c in cls):
             out.append((m.group(1), " ".join(cls)[:48]))
     return out
 
@@ -241,8 +289,8 @@ def report(deck):
         if got is None:
             problems.append("slide %d %s: carries %s and no --m-rank, so it is ranked 101 by the "
                             "root default and never runs at any density"
-                            % (r[5] + 1, r[6][:30], "/".join(c for c in r[3] if c in
-                                                             dict((c2, t) for c2, t, _w in CONTENT_CLASSES))))
+                            % (r[5] + 1, r[6][:30],
+                               "/".join(c for c in r[3] if c in content_classes(html))))
         elif got != want:
             problems.append("slide %d %s: --m-rank is %d, the rule gives %d"
                             % (r[5] + 1, r[6][:30], got, want))
@@ -291,9 +339,44 @@ STARTS = re.compile(r"(?:^|;|\s)(animation|animation-name|transition|transition-
 KIND = re.compile(r"--motion-kind\s*:\s*(content|affordance)\b")
 
 
+# A CSS comment is not part of a selector, and `CSS_RULE` cannot tell the difference: the text
+# between one rule's `}` and the next rule's `{` includes any comment written there, so a commented
+# rule arrived with the comment glued to the head of its selector. **7 of the reference deck's 14
+# motion rules were affected**, two of the three content ones among them. Nothing had failed,
+# because DS-237 and DS-238 only ask whether a KIND is declared - but a vocabulary derived from
+# those selectors would have been derived from prose, and DS-237's diagnostic was printing 44
+# characters of comment where it means to name a selector.
+CSS_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+
+
 def css_of(html):
-    """Every `<style>` body in the document, joined. The deck carries its CSS inline."""
-    return "\n".join(re.findall(r"<style[^>]*>(.*?)</style>", html, re.S | re.I))
+    """Every `<style>` body in the document, joined, with CSS comments removed.
+
+    The deck carries its CSS inline. Comments go because everything downstream reads the text
+    between braces AS a selector.
+    """
+    return CSS_COMMENT.sub(" ", "\n".join(
+        re.findall(r"<style[^>]*>(.*?)</style>", html, re.S | re.I)))
+
+
+BANG_IMPORTANT = "!important"
+
+
+def switched_off(value):
+    """`animation:` / `transition:` value that starts nothing.
+
+    **`rstrip` takes a character SET, not a suffix**, and this test used to read
+    `.rstrip("!important")`. `"pop"` is three characters all of which are in `"!important"`, so it
+    stripped to the empty string, `"" in ("none", "")` was true, and a rule reading
+    `animation:pop 1s` was classified as one switching motion OFF - dropped from the motion set
+    entirely, taking its `--motion-kind` declaration with it. Nothing in the tree animates a name
+    that spells out of those nine letters today, which is why it had never fired; found while
+    deriving DS-239's vocabulary from this function, where a dropped rule is a dropped class.
+    """
+    first = value.strip().split()[0]
+    if first.endswith(BANG_IMPORTANT):
+        first = first[:-len(BANG_IMPORTANT)]
+    return first.strip() in ("none", "")
 
 
 def motion_rules(html):
@@ -306,7 +389,7 @@ def motion_rules(html):
         # a rule whose every motion declaration is `none` is switching motion off, not starting it
         live = re.findall(r"(?:animation|animation-name|transition|transition-property)\s*:\s*([^;]*)",
                           body)
-        if all(v.strip().split()[0].rstrip("!important").strip() in ("none", "") for v in live if v.strip()):
+        if all(switched_off(v) for v in live if v.strip()):
             continue
         k = KIND.search(body)
         out.append((sel, body, k.group(1) if k else None))
@@ -359,12 +442,46 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a deck with no content motion produced a rank")
     # **Order is tier first, then the slide, then the document** - and the fixture asserts it in a
     # deck where document order and tier order disagree, which is the only case that can catch it.
-    html = ('<section class="slide" data-name="one"><p class="rise">a</p></section>'
+    # **The fixture carries the stylesheet, because the vocabulary comes from it** (`PR-44`). The
+    # markup alone used to be enough: three class names were compiled in, so a `<p class="pulse">`
+    # was a content motion by spelling. It is one here because a rule says so, and the same fixture
+    # now asserts the derivation as well as the order.
+    STYLE = ('<style>.pulse{animation:pulse 900ms ease both;--motion-kind:content}'
+             '.slide[data-played] .rise{animation:rise 300ms ease both;--motion-kind:affordance}'
+             '</style>')
+    html = (STYLE
+            + '<section class="slide" data-name="one"><p class="rise">a</p></section>'
             '<section class="slide" data-name="two"><p class="stat-figure pulse">b</p></section>')
     rows = eligible(html)
     if len(rows) != 1 or rows[0][6] != "two":
         sys.exit("SELF-TEST FAILED: `eligible` did not find exactly the pulse on slide two - it "
                  "found %r. A rise is affordance motion and must not be ranked" % (rows,))
+    if content_classes(html) != {"pulse": 1}:
+        sys.exit("SELF-TEST FAILED: the vocabulary was not derived from the deck's declarations - "
+                 "it came out as %r. `rise` is declared `affordance` and must not be in it"
+                 % (content_classes(html),))
+
+    # **A content motion the tier table does not name is still ranked** - the failure `PR-44`
+    # predicts, and the one a compiled-in list cannot pass. It sorts after every named tier.
+    opened = (STYLE.replace("</style>", '.swell{animation:swell 400ms ease both;'
+                                        '--motion-kind:content}</style>')
+              + '<section class="slide" data-name="one"><p class="swell">a</p>'
+              '<p class="pulse">b</p></section>')
+    voc = content_classes(opened)
+    if "swell" not in voc or voc["swell"] <= voc["pulse"]:
+        sys.exit("SELF-TEST FAILED: a declared content motion the tier table does not name was "
+                 "dropped or out-ranked a named one - the vocabulary came out as %r. T-187 opened "
+                 "DS-140's names, so a conformant motion may carry one no table holds" % (voc,))
+    got = [r[3] for r in eligible(opened)]
+    if len(got) != 2 or "pulse" not in got[0][0:] and "pulse" not in got[0]:
+        sys.exit("SELF-TEST FAILED: the opened vocabulary did not rank both motions - %r" % (got,))
+
+    # `css_of` strips comments, or a commented rule arrives with the comment as its selector.
+    commented = "<style>/* a note about .pulse */\n.dot-pop circle{animation:pop 1s;" \
+                "--motion-kind:content}</style>"
+    if sorted(content_classes(commented)) != ["dot-pop"]:
+        sys.exit("SELF-TEST FAILED: a comment above a rule reached the selector - the vocabulary "
+                 "came out as %r" % (sorted(content_classes(commented)),))
     tag = '<p class="stat-figure pulse">'
     if set_rank(tag, 7) != '<p class="stat-figure pulse" style="--m-rank:7">':
         sys.exit("SELF-TEST FAILED: a rank was not added to a tag with no style attribute")
@@ -403,6 +520,13 @@ def self_test():
     if got["DS-238"][1]:
         sys.exit("SELF-TEST FAILED: an affordance motion gated on --m-on passed DS-238. Density "
                  "reaching an affordance motion is the one thing the split exists to prevent")
+    # **A `rstrip` that took a character set rather than a suffix.** `animation:pop` classified as
+    # `animation:none`, so the rule left the motion set and its `--motion-kind` left with it.
+    if switched_off("pop 1s") or switched_off("swell 400ms ease both"):
+        sys.exit("SELF-TEST FAILED: a live animation was read as one switching motion off. Its "
+                 "rule would leave the motion set and take its --motion-kind declaration with it")
+    if not switched_off("none") or not switched_off("none!important"):
+        sys.exit("SELF-TEST FAILED: `animation:none` was not recognised as switching motion off")
     if kind_verdicts("")[0][2] is not True or "of 0" not in kind_verdicts("")[0][1]:
         sys.exit("SELF-TEST FAILED: a document with no stylesheet either failed DS-237 or reported "
                  "no denominator - and *0 of 0* must not read like *0 of 8* (**L-36**)")
@@ -468,7 +592,17 @@ def main(argv):
                   "govern (DS-237).")
         return 0
     if cmd == "check":
-        problems, rows, _ = report(deck)
+        problems, rows, ranks = report(deck)
+        # **Print the rank the rule derives, per motion.** The gate already knows it, and the
+        # adopter's `021` is what printing it costs when it does not: `--m-rank` is derived from
+        # the SET, so removing two of five content motions leaves the other three wrong with
+        # nothing in the edit touching them. Read as a list of ranks that is one line; read by
+        # bisection it was an afternoon.
+        for r in rows:
+            print("  slide %2d  %-30s %-22s rank %3d derived%s"
+                  % (r[5] + 1, r[6][:30], " ".join(r[3])[:22], ranks[r[1]],
+                     "" if declared(io.open(deck, encoding="utf-8").read(), r[1], r[2])
+                     == ranks[r[1]] else "  <- the deck does not carry this"))
         for p in problems:
             print("  %s" % p)
         print("%s - %d content motion(s), %d wrong"

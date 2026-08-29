@@ -733,6 +733,107 @@ CHART_ENGINE_DECL = re.compile(
 REDISTRIBUTABLE = ("mit", "isc", "0bsd", "bsd-2-clause", "bsd-3-clause", "apache-2.0",
                    "ofl-1.1", "unlicense", "cc0-1.0")
 
+# **The same class, written the way a font file writes it.** DS-032 says *licence permitting
+# redistribution* and a face carries a NOTICE, not an identifier - the three shipped faces all say
+# `SIL Open Font License 1.1`, which is `ofl-1.1` in the list above and matches none of its text.
+# So the row cannot simply read `REDISTRIBUTABLE`: the two are different alphabets for one class,
+# and a check that reads only one of them fails a deck that satisfied the rule in the other.
+#
+# Both are accepted, because *the licence travels with the font* is a claim about the deck naming
+# its licence and either form names it. `PR-49` asked which was meant and this is the answer.
+LICENCE_NOTICES = {
+    "mit": ("MIT License", "MIT Licence"),
+    "isc": ("ISC License", "ISC Licence"),
+    "0bsd": ("Zero-Clause BSD", "BSD Zero Clause"),
+    "bsd-2-clause": ("BSD 2-Clause", "Simplified BSD"),
+    "bsd-3-clause": ("BSD 3-Clause", "New BSD", "Modified BSD"),
+    "apache-2.0": ("Apache License", "Apache Licence"),
+    "ofl-1.1": ("Open Font License", "Open Font Licence", "SIL OFL"),
+    "unlicense": ("The Unlicense", "Unlicence"),
+    "cc0-1.0": ("CC0", "Creative Commons Zero"),
+}
+
+
+def redistributable_licence(text):
+    """The redistributable licence `text` names, as `(spdx, how)` - or `None` if it names none.
+
+    Reads the SPDX identifier and the human notice alike. `how` says which form answered, so a
+    verdict can name what it found rather than what it wanted.
+    """
+    low = text.lower()
+    # **On a token boundary, or `mit` matches *submit*.** Binding a licence test on a bare
+    # substring is the same defect one alphabet over from the one this function was written to
+    # fix, and it would pass every deck in the tree for free.
+    for spdx in REDISTRIBUTABLE:
+        if re.search(r"(?<![\w-])" + re.escape(spdx) + r"(?![\w-])", low):
+            return spdx, "the SPDX identifier %s" % spdx
+    for spdx, notices in LICENCE_NOTICES.items():
+        for notice in notices:
+            if notice.lower() in low:
+                return spdx, "the notice %r" % notice
+    return None
+
+
+def face_window(h, start, floor):
+    """Where the text belonging to the face at `start` begins.
+
+    **Walk back over whitespace and whole comments, and stop at anything else.** A notice
+    attached to a face is the comment above it, and this is the bound that says so without a
+    constant: no character count to justify, and nothing to re-tune when a face gains a line.
+    The walk never crosses `floor`, the end of the previous face, so one notice cannot answer
+    for two faces.
+    """
+    i = start
+    while i > floor:
+        j = i
+        while j > floor and h[j - 1].isspace():
+            j -= 1
+        if j > floor and h[j - 2:j] == "*/":
+            k = h.rfind("/*", floor, j)
+            if k < 0:
+                return max(floor, j)
+            i = k
+            continue
+        return max(floor, j)
+    return floor
+
+
+FONT_FACE = re.compile(r"@font-face\s*\{[^{}]*\}", re.I)
+
+
+def ds032_faces(h):
+    """`(ok, why)` - every embedded face carries a licence permitting redistribution.
+
+    **The licence is read in the window that belongs to the face, not in the document** (`PR-49`).
+    Searching the whole deck passes the reference deck on the word `MIT`, which is the Lucide
+    icons' licence four hundred lines away from any font - the right answer for the wrong reason,
+    and it would go on being right after the fonts changed. *The licence travels with the font*
+    is a claim about proximity, so the check measures proximity: each face's window runs from the
+    end of the previous face to the end of this one, which is where every shipped face puts its
+    notice and where a build that inlines a face's own stylesheet will put it too.
+    """
+    faces = list(FONT_FACE.finditer(h))
+    embedded, prev, bad, found = [], 0, [], []
+    for m in faces:
+        window = h[face_window(h, m.start(), prev):m.end()]
+        prev = m.end()
+        if "data:font/woff2;base64," not in m.group(0):
+            continue
+        embedded.append(m)
+        lic = redistributable_licence(window)
+        name = re.search(r"font-family:\s*['\"]?([^;'\"]+)", m.group(0), re.I)
+        who = (name.group(1).strip() if name else "an unnamed face")
+        if lic is None:
+            bad.append(who)
+        else:
+            found.append("%s: %s" % (who, lic[1]))
+    if not embedded:
+        return False, "no face is embedded as base64 woff2"
+    if bad:
+        return False, ("no licence permitting redistribution travels with %s"
+                       % ", ".join(bad[:3]))
+    return True, "; ".join(found[:3])
+
 
 def ds122_charts(h):
     """`(ok, why)` - the deck draws its charts at build time, or declares the engine that does not."""
@@ -899,8 +1000,11 @@ STATIC = [
      lambda h: all(t in h for t in ("--font-display", "--font-text", "--font-mono"))),
     ("DS-031", "no Inter, Roboto, Arial or system-ui",
      lambda h: not re.search(r"font-family:[^;]*(Inter|Roboto|Arial|system-ui)", h)),
+    # **A class of licences, not one of them** (`PR-49`). The rule reads *licence permitting
+    # redistribution*; requiring the literal *Open Font License* made a deck embedding an MIT,
+    # Apache-2.0 or CC0 face fail a `hard` check for doing what the ruleset permits.
     ("DS-032", "faces embedded base64, licence travelling with them",
-     lambda h: h.count("data:font/woff2;base64,") >= 1 and "Open Font License" in h),
+     lambda h: ds032_faces(h)[0]),
     ("DS-033", "no vw/vh/clamp inside the stage",
      lambda h: not re.search(r"[:\s]\d[\d.]*v[wh]\b", h) and "clamp(" not in h),
     ("DS-061", "no width media query reshaping the stage",

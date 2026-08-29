@@ -51,10 +51,63 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 # `Route 3` and `Phase 1` name a thing rather than measure one, and admitting them fills every
 # ledger with identifiers a reader would never repeat as a number.
 TIME_UNITS = r"minutes?|mins?|hours?|days?|weeks?|months?|years?"
-UNITS = (r"%|per cent|percent|" + TIME_UNITS + r"|"
-         r"stations?|routes?|riders?|trips?|people|buses|corridors?|stops?|km|m\b")
-FIGURE = re.compile(
-    r"(?<![\w.$])((?:" + TIME_UNITS + r")[\s-]\d+(?:,\d{3})*(?:\.\d+)?|"  # month 4, Month 4, month-4
+
+# **The unit vocabulary is two things and used to be one** (`PR-45`). The shape-based half below
+# is domain-free - a proportion, a duration, an SI length - and belongs to every deck. The other
+# half was the reference deck's transit domain written out as nouns: *stations, routes, riders,
+# trips, people, buses, corridors, stops*. `examples/sort-window/` states *9 miles*, *14 miles*,
+# *6 miles* and *14 nights* on its slides and none of them was a figure, because `miles` and
+# `nights` are not in that list - and its `FIG-1` row read *figures on a slide that appear in no
+# source: 0 of 73*. A silent under-report, which is the direction this module's own docstring says
+# these checks do not fail in.
+#
+# **Enlarging the list is the answer this argues against**: a list of nouns is one deck's domain
+# however long it grows, and the next adopter's domain is not in it. So the domain half is DERIVED
+# from the pair being compared - any word the SOURCES use beside a numeral is a unit word for this
+# deck - which is the shape the pattern already used for currency and separators.
+SHAPE_UNITS = r"%|per cent|percent|" + TIME_UNITS + r"|km|m\b"
+
+# The transit nouns are kept as the vocabulary of LAST resort - what `FIGURE` reads when there are
+# no sources to derive from, which is every reader outside the ledger (DS-231 compares a bottom
+# line against the slide faces, and both sides are the deck). They no longer decide the ledger's
+# denominator, which is what `PR-45` is about.
+FALLBACK_UNITS = r"stations?|routes?|riders?|trips?|people|buses|corridors?|stops?"
+UNITS = SHAPE_UNITS + r"|" + FALLBACK_UNITS
+
+
+def figure_pattern(units):
+    """The figure pattern over `units`, an alternation of unit words."""
+    return re.compile(FIGURE_SHAPE % {"time": TIME_UNITS, "units": units}, re.I)
+
+
+# **The numeral may not END in a comma**, or the deriver reads a list separator as part of the
+# number and takes the next word as its unit. `18, against 22` minted `against` as a unit word
+# for the whole run, and `380 against` and `430 against` then became figures the reference deck
+# does not state - reported as unsourced, which sends a reader to look for something nobody
+# wrote. `38,000` is unaffected: its commas sit between digits.
+NUMERAL_THEN_WORD = re.compile(
+    r"(?<![\w.$:])\d(?:[\d,]*\d)?(?:\.\d+)?\s?([A-Za-z][A-Za-z-]{1,19})\b")
+
+
+def units_from(text):
+    """Every word `text` uses immediately after a numeral, as an alternation - or `""`.
+
+    **The vocabulary comes from the documents being compared, not from a table** (`PR-45`). A word
+    a source writes beside a number is a unit word for this pair by demonstration, which is the
+    same evidence the reader on the slide would use. Stop words are excluded because *4 and*,
+    *2 of* and *30 per* are grammar rather than measurement, and the hyphen is allowed because
+    *9 miles-per-hour* is one word to a reader.
+    """
+    words = set()
+    for m in NUMERAL_THEN_WORD.finditer(text):
+        w = m.group(1).lower().rstrip("-")
+        if w and w not in STOP and w not in FUNCTION_WORDS and not w.isdigit():
+            words.add(w)
+    return "|".join(re.escape(w) for w in sorted(words, key=lambda x: (-len(x), x)))
+
+
+FIGURE_SHAPE = (
+    r"(?<![\w.$:])((?:%(time)s)[\s-]\d+(?:,\d{3})*(?:\.\d+)?|"  # month 4, Month 4, month-4
     r"\$\s?\d[\d,]*(?:\.\d+)?\s?[MKB]?|"                      # $5.6M, $1.5M
     r"\d[\d,]*\.\d+\s?[MKB]?|"                                # 6.8, 4.1M
     r"\d{1,3}(?:,\d{3})+|"                                    # 38,000
@@ -70,10 +123,38 @@ FIGURE = re.compile(
     # 02:30 ...` arrived as `5%The` and the wider guard correctly read that as a compound. It now
     # arrives as `5% The`. The narrow form let `4 stopover` mint `4 stop` - the same shape of
     # phantom the compound guard exists to stop, one character to the left.
-    r"\d+\s?(?:" + UNITS + r")(?![-\w]))", re.I)
+    r"\d+\s?(?:%(units)s)(?![-\w]))")
+
+# The default pattern: the shape forms plus the fallback nouns. Every reader that has no sources to
+# derive from uses this - `audit.py`'s DS-231 among them, where both sides of the comparison are
+# the deck.
+FIGURE = figure_pattern(UNITS)
 
 STOP = set(("the a an of in on for and or to is are was with by at from that this it its as "
             "be but not no than then so under over into per one two").split())
+
+# **The open class is derived; the closed class is listed - and that is the whole distinction**
+# (`PR-45`). Unit nouns are an OPEN class: *stations*, *riders*, *miles*, *nights*, and the next
+# adopter's word is not in any list however long it grows, which is why `units_from` reads them off
+# the sources instead. English function words are a CLOSED class - finite, domain-free, and the
+# same set for every deck - so listing them is not the failure that listing nouns is.
+#
+# The words below are the ones that can stand immediately after a numeral without measuring it.
+# The measured cases: `Phase 2 cannot start early` minted `cannot` as a unit and then `5 cannot`
+# as a figure the deck does not state; `18, against 22` did the same with `against`. The module's
+# own comment above already states the principle for the numeral's other side - *`Route 3` and
+# `Phase 1` name a thing rather than measure one* - and this is that principle one word to the
+# right.
+FUNCTION_WORDS = set((
+    "cannot can will would should could must may might shall need dare "
+    "does do did done has have had having "
+    "more most less least fewer other others another each every both all any some none "
+    "further again also only just even still yet already almost about "
+    "out up down off before after during while because since until unless although though "
+    "against across within without between through above below near along around beyond behind "
+    "toward towards onto upon via plus minus times who which what when where why how "
+    "we they he she you i us them him her our their your my its his hers "
+    "new old same such these those there here").split())
 
 
 # **The reversed form is turned round in one place, and every reader of a figure uses it** (T-169).
@@ -198,7 +279,7 @@ def runs(fragment):
     return out
 
 
-def deck_figures(deck):
+def deck_figures(deck, figure=None):
     """Every figure on a slide, with the slide it is on and the words around it.
 
     Read per `<section class="slide">` so *Used on* is a real answer rather than a guess.
@@ -223,7 +304,7 @@ def deck_figures(deck):
         name = re.search(r'data-name="([^"]*)"', block)
         name = name.group(1) if name else "?"
         for run in runs(QUICK_VIEW.sub(" ", m.group(1))):
-            for f in FIGURE.finditer(run):
+            for f in (figure or FIGURE).finditer(run):
                 label = label_of(run, f.group(1))
                 if not label:
                     continue
@@ -250,7 +331,7 @@ def source_units(text):
     return units
 
 
-def source_figures(paths):
+def source_figures(paths, figure=None):
     """Every figure in the supplied sources, with its unit as context. Text files are read as
     text; a source that is not one is reported rather than silently skipped."""
     out, files, skipped = [], [], []
@@ -260,7 +341,7 @@ def source_figures(paths):
             continue
         files.append(path)
         for unit in source_units(io.open(path, encoding="utf-8").read()):
-            for f in FIGURE.finditer(unit):
+            for f in (figure or FIGURE).finditer(unit):
                 out.append({"value": f.group(1).strip(), "norm": normalise(f.group(1)),
                             "origin": os.path.basename(path),
                             "label": label_of(unit, f.group(1)), "context": unit[:110]})
@@ -298,8 +379,18 @@ def kind(norm):
 def build_ledger(deck, sources):
     """The **Figure · Value · Origin · Used on** table `artifacts.md` specifies, emitted rather
     than kept internal — [T-004] prioritises what this one counts."""
-    figs = deck_figures(deck)
-    src, files, skipped = source_figures(collect(sources))
+    # **The vocabulary is derived from the sources, then both sides are read with it** (`PR-45`).
+    # A word the sources use beside a numeral is a unit word for this pair, so the ledger's
+    # denominator is what the documents state rather than what a table of nouns admits. The
+    # fallback nouns stay in the alternation: dropping them would narrow a deck whose sources
+    # happen not to spell one out, and this change is about widening.
+    paths = collect(sources)
+    derived = units_from("\n".join(
+        io.open(f, encoding="utf-8", errors="replace").read() for f in paths
+        if os.path.splitext(f)[1].lower() in (".md", ".txt", ".csv", ".markdown")))
+    figure = figure_pattern(UNITS + ("|" + derived if derived else ""))
+    figs = deck_figures(deck, figure)
+    src, files, skipped = source_figures(paths, figure)
     by_norm = {}
     for s in src:
         by_norm.setdefault(s["norm"], []).append(s)

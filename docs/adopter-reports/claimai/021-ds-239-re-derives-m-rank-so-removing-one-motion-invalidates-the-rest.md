@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` |
 | **Severity** | Medium — an unrelated edit makes a passing deck fail, and the failure names ranks the author never touched |
 | **Found while** | Deciding what the verdict pulse should do, on 2026-08-26 — `E79`; met first on 2026-08-26 — `E66` |
 | **Version seen** | 0.6.0 |
@@ -34,3 +34,11 @@ without recomputing the whole deck.
 2. **Make the safe writer safe.** `density.py write` exists precisely for this arithmetic and is
    currently the thing an author must not run — see [`015`](015-density-py-write-corrupts-a-self-closing-svg-tag.md).
    With that fixed, the coupling costs one command instead of a manual renumbering.
+
+## Resolved
+
+**Closed 2026-08-29 by [T-243](../../../tasks/T-243-five-checks-bound-on-a-name-rather-than-on-structure.md), batch B4.**
+
+`python tools/deck/density.py check` now prints the rank it derives for every content motion, with the slide, the classes, and a mark where the deck does not carry that value. The gate already knew it; printing it turns the bisection this report describes into one line of output.
+
+The record's other half - that `--m-rank` is a property of the SET, so removing two of five motions leaves the other three wrong - is unchanged and is the rule working. `PR-44` closed in the same task and is why the set is now the deck's declared content motions rather than three compiled-in class names.

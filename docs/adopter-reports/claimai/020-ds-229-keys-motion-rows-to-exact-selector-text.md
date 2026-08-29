@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Target** | `htmldeck` — Gábor's own repository, cloned under `C:\Work\AgentPlugins` |
 | **Kind** | Defect |
-| **Status** | `open` |
+| **Status** | `closed` |
 | **Severity** | Medium — the correct CSS for a common need takes the gate from four failures to five, and the failure names the wrong thing |
 | **Found while** | Deciding whether figure motion should play on arrival, on 2026-08-26 — `E68` |
 | **Version seen** | 0.6.0 |
@@ -47,3 +47,15 @@ the awkward one.
 - [`014-a-deck-cannot-name-a-repeated-figure-treatment-once.md`](014-a-deck-cannot-name-a-repeated-figure-treatment-once.md)
   — the other `DS-229` finding. That one is the rule refusing a class the deck needed; this one is
   the rule failing to find a class the deck kept.
+
+## Resolved
+
+**Closed 2026-08-29 by [T-243](../../../tasks/T-243-five-checks-bound-on-a-name-rather-than-on-structure.md), batch B4.** Both asks were implemented.
+
+A contract motion row is matched on the **compound selector**: the row's compounds must be the tail of the rule's, each a subset of the rule's compound in that place. `.pulse` is now found inside `:where(...) .pulse` and inside `.slide[data-played] .pulse`, and is still not found by `.pulse-ring` or `.pulse .label`.
+
+**The exact match is kept and tried first**, because matching on the compound alone would let `.rise` be answered by `.slide[data-played] .rise` - a different rule with different tokens.
+
+**One thing the report could not see, and it is why a first attempt failed.** A deck keeps several rules on one class - the density gate, the reduced-motion collapse, the preflight - so `.pulse` matched exactly, read none of the motion tokens, and a fallback guarded on *no exact match* never ran. Scope is therefore consulted whenever the tokens are still missing, not only when nothing matched.
+
+The second ask is answered too: when scope is what completed a row, DS-229's verdict says so and names the rule, rather than passing silently. Measured - the reference deck reports 0 gaps and 0 scoped rows, unchanged; the same deck with its `.pulse` motion rule scoped reports 0 gaps and names the scoped rule.

@@ -235,8 +235,17 @@ def drop_at_rule(css, media):
     return css[:found.start()] + css[i:]
 
 
+CSS_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+
+
 def rules(css):
-    """`[(selector, declarations)]`, one per comma-separated selector, at-rules dropped."""
+    """`[(selector, declarations)]`, one per comma-separated selector, at-rules dropped.
+
+    **Comments go first, because the text between one rule's `}` and the next rule's `{` includes
+    any comment written there** - and everything below reads that text AS a selector. `density.py`
+    carried the same defect in the same shape and it is fixed there in the same change.
+    """
+    css = CSS_COMMENT.sub(" ", css)
     out = []
     for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
         s = " ".join(sel.split())
@@ -433,6 +442,42 @@ def missing_rows(parts, styled):
     return out
 
 
+PSEUDO_FN = re.compile(r":(?:where|is|matches|any)\s*\(")
+SIMPLE = re.compile(r"\[[^\]]*\]|\.[A-Za-z_][\w-]*|#[A-Za-z_][\w-]*|::?[A-Za-z-]+|[A-Za-z][\w-]*")
+
+
+def compounds(selector):
+    """`selector` as a list of compounds, each a set of its simple selectors.
+
+    A functional pseudo-class is a bracket around part of the chain rather than a step in it, so
+    `:where(...)` and `:is(...)` are flattened into it. Combinators are treated as descendant,
+    which is deliberate: this decides *does this rule style that thing*, not *how tightly*.
+    """
+    flat = PSEUDO_FN.sub(" ", selector).replace(")", " ").replace(">", " ")
+    flat = flat.replace("+", " ").replace("~", " ")
+    return [set(SIMPLE.findall(c)) for c in flat.split() if c.strip()]
+
+
+def selector_covers(contract_sel, css_sel):
+    """Does the rule `css_sel` style what the contract row `contract_sel` names?
+
+    True when the contract's compounds are the TAIL of the rule's, each a subset of the rule's
+    compound in that place. `.pulse` is covered by `:where(.slide[data-played]) .pulse` and by
+    `.slide[data-played] .pulse`, and is not covered by `.pulse-ring` or by `.pulse .label`.
+    """
+    want, got = compounds(contract_sel), compounds(css_sel)
+    if not want or len(want) > len(got):
+        return False
+    tail = got[len(got) - len(want):]
+    return all(w <= g for w, g in zip(want, tail))
+
+
+def absent_tokens(toks, bodies):
+    """The contract tokens none of `bodies` reads."""
+    joined = "\n".join(bodies).replace(" ", "")
+    return [t for t in toks if ("var(%s" % t) not in joined]
+
+
 def motion_gaps(css, motions):
     """Motion rows whose rule does not read the tokens the contract says it reads."""
     bad = []
@@ -444,17 +489,58 @@ def motion_gaps(css, motions):
         if sel.startswith("@keyframes"):
             m = re.search(r"@keyframes\s+" + re.escape(sel.split()[-1]) + r"\s*\{(.*?)\}\s*\}",
                           text, re.S)
-            bodies = [m.group(1)] if m else []
+            bodies, by_scope = ([m.group(1)] if m else []), []
         else:
-            bodies = by_sel.get(sel, [])
+            # **Exact text first, then the compound** (the adopter's `020`). Keying the row on the
+            # selector AS WRITTEN meant that scoping a motion to a state -
+            # `:where(.slide[data-played]) .pulse`, the ordinary way to say *this plays on
+            # arrival* - left the row with no rule to find. The tokens were declared, the motion
+            # worked, and the gate reported the row unsatisfied: the natural construction failed
+            # and the awkward one passed, which teaches the awkward one.
+            #
+            # **Scope is consulted whenever the tokens are still missing, not only when no rule
+            # matched exactly.** A deck usually keeps several rules on one class - the density
+            # gate, the reduced-motion collapse, the preflight - so `.pulse` matched exactly and
+            # read none of the tokens, and a fallback guarded on *no exact match* never ran.
+            #
+            # The exact match is still tried first and still wins on its own, because matching on
+            # the compound alone would let `.rise` be answered by `.slide[data-played] .rise` - a
+            # different rule with different tokens. When scope is what completed the row, the row
+            # says so rather than passing silently, which is the second half of what `020` asked.
+            bodies, by_scope = by_sel.get(sel, []), []
+            if absent_tokens(toks, bodies):
+                for css_sel, css_bodies in by_sel.items():
+                    if css_sel != sel and selector_covers(sel, css_sel):
+                        by_scope.append(css_sel)
+                        bodies = bodies + css_bodies
         if not bodies:
             bad.append("%s is in the contract and not in the deck's CSS" % sel)
             continue
-        joined = "\n".join(bodies)
-        absent = [t for t in toks if ("var(%s" % t) not in joined.replace(" ", "")]
+        absent = absent_tokens(toks, bodies)
         if absent:
             bad.append("%s does not read %s" % (sel, " ".join(absent)))
     return bad
+
+
+def scoped_rows(css, motions):
+    """Contract rows that only their SCOPED form satisfies - `[(row, [selector])]`.
+
+    Reported rather than left silent: a row satisfied by `:where(...) .pulse` is satisfied, and a
+    reader who cannot see that the exact selector is absent has no way to tell this deck from one
+    where the contract and the stylesheet actually agree.
+    """
+    by_sel = {}
+    for sel, body in rules(css):
+        by_sel.setdefault(sel, []).append(body)
+    out = []
+    for sel, toks in motions:
+        if sel.startswith("@keyframes") or not absent_tokens(toks, by_sel.get(sel, [])):
+            continue
+        hits = [s2 for s2 in by_sel if s2 != sel and selector_covers(sel, s2)]
+        if hits and not absent_tokens(toks, by_sel.get(sel, [])
+                                      + [b for s2 in hits for b in by_sel[s2]]):
+            out.append((sel, hits))
+    return out
 
 
 # ---------------------------------------------------------------------------- verdicts
@@ -478,6 +564,7 @@ def verdicts(html):
     bad = structure(root, parts, styled, script_arrays(html))
     missing = missing_rows(parts, styled)
     gaps = motion_gaps(css, motions)
+    scoped = scoped_rows(css, motions)
 
     place = [m for m in bad if "sit outside" in m or "carry it alone" in m]
     vocabbad = [m for m in bad if "is `vocabulary`" in m]
@@ -491,9 +578,15 @@ def verdicts(html):
         ("DS-229", "no contracted class sits where the contract does not put it: %d problem(s)%s"
          % (len(place), "" if not place else " - " + "; ".join(place[:3])),
          not place),
+        # The scoped count travels in the text for the reason every denominator here does
+        # (**L-36**): *0 gaps* over rules all matched exactly and *0 gaps* over a deck where three
+        # rows were completed by a scoped rule are the same boolean and not the same fact.
         ("DS-229", "every rule the contract lists reads the motion tokens it lists: "
-         "%d rule(s), %d gap(s)%s"
-         % (len(motions), len(gaps), "" if not gaps else " - " + "; ".join(gaps[:3])),
+         "%d rule(s), %d gap(s)%s%s"
+         % (len(motions), len(gaps), "" if not gaps else " - " + "; ".join(gaps[:3]),
+            "" if not scoped else "; %d row(s) satisfied by a scoped rule rather than the "
+            "contracted selector - %s" % (len(scoped),
+                                          "; ".join("%s via %s" % (r, h[0]) for r, h in scoped[:2]))),
          not gaps),
         ("DS-229", "every class the shared block styles has a row: %d styled, %d uncontracted%s"
          % (len(styled), len(missing), "" if not missing else " - ." + " .".join(missing[:6])),

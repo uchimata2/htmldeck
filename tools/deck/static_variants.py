@@ -368,8 +368,13 @@ REDUCED_VARIANTS = [
     ("reduced-motion-solidifies-the-flow", "DS-143", [
         # The semantics half. The arrows stop moving AND stop being dashed, so the diagram no
         # longer says *flow* - motion removed, and meaning with it.
-        (".current{animation:none}",
-         ".current{animation:none;stroke-dasharray:none}")]),
+        # **Anchored on the enclosing selector, so it names which path it seeds** (`PR-57`).
+        # `.current{animation:none}` alone occurs twice in the reference deck - under the
+        # `[data-motion="off"]` attribute rule and again inside the `prefers-reduced-motion`
+        # media query - and the seed silently took the first. That is the path that wins on
+        # specificity, so the variant was correct by accident.
+        (':root[data-motion="off"] .current{animation:none}',
+         ':root[data-motion="off"] .current{animation:none;stroke-dasharray:none}')]),
 ]
 
 
@@ -432,10 +437,20 @@ GF_PASS_VARIANTS = [
 
 def build(name, edits):
     html = open(SRC, "r", encoding="utf-8").read()
-    for old, new in edits:
-        if html.count(old) < 1:
-            sys.exit("VARIANT %s: anchor not found\n  %.160s" % (name, old))
-        html = html.replace(old, new, 1)
+    for edit in edits:
+        # **A third element declares how many occurrences the edit expects. Declared, never
+        # defaulted to "all"** - the form `contract_variants.py` and `deliverable_variants.py`
+        # have carried since they were written, and the reason they wrote down: a rename that
+        # silently hit a different number of elements than the variant's author believed would
+        # make the variant test something nobody wrote down. This suite tested `count < 1`
+        # instead, so `str.replace(old, new, 1)` decided which of two redundant paths a seeded
+        # defect landed in and nothing said so (`PR-57`).
+        old, new, want = edit if len(edit) == 3 else (edit[0], edit[1], 1)
+        n = html.count(old)
+        if n != want:
+            sys.exit("VARIANT %s: expected %d occurrence(s), found %d\n  %.140s"
+                     % (name, want, n, old))
+        html = html.replace(old, new)
     os.makedirs(OUT, exist_ok=True)
     dest = os.path.join(OUT, name + ".html")
     with open(dest, "w", encoding="utf-8", newline="\n") as fh:
@@ -505,11 +520,15 @@ def self_test():
     src = open(SRC, "r", encoding="utf-8").read()
     for name, _rule, edits in (STATIC_VARIANTS + RENDER_VARIANTS + REDUCED_VARIANTS
                               + GF_VARIANTS + GF_PASS_VARIANTS):
-        for old, _new in edits:
-            if src.count(old) < 1:
+        for edit in edits:
+            # The same exact-count test `build` applies, so the suite refuses at self-test
+            # time rather than seeding one of several redundant paths (`PR-57`).
+            old, want = edit[0], (edit[2] if len(edit) == 3 else 1)
+            if src.count(old) != want:
                 sys.exit("SELF-TEST FAILED: variant %r no longer matches the deck.\n"
                          "  The deck changed under the suite; fix the variant, do not delete it.\n"
-                         "  %.160s" % (name, old))
+                         "  wanted %d occurrence(s), found %d\n  %.160s"
+                         % (name, want, src.count(old), old))
     base, _rows = static_failures(SRC)
     if base:
         sys.exit("SELF-TEST FAILED: the UNBROKEN deck already fails %s - a seeded break cannot be "

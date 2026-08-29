@@ -70,11 +70,20 @@ VARIANTS = [
 
 def build(name, edits):
     html = open(SRC, "r", encoding="utf-8").read()
-    for old, new in edits:
+    for edit in edits:
+        # **A third element declares how many occurrences the edit expects. Declared, never
+        # defaulted to "all"** - the form `contract_variants.py` and `deliverable_variants.py`
+        # have carried since they were written, and the reason they wrote down: a rename that
+        # silently hit a different number of elements than the variant's author believed would
+        # make the variant test something nobody wrote down. This suite tested `count < 1`
+        # instead, so `str.replace(old, new, 1)` decided which of two redundant paths a seeded
+        # defect landed in and nothing said so (`PR-57`).
+        old, new, want = edit if len(edit) == 3 else (edit[0], edit[1], 1)
         n = html.count(old)
-        if n < 1:
-            sys.exit("VARIANT %s: anchor not found\n  %.160s" % (name, old))
-        html = html.replace(old, new, 1)
+        if n != want:
+            sys.exit("VARIANT %s: expected %d occurrence(s), found %d\n  %.140s"
+                     % (name, want, n, old))
+        html = html.replace(old, new)
     os.makedirs(OUT, exist_ok=True)
     dest = os.path.join(OUT, name + ".html")
     with open(dest, "w", encoding="utf-8", newline="\n") as fh:
@@ -91,11 +100,15 @@ def self_test():
                  "reconcile against and would report every figure unsourced" % SOURCES)
     src = open(SRC, "r", encoding="utf-8").read()
     for name, _rule, edits in VARIANTS:
-        for old, _new in edits:
-            if src.count(old) < 1:
+        for edit in edits:
+            # The same exact-count test `build` applies, so the suite refuses at self-test
+            # time rather than seeding one of several redundant paths (`PR-57`).
+            old, want = edit[0], (edit[2] if len(edit) == 3 else 1)
+            if src.count(old) != want:
                 sys.exit("SELF-TEST FAILED: variant %r no longer matches the deck.\n"
                          "  The deck changed under the suite; fix the variant, do not delete it.\n"
-                         "  %.160s" % (name, old))
+                         "  wanted %d occurrence(s), found %d\n  %.160s"
+                         % (name, want, src.count(old), old))
     _L, rows = content.audit(SRC, SOURCES)
     if not all(ok for _r, _w, ok in rows):
         sys.exit("SELF-TEST FAILED: the UNBROKEN deck already fails the content half - a suite "
