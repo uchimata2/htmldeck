@@ -144,13 +144,17 @@ FLOOR = {
 # Fenced blocks that are not a command's output, each with the reason. An unlisted unbound fence
 # fails the run: the partition is the point, and a silent third category is how six figures went
 # stale under a rule that was already in writing.
+# **How far after a command an output fence may open, in lines, counting from the command's own
+# closing fence** (T-246, `PR-67`). Two is the minimum a closing fence plus one blank line allows and
+# is what every genuine pair in the tree measures; the two false ones measured 73 and 113. Derived,
+# not chosen - the census is in `bind()`'s docstring.
+GAP = 2
+
 EXCLUDED_FENCES = {
     "/plugin marketplace add": "typed into Claude Code; there is no local command to run",
     "git clone https://": "clones this repository; running it would fetch the network every check",
     "claude plugin update": "upgrades an installed plugin on the reader's machine",
     "taskmd check": "belongs to another project's tool, and no output is pasted under it",
-    "python tools/deck/check.py examples/sort-window": "invoked for its side effect in the text; "
-        "no output is pasted under it",
     "python tools/deck/critique.py": "shows the calling form with placeholder arguments, not a run",
 }
 
@@ -549,10 +553,25 @@ def bind(blocks):
     list kept beside it: an unlabelled fence directly after a ```bash fence is that command's
     output. A list of which block goes with which command would be a second copy of a fact the
     page already states by layout, and it would drift the first time a section moved (**L-13**).
+
+    **`directly after` is measured, and until T-261's batch it was not** (`PR-67`). The loop carried
+    `pending` forward to whatever fence came next, however much prose and however many headings lay
+    between - so *adjacency* named the docstring's intent and the code implemented *eventually*. Two
+    pairs in the tree were bound across 73 and 113 lines and both were being compared: a command
+    shown in a plain fence in `PUBLISHING.md`, and a `check.py` account in `examples/README.md`. The
+    threshold is **derived rather than chosen**: across every tracked document the gaps were 2, 2, 2,
+    2, 2, 73, 113 - five genuine pairs at the minimum a closing fence and a blank line allow, then
+    nothing at all until the two false ones. `GAP` is that measurement, and a pair further apart is
+    `UNDECLARED`, which fails the run rather than passing quietly.
     """
     out, pending = [], None
+    close = {}
+    for start, lang, body in blocks:
+        close[start] = start + len(body) + 1
     for start, lang, body in blocks:
         cmd = " ".join(l.strip() for l in body if l.strip())
+        if pending is not None and start - close[pending[1]] > GAP:
+            pending = None
         if lang == "bash" or (lang == "" and not pending and not RUNNABLE.match(cmd)):
             reason = None
             for prefix, why in EXCLUDED_FENCES.items():
@@ -560,14 +579,14 @@ def bind(blocks):
                     reason = why
                     break
             if lang == "bash" and RUNNABLE.match(cmd) and reason is None:
-                pending = cmd
+                pending = (cmd, start)
                 out.append(("command", start, cmd, body))
             else:
                 pending = None
                 out.append(("excluded" if reason else "UNDECLARED", start,
                             reason or "a fenced block bound to nothing and declared nowhere", body))
         elif pending:
-            out.append(("output", start, pending, body))
+            out.append(("output", start, pending[0], body))
             pending = None
         else:
             out.append(("UNDECLARED", start,
@@ -1158,6 +1177,25 @@ def self_test():
                  % (bad[1], bad[2]))
     if not [r for r in rows if r[0] == "compared"]:
         sys.exit("SELF-TEST FAILED: no block was compared, so a clean run means nothing")
+
+    # **Adjacency, asserted on a page written here** (T-246, `PR-67`). The docstring said *directly
+    # after* and the loop carried `pending` to whatever fence came next, however far. The fixture is
+    # the register's own evidence: a command fence, prose and headings, then an unlabelled fence far
+    # below. Both directions, because a threshold that never pairs is as wrong as one that always
+    # does - and the near case is what stops the fix being "bind nothing".
+    far = "\n".join(["```bash", "python tools/docs/cycles.py --list", "```"]
+                     + ["", "## a heading", ""] + ["filler paragraph."] * 12
+                     + ["", "```", "  7  docs/AUDIT-METHOD.md", "```"])
+    kinds = [k for k, _l, _w, _b in bind(fences(far))]
+    if "output" in kinds:
+        sys.exit("SELF-TEST FAILED: a fence %d lines below a command was still bound to it as its "
+                 "output. `bind()` says *directly after* and GAP is what makes that true (PR-67)"
+                 % (len(far.split(chr(10))) - 4))
+    near = "\n".join(["```bash", "python tools/docs/cycles.py --list", "```", "", "```", "  7  docs/AUDIT-METHOD.md", "```"])
+    if [k for k, _l, _w, _b in bind(fences(near))] != ["command", "output"]:
+        sys.exit("SELF-TEST FAILED: an output fence directly under its command was not bound to it "
+                 "(%r). A threshold that pairs nothing passes every page by deciding nothing"
+                 % ([k for k, _l, _w, _b in bind(fences(near))],))
     if not [r for r in rows if r[0] == "floor"]:
         sys.exit("SELF-TEST FAILED: no block is compared as a floor, so the split this tool exists "
                  "for is not exercised and the refcheck block must have stopped being bound")

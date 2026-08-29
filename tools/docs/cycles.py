@@ -51,7 +51,9 @@ Runs from anywhere: the project root is derived from this file, not from the wor
 Pure standard library (**L-07**), plus `git`, which decides what a clone receives.
 """
 
+import contextlib
 import fnmatch
+import io
 import os
 import re
 import subprocess
@@ -180,6 +182,12 @@ CYCLES = [
     (7, "The unreleased work, and this audit's own record", "A", [
         "docs/AUDIT-METHOD.md",
         "docs/PRE-RELEASE-AUDIT.md",
+        # Written 2026-08-29 by cycle 40's triage and assigned here the same day, by T-246, which
+        # found it UNASSIGNED while running this very command. It is the audit's own record in the
+        # cycle's exact sense: the schedule the triage produced, sitting beside the register it was
+        # derived from. AUDIT-METHOD.md section 2 is why an unassigned file is a defect rather than
+        # a state to tolerate - "a file with no audit cycle is a defect in the audit's coverage".
+        "docs/REMEDIATION-ORDER.md",
         Task(state="open"),
         # *Every `shipped_in: unreleased` record*, which is the cycle's own words. A task can close
         # and stay unreleased for days, and the closed-record bands are stage 7 - the LEAST current
@@ -538,19 +546,7 @@ def report(assignment, unassigned, stale, byte):
         if grade != "C" and b > SIZING:
             print("  OVERSIZED   cycle %d, %s - %s bytes against the ~300 KB a cycle is sized to"
                   % (number, subject, "{:,}".format(b)))
-    code = complaint(unassigned, stale, unstated(assignment))
-    if unassigned:
-        print("\nEvery one of those is a hole in the acceptance criterion *every tracked file is "
-              "read,\nskipped with a stated reason, or produced a finding* - the claim cycle 40 has "
-              "to make,\nand cannot make over a file no cycle reads. Assign each, or declare a "
-              "cycle that does.")
-    if stale:
-        print("\nA rule written for a file that has since moved is how a partition goes quietly "
-              "short.\nThat is PR-06, and it is why this checks both directions rather than one "
-              "(**L-74**).")
-    if not code:
-        print("Every tracked file belongs to exactly one cycle, and every rule earns its place.")
-    return code
+    return 0
 
 
 def plan_rows(assignment, byte):
@@ -570,7 +566,11 @@ def self_test():
     """**A partition that has never been seen to fail is a claim about the instrument** (**L-04**,
     **L-36**). Five states are asserted rather than read: precedence deciding a contested path, an
     unassigned file, a stale path claim, a query whose empty answer must **not** read as stale, and
-    an empty cycle that states its reason against one that does not. The fixture is written here and
+    an empty cycle that states its reason against one that does not. **A sixth
+    guards the verdict itself** (T-246, `PR-65`) - that it is printed rather than merely returned,
+    and that no mode returns it after its answer. Both halves of that finding were invisible to
+    every check here for as long as the file existed, because a verdict nobody prints and a verdict
+    printed last look identical to an exit code. The fixture is written here and
     never taken from the tree - a self-test built out of repository state blocks the commit that
     changes it."""
     cycles = [(1, "first", "A", ["a/*"], None),
@@ -608,6 +608,23 @@ def self_test():
                      "That is T-107, and splitting on the substring put a PH1 record in the band "
                      "for the two stubs with no work package at all - a complete partition with "
                      "one file in the wrong cycle, which nothing else here can see" % (got,))
+
+        # **A holding partition must SAY so.** It returned 0 in silence in every mode but the
+        # default, so a green run read exactly like a mode that does not check - which is what
+        # `PR-96` added to `PR-65` before it was withdrawn as a second raising of it.
+        held = io.StringIO()
+        with contextlib.redirect_stdout(held):
+            quiet = complaint([], [], [])
+        if quiet != 0 or not held.getvalue().strip():
+            sys.exit("SELF-TEST FAILED: a holding partition printed %r and returned %r. A verdict "
+                     "carried only by an exit code cannot be told from a mode that never checked "
+                     "(PR-65, PR-96)" % (held.getvalue(), quiet))
+        spoke = io.StringIO()
+        with contextlib.redirect_stdout(spoke):
+            broke = verdict(["b/z.md"], [], [])
+        if broke != 1 or "UNASSIGNED" not in spoke.getvalue():
+            sys.exit("SELF-TEST FAILED: a broken partition printed %r and returned %r"
+                     % (spoke.getvalue(), broke))
     finally:
         CYCLES[:] = real
     return True
@@ -617,6 +634,14 @@ def self_test():
 
 def complaint(unassigned, stale, empty=()):
     """The partition's verdict, printed by **every** mode rather than only by the default one.
+
+    **Printed BEFORE the answer, and never printed as nothing** (T-246, `PR-65`). Four documents
+    said the verdict came first and the code returned it last, after the file list and the byte
+    total - so a reader who took the list and started reading had already passed the place the
+    complaint appears, which is the exact failure the ordering was written to prevent. On a holding
+    partition it printed no line at all in every mode but the default, so a green run could not be
+    told from a mode that does not check. Both are fixed here rather than by correcting four
+    sentences, which is what makes all four documents true at once.
 
     **This is where the failing half lives, and it is deliberately not `tools/check_all.py`'s.**
     Wiring it into the release gate would make an audit's coverage a release step, and
@@ -639,15 +664,52 @@ def complaint(unassigned, stale, empty=()):
               "whole account before reading anything."
               % (len(unassigned), len(stale), len(empty)))
         return 1
+    print("Every tracked file belongs to exactly one cycle, and every rule earns its place.")
     return 0
+
+
+def verdict(unassigned, stale, empty=()):
+    """`complaint()` plus what each kind of breach means - the block every mode leads with."""
+    code = complaint(unassigned, stale, empty)
+    if unassigned:
+        print("\nEvery one of those is a hole in the acceptance criterion *every tracked file is "
+              "read,\nskipped with a stated reason, or produced a finding* - the claim cycle 40 has "
+              "to make,\nand cannot make over a file no cycle reads. Assign each, or declare a "
+              "cycle that does.")
+    if stale:
+        print("\nA rule written for a file that has since moved is how a partition goes quietly "
+              "short.\nThat is PR-06, and it is why this checks both directions rather than one "
+              "(**L-74**).")
+    return code
 
 
 def main(argv):
     self_test()
+    # **Structural, and it is the half a fixture cannot reach** (T-246, `PR-65`). Every mode used to
+    # end on `return complaint(...)`, which is what put the verdict under the file list. Asserted on
+    # the source rather than on the output, for the reason T-209 gives: a guard on one path's text
+    # cannot see a guarantee that belongs to all four.
+    with open(os.path.abspath(__file__), "r", encoding="utf-8") as fh:
+        _own = fh.read()
+    # Matched as CODE, not as prose: the indentation is the difference. The first version of
+    # this guard looked for the bare phrase and was tripped by the comment above explaining
+    # the fault - render.py carries the same lesson beside its own pin guard, and a
+    # self-test that fails on its own documentation teaches the next reader to delete it.
+    if re.search(r"^\s+return complaint\(", _own, re.M):
+        sys.exit("SELF-TEST FAILED: a mode returns the verdict as its last act again. That is "
+                 "PR-65 exactly - the reader has the file list before the complaint appears, and "
+                 "the ordering four documents promise is the reverse of the code's")
     paths = tracked()
     opens = open_statuses()
     assignment, unassigned, stale = partition(paths, opens)
     byte = sizes(paths)
+
+    # **The verdict, before any answer, in every mode** (T-246, `PR-65`). Section 2 of `T-219` says
+    # a tracked file that has fallen outside every cycle *stops the reading rather than surviving
+    # it*, and a complaint printed under the file list cannot do that - the reader already has the
+    # list. It is computed once here and returned by whichever mode ran.
+    code = verdict(unassigned, stale, unstated(assignment))
+    print("")
 
     if "--cycle" in argv:
         try:
@@ -666,21 +728,19 @@ def main(argv):
             print("\n  %d file(s), %s bytes" % (len(own), "{:,}".format(sum(byte[p] for p in own))))
         else:
             print("  no tracked file: %s" % (reason or "no reason recorded, which is a defect"))
-        print("")
-        return complaint(unassigned, stale, unstated(assignment))
+        return code
 
     if "--list" in argv:
         for p in sorted(paths):
             print("%3s  %s" % (assignment.get(p, "--"), p))
-        print("")
-        return complaint(unassigned, stale, unstated(assignment))
+        return code
 
     if "--plan" in argv:
         plan_rows(assignment, byte)
-        print("")
-        return complaint(unassigned, stale, unstated(assignment))
+        return code
 
-    return report(assignment, unassigned, stale, byte)
+    report(assignment, unassigned, stale, byte)
+    return code
 
 
 if __name__ == "__main__":
