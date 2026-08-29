@@ -131,6 +131,9 @@ deterministic — a 60 s delay inside a 4 s virtual-time budget — so the rate 
 **Child fix tasks raised**
 - none
 
+**Lesson written**
+- [L-139](../docs/lessons/L-139.md) — a measurement taken on one subject and written down as general is a claim nothing will re-check. This task's correction of T-209 is its instance; the lesson is the class, and [L-138](../docs/lessons/L-138.md) is the same failure along the other axis.
+
 ## Log
 
 | Date | Status change | Note |
