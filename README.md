@@ -36,7 +36,7 @@ cd htmldeck
 python tools/plugin/check_scaffold.py
 ```
 
-It self-tests against sixteen deliberately broken packages and seven good ones before it looks at
+It self-tests against eighteen deliberately broken packages and eight good ones before it looks at
 this one, and *Run it* below shows what a good result prints. That command is also the fastest way
 to tell whether a vendored copy is still wired up.
 
@@ -153,7 +153,7 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 4976 document pointer(s) checked, 0 broken
+OK - 4992 document pointer(s) checked, 0 broken
      1086 section reference(s) resolved, 0 dead; 3259 not bound to a document and skipped.
 ```
 
@@ -175,8 +175,8 @@ python tools/plugin/check_scaffold.py
 ```
 
 ```
-23 of 23 fixtures behaved as specified.
-  skills/htmldeck: 5 markdown file(s), base $HTMLDECK - checks 4-5 read 49 path(s), check 7 read 23 of 23 documented command(s)
+26 of 26 fixtures behaved as specified.
+  skills/htmldeck: 5 markdown file(s), base $HTMLDECK - checks 4-5 read 50 path(s), check 7 read 29 of 29 documented command(s)
 OK - manifest valid, components at the root, every based pointer resolves,
 ```
 

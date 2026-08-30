@@ -102,7 +102,9 @@ is looked up:
 - **Every slide delivers one thing and says it on the slide.** The audience must never wait for the
   presenter to reach the point.
 - **Portable or it does not ship.** One file, zero external references, opens from `file://`. Not a
-  size problem — a full deck with three embedded faces is under 200 KB.
+  size problem — embedding is cheap. Measured 2026-08-30, the four decks this repository
+  ships run 316 to 427 KB, every one of them with three embedded faces and zero external
+  references.
 - **The headline is a claim, not a topic.**
 - **Motion must encode something.** *What does this animation encode?* If the answer is "it looks
   good", remove it.

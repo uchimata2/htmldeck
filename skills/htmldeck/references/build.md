@@ -74,7 +74,7 @@ will not tell you, because they are this stage's judgement:
   drawing lands wherever the viewBox puts it. **Set the viewBox so the leftmost drawn thing sits
   at its left edge**, and the diagram shares the grid the headline, the fragments and the bottom
   line are on. Getting this wrong is invisible until a row of text sits directly under the
-  diagram, and then it reads as a step rather than a margin. `python tools/deck/figgrid.py <deck>`
+  diagram, and then it reads as a step rather than a margin. `python $HTMLDECK/tools/deck/figgrid.py <deck>`
   measures it; it reports rather than gates, because the decks written before this rule do not
   pass it yet (T-184).
 - **A decision node carries its label inside itself.** Use `.decision` — a `<g>` holding one

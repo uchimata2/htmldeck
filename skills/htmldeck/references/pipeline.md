@@ -98,8 +98,10 @@ to lose a slide, and losing one here is a success, not a setback.
 **In:** the signed-off outline.
 **Out:** the slide-by-slide specification on disk. Template in `artifacts.md`.
 
-Seven fields per slide: **structure · text · visuals · animations · interactive elements · title ·
-bottom line**. Expanded from the outline **page by page, never in one pass** (DS-212) — the
+**Every field the template in `artifacts.md` carries, in the order it lists them.** The list is
+not restated here, because a restated list drifts — this one stood at seven while the template
+carried nine and an optional tenth, and one of the two it had lost, `Sources`, is gated on every
+slide by `spec.py`'s `SPEC-1`. Expanded from the outline **page by page, never in one pass** (DS-212) — the
 one-pass version reads like a list of slides rather than an argument, and it is where the spine
 quietly breaks.
 

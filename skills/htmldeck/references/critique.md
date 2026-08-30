@@ -26,7 +26,7 @@ things no check in the repository reaches. Three things follow from reading it f
   move on. A review that re-derives the gate is padding, and the reader stops before the part that
   is worth their time.
 - **The review is what the spine says nobody has decided** — S1 Claim, S2 Evidence, S4 Density,
-  D1 Spine, D4 Consistency, and the 25 `hard` rules on the worksheet.
+  D1 Spine, D4 Consistency, and the `hard` rules the worksheet lists.
 - **Say which half ran.** If no sources were supplied the run is presentation-only, and that goes in
   the report. A presentation-only check presented as a clean pass is a false one.
 
@@ -43,8 +43,9 @@ python $HTMLDECK/tools/deck/critique.py <deck> --worksheet > sheet.txt
 python $HTMLDECK/tools/deck/critique.py --answers sheet.txt
 ```
 
-26 `hard` rules that no mechanical gate can reach. **One line each: `pass`, `fail` with what and
-where, or `excused` with why and what would close the excusal.** A rule in none of those three
+The sheet carries every `hard` rule no mechanical gate can reach, and it is where that count
+lives — this page stated it twice, ten lines apart, and was wrong both times. **One line each:
+`pass`, `fail` with what and where, or `excused` with why and what would close the excusal.** A rule in none of those three
 states fails the run — `$HTMLDECK/docs/EVALUATION.md` §1.1, and the tool enforces it.
 
 **An excusal is about the instrument, never the rule.** *"No deck here has an appendix"* is a

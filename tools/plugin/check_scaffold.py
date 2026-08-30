@@ -83,7 +83,12 @@ PLACEHOLDER_RE = re.compile(r"^#{1,6}[^\n]*?\bResolve\s+`?(\$\{?[A-Za-z_][A-Za-z
 # denominator**; nothing else distinguishes *nothing to check* from *nothing checked*.
 ANY_BASE_RE = re.compile(r"(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)"
                          r"/(?:docs|skills|examples|tools|reference)/")
-ANY_COMMAND_RE = re.compile(r"^\s*python\s+(\S*?)/?(tools/[A-Za-z0-9_./-]+\.py)", re.M)
+# **A command is anchored at a line start or at a backtick, and it ends where the span does.**
+# Anchoring on the line alone hid `artifacts.md`'s `presenter.py`, which is written as an inline
+# span inside a template fence, so the line begins with a backtick and never with `python`
+# (T-235, `PR-08`). Ending at a backtick rather than at the line end keeps the prose after a
+# span - `\u2026 writes <slug>-presenter.html` - out of the flag check.
+ANY_COMMAND_RE = re.compile(r"(?:^|`)[ \t]*python\s+(\S*?)/?(tools/[A-Za-z0-9_./-]+\.py)", re.M)
 
 
 def placeholder(body):
@@ -94,8 +99,8 @@ def placeholder(body):
 
 def command_re(var):
     """Check 7's pattern, bound to the base the skill declared."""
-    return re.compile(r"^\s*python\s+" + re.escape(var) + r"/(tools/[A-Za-z0-9_./-]+\.py)"
-                      r"(.*)$", re.M)
+    return re.compile(r"(?:^|`)[ \t]*python\s+" + re.escape(var) + r"/(tools/[A-Za-z0-9_./-]+\.py)"
+                      r"([^`\n]*)", re.M)
 
 # The body is read on every invocation, so its cost is paid whether or not a deck is built.
 # 8 KB is roughly two screens of prose - enough to route, far too little to restate a ruleset.
@@ -297,10 +302,31 @@ def strip_fences(text):
     return re.sub(r"```.*?```", "", text, flags=re.S)
 
 
-# A command line the skill tells a build to run lives only inside fences, which is exactly where
-# checks 4 and 5 do not look - so until T-074 the one part of a skill file that is meant to be
-# executed verbatim was the one part nothing read. The pattern is built per skill now, from the
-# base that skill declares: see `command_re`.
+# A command line the skill tells a build to run is one of the few parts of a skill file meant to be
+# executed verbatim, and until T-074 it was the one part nothing read. The pattern is built per
+# skill now, from the base that skill declares: see `command_re`.
+#
+# **It does not live only inside fences, and believing it did was the second half of `PR-08`.**
+# `build.md` documents `figgrid.py` in a sentence, as an inline span in ordinary prose, where this
+# check never looked and where `check_paths`'s bare-path rule could not see it either - that rule
+# needs the backtick followed by the path, and this span opens with `python`. So one instance was
+# invisible to the command check and the other to the path check, and the register names only the
+# second mechanism. `command_units` below is the fix: fenced blocks **and** the inline spans of the
+# prose around them, which partition the file between them.
+
+
+def command_units(text):
+    """Every place a documented invocation can live, each yielded as its own string.
+
+    Fenced blocks first, then the inline code spans of the prose outside them - `strip_fences`
+    makes the two a partition, so nothing is read twice. Yielding a span whole is what bounds the
+    flag check to the command instead of to the rest of the sentence.
+    """
+    for block in re.findall(r"```(.*?)```", text, flags=re.S):
+        # A trailing backslash continues the command onto the next line, as in `shell.py new`.
+        yield re.sub(r"\\\n\s*", " ", block)
+    for span in re.findall(r"`([^`\n]+)`", strip_fences(text)):
+        yield span
 
 
 def check_commands(root, rel, text, var=ROOT_VAR):
@@ -327,8 +353,7 @@ def check_commands(root, rel, text, var=ROOT_VAR):
     # stays valid for a plugin that uses it.
     bases = [var] if var == ROOT_VAR else [var, ROOT_VAR]
     patterns = [command_re(b) for b in bases]
-    for block in re.findall(r"```(.*?)```", text, flags=re.S):
-        flat = re.sub(r"\\\n\s*", " ", block)
+    for flat in command_units(text):
         # **How many commands are here at all, whatever base they carry.** Without it the check
         # cannot tell an empty subject from one it has stopped being able to see, and that is the
         # whole of T-231: it read nought of eighteen and printed green.
@@ -338,7 +363,6 @@ def check_commands(root, rel, text, var=ROOT_VAR):
                 problems.append("UNBOUND CMD   %s: `python %s/...` is documented, and this skill's "
                                 "section 0 declares %s - the command is not read"
                                 % (rel, other or ".", var))
-        # A trailing backslash continues the command onto the next line, as in `shell.py new`.
         for match in [m for pattern in patterns for m in pattern.finditer(flat)]:
             bound += 1
             tool, rest = match.group(1), match.group(2)
@@ -551,6 +575,34 @@ FIXTURES = [
         SKILL: DECLARES + "Load `$OTHER/%s`.\n" % DOC,
         DOC: "thing",
     }, "UNBOUND BASE"),
+    # ---- T-235, `PR-08`: the two places a documented command can hide. Both were live in this
+    # plugin's own skill and both printed green, for **different** reasons - which is why one
+    # fixture would not have been enough. The register names the second mechanism only.
+    #
+    # A span inside a fence. The line begins with a backtick, so a line-anchored `^\s*python`
+    # never reaches the command; `artifacts.md` documented `presenter.py` this way.
+    ("a command written as an inline span inside a fence", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: HEAD + "\n```markdown\n- **Notes.** `python %s shots x.html` writes a file.\n```\n"
+               % TOOL,
+        TOOL: TOOL_SRC,
+    }, "UNBOUND CMD"),
+    # A span in ordinary prose, in no fence at all. Check 7 read only fences, and `check_paths`'s
+    # bare-path rule needs the backtick followed by the path rather than by `python` - so this one
+    # was invisible to both halves at once. `build.md` documented `figgrid.py` this way.
+    ("a command in prose, outside any fence", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: HEAD + "\nWhen the grid drifts, `python %s shots x.html` prints it.\n" % TOOL,
+        TOOL: TOOL_SRC,
+    }, "UNBOUND CMD"),
+    # And the direction that must NOT fire: prose is now read, so a based command written there is
+    # bound like any other. Without this the widening could have been a blanket refusal of prose.
+    ("a based command in prose is read, not flagged", {
+        MANIFEST: '{"name": "example"}',
+        SKILL: HEAD + "\nWhen the grid drifts, `python %s/%s shots x.html` prints it.\n"
+               % (ROOT_VAR, TOOL),
+        TOOL: TOOL_SRC,
+    }, None),
 ]
 
 def self_test():

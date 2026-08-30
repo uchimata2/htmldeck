@@ -139,7 +139,7 @@ Expanded from the outline in `<slug>.foundation.md`, page by page. Nine fields p
   concedes — addressed to the person presenting and never to the audience. **It does not render
   into the shipped deck, ever.** DS-088 forbids notes there and the gate enforces it, so a note
   written here reaches the presenter through a second artifact:
-  `python tools/deck/presenter.py <slug>.html <slug>.slides.md` writes `<slug>-presenter.html`,
+  `python $HTMLDECK/tools/deck/presenter.py <slug>.html <slug>.slides.md` writes `<slug>-presenter.html`,
   which carries the notes and **fails DS-088 by design** — the only build that can pass a gate is
   the one with no notes in it. Omit the field entirely on a slide with nothing to say; an empty
   `Notes.` and no `Notes.` are the same answer. This is not slide copy, so DS-106's terminology
