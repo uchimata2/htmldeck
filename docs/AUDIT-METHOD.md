@@ -42,9 +42,16 @@ are the plan's to decide, and this list is what has been decided *here*, not a r
 - **Aspects.** Project method, project documentation, product documentation, and the product.
 - **The instrument-only grade applies to the decks and to the blindness fixture, and the two do not
   share an instrument.** `CLAUDE.md` rule 6 forbids reading a deck whole. Cycle 17 holds five of the
-  six tracked `.html` files, 1,773,568 bytes — the four decks `check_all.py`'s `DECKS` names, at
-  1,451,311, and `examples/reference-deck-seeded-defects.html` at 322,257; the sixth is
-  `shell/shell.html`, which is cycle 16's. The decks are rendered, looked at offline, and measured
+  six tracked `.html` files — the four decks `check_all.py`'s `DECKS` names, and
+  `examples/reference-deck-seeded-defects.html`; the sixth is `shell/shell.html`, which is cycle
+  16's. **`python tools/docs/cycles.py --cycle 17` is what answers which files and how large they
+  are**, and this sentence states neither. *It stated three byte totals until 2026-08-30 —
+  1,773,568 for the five, 1,451,311 for the decks and 322,257 for the fixture — which were the
+  plan's figures, correct when cycle 17 ran on 2026-08-23 and wrong by −34,448 bytes seven days
+  later, after B9 synced the shell into every deck and B12 took 84,750 bytes of dead payload out of
+  one. The register's cycle-17 row still carries them, dated, which is where a measurement belongs;
+  restating them here made a second home for a number that decays, in the document that tells every
+  cycle to re-measure its own subject.* The decks are rendered, looked at offline, and measured
   with the tools in `tools/deck/`, and their specifications are read. **The fixture is not.** It
   carries one seeded defect per evaluation dimension on purpose, at score 0, so a deck gate pointed
   at it reports the fixture working rather than a finding; its instrument is `python

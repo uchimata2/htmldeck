@@ -34,7 +34,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
-| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223, T-224, T-226, T-227, T-228, T-229, T-230, T-231, T-232, T-233, T-234, T-235, T-236, T-237, T-238, T-239, T-240, T-241, T-242, T-243, T-244, T-245, T-246, T-247, T-248, T-249, T-250, T-251, T-252, T-253, T-278 | - | T-042, T-119, T-130, T-153, T-218, T-222, T-273 |
+| [T-219](T-219-pre-release-audit-of-the-whole-repository.md) | Pre-release audit of the whole repository, project and product | `PH3` | - | `in_progress` | `implement` | - | T-223, T-224, T-226, T-227, T-228, T-229, T-230, T-231, T-232, T-233, T-234, T-235, T-236, T-237, T-238, T-239, T-240, T-241, T-242, T-243, T-244, T-245, T-246, T-247, T-248, T-249, T-250, T-251, T-252, T-253, T-278, T-284 | - | T-042, T-119, T-130, T-153, T-218, T-222, T-273 |
 | [T-220](T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md) | Derive the release chronology's task count instead of typing it | `PH3` | - | `proposed` | `specify` | - | - | - | T-042, T-096, T-145, T-216, T-223 |
 | [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | Correct the copy-into-your-own-plugin route, or withdraw it | `PH1` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-234](T-234-the-front-pages-own-figures-and-claims.md) | Correct the front page's figures and its two false claims | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
@@ -57,6 +57,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md) | Write the clause rows for the nine conjunctions the sweep found owing | `PH3` | - | `proposed` | `specify` | T-219 | - | - | T-054, T-244 |
 | [T-282](T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | The portfolio deck's opening slide carries one of the two figures its specification calls the whole argument | `PH3` | - | `proposed` | `specify` | - | - | - | T-233 |
 | [T-283](T-283-ds-218-reports-a-pass-where-it-has-no-subject.md) | Make DS-218 report no subject where it has none, rather than a pass | `PH1` | - | `proposed` | `specify` | - | - | - | T-231, T-257 |
+| [T-284](T-284-owed-looks-belongs-to-no-audit-cycle.md) | Give OWED-LOOKS.md an audit cycle, or a rule that says which one reads it | `PH3` | - | `proposed` | `specify` | T-219 | - | - | T-223, T-273 |
 
 ## Closed
 
@@ -281,7 +282,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md) | Record the pre-release audit method, and the machinery a run needs | `PH3` | `0.6.0` | `done` | `review` | - | - | - | T-042, T-119, T-130, T-153, T-219, T-222, T-223 |
 | [T-221](T-221-answer-the-three-defects-taskmd-0-6-0s-wider-check-set-found.md) | Answer the three defects taskmd 0.6.0's wider check set found | `PH3` | - | `done` | `review` | - | - | - | T-098, T-161, T-163 |
 | [T-222](T-222-derive-the-reconcile-sweeps-membership-instead-of-enumerating-it.md) | Derive the reconcile sweep's membership instead of enumerating it | `PH3` | - | `done` | `review` | - | - | - | T-218, T-219, T-223 |
-| [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) | Derive each audit cycle's membership instead of counting it | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | T-218, T-220, T-222, T-224 |
+| [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) | Derive each audit cycle's membership instead of counting it | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | T-218, T-220, T-222, T-224, T-284 |
 | [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) | Give the blindness fixture its own instrument in cycle 17 | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | T-044, T-223 |
 | [T-225](T-225-triage-the-claimai-adopter-report.md) | Triage the ClaimAI adopter report and decide each of its twenty-seven findings | `PH3` | - | `done` | `review` | - | - | - | T-063, T-254, T-255, T-256, T-257, T-258, T-259, T-260, T-261, T-262, T-263, T-264, T-265, T-266, T-267, T-268, T-269, T-270, T-271, T-276 |
 | [T-226](T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | Give the portfolio-review deck a home in both human-facing documents | `PH3` | - | `done` | `review` | T-219 | - | - | - |
@@ -313,7 +314,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-269](T-269-three-build-path-defects-the-adopter-worked-around.md) | Unwrap a provenance row, read a rich Sources field, and convert bold across a line break | `PH1` | - | `done` | `review` | - | - | - | T-225 |
 | [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | Decide what DS-100 and DS-202 should measure, and say the reason in each failure | `PH3` | - | `done` | `review` | - | - | - | T-225, T-276 |
 | [T-272](T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md) | Make render.py motion enumerate the same animation set on every run of one deck | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-255 |
-| [T-273](T-273-the-owed-looks-have-no-queue-to-accumulate-in.md) | Give the owed looks a queue, so the pass before the release has something to run | `PH3` | - | `done` | `review` | - | - | - | T-219 |
+| [T-273](T-273-the-owed-looks-have-no-queue-to-accumulate-in.md) | Give the owed looks a queue, so the pass before the release has something to run | `PH3` | - | `done` | `review` | - | - | - | T-219, T-284 |
 | [T-274](T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | Build the card reveal, so DS-140's Turn is a component rather than two dials | `PH3` | - | `done` | `review` | - | - | - | T-242, T-275 |
 | [T-275](T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | Retire --accent-ink from the contract, both themes and every deck that carries it | `PH3` | - | `done` | `review` | - | - | - | T-242, T-274 |
 | [T-276](T-276-narrow-ds-100-to-the-question-a-slide-puts-in-its-header.md) | Narrow DS-100 to the question a slide puts in its header | `PH3` | - | `done` | `review` | - | - | - | T-225, T-270 |
