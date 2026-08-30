@@ -36,10 +36,11 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-Empty. Nothing outstanding.
+One outstanding.
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
+| 10 | [`examples/portfolio-review/portfolio-review.html`](../examples/portfolio-review/portfolio-review.html) | *Three tranches, one gate*, slide 11 - the timeline's **first** segment, the one running into the gate | It is now a flowing dashed line (`Current`) where it was a plain rule, and the segment **after** the gate is deliberately left plain. The asymmetry is the encoding: what the gate measures accrues before it and not after it. *Does the moving segment read as the realised discount accruing into the gate, or as decoration on a schedule - and does the plain second segment read as deliberate rather than as a line somebody forgot?* Also worth a glance with `Motion` off, where both segments should read as dashed and still. | [T-257](../tasks/T-257-ds-218-passes-the-shipped-example-vacuously.md) |
 
 ## What has already been looked at
 

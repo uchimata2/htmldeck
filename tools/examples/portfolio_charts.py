@@ -38,7 +38,9 @@ if hasattr(sys.stdout, "reconfigure"):
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, "tools", "assets"))
+sys.path.insert(0, os.path.join(ROOT, "tools", "deck"))
 
+import quickview                                                                      # noqa: E402
 from chart_probe import guard_height, guard_label, label_box, ChartError, MIN_BAR_PX          # noqa: E402
 
 # **One estimate of one quantity** (L-13). Every label box in this file - the clip guard's and the
@@ -116,6 +118,23 @@ DRAWDOWN = [                           # FY26 by quarter-end, cumulative % from 
 ]
 
 TRANCHES = [("Q1 2027", 70, 49), ("Q3 2027", 60, 47), ("Q1 2028", 40, 45)]
+
+# Slide 6's three largest revaluation lines ($M), and whether each is renewables. **The slide's
+# figure is derived from this and was typed before**: it read `$131M of the revaluation sits in
+# renewables` in three places, which is all three lines summed - and the third is transmission.
+# T-248 corrected the built deck by hand and the rebuild put `$131M` back in all three, which is
+# **L-148**. Deriving it is what stops a fourth occurrence: the sum cannot disagree with the table
+# printed beside it, because it is the table.
+REVALUATION = [                        # name, $M, renewables?, why it moved
+    ("Calder wind", 58, True,
+     "moved on a revised merchant tail beyond the contracted period."),
+    ("Norbeck solar", 44, True,
+     "moved on a discount-rate change, not on operating performance."),
+    ("Aldis transmission", 29, False,
+     "moved on the regulated asset base reset."),
+]
+REVAL_RENEWABLE = sum(v for _, v, renew, _ in REVALUATION if renew)
+REVAL_TOTAL = 172                      # FY26 unrealised revaluation, all sectors
 
 
 # --- Scale arithmetic --------------------------------------------------------------------------
@@ -398,7 +417,8 @@ def fig_waterfall():
                  % (xr, yy, bars[i + 1][0], yy))
     o.append('      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (L, BASE, R, BASE))
     o.append(text(L, TOP - 8, "$M — axis truncated below the opening balance, so the six movements are legible", "lab t-soft", "start"))
-    o.append(text(L, NOTE_Y, "$131M of the revaluation sits in renewables.", "val t-soft", "start"))
+    o.append(text(L, NOTE_Y, "$%dM of the revaluation sits in renewables." % REVAL_RENEWABLE,
+                  "val t-soft", "start"))
     return svg("NAV movement over FY26 in millions: opening 2,150, contributions plus 180, "
                "distributions minus 145, realised gains plus 95, unrealised revaluation plus 172, "
                "fees and carry minus 52, closing 2,400.", "\n".join(o))
@@ -526,7 +546,19 @@ def fig_tranches():
 
 
 def fig_timeline():
-    """Slide 11. Three step markers and one gate, and the gate must not look like a fourth step."""
+    """Slide 11. Three step markers and one gate, and the gate must not look like a fourth step.
+
+    **The segment entering the gate carries `Current`, and it is the deck's only looping motion.**
+    The gate's label is `realised vs 4.5%` and the slide's note says the committee reviews the
+    realised discount before tranche two - so what the gate measures **accrues over the interval
+    before it**, which is a subject genuinely in flight and is what `--motion-subject:live` asserts
+    (DS-142). The segment **after** the gate carries later tranches that have not happened, so it
+    stays plain: only one of the two axis lines takes the class, and the difference between them is
+    the encoding (DS-150). Before this the deck had no looping motion at all, so DS-218 passed on an
+    absent subject and DS-140 reported no dashed flow, while the deck already declared
+    `--current-dash` and `--current-dur` and shipped the stop control - it paid for the mechanism
+    and used none of it (T-257).
+    """
     y = 200.0
     xs = [420.0, 1000.0, 1500.0]
     gate_x = 710.0
@@ -536,7 +568,7 @@ def fig_timeline():
     # **A gate on a timeline interrupts the line; it is not overdrawn by it.** The axis stops at the
     # rhombus's left vertex and resumes at its right one - both sit on `y` by construction, so the
     # line reads as entering the gate and leaving it (T-203).
-    o = ['      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (240, y, gate_x - hw, y),
+    o = ['      <line class="axis current" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (240, y, gate_x - hw, y),
          '      <line class="axis" x1="%.0f" y1="%.0f" x2="%.0f" y2="%.0f"/>' % (gate_x + hw, y, 1620, y)]
     for i, ((when, size, to), x) in enumerate(zip(TRANCHES, xs)):
         o.append('      <circle class="%s" cx="%.0f" cy="%.0f" r="16"/>'
@@ -657,6 +689,13 @@ def selftest():
           and got == sorted(got), "got %s" % [round(g, 1) for g in got])
     check("spread keeps the block on its own centre",
           abs(sum(got) / 3.0 - (100.0 + 104.0 + 140.0) / 3.0) < 1e-9)
+
+    check("the renewables revaluation is the renewables lines and not all three",
+          REVAL_RENEWABLE == 102 and REVAL_RENEWABLE != sum(v for _, v, _, _ in REVALUATION),
+          "got %s against a three-line total of %s"
+          % (REVAL_RENEWABLE, sum(v for _, v, _, _ in REVALUATION)))
+    check("the renewables revaluation is part of the FY26 total, not equal to it",
+          0 < REVAL_RENEWABLE < REVAL_TOTAL)
 
     check("the top three sum to the stated 34%", sum(v for _, v in TOP3) == 34)
     check("the tranches take renewables to the 45% limit", TRANCHES[-1][2] == 45)
@@ -852,9 +891,25 @@ def md_to_html(md):
 SOURCE_TITLES = {"portfolio-model": "Portfolio model", "market-outlook": "Market outlook"}
 
 
+# Titles whose `<template>` this compose run has already written. **`deck.js` keys on `data-qv`,
+# so one template answers every control carrying that title** - and eleven copies of one source is
+# what this deck shipped before T-233 removed them from the built file **by hand**. The builder was
+# not changed with it, so the next rebuild put all eleven back and `quickview.py check` reported
+# `DUPLICATE` on a tree that had been green: a fix that does not survive the command that produces
+# its subject is a fix with a half-life (T-226 found it, rebuilding for T-257).
+_TEMPLATED = set()
+
+
 def quick_view(slug):
-    with open(os.path.join(SOURCES, slug + ".md"), encoding="utf-8") as fh:
-        return md_to_html(fh.read())
+    """The source as inert markup, rendered by **`quickview.py`'s own renderer**.
+
+    Not this file's `md_to_html`, which is for slide copy. The template written here is the one
+    `quickview.py check` compares against the source on every gate run, so rendering it any other
+    way makes the two disagree by construction - and it did: the builder's markdown left `*text*`
+    literal where `render` emits `<i>`, and a rebuilt deck reported `DRIFTED` at word 560 against a
+    source nobody had touched.
+    """
+    return quickview.render(os.path.join(SOURCES, slug + ".md"))[0]
 
 
 def provenance(slugs, box_id):
@@ -862,13 +917,16 @@ def provenance(slugs, box_id):
     items = []
     for slug in slugs:
         title = SOURCE_TITLES[slug]
+        first = title not in _TEMPLATED
+        _TEMPLATED.add(title)
         items.append(
             '<span class="sources-item">'
             + ('<svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>'
                if len(slugs) > 1 else "")
             + '<button class="sources-open" type="button" data-qv="%s" data-file="%s.md">%s</button>'
               % (title, slug, title)
-            + '<template class="qv-src" data-qv="%s">%s</template>' % (title, quick_view(slug))
+            + ('<template class="qv-src" data-qv="%s">%s</template>' % (title, quick_view(slug))
+               if first else "")
             + "</span>")
     if len(slugs) == 1:
         return ('  <p class="provenance"><span class="sources sources--one">'
@@ -988,7 +1046,8 @@ def build_slides():
         standfirst="No allocation decision moved this. Revaluation did.",
         disc=disclosure("derivation", "What moved the share", "p4", [
             ("Purchases", "No renewable asset was bought in the window; two were bought in 2021."),
-            ("Revaluation", "$131M of FY26's $172M revaluation sits in the sector."),
+            ("Revaluation", "$%dM of FY26's $%dM revaluation sits in the sector."
+                             % (REVAL_RENEWABLE, REVAL_TOTAL)),
             ("Denominator", "Water and transport ran down through distribution, not sale."),
             ("Net effect", "31% to 52% with the allocation committee taking no decision on it."),
         ])))
@@ -1010,15 +1069,14 @@ def build_slides():
         6, "1", "The best year is a mark", "NAV movement, FY26",
         "The best year is a mark",
         figure_body(fig_waterfall()),
-        "Unrealised revaluation is $172M of the movement, and $131M of it is renewables.",
+        "Unrealised revaluation is $%dM of the movement, and $%dM of it is renewables."
+        % (REVAL_TOTAL, REVAL_RENEWABLE),
         ["portfolio-model"], body_cls="body figwrap",
         standfirst="Six lines move the fund from 2,150 to 2,400. One of them is a valuation.",
-        disc=disclosure("derivation", "What the $131M is", "p6", [
-            ("Calder wind", "$58M, moved on a revised merchant tail beyond the contracted period."),
-            ("Norbeck solar", "$44M, moved on a discount-rate change, not on operating performance."),
-            ("Aldis transmission", "$29M, moved on the regulated asset base reset."),
-            ("Realised", "None of the three was sold, refinanced or partially exited in the year."),
-        ])))
+        disc=disclosure("derivation", "The three largest lines", "p6",
+                        [(name, "$%dM, %s" % (v, why)) for name, v, _, why in REVALUATION]
+                        + [("Realised", "None of the three was sold, refinanced or partially "
+                                        "exited in the year.")])))
 
     s.append(slide(
         7, "2", "Return does not track risk", "Net IRR against volatility",
