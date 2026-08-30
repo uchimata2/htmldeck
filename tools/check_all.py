@@ -565,6 +565,33 @@ def self_test():
     return True
 
 
+def decks_not_in_examples_readme():
+    """`[(deck, why)]` - every deck in `DECKS` that `examples/README.md` does not link.
+
+    **The page opens with a count, and a count is the one thing about a folder that goes stale
+    without anybody editing it.** `examples/portfolio-review/` was tracked with its specification
+    pair, its sources and a line in `DECKS`, and `0.6.0` shipped with `examples/README.md` saying
+    *Four decks* over a table listing three and the seeded-defects fixture - so the number was right
+    about the table and the table was wrong about the tree (`PR-02`, T-226).
+
+    **What this asserts is membership, not the numeral**, and that is deliberate. Parsing the count
+    out of the prose would bind this gate to one sentence's wording; asking whether each deck is
+    reachable from the page binds it to the property the reader cares about. A deck added to `DECKS`
+    and not written up fails here, which is the direction the defect travelled.
+    """
+    text = io.open(os.path.join(ROOT, "examples", "README.md"), encoding="utf-8").read()
+    out = []
+    for deck in sorted(DECKS):
+        rel = deck[len("examples/"):]
+        if rel not in text:
+            out.append((deck, "`examples/README.md` does not link it. It is a deck this repository "
+                              "ships - it is in DECKS and it is gated on every run - so the page "
+                              "the front README sends a reader to for *every shipped deck* has to "
+                              "reach it. Add its row and its section, and its entry to "
+                              "`figures.py`'s ARTIFACTS if the section states its size."))
+    return out
+
+
 # --- entry point ----------------------------------------------------------------------------
 
 def main(argv):
@@ -591,6 +618,13 @@ def main(argv):
                                       "deck.", 8))
         for h in gone:
             print("STALE .html       %s  - declared and not tracked" % h)
+        return 2
+
+    unlisted = decks_not_in_examples_readme()
+    if unlisted:
+        for h, why in unlisted:
+            print("UNLISTED DECK     %s" % h)
+            print("        %s" % wrap(why, 8))
         return 2
 
     decks = [d for d in html if d in DECKS]

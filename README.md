@@ -69,7 +69,7 @@ the installed plugin a few minutes after each session starts.
 | [`docs/EVALUATION.md`](docs/EVALUATION.md) | How a deck is scored, and **when it is good enough to stop** |
 | [`tools/deck/check.py`](tools/deck/check.py) | The build check. A pass/fail per rule ID, **and an account of every rule it did not check, with a reason each** |
 | [`examples/reference-deck.html`](examples/reference-deck.html) | A 12-slide deck built by hand against the ruleset. Open it offline |
-| [`examples/`](examples/README.md) | Every shipped deck, with what was measured on each: the hand-built one above, one assembled through build mode, one an adopter built elsewhere, and a fixture carrying a deliberate defect per evaluation dimension |
+| [`examples/`](examples/README.md) | Every shipped deck, with what was measured on each: the hand-built one above, one assembled through build mode, one an adopter built elsewhere, one built chart-first to cost hand-written SVG against a chart library, and a fixture carrying a deliberate defect per evaluation dimension |
 | [`docs/research/`](docs/research/) | Seven notes the rules are derived from: a corpus study, external principles, exemplar decks, prior art, asset licences, a `file://` capability matrix, printing |
 | [`skills/htmldeck/`](skills/htmldeck/) | The plugin skill: the pipeline, the artifacts it passes between stages, and the two questions it asks |
 

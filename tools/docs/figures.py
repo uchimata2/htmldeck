@@ -623,6 +623,12 @@ ARTIFACTS = {
         "slide count, and it is the one deck here whose size moves for a reason nobody in this "
         "repository decided - an upstream author's edit, arriving through a copy rather than "
         "through a commit",
+    "examples/portfolio-review/portfolio-review.html":
+        "the chart-first deck T-113 built to cost hand-authored SVG against a library; "
+        "examples/README.md states its size, slide count and figure count, and the figure count is "
+        "the one this manifest watches that the others do not - it is what the deck is FOR, so a "
+        "figure added or lost is the claim moving. Added by T-226, which found the deck in neither "
+        "human-facing document a release after it shipped",
 }
 
 _RUNS = {}

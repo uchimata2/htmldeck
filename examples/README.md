@@ -1,7 +1,13 @@
 # examples
 
-Four decks. All are single self-contained `.html` files with **zero external references**; open any
-of them by double-clicking, with the network off.
+Four decks and one test fixture. All are single self-contained `.html` files with **zero external
+references**; open any of them by double-clicking, with the network off.
+
+**The four are the four `check_all.py`'s `DECKS` names, and the gate holds this page to that list**
+rather than to a number typed here: a deck declared there and not linked below fails the run. The
+count was *four* when the table listed three decks and called the fixture the fourth, and
+`portfolio-review` had been shipped and tracked for a release without appearing on either
+human-facing page.
 
 | File | What it is |
 | :--- | :--- |
@@ -9,6 +15,7 @@ of them by double-clicking, with the network off.
 | [`reference-deck-seeded-defects.html`](reference-deck-seeded-defects.html) | The same deck with **one deliberate defect per evaluation dimension**. A test fixture, not an example to copy. |
 | [`sort-window/`](sort-window) | *Move the window, not the fleet*, 12 slides, built **through build mode** by [T-002](../tasks/T-002-build-mode-the-self-contained-deck-generator.md), with its two specification files and its sources beside it. |
 | [`measure-first/`](measure-first) | *Demand Planning: what Business Analytics can do first*, 14 slides: a lobby, twelve of argument, and a colophon. The counter reads 12, because the covers are not content. The only deck here **somebody else built**, using the published plugin, in their own project. Copied in and sanitized by [T-128](../tasks/T-128-publish-the-adopter-deck-as-a-worked-example.md), with its two specifications, its five source documents and its two process models. |
+| [`portfolio-review/`](portfolio-review) | *Meridian Infrastructure Fund - 2026 portfolio review*, 12 slides, and the only deck here built **chart-first** - ten charts among its eighteen figures, composed by [`tools/examples/portfolio_charts.py`](../tools/examples/portfolio_charts.py) for [T-113](../tasks/T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md), which needed a chart-intensive deck to cost a chart library against hand-written SVG. |
 
 **The difference between the first and the third is the whole point of T-002.** One was authored;
 the other was assembled from [`shell/`](../shell) and then authored into, three slides at a time,
@@ -448,3 +455,42 @@ The deck was built on 0.2.2 and brought up to date here with `shell.py sync`, wh
 releases. That was the first time this repository ran its own published upgrade path on a real
 adopter's file, and where
 [T-166](../tasks/T-166-shell-sync-leaves-an-upgraded-deck-failing-the-theme-gate.md) came from.
+## The deck that answers whether a chart library is worth it
+
+[`portfolio-review/portfolio-review.html`](portfolio-review/portfolio-review.html) is *Meridian
+Infrastructure Fund - 2026 portfolio review*, 12 slides. It is **316 KB in one file**, 323 085 bytes,
+zero external references, and it carries 18 figures - ten of them charts, which is more charts than
+the other three decks hold between them.
+
+**It exists because of a question, not because of a topic.**
+[T-113](../tasks/T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) asked
+whether this plugin should embed a chart library. `DS-122` requires charts to be hand-written SVG
+*borrowing scale arithmetic as a few lines*, and the honest way to cost that sentence is to make a
+deck pay it ten times over rather than estimate. There was no such deck: every other deck here
+carries at most one chart, which is the case hand-authored SVG already wins.
+
+So the answer has a price on it.
+[`tools/examples/portfolio_charts.py`](../tools/examples/portfolio_charts.py) is 1,351 lines, and
+that is what ten charts cost when the arithmetic is computed once at build time and the marks it
+produces are ordinary SVG. Three of the chart kinds - a multi-series line chart, a waterfall and a
+scatter - are written there rather than in the shared probe, because they are what a *financial*
+deck adds to the four a *business* deck needs. That difference is itself a finding.
+
+```bash
+python tools/deck/check.py examples/portfolio-review/portfolio-review.html --sources examples/portfolio-review/sources
+```
+
+**Meridian Infrastructure Fund does not exist**, and neither does the portfolio. Every figure comes
+from [`portfolio-review/sources/`](portfolio-review/sources) and every one of them is illustrative.
+
+### What building it changed
+
+| | |
+| :--- | :--- |
+| [T-247](../tasks/T-247-the-portfolio-generators-documents-against-the-deck.md) | slide 4's stacked area was built, looked at and **rejected**: `DS-020` allows one accent hue, so four of the five bands rendered in the same quiet fill and the chart showed two shapes where it claimed five. It ships as five lines, separating on position instead of colour |
+| [T-233](../tasks/T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md) | the deck carried **eleven** copies of one source document, one per provenance mark; they are now one template shared by all eleven controls |
+| [T-257](../tasks/T-257-ds-218-passes-the-shipped-example-vacuously.md) | it had no looping motion at all, so `DS-218` passed it on an absent subject and `DS-140` reported no dashed flow. Slide 11's timeline now carries one, and the rule fires |
+
+The first of those is the one worth reading twice. It was found by a person opening the deck, not by
+any gate here - and the specification still carries the reviewed wording with the deviation recorded
+beneath it, so the record says what was reviewed *and* what shipped.
