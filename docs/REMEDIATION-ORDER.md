@@ -25,7 +25,7 @@ directly, which outranks a standing authority rather than needing one. **One joi
 which is a count of what the triage put on the board and reads as a count of what this file holds.
 The sentence below forbids exactly that, and the title was the one place nobody applied it.*
 
-**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 to B11 landed 2026-08-29.**
+**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 to B11 landed 2026-08-29, B12 to B14 on 2026-08-30.**
 
 ---
 
@@ -104,7 +104,7 @@ is blocked.
 
 | Batch | Tasks | Eff | Why here |
 | :--- | :--- | :--- | :--- |
-| **B14** | [T-259](../tasks/T-259-nothing-prints-what-a-slide-actually-contains.md), [T-258](../tasks/T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | `m`·2 | Two printers that report rather than gate, built against a tree whose rules have settled. `T-259` first: the fact printer is what a later verdict would rest on |
+| **B14** — landed 2026-08-30 | [T-259](../tasks/T-259-nothing-prints-what-a-slide-actually-contains.md), [T-258](../tasks/T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | `m`·2 | Two printers that report rather than gate, built against a tree whose rules have settled. `T-259` first: the fact printer is what a later verdict would rest on. **Landed, and both tasks refused the mechanism their record proposed — for opposite reasons.** `T-259`'s report asks for `render.py`'s parse, which is a Chrome DOM read; every claimed field is in the static markup, and taking the static route is what exposed a trap the DOM route hides — a quick view's source document ships as a `<template>` **inside** the slide citing it, **59% of one section**, so four fields were answered by another document before anything caught it ([L-149](lessons/L-149.md)). `T-258`'s report asks for *the deck's own text nodes*; scored both ways on the four tracked decks the readings differ by **8 Flesch points** on `measure-first` and the sign is not constant, so it is not an offset to correct for — an axis tick has no verb and no sentence end. **The second task then found a defect in the first, hours old**: `slidefacts.py` decoded a six-entry table of *the entities a deck writes* and a tracked deck writes `&middot;` and `&rsquo;`, both counted as words, which had put a byline third in the hardest-lines ranking. Fixed in place under §4 and asserted in the fixture. **No look is owed** — neither task changed a deck, and both outputs are text |
 | **B15** | [T-267](../tasks/T-267-render-py-cannot-capture-a-decks-interactive-states.md), [T-271](../tasks/T-271-a-quick-view-scoped-to-a-document-section.md) | `m`·2 | Interactive capture, and the per-section quick view. **`T-271` stays deferred past the release** by §3's ruling, so B15 is `T-267` alone unless the owner reschedules it |
 
 ### Wave 6 — documentation and counts (last, because every figure depends on everything above)
