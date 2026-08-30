@@ -318,6 +318,22 @@ Two obligations come with that authority, and the first is the one under pressur
    asks the user to file anything; the obligation is to say which entries are candidates rather than
    let a closed workaround look like a settled question.
 
+**Editing the built deck in place forks the specification, and nothing gates the fork.** The
+obligation above is written for a deviation taken *during* the build, but the deck stays editable
+afterwards and that is the supported way to work once a slide carries anything the build cannot
+reproduce. Every such edit makes `<slug>.slides.md` a claim about the deck rather than a description
+of it, and **no check spans the two**: `spec.py` reads the specification, `check.py` reads the deck,
+and a stale entry is valid input to both. An adopter swept theirs and found **twenty-three of
+twenty-five entries had drifted**, with the gate green throughout. So write the edit back the way
+obligation 1 says, and where you need to see what a slide now holds:
+
+```
+python $HTMLDECK/tools/deck/slidefacts.py <slug>.html <slide-number>
+```
+
+It prints that slide's own answer for every field an entry claims and **makes no judgement** — hold
+it against the entry yourself. A differ would flag every intentional difference, and there are many.
+
 **This is not the exit for everything.** `$HTMLDECK/docs/EVALUATION.md` §6.1 keeps its
 two: **STALL** — a design decision wearing a finding's clothes — escalates, and **OSCILLATION** —
 two rules genuinely in tension — stops and names them. Deviation authority is for what this stage

@@ -117,6 +117,7 @@ comes here.
 | [L-146](lessons/L-146.md) | A guard true of every case is only half an off switch; what settles it is whether another document already mandates it | Evidence and verification |
 | [L-147](lessons/L-147.md) | Duplicated data does not only cost bytes; it answers for the thing it was copied from, and the checkers reading it go green | Evidence and verification |
 | [L-148](lessons/L-148.md) | A fix applied to a generated file has a half-life, and the gate that finds it is the next rebuild | Evidence and verification |
+| [L-149](lessons/L-149.md) | A container answers with everything nested in it, including documents it only cites | Evidence and verification |
 
 ### Tooling
 

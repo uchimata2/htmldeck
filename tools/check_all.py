@@ -73,6 +73,7 @@ WIDE = [
     ("tools/examples/seed_defects.py", ["--check"]),
     ("tools/examples/portfolio_charts.py", ["selftest"]),
     ("tools/deck/contents_bound.py", []),
+    ("tools/deck/slidefacts.py", ["--self-test"]),
 ]
 
 # Per-theme gates: `path -> builder`, the builder taking the theme's repo-relative path.

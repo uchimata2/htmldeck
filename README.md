@@ -172,7 +172,7 @@ python tools/plugin/check_scaffold.py
 
 ```
 23 of 23 fixtures behaved as specified.
-  skills/htmldeck: 5 markdown file(s), base $HTMLDECK - checks 4-5 read 49 path(s), check 7 read 18 of 18 documented command(s)
+  skills/htmldeck: 5 markdown file(s), base $HTMLDECK - checks 4-5 read 49 path(s), check 7 read 19 of 19 documented command(s)
 OK - manifest valid, components at the root, every based pointer resolves,
 ```
 
