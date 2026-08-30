@@ -11,23 +11,33 @@ user can decline.**
 ## 0. Resolve `$HTMLDECK` first, before any command below
 
 Every path in this skill is written from `$HTMLDECK`, the plugin's own directory — a bare path would
-resolve against the user's project, which may well have a `docs/` of its own. **Resolve it once, in
-your first shell call:**
+resolve against the user's project, which may well have a `docs/` of its own.
+
+**Read it off this file's own location.** A harness that loads a skill names the directory it loaded
+it from. This file is `$HTMLDECK/skills/htmldeck/SKILL.md`, so `$HTMLDECK` is two directories above
+it. That answer is already version-correct, and it is the only one that works for a copy of this
+plugin published under another name.
+
+**If your harness does not name it**, resolve it once, in your first shell call:
 
 ```
 ls -d "$HOME"/.claude/plugins/cache/*/htmldeck/*/ | sort -V | tail -1
 ```
 
-Then **substitute the printed path literally** into every later command. Shell state does not
-persist between calls, so an assignment made in one is gone in the next. In a clone of the
-repository, `$HTMLDECK` is the clone.
+**`sort -V` is load-bearing.** The cache keeps every version ever installed, so a first-match glob
+picks the oldest and the failure reads as *tool not found*. In a clone of the repository,
+`$HTMLDECK` is the clone.
 
-**Do not write `${CLAUDE_PLUGIN_ROOT}` in a command.** Claude Code interpolates that variable into a
-plugin's *manifest* files; it is **not exported into the shell**, so it expands to nothing and
-`python ${CLAUDE_PLUGIN_ROOT}/tools/deck/check.py` becomes `python /tools/deck/check.py`. This skill
-used to spell every command that way. The first outside build read these documents in full, never
-used the variable once, and hardcoded a version-pinned cache path **87 times** instead — one plugin
-update away from being wrong, in a session that had updated the plugin an hour earlier (T-189).
+Then **substitute the printed path literally** into every later command. Shell state does not
+persist between calls, so an assignment made in one is gone in the next.
+
+**Never write a plugin-root placeholder into a command.** Claude Code substitutes its own into a
+plugin's files *before you read them* — this file included, which is why this paragraph does not
+spell it out. The value is **not exported into the shell**, so a command written from it arrives
+with no base at all and runs against the drive root. This skill used to spell every command that
+way. The first outside build read these documents in full, never used the placeholder once, and
+hardcoded a version-pinned cache path **87 times** instead — one plugin update away from being
+wrong, in a session that had updated the plugin an hour earlier (T-189).
 
 **Re-resolve after a plugin update**, and never carry a version number in a path you keep.
 

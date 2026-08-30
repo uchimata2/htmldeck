@@ -191,5 +191,6 @@ comes here.
 | [L-101](lessons/L-101.md) | A document written to be sent is wrong at home in exactly the ways nothing here can check | Writing |
 | [L-133](lessons/L-133.md) | An ordinal cited in prose is a running total in disguise, and fixing one numbering in a document does not fix the other | Writing |
 | [L-134](lessons/L-134.md) | A pipe inside a code span still splits a table cell, and Markdown drops the remainder rather than showing it | Writing |
+| [L-151](lessons/L-151.md) | A prohibition that spells the token it forbids is destroyed by whatever substitutes it | Writing |
 
 <!-- lessons:end -->

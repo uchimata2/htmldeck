@@ -20,9 +20,13 @@ Both lines are typed inside Claude Code, not in a terminal:
 /plugin install htmldeck@htmldeck
 ```
 
-Copying [`skills/htmldeck/`](skills/htmldeck/) into a plugin of your own works as well. Every path
-the skill resolves goes through `${CLAUDE_PLUGIN_ROOT}`, which is what lets a copied directory find
-its own references.
+You can also vendor htmldeck inside a plugin of your own — but copy the **whole payload**, not just
+the skill directory. Most of what the skill resolves sits outside
+[`skills/htmldeck/`](skills/htmldeck/): the design system, every deck tool, the shell and the
+reference deck. Copy that one directory and the first documented command fails with *No such file or
+directory*. Copy `skills/`, `docs/`, `tools/`, `shell/`, `examples/` and `themes/` to your plugin's
+root and it works under whatever name you give the plugin — the skill reads its base from its own
+location rather than from a variable.
 
 To check the package rather than assume it, clone the repository and run:
 
@@ -32,9 +36,9 @@ cd htmldeck
 python tools/plugin/check_scaffold.py
 ```
 
-It self-tests against nineteen deliberately broken packages before it looks at this one, and *Run it*
-below shows what a good result prints. That command is also the fastest way to tell whether a copied
-skill directory is still wired up.
+It self-tests against sixteen deliberately broken packages and seven good ones before it looks at
+this one, and *Run it* below shows what a good result prints. That command is also the fastest way
+to tell whether a vendored copy is still wired up.
 
 ---
 
@@ -149,8 +153,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 4939 document pointer(s) checked, 0 broken
-     1085 section reference(s) resolved, 0 dead; 3256 not bound to a document and skipped.
+OK - 4976 document pointer(s) checked, 0 broken
+     1086 section reference(s) resolved, 0 dead; 3259 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
