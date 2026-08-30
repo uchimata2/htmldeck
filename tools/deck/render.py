@@ -31,6 +31,16 @@ Two things here are not obvious and both cost time to discover (**L-26**):
     python tools/deck/render.py motion  examples/reference-deck.html --into 4 --at 0,25,50,75,100
     python tools/deck/render.py motion  examples/reference-deck.html --into 4 --shots
     python tools/deck/render.py motion  examples/reference-deck.html --into 4 --back
+    python tools/deck/render.py state   examples/reference-deck.html --click "#moreBtn" --shot
+    python tools/deck/render.py state   examples/reference-deck.html --probe "#next" --at 960,600
+    python tools/deck/render.py state   examples/reference-deck.html --slide 4 --qv <name>
+
+**`state` is the fourth command and the only one that presses anything but the pager** (T-267).
+The other three photograph a slide at rest, so a menu, a hover detail, a quick view or any other
+progressive disclosure had no capture path at all - and rule 6's ninth condition is a person
+looking at exactly that. It also hit-tests, which is the one question none of the workarounds an
+adopter built could reach. Its own block comment below carries what was measured before it was
+designed, including the record premise that turned out to be wrong.
 
 Output goes to `<the deck's project>/.assets-cache/deck/`, or to `--out`. **The deck's project, not
 this tool's** - installed as a plugin those are different directories, and writing to the second put
@@ -46,6 +56,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.parse
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -941,6 +952,545 @@ def cmd_motion(deck, into=1, at=None, shots=False, back=False, out=None, w=1920,
 SECTION_CLASS = re.compile(r'<section[^>]*\sclass="([^"]*)"', re.I)
 
 
+# ------------------------------------------------------------------------------ state
+
+# **The capture path for what a click discloses** (T-267). `measure`, `shots` and `motion` all
+# photograph a slide at REST, and the only element any of them ever presses is `#next` / `#prev` -
+# so the part of a deck that cannot be printed was also the part that could not be reviewed by
+# picture, and `CLAUDE.md` rule 6's ninth condition is a person looking at exactly that.
+#
+# **Three of the adopter record's premises were measured before this was designed, and one was
+# wrong** (T-267 step 0, 2026-08-30, on `examples/reference-deck.html` at 1600x1000):
+#
+# - *hit-testing does not work* - **refused.** `elementFromPoint` at `#next`'s centre returns
+#   `span.chev.r` and `elementsFromPoint` returns the whole stack down to `section.slide`. The
+#   record's sentence is true of the reporter's own non-compositing pane and not of headless
+#   Chrome, so `--probe` is the CHEAPEST of the four items rather than the one with no workaround.
+# - *un-setting `hidden` on the menu still renders closed* - **held**, and now explained: pressing
+#   the deck's own `#moreBtn` moves `#moreMenu` from `hidden`, `0x0` to `180x114`, `display:flex`.
+#   Item 1 is `el.click()` and nothing else.
+# - *`:hover` needs the CSS edited* - **held.** `querySelectorAll(':hover')` returns 0 and does not
+#   throw; no DOM write reaches the pseudo-class. All four sheets read back with `cssRules`, so the
+#   rewrite below is possible - and it is a SUBSTITUTED TRIGGER, which the report says every run.
+#
+# This probe declares neither `MEASURES_MOTION` nor `PINS_LOCALLY`, so `make_probe` pins motion off
+# (T-209). That is deliberate and it is the same guarantee `shots` gets: a disclosed state is
+# photographed settled, not part-way through whatever transition revealed it.
+STATE_PROBE = r"""
+<script>
+(function(){
+  var P = new URLSearchParams(location.search);
+  var want = parseInt(P.get('s') || '0', 10);
+  var quiet = P.get('quiet') === '1';
+  var opts = {};
+  try { opts = JSON.parse(P.get('opts') || '{}'); } catch (e) { opts = {}; }
+  var HOVER_ATTR = 'data-htmldeck-hover';
+
+  function rect(el){
+    if (!el) return null;
+    var r = el.getBoundingClientRect();
+    return [+r.left.toFixed(1), +r.top.toFixed(1), +r.width.toFixed(1), +r.height.toFixed(1)];
+  }
+  function who(el){
+    if (!el) return null;
+    if (el === document.documentElement) return 'html';
+    var n = el.tagName ? el.tagName.toLowerCase() : String(el);
+    if (el.id) { n += '#' + el.id; }
+    var c = el.getAttribute ? el.getAttribute('class') : null;
+    if (c) { n += '.' + c.trim().split(/\s+/).slice(0, 3).join('.'); }
+    return n;
+  }
+  /* **`deep` is for the hover path and exists because of what the first run showed.** A press
+     reveals a box, so `hidden`/`display`/`rect` answer it; a hover most often changes a COLOUR,
+     and against those five fields a colour change reads exactly like a hover that never fired.
+     Both failures print two identical lines, which is the one thing an instrument must not do. */
+  function shown(el, deep){
+    if (!el) return null;
+    var c = getComputedStyle(el);
+    var o = {hidden: !!el.hidden, display: c.display, visibility: c.visibility,
+             opacity: c.opacity, rect: rect(el)};
+    if (deep){
+      o.color = c.color;
+      o.background = c.backgroundColor;
+      o.borderColor = c.borderTopColor;
+      o.transform = c.transform;
+      o.boxShadow = (c.boxShadow || '').slice(0, 60);
+      /* **`outline` reads none of the above.** It is drawn outside the border box, so it changes
+         no rect, no background and no shadow - and an outline is the commonest way this project's
+         CSS marks a control as reachable, which is the very question `--probe` asks. */
+      o.outline = c.outline;
+      o.filter = c.filter;
+    }
+    return o;
+  }
+  /* **`undefined` for a selector that will not parse, `null` for one that matches nothing**, and
+     the two must never collapse. A typo in a `--probe` argument would otherwise read as *this deck
+     has no such control*, which is a statement about the deck made out of a statement about the
+     caller. */
+  function pick(sel, root){
+    try { return (root || document).querySelector(sel); }
+    catch (e) { return undefined; }
+  }
+
+  /* ---- item 2: hover, by substituting the trigger -----------------------------------------
+     `:hover` has no DOM write behind it - measured, see the block comment in render.py - so the
+     only honest route is the adopter's own workaround, automated: re-insert every `:hover` rule
+     with the pseudo-class swapped for an attribute, then write that attribute.
+
+     **Inserted into the rule's OWN parent, never re-serialised into a new sheet.** A rule inside
+     `@media`/`@supports`/`@layer` would need its conditions rebuilt by hand, and a rebuilt
+     condition that is subtly wrong applies the state under the wrong circumstances and looks
+     exactly like a correct one. `insertRule` on `r.parentRule || r.parentStyleSheet` inherits the
+     conditions instead of guessing them, and appending at the end keeps the cascade order that
+     makes the substitute win at equal specificity - `[attr]` and `:hover` are both 0,1,0, so no
+     `!important` is needed and none is used. */
+  function substituteHover(){
+    var found = [], blocked = 0, sheets = 0;
+    function walk(list){
+      if (!list) return;
+      for (var i = 0; i < list.length; i++){
+        var r = list[i];
+        if (r.cssRules) { walk(r.cssRules); }
+        if (r.selectorText && r.selectorText.indexOf(':hover') >= 0) { found.push(r); }
+      }
+    }
+    for (var s = 0; s < document.styleSheets.length; s++){
+      sheets++;
+      var sh = document.styleSheets[s], rules = null;
+      try { rules = sh.cssRules; } catch (e) { blocked++; continue; }
+      walk(rules);
+    }
+    /* Collected first, inserted second: appending into a list that is still being walked would
+       re-visit what was just written and never terminate. */
+    var made = 0, failed = 0;
+    for (var j = 0; j < found.length; j++){
+      var r = found[j];
+      var sel = r.selectorText.replace(/:hover\b/g, '[' + HOVER_ATTR + ']');
+      var parent = r.parentRule || r.parentStyleSheet;
+      try {
+        parent.insertRule(sel + '{' + r.style.cssText + '}', parent.cssRules.length);
+        made++;
+      } catch (e) { failed++; }
+    }
+    return {sheets: sheets, sheetsBlocked: blocked, rules: found.length,
+            substituted: made, refused: failed};
+  }
+
+  /* A real pointer hovers the target AND every ancestor of it, and CSS says so - `.card:hover .x`
+     is reached by hovering `.x`. Marking the target alone would leave every ancestor rule unfired
+     and photograph a state no pointer produces. */
+  function markHover(el){
+    var n = 0;
+    for (var e = el; e && e.setAttribute; e = e.parentElement){
+      e.setAttribute(HOVER_ATTR, '');
+      n++;
+    }
+    return n;
+  }
+
+  /* ---- item 4: hit-testing ----------------------------------------------------------------
+     Five points, not one. A centre-only test passes a control that a decoration covers on three
+     sides, which is the half of `is this reachable` that matters and the reason DS-244 has a
+     blind spot at all (T-260). The four extra points are inset a tenth of the box so they stay
+     inside a rounded corner. */
+  function stackAt(x, y){
+    var els = document.elementsFromPoint ? document.elementsFromPoint(x, y) : [];
+    return Array.prototype.slice.call(els, 0, 6).map(who);
+  }
+  function inView(x, y){
+    return (x >= 0 && y >= 0 && x < window.innerWidth && y < window.innerHeight);
+  }
+  function reach(sel){
+    var el = pick(sel);
+    if (el === undefined) return {sel: sel, error: 'not a selector this browser will parse'};
+    if (!el) return {sel: sel, found: false};
+    var r = el.getBoundingClientRect();
+    var out = {sel: sel, found: true, name: who(el), rect: rect(el)};
+    if (!r.width || !r.height){
+      out.reachable = false;
+      out.why = 'its box is ' + (+r.width.toFixed(1)) + 'x' + (+r.height.toFixed(1)) +
+                ' - nothing can be pointed at it';
+      return out;
+    }
+    var pts = [[0.5, 0.5], [0.1, 0.1], [0.9, 0.1], [0.1, 0.9], [0.9, 0.9]];
+    var hits = 0, off = 0, cover = {}, first = null;
+    out.points = [];
+    for (var i = 0; i < pts.length; i++){
+      var x = r.left + r.width * pts[i][0], y = r.top + r.height * pts[i][1];
+      if (!inView(x, y)){
+        off++;
+        out.points.push({at: [Math.round(x), Math.round(y)], outsideViewport: true});
+        continue;
+      }
+      var top = document.elementFromPoint(x, y);
+      var mine = !!(top && (top === el || el.contains(top)));
+      if (mine) { hits++; }
+      else {
+        var k = who(top);
+        cover[k] = (cover[k] || 0) + 1;
+        if (!first) { first = k; }
+      }
+      out.points.push({at: [Math.round(x), Math.round(y)], top: who(top), mine: mine});
+    }
+    out.sampled = pts.length;
+    out.outsideViewport = off;
+    out.hits = hits;
+    out.reachable = (hits > 0);
+    out.wholly = (hits === pts.length);
+    out.coveredBy = first;
+    out.coverCounts = cover;
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    if (inView(cx, cy)) { out.stack = stackAt(cx, cy); }
+    return out;
+  }
+
+  function run(){
+    var next = document.getElementById('next');
+    var out = {slide: null, steps: [], hover: null, qv: null, points: [], probes: [],
+               vw: window.innerWidth, vh: window.innerHeight};
+    /* Driven through the deck's own control, exactly as `PROBE` and `MOTION_PROBE` are, and for
+       their reason: writing internal state would disclose a slide the audience cannot reach. */
+    if (want > 0){
+      if (!next){ document.title = 'PROBE-ERROR no next control'; return; }
+      for (var n = 0; n < want; n++) { next.click(); }
+    }
+
+    /* ---- item 1: press named controls, in the order given -------------------------------- */
+    var clicks = opts.click || [];
+    for (var i = 0; i < clicks.length; i++){
+      var sel = clicks[i], el = pick(sel);
+      var step = {sel: sel};
+      if (el === undefined){ step.error = 'not a selector this browser will parse'; }
+      else if (!el){ step.found = false; }
+      else {
+        step.found = true;
+        step.name = who(el);
+        /* What the press CHANGED, not merely that it happened. A click on a control whose handler
+           never ran reports identically to one that worked, and the whole point of this command is
+           a state that is hard to confirm any other way. */
+        var target = (opts.watch && opts.watch[i]) ? pick(opts.watch[i]) : null;
+        step.beforeSelf = shown(el);
+        if (target){ step.watch = opts.watch[i]; step.beforeWatch = shown(target); }
+        try { el.click(); step.clicked = true; }
+        catch (e) { step.clicked = false; step.error = String((e && e.message) || e); }
+        step.afterSelf = shown(el);
+        if (target){ step.afterWatch = shown(target); }
+      }
+      out.steps.push(step);
+    }
+
+    /* ---- item 3: open a named quick view --------------------------------------------------
+       **Bound on `.sources-open`, the class the deck's own delegated handler requires** - not on
+       `[data-qv]`, which the SOURCE `<template>` carries too. A container answers with everything
+       nested in it (**L-149**), and here that would press a template. Scoped to the stage because
+       `buildDoc()` clones every control into the reading view and the source map is keyed off the
+       stage's templates. */
+    if (opts.qv){
+      var stage = document.getElementById('stage');
+      var opener = stage ? pick('.sources-open[data-qv="' + opts.qv + '"]', stage) : undefined;
+      var qv = document.getElementById('qv');
+      var names = [];
+      if (stage){
+        Array.prototype.forEach.call(stage.querySelectorAll('.sources-open[data-qv]'),
+          function(b){
+            var v = b.getAttribute('data-qv');
+            if (names.indexOf(v) < 0) { names.push(v); }
+          });
+      }
+      out.qv = {name: opts.qv, names: names, hasSurface: !!qv};
+      if (!stage){ out.qv.error = 'this page has no #stage'; }
+      else if (opener === undefined){ out.qv.error = 'the name will not parse into a selector'; }
+      else if (!opener){ out.qv.found = false; }
+      else {
+        out.qv.found = true;
+        /* **Which slide the opener is on, and whether it is the one on screen.** The deck's
+           handler is delegated on `document`, so a control nine slides away presses perfectly -
+           and the quick view is a modal over whatever slide is CURRENT. The picture would then
+           pair a source with a slide the deck never shows together. Reported rather than refused:
+           reading a source against another slide is a legitimate thing to want a picture of. */
+        var osl = opener.closest ? opener.closest('.slide') : null;
+        out.qv.onSlide = osl ? (osl.dataset.name || null) : null;
+        out.qv.onCurrentSlide = !!(osl && osl.hasAttribute('data-current'));
+        out.qv.before = shown(qv);
+        opener.click();
+        out.qv.after = shown(qv);
+        var title = document.getElementById('qvTitle');
+        out.qv.title = title ? title.textContent.trim().slice(0, 120) : null;
+        out.qv.opened = !!(qv && !qv.hidden);
+      }
+    }
+
+    /* ---- item 2: hover, applied AFTER the clicks so a hover inside a disclosed panel works -- */
+    if (opts.hover){
+      var sub = substituteHover();
+      var h = pick(opts.hover);
+      out.hover = {sel: opts.hover, css: sub,
+                   note: 'substituted trigger - the real CSS, fired by an attribute'};
+      if (h === undefined){ out.hover.error = 'not a selector this browser will parse'; }
+      else if (!h){ out.hover.found = false; }
+      else {
+        out.hover.found = true;
+        out.hover.name = who(h);
+        out.hover.before = shown(h, true);
+        out.hover.marked = markHover(h);
+        out.hover.after = shown(h, true);
+      }
+    }
+
+    var cur = document.querySelector('.slide[data-current]');
+    out.slide = cur ? (cur.dataset.name || null) : null;
+
+    /* ---- item 4 ---------------------------------------------------------------------------- */
+    (opts.at || []).forEach(function(p){
+      out.points.push({at: p, stack: inView(p[0], p[1]) ? stackAt(p[0], p[1]) : null});
+    });
+    (opts.probe || []).forEach(function(s){ out.probes.push(reach(s)); });
+
+    /* **The title, never the DOM** - the same channel `PROBE` uses and for a reason this command
+       makes sharper than any other: it is the one that takes a PICTURE of the page it measured.
+       An appended result element is a paragraph of JSON sitting in the screenshot. `quiet` is what
+       the capture run passes, and it is the whole of what `quiet` does here. */
+    if (!quiet){ document.title = 'RESULT' + JSON.stringify(out) + 'ENDRESULT'; }
+    document.documentElement.setAttribute('data-probe-done', '');
+  }
+  if (document.readyState === 'complete') { setTimeout(run, 60); }
+  else { window.addEventListener('load', function(){ setTimeout(run, 60); }); }
+})();
+</script>
+"""
+
+STATE_HOVER_ATTR = "data-htmldeck-hover"
+
+
+def state_url(probe, slide, opts, quiet=False):
+    """The probe's URL. **Options travel as one URL-encoded JSON parameter, not as many.**
+
+    A CSS selector contains `,` `=` `[` `]` `#` and `.` - every delimiter a hand-rolled query
+    string would have to reserve - and `#` in particular ends the query and starts the fragment,
+    so a selector naming an id would arrive truncated at exactly the character that made it
+    specific. One `quote`d JSON blob has no delimiter to collide with.
+    """
+    q = "?s=%d&opts=%s" % (slide, urllib.parse.quote(json.dumps(opts, sort_keys=True), safe=""))
+    return file_url(probe) + q + ("&quiet=1" if quiet else "")
+
+
+# The `deep` fields, in the order they are printed. Named here rather than derived from the
+# reading, so a field that stopped being collected shows up as a missing line instead of silently
+# leaving the comparison.
+STATE_DEEP = ("color", "background", "borderColor", "transform", "boxShadow", "outline",
+              "filter")
+
+
+def _state_line(label, before, after):
+    """One `before -> after` pair, or a bare reading where nothing was compared."""
+    def brief(s):
+        if not s:
+            return "-"
+        r = s.get("rect") or [0, 0, 0, 0]
+        return "hidden=%-5s %s/%s op=%s  %.0fx%.0f at (%.0f,%.0f)" % (
+            str(bool(s.get("hidden"))).lower(), s.get("display"), s.get("visibility"),
+            s.get("opacity"), r[2], r[3], r[0], r[1])
+    if before is None:
+        return "    %-14s %s" % (label, brief(after))
+    return "    %-14s %s\n    %-14s %s" % (label + " before", brief(before),
+                                           label + " after", brief(after))
+
+
+def _state_deltas(before, after):
+    """The `deep` fields that actually moved, as `name: was -> now`."""
+    b, a = before or {}, after or {}
+    return ["%s: %s -> %s" % (k, b.get(k), a.get(k))
+            for k in STATE_DEEP if k in b or k in a if b.get(k) != a.get(k)]
+
+
+def report_state(res):
+    """Print the state report and count what the caller ASKED FOR that did not happen.
+
+    **Every section says what it could not do as loudly as what it did.** A `--click` that matched
+    nothing still produces a photograph, and the photograph is of the resting slide - a picture
+    never says what it is not showing, so the report has to.
+    """
+    bad = 0
+    print("  slide:    %s" % (res.get("slide") or "(unnamed)"))
+    print("  viewport: %sx%s" % (res.get("vw"), res.get("vh")))
+
+    for st in res.get("steps") or []:
+        print("\n  click %s" % st["sel"])
+        if st.get("error"):
+            print("    ! %s" % st["error"])
+            bad += 1
+        elif not st.get("found"):
+            print("    ! no element matches - nothing was pressed")
+            bad += 1
+        else:
+            print("    %s" % st["name"])
+            print(_state_line("self", st.get("beforeSelf"), st.get("afterSelf")))
+            if st.get("watch"):
+                print("    watching %s" % st["watch"])
+                print(_state_line("it", st.get("beforeWatch"), st.get("afterWatch")))
+                if (st.get("beforeWatch") or {}) == (st.get("afterWatch") or {}):
+                    print("    ! the press changed nothing about it")
+                    bad += 1
+
+    qv = res.get("qv")
+    if qv:
+        print("\n  quick view %r" % qv["name"])
+        if not qv.get("hasSurface"):
+            print("    ! this deck has no #qv surface at all")
+            bad += 1
+        if qv.get("error"):
+            print("    ! %s" % qv["error"])
+            bad += 1
+        elif not qv.get("found"):
+            print("    ! no `.sources-open` on the stage carries that name")
+            print("      the stage offers: %s" % (", ".join(qv.get("names") or []) or "none"))
+            bad += 1
+        else:
+            print(_state_line("surface", qv.get("before"), qv.get("after")))
+            print("    title:         %s" % (qv.get("title") or "(empty)"))
+            if not qv.get("onCurrentSlide"):
+                print("    ! its control is on %r, not on the slide being shown - the quick view "
+                      "is a modal over the CURRENT slide, so a capture pairs this source with a "
+                      "slide the deck never shows together"
+                      % (qv.get("onSlide") or "another slide"))
+                bad += 1
+            if not qv.get("opened"):
+                print("    ! it is still hidden - the press did not open it")
+                bad += 1
+
+    hv = res.get("hover")
+    if hv:
+        c = hv.get("css") or {}
+        print("\n  hover %s" % hv["sel"])
+        print("    %s" % hv["note"])
+        print("    %d `:hover` rule(s) across %d sheet(s) re-inserted as [%s]; %d refused, %d "
+              "sheet(s) unreadable" % (c.get("rules", 0), c.get("sheets", 0), STATE_HOVER_ATTR,
+                                       c.get("refused", 0), c.get("sheetsBlocked", 0)))
+        if hv.get("error"):
+            print("    ! %s" % hv["error"])
+            bad += 1
+        elif not hv.get("found"):
+            print("    ! no element matches - nothing was hovered")
+            bad += 1
+        else:
+            print("    %s, marked on it and %d ancestor(s)"
+                  % (hv["name"], max(0, hv.get("marked", 1) - 1)))
+            print(_state_line("it", hv.get("before"), hv.get("after")))
+            moved = _state_deltas(hv.get("before"), hv.get("after"))
+            for line in moved:
+                print("    %-14s %s" % ("changed", line))
+            if not c.get("rules"):
+                print("    ! this deck declares no `:hover` rule, so nothing could differ")
+                bad += 1
+            elif not moved and hv.get("before") == hv.get("after"):
+                # **Said, not left to be inferred from two identical lines.** Identical lines are
+                # also what a hover that never fired prints, and the reader cannot tell the two
+                # apart from the output alone - so the output says which of them this is not.
+                print("    ! nothing measured differs: not the box, and none of %s."
+                      % ", ".join(STATE_DEEP))
+                print("      the substitution ran, so either no rule reaches this element or its "
+                      "effect is in a property this reads none of")
+                bad += 1
+
+    for p in res.get("points") or []:
+        print("\n  under (%s,%s)" % (p["at"][0], p["at"][1]))
+        if not p.get("stack"):
+            print("    nothing - that point is outside the %sx%s viewport"
+                  % (res.get("vw"), res.get("vh")))
+            bad += 1
+        else:
+            for i, name in enumerate(p["stack"]):
+                print("    %d. %s" % (i + 1, name))
+
+    for pr in res.get("probes") or []:
+        print("\n  probe %s" % pr["sel"])
+        if pr.get("error"):
+            print("    ! %s" % pr["error"])
+            bad += 1
+            continue
+        if not pr.get("found"):
+            print("    ! no element matches")
+            bad += 1
+            continue
+        r = pr["rect"]
+        print("    %s  %.0fx%.0f at (%.0f,%.0f)" % (pr["name"], r[2], r[3], r[0], r[1]))
+        if pr.get("why"):
+            print("    ! %s" % pr["why"])
+            bad += 1
+            continue
+        off, sampled, hits = pr["outsideViewport"], pr["sampled"], pr["hits"]
+        # **Off-screen and covered are different answers**, and collapsing them would report a
+        # control that is simply not on this slide as one a decoration is sitting on top of.
+        if off == sampled:
+            print("    ! every sampled point is outside the viewport - off-screen, not covered")
+            bad += 1
+        elif pr.get("wholly"):
+            print("    reachable at all %d sampled points" % sampled)
+        elif pr.get("reachable"):
+            print("    REACHABLE, but %d of %d sampled points are covered"
+                  % (sampled - hits - off, sampled))
+            bad += 1
+        else:
+            print("    NOT REACHABLE - something is on top at every point that is on screen")
+            bad += 1
+        for k, n in sorted((pr.get("coverCounts") or {}).items()):
+            print("      %d point(s) hit %s instead" % (n, k))
+        if off and off != sampled:
+            print("      %d point(s) fell outside the viewport and were not tested" % off)
+        if pr.get("stack"):
+            print("    stack at centre: %s" % " > ".join(pr["stack"]))
+    return bad
+
+
+def cmd_state(deck, slide=0, click=(), watch=(), hover=None, qv=None, at=(), probe=(),
+              shot=False, name=None, out=None, w=1920, h=1234):
+    """Drive one slide into a disclosed state, report it, and optionally photograph it.
+
+    **Two Chrome runs, not one.** The report comes back through `--dump-dom` and the picture
+    through `--screenshot`, exactly as `measure` and `shots` are two runs over one probe. They also
+    take different window sizes on purpose: the report's is calibrated, so `--at` coordinates mean
+    the viewport the report prints, and the capture's is not, for `cmd_shots`'s stated reason - a
+    window a little larger than the stage puts the whole stage inside the PNG.
+    """
+    opts = {}
+    if click:
+        opts["click"] = list(click)
+    if watch:
+        opts["watch"] = list(watch)
+    if hover:
+        opts["hover"] = hover
+    if qv:
+        opts["qv"] = qv
+    if at:
+        opts["at"] = [list(p) for p in at]
+    if probe:
+        opts["probe"] = list(probe)
+
+    p = make_probe(deck, name="state-probe.html", extra=STATE_PROBE, out=out)
+    where = os.path.dirname(p)
+    cw, ch = calibrate(p, w, h)
+    res, err = read_result(state_url(p, slide, opts), cw, ch)
+    if not res:
+        sys.exit("the state probe returned nothing at %dx%d\n%s" % (cw, ch, err[:400]))
+    bad = report_state(res)
+
+    if shot:
+        stem = name or ("state-%02d" % (slide + 1))
+        dest = os.path.join(where, stem + ".png")
+        chrome_run(state_url(p, slide, opts, quiet=True), w, h, ["--screenshot=" + dest])
+        if os.path.isfile(dest) and os.path.getsize(dest):
+            print("\n  %s  %.0f KB" % (os.path.basename(dest), os.path.getsize(dest) / 1024))
+        else:
+            print("\n  %s  FAILED - no image at %s" % (os.path.basename(dest), dest))
+            bad += 1
+
+    print("\n%s" % where)
+    # **Non-zero when something the caller ASKED FOR did not happen**, which is the difference
+    # between this and `shots`. A named control that matched nothing produces a photograph of the
+    # resting slide, and a photograph never says what it is not showing.
+    return 1 if bad else 0
+
+
 def slide_count(deck):
     """How many slides the deck has, read from the file rather than assumed.
 
@@ -1110,13 +1660,55 @@ def self_test():
             sys.exit("SELF-TEST FAILED: a probe declaring PINS_LOCALLY was pinned at injection "
                      "time anyway, so its motion rows have no subject left to read (T-209, T-261)")
 
+        # **The state probe, and the fifth case** (T-267). It declares NEITHER marker, so it
+        # must come out pinned exactly as an ordinary probe does. That matters more here than
+        # anywhere else: this is the one command that photographs a state a click disclosed, and
+        # an unpinned capture would freeze whatever transition did the disclosing - a picture of
+        # the menu half-open, which reads as a menu that renders wrong.
+        _state = make_probe(deck, name="state.html", extra=STATE_PROBE,
+                            out=os.path.join(fixture, "out"))
+        with open(_state, "r", encoding="utf-8") as _fh:
+            _stext = _fh.read()
+        if MOTION_PIN_CALL not in _stext:
+            sys.exit("SELF-TEST FAILED: STATE_PROBE came out unpinned, so `state` photographs a "
+                     "disclosure part-way through the transition that revealed it (T-267)")
+        if MEASURES_MOTION in STATE_PROBE or PINS_LOCALLY in STATE_PROBE:
+            sys.exit("SELF-TEST FAILED: STATE_PROBE now declares a motion marker. Its subject is "
+                     "a disclosed state, not an animation, and either marker takes its pin away "
+                     "(T-209, T-261, T-267)")
+
+        # **The result travels by TITLE and the capture run suppresses it**, which is the whole of
+        # what keeps a paragraph of JSON out of the photograph. Asserted structurally because the
+        # failure is invisible in every value the tool prints: the report would be perfect and the
+        # picture would carry the report on top of the slide. Proved once by measurement
+        # (2026-08-30: a no-op `state --shot` was byte-identical to `shots` of the same slide,
+        # sha256 3991fdd14ec4aa0e) - this guard is what stops that going quietly false.
+        if "document.body.appendChild" in STATE_PROBE:
+            sys.exit("SELF-TEST FAILED: STATE_PROBE appends its result to the DOM again, so every "
+                     "`--shot` photographs the JSON along with the slide (T-267)")
+        if "if (!quiet){ document.title" not in STATE_PROBE:
+            sys.exit("SELF-TEST FAILED: STATE_PROBE's result is no longer behind `quiet`, so the "
+                     "capture run writes a title it does not read and may render (T-267)")
+
+        # **Both halves of the hover substitution, named.** It is the one item of the four that
+        # does not use the deck's own trigger - it rewrites CSS - so the report says `substituted
+        # trigger` on every run. A rewrite that stopped matching `:hover`, or stopped writing the
+        # attribute, would substitute nothing and print an unchanged element beside that phrase,
+        # which is a claim about the deck built out of a broken instrument.
+        for _needle, _why in ((":hover", "the pseudo-class it looks for"),
+                              (STATE_HOVER_ATTR, "the attribute it substitutes"),
+                              ("substituted trigger", "the words that say the trigger is not real")):
+            if _needle not in STATE_PROBE:
+                sys.exit("SELF-TEST FAILED: STATE_PROBE no longer names %s (%r), so `--hover` "
+                         "reports a state it did not produce (T-267)" % (_why, _needle))
+
         # **The trap, proved on the written page and in all three cases** (T-041). The pin has one
         # declared exemption and the trap has none, so `MOTION_PROBE` is here as a case that must
         # carry it rather than as one that must not - the two seams differ exactly here, and a
         # reader who assumes they match would be wrong in the direction that loses the guarantee.
         # The fixture also has no `<head>`, so this is `inject_head`'s last fallback under test.
         for _label, _text in (("no extra", _plain), ("a caller's extra", _ftext),
-                              ("MOTION_PROBE", _mtext)):
+                              ("MOTION_PROBE", _mtext), ("STATE_PROBE", _stext)):
             if "__htmldeckErr" not in _text:
                 sys.exit("SELF-TEST FAILED: the probe built with %s carries no console trap, so "
                          "GF-2 reads an absent store and reports a clean console (T-041)" % _label)
@@ -1330,6 +1922,86 @@ def main(argv):
         print("deck:    %s\n" % paths.display_path(deck, ROOT))
         return cmd_motion(deck, into=into, at=at, shots=shots, back=back, out=out)
 
+    # **`state` parses its own options too, and for `motion`'s reason** - the shared path below
+    # rejects every unknown flag by design, which is what stops a documented flag going
+    # unimplemented (T-074). Its options are repeatable where `motion`'s are not: pressing two
+    # controls in order is the ordinary case, not the exotic one.
+    if cmd == "state":
+        slide, clicks, watches, hover, qv = 0, [], [], None, None
+        ats, probes, shot, name = [], [], False, None
+
+        def _take(flag, what):
+            """Pull `flag`'s value out of `rest`, or refuse. Returns None when it is absent."""
+            if flag not in rest:
+                return None
+            i = rest.index(flag)
+            if i + 1 >= len(rest):
+                sys.exit("%s needs %s" % (flag, what))
+            v = rest[i + 1]
+            del rest[i:i + 2]
+            return v
+
+        v = _take("--slide", "a slide number")
+        if v is not None:
+            slide = int(v) - 1
+
+        # **Repeatable, and the pairing with `--watch` is positional.** `--click A --watch X
+        # --click B` watches X across A and nothing across B, which is what reading them into two
+        # lists in encounter order gives - so the loop takes them together rather than draining
+        # one flag at a time.
+        while "--click" in rest or "--watch" in rest:
+            ci = rest.index("--click") if "--click" in rest else len(rest)
+            wi = rest.index("--watch") if "--watch" in rest else len(rest)
+            if ci < wi:
+                v = _take("--click", "a CSS selector")
+                clicks.append(v)
+                # keep the two lists the same length, so index i pairs with click i
+                while len(watches) < len(clicks) - 1:
+                    watches.append(None)
+            else:
+                v = _take("--watch", "a CSS selector")
+                if not clicks:
+                    sys.exit("--watch names what a click changes, so it follows a --click")
+                while len(watches) < len(clicks) - 1:
+                    watches.append(None)
+                watches.append(v)
+        while len(watches) < len(clicks):
+            watches.append(None)
+
+        hover = _take("--hover", "a CSS selector")
+        qv = _take("--qv", "the name a `.sources-open` control carries")
+        while "--at" in rest:
+            v = _take("--at", "a point as x,y")
+            try:
+                x, y = [float(n) for n in v.split(",")]
+            except ValueError:
+                sys.exit("--at takes one point as x,y - got %r" % v)
+            ats.append([x, y])
+        while "--probe" in rest:
+            probes.append(_take("--probe", "a CSS selector"))
+        name = _take("--name", "a filename stem for the shot")
+        if "--shot" in rest:
+            shot = True
+            rest.remove("--shot")
+        v = _take("--out", "a directory")
+        if v is not None:
+            out = v
+        if rest:
+            sys.exit("unknown option %r - `state` takes [--slide N] [--click <sel> "
+                     "[--watch <sel>]]... [--hover <sel>] [--qv <name>] [--at x,y]... "
+                     "[--probe <sel>]... [--shot] [--name <stem>] [--out <dir>]" % rest[0])
+        count = slide_count(deck)
+        if not 0 <= slide < count:
+            sys.exit("slide %d - this deck has %d, numbered 1 to %d"
+                     % (slide + 1, count, count))
+        if not (clicks or hover or qv or ats or probes):
+            sys.exit("`state` needs something to do - a --click, --hover, --qv, --at or --probe. "
+                     "With none of them it is `shots` with an extra word.")
+        print("browser: %s" % CHROME)
+        print("deck:    %s\n" % paths.display_path(deck, ROOT))
+        return cmd_state(deck, slide=slide, click=clicks, watch=watches, hover=hover, qv=qv,
+                         at=ats, probe=probes, shot=shot, name=name, out=out)
+
     if "--out" in rest:
         i = rest.index("--out")
         if i + 1 >= len(rest):
@@ -1367,7 +2039,7 @@ def main(argv):
     elif cmd == "shots":
         cmd_shots(deck, which, out=out)
     else:
-        sys.exit("unknown command %r - use measure, shots or motion" % cmd)
+        sys.exit("unknown command %r - use measure, shots, motion or state" % cmd)
     return 0
 
 

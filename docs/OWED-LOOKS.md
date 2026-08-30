@@ -36,11 +36,12 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-One outstanding.
+Two outstanding.
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
 | 10 | [`examples/portfolio-review/portfolio-review.html`](../examples/portfolio-review/portfolio-review.html) | *Three tranches, one gate*, slide 11 - the timeline's **first** segment, the one running into the gate | It is now a flowing dashed line (`Current`) where it was a plain rule, and the segment **after** the gate is deliberately left plain. The asymmetry is the encoding: what the gate measures accrues before it and not after it. *Does the moving segment read as the realised discount accruing into the gate, or as decoration on a schedule - and does the plain second segment read as deliberate rather than as a line somebody forgot?* Also worth a glance with `Motion` off, where both segments should read as dashed and still. | [T-257](../tasks/T-257-ds-218-passes-the-shipped-example-vacuously.md) |
+| 11 | [`examples/reference-deck.html`](../examples/reference-deck.html) | the chrome row, on any slide - the `More` menu **open**, in a picture rather than in a browser | This is the first capture of a state that only exists after a click, so the question is about the PICTURE and not about the deck. Run `python tools/deck/render.py state examples/reference-deck.html --click "#moreBtn" --watch "#moreMenu" --shot` and open the PNG. *Is the open menu wholly inside the frame, fully painted, and legible enough to review the menu from - or is it clipped at the window edge, or caught half-drawn?* Measurement says the state is in the file - the shot is 250 KB against 69 KB at rest, and a no-op `state --shot` is byte-identical to `shots` - but no measurement here says the picture is USABLE, which is the whole point of the command. | [T-267](../tasks/T-267-render-py-cannot-capture-a-decks-interactive-states.md) |
 
 ## What has already been looked at
 

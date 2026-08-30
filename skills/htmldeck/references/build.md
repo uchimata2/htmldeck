@@ -251,6 +251,25 @@ the only way anything here can show you a transition part way through — headle
 frames, so nothing plays. It reports what does not play either: an animation whose computed style
 does not move across the offsets never reached the element the CSS names.
 
+**If a slide holds something a click reveals, `render.py state` is the only thing that can show
+you.** The five commands above photograph a slide at rest, so a More menu, a hover detail, a quick
+view or any other progressive disclosure never appears in a shot.
+
+```
+python $HTMLDECK/tools/deck/render.py state <slug>.html --click "#moreBtn" --watch "#moreMenu" --shot
+python $HTMLDECK/tools/deck/render.py state <slug>.html --slide 4 --qv "<source name>" --shot
+python $HTMLDECK/tools/deck/render.py state <slug>.html --hover ".card" --shot
+python $HTMLDECK/tools/deck/render.py state <slug>.html --probe "#next" --at 960,600
+```
+
+Four things, and they compose in one run: `--click` presses a named control (repeatable, in order,
+and `--watch` names what that press should change); `--qv` opens a named quick view; `--hover`
+reaches `:hover`, which no DOM write can — **it substitutes the trigger**, re-inserting the deck's
+own `:hover` rules against an attribute, and it says so on every run; `--probe` hit-tests a control
+at five points and answers whether anything is on top of it. `--shot` turns any of them into a
+picture. **It exits non-zero when something you asked for did not happen** — a selector that
+matched nothing still produces a photograph, and a photograph never says what it is not showing.
+
 **Pass `--quiet` to that fourth command and read the default without it.** A passing run prints its
 notes and one line carrying the rule partition — 345 bytes instead of 17,581 — and a run that is
 not passing prints everything either way, so the flag costs no diagnosis. Drop it when you want the
@@ -258,7 +277,7 @@ per-rule listing to read yourself; that listing is why the default is the defaul
 
 `--out` is optional and the default is right: shots, probes and measurements go to
 `.assets-cache/deck/` **under the deck's own project**, never under the plugin. Add
-`<slides>` before it — `0,4,6`, zero-based — to render a subset.
+`<slides>` before it — `1,5,7`, counting from one — to render a subset.
 
 **If `shell.py check` reports `COMPONENTS differs` or `SCRIPT differs` on a deck you did not edit
 there, the deck was built on an older release of this plugin.** That is not a defect in the deck and
