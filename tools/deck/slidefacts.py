@@ -38,6 +38,7 @@ Slides are located by `density.slide_bounds`, which reads the deck's own declare
 than counting - a deck shipping a colophon outside the run cannot shift every answer by one.
 """
 
+import html as html_lib
 import os
 import re
 import sys
@@ -53,16 +54,17 @@ TEMPLATE = re.compile(r"<template\b[^>]*>.*?</template>", re.S | re.I)
 SVG = re.compile(r"<svg\b.*?</svg>", re.S | re.I)
 TAG = re.compile(r"<[^>]+>")
 CLASS_ATTR = re.compile(r'\bclass="([^"]*)"')
-ENTITY = [("&amp;", "&"), ("&lt;", "<"), ("&gt;", ">"), ("&quot;", '"'), ("&#39;", "'"),
-          ("&nbsp;", " ")]
-
-
 def unescape(text):
-    """The five entities a deck writes, plus the space. `html.unescape` would do, and this keeps
-    the file to what the rest of `tools/deck/` imports."""
-    for a, b in ENTITY:
-        text = text.replace(a, b)
-    return text
+    """Every named and numeric HTML entity, through the standard library.
+
+    This was a six-entry table until 2026-08-30 - `&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#39;`,
+    `&nbsp;` - on the reasoning that a deck writes no others. It writes plenty: the title slide of
+    `examples/measure-first/measure-first.html` alone carries `&middot;` and `&rsquo;`, and both
+    reached the printed output as literal text and were counted as words by
+    [`readability.py`](readability.py). A hand-kept table of *the ones we use* is a second home for
+    a list the standard library already owns.
+    """
+    return html_lib.unescape(text)
 
 
 def flatten(fragment):
@@ -278,6 +280,15 @@ def self_test():
     if ("rise", "affordance") not in f["motion classes"]:
         sys.exit("SELF-TEST FAILED: `.rise` is declared affordance motion and the slide carries "
                  "it; the printer reported %r" % (f["motion classes"],))
+
+    # --- an entity is text, and every entity is, not a table of the ones somebody remembered
+    entities = ('<section class="slide" data-name="e">'
+                '<p class="body">Priya &middot; Partners&rsquo; meeting &amp; review</p></section>')
+    got = facts(entities, 1)["body copy"]
+    if got != ["Priya · Partners’ meeting & review"]:
+        sys.exit("SELF-TEST FAILED: entities came out as %r. `&middot;` and `&rsquo;` are on the "
+                 "title slide of a tracked deck, and an undecoded one is printed as literal text "
+                 "and counted as a word by readability.py" % (got,))
 
     # --- the two text fields partition the slide, they do not overlap
     for label in f["drawn labels"]:

@@ -1314,6 +1314,15 @@ DS-106 is never "reads as human-written" (DS-107, C-10).** Five of the ten evalu
 against a seeded-defect deck. A clean run is not a good deck; it is a deck carrying no defect this
 gate was built to see (L-05, DS-191).
 
+**A clean copy run is not "reads easily" either, and that is a second sentence rather than the
+same one.** The two rules over copy measure LENGTH (DS-092) and a WORD LIST (DS-106). Neither
+measures difficulty, and both were green on a deck whose own author called it hard - the difficulty
+was vocabulary, noun stacks and abstraction (T-258, adopter report 025). Nothing here reads for
+that, and nothing here should: a threshold on prose invites writing to the threshold. What exists
+is a REPORT, which names the hardest lines and passes judgement on none of them:
+
+    python tools/deck/readability.py <deck>
+
 **And R6 section 8's ninth condition is a person.** GF-2 to GF-8 above decide conditions 2 to 8 and
 DS-001 decides condition 1, so *renders glitch-free* is eight-ninths measured here. The ninth is
 *looked at* - a human opens the deck offline and reads it - and it is not deferred, not excused and

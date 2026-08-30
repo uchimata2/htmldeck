@@ -50,7 +50,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-251](T-251-a-research-note-and-a-memory-entry-describe-a-state-that-changed.md) | Correct R9's account of DS-122 and a memory entry recording an edit never made | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-252](T-252-the-ignore-rules-come-from-three-files-and-one-ships.md) | Put this repository's ignore rules where a clone receives them | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
 | [T-253](T-253-the-low-findings-batch.md) | Correct the audit's forty-nine Low findings, or accept each with a reason and a date | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - |
-| [T-258](T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | Report a readability measurement over drawn slide copy, and name the hardest lines | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | Give render.py a capture path for a deck's disclosed states | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-225 |
 | [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md) | Write the clause rows for the nine conjunctions the sweep found owing | `PH3` | - | `proposed` | `specify` | T-219 | - | - | T-054, T-244 |
@@ -302,6 +301,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-255](T-255-render-py-motion-seeks-past-the-delay.md) | Add the delay in the report branch and drop the subtraction in the capture branch | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-225, T-272 |
 | [T-256](T-256-ds-219-cannot-see-a-painted-svg-ancestor.md) | Walk the full ancestor chain for DS-219's ground, and settle the doubt the rationale records | `PH1` | - | `done` | `review` | - | - | - | T-225 |
 | [T-257](T-257-ds-218-passes-the-shipped-example-vacuously.md) | Make portfolio-review pass DS-218 for a reason, rather than for having no looping motion | `PH1` | - | `done` | `review` | - | - | - | T-225, T-277, T-283 |
+| [T-258](T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | Report a readability measurement over drawn slide copy, and name the hardest lines | `PH3` | - | `done` | `review` | - | - | - | T-225 |
 | [T-259](T-259-nothing-prints-what-a-slide-actually-contains.md) | Ship a per-slide fact printer, so a specification and its deck stop drifting silently | `PH3` | - | `done` | `review` | - | - | - | T-225 |
 | [T-260](T-260-ds-244-tests-proximity-where-it-means-obstruction.md) | Decide what DS-244 measures, from the two findings that contradict each other | `PH1` | - | `done` | `review` | - | - | - | T-225 |
 | [T-261](T-261-ds-035-measures-a-text-run-through-its-transform.md) | Re-derive whether audit.PROBE can stay unpinned, on a deck whose entrance moves the axis | `PH1` | - | `done` | `review` | - | - | - | T-225, T-254 |
