@@ -18,20 +18,23 @@ three**; the other two are the owner's and outside this bound, and the memory in
 plugin also writes into an adopter's tier 1, through `skills/htmldeck/SKILL.md`'s description block
 and nothing else.
 
-**The bound: this file stays smaller than the smallest document it defers to** — `docs/BRIEF.md`,
-`docs/PUBLISHING.md`, `tasks/TASK-WORKFLOW.md`, `tasks/README.md`, `.taskmd/config.md`. **Those five
-are the tier-2 set and the comparison is against tier 2**, which is what makes the list closed rather
-than every document this file links to. A tier-3 document — one opened for a single question, never
-to start work of a kind — is not a term: `docs/RELEASE-PHASES.md` was never in the list and
-`docs/RELEASE-HISTORY.md` is not either. **Otherwise splitting content out could never satisfy the
-bound**, since each split makes a new document smaller than what it was cut from. Both terms
-are counted from the tree and **no constant is written anywhere**, because a number and the
-arithmetic that justified it have to be edited together and the number wins by staying put. The
-inequality says something: once the file you pay for on every turn costs more than any single
-document you open on demand, the split has inverted. Measure both terms with
+**The bound: this file stays smaller than the smallest document it defers to that a session enters
+at the start of work of a kind** — today `docs/BRIEF.md`, `docs/PUBLISHING.md`,
+`tasks/TASK-WORKFLOW.md`, `tasks/README.md`, `.taskmd/config.md` and `docs/AUDIT-METHOD.md`. **That
+test is the tier-2 set, ruled by the owner 2026-08-23**
+([T-236](tasks/T-236-tier-1-and-the-brief-against-what-they-measure.md)): the list is its enumeration,
+a document that meets the test joins it, and it is still not every document this file links to. A
+tier-3 document — one opened for a single question *during* work — is not a term:
+`docs/RELEASE-PHASES.md`, `docs/RELEASE-HISTORY.md`, `docs/REMEDIATION-ORDER.md`. **Otherwise
+splitting content out could never satisfy the bound**, since each split makes a new document smaller
+than what it was cut from. Both terms are counted from the tree and **no constant is written
+anywhere**, because a number and the arithmetic that justified it have to be edited together and the
+number wins by staying put. The inequality says something: once the file you pay for on every turn
+costs more than any single document you open on demand, the split has inverted. Measure both terms
+with
 
 ```bash
-python -c "import pathlib;[print(f'{p.stat().st_size:>7}  {p}') for p in map(pathlib.Path,'CLAUDE.md docs/BRIEF.md docs/PUBLISHING.md tasks/TASK-WORKFLOW.md tasks/README.md .taskmd/config.md'.split())]"
+python -c "import pathlib;[print(f'{p.stat().st_size:>7}  {p}') for p in map(pathlib.Path,'CLAUDE.md docs/BRIEF.md docs/PUBLISHING.md tasks/TASK-WORKFLOW.md tasks/README.md .taskmd/config.md docs/AUDIT-METHOD.md'.split())]"
 ```
 
 **Tiers 2 and 3 carry no budget**, and that is deliberate rather than an omission: they are not paid
@@ -39,22 +42,18 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is still over its own bound** — 15,597 bytes against `tasks/TASK-WORKFLOW.md`'s 13,324,
-measured 2026-08-29 with the command above. *The floor rose 1,399 bytes because `TASK-WORKFLOW.md`
-gained §8, the audit entry point
-([T-218](tasks/T-218-record-the-pre-release-audit-method-and-its-machinery.md)), so the debt fell from
-3,301 to 2,248 that day without a word being cut here — which is what a bound measured against a
-moving term does, and why the rule below says re-measure both.* That day's cuts took it **19,035 → 15,208, −20.1%**,
-closing 57% of the debt before later edits added back: `CE-01` as
+**This file is over its own bound** — 15,581 bytes against `docs/AUDIT-METHOD.md`'s 6,438, measured
+2026-09-01 with the command above. *The floor fell from `tasks/TASK-WORKFLOW.md`'s 13,324 when the
+2026-08-23 ruling made the audit method a term, so the debt is 9,143 where this paragraph said 2,248 —
+a change in the definition, not in either file.* The two cuts this bound was written to make
+decidable are spent: `CE-01` as
 [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and `CE-04` as
 [T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), both ranked in
-[`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6. **Those were the two cuts this bound was written
-to make decidable, and both are spent** — what remains has no ranked finding behind it. That is dated
-debt and not a rule already met. *This statement has now been wrong in both terms twice: it read
-18,807 against `.taskmd/config.md`'s 14,087 when the smaller side had changed hands the same day, and
-15,182 against 11,579 after a later session moved both and recorded the new pair in a task record
-instead of here. **Re-measure both, never one**, and write it here in the same edit — a figure about
-this file cannot be corrected anywhere else.*
+[`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6, and what remains has no ranked finding behind
+it. That is dated debt and not a rule already met. *This statement has been wrong in both terms three
+times — twice when the smaller side changed hands, once when the definition did. **Re-measure both,
+never one**, and write it here in the same edit — a figure about this file cannot be corrected
+anywhere else, and `tools/docs/figures.py` holds both terms to the fence.*
 
 ## What this is
 
@@ -107,8 +106,9 @@ direction, not quietly worked around.
 ## The rules that must survive
 
 1. **Self-contained or it doesn't ship.** One `.html` that renders correctly with the network
-   disabled. Every deck in the source corpus failed this — 2–7 external references each, mostly
-   web fonts.
+   disabled. Most of the source corpus failed this, mostly on web fonts, and the decks that passed
+   are the precedent — the measurement is [R1](docs/research/R1-corpus-conventions.md)'s, and no
+   figure from it lives here (**L-96**).
    *Measured and settled 2026-08-06:* this is no longer the main technical problem. A full
    12-slide deck with three embedded faces, icons, a motion library and SVG diagrams is **192 KB
    with zero external references** (`docs/research/R5-assets-and-licences.md`). Embedding is
@@ -129,9 +129,9 @@ direction, not quietly worked around.
 5. **Printing is optional.** A mode the user can force on, never a constraint on the design.
 6. **Look at the rendered deck, and never read one whole.** A deck that validates is not a deck
    that reads well — so *look* means render it and open it, which nothing here replaces. It does
-   **not** mean reading the file: the three shipped decks are 810,746 bytes, and a question about
-   what is inside one is answered by a tool in `tools/deck/` or by a targeted search, never by
-   opening the HTML.
+   **not** mean reading the file: every shipped deck is over 300 KB (`python tools/docs/figures.py`
+   prints each size), and a question about what is inside one is answered by a tool in `tools/deck/`
+   or by a targeted search, never by opening the HTML.
 7. **Critique is a first-class mode**, not a footnote. It is what turns a first draft into
    something worth presenting, and it is the part users cannot do for their own work.
 

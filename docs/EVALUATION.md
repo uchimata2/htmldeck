@@ -87,19 +87,23 @@ is a reason; *"hard to judge"* is not. A `hard` rule that genuinely cannot be ju
 finding to raise** — the label is wrong — and never a row quietly skipped.
 
 > **Every count in this document is derived from `DESIGN-SYSTEM.md` and goes stale when a rule is
-> added.** These are as of **2026-08-09: 164 rules**, counting DS-000. **Re-derive them, never adjust
-> them by hand** — the previous set was wrong by six, having been written before the rules T-027 and
-> T-025 added, and a hand-adjusted count is indistinguishable from a correct one.
+> added.** The totals are no longer written here: the last pasted set — **164 rules as of
+> 2026-08-09**, counting DS-000 — was fourteen short within a fortnight, inside this very note
+> ([T-236](../tasks/T-236-tier-1-and-the-brief-against-what-they-measure.md), 2026-09-01).
+> **Re-derive them, never adjust them by hand** — the set before that was wrong by six, having been
+> written before the rules T-027 and T-025 added, and a hand-adjusted count is indistinguishable from
+> a correct one.
 >
 > **`python tools/deck/ruleset.py --counts` now derives every figure below**, added 2026-08-09 by
 > [T-043](../tasks/T-043-make-the-gates-coverage-account-provable.md) — because this instruction was
 > written twice and could not be followed: nothing computed the numbers, so *re-deriving* meant
 > reading the table and counting. **Paste from that command, never from another document.**
 >
-> **Why `BRIEF.md` says 163 and this says 164, since they are read together.** The table has 163
-> rows. **DS-000**, the override clause, is stated as prose in §0 rather than as a row, so it is
-> invisible to a row count and is the whole of the difference — it moves `guidance` from 5 to 6 and
-> nothing else. `--counts` prints both sets side by side for exactly this reason.
+> **Why `--counts` prints two totals one apart, since `BRIEF.md` and this document are read
+> together.** The table's row count is one short of the declared count. **DS-000**, the override
+> clause, is stated as prose in §0 rather than as a row, so it is invisible to a row count and is the
+> whole of the difference — it moves `guidance` by one and nothing else. Both sets are printed side
+> by side for exactly this reason, and neither document states either.
 >
 > **It went stale again, exactly as predicted, and by more than the rules that caused the re-count.**
 > The 2026-08-06 set read 154 / 108 / 40 / 6 and 65 `auto`, 39 `render`. Re-derived on 2026-08-09 by
