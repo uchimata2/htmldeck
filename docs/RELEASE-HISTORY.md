@@ -39,11 +39,18 @@ git for-each-ref --sort=creatordate --format='%(refname:short) %(creatordate:sho
 grep -h "^shipped_in:" tasks/*.md | sort | uniq -c
 ```
 
+**Both counted columns are held to those two commands by `python tools/docs/chronology.py`**, which
+`check_all.py` runs: a row whose date or count disagrees fails the run, a tag with no row fails it,
+and a version the task records carry with no row fails it. Since 2026-09-01
+([T-220](../tasks/T-220-derive-the-release-chronologys-task-count-instead-of-typing-it.md)); the
+tool implements the two commands rather than executing a shell, and fails if this fence stops
+naming them.
+
 **The third column is not the second.** `0.2.1` is remembered for three defect fixes and carries ten
 tasks; a patch release closes whatever was open, and only some of it is what the release was *for*.
 Counted 2026-08-14.
 
-*Recounted 2026-08-22 against the command above, and two rows had drifted from it. `0.2.4` read 1 where the command answered 2. `0.5.0` read 14 where it answered 22, and **the eight tasks back-filled the same day took it to 30**: T-111, T-112, T-178, T-181, T-182, T-184, T-185 and T-186 closed 2026-08-19 carrying no `shipped_in` at all, so they were counted by nothing. Which release each belonged to was derived rather than assumed — the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. **This column is derived and no tool re-derives it**, which is what let a figure sit eight short for two days: `figures.py` watches pasted command output, and these numbers are typed into a table.*
+*Recounted 2026-08-22 against the command above, and two rows had drifted from it. `0.2.4` read 1 where the command answered 2. `0.5.0` read 14 where it answered 22, and **the eight tasks back-filled the same day took it to 30**: T-111, T-112, T-178, T-181, T-182, T-184, T-185 and T-186 closed 2026-08-19 carrying no `shipped_in` at all, so they were counted by nothing. Which release each belonged to was derived rather than assumed — the commit that set `status: done` is an ancestor of `v0.5.0`, which `git tag --contains` answers. **This column is derived and until 2026-09-01 no tool re-derived it**, which is what let a figure sit eight short for two days: `figures.py` watches pasted command output, and these numbers are typed into a table — `chronology.py` is what now reads the table.*
 
 | Version | Date | Tasks | What it is remembered for |
 | :--- | :--- | ---: | :--- |

@@ -2,8 +2,8 @@
 id: T-220
 title: Derive the release chronology's task count instead of typing it
 type: deliverable
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-216, T-096, T-145, T-042]
@@ -12,8 +12,9 @@ owner: the project owner
 business_value: medium
 effort: s
 created: 2026-08-22
-updated: 2026-08-22
-deliverables: []
+updated: 2026-09-01
+deliverables: [tools/docs/chronology.py]
+shipped_in: unreleased
 ---
 
 # T-220 — Derive the release chronology's task count instead of typing it
@@ -86,16 +87,58 @@ accounts*, where `the gate's coverage of the ruleset — 92 of 122` is held to
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+
+- **Step 1's decision: a checker of its own, refusing this task's own recommendation.** Read before
+  writing a line: `figures.py` binds a figure four ways — a fence adjacent to its command, a prose
+  numeral to a label the command printed beside it, a part-of-whole claim to a declared account, and
+  a property of an artifact the block links — plus a per-document grant for one `python -c` fence.
+  A table cell keyed by a version is none of those shapes, and the two commands the document names
+  are `git` and a shell pipeline, which that tool's `RUNNABLE` allowlist refuses by design and its
+  `MEASURED` grant admits only per document and per prefix. Widening either is what its own comments
+  forbid. So the plural of the declared account is not a small extension of it, and the checker
+  follows `cycles.py`, `findings.py` and `refcheck.py` instead: one subject, one verdict. Measured:
+  `figures.py` is 106,538 bytes with a self-test of some three hundred lines; the checker is 12,505. 2026-09-01.
+- **The commands are implemented, not executed, and the fence is asserted.** Nothing here runs a
+  shell (**L-07**). Tag dates come from `git for-each-ref` with the document's own format; counts
+  come from every `shipped_in:` line in `tasks/*.md`, which is what `grep -h` reads. The document
+  must keep naming both commands verbatim in a fence or the run fails, because then the check would
+  be enforcing a derivation the document no longer claims — which is how the specification's one
+  open question stays answered by the document rather than by the checker.
+- **Both directions, and the two 2026-08-22 errors are the fixture.** The self-test judges nine
+  cases by the message each produces: agreement; `0.5.0` seeded to 14 against 30; `0.2.4` to 1
+  against 2; a date one day off its tag; a row with no tag; a tag with no row; a version the records
+  carry with no row; `unreleased` read as no version; a fence naming a different command. Then on the
+  real document, seeded by hand: *line 64: `0.5.0` counts 14 task(s) and `shipped_in:` on the task
+  records answers 30* and *line 60: `0.2.4` counts 1 task(s) ... answers 2*, both red; unseeded,
+  17 rows, 17 tags, 17 versions, 0 disagreements.
+- **It lands in `check_all.py`'s partition** as a repository-wide gate after `figures.py`, and was
+  `git add`ed before the run so the manifest saw a tracked file rather than a `STALE` entry.
+- **Nothing in it enumerates a release.** Rows, tags and records are read; a release that adds all
+  three satisfies it with no edit, and a release that adds two of the three is what it fails.
+- **Where it is said.** `RELEASE-HISTORY.md` says under its fence that the two columns are held to
+  the commands, and its recount note's *no tool re-derives it* is now dated. `PUBLISHING.md` §8's
+  step 8 tells the release cutter to run the checker after writing the row, because step 1's gate
+  ran before the row existed and would otherwise catch a wrong row one release late.
 
 **Outputs produced**
-- <path>
+
+- [`tools/docs/chronology.py`](../tools/docs/chronology.py) — the checker and its self-test
+- [`tools/check_all.py`](../tools/check_all.py) — one `WIDE` entry
+- [`docs/RELEASE-HISTORY.md`](../docs/RELEASE-HISTORY.md) — the sentence under the fence and the
+  dated recount note
+- [`docs/PUBLISHING.md`](../docs/PUBLISHING.md) — step 8
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| A row whose count disagrees fails, proved by seeding a 2026-08-22 error back | pass | Both seeded on the real document and quoted in §3; both are also self-test fixtures |
+| The corrected table passes, every one of the seventeen rows compared | pass | `rows compared 17`, and the report prints the count so a subset would show |
+| It runs from `check_all.py` and lands in the partition | pass | `WIDE`, after `figures.py`; the run reports 0 unclassified, 0 stale |
+| A release that adds a row satisfies it without editing the checker | pass | Nothing enumerated; a tag, its records and its row are read from the tree |
+| A row whose date disagrees fails, and a row with no tag fails | pass | Fixtures four and five, judged by message |
+
+**No look is owed.** This task added a checker and edited three documents, and changed no deck.
 
 **Child fix tasks raised**
 - none
@@ -104,5 +147,6 @@ accounts*, where `the gate's coverage of the ruleset — 92 of 122` is held to
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-09-01 | → done | **The column is held to its command, by a checker of its own.** The specification recommended extending `figures.py`'s declared accounts; read first, none of that tool's four bindings reaches a table cell and its allowlist refuses the two commands the document names, so `tools/docs/chronology.py` implements them, asserts the fence still names them, and fails in both directions — a wrong count or date, a row with no tag, a tag or a shipped version with no row. Both 2026-08-22 errors seeded back go red; all seventeen rows agree; wired into `check_all.py`, and `PUBLISHING.md` §8 step 8 runs it after the row is written. |
 | 2026-08-22 | (no status change) | **The one open question is answered and the date column is in scope.** Decided by measuring rather than by weighing the argument: all seventeen rows already agree with `%(creatordate:short)`, so the *a person may state it* case has no instance behind it, and binding the column cannot fail a row today. The condition is that the comparison uses the command the document names and not a better one — the tag set is mixed, annotated and lightweight, and `creatordate` means different things across it. |
 | 2026-08-22 | → proposed | **Created from a figure found wrong while cutting `0.6.0`.** Two rows of the chronology disagreed with the command the document itself names, and one of them had been eight short since `0.5.0` shipped. The back-fill that closed half of it is done; this is the half that recurs, because the column is derived by a command and maintained by hand. `PH3` per `CLAUDE.md`: it is this repository's own tooling and not a defect in the published plugin, so it does not reopen `PH1`. |

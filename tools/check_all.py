@@ -63,6 +63,7 @@ WIDE = [
     ("tools/tasks/lint.py", []),
     ("tools/docs/lessons.py", []),
     ("tools/docs/figures.py", []),
+    ("tools/docs/chronology.py", []),
     ("tools/docs/screening.py", []),
     ("tools/deck/ruleset.py", ["--counts"]),
     ("tools/plugin/check_scaffold.py", []),
