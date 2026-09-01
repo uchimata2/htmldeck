@@ -11,7 +11,7 @@ tasks plus [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md)'
 cycles.
 
 **Three tasks have joined it since, each following a ruling** — `T-274` and `T-275` from §3's two
-post-B7 questions, and `T-276` from the third. **Three more have joined since B11, and none of them from a ruling** —
+post-B7 questions, and `T-276` from the third. **Five more have joined since B11, and none of them from a ruling** —
 [T-278](../tasks/T-278-write-the-clause-rows-the-sweep-found-owing.md) from what `T-244` found, and
 [T-279](../tasks/T-279-check-all-reports-one-number-for-thirty-seven-commands.md) and
 [T-280](../tasks/T-280-every-render-pays-a-fresh-chrome-launch.md) from the owner asking on
