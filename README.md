@@ -4,9 +4,10 @@
 with the network off, carries its own fonts, icons and diagrams, and renders identically on a
 projector, a laptop and a share window. There is nothing to install, no build step and no CDN.
 
-This repository is the **design system, the evaluator and the build check** behind that, plus two
-decks built strictly to them. It is a Claude Code plugin, and all four parts run today: the standard,
-the gate, the mode that writes a deck and the mode that reviews one. What is still outstanding has
+This repository is the **design system, the evaluator and the build check** behind that, plus the
+decks under `examples/`, each built to them and gated on every run. It is a Claude Code plugin, and
+all four parts run today: the standard, the gate, the mode that writes a deck and the mode that
+reviews one. What is still outstanding has
 its own section, *What does not exist yet*.
 
 ---
@@ -153,7 +154,7 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 4992 document pointer(s) checked, 0 broken
+OK - 5009 document pointer(s) checked, 0 broken
      1086 section reference(s) resolved, 0 dead; 3259 not bound to a document and skipped.
 ```
 
@@ -210,8 +211,8 @@ names every one it misses.
 [`examples/sort-window/`](examples/sort-window) holds *Move the window, not the fleet*: 12 slides,
 **316 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
 panels. It was built through the pipeline rather than written, assembled from
-[`shell/`](shell), which is the reference deck with its content cut out, then authored three slides
-at a time with the gate run per batch.
+[`shell/`](shell), which is the reference deck with its content cut out, then authored in batches
+of three, with the gate run on each batch.
 
 The directory holds all four artifacts a run leaves behind: the deck, the foundation spec with its
 outline, the slide-by-slide specification, and the three source documents its figures were
@@ -258,15 +259,20 @@ sources were supplied. That is why the report always says which half it checked.
 Listed here rather than left to be inferred, so nobody has to work out which parts of this page
 describe a plan.
 
-- **It has been installed and used by one project other than this one**, which found six defects in
-  two days: a manifest the installer rejected, a crash on any deck outside the plugin's own drive, a
-  gate failing decks for not containing what its rules judge, upgrade instructions that upgraded
-  nothing, a documented command with a flag the tool did not have, and a rule that looked for the
-  reference deck's own class names and failed any deck not using them. All six are fixed. The third
-  took three goes. The first fix searched for other instances with a throwaway script that read only
-  part of what it claimed to have read; the second replaced that script with a fixture, and the
-  fixture could see one file of the eight that needed it. The sample is one project.
-- **That project's deck is now the third example here, and running the gates over it found four more
+- **Projects other than this one have installed and used it, and each found defects nobody here
+  could have.** The first found six in two days: a manifest the installer rejected, a crash on any
+  deck outside the plugin's own drive, a gate failing decks for not containing what its rules judge,
+  upgrade instructions that upgraded nothing, a documented command with a flag the tool did not
+  have, and a rule that looked for the reference deck's own class names and failed any deck not
+  using them. All six are fixed. The third took three goes. The first fix searched for other
+  instances with a throwaway script that read only part of what it claimed to have read; the second
+  replaced that script with a fixture, and the fixture could see one file of the eight that needed
+  it. The second project built a twenty-five-slide board deck against a training deadline and sent
+  back twenty-seven records, kept in [`docs/adopter-reports/claimai/`](docs/adopter-reports/claimai/README.md)
+  and triaged in [T-225](tasks/T-225-triage-the-claimai-adopter-report.md): every one accepted,
+  eighteen tasks raised, three merged into work already open, none rejected. Each report stays in
+  the tree rather than being summarised here.
+- **The first project's deck is now an example here, and running the gates over it found four more
   defects**, none of which either deck written in this repository could have exposed. Two further
   faults came out of somebody opening the deck and clicking: a control that reopened at the previous
   document's scroll position, and a colophon filed as an argument slide. The pattern is the point.

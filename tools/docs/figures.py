@@ -959,23 +959,41 @@ def audit(text):
     # A figure is now bound to **the field it claims to be**: the sentence has to name the label
     # the command printed beside the value. A check that says `compared` when it compared a
     # coincidence is worse than one that says nothing (**L-36**, **L-44**).
-    prose_rows = []
-    for sentence, _dated in sentences(prose(text)):
-        said = words(sentence)
-        claims = claimed(sentence, table, outputs)
-        for m in PROSE_NUMERAL.finditer(sentence):
-            n = m.group(1)
-            if n in EXCLUDED_PROSE:
-                prose_rows.append(("excluded", n, EXCLUDED_PROSE[n]))
-                continue
-            hits = bound(n, said, table)
-            if hits:
-                prose_rows.append(("compared", n, "%r, printed by %s" % (hits[0][0], hits[0][1])))
-            elif n in claims:
-                prose_rows.append((claims[n][0], n, claims[n][1]))
-            else:
-                prose_rows.append(("UNDECLARED", n, unbound_why(n, said, table)))
-    return rows, prose_rows, seen, table, outputs
+    # **A block that links one manifest artifact is judged by the link first** (T-234, `PR-04`).
+    # `bound()` holds a numeral to a label by shared words, and every deck's label shares the word
+    # `examples` - so the front page's size for the built deck read `compared` against whichever
+    # deck happened to be that size, and seeded to the reference deck's value it stayed green,
+    # bound to the wrong file. The third binding already exists for the declared documents and is
+    # strict in exactly the way this needs: the block has to link the file, and only one. So it
+    # runs here too, and a numeral it judged is taken out of the word-bound path - `declared()`'s
+    # `spoken` rule, because a figure judged twice is counted twice and the count means nothing.
+    facts = artifact_facts()
+    prose_rows, watched = [], {}
+    for block, sents in blocks(prose(text)):
+        judged = {}
+        for written, verdict, why, prop, art_rel in artifact_claims(block, "README.md", facts):
+            prose_rows.append((verdict, written, why))
+            watched[(art_rel, prop)] = watched.get((art_rel, prop), 0) + 1
+            judged[written] = judged.get(written, 0) + 1
+        for sentence, _dated in sents:
+            said = words(sentence)
+            claims = claimed(sentence, table, outputs)
+            for m in PROSE_NUMERAL.finditer(sentence):
+                n = m.group(1)
+                if judged.get(n):
+                    judged[n] -= 1
+                    continue
+                if n in EXCLUDED_PROSE:
+                    prose_rows.append(("excluded", n, EXCLUDED_PROSE[n]))
+                    continue
+                hits = bound(n, said, table)
+                if hits:
+                    prose_rows.append(("compared", n, "%r, printed by %s" % (hits[0][0], hits[0][1])))
+                elif n in claims:
+                    prose_rows.append((claims[n][0], n, claims[n][1]))
+                else:
+                    prose_rows.append(("UNDECLARED", n, unbound_why(n, said, table)))
+    return rows, prose_rows, seen, table, outputs, watched
 
 
 def declared(table, outputs, docs=None, facts=None):
@@ -1176,7 +1194,7 @@ def self_test():
     it produces, because an assertion that cannot run still exits non-zero (**L-55**)."""
     base = io.open(README, encoding="utf-8").read()
 
-    rows, prose_rows, _seen, table, outputs = audit(base)
+    rows, prose_rows, _seen, table, outputs, _watched = audit(base)
     if [r for r in rows if r[0] in ("FAILING", "UNDECLARED")]:
         bad = [r for r in rows if r[0] in ("FAILING", "UNDECLARED")][0]
         sys.exit("SELF-TEST FAILED: the live README does not pass its own check - line %d, %s"
@@ -1236,6 +1254,41 @@ def self_test():
                     moved = line[:at.start()] + str(int(at.group(0)) + delta) + line[at.end():]
                     return line, base.replace(line, moved)
         return None, base
+
+    # 0. **A deck figure on the README is bound to the file the block links, not to a value some
+    # deck happens to share** (T-234, `PR-04`). Derived from the page and the manifest: the block
+    # linking the built deck is found, its size is moved to the reference deck's size, and the run
+    # must go STALE naming the built deck - where the word-bound path alone read it `compared`
+    # against the reference deck and exited 0. Then the live page must bind that same figure to the
+    # built deck, or the fixture proved a message and not a binding.
+    facts = artifact_facts()
+    built, hand = "examples/sort-window/sort-window.html", "examples/reference-deck.html"
+    if built in facts and hand in facts:
+        block = next((b for b, _s in blocks(prose(base))
+                      if linked_artifacts(b, "README.md") == [built]
+                      and re.search(r"\b\d+ KB\b", b)), None)
+        if block is None:
+            sys.exit("SELF-TEST FAILED: no README block links the built deck and states a size, "
+                     "so the binding T-234 added has no subject on the live page")
+        said = int(re.search(r"\b(\d+) KB\b", block).group(1))
+        if said != facts[built]["KB"]:
+            sys.exit("SELF-TEST FAILED: the live README states %s at %d KB in the block linking it "
+                     "and the file is %d KB. The page fails its own check - correct the figure, "
+                     "which is what report() would print as STALE" % (built, said, facts[built]["KB"]))
+        live = [r for r in prose_rows if r[0] == "compared" and r[1] == str(facts[built]["KB"])
+                and built in r[2]]
+        if not live:
+            sys.exit("SELF-TEST FAILED: the README states the built deck's size in a block linking "
+                     "it and the figure is not bound to that file - it is bound by shared words to "
+                     "whichever deck shares the value, which is the coincidence PR-04 measured")
+        other = facts[hand]["KB"] if facts[hand]["KB"] != facts[built]["KB"] else facts[built]["KB"] + 7
+        moved = re.sub(r"\b%d KB\b" % facts[built]["KB"], "%d KB" % other, block, count=1)
+        stale = [r for r in audit(base.replace(block, moved))[1]
+                 if r[0] == "STALE" and r[1] == str(other) and built in r[2]]
+        if not stale:
+            sys.exit("SELF-TEST FAILED: the built deck's README size was moved to %d KB and nothing "
+                     "reported it STALE against %s. If %d is another deck's size the figure passed "
+                     "by coincidence, which is the state PR-04 was raised out of" % (other, built, other))
 
     # 1. A stale *compared* figure has to fail. This is the defect class T-056 found six of.
     line, staled = stale_a("compared")
@@ -1661,8 +1714,10 @@ def self_test():
 
 def report(values):
     text = io.open(README, encoding="utf-8").read()
-    rows, prose_rows, _seen, table, outputs = audit(text)
+    rows, prose_rows, _seen, table, outputs, readme_watched = audit(text)
     doc_rows, unanchored, watched = declared(table, outputs)
+    for key, n in readme_watched.items():
+        watched[key] = watched.get(key, 0) + n
     print("README figures - %s\n" % os.path.basename(README))
 
     counts = {}
@@ -1761,8 +1816,8 @@ def report(values):
     # this report was of things the tool *did* judge - so nothing anywhere read as missing. A zero
     # here is not a failure on its own: a property no document states is correctly watched by nobody.
     # It is the one number that would have made T-129 visible without reading the page.
-    print("\n    where each property is watched - a zero means no declared document binds a claim "
-          "to it")
+    print("\n    where each property is watched, the README included - a zero means no document "
+          "binds a claim to it")
     for rel in sorted(ARTIFACTS):
         print("    %-42s %s" % (rel, ", ".join("%s %d" % (p, watched.get((rel, p), 0))
                                                for p in ("KB", "bytes", "slides", "figures"))))

@@ -192,5 +192,6 @@ comes here.
 | [L-133](lessons/L-133.md) | An ordinal cited in prose is a running total in disguise, and fixing one numbering in a document does not fix the other | Writing |
 | [L-134](lessons/L-134.md) | A pipe inside a code span still splits a table cell, and Markdown drops the remainder rather than showing it | Writing |
 | [L-151](lessons/L-151.md) | A prohibition that spells the token it forbids is destroyed by whatever substitutes it | Writing |
+| [L-152](lessons/L-152.md) | A total decays when an item is added and a per-item record does not, so a count nothing binds is deleted, never refreshed | Writing |
 
 <!-- lessons:end -->
