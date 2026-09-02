@@ -1,3 +1,12 @@
+# Every ignore rule this repository depends on lives in this file. That is a rule, not an
+# observation: git consults three sources and a clone receives only this one. The other two are
+# `.git/info/exclude`, which git creates fresh in every clone, and the machine's global excludes
+# file, which is somebody's home directory - neither is written here, because this repository
+# publishes. Until 2026-09-02 both rules covering `.claude/` came from those two, so on one
+# machine a local settings file never appeared as untracked while on every other machine
+# `git add -A` would have staged it into a public repository (PR-15, PR-122). A rule that
+# protects only its author is not protection.
+
 # Local scratch — never published
 control/
 dist/
@@ -8,12 +17,17 @@ __pycache__/
 .handoff/HANDOFF.md
 .handoff/processed_*
 
-# A test instrument, not a rule: T-288's probe, which T-295 deletes when it takes the
-# reading. `.claude/rules/` itself is deliberately NOT ignored - whether this repository
-# should track a rule file at all is T-295's decision, and ignoring the directory would
-# take it. `git add -A` published this one before anyone chose; hence the line.
-.claude/rules/t-288-probe.md
+# Machine state under `.claude/`, named one line at a time rather than by the directory.
+# `.claude/` itself is deliberately NOT ignored: whether this repository should track a rule
+# file at all is T-295's decision, and a wholesale rule would take that decision quietly -
+# which is how the probe below came to be published before anyone chose. The worktrees line
+# was `.git/info/exclude`'s until 2026-09-02 and so reached no clone at all.
 .claude/settings.local.json
+.claude/worktrees/
+
+# A test instrument, not a rule: T-288's probe, which T-295 deletes when it takes the
+# reading. `git add -A` published this one before anyone chose; hence the line.
+.claude/rules/t-288-probe.md
 
 # Corpus knowledgebase — full-fidelity extraction of the owner's private notes.
 # Local-only by construction: it contains client and personal data and must never publish.
