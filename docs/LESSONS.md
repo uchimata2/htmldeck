@@ -123,6 +123,7 @@ comes here.
 | [L-156](lessons/L-156.md) | A finding names the instance somebody hit; only a tool finds the ones nobody looked at, and the document that recorded the finding is a likely host | Evidence and verification |
 | [L-157](lessons/L-157.md) | Where one step names two homes and only one of them has a proof, the unprovable half stops running and the proof stays green | Evidence and verification |
 | [L-159](lessons/L-159.md) | A finding that names its own test can still have been counted by a coarser one, and then its number is an over-count nobody re-derives | Evidence and verification |
+| [L-161](lessons/L-161.md) | A derived figure written into a document that is inside its own subject cannot converge, and the case that converges by accident is the dangerous one | Evidence and verification |
 
 ### Tooling
 

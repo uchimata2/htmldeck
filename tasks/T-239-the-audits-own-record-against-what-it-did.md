@@ -99,6 +99,7 @@ This run's own record says what the run did. Today a cycle records three of the 
   — §2 loses `Files` and `Bytes`, gains `Instrument`, and cycle 41's brief names cycle 7; the
   preamble records both refusals with their measurements
 - [`docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) — the four Status cells
+- [`docs/lessons/L-161.md`](../docs/lessons/L-161.md) — the mechanism `PR-101` turned on, met twice in one session and generalising past this audit
 
 ## 4. Review
 

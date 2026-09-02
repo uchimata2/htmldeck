@@ -132,7 +132,7 @@ recorded five days earlier — so reprinting them, which [T-223](T-223-derive-th
 did on 2026-08-23, bought five days and decayed four times faster afterwards. **And one row could
 never have been made right.** Cycle 7's subject is this run's own record, which includes this file:
 writing its byte count in here changes its byte count, and the replacement is not even the same
-width. So a `--plan --check` guarding the table was refused too — it would have failed forever on
+width — [**L-161**](../docs/lessons/L-161.md). So a `--plan --check` guarding the table was refused too — it would have failed forever on
 that row, and after deleting the columns it has no subject at all. `PR-68`'s unimplemented
 `--sizing` is untouched: that flag reports when a cycle has grown enough to need cutting, which is a
 property of the command's output and not of a copy kept here.*
