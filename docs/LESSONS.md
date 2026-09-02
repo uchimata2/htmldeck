@@ -120,6 +120,8 @@ comes here.
 | [L-149](lessons/L-149.md) | A container answers with everything nested in it, including documents it only cites | Evidence and verification |
 | [L-150](lessons/L-150.md) | A reported impossibility can be a property of the reporter's instrument | Evidence and verification |
 | [L-155](lessons/L-155.md) | A resolver proves an id exists, never that it is unique, so two sections numbered the same are green in both directions | Evidence and verification |
+| [L-156](lessons/L-156.md) | A finding names the instance somebody hit; only a tool finds the ones nobody looked at, and the document that recorded the finding is a likely host | Evidence and verification |
+| [L-157](lessons/L-157.md) | Where one step names two homes and only one of them has a proof, the unprovable half stops running and the proof stays green | Evidence and verification |
 
 ### Tooling
 

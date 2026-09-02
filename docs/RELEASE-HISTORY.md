@@ -31,7 +31,7 @@ lists all fourteen and where each ended.
 
 ## 1. What shipped when
 
-**Eleven releases over six days.** The authority is `shipped_in` on each task, and the two counted
+The authority is `shipped_in` on each task, and the two counted
 columns below are derived from it rather than kept by hand — re-derive them, do not trust these:
 
 ```bash

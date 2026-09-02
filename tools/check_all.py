@@ -89,6 +89,7 @@ WIDE = [
     ("tools/docs/figures.py", [], True),
     ("tools/docs/chronology.py", [], True),
     ("tools/docs/screening.py", [], True),
+    ("tools/docs/tables.py", [], True),
     ("tools/deck/ruleset.py", ["--counts"], True),
     ("tools/plugin/check_scaffold.py", [], True),
     ("tools/deck/static_variants.py", [],
