@@ -5,7 +5,7 @@
 [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md), whose §2 holds the cycle
 program this document records the results of.
 
-**Status: running.** Cycles 0 to 26, 34, 39, 40 and 41 are done, and eleven of stage 7 are skipped with a stated reason, so **42 of 43 are settled** and cycle 42 is the only one left - **stages 1 to 6 complete**, so what an adopter receives, how this project governs itself, the product, the decks and the specifications they were built from, the whole written record and both surfaces outside git have all been read. **Cycle 41 landed as `B23` on 2026-09-02, so the remediation and the re-read of it are both behind; phase 2 is next and last.** *This sentence read *cycles 0 to 26 and 39 ... 32 of 43* until then - stale by three cycles, and wrong in a way no elapsed time explains: its own enumeration summed to 39, not to the 32 it stated, so the count and the list it was drawn from had stopped agreeing. **Never retype it.** [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) section 2's status column is the one home; counting that column is the derivation.* The owner ruled on 2026-08-29, with 39's result in hand: **cycle 34 only, then cycle 40** - stage 7's other eleven cycles are skipped and the coverage ledger carries the reason. The owner ruled the run order on 2026-08-29 and [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) section 2 carries it: the figure and version sweep first, because it was the only remaining cycle whose subject is the live tree, then the checkpoint taken with its result rather than before it. **What 39 hands the checkpoint**: the live tree's figures hold wherever a command binds them and drift wherever prose carries them, and both of its findings were invisible to every instrument here - so stage 7's twelve cycles of closed record are a reading for sentences, not a sweep for numerals. The baseline is below. The tables carry what one
+**Status: complete.** Cycles 0 to 26, 34, 39, 40, 41 and 42 are done, and eleven of stage 7 are skipped with a stated reason, so **43 of 43 are settled and no cycle is left** - **stages 1 to 6 complete**, so what an adopter receives, how this project governs itself, the product, the decks and the specifications they were built from, the whole written record and both surfaces outside git have all been read. **Cycle 42 landed as `B24` on 2026-09-02 and closed the run**: the remediation, its re-read and the grading pass are all behind, and section 5 is what phase 2 measured. *This sentence read *cycles 0 to 26 and 39 ... 32 of 43* until then - stale by three cycles, and wrong in a way no elapsed time explains: its own enumeration summed to 39, not to the 32 it stated, so the count and the list it was drawn from had stopped agreeing. **Never retype it.** [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) section 2's status column is the one home; counting that column is the derivation.* The owner ruled on 2026-08-29, with 39's result in hand: **cycle 34 only, then cycle 40** - stage 7's other eleven cycles are skipped and the coverage ledger carries the reason. The owner ruled the run order on 2026-08-29 and [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) section 2 carries it: the figure and version sweep first, because it was the only remaining cycle whose subject is the live tree, then the checkpoint taken with its result rather than before it. **What 39 hands the checkpoint**: the live tree's figures hold wherever a command binds them and drift wherever prose carries them, and both of its findings were invisible to every instrument here - so stage 7's twelve cycles of closed record are a reading for sentences, not a sweep for numerals. The baseline is below. The tables carry what one
 cycle found and nothing more — a subject with no row has not been audited, it has not been
 reached.
 
@@ -72,6 +72,7 @@ the audit ([`AUDIT-METHOD.md`](AUDIT-METHOD.md) §2).
 | **34** | `PH3` closed, `T-187` onward - the records `0.6.0` shipped, and the only part of stage 7 a live document cites | 25 | 301,841 | `PR-126`, `PR-127`, `PR-128` | none: `python tools/docs/cycles.py --cycle 34` names 25 files and all 25 were read | 2026-08-29 |
 | **40** | Triage, rank, raise the tasks | - | - | none raised; **one withdrawn** (`PR-96`) and **28 child tasks raised** | none, and no tracked file: `python tools/docs/cycles.py --cycle 40` names none - *synthesis over the register, not over the tree* | 2026-08-29 |
 | **41** | Re-read what the remedies changed - cycles 1, 3 and 5 as the programme names them, the **28 cycles** a remedy actually touched, and cycle 7 last (`PR-102`) | - | - | `PR-129` | none, and no tracked file of its own: `python tools/docs/cycles.py --cycle 41` names none - *synthesis over cycles that already own their files*. **The subject was derived rather than assumed**: the 261 files changed since `7117b73`, joined to `cycles.py --list`, name 28 cycles. **All four of the cycle's named instruments were re-run, never cited** - `refcheck.py` 0 broken, `figures.py` 0 stale, `severity.py` green, and both gates green and run separately. **Three checks a tool cannot make, all passing**: the lessons index reconciles 161 against 161 in both directions; every bold `L-nn` citation in the tree resolves to a file; and the front page's *twenty-seven records* and *eighteen tasks raised* are exact against the directory and against `T-254` to `T-271`. **Two corrections were made rather than raised**, on cycle 6's precedent that this run's own machinery is this run's to keep true: `cycles.py`'s cycle-7 comment still said *no record carries the value today* and was false by 68, and `T-284`'s own section 1 named two candidate cycles that were both misnamed | 2026-09-02 |
+| **42** | Phase 2 — the register's own predictions against what the remediation measured | - | - | none raised; **one correction made rather than raised** ([`REMEDIATION-ORDER.md`](REMEDIATION-ORDER.md) §1) | none, and no tracked file: `python tools/docs/cycles.py --cycle 42` names none - *synthesis over the register, not over the tree*. **Every one of the 129 rows was graded**, on the three things a row predicts: the **remedy** is graded per row in §3's `Status` cell already and is not restated; the **effort** is gradeable for the thirteen findings a task closed one to one and for no other, which is §5.2's result; the **rank** is graded as a band, because a band is what consumed it. **Four predictions the measurement refused are named in §5.4** and the one that held is reported unresolved rather than confirmed, because its instrument does not separate a refusal from a longer sentence. **The `REMEDIATION-ORDER.md` §1 correction follows cycle 41's precedent and cycle 6's before it** - this run's own machinery is this run's to keep true, and its claim that severity does not sequence the remediation is refused by the run's own closing dates with the aspect held fixed. **Instruments re-run, never cited**: `severity.py` green over the 129 rows, and both gates green and run separately | 2026-09-02 |
 
 ---
 
@@ -230,9 +231,101 @@ may not.
 ## 5. Phase 2 — predicted against measured
 
 Written after the remedies exist, never at ranking time — the taskmd skill's `pre-release-audit.md`
-owns that rule.
+owns that rule. **Run as cycle 42 on 2026-09-02**, over this register's 129 rows and the tasks that
+closed them. No tracked file is its subject: `python tools/docs/cycles.py --cycle 42` names none.
 
-| # | Predicted sev / effort | Measured | What the difference was |
-| :-- | :--- | :--- | :--- |
-| `PR-06` | Med, `s` | Med, `s` — the severity and the cost both held | **The remedy's own prediction was refused, which is the row this table exists for.** It read *the counts may reconcile once membership is derivable, in which case the defect was only ever that it was not*. They did not. Deriving the partition located one half exactly — `shell/README.md`, 6,380 bytes, counted in both cycle 1 and cycle 16 — and showed the other half unlocatable, so the plan's thirty-seven rows summing to 491 covered at most **488 distinct** files. **Four tracked files were in no cycle, not one**: a double count and two entries the document cannot name ran in opposite directions and partly cancelled, which is why the aggregate looked one short. The finding understated itself |
-| | | *the rest not run* | |
+**Each row predicted three things, and only two of them can be graded.** A **rank**, an **effort**
+and a **remedy**. The remedy is graded per row already, in §3's `Status` cell, written as each row
+closed — phase 2 does not restate it, and a reader wanting one finding's grade reads its row. What
+no single row could see is below.
+
+### 5.1 Effort, for the thirteen findings a task closed one to one
+
+**Thirteen of the 129 have a remedy task to themselves** — the eight `High` rows one-for-one, the two
+raised ahead of triage, and three raised from later rulings. For these, and only these, the
+register's per-finding `Effort` faces a second estimate taken with the remedy decided.
+
+| # | Predicted | Task | Its effort | Difference |
+| :-- | :--- | :--- | :---: | :--- |
+| `PR-01` | Med, `xs` | [T-224](../tasks/T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) | `xs` | none |
+| `PR-02` | High, `s` | [T-226](../tasks/T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | `s` | none |
+| `PR-06` | Med, `s` | [T-223](../tasks/T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) | `s` | **The remedy's own prediction was refused, which is the row this table exists for.** It read *the counts may reconcile once membership is derivable, in which case the defect was only ever that it was not*. They did not. Deriving the partition located one half exactly — `shell/README.md`, 6,380 bytes, counted in both cycle 1 and cycle 16 — and showed the other half unlocatable, so the plan's thirty-seven rows summing to 491 covered at most **488 distinct** files. **Four tracked files were in no cycle, not one**: a double count and two entries the document cannot name ran in opposite directions and partly cancelled, which is why the aggregate looked one short. The finding understated itself |
+| `PR-07` | High, `s` | [T-227](../tasks/T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | `s` | none |
+| `PR-36` | Med, `s` | [T-274](../tasks/T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | `m` | **One band high.** The row costed the remedy it recommended — retire the two tokens — and put the alternative beside it. The owner chose to build the component |
+| `PR-37` | High, `s` | [T-228](../tasks/T-228-the-second-theme-fails-the-contract-it-demonstrates.md) | `s` | none |
+| `PR-48` | High, `s` | [T-229](../tasks/T-229-ds-106s-check-omits-a-word-the-rule-names.md) | `s` | none |
+| `PR-53` | High, `s` | [T-230](../tasks/T-230-the-resolution-contract-samples-four-slides-by-fixed-index.md) | `s` | none |
+| `PR-70` | High, `s` | [T-231](../tasks/T-231-two-packaging-checks-have-no-subject-at-all.md) | `s` | none |
+| `PR-77` | Med, `xs` | [T-275](../tasks/T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | `s` | **One band high, and the same cause as `PR-36`** — the same question in the colour band, moved by the same ruling |
+| `PR-80` | High, `s` | [T-232](../tasks/T-232-two-entrance-motions-do-not-collapse-for-print.md) | `s` | none |
+| `PR-83` | High, `s` | [T-233](../tasks/T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md) | `s` | none |
+| `PR-84` | Med, `s` | [T-281](../tasks/T-281-the-sort-windows-capacity-story-cannot-hold-its-own-failure-table.md) | `s` | none — **and this is the row that refuses the obvious explanation of the two above.** `PR-84` was deferred, had all three candidate answers refused as number fixes, and was settled by the owner's ruling. Needing a decision did not move it. What moved `PR-36` and `PR-77` is that the ruling chose a remedy other than the one the row had costed |
+
+**Eleven of thirteen held exactly, two came in one band high, and none came in low.** The error is
+one-way, and small. **The `Effort` scale prices the remedy the row recommends**; where the decision
+went elsewhere it priced work nobody did.
+
+**The instrument is a second estimate, not a measurement, and no harder one exists.** A task's
+`effort` is set when the task is written. Git cannot supply the harder reading: of the 33 remedy
+tasks, **28 are named somewhere in a commit and 17 have at least one commit naming that task alone**,
+so a batch's diff is attributable to a batch and not to a task. Measured 2026-09-02 over `master`
+at `27385ea`.
+
+### 5.2 The other 116 efforts cannot be graded at all, and the run decided that itself
+
+`Effort` was predicted **129 times** — `xs` 90, `s` 37, `m` 2. It is testable **13 times**. The other
+116 findings were closed by 20 tasks holding two or more each, the largest being
+[T-253](../tasks/T-253-the-low-findings-batch.md)'s 49, so their cost is recorded per task and the
+per-finding figure has nothing to face.
+
+**This was not an accident of bookkeeping — it is cycle 40's granularity ruling arriving here.** The
+owner ruled on 2026-08-29 that a severity obliges a disposition rather than a file count, which is
+what made 129 findings affordable as 33 tasks. The same ruling made 90% of this column
+unfalsifiable. **A per-finding estimate is worth writing only where a per-finding record will answer
+it**, and this run wrote the one and then chose not to keep the other. *For the next audit: cost the
+unit that will be worked, not the unit that is found.*
+
+### 5.3 Severity ordered the work, and the order document says it does not
+
+Every row's rank was predicted. **[`REMEDIATION-ORDER.md`](REMEDIATION-ORDER.md) §1 states that it is
+not what sequences the remediation** — *the `High` and `critical` bands do not run first*, because
+that order measures rework and severity measures the audience's cost. **The closing dates refuse it.**
+
+| Band | 08-23 | 08-29 | 08-30 | 09-01 | 09-02 |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| `High` (8) | | 5 | 3 | | |
+| `Med` (70) | 3 | 20 | 11 | 7 | 29 |
+| `Low` (51) | | 1 | | | 50 |
+
+**Every `High` closed in the first two days; 50 of 51 `Low` closed on the last.** The obvious
+objection is that rank and aspect co-vary — instrument and product fixes rank higher and rule 1 puts
+them first. **It does not survive holding the aspect fixed.** Within *the product* alone, 36
+findings: `High` 5 on 08-29 and 1 on 08-30, `Med` 15 and 6 with a single straggler, `Low` all 14 on
+09-02. Within *product documentation*, both `High` rows on 08-30 and all 8 `Low` rows on 09-02. **No
+`Low` finding in either aspect closed before any `High` finding in the same aspect.**
+
+**The mechanism is the two rulings meeting, and neither document says they do.** Cycle 40 made the
+whole `Low` band one task. A task is the unit the order schedules. So severity chose the schedule one
+level below where §1 was looking — not by ranking the batches, but by deciding how many batches a
+band gets. **`REMEDIATION-ORDER.md` §1 is corrected rather than raised as a finding**, on cycle 41's
+precedent and cycle 6's before it: this run's own machinery is this run's to keep true.
+
+### 5.4 What the measurement refused
+
+The method requires this list, and requires it to be non-empty.
+
+1. **That an `Effort` per finding would ever meet a measurement** — §5.2. Predicted 129 times,
+   gradeable 13, and the run's own triage is what made it so.
+2. **That severity did not sequence the remediation** — §5.3. The run's own order document says it,
+   and the run's own dates say otherwise, with the aspect held fixed.
+3. **That the two effort overruns are explained by needing an owner's decision** — §5.1. `PR-84`
+   needed one and held exactly. The distinguishing fact is a ruling that chose a *different* remedy,
+   not a ruling as such.
+4. **That git could grade the cost per task** — §5.1. It names 28 of 33 tasks and attributes a diff
+   to 17, because the remediation commits by batch.
+
+**What held.** The rank predicted the remedy's survival in the direction expected — 5 of 8 `High`
+rows had some part of their stated remedy refused against 4 of 51 `Low` rows — but the `Status` cells
+that record a refusal are also the longest ones (`High` median 1,234 characters, `Low` 419), so the
+difference is not separable from how much was written about each. **It is reported as unresolved
+rather than as a confirmation**, which is the same reason §5.3 controls for aspect and this cannot.

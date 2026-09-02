@@ -25,7 +25,7 @@ directly, which outranks a standing authority rather than needing one. **One joi
 which is a count of what the triage put on the board and reads as a count of what this file holds.
 The sentence below forbids exactly that, and the title was the one place nobody applied it.*
 
-**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 to B11 landed 2026-08-29, B12 to B16 on 2026-08-30, B17 on 2026-09-01, and B18 to B22 on 2026-09-02.**
+**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 to B11 landed 2026-08-29, B12 to B16 on 2026-08-30, B17 on 2026-09-01, and B18 to B24 on 2026-09-02 — B24 being the last.**
 
 ---
 
@@ -57,6 +57,16 @@ corollary below is affordable.
 measures the audience's cost; this order measures rework. Where they disagree, a `critical`
 documentation fix waits behind a `medium` instrument fix, because the instrument decides whether the
 documentation fix can be verified at all.
+
+***And the run did not do this. Measured by cycle 42 on 2026-09-02, over the register's own closing
+dates:*** *every one of the eight `High` findings closed in the first two days, and 50 of the 51
+`Low` findings on the last. It survives holding the aspect fixed, so it is not this order's rework
+argument in disguise — inside `the product` alone, all six `High` rows closed on 08-29 or 08-30 and
+all fourteen `Low` rows on 09-02. **The mechanism sits one level below where this paragraph looks.**
+Cycle 40 made the whole `Low` band a single task, and a task is the unit this file schedules — so
+the band chose the slot without any batch ever being ranked by severity. Both sentences are kept:
+the paragraph states the intent correctly, and the measurement is what a later order has to design
+against. [`PRE-RELEASE-AUDIT.md`](PRE-RELEASE-AUDIT.md) §5.3 holds the figures.*
 
 ---
 
@@ -124,7 +134,7 @@ is blocked.
 | :--- | :--- | :--- | :--- |
 | **B22** — landed 2026-09-02 | [T-253](../tasks/T-253-the-low-findings-batch.md) | `l` | **Last of the remediation.** Forty-nine `Low` findings, many of them in documents waves 4 to 6 rewrite. Running it earlier means fixing a line and then rewriting the paragraph around it. **Landed: 48 fixed, 1 accepted, and eight rows came back differently from what they said — a fifteenth consecutive batch.** `PR-110`'s remedy is an instrument rather than a correction, and [`../tools/docs/severity.py`](../tools/docs/severity.py) found `T-219` §3's `Open` column stale by **74** on its first run - every `High` and `Medium` row had closed and the table still read 7 and 67. `PR-74`'s new fixture failed on its own off-by-one and the tool held: the title channel's index is zero-based against a one-based total. `PR-69` was wrong again by two files four days after it was raised, so its figure was deleted rather than corrected - the batch's default, and **L-161** is why: `PR-05`, `PR-18`, `PR-47`, `PR-52`, `PR-87`, `PR-109` and `PR-125` all lost a number rather than gaining a corrected one. `PR-113`'s prior question had to be answered before any tally could be right: a principle carries a grade **set**. **Two things were absorbed in place** - three rows striking their id where §3 strikes the rank, and `T-219`'s log reading in two directions. **One look is owed**: `PR-79`'s degraded-state palette, [`OWED-LOOKS.md`](OWED-LOOKS.md) row 12, which is also why all five decks were re-synced |
 | **B23** — landed 2026-09-02 | [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) cycle 41, and [T-284](../tasks/T-284-owed-looks-belongs-to-no-audit-cycle.md) | — | Re-read cycles 1, 3 and 5 plus every cycle a remedy touched. **This is where the audit's own damage shows**, and it cannot run before the remedies exist. **Landed, and the damage was one finding wide.** The subject was derived rather than assumed: 261 files changed since `7117b73` name **28 cycles**, not the handful the phrase suggests. `PR-129` is this run's own last remediation commit falsifying a figure on a human-facing page that no gate binds. `T-284` closed here, which is where this document said it would be met. Two further corrections were made rather than raised, on cycle 6's precedent for the run's own machinery |
-| **B24** | [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) cycle 42 | — | Phase 2: predicted against measured, per finding. It has to name at least one prediction the measurement refused, or it was not run honestly |
+| **B24** — landed 2026-09-02 | [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) cycle 42 | — | Phase 2: predicted against measured, per finding. It has to name at least one prediction the measurement refused, or it was not run honestly. **Landed, and it named four.** All 129 rows graded on the three things a row predicts. The **remedy** was already graded per row in the register's §3, so phase 2 did not restate it; the **effort** is gradeable for thirteen findings and no others, of which eleven held exactly, two came in one band high and none came in low; the **rank** is graded as a band, because a band is what consumed it. **The other 116 efforts cannot be graded at all** — cycle 40's granularity ruling closed them in 20 multi-finding tasks, so the run predicted a quantity it then decided not to record. **The sharpest refusal is this file's own §1 corollary**, corrected there rather than raised, on cycle 41's precedent. **§4's standing authorities expire with this row** |
 
 ---
 
@@ -212,7 +222,10 @@ nothing.
 
 Ruled by the owner 2026-08-29, in the same pass as §3. **These are standing authorities for this
 programme of work, not general ones**: they are scoped to **the batches in §2 and whatever a ruling in §3 adds to them** — which is three tasks so far, and is why this reads as the schedule rather than as a count — and they expire when B24
-closes.
+closes. **B24 closed on 2026-09-02, so they have expired**: a session working anything below now
+needs the owner's authority for it, and this section is the record of what the authority was, not a
+grant a later session may still read as live. What remains unbatched was never covered by it in the
+first place — those tasks were asked for directly, which is §3's own distinction.
 
 | May | Bound |
 | :--- | :--- |
