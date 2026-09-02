@@ -49,9 +49,11 @@ evidence that it can be.
 corrected, and already corrected once by
 [T-119](../../tasks/T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md).
 
-**DS-122 is `hard`, `auto` and owned, and its check is a list of five vendor names.** The rule reads
-*no chart library. Hand-written SVG, borrowing scale arithmetic as a few lines.* What enforces it is
-one row in [`tools/deck/audit.py`](../../tools/deck/audit.py)'s `STATIC` table, matching the
+**DS-122 was `hard`, `auto` and owned, and its check was a list of five vendor names.** *Past
+tense since 2026-09-02: §8's amendment shipped, and this paragraph and the table below are kept
+as the state it argued from — the vacuity they demonstrate is the reason the rule was amended.*
+The rule read *no chart library. Hand-written SVG, borrowing scale arithmetic as a few lines.*
+What enforced it was one row in [`tools/deck/audit.py`](../../tools/deck/audit.py)'s `STATIC` table, matching the
 substrings `chart.js`, `d3.min`, `plotly`, `highcharts` and `echarts`. Probed against the row itself:
 
 | Probe handed to DS-122's check | Verdict |
@@ -62,8 +64,9 @@ substrings `chart.js`, `d3.min`, `plotly`, `highcharts` and `echarts`. Probed ag
 | `frappe-charts` | **passes** |
 | `chart.js` | fails |
 
-Four things a reader would call chart libraries pass a rule that forbids chart libraries. This is
-one step short of **L-125**'s vacuous check, and §6 below says what to do about it.
+Four things a reader would call chart libraries passed a rule that forbade chart libraries. That
+was one step short of **L-125**'s vacuous check, and §6 below says what to do about it. §8 carries
+what was done.
 
 ---
 
@@ -329,9 +332,16 @@ check that cannot be walked around by picking a library nobody listed:
   permitting redistribution. A deck that declares nothing is held to the hand-authored default, which
   is where every deck stands today.
 
-That change is not made here. It needs a child task, because it touches the ruleset, `audit.py`'s
+~~That change is not made here. It needs a child task~~, because it touches the ruleset, `audit.py`'s
 `STATIC` table and the component contract at once, and because nothing should be admitted through the
 new door until the middle row of §7 actually fires.
+
+**Made 2026-08-21 by [T-202](../../tasks/T-202-amend-ds-122-into-a-threshold-and-bind-its-check-on-structure.md), shipped in `0.6.0`.** `DS-122` carries the rule above almost verbatim, and its check binds on run-time mark
+mechanisms rather than on five names. **§1's probe table is restated as history rather than
+re-probed**, which is the choice `PR-114` left open: those four probes are evidence about the check
+that was replaced, so running them against the structural one would answer a different question and
+lose **L-125**'s case. What the new check decides is `audit.py`'s to state, and it does, in the
+comment that opens *It was a substring blocklist of five vendor names*.
 
 ---
 
