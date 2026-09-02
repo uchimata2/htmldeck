@@ -25,6 +25,8 @@ Runs as the fifth step of `tools/tasks/lint.py`, which is what a closure runs. I
 first (**L-04**). Pure standard library (**L-07**).
 """
 
+import contextlib
+import io
 import os
 import re
 import sys
@@ -84,6 +86,23 @@ def self_test():
     return True
 
 
+def quiet_wanted(argv, stdout=None):
+    """Whether a green run prints one line (**L-153**). `--report` says no and `--quiet` says yes,
+    outright; otherwise a terminal gets the account and anything else gets the line."""
+    if "--report" in argv:
+        return False
+    if "--quiet" in argv:
+        return True
+    stdout = sys.stdout if stdout is None else stdout
+    return not (hasattr(stdout, "isatty") and stdout.isatty())
+
+
+def emit(full, code, line, quiet):
+    """The whole account on a red run or a watched one, the line otherwise. `code` before `quiet`:
+    a quiet mode that hid a failure would be worse than the account it replaces."""
+    return full if code or not quiet else line + "\n"
+
+
 def report():
     bad = missing(records())
     print("shipped_in - every closed task carries it (`PR-27`)\n")
@@ -92,9 +111,19 @@ def report():
               % name)
     print("\n%s" % ("%d closed task(s) missing the field" % len(bad) if bad else
                     "0 missing - every closed task carries `shipped_in`"))
-    return 1 if bad else 0
+    return (1 if bad else 0,
+            "shipped: %d task record(s), %d closed with no `shipped_in`"
+            % (sum(1 for _ in records()), len(bad)))
+
+
+def main(argv):
+    self_test()
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        code, line = report()
+    sys.stdout.write(emit(buf.getvalue(), code, line, quiet_wanted(argv)))
+    return code
 
 
 if __name__ == "__main__":
-    self_test()
-    sys.exit(report())
+    sys.exit(main(sys.argv[1:]))

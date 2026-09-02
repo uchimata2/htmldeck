@@ -1180,10 +1180,51 @@ def self_test():
                  "mode that reports a red run as one line, or as none, is worse than no quiet mode"
                  % (code, "printed" if "DS-000" in out.getvalue() else "dropped"))
 
+    # The three readings `CE-19` asks for, and the flags that override them. The red case is
+    # asserted above with a seeded failure; these are the two that decide a *green* run, and a
+    # default that silently stopped depending on `isatty` is exactly what would go unnoticed.
+    class Tty(object):
+        def isatty(self):
+            return True
+
+    class Pipe(object):
+        def isatty(self):
+            return False
+
+    if quiet_wanted([], stdout=Tty()):
+        sys.exit("SELF-TEST FAILED: a run at a terminal would print one line. A person watching "
+                 "loses the account, which is the half of L-153 that costs nothing to keep")
+    if not quiet_wanted([], stdout=Pipe()):
+        sys.exit("SELF-TEST FAILED: a piped green run would print the whole account. That is the "
+                 "29,980 bytes CE-19 measured, paid again on every later turn of the session")
+    if not quiet_wanted(["--quiet"], stdout=Tty()):
+        sys.exit("SELF-TEST FAILED: --quiet did not win at a terminal")
+    if quiet_wanted(["--report"], stdout=Pipe()):
+        sys.exit("SELF-TEST FAILED: --report did not win when piped. It is the only way back to "
+                 "the account from a captured stream")
+
     # Every verdict producer is in the static half or declared outside it. Here as well as in
     # `static_variants.py`, because the composition is this file's and a producer arrives here first.
     producer_split()
     return True
+
+
+def quiet_wanted(argv, stdout=None):
+    """Whether a green run prints one line (**L-153**). `--report` says no and `--quiet` says yes,
+    outright; otherwise a terminal gets the account and anything else gets the line.
+
+    **This tool prints most and was the last to get it.** Measured 2026-09-02 (`CE-19`): a green run
+    printed **29,980 bytes** by default, up from 17,391 on 2026-08-13, against 398 under `--quiet` -
+    and the four document tools had carried the rule since `T-286` while the one whose output a
+    session actually captures did not. Nothing about the green account changes; what changes is that
+    a captured stream stops paying for it on every later turn.
+    """
+    if "--report" in argv:
+        return False
+    if "--quiet" in argv:
+        return True
+    stdout = sys.stdout if stdout is None else stdout
+    return not (hasattr(stdout, "isatty") and stdout.isatty())
 
 
 def summary(res):
@@ -1349,7 +1390,7 @@ def main(argv):
     if "--json" in argv:
         print(json.dumps(res, indent=1))
         return 0 if res["ok"] else 1
-    return report(res, quiet="--quiet" in argv)
+    return report(res, quiet=quiet_wanted(argv))
 
 
 if __name__ == "__main__":

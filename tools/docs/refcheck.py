@@ -69,7 +69,9 @@ the fixture before believing its zeros is **L-103**.
 Run it from the repository root. Task validation is `taskmd check`, not this.
 """
 
+import contextlib
 import fnmatch
+import io
 import os
 import re
 import sys
@@ -437,7 +439,7 @@ def cmd_check():
         print("\nFAIL - %d problem(s):\n" % len(problems))
         for p in problems:
             print("  " + p)
-        return 1
+        return 1, "refcheck: %d problem(s)" % len(problems)
     # Say what was checked, not just that it passed: this line used to read "0 broken links"
     # while two documents the tool itself points at were missing (L-05).
     print("OK - %d document pointer(s) checked, 0 broken" % pointers)
@@ -447,7 +449,8 @@ def cmd_check():
     print("     %d document(s) not scanned (.gitignore); front-matter is not scanned."
           % skipped)
     print("     references only - it cannot tell you a document is any good. Tasks are `taskmd`.")
-    return 0
+    return 0, ("refcheck: %d pointer(s), %d section reference(s), %d label(s), 0 broken"
+               % (pointers, sections, labels))
 
 
 def self_test():
@@ -568,17 +571,43 @@ def self_test():
     return True
 
 
+def quiet_wanted(argv, stdout=None):
+    """Whether a green run prints one line (**L-153**). `--report` says no and `--quiet` says yes,
+    outright; otherwise a terminal gets the account and anything else gets the line."""
+    if "--report" in argv:
+        return False
+    if "--quiet" in argv:
+        return True
+    stdout = sys.stdout if stdout is None else stdout
+    return not (hasattr(stdout, "isatty") and stdout.isatty())
+
+
+def emit(full, code, line, quiet):
+    """The text a run prints: the whole account on a red run or a watched one, the line otherwise.
+    `code` is consulted before `quiet` - a quiet mode that hid a failure would be worse than the
+    account it replaces."""
+    return full if code or not quiet else line + "\n"
+
+
 def main():
     argv = sys.argv[1:]
-    if argv and argv[0] not in ("check", "--self-test"):
+    # `--report` and `--quiet` decide how a *green* run reads (**L-153**) and are not commands.
+    # Filtering them here rather than widening the guard keeps the guard's job intact: a mistyped
+    # command still prints the docstring and exits 1, which is what it is for.
+    words = [a for a in argv if a not in ("--report", "--quiet")]
+    if words and words[0] not in ("check", "--self-test"):
         print(__doc__)
         return 1
     os.chdir(ROOT)
     self_test()
-    if argv and argv[0] == "--self-test":
+    if words and words[0] == "--self-test":
         print("OK - self-test passed; the resolver rejects what it should.")
         return 0
-    return cmd_check()
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        code, line = cmd_check()
+    sys.stdout.write(emit(buf.getvalue(), code, line, quiet_wanted(argv)))
+    return code
 
 
 if __name__ == "__main__":

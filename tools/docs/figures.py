@@ -641,8 +641,31 @@ ARTIFACTS = {
 _RUNS = {}
 
 
+def has_quiet_default(rel):
+    """Whether a tool of this repository prints one line when its stdout is not a terminal.
+
+    Read from the tool's own source rather than from a list here, so a tool that adopts **L-153**
+    tomorrow is handled without an edit - and one that drops it stops being asked for the account.
+    The marker is the function every one of them defines.
+    """
+    if not rel.startswith("tools/"):
+        return False
+    full = os.path.join(ROOT, rel.replace("/", os.sep))
+    if not os.path.exists(full):
+        return False
+    with io.open(full, encoding="utf-8") as handle:
+        return "def quiet_wanted(" in handle.read()
+
+
 def run(cmd):
     """The command's combined output, run at most once per process.
+
+    **A pipe is not what the README documents.** Since **L-153** a tool prints its account at a
+    terminal and one line anywhere else, and this reads a pipe - so a command whose output the page
+    pastes would be measured in a form no reader of the page ever sees, and every pasted line would
+    read as absent. `--report` is the documented way back to the account, and it is added for
+    exactly the tools that have the rule. Found by this self-test on the day `check.py` adopted it
+    (T-293): two README blocks, `check.py` and `refcheck.py`.
 
     **The cache is not an optimisation.** `check.py` drives real headless Chrome, and the self-test
     audits the document six times over - once clean and once per staled fixture. Without this the
@@ -656,6 +679,9 @@ def run(cmd):
         argv = shlex.split(cmd)
         if argv[0] == "python":
             argv[0] = sys.executable
+        if (len(argv) > 1 and has_quiet_default(argv[1])
+                and not {"--report", "--quiet", "--json"} & set(argv)):
+            argv.append("--report")
         p = subprocess.Popen(argv, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         _RUNS[cmd] = p.communicate()[0].decode("utf-8", "replace").replace("\r\n", "\n")
     return _RUNS[cmd]
