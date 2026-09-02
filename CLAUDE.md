@@ -42,10 +42,11 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is over its own bound** — 15,742 bytes against `docs/AUDIT-METHOD.md`'s 6,675, measured
-2026-09-02 with the command above. *The floor fell from `tasks/TASK-WORKFLOW.md`'s 13,324 when the
-2026-08-23 ruling made the audit method a term, so the debt is 9,067 where this paragraph said 2,248 —
-a change in the definition, not in either file.* The two cuts this bound was written to make
+**This file is over its own bound** — 15,833 bytes against `docs/AUDIT-METHOD.md`'s 7,837, measured
+2026-09-02 with the command above. *The floor rose 1,162 bytes that day, when `T-239` gave that file
+a Method column, so the debt is 7,996; it had fallen to it from `tasks/TASK-WORKFLOW.md`'s 13,324
+when the 2026-08-23 ruling made the audit method a term — twice a change in the smaller side, once
+in the definition, and never in this file.* The two cuts this bound was written to make
 decidable are spent: `CE-01` as
 [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and `CE-04` as
 [T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), both ranked in

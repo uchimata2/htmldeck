@@ -1,9 +1,11 @@
 # Audit method — htmldeck
 
-**The method is not here.** It is the taskmd skill's — `METHOD.md` §5 for the type and the one rule
-that matters, `audit.md` for the procedure, and `pre-release-audit.md` for an audit whose subject is
-everything about to be released. This file is the local binding: the handful of things that are
-htmldeck's own and cannot be written in a document every adopter receives.
+**No method is here — §1's table says where each one is.** The pre-release audit's is the taskmd
+skill's: `METHOD.md` §5 for the type and the one rule that matters, `audit.md` for the procedure, and
+`pre-release-audit.md` for an audit whose subject is everything about to be released. The other two
+answer differently, which is why the table has a column and not this paragraph a clause. This file is
+the local binding: the handful of things that are htmldeck's own and cannot be written in a document
+every adopter receives.
 
 *The generic half was written here on 2026-08-22 and handed upstream the same day
 ([T-218](../tasks/T-218-record-the-pre-release-audit-method-and-its-machinery.md)), because most of it
@@ -17,11 +19,17 @@ will not find it.*
 
 ## 1. Which audits this project runs
 
-| Audit | Subject | Trigger | Register |
-| :--- | :--- | :--- | :--- |
-| **Pre-release** | the whole repository — project and product | **the owner's request, never automatic** | [`PRE-RELEASE-AUDIT.md`](PRE-RELEASE-AUDIT.md), ids `PR-nn` |
-| **Context economy** | what a session loads without asking for it | request, or a change to tier 1 | [`CONTEXT-AUDIT.md`](CONTEXT-AUDIT.md), ids `CE-nn` |
-| **Ruleset** | rules that cost more to satisfy than they return | request | [`RULESET-AUDIT.md`](RULESET-AUDIT.md) |
+| Audit | Subject | Trigger | Method | Register |
+| :--- | :--- | :--- | :--- | :--- |
+| **Pre-release** | the whole repository — project and product | **the owner's request, never automatic** | taskmd's `pre-release-audit.md`, as above | [`PRE-RELEASE-AUDIT.md`](PRE-RELEASE-AUDIT.md), ids `PR-nn` |
+| **Context economy** | what a session loads without asking for it | request, or a change to tier 1 | **the `ecoctx` skill**, packaged by [T-137](../tasks/T-137-package-the-context-economy-method-as-a-skill.md) and shipped in its `0.3.0`. **Not** [`research/R8`](research/R8-context-economy-for-coding-agents.md), which says of itself that the skill is the method and it is the record of what that was on the day it was packaged | [`CONTEXT-AUDIT.md`](CONTEXT-AUDIT.md), ids `CE-nn` |
+| **Ruleset** | rules that cost more to satisfy than they return | request | its own — [`RULESET-AUDIT.md`](RULESET-AUDIT.md) §3, the three tests and what each could actually decide | [`RULESET-AUDIT.md`](RULESET-AUDIT.md) |
+
+**Every row is fillable, which was the prior question and not a foregone one.** `PR-115` raised the
+column against a fear that it would be fillable twice of three and so would state the gap rather than
+close it. Measured 2026-09-02 while closing it: the ruleset audit's method is §3 of its own register
+— three named tests, each with what it could and could not decide — which is §2's rule below working
+rather than an absence. A column filled three of three is why this is a column and not a clause.
 
 Ran as [T-042](../tasks/T-042-audit-the-whole-repository-against-itself.md),
 [T-119](../tasks/T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md),

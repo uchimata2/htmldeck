@@ -117,67 +117,91 @@ than by directory, each sized to about 300 KB of source
 (the taskmd skill's `pre-release-audit.md`). **A cycle is a session boundary**: it may
 be run alone, and it ends at a commit with the register written.
 
-**The Files and Bytes columns are printed, not typed.** `python tools/docs/cycles.py --plan` emits
-them; the rule that decides which files a cycle owns lives in that file, one rule per cycle, and a
-tracked path belonging to no cycle fails the command. **The Subject column is the input to those
-rules and the Brief and Status columns are this table's own** — so a re-cut boundary is edited here
-*and* there, in one change, and nowhere else.
+**This table no longer states Files and Bytes, and that is `PR-101`'s remedy rather than a
+loss.** `python tools/docs/cycles.py --plan` emits both, for every cycle, from the rule that decides
+which files a cycle owns — one rule per cycle, in that file, with a tracked path belonging to no
+cycle failing the command. **The Subject column is the input to those rules and the Brief,
+Instrument and Status columns are this table's own** — so a re-cut boundary is edited here *and*
+there, in one change, and nowhere else.
 [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) is why, and `PR-06` is
 what it cost to find out.
 
-| # | Subject | Files | Bytes | Brief | Status |
-| :-- | :--- | ---: | ---: | :--- | :--- |
-| **0** | **Instruments and baseline** | **4** | **62,058** | Freeze the tree. `check_all.py` and `lint.py` green, both recorded with their elapsed time. Generalise `findings.py` to discover registers, or record `parent:` as the fallback and why. | **done** |
-| | *Stage 1 — what an adopter receives.* Highest density: it is the oldest text about the fastest-moving tree. | | | | |
-| 1 | The human-facing set | 7 | 55,103 | Every claim in `README.md` against the tree — it says *two decks* and three are shipped. The install lines run. The humanizer test of `PUBLISHING.md` §2 still holds. `LICENSE` and the marketplace manifest agree with the plugin manifest. | **done** |
-| 2 | The skill and the prompt | 6 | 58,890 | What an adopter's tier 1 receives through the skill description. Every `${CLAUDE_PLUGIN_ROOT}` path resolves in a copied directory. The four reference documents agree with the tools they describe. | **done** |
-| | *Stage 2 — how this project governs itself.* | | | | |
-| 3 | Tier 1 and the brief | 2 | 60,449 | The tier definitions against each other and against what a session is actually given. The bound's two terms re-measured. `BRIEF.md`'s *Decisions taken* against what shipped. | **done** |
-| 4 | The release machinery | 4 | 60,607 | `PUBLISHING.md` §8's eight steps against how `0.5.0`, `0.5.1` and `0.6.0` actually ran. §8.1's `*next*` row. `RELEASE-HISTORY.md` against the tags. What `.gitignore` hides that should ship, and what it fails to hide. | **done** |
-| 5 | The tracker's own rules | 7 | 112,267 | `TASK-WORKFLOW.md`, `TOOLING.md`, the two templates and the schema against each other and against 219 task files. Which conventions are gated and which are only written down. | **done** |
-| 6 | The release plan | 1 | 179,575 | 177 KB of phase decision against the phases as they ran. Rows for tasks that changed shape, counts that moved, and the PH3-takes-everything rule against what PH3 now holds. | **done** |
-| 7 | The unreleased work, and this audit's own record | 6 | 132,120 | What the next release contains, read as an adopter would meet it. Every open record against the code that will close it, plus `AUDIT-METHOD.md` and the register. *It was 18 files when the plan was written and is 6 now: `0.6.0` shipped on 2026-08-23 and took the other 13 into cycle 34, [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md) among them. The cycle did not shrink — its subject moved, which is what a membership derived from `status` does and a count could not.* | **done** |
-| | *Stage 3 — the product.* | | | | |
-| 8 | The design system and the evaluation | 2 | 146,650 | Every `DS-nnn` against `check.py`'s coverage: decided, named-with-a-reason, or neither. The ten evaluation dimensions against what any instrument can reach. | **done** |
-| 9 | The three contracts | 3 | 76,319 | Component, theme and motion contracts against the shell that implements them and the checkers that decide them. A contracted part nothing enforces. | **done** |
-| 10 | The gate's code | 9 | 240,446 | 122 rules, 92 decided. Whether each undecided rule's stated reason is still true, and whether any decided rule decides something other than what it says. | **done** |
-| 11 | `audit.py` and `critique.py` | 2 | 198,718 | 182 KB in one file. What is dead, what is duplicated from `check.py`, and whether the stage-1/stage-2 split still matches `EVALUATION.md`. | **done** |
-| 12 | The build path | 7 | 268,414 | Spec to shell to render to deck. Where a failure is silent, where a path is assumed, and what the presenter build shares with the deck build. | **done** |
-| 13 | The rest of `tools/deck/` | 14 | 270,560 | Fourteen tools. Which are reachable from a documented command, which are only reachable from a task record, and which are neither. | **done** |
-| 14 | `tools/docs/` | 5 | 188,895 | The four checkers that read documents. `figures.py` is 99 KB and every pasted figure in the tree depends on it. `refcheck.py`'s skip list. | **done** |
-| 15 | The remaining tools | 9 | 265,632 | Assets, portability, examples, kb, plugin scaffold. `check_all.py`'s partition says every one of these is classified — verify that against what each actually does. | **done** |
-| 16 | The shell and the themes | 9 | 272,593 | 85 KB of CSS and 51 KB of JavaScript that every shipped deck embeds. Dead selectors, tokens nothing reads, a theme value that is not parametric. | **done** |
-| | *Stage 4 — the decks.* | | | | |
-| 17 | The shipped decks and the blindness fixture | 5 | 1,773,568 | **Grade C, and two instruments.** The four decks `check_all.py`'s `DECKS` names, 1,451,311 bytes: render each offline and look at it; `check.py`, `audit.py`, `printgeom.py`, `glitchfree.py`; print two and read the paper. The fixture, 322,257: `seed_defects.py --check` and nothing else — it is seeded to score 0 on every dimension, so a deck gate's reds are it working. No `.html` is opened as a file. [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) is why the brief has two halves. | **done** |
-| 18 | The deck specifications and sources | 25 | 301,861 | Each specification against the deck built from it, and each source against what the deck claims it says. The sanitisation rule on the adopter deck. | **done** |
-| | *Stage 5 — the record.* | | | | |
-| 19 | The prior audits | 2 | 119,302 | `CONTEXT-AUDIT.md` and `RULESET-AUDIT.md`: is every row that reads closed actually closed, and does every open row still describe the tree? `findings.py --check` decides part of this and not all of it. | **done** |
-| 20 | The design rationale | 1 | 69,194 | **Grade B.** A decision recorded here that the product no longer implements. | **done** |
-| 21 | Lessons `L-01`–`L-77`, and the index | 78 | 167,650 | **Grade B.** A lesson whose mechanism the tree no longer has. The index against the files. | **done** |
-| 22 | Lessons `L-78`–`L-137` | 60 | 161,852 | **Grade B.** As cycle 21. | **done** |
-| 23 | Research `R1`–`R4` | 5 | 153,311 | **Grade B.** A finding the build later contradicted, and a candidate rule that never became one. | **done** |
-| 24 | Research `R5`–`R9`, upstream, sketches, adopter reports | 38 | 305,209 | **Grade B.** `R8` against `AUDIT-METHOD.md`. The three upstream reports against what those projects did. An orphan sketch. The 27 adopter findings and their README against what [T-225](T-225-triage-the-claimai-adopter-report.md) decided about each. | **done** |
-| | *Stage 6 — outside git.* | | | | |
-| 25 | Memory and the handoff record | - | - | Every memory entry against the tree it describes — a named file, function or flag that no longer exists. The index against its entries. The handoff config, and whether the processed chain still holds anything unreconciled. | **done** |
-| 26 | The untracked surface | - | - | What `.gitignore` hides: anything that should be tracked, anything that must never publish, and anything left behind by a tool that no longer runs. `.claude/settings.local.json`. **Checkpoint: the owner decides here whether stage 7 runs.** | **done** |
-| | *Stage 7 — the closed record, Grade B.* One question per file: does anything written here contradict the tree today? | | | | |
-| 27 | `PH1` closed, `T-002`–`T-085` | 14 | 273,368 | | `skipped` |
-| 28 | `PH1` closed, `T-086` onward | 31 | 288,539 | | `skipped` |
-| 29 | `PH2` closed | 21 | 293,976 | | `skipped` |
-| 30 | `PH3` closed, up to `T-113` | 20 | 326,610 | | `skipped` |
-| 31 | `PH3` closed, `T-114`–`T-135` | 19 | 339,137 | | `skipped` |
-| 32 | `PH3` closed, `T-136`–`T-153` | 18 | 327,529 | | `skipped` |
-| 33 | `PH3` closed, `T-154`–`T-186` | 24 | 326,197 | | `skipped` |
-| 34 | `PH3` closed, `T-187` onward | 25 | 301,841 | | **done** |
-| 35 | `WP2` closed, up to `T-032` | 11 | 215,435 | | `skipped` |
-| 36 | `WP2` closed, `T-033` onward | 6 | 181,144 | | `skipped` |
-| 37 | `WP1` closed | 11 | 181,895 | | `skipped` |
-| 38 | `WP3`, `final`, `none`, and the two cancelled stubs | 19 | 311,202 | | `skipped` |
-| | *Stage 8 — synthesis.* | | | | |
-| 39 | The figure and version sweep | - | - | Every number, count and version string in the tree against what the tree is. Scripted first, then read: `figures.py` decides the fenced ones and **L-05** is the family it cannot see. | **done** |
-| 40 | Triage, rank, raise the tasks | - | - | Severity and its obligations per the taskmd skill's `pre-release-audit.md`. Child tasks for High and Medium; one batch task or an accepted row for each Low. | **done** |
-| 41 | Re-read what the remedies changed | - | - | Cycles 1, 3 and 5 again, plus every cycle a remedy touched. **This is where an audit's own damage shows.** | pending |
-| 42 | Phase 2 | - | - | Predicted against measured, per finding. It has to name at least one prediction the measurement refused, or it was not run honestly. | pending |
+*The two columns were here, marked printed-not-typed, and nothing compared them to the command.
+Measured 2026-09-02 closing `PR-101`: **26 of 37 sized rows disagreed**, against the six that row
+recorded five days earlier — so reprinting them, which [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md)
+did on 2026-08-23, bought five days and decayed four times faster afterwards. **And one row could
+never have been made right.** Cycle 7's subject is this run's own record, which includes this file:
+writing its byte count in here changes its byte count, and the replacement is not even the same
+width. So a `--plan --check` guarding the table was refused too — it would have failed forever on
+that row, and after deleting the columns it has no subject at all. `PR-68`'s unimplemented
+`--sizing` is untouched: that flag reports when a cycle has grown enough to need cutting, which is a
+property of the command's output and not of a copy kept here.*
+
+**The Instrument column is `PR-21`'s remedy, and it is filled forward rather than back.** taskmd's
+`pre-release-audit.md` §3 says a cycle names four things — what it examines, the brief, **the
+instrument**, and what it produced — and [`_audit-umbrella-template.md`](_audit-umbrella-template.md)
+carries the column while this table did not. **Back-filling it was refused on a
+measurement.** All 30 of the register's closed ledger rows already name their instrument in prose:
+22 name a command, and the other 8 open on *none: all N read whole*, which names reading. So a
+back-filled cell would be a second copy of a fact that already has a home, and the closed rows carry
+`ledger` — a pointer, not a restatement. **The two cycles that have not run carry a real cell**,
+which is the whole of what `PR-21` was about: cycle 17 is grade C, *examined by measurement or by
+use, never by reading*, and its instrument was left inside a prose brief where nothing made it answer
+the question.
+
+| # | Subject | Brief | Instrument | Status |
+| :-- | :--- | :--- | :--- | :--- |
+| **0** | **Instruments and baseline** | Freeze the tree. `check_all.py` and `lint.py` green, both recorded with their elapsed time. Generalise `findings.py` to discover registers, or record `parent:` as the fallback and why. | ledger | **done** |
+| | *Stage 1 — what an adopter receives.* Highest density: it is the oldest text about the fastest-moving tree. | | | |
+| 1 | The human-facing set | Every claim in `README.md` against the tree — it says *two decks* and three are shipped. The install lines run. The humanizer test of `PUBLISHING.md` §2 still holds. `LICENSE` and the marketplace manifest agree with the plugin manifest. | ledger | **done** |
+| 2 | The skill and the prompt | What an adopter's tier 1 receives through the skill description. Every `${CLAUDE_PLUGIN_ROOT}` path resolves in a copied directory. The four reference documents agree with the tools they describe. | ledger | **done** |
+| | *Stage 2 — how this project governs itself.* | | | |
+| 3 | Tier 1 and the brief | The tier definitions against each other and against what a session is actually given. The bound's two terms re-measured. `BRIEF.md`'s *Decisions taken* against what shipped. | ledger | **done** |
+| 4 | The release machinery | `PUBLISHING.md` §8's eight steps against how `0.5.0`, `0.5.1` and `0.6.0` actually ran. §8.1's `*next*` row. `RELEASE-HISTORY.md` against the tags. What `.gitignore` hides that should ship, and what it fails to hide. | ledger | **done** |
+| 5 | The tracker's own rules | `TASK-WORKFLOW.md`, `TOOLING.md`, the two templates and the schema against each other and against 219 task files. Which conventions are gated and which are only written down. | ledger | **done** |
+| 6 | The release plan | 177 KB of phase decision against the phases as they ran. Rows for tasks that changed shape, counts that moved, and the PH3-takes-everything rule against what PH3 now holds. | ledger | **done** |
+| 7 | The unreleased work, and this audit's own record | What the next release contains, read as an adopter would meet it. Every open record against the code that will close it, plus `AUDIT-METHOD.md` and the register. *It was 18 files when the plan was written and is 6 now: `0.6.0` shipped on 2026-08-23 and took the other 13 into cycle 34, [T-218](T-218-record-the-pre-release-audit-method-and-its-machinery.md) among them. The cycle did not shrink — its subject moved, which is what a membership derived from `status` does and a count could not.* | ledger | **done** |
+| | *Stage 3 — the product.* | | | |
+| 8 | The design system and the evaluation | Every `DS-nnn` against `check.py`'s coverage: decided, named-with-a-reason, or neither. The ten evaluation dimensions against what any instrument can reach. | ledger | **done** |
+| 9 | The three contracts | Component, theme and motion contracts against the shell that implements them and the checkers that decide them. A contracted part nothing enforces. | ledger | **done** |
+| 10 | The gate's code | 122 rules, 92 decided. Whether each undecided rule's stated reason is still true, and whether any decided rule decides something other than what it says. | ledger | **done** |
+| 11 | `audit.py` and `critique.py` | 182 KB in one file. What is dead, what is duplicated from `check.py`, and whether the stage-1/stage-2 split still matches `EVALUATION.md`. | ledger | **done** |
+| 12 | The build path | Spec to shell to render to deck. Where a failure is silent, where a path is assumed, and what the presenter build shares with the deck build. | ledger | **done** |
+| 13 | The rest of `tools/deck/` | Fourteen tools. Which are reachable from a documented command, which are only reachable from a task record, and which are neither. | ledger | **done** |
+| 14 | `tools/docs/` | The four checkers that read documents. `figures.py` is 99 KB and every pasted figure in the tree depends on it. `refcheck.py`'s skip list. | ledger | **done** |
+| 15 | The remaining tools | Assets, portability, examples, kb, plugin scaffold. `check_all.py`'s partition says every one of these is classified — verify that against what each actually does. | ledger | **done** |
+| 16 | The shell and the themes | 85 KB of CSS and 51 KB of JavaScript that every shipped deck embeds. Dead selectors, tokens nothing reads, a theme value that is not parametric. | ledger | **done** |
+| | *Stage 4 — the decks.* | | | |
+| 17 | The shipped decks and the blindness fixture | **Grade C, and two instruments.** The four decks `check_all.py`'s `DECKS` names, 1,451,311 bytes: render each offline and look at it; `check.py`, `audit.py`, `printgeom.py`, `glitchfree.py`; print two and read the paper. The fixture, 322,257: `seed_defects.py --check` and nothing else — it is seeded to score 0 on every dimension, so a deck gate's reds are it working. No `.html` is opened as a file. [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) is why the brief has two halves. | ledger | **done** |
+| 18 | The deck specifications and sources | Each specification against the deck built from it, and each source against what the deck claims it says. The sanitisation rule on the adopter deck. | ledger | **done** |
+| | *Stage 5 — the record.* | | | |
+| 19 | The prior audits | `CONTEXT-AUDIT.md` and `RULESET-AUDIT.md`: is every row that reads closed actually closed, and does every open row still describe the tree? `findings.py --check` decides part of this and not all of it. | ledger | **done** |
+| 20 | The design rationale | **Grade B.** A decision recorded here that the product no longer implements. | ledger | **done** |
+| 21 | Lessons `L-01`–`L-77`, and the index | **Grade B.** A lesson whose mechanism the tree no longer has. The index against the files. | ledger | **done** |
+| 22 | Lessons `L-78`–`L-137` | **Grade B.** As cycle 21. | ledger | **done** |
+| 23 | Research `R1`–`R4` | **Grade B.** A finding the build later contradicted, and a candidate rule that never became one. | ledger | **done** |
+| 24 | Research `R5`–`R9`, upstream, sketches, adopter reports | **Grade B.** `R8` against `AUDIT-METHOD.md`. The three upstream reports against what those projects did. An orphan sketch. The 27 adopter findings and their README against what [T-225](T-225-triage-the-claimai-adopter-report.md) decided about each. | ledger | **done** |
+| | *Stage 6 — outside git.* | | | |
+| 25 | Memory and the handoff record | Every memory entry against the tree it describes — a named file, function or flag that no longer exists. The index against its entries. The handoff config, and whether the processed chain still holds anything unreconciled. | ledger | **done** |
+| 26 | The untracked surface | What `.gitignore` hides: anything that should be tracked, anything that must never publish, and anything left behind by a tool that no longer runs. `.claude/settings.local.json`. **Checkpoint: the owner decides here whether stage 7 runs.** | ledger | **done** |
+| | *Stage 7 — the closed record, Grade B.* One question per file: does anything written here contradict the tree today? | | | |
+| 27 | `PH1` closed, `T-002`–`T-085` | | ledger | `skipped` |
+| 28 | `PH1` closed, `T-086` onward | | ledger | `skipped` |
+| 29 | `PH2` closed | | ledger | `skipped` |
+| 30 | `PH3` closed, up to `T-113` | | ledger | `skipped` |
+| 31 | `PH3` closed, `T-114`–`T-135` | | ledger | `skipped` |
+| 32 | `PH3` closed, `T-136`–`T-153` | | ledger | `skipped` |
+| 33 | `PH3` closed, `T-154`–`T-186` | | ledger | `skipped` |
+| 34 | `PH3` closed, `T-187` onward | | ledger | **done** |
+| 35 | `WP2` closed, up to `T-032` | | ledger | `skipped` |
+| 36 | `WP2` closed, `T-033` onward | | ledger | `skipped` |
+| 37 | `WP1` closed | | ledger | `skipped` |
+| 38 | `WP3`, `final`, `none`, and the two cancelled stubs | | ledger | `skipped` |
+| | *Stage 8 — synthesis.* | | | |
+| 39 | The figure and version sweep | Every number, count and version string in the tree against what the tree is. Scripted first, then read: `figures.py` decides the fenced ones and **L-05** is the family it cannot see. | ledger | **done** |
+| 40 | Triage, rank, raise the tasks | Severity and its obligations per the taskmd skill's `pre-release-audit.md`. Child tasks for High and Medium; one batch task or an accepted row for each Low. | ledger | **done** |
+| 41 | Re-read what the remedies changed | Cycles 1, 3 and 5 again, plus every cycle a remedy touched, **and cycle 7 — whose subject is this run's own record, so it is complete only against a tree that stopped moving and must be read last** (`PR-102`). **This is where an audit's own damage shows.** | `cycles.py`, `refcheck.py`, `figures.py`, and the two gates — **re-run, never cited from a batch's record** | pending |
+| 42 | Phase 2 | Predicted against measured, per finding. It has to name at least one prediction the measurement refused, or it was not run honestly. | reading: the register's own §5, predicted against measured | pending |
 
 **Execution order from cycle 27 on. The table above is the programme; this is the run order.**
 Ruled by the owner 2026-08-29, once cycles 25 and 26 closed stage 6. **No cycle is renumbered** -
