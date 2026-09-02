@@ -3,7 +3,7 @@
 
     python tools/docs/refcheck.py
 
-Four checks, all mechanical:
+Five checks, all mechanical:
 
   1. **BROKEN LINK** - a markdown `[text](target)` whose target does not exist.
   2. **DEAD POINTER** - a repo-relative `.md` path written in **prose**, or printed by a tool into
@@ -11,6 +11,16 @@ Four checks, all mechanical:
   3. **DEAD SECTION** - a `<named document> §n` whose number is not a heading in that document.
   4. **LYING LABEL** - a link whose **label** names one `.md` file and whose target opens another.
      Checks 1 to 3 all resolve a *target*; this is the first that reads what the reader is told.
+  5. **DEAD ANCHOR** - a `](#...)` link whose slug is not a heading in the file it sits in.
+
+**Check 5 was invisible to check 1 by construction.** `LINK` requires at least one character before
+the fragment, so a pure in-page link matched nothing and was never resolved - which is how two dead
+ones sat in `docs/lessons/` while every gate printed a clean tree (`PR-104`) - **L-57**, in the
+instrument that hunts this class for a living. The population is thin,
+three links repository-wide, and **L-75** warns against a check built on one: what carries it is that
+two of the three were dead and that the class was created wholesale by one refactor, when
+`T-146` gave every lesson its own file and the headings the anchors named stopped existing. A split
+can do that again; nothing else would say so.
 
 **Check 4 is the one defect class no pointer-resolver can reach.** A link whose target is right and
 whose words are wrong passes every other check here and every check taskmd has, because all of them
@@ -93,6 +103,10 @@ PROJECT_DOCS = {
 
 LINK = re.compile(r"\[[^\]]*\]\(([^)#\s]+)(?:#[^)\s]*)?\)")
 
+# A link that is only a fragment - `](#some-heading)`. `LINK` cannot match one: it requires a
+# path before the `#`, which is exactly why check 5 has to read them separately.
+INPAGE_LINK = re.compile(r"\[[^\]]*\]\((#[^)\s]+)\)")
+
 # Check 4 needs the label as well as the target; check 1 discards it, because resolving a target
 # never had a use for it.
 LABELLED_LINK = re.compile(r"\[([^\]]*)\]\(([^)#\s]+)(?:#[^)\s]*)?\)")
@@ -127,6 +141,31 @@ ORDINAL = re.compile(r"^\s{0,3}(\d+)\.\s", re.M)
 # never existed, and under any other rule the record of a dead pointer is itself one.
 FENCE = re.compile(r"^```.*?^```", re.M | re.S)
 CODE_SPAN = re.compile(r"`[^`\n]*`")
+
+
+def anchor_slug(heading):
+    """The anchor a renderer derives from a heading: lowercase, punctuation dropped, spaces
+    hyphenated.
+
+    An em dash is **dropped rather than replaced**, so `L-36 - A stated tolerance` written with one
+    slugs with *two* hyphens after the id. That is the shape the two dead links were written
+    against, and getting it wrong the other way would make this check report the live one."""
+    s = re.sub(r"[^\w\s-]", "", heading.strip().lower(), flags=re.U)
+    return re.sub(r"\s", "-", s)
+
+
+def anchors_in(text):
+    """Every anchor the file offers, including a renderer's `-1` suffix for a repeated heading.
+
+    Headings inside a fence are not headings - `strip_code` has already blanked them, which is the
+    same rule check 1 follows for a link inside one."""
+    seen, out = {}, set()
+    for m in re.finditer(r"^#{1,6}\s+(.+?)\s*$", strip_code(text), re.M):
+        slug = anchor_slug(m.group(1))
+        n = seen.get(slug, 0)
+        seen[slug] = n + 1
+        out.add(slug if n == 0 else "%s-%d" % (slug, n))
+    return out
 
 
 def strip_code(text):
@@ -338,7 +377,7 @@ def cmd_check():
     # `.gitignore` governs here too: an archived, machine-local handoff was once link-checked as
     # though a fresh clone contained it, which is the opposite of the question both scans answer.
     ignore = gitignore_patterns()
-    labels = 0
+    labels, anchors = 0, 0
     for md in sorted(markdown_files()):
         if is_ignored(os.path.relpath(md, "."), ignore):
             continue
@@ -364,6 +403,18 @@ def cmd_check():
             labels += 1
             problems.append("LYING LABEL  %s -> the label says %s, the link opens %s"
                             % (md, lie[0], lie[1]))
+
+        # Check 5. A link that never leaves the file, resolved against the file's own headings.
+        # `links_in` cannot see these at all, so until now the only thing standing between a
+        # reader and a dead one was somebody re-reading the paragraph (PR-104).
+        here = None
+        for m in INPAGE_LINK.finditer(strip_code(text)):
+            if here is None:
+                here = anchors_in(text)
+            anchors += 1
+            frag = m.group(1)[1:]
+            if frag not in here:
+                problems.append("DEAD ANCHOR  %s -> #%s is not a heading in this file" % (md, frag))
 
     for doc in sorted(PROJECT_DOCS):
         if not os.path.exists(os.path.normpath(doc)):
@@ -446,11 +497,12 @@ def cmd_check():
     print("     %d section reference(s) resolved, 0 dead; %d not bound to a document and skipped."
           % (sections, sec_skipped))
     print("     %d link label(s) name a path, 0 disagree with the file the link opens." % labels)
+    print("     %d in-page anchor(s) resolved against their own file's headings, 0 dead." % anchors)
     print("     %d document(s) not scanned (.gitignore); front-matter is not scanned."
           % skipped)
     print("     references only - it cannot tell you a document is any good. Tasks are `taskmd`.")
-    return 0, ("refcheck: %d pointer(s), %d section reference(s), %d label(s), 0 broken"
-               % (pointers, sections, labels))
+    return 0, ("refcheck: %d pointer(s), %d section reference(s), %d label(s), "
+               "%d anchor(s), 0 broken" % (pointers, sections, labels, anchors))
 
 
 def self_test():
@@ -568,6 +620,34 @@ def self_test():
     if any(labelled_links_in("```\n[`no-such-dir/a.md`](no-such-dir/b.md)\n```\n")):
         sys.exit("SELF-TEST FAILED: a link inside a fence was read by check 4 - it renders as the "
                  "characters typed, so its label tells nobody anything")
+
+    # ---- check 5, the anchor that never leaves the file (T-250)
+    #
+    # The em dash decides this one. It is *dropped*, not replaced, so a heading written with one
+    # yields two hyphens where a reader would type one - and a slug rule that collapses them
+    # reports the live anchor in T-056 and clears the two dead ones. Both directions are asserted,
+    # because either error alone leaves a check that prints a confident zero.
+    page = "# L-36 — A stated tolerance\n\n## Where this differs\n\nprose\n"
+    slugs = anchors_in(page)
+    if "l-36--a-stated-tolerance" not in slugs:
+        sys.exit("SELF-TEST FAILED: each space becomes its own hyphen - a rule that collapses a "
+                 "run of them cannot resolve any heading written with a dash")
+    if "where-this-differs" not in slugs:
+        sys.exit("SELF-TEST FAILED: an ordinary heading did not yield its own anchor")
+    if anchors_in("```\n# Fenced heading\n```\n"):
+        sys.exit("SELF-TEST FAILED: a heading inside a fence was offered as an anchor - it renders "
+                 "as the characters typed and anchors nothing")
+
+    # The defect itself: `LINK` cannot match a fragment-only link, which is how two dead ones
+    # survived every run of this tool. If `INPAGE_LINK` stops matching, check 5 goes silent and
+    # says so nowhere.
+    found = [m.group(1) for m in INPAGE_LINK.finditer("see [L-36](#l-36-a-stated-tolerance) above")]
+    if found != ["#l-36-a-stated-tolerance"]:
+        sys.exit("SELF-TEST FAILED: a fragment-only link was not read - check 5 would then report "
+                 "zero anchors on a file full of them, which is the state PR-104 was found in")
+    if any(LINK.finditer("see [L-36](#l-36-a-stated-tolerance) above")):
+        sys.exit("SELF-TEST FAILED: check 1 matched a fragment-only link - the two patterns would "
+                 "then both own it, and check 1 would resolve it as a path")
     return True
 
 
