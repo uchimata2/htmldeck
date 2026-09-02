@@ -154,8 +154,8 @@ python tools/docs/refcheck.py
 ```
 
 ```
-OK - 5048 document pointer(s) checked, 0 broken
-     1091 section reference(s) resolved, 0 dead; 3267 not bound to a document and skipped.
+OK - 5366 document pointer(s) checked, 0 broken
+     1128 section reference(s) resolved, 0 dead; 3566 not bound to a document and skipped.
 ```
 
 Every markdown link, every repo-relative path written in prose or printed by a tool, and every
@@ -279,7 +279,7 @@ describe a plan.
   A ruleset tested only by its authors is tested against what its authors already knew.
 - **There is still no 3D visual class.** It is the last thing this page has been promising that is
   not built. The frame-rate figure and the seven glitch-free conditions were listed here too, until
-  this release.
+  0.6.0.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
 is split into three phases, and a phase is not a version. **PH1** is what a first working plugin
@@ -295,36 +295,35 @@ larger work. The frame-rate figure and those seven conditions have now shipped; 
 not.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
-The current release is 0.6.0. It is the release where the gate stopped taking the deck's word for
-things. Every check used to read the file. Now it also opens the file, clicks through every slide,
-and reports what the browser actually did.
+The current release is 0.7.0. It is the release where the repository read itself end to end and
+fixed what it found.
 
-Seven of those reports are new. The console has to stay clean from the load to the last slide. The
-embedded faces have to load, and the text has to come out in them. Nothing may scroll out of its box
-or jump when the fonts arrive. Every canvas has to draw, and every slide has to be reachable without
-a script error. Reading the file answers none of that, which is why this page listed all seven as
-unchecked until now.
+The audit covered every tracked file. It raised one hundred and twenty-nine findings, each with the
+command that proves it, and every one is now closed or accepted with a reason and a date. Eight were serious enough to
+hold the release. The rest were wrong numbers, sentences that had gone false, checks that
+passed because they had nothing to look at, and rules that had drifted from the thing they were
+written to stop.
 
-Diagram labels no longer sit on top of one another. A deck here passed every check while carrying
-fifteen chart defects that only people found, and three separate readings each missed some of them.
-A tool now measures label against label on the rendered page, and a deck fails when two overlap far
-enough that you have to read them one at a time.
+Eighteen of the fixes started as somebody else's problem. An adopter built decks with this plugin
+and sent back twenty-seven reports. Most of those reports were right. The ones that were not still
+pointed at something real behind what they described.
 
-Charts can use a chart engine, if the reader is meant to interrogate them by hovering a series for
-its value or brushing a range of it. The deck declares the engine in its own head. A deck that
-declares nothing is held to hand-written SVG, which is where every deck stands today.
+Several rules got narrower rather than stricter. A rasterised diagram is still refused, but a
+presenter's own pencil drawing outside the argument is not. A question mark in a slide's header is a
+rhetorical question; the same mark inside a panel is not. A sources box is no longer counted as
+prose. Each of those had been failing decks for doing something the rule was never written to
+prevent.
 
-The motion rules read what a motion says about itself instead of what it is called. One of them was
-an allow-list of a single class name, so any looping animation you wrote that was not that one class
-failed a gate for a design the rules permit. A motion now states its own subject, and states why it
-is allowed to run past half a second.
+The checks that were blind can see again. One skipped every custom property, so a duration hidden in
+a variable passed where the same number written out plainly failed. One read only a label's
+immediate parent when deciding what colour it sat on. One left out a word its own rule names.
 
-Speaker notes have somewhere to live. They go into a presenter build, a second file made from the
-same specification. It carries a marker the gate fails on, so it cannot become the file you send.
+`--accent-ink` is gone from the theme contract, and nothing replaced it. It was a token no theme
+varied and every deck carried. Turn, the card reveal, is a component now instead of two dials you
+wire up by hand.
 
 A deck built on an earlier version will fail `shell.py check` until you run `shell.py sync`. The
-release notes say what else fails and what fixes it. Most of it now needs the deck opened in a
-browser rather than a command run against the file.
+release notes say what else fails and what fixes it.
 
 **Both halves of the gate are green.** Two `hard` rules failed the reference deck on the judgement
 half's first run and were settled the same day in
