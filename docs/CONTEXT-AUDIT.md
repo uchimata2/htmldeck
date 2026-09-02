@@ -648,6 +648,16 @@ catalogue, which is the thing being measured.
 | **Controller** | `project` |
 | **Source** | `T-285` §3, confirmed here |
 
+**The mechanism is refuted, and the finding stands. Measured 2026-09-02 by [T-292](../tasks/T-292-the-docs-gate-is-four-fifths-one-render.md):**
+the coverage account is **not** what runs `check.py`. Empty `ACCOUNTS` and the run still
+happens, because [`../README.md`](../README.md) pastes that command's output in a fence and
+`figures.py` compares the paste against a live one — the account is a second reader of a run
+that happens anyway. So both changes this row proposes save **nothing**, and rebinding the
+account would trade a live binding for a weaker one to buy no seconds. `figures.py` alone is
+**33.2 s**, of which `check.py` is **28.7 s** and the five other commands 4 s together. The
+remedy the measurement points at is a different one, and it removes a guarantee from the front
+page rather than moving a binding: [T-296](../tasks/T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md).
+
 #### CE-19 — The deck gate's green default grew 72% and L-153 was not applied to it
 
 | | |
