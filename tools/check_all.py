@@ -201,6 +201,12 @@ NOT_RUN = {
         "tools/deck/markhits.py <deck>",
     "tools/docs/refcheck.py":
         "runs inside tools/tasks/lint.py, the first gate, which is where its exit code is read",
+    "tools/tasks/shipped.py":
+        "runs inside tools/tasks/lint.py, the first gate, as its fifth step. A closed task with "
+        "no shipped_in is created at a closure, and lint.py is what a closure runs - catching "
+        "it here instead would report it at the next release, which is what happened the three "
+        "times it was back-filled and recurred (PR-27). Still runnable alone, and then it names "
+        "every record rather than one verdict: python tools/tasks/shipped.py",
     "tools/docs/findings.py":
         "runs inside tools/tasks/lint.py, the first gate, as --check. The drift it catches - a "
         "finding whose row and whose task disagree - is created at a task closure, and lint.py is "

@@ -13,6 +13,7 @@ business_value: medium
 effort: m
 created: 2026-08-29
 updated: 2026-08-30
+shipped_in: unreleased
 deliverables:
   - tools/deck/render.py
   - skills/htmldeck/references/build.md

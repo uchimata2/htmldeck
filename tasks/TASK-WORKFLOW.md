@@ -21,8 +21,14 @@ is the failure §6.1 exists to catch.*
 
 One file per task in `tasks/`, created from [`_task-template.md`](_task-template.md). Name it
 `T-NNN-<slug of the title>.md` — lower case, hyphenated, truncated where it gets silly. The filename
-is a convenience; `id:` is the identity, and the tooling reads only the front-matter. `taskmd index`
-prints the next free number.
+is a convenience; `id:` is the identity, and the tooling reads only the front-matter. `python
+tools/tasks/query.py next` prints the id the next task takes.
+
+*It said `taskmd index` until 2026-09-02. That command prints the number and does not run in an
+agent shell; the substitute that does, `lint.py`, drops exactly that line, so the one step of the
+opening checklist a session cannot follow was its first (`PR-20`). It is also the wrong shape for
+the question - `index` earns its number by rewriting the board, which is a write in the middle of a
+read.*
 
 An audit that will raise child fixes starts from
 [`_audit-umbrella-template.md`](_audit-umbrella-template.md); METHOD §5 is the rule it follows.
@@ -175,7 +181,7 @@ check enforces, the one advisory that is expected forever, and the two rules bel
 its two subsections keep their numbers because 65 citations use them.
 
 **What to run**, so this pointer is not a dead end for the commonest question: `python
-tools/tasks/lint.py` is the four checks a task edit owes. Everything else is one file away.
+tools/tasks/lint.py` is the checks a task edit owes. Everything else is one file away.
 
 *It was 55% of this document and grew with every tooling change, while the workflow around it did
 not — finding `CE-09`, [T-147](T-147-one-workflow-file-per-lifecycle-phase.md).*
@@ -195,8 +201,8 @@ checked, when it resolves, and why quoting a dead reference must not create one.
 
 **Opening a task**
 
-1. Copy [`_task-template.md`](_task-template.md), take the next ID from `taskmd index`, name the file
-   after the title.
+1. Copy [`_task-template.md`](_task-template.md), take the next ID from `python
+   tools/tasks/query.py next`, name the file after the title.
 2. Fill §1 and the front-matter. Set `related` and `blocked_by` deliberately; default to `related`.
 3. `taskmd index` — the task appears in the tables.
 4. `taskmd check` — it passes before any work starts.
@@ -212,7 +218,7 @@ checked, when it resolves, and why quoting a dead reference must not create one.
 4. Findings worth keeping beyond this task are in [`../docs/LESSONS.md`](../docs/LESSONS.md), not only
    in the task file.
 5. `status: done`, `updated:` today, a final log row.
-6. `python tools/tasks/lint.py` — §6's four checks, chained with `&&` rather than `;` (**L-40**)
+6. `python tools/tasks/lint.py` — §6's checks, chained with `&&` rather than `;` (**L-40**)
    inside the one command, so a failure stops the chain instead of scrolling past. **The fourth binds
    an audit finding to the task serving it**, so a closure that leaves the two disagreeing stops here
    rather than at the next release.

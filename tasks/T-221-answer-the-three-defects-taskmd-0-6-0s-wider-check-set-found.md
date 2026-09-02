@@ -13,6 +13,7 @@ business_value: high
 effort: s
 created: 2026-08-23
 updated: 2026-08-23
+shipped_in: unreleased
 deliverables:
   - docs/lessons/L-134.md
 ---

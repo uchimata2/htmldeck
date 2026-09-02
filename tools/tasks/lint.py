@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the four checks a task edit owes, in order, stopping at the first failure.
+"""Run the checks a task edit owes, in order, stopping at the first failure.
 
 `tasks/TASK-WORKFLOW.md` §7 *Closing a task* requires `taskmd index`, then `taskmd check`, then
 `tools/docs/refcheck.py`, chained with `&&` rather than `;` so a failure stops the chain (**L-40**).
@@ -112,6 +112,8 @@ def steps():
          dict(os.environ)),
         ("findings", [sys.executable, os.path.join("tools", "docs", "findings.py"), "--check"],
          dict(os.environ)),
+        ("shipped", [sys.executable, os.path.join("tools", "tasks", "shipped.py")],
+         dict(os.environ)),
     ]
 
 
@@ -132,12 +134,17 @@ def verdict(code, label, quiet):
     if code:
         return ("\nFAILED at `%s` (exit %d). The chain stopped there; the steps after it did not "
                 "run." % (label, code))
+    # The count is derived, never typed. It said `four` through the addition of a fifth step
+    # and would have again (`PR-27`, T-236's rule: a figure with a command behind it is
+    # printed by the command).
+    names = [label for label, _, _ in steps()]
     if quiet:
-        return "lint: all four passed - index, check, refcheck, findings"
-    return ("\nAll four passed: the task record, its references, every pointer in every "
-            "document, and\nthe finding-to-task register.\n"
+        return "lint: all %d passed - %s" % (len(names), ", ".join(
+            n.replace("taskmd ", "") for n in names))
+    return ("\nAll %d passed: the task record, its references, every pointer in every "
+            "document, the\nfinding-to-task register, and `shipped_in` on every closed task.\n"
             "This validates structure and references. It cannot tell you a specification is "
-            "wrong or a deliverable is bad.")
+            "wrong or a deliverable is bad." % len(names))
 
 
 def self_test():

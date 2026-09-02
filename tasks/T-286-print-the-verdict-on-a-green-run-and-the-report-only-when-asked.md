@@ -13,6 +13,7 @@ business_value: medium
 effort: s
 created: 2026-09-02
 updated: 2026-09-02
+shipped_in: unreleased
 deliverables: [tools/check_all.py, tools/docs/figures.py, tools/docs/chronology.py, tools/tasks/lint.py, docs/lessons/L-153.md]
 ---
 

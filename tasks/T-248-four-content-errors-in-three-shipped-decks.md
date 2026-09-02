@@ -13,6 +13,7 @@ business_value: high
 effort: m
 created: 2026-08-29
 updated: 2026-08-30
+shipped_in: unreleased
 deliverables: [examples/sources/cost-model.md, examples/portfolio-review/sources/portfolio-model.md, examples/measure-first/sources/D5-management-decision-matrix.md]
 ---
 
