@@ -51,14 +51,14 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-282](T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | The portfolio deck's opening slide carries one of the two figures its specification calls the whole argument | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-233 |
 | [T-283](T-283-ds-218-reports-a-pass-where-it-has-no-subject.md) | Make DS-218 report no subject where it has none, rather than a pass | `PH1` | - | `proposed` | `specify` | - | - | - | - | T-231, T-257 |
 | [T-284](T-284-owed-looks-belongs-to-no-audit-cycle.md) | Give OWED-LOOKS.md an audit cycle, or a rule that says which one reads it | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - | T-223, T-273 |
-| [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md) | Audit — what a session pays per turn, and why it grows | `PH3` | - | `in_progress` | `review` | - | T-288, T-289, T-290, T-291, T-292, T-293, T-294 | - | - | T-130, T-153, T-285, T-286 |
-| [T-288](T-288-move-the-rules-that-bind-only-deck-or-release-work-under-path-scoped-rules.md) | Move the rules that bind only deck or release work out of tier 1, under path-scoped rules | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-143, T-236 |
+| [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md) | Audit — what a session pays per turn, and why it grows | `PH3` | - | `in_progress` | `review` | - | T-288, T-289, T-290, T-291, T-292, T-293, T-294, T-295 | - | - | T-130, T-153, T-285, T-286 |
 | [T-289](T-289-give-tooling-md-section-1-addressable-subsections.md) | Give TOOLING.md section 1 addressable subsections, so a pointer costs one rule and not ten | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-285, T-286 |
 | [T-290](T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md) | Measure one batch run as a single session with compaction, against the session-per-task rhythm | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-285, T-286 |
 | [T-291](T-291-measure-whether-the-desktop-apps-skill-catalogue-can-be-scoped-per-project.md) | Measure whether the desktop app's skill catalogue can be scoped, and disable what no project uses | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-135 |
 | [T-292](T-292-the-docs-gate-is-four-fifths-one-render.md) | The docs gate is four fifths one render — decide what figures.py's coverage account binds to | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-234, T-285 |
 | [T-293](T-293-the-second-runs-low-findings-in-one-pass.md) | The second context-economy run's three Low findings, in one pass | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-132, T-286 |
-| [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | Grade the second context-economy run's bands after its remedies land | `PH3` | - | `proposed` | `specify` | T-287 | - | T-288, T-289, T-290, T-291, T-292, T-293 | - | T-153 |
+| [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | Grade the second context-economy run's bands after its remedies land | `PH3` | - | `proposed` | `specify` | T-287 | - | T-289, T-290, T-291, T-292, T-293 | - | T-153 |
+| [T-295](T-295-complete-t-288s-observation-and-decide-the-move.md) | Complete T-288's observation in a session that can take it, then decide the move on the evidence | `PH3` | - | `proposed` | `specify` | T-287 | - | - | - | T-236, T-288 |
 
 ## Closed
 
@@ -297,7 +297,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-233](T-233-a-shipped-deck-carries-eleven-copies-of-one-source.md) | Remove the ten dead quick-view payloads, and fix the verb that writes them | `PH1` | `unreleased` | `done` | `review` | T-219 | - | - | - | T-282 |
 | [T-234](T-234-the-front-pages-own-figures-and-claims.md) | Correct the front page's figures and its two false claims | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | T-292 |
 | [T-235](T-235-the-skills-documents-against-the-tools-they-describe.md) | Reconcile the skill's documents with the tools and rules they describe | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | - |
-| [T-236](T-236-tier-1-and-the-brief-against-what-they-measure.md) | Correct tier 1's three figures and settle the tier-2 set the owner already ruled on | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | T-288 |
+| [T-236](T-236-tier-1-and-the-brief-against-what-they-measure.md) | Correct tier 1's three figures and settle the tier-2 set the owner already ruled on | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | T-288, T-295 |
 | [T-237](T-237-the-release-machinery-and-its-record.md) | Reconcile the release documents with the releases that actually ran | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | - |
 | [T-238](T-238-the-trackers-own-rules-against-its-own-records.md) | Fix the board header that routes work into a shipped phase, and two silent closures | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | - |
 | [T-240](T-240-the-evaluation-document-against-itself-and-the-code.md) | Correct EVALUATION.md's four internal contradictions and its account of the stage split | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | - |
@@ -337,5 +337,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-281](T-281-the-sort-windows-capacity-story-cannot-hold-its-own-failure-table.md) | The sort-window deck's capacity story cannot hold its own failure table, and the fix changes its headline | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-248 |
 | [T-285](T-285-let-a-documentation-task-run-the-gates-its-change-can-reach.md) | Let a documentation task run the gates its change can reach, and keep the full run for the batch | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-279, T-280, T-286, T-287, T-289, T-290, T-292 |
 | [T-286](T-286-print-the-verdict-on-a-green-run-and-the-report-only-when-asked.md) | Print the verdict on a green run, and the report only when asked or when it fails | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-279, T-285, T-287, T-289, T-290, T-293 |
+| [T-288](T-288-move-the-rules-that-bind-only-deck-or-release-work-under-path-scoped-rules.md) | Move the rules that bind only deck or release work out of tier 1, under path-scoped rules | `PH3` | `unreleased` | `done` | `review` | T-287 | - | - | T-294 | T-143, T-236, T-295 |
 
 <!-- taskmd:end -->
