@@ -377,7 +377,7 @@ the finding itself, and four closures showed that none of it is obvious from the
 | 14 | **CE-14** | A / F1 | Move the rules that bind only deck or release work under path-scoped rules — about 4,500 of `CLAUDE.md`'s 15,581 bytes, and rule 6 stays. **Still open, and the risk cell was right to name addressability.** `T-288` measured it and closed `not met` without moving anything: the mechanism is real on this harness — one `path_glob_match` in 1,814 logged instruction loads — but a rule file added mid-session does not fire, so no session can take the reading on itself. It also found two things this row does not hold: `.claude/` is untracked in a repository that publishes, and the sibling project declined the same move. `T-295` carries the decision | `L` on tier 1, `M` on the start context | `s` | stated | §6.3 |
 | ~~15~~ | **CE-15** | B / F1 | `TOOLING.md` §1 is 18,461 of 26,408 bytes and every pointer to it costs the whole — **done 2026-09-02, and the band is real but conditional in a way this row did not say.** Nothing was deleted, so a session that reads §1 whole still pays all of it. What changed is that no pointer sends it there: fourteen numbered subsections of 262 to 3,440 bytes, and the four live pointers now each name the one rule they meant. The saving belongs to the pointer, not to the file, and a row stating a gain against a file size cannot see that distinction | `M` | `s` | none | §6.3 |
 | 16 | **CE-16** | E / F5 | A session boundary re-pays the start context and the read path at the write rate; the session-per-task rhythm buys continuity, not tokens — **a measurement first, because it collides with a settled rhythm** | `L` (estimated) | `m` | stated | §6.3 |
-| 17 | **CE-17** | A / F1 | Sixty skills offered every turn, five of them this repository's; the app's store is outside `CE-07`'s reach | `M` on the start context | `xs` | none | §6.3 |
+| ~~17~~ | **CE-17** | A / F1 | Sixty skills offered every turn, five of them this repository's; the app's store is outside `CE-07`'s reach — **done 2026-09-02, and the band is unspendable from here.** The counts re-derive exactly — 5 this repository's, 41 others, and 15 built-ins against the row's 14 — but **the row's account of where the 41 live is wrong**: 40 of them are on no disk in this profile, and the one that is sits in `~/.claude/skills`. They are account-level, and this CLI has no settings key to disable a skill by name. So the gain is real and the controller is the account's own interface | `M` on the start context | `xs` | none | §6.3 |
 | 18 | **CE-18** | E / F5 | The docs gate is 81% one render — seconds, not tokens | *time* | `s` | stated | §6.3 |
 | ~~19~~ | **CE-19** | C / F5 | The deck gate's green default prints 29,980 bytes, up 72%; L-153 was not applied to it — **done 2026-09-02, and the band held with room.** One line: the default now comes from `isatty` rather than from the flag. A piped green run of the reference deck is **327 bytes**, not the 398 the row predicted from `--quiet`, because the deck line and the two notes are all that survive. The self-test asserts all three readings — terminal, pipe, and each flag winning — rather than only the red run it already covered | `M` | `xs` | none | §6.3 |
 | ~~20~~ | **CE-20** | A / F2 | Five memory-index entries duplicate a rule with a home — **done 2026-09-02, and the band did not hold: five is two, and 930 bytes is 219.** The row named the right test and was counted by a coarser one. The test is **per facet** — spent means *every* facet superseded or absorbed, and a cross-project facet is neither — and three of the five have one: the publishing entry carries the method, the fleet state and taskmd's no-rewrite ruling; the PowerShell entry carries a failure mode no tier-1 file states; and the trailer entry **is named as a keeper, by id, inside the entry this row cites as its test**. The index is 9,014 → 8,795 bytes, the two spent entries are in `spent/` rather than deleted, and the one inbound link was repointed at the document that now owns the rule ([L-159](lessons/L-159.md)) | `S` | `xs` | none | §6.3 |
@@ -621,6 +621,18 @@ sentence is the standing verdict on this method's forecasts, and nothing here is
 | **Applies to** | `this project`'s sessions |
 | **Controller** | `user` — the change lands outside the repository and no clone inherits it |
 | **Source** | this audit |
+
+**Re-measured 2026-09-02 by [T-291](../tasks/T-291-measure-whether-the-desktop-apps-skill-catalogue-can-be-scoped-per-project.md), and the counts held while the mechanism did not.** The catalogue arrived as **61** entries, not
+60: 5 this repository's, 15 harness built-ins where the row says 14, and the same **41** in
+between. *Installed by the desktop app in the user's roaming profile* is the half that fails —
+searching the whole user profile finds a directory for exactly **one** of the 41, in
+`~/.claude/skills`, and none for the rest at any depth. They are delivered with the account, and
+`ListSkills` reports each with its own `enabled` flag, so per-skill scoping **exists** and is the
+account interface's. **Nothing on this machine can reach it**: the CLI binary carries
+`enabledPlugins` and `disabledMcpjsonServers` and knows none of `disabledSkills`,
+`enabledSkills`, `allowedSkills`, `deniedSkills` or `skillSettings`. The byte figure is left at
+the row's own measurement rather than restated — re-deriving it means transcribing the
+catalogue, which is the thing being measured.
 
 #### CE-18 — The documents gate is four fifths one render
 
