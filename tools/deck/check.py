@@ -355,6 +355,104 @@ CLAUSES = {
                 "the 2026-08-08 ruling is read as leaving this with the person who prints.",
                 ("work", "assert matter is marked as matter on the printed contents page")),
                ),
+    # ---- added by T-278, eight of the nine `CONJUNCTIONS_OWED` counted --------------------------
+    # T-244's sweep read nine rules as conjunctions and left the rows unwritten, because nine
+    # rules is about twenty clauses and a clause row is a judgement rather than bookkeeping.
+    # These are eight of them: **eighteen clauses, twelve decided and six not**, which is what
+    # the count was standing in for.
+    #
+    # **The ninth, DS-230, cannot take a row here, and that is a defect in the sweep rather
+    # than in this table.** `clausesForRulesNotOwned` refuses a clause row for a rule the
+    # ruleset does not own, and `owned` is `check in (auto, render)` - DS-230 is `judge`. The
+    # refusal is right: this table exists because one satisfied row moves a rule into
+    # `checked` and hides a clause nothing reaches, and a `judge` rule is never in `checked`,
+    # so there is no coverage claim to see through. Its second clause IS decided - `component.py`
+    # closes `data-disc` against the four kinds - but that row reports under DS-229 by
+    # design, so writing `True` here would claim coverage the gate does not report under
+    # DS-230. It stays in `CONJUNCTIONS_OWED` with the reason beside it, and what is owed is
+    # a decision about the sweep's own membership. T-298.
+    "DS-110": (("no rasterised diagram", True),
+               # One check decides both, by its two halves: `role="img"` is how a raster is dressed
+               # as a figure that names data, which is the diagram clause, and inside a slide's
+               # `.body` is where a raster carries the argument. Neither half decides the other.
+               ("no raster carrying the argument", True)),
+    "DS-122": (("charts are hand-written SVG", True),
+               # `ds122_charts` refuses run-time marks with no declaration, and separately refuses a
+               # declaration whose `output` is not SVG. Two tests in one function, not one test read
+               # twice - the second fires on a deck the first passes.
+               ("a declared engine must emit SVG", True)),
+    "DS-141": (("the 500 ms cap", True),
+               ("eased rather than linear",
+                "Nothing reads the timing function. `ds141_durations` parses every rule that starts "
+                "a motion and looks at the duration and the licence only, so a 300 ms `linear` "
+                "transition passes the row the other two clauses are decided by. The obstacle is "
+                "not a threshold: it is the rule's own two carve-outs - a looping dash and a "
+                "zero-duration step, where `linear` is what the mechanism requires - which a check "
+                "has to spare rather than pick a number for. CLOSES WHEN: the check reads the "
+                "timing function of the same rules it already parses, sparing those two.",
+                ("work", "read the timing function beside the duration, sparing a looping dash and "
+                         "a zero-duration step")),
+               ("the declared licence", True)),
+    "DS-146": (("charts draw in once", True),
+               ("the draw-in is Rise, not a stroke-dash",
+                "The row above decides *once* from `playedSurvivesReturn` and says nothing about "
+                "what draws. The two dasharray reads the render pass takes are DS-140's `.current` "
+                "and DS-143's flow; a chart's marks are the subject of neither, so a chart "
+                "animating `stroke-dashoffset` passes every row this rule has. The subject is in "
+                "the DOM and the measurement is one the render pass already takes elsewhere, which "
+                "is why this is `work` and not an amendment. CLOSES WHEN: the render pass reports "
+                "the animated properties on a chart's marks, so a dash draw is distinguishable "
+                "from Rise.",
+                ("work", "report the animated properties on a chart's marks, so a dash draw is "
+                         "distinguishable from Rise")),
+               ),
+    "DS-202": (("one sentence", True),
+               ("factual",
+                "Whether a sentence states a fact is a reading of it, not a pattern in it - the "
+                "same shape as DS-100's *active voice* above, and every proxy fails the same way: "
+                "a hedge, a forecast and a measured claim are one sentence shape. CLOSES WHEN: "
+                "this becomes a `judge` clause the critique pass owns, or the rule names a "
+                "structure a check can read.",
+                ("amendment", "DS-202")),
+               ("not the headline restated",
+                "Both subjects are in the DOM and cheap to read, so this is not unreachable - what "
+                "nothing supplies is the cut-off. *Restated* is an overlap, and any threshold is a "
+                "number chosen to fit the decks in front of it (**L-38**). T-270 found eight bottom "
+                "lines restating their own headline by reading them, which is evidence that the "
+                "fault is real AND that a person is what found it. CLOSES WHEN: the rule names a "
+                "structural test - an exact match, a shared subject - or this becomes a judge "
+                "clause beside the one above.",
+                ("amendment", "DS-202"))),
+    "DS-218": (("the stop control is reachable", True),
+               ("the deck still reads with motion off",
+                "**A look, and T-278's open question is answered here rather than carried.** "
+                "*Reads* is a property of the rendered deck seen by somebody. The mechanical half "
+                "already has an owner - DS-143 decides that nothing is left animating under "
+                "`prefers-reduced-motion` and that no risen element is stranded at `opacity:0` - "
+                "so what this clause adds is whether the deck still ARGUES with the motion "
+                "stopped: whether a diagram whose meaning was in the movement still says it. No "
+                "threshold expresses that, and inventing one would be DS-091's failure a rule "
+                "over, a number chosen to spare the decks in hand. CLOSES WHEN: it does not close "
+                "mechanically. It is owed to a person on every deck that ships a stop control, "
+                "which is CLAUDE.md rule 6.",
+                ("look", None))),
+    "DS-229": (("every part matches its contract row", True),
+               # `component.py` emits five rows and the two clauses take different ones: the
+               # requirement rows walk the parts the contract names, and one prohibition row walks
+               # the shared block's styled classes back to it. The completeness half is the one
+               # that decays, and it is checked rather than assumed.
+               ("every styled class has a row", True)),
+    "DS-238": (("density never reaches affordance motion", True),
+               ("a content motion runs at or above its rank",
+                "The row above decides the SPLIT - a content motion is gated on `--m-on`, an "
+                "affordance motion is not - and DS-239 decides that `--m-rank` is the value the "
+                "rule derives. Neither decides that the gate EVALUATES. `--m-on` is "
+                "`max(0,min(1,density - rank + 1))` in the shared block, and nothing sets a "
+                "density and reports which motions ran, so a deck whose arithmetic inverted would "
+                "pass both rows. CLOSES WHEN: the render pass sets `--motion-density` and reports "
+                "which content motions run, so the at-or-above comparison is measured rather than "
+                "assumed.",
+                ("work", "set --motion-density and report which content motions run"))),
 }
 
 
@@ -520,15 +618,12 @@ SWEPT = {
 # stop counting. What DOES fail is a rule in here that is also in `CLAUSES` - the row exists, so
 # the debt does not - or one nothing has swept.
 CONJUNCTIONS_OWED = {
-    "DS-110": "no rasterised diagram / no raster carrying the argument",
-    "DS-122": "charts are hand-written SVG / a declared engine must emit SVG",
-    "DS-141": "the 500 ms cap / eased rather than linear / the declared licence",
-    "DS-146": "charts draw in once / the draw-in is Rise, not a stroke-dash",
-    "DS-202": "one sentence / factual / not the headline restated",
-    "DS-218": "the stop control is reachable / the deck still reads with motion off",
-    "DS-229": "every part matches its contract row / every styled class has a row",
+    # **Read, judged a conjunction, and refused a `CLAUSES` row by the table's own guard** (T-278).
+    # DS-230 is `judge`, so `ruleset.owned()` excludes it and `clausesForRulesNotOwned` fails the
+    # run on a clause row for it. The sweep reads every `hard` rule and does not ask whether the
+    # clause table can hold what it finds, which is how a rule reaches this queue with nowhere to
+    # go. Left here rather than dropped: dropping it is the silence this record exists to prevent.
     "DS-230": "tier two answers a question the face provokes / it is one of four kinds",
-    "DS-238": "density never reaches affordance motion / a content motion runs at or above its rank",
 }
 
 
