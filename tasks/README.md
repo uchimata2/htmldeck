@@ -304,7 +304,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-250](T-250-two-lessons-state-a-figure-and-two-link-to-a-dead-anchor.md) | Fix four lessons in the folder whose own rule is that a lesson outlives its instance | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | - |
 | [T-251](T-251-a-research-note-and-a-memory-entry-describe-a-state-that-changed.md) | Correct R9's account of DS-122 and a memory entry recording an edit never made | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | - |
 | [T-252](T-252-the-ignore-rules-come-from-three-files-and-one-ships.md) | Put this repository's ignore rules where a clone receives them | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | - |
-| [T-253](T-253-the-low-findings-batch.md) | Correct the audit's forty-nine Low findings, or accept each with a reason and a date | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | - |
+| [T-253](T-253-the-low-findings-batch.md) | Correct the audit's forty-nine Low findings, or accept each with a reason and a date | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | T-297 |
 | [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) | Fix set_var's self-closing tag insertion, and have write verify what it wrote | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-225, T-261 |
 | [T-255](T-255-render-py-motion-seeks-past-the-delay.md) | Add the delay in the report branch and drop the subtraction in the capture branch | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-225, T-272 |
 | [T-256](T-256-ds-219-cannot-see-a-painted-svg-ancestor.md) | Walk the full ancestor chain for DS-219's ground, and settle the doubt the rationale records | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-225 |
@@ -339,5 +339,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-291](T-291-measure-whether-the-desktop-apps-skill-catalogue-can-be-scoped-per-project.md) | Measure whether the desktop app's skill catalogue can be scoped, and disable what no project uses | `PH3` | `unreleased` | `done` | `review` | T-287 | - | - | T-294 | T-135 |
 | [T-292](T-292-the-docs-gate-is-four-fifths-one-render.md) | The docs gate is four fifths one render — decide what figures.py's coverage account binds to | `PH3` | `unreleased` | `done` | `review` | T-287 | - | - | T-294 | T-234, T-285, T-296 |
 | [T-293](T-293-the-second-runs-low-findings-in-one-pass.md) | The second context-economy run's three Low findings, in one pass | `PH3` | `unreleased` | `done` | `review` | T-287 | - | - | T-294 | T-132, T-286 |
+| [T-297](T-297-record-the-degraded-states-colour-ruling-where-the-block-asks-the-question.md) | Record the degraded state's colour ruling in the block that asks the question | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-253 |
 
 <!-- taskmd:end -->

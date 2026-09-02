@@ -1310,9 +1310,15 @@ svg{display:block}
    deck on `lattice`, whose ground is a cool near-neutral, degrades into the other theme's family,
    and every template CLAUDE.md rule 4's generator will produce degrades into `quarto` too. That
    is deliberate rather than an oversight: the degraded state is a plain document, it owes no
-   palette, and the values cannot be tokenised without breaking the rule above. Whether they
-   should be neutral rather than one theme's is a question for an eye - `PR-79`, and a row in
-   `docs/OWED-LOOKS.md`.
+   palette, and the values cannot be tokenised without breaking the rule above.
+
+   **Looked at and settled 2026-09-03, and the four literals stay.** The owner read the pair - a
+   deck on `quarto` beside the same deck swapped onto `lattice` - and ruled that it reads as a more
+   conservative version of the deck rather than as damage. **The ruling is on the block, not on
+   `lattice`**: a template the rule 4 generator produces inherits the same answer and does not
+   reopen it, which is why it was worth deciding before that generator exists. `PR-79`, and row 12
+   of `docs/OWED-LOOKS.md`, which carries the wording. A task that changes a colour here needs its
+   own look.
 
    Printing is unchanged by it. The print block above is `!important` throughout and paginates the
    stage; a browser that failed the preflight prints what that block says. Printing is a mode the

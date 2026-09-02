@@ -40,7 +40,7 @@ study, company or place. See *Provenance*, below.
 *Buy frequency before bikes*, a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-[`reference-deck.html`](reference-deck.html) is **317 KB in one file**, 324 805 bytes. Three embedded
+[`reference-deck.html`](reference-deck.html) is **318 KB in one file**, 325 273 bytes. Three embedded
 typefaces (97 KB of it as base64), eleven Lucide icons in one sprite, eight hand-written SVG figures,
 and the deck shell. No libraries, no build step, no network.
 
@@ -354,7 +354,7 @@ edited without regenerating is a red run rather than a discovery two audits late
 
 [`sort-window/`](sort-window) holds all four artifacts a build run leaves behind: the deck, the
 foundation spec with its outline, the slide-by-slide specification, and the sources the figures were
-reconciled against. It is **316 KB in one file**, 323 824 bytes, 12 slides, six hand-written SVG
+reconciled against. It is **317 KB in one file**, 324 292 bytes, 12 slides, six hand-written SVG
 figures, ten disclosure panels, zero external references.
 
 ```bash
@@ -418,7 +418,7 @@ first one. Nothing but a person saw the other two.**
 [`measure-first/measure-first.html`](measure-first/measure-first.html) is *Demand Planning: what
 Business Analytics can do first*, and it runs to 14 slides: a lobby, twelve of argument, and a
 colophon. It is
-**427 KB in one file**, 437 529 bytes, zero external references. It argues that measurement and
+**428 KB in one file**, 437 997 bytes, zero external references. It argues that measurement and
 discipline fix demand planning before any AI is bought, for an invented dental group deciding what
 to do first.
 
@@ -458,7 +458,7 @@ adopter's file, and where
 ## The deck that answers whether a chart library is worth it
 
 [`portfolio-review/portfolio-review.html`](portfolio-review/portfolio-review.html) is *Meridian
-Infrastructure Fund - 2026 portfolio review*, 12 slides. It is **316 KB in one file**, 323 780 bytes,
+Infrastructure Fund - 2026 portfolio review*, 12 slides. It is **317 KB in one file**, 324 248 bytes,
 zero external references, and it carries 18 figures - ten of them charts, which is more charts than
 the other three decks hold between them.
 
