@@ -13,7 +13,7 @@ business_value: high
 effort: m
 created: 2026-08-28
 updated: 2026-08-29
-shipped_in: unreleased
+shipped_in: 0.7.0
 deliverables: []
 ---
 

@@ -13,7 +13,7 @@ business_value: low
 effort: s
 created: 2026-09-03
 updated: 2026-09-03
-shipped_in: unreleased
+shipped_in: 0.7.0
 deliverables:
   - shell/components.css
   - examples/reference-deck.html

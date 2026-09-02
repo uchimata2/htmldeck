@@ -14,7 +14,7 @@ effort: m
 created: 2026-08-29
 updated: 2026-09-01
 deliverables: [CLAUDE.md, docs/BRIEF.md, docs/EVALUATION.md]
-shipped_in: unreleased
+shipped_in: 0.7.0
 ---
 
 # T-236 — Correct tier 1's three figures and settle the tier-2 set the owner already ruled on

@@ -14,7 +14,7 @@ effort: xs
 finding: CE-19
 created: 2026-09-02
 updated: 2026-09-02
-shipped_in: unreleased
+shipped_in: 0.7.0
 deliverables: []
 ---
 

@@ -14,7 +14,7 @@ effort: s
 created: 2026-08-29
 updated: 2026-09-02
 deliverables: []
-shipped_in: unreleased
+shipped_in: 0.7.0
 ---
 
 # T-239 — Reconcile the audit's plan, its ledger and the document binding it to its method

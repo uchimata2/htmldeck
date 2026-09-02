@@ -14,7 +14,7 @@ effort: s
 created: 2026-08-29
 updated: 2026-08-30
 deliverables: []
-shipped_in: unreleased
+shipped_in: 0.7.0
 ---
 
 # T-227 — Correct the copy-into-your-own-plugin route, or withdraw it

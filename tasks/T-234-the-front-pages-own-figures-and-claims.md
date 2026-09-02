@@ -14,7 +14,7 @@ effort: s
 created: 2026-08-29
 updated: 2026-09-01
 deliverables: [README.md, tools/docs/figures.py, docs/lessons/L-152.md]
-shipped_in: unreleased
+shipped_in: 0.7.0
 ---
 
 # T-234 — Correct the front page's figures and its two false claims

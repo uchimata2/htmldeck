@@ -13,7 +13,7 @@ business_value: high
 effort: s
 created: 2026-08-23
 updated: 2026-08-23
-shipped_in: unreleased
+shipped_in: 0.7.0
 deliverables:
   - tools/docs/cycles.py
 ---

@@ -14,7 +14,7 @@ effort: s
 created: 2026-08-22
 updated: 2026-09-01
 deliverables: [tools/docs/chronology.py]
-shipped_in: unreleased
+shipped_in: 0.7.0
 ---
 
 # T-220 — Derive the release chronology's task count instead of typing it

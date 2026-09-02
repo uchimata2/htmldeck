@@ -13,7 +13,7 @@ business_value: high
 effort: xs
 created: 2026-08-23
 updated: 2026-08-23
-shipped_in: unreleased
+shipped_in: 0.7.0
 deliverables:
   - docs/AUDIT-METHOD.md
   - tasks/T-219-pre-release-audit-of-the-whole-repository.md

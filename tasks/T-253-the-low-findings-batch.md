@@ -13,7 +13,7 @@ business_value: low
 effort: l
 created: 2026-08-29
 updated: 2026-09-02
-shipped_in: unreleased
+shipped_in: 0.7.0
 deliverables:
   - docs/PRE-RELEASE-AUDIT.md
   - tools/docs/severity.py

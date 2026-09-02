@@ -13,7 +13,7 @@ business_value: medium
 effort: s
 created: 2026-08-30
 updated: 2026-08-30
-shipped_in: unreleased
+shipped_in: 0.7.0
 deliverables: [examples/sort-window/sources/throughput-model.md, examples/sort-window/sort-window.html]
 ---
 
