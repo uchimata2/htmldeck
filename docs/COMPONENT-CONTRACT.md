@@ -379,8 +379,6 @@ are DS-131's and DS-217's, measured in the render gate rather than read out of t
 | `.l` | — | `on .chev` | `0+` | — | author |
 | `.r` | — | `on .chev` | `0+` | — | author |
 
-**`.arrow-pop` and `.dot-pop` are content motions, and they sit on the figure rather than on what moves (T-112).** A `<marker>` renders in its own context and inherits from where it is *defined*, so a rank on the referencing line never reaches the arrowhead — and a matrix's dots interleave with its row labels, so they cannot be wrapped in one element without moving the labels. Both are therefore one motion per figure with one `--m-rank`, which is also the right unit: ranking each arrowhead separately would pop three of a diagram's five, and that is the incoherence DS-237 rejected for `rise`. A `.dot-pop` figure's dots each carry `--dp`, their place in the arrival order, derived by `tools/deck/density.py` and checked by it.
-
 **What may sit in the navigation container, and what may not (T-114).** `.navbox` holds the
 controls that answer *where am I, and how do I move*: the ruler, the counter, and the two pager
 buttons. Nothing else may go in it. `Read` switches rendering and `Motion` switches playback —
@@ -463,6 +461,8 @@ attributes, because a presentation attribute loses to any class rule and renders
 (DS-214). These are that vocabulary. Every one of them is `0+`: which marks a figure uses is the
 figure's business.
 
+**`.arrow-pop` and `.dot-pop` are content motions, and they sit on the figure rather than on what moves (T-112).** A `<marker>` renders in its own context and inherits from where it is *defined*, so a rank on the referencing line never reaches the arrowhead — and a matrix's dots interleave with its row labels, so they cannot be wrapped in one element without moving the labels. Both are therefore one motion per figure with one `--m-rank`, which is also the right unit: ranking each arrowhead separately would pop three of a diagram's five, and that is the incoherence DS-237 rejected for `rise`. A `.dot-pop` figure's dots each carry `--dp`, their place in the arrival order, derived by `tools/deck/density.py` and checked by it.
+
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `.fig` | `svg` | `.slide` | `0+` | `viewBox` `role` `aria-label` | author |
@@ -514,7 +514,14 @@ whose charts the reader is expected to *interrogate* may carry an engine, and it
 
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `htmldeck-chart-engine` | `meta` | `head` | `0..1` | `name` `content` | author |
+| `htmldeck-chart-engine` | `meta` | `head` | `0-1` | `name` `content` | author |
+
+*This row is drawn as a part and is **not** one: `parse_part_row` in `tools/deck/component.py`
+reads a leading dot, so a bare element name is skipped and this document *as data* carries 102
+rows where it prints 103. That is correct for a `meta` declaration rather than a class, and
+nothing is unenforced - the four keys, the `output=svg` rule and the SPDX test are `audit.py`'s
+under DS-122. The count cell read `0..1` until 2026-09-02, the one cell outside §2's closed
+vocabulary (`PR-41`).*
 
 `content` is four `key=value` pairs separated by `;` — **`engine`**, **`version`**, **`licence`**
 and **`output`**. All four are required, `output` must be `svg`, and `licence` must be an SPDX

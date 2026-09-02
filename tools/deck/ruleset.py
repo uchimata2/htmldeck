@@ -43,7 +43,8 @@ CHECKS = ("auto", "render", "judge", "—")
 REACHES = ("yes", "never", "off-gate", "—")
 
 # The `Check` values that put a rule inside a gate's jurisdiction. `judge` is the evaluator's and
-# `—` belongs to the four rules that bind whoever builds a check rather than the deck.
+# `—` belongs to the rules that bind whoever builds a check rather than the deck - `--counts`
+# prints how many, and `DESIGN-SYSTEM.md` §8 describes the group.
 OWNED = ("auto", "render")
 
 
@@ -113,8 +114,9 @@ def off_table(path=SPEC, rules=None):
 
     **This is why two totals are in circulation, and the label is the half nobody wrote down.**
     DS-000 is the override clause, stated as prose in §0 as `(DS-000, guidance)` rather than as a
-    row - so the table holds 160 with 5 `guidance` rules, and the document declares 161 with 6.
-    Both published sets are right and neither says which rule moves between them.
+    row - so the table holds one fewer rule than the document declares, and one fewer `guidance`
+    rule with it. Both published sets are right and neither says which rule moves between them;
+    `--counts` prints both totals side by side and names DS-000 as the rule that moves.
 
     Derived rather than hard-coded, so a second prose rule shows up here instead of quietly
     widening the gap, and a citation of a rule ID that no longer exists shows up with no label.
@@ -234,7 +236,7 @@ def self_test():
     """Refuse to run if the parser has stopped agreeing with the document (**L-04**).
 
     Each assertion below is a property the coverage account depends on, not a spot check: a wrong
-    `Reach` split silently converts 43 `judge` rules into rules the gate must account for.
+    `Reach` split silently converts every `judge` rule into a rule the gate must account for.
     """
     row = parse_row("| DS-042 | Boxes that read as a set are siblings in one container. | hard "
                     "| auto | never — which boxes *read as a set* is a reading of the content |\n")

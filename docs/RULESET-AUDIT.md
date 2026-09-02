@@ -75,8 +75,11 @@ grep -c -i "chart" shell/components.css   →  0
 ```
 
 The count is right and it settles nothing. **Both rules govern behaviour, and behaviour is not in the
-stylesheet.** `shell/deck.js:410` carries DS-146 by name; `shell/deck.js:825` is DS-147's `countUp()`;
-both ship in all three decks. The subject is there too — `examples/reference-deck.html` holds a
+stylesheet.** `shell/deck.js` carries DS-146 by name in the once-only comment; DS-147's `countUp()` is in the same
+file; both ship in every deck this repository gates. *The two were cited as `deck.js:410` and
+`deck.js:825` until 2026-09-02 and had moved to 482 and 1032 by then, in a file that has grown to
+1,077 lines - a `file:line` is the one pointer `refcheck.py` cannot resolve, so it is unwatched by
+construction (`PR-95`). The deck count went with them: it read three and four ship.* The subject is there too — `examples/reference-deck.html` holds a
 hand-authored line chart, `<polyline>` twice under an `aria-label` naming it, which is what
 **DS-122** requires a chart to be. *No chart library. Hand-written SVG.* So the probe searched the
 stylesheet for a component the ruleset forbids anyone to write.
@@ -105,7 +108,7 @@ neighbourhood. *Until 2026-09-02 this paragraph pinned the fixture by naming fiv
 said to seed — `DS-035`, `DS-075`, `DS-141`, `DS-142`, `DS-229` — and had been wrong since
 [T-224](../tasks/T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) rebuilt the
 fixture around dimensions, because a sentence pinned to a list of outputs has nothing to fail
-against when the instrument changes. It now names the instrument: `PR-92`.* **29 rules are recorded `unverified`**, which §1 rules is the correct
+against when the instrument changes. It now names the instrument: `PR-92`.* **30 rules are recorded `unverified`**, which §1 rules is the correct
 outcome and not a gap: *a rule that has never fired is unverified, not proven*. 27 of them
 the gate owns and excuses on every deck built here, each excusal stating its own closing condition in
 `check.py`; the rest are `off-gate` in the ruleset itself — DS-072, DS-210 and DS-211, where the
@@ -262,7 +265,7 @@ carries the one that decided the row. **A ·  after the ID marks a rule this aud
 | **DS-143** | hard | render/yes | pass | pass | pass | the gate decided it on a shipped deck, so a subject was there to decide |
 | **DS-144** | hard | auto/yes | pass | pass | pass | the gate decided it on a shipped deck, so a subject was there to decide |
 | **DS-145** | default | render/yes | pass | unverified | pass | owned by the gate and excused on every deck built here; the excusal states its own closing condition |
-| **DS-146** | hard | render/yes | pass | pass | pass | **the withdrawn dead-legislation instance.** `shell/deck.js:410` carries it by name and `examples/reference-deck.html` holds a real hand-authored line chart |
+| **DS-146** | hard | render/yes | pass | pass | pass | **the withdrawn dead-legislation instance.** `shell/deck.js` carries it by name and `examples/reference-deck.html` holds a real hand-authored line chart |
 | **DS-147** | default | render/yes | pass | unverified | pass | owned by the gate and excused on every deck built here; the excusal states its own closing condition |
 | **DS-148** | default | render/yes | pass | unverified | pass | owned by the gate and excused on every deck built here; the excusal states its own closing condition |
 | **DS-149** | hard | render/yes | pass | unverified | pass | owned by the gate and excused on every deck built here; the excusal states its own closing condition |

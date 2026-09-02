@@ -253,9 +253,6 @@ render as before; motion is pinned off in a capture, as `render.py` documents.
 - **The declaration idiom does not carry its guarantees across instruments.** Kept as **L-130**; it
   is the finding that decided the shape of the fix rather than a note beside it.
 
-**Child fix tasks raised**
-- none
-
 ## Log
 
 | Date | Status change | Note |

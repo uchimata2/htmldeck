@@ -8,7 +8,10 @@ admired.
 [`lessons/`](lessons) — the
 bare id is the filename, so a citation you meet anywhere in the tree opens without a search. Read
 one; do not read them all. **To add a lesson**, write the file with a `category:` front-matter line
-and a `# L-nn — Title` heading, then run `python tools/docs/lessons.py index`. Editing the table
+and a `# L-nn — Title` heading, **ending on its last paragraph and not on a horizontal rule**, then run
+`python tools/docs/lessons.py index`. *Twenty-one files ended on a rule until 2026-09-02 - the mark
+that separated one lesson from the next while they were all in this file, cut with the lesson above it
+by [T-146](../tasks/T-146-one-file-per-lesson-with-a-generated-index.md) (`PR-106`).* Editing the table
 below by hand is a gate failure, in both directions.
 
 Cite them by ID. `L-07` and `L-11` are cited from `tools/assets/build_probe_deck.py`, so **IDs are

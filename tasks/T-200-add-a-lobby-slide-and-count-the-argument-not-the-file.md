@@ -45,7 +45,7 @@ cover pages of the topic, not content.*
   `<section>` placed after the final slide breaks `section.slide:last-of-type`. A lobby placed
   before it breaks neither the reason nor the mechanism. The wording still needs amending, because
   it will no longer be literally true.
-- **DS-108's back-matter stage** already exists - `data-stage="back"`, a slide outside the argument,
+- **T-108's back-matter stage** already exists - `data-stage="back"`, a slide outside the argument,
   which DS-225 gives a box with no mark. A `front` stage is that rule's mirror and should be built
   as one rather than as a new idea.
 

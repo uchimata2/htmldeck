@@ -315,6 +315,11 @@ def self_test(data):
     # measurement, so a value read from the deck would agree with every deck and catch nothing. What
     # a re-baseline owes instead is saying which deck the number describes, so the next trip is
     # readable rather than mysterious - and that is what the paragraph above is.
+    AUTHORED = 13
+    if data.get("authored") != AUTHORED:
+        failures.append("the deck built %r contents boxes, expected %d (twelve slides and the "
+                        "colophon) - the reference deck changed and these numbers describe a "
+                        "different deck" % (data.get("authored"), AUTHORED))
     # ---- the split rule (T-036). Three invariants, and the first is the one DS-226 states.
     #
     # Checked here rather than trusted because the split is the only thing now standing between a
@@ -348,11 +353,6 @@ def self_test(data):
             failures.append("%s: %d sheets, expected %d"
                             % (s["name"], len(s["sizes"]), s["want"]))
 
-    AUTHORED = 13
-    if data.get("authored") != AUTHORED:
-        failures.append("the deck built %r contents boxes, expected %d (twelve slides and the "
-                        "colophon) - the reference deck changed and these numbers describe a "
-                        "different deck" % (data.get("authored"), AUTHORED))
     return failures
 
 

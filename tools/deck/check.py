@@ -836,6 +836,11 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     Returns `(rows, data, notes)`. `notes` carries what a reader needs to know about the run
     itself - which halves ran, and anything that failed to measure.
     """
+    if os.path.isdir(deck):
+        sys.exit("not a deck: %s is a directory. Point this at the .html file inside it."
+                 % paths.display_path(deck, ROOT))
+    if not os.path.isfile(deck):
+        sys.exit("no such deck: %s" % paths.display_path(deck, ROOT))
     html = open(deck, "r", encoding="utf-8").read()
     rows, notes = [], []
 

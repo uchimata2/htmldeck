@@ -181,9 +181,6 @@ banner reads correctly, the panel names slide 10, and the note is the one writte
   plainly: a single instance cannot demonstrate that a mapping is a mapping. The second example
   found the defect within minutes of being written.
 
-**Child fix tasks raised**
-- none
-
 ## Log
 
 | Date | Status change | Note |

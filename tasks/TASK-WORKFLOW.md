@@ -217,6 +217,12 @@ checked, when it resolves, and why quoting a dead reference must not create one.
    this step is when it is owed and what it blocks.
 4. Findings worth keeping beyond this task are in [`../docs/LESSONS.md`](../docs/LESSONS.md), not only
    in the task file.
+4a. **Every open question in §1 is answered, struck, or handed somewhere with a name.** Not a
+   checker - no program can tell an answer from a silence - and not optional: a `done` task may
+   carry an unanswered open question and nothing looks, which is `PR-127` in
+   [T-188](T-188-raise-the-shipped-motion-density-default-to-100.md), closed with the condition it
+   named still holding and the task it promised unraised. **Where a criterion is dropped rather
+   than met, §4 says so in a row** - the same silence one column over.
 5. `status: done`, `updated:` today, a final log row.
 6. `python tools/tasks/lint.py` — §6's checks, chained with `&&` rather than `;` (**L-40**)
    inside the one command, so a failure stops the chain instead of scrolling past. **The fourth binds

@@ -1423,20 +1423,19 @@ def eyebrow_verdicts(html):
 #     answers needs the network, which is the one thing a portable deck is defined against. The row
 #     prints how many it did not follow, so the unchecked part is visible on every run.
 
-PROVENANCE_MARK = re.compile(
-    r'<p[^>]*class="[^"]*\bprovenance\b[^"]*"[^>]*>(.*?)</p>', re.S | re.I)
-# Anchors only. A bare `href=` sweep would count the `<use href="#i-source">` that draws the mark's
-# own glyph as a link and report `1 of 1 examined` on a deck with no links in it at all - the
-# denominator this row exists to make honest, made dishonest by the instrument.
-MARK_HREF = re.compile(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']*)["\']', re.I)
-
-# **The class, not the place, and T-109 is why.** These two used to sweep the region inside
+# **The class, not the place, and T-109 is why.** Two constants used to sweep the region inside
 # `<p class="provenance">`, which was the only place the component could sit. It sits in `.body`
 # too now - the colophon renders the same rows - and a region sweep silently stopped seeing them:
 # the four-kind fixture reported `0 of 0 examined` with an external URL in it, and DS-001 failed
 # the same URL because the exemption did not reach it either. Binding to `.sources-link` is also
 # tighter than what it replaces: an `<a>` inside a provenance mark that is not part of the
 # component was never DS-105's to judge, and is not exempt from DS-001 now.
+#
+# **Anchors only, and the reason moved here with the obligation** (`PR-51`). A bare `href=` sweep
+# would count the `<use href="#i-source">` that draws the mark's own glyph as a link and report
+# `1 of 1 examined` on a deck with no links in it at all - the denominator this row exists to make
+# honest, made dishonest by the instrument. `PROVENANCE_MARK` and `MARK_HREF` carried that
+# argument and were read by nothing after T-109; they went on 2026-09-02 and the argument did not.
 ANCHOR = re.compile(r'<a\b[^>]*>', re.I)
 HREF_ATTR = re.compile(r'\bhref\s*=\s*["\']([^"\']*)["\']', re.I)
 CLASS_ATTR = re.compile(r'\bclass\s*=\s*["\']([^"\']*)["\']', re.I)

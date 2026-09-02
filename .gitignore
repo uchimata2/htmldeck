@@ -7,7 +7,12 @@
 # `git add -A` would have staged it into a public repository (PR-15, PR-122). A rule that
 # protects only its author is not protection.
 
-# Local scratch — never published
+# Local scratch — never published. `control/` and `dist/` are **conventional, not observed**:
+# neither has appeared in any commit of this repository, and `check_all.py`'s `tracked()`
+# docstring cites both as worked examples of what is machine-local by design. Nothing here looks
+# at what this file hides - `refcheck.py` reads it only to skip - and that is deliberate rather
+# than a gap: an ignored surface differs on every clone, so a checker over it would fail
+# differently for every adopter (PR-123).
 control/
 dist/
 __pycache__/

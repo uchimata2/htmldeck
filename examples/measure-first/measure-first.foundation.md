@@ -35,14 +35,18 @@ it cost* → *what will go wrong* → *what else could we do* → *approve this*
 
 ## Quality bar — additions only
 
-Three, and each comes from something this project has already paid for.
+Four, and each comes from something this project has already paid for.
 
 1. **No figure appears beside a picture that contradicts it.** A count true of the full process map is
    false beside a simplified drawing of it. The deck therefore quotes **no element counts at all**
    for the two process maps, although both source documents state them.
-2. **Delivery punctuality is stated as *on time*, never as OTIF.** Larkfield counts on-time delivery
-   by hand and does not count *in full*, so the industry term claims a measurement that does not
-   exist (D1 §3).
+2. **Delivery punctuality is stated as *on time*, never as OTIF — in the deck's own copy.** Larkfield
+   counts on-time delivery by hand and does not count *in full*, so the industry term claims a
+   measurement that does not exist (D1 §3). **The bar does not reach the five sources the deck
+   carries**, and two of them use the term: `D2` §3 and `D4` §3 both label the same 87% figure OTIF
+   where `D1` §3 caveats it. A source is evidence, and editing one on the way in stops it being
+   the thing the deck was built from - so a reader who opens a provenance mark does meet the term
+   the bar avoids, and this sentence is where that is said rather than a silence (`PR-88`).
 3. **Each of the six geometry classes listed in the outline's note is checked against the rendered
    slides by name before the deck ships.** Every one passed all four automatic checks the last time.
 4. **The reference framework is read, not substituted for by D1–D5.** v1 was authored from the five
@@ -71,8 +75,8 @@ states on its own surface.
 
 **Written from the built deck, not from the outline.** The first block is tier one, drafted with the
 outline; the second is what only the built artefact could show — the values that reach a slide
-through a disclosure or as a label inside a diagram. Thirteen of the forty rows are in the second
-block, which is the share that a ledger drafted at outline time would have missed.
+through a disclosure or as a label inside a diagram. Thirteen rows are in the second block, and they are
+what a ledger drafted at outline time would have missed.
 
 | Figure | Value | Origin | Used on |
 | :--- | :--- | :--- | :--- |

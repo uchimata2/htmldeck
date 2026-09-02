@@ -244,54 +244,72 @@ def self_test():
             "## Slide 2 - Nothing here measures it\n\n- **Title.** B\n- **Sources.** none\n\n"
             "## Slide 3 - Empty note\n\n- **Notes.** \n- **Sources.** none\n")
     got = notes_of(spec)
-    assert set(got) == {1}, got
-    assert got[1] == ("Two opposite problems", "first note wrapped over two lines"), got[1]
-    assert 2 not in got, "a slide with no Notes field must not get an entry"
-    assert 3 not in got, "an empty Notes field is no note, not an empty one"
+    if not (set(got) == {1}):
+        sys.exit("SELF-TEST FAILED: %r" % (got,))
+    if not (got[1] == ("Two opposite problems", "first note wrapped over two lines")):
+        sys.exit("SELF-TEST FAILED: %r" % (got[1],))
+    if not (2 not in got):
+        sys.exit("SELF-TEST FAILED: %s" % ("a slide with no Notes field must not get an entry",))
+    if not (3 not in got):
+        sys.exit("SELF-TEST FAILED: %s" % ("an empty Notes field is no note, not an empty one",))
 
     # A slide section ending in a horizontal rule must not put it inside the note.
     ruled = notes_of("## Slide 1 - T\n\n- **Notes.** hold the range\n\n---\n\n## Slide 2 - U\n")
-    assert ruled[1] == ("T", "hold the range"), ruled
+    if not (ruled[1] == ("T", "hold the range")):
+        sys.exit("SELF-TEST FAILED: %r" % (ruled,))
 
     # The LAST slide is followed by the open-questions section, not by another slide. Bounding on
     # `## Slide` alone gave it a section running to end of file.
     tail = notes_of("## Slide 1 - T\n\n- **Notes.** make the ask\n\n"
                     "## Open - needs a decision\n\n| # | q |\n| - | - |\n| 1 | something |\n")
-    assert tail[1] == ("T", "make the ask"), tail
+    if not (tail[1] == ("T", "make the ask")):
+        sys.exit("SELF-TEST FAILED: %r" % (tail,))
 
     # **The offset case, which is the whole of T-217.** The deck opens with a title slide the
     # specification does not number, so specification slide 1 is the deck's slide 2. Attaching by
     # position puts the note on `Cover`; attaching by title puts it where it was written.
     names = ["Cover", "Two opposite problems", "Nothing here measures it", "Sources"]
     attached, problems = resolve(got, names)
-    assert not problems, problems
-    assert list(attached) == [1], attached
-    assert attached[1][0] == 1 and attached[1][2].startswith("first note"), attached
+    if not (not problems):
+        sys.exit("SELF-TEST FAILED: %r" % (problems,))
+    if not (list(attached) == [1]):
+        sys.exit("SELF-TEST FAILED: %r" % (attached,))
+    if not (attached[1][0] == 1 and attached[1][2].startswith("first note")):
+        sys.exit("SELF-TEST FAILED: %r" % (attached,))
 
     # Punctuation and currency must not break an obvious match.
     money = notes_of("## Slide 9 - \u20ac450k in, \u20ac1.2m a year out\n\n- **Notes.** hold it\n")
     hit, probs = resolve(money, ["x", "450k in, 1.2m a year out"])
-    assert not probs and hit[1][2] == "hold it", (hit, probs)
+    if not (not probs and hit[1][2] == "hold it"):
+        sys.exit("SELF-TEST FAILED: %r" % ((hit, probs),))
 
     # No match and ambiguity both stop the build rather than landing on a neighbour.
     _a, p_none = resolve(money, ["something else"])
-    assert p_none and "matches no slide" in p_none[0], p_none
+    if not (p_none and "matches no slide" in p_none[0]):
+        sys.exit("SELF-TEST FAILED: %r" % (p_none,))
     _a, p_many = resolve(money, ["450k in, 1.2m a year out", "450k in 1.2m a year out"])
-    assert p_many and "matches 2 slides" in p_many[0], p_many
+    if not (p_many and "matches 2 slides" in p_many[0]):
+        sys.exit("SELF-TEST FAILED: %r" % (p_many,))
 
     out = build("<html><body><section class=\"slide\"></section></body></html>", attached)
     # **The safety property, asserted here as well as in the gate.** DS-088's check is this string.
-    assert "speaker-note" in out, "the artifact must carry the token DS-088 fails on"
-    assert out.count("</body>") == 1, "the anchor was duplicated rather than replaced"
-    assert "first note wrapped over two lines" in out, "the note did not reach the page"
-    assert '"2":' in out, "the note must be keyed by the DECK's index, not the specification's"
+    if not ("speaker-note" in out):
+        sys.exit("SELF-TEST FAILED: %s" % ("the artifact must carry the token DS-088 fails on",))
+    if not (out.count("</body>") == 1):
+        sys.exit("SELF-TEST FAILED: %s" % ("the anchor was duplicated rather than replaced",))
+    if not ("first note wrapped over two lines" in out):
+        sys.exit("SELF-TEST FAILED: %s" % ("the note did not reach the page",))
+    if not ('"2":' in out):
+        sys.exit("SELF-TEST FAILED: %s" % ("the note must be keyed by the DECK's index, not the specification's",))
 
     esc = build("<body></body>", {0: (1, "t", 'push back <b>hard</b> & "concede"')})
-    assert "<b>hard</b>" not in esc, "note text must be escaped, not injected as markup"
+    if not ("<b>hard</b>" not in esc):
+        sys.exit("SELF-TEST FAILED: %s" % ("note text must be escaped, not injected as markup",))
 
-    assert slide_count('<section class="slide x"></section><section class="slide"></section>') == 2
-    assert deck_names('<section class="slide" data-name="A"></section>'
-                      '<section class="slide" data-name="B"></section>') == ["A", "B"]
+    if not (slide_count('<section class="slide x"></section><section class="slide"></section>') == 2):
+        sys.exit("SELF-TEST FAILED: the assertion did not hold")
+    if not (deck_names('<section class="slide" data-name="A"></section>' '<section class="slide" data-name="B"></section>') == ["A", "B"]):
+        sys.exit("SELF-TEST FAILED: the assertion did not hold")
     try:
         build("<html><p>no body close</p></html>", {})
     except ValueError:

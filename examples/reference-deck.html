@@ -1305,6 +1305,15 @@ svg{display:block}
    `.slide[data-current]` on specificity, so the cascade settles this whatever order the file ends
    up in - the position is for a reader, not for the browser.
 
+   **The look is fixed, and it is not a theme's.** `#23211d` is `quarto.css`'s `--ink` exactly;
+   `#f6f1e4`, `#b9b2a4` and `#ddd6c6` are warm neutrals matching no token in either theme. So a
+   deck on `lattice`, whose ground is a cool near-neutral, degrades into the other theme's family,
+   and every template CLAUDE.md rule 4's generator will produce degrades into `quarto` too. That
+   is deliberate rather than an oversight: the degraded state is a plain document, it owes no
+   palette, and the values cannot be tokenised without breaking the rule above. Whether they
+   should be neutral rather than one theme's is a question for an eye - `PR-79`, and a row in
+   `docs/OWED-LOOKS.md`.
+
    Printing is unchanged by it. The print block above is `!important` throughout and paginates the
    stage; a browser that failed the preflight prints what that block says. Printing is a mode the
    user forces on and never a constraint on the design (CLAUDE.md rule 5), so it is not this

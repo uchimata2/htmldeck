@@ -1127,7 +1127,10 @@ def main(argv):
         sys.exit("no --source given; there is nothing to plan")
     out = None
     if "-o" in rest:
-        out = rest[rest.index("-o") + 1]
+        i = rest.index("-o")
+        if i + 1 >= len(rest):
+            sys.exit("-o takes an output path")   # PR-64: this read index+1 unguarded
+        out = rest[i + 1]
     if cmd == "check":
         return check(deck, sources)
     if cmd == "refresh":

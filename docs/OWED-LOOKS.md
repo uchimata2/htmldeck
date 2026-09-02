@@ -38,14 +38,12 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-**None outstanding.** Every look this remediation has owed has been taken - eleven of them, all by
-the owner, all recorded below with their answers. **That is a state, not a milestone**: B16 to B24
-are still to run and any of them can put a row back here. What it does mean is that
-[`REMEDIATION-ORDER.md`](REMEDIATION-ORDER.md) §4's pass has nothing queued against it **today**,
-so nothing in this file is holding the release.
+**One outstanding, added by B22.** Eleven have been taken, all by the owner, all recorded below with
+their answers; row 12 is a colour decision a session may not take for itself.
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
+| 12 | any deck, and the pair matters: [`examples/reference-deck.html`](../examples/reference-deck.html) on `quarto` beside a deck on `lattice` | the **degraded state**, not a slide. Open a deck and set the attribute by hand in the browser console: `document.documentElement.setAttribute('data-preflight','1')`. The whole page changes - a cream ground, a monospace banner across the top, every slide stacked as a plain document | **Does the warm palette read as a plain document, or as damage?** `#23211d` is `quarto.css`'s `--ink` exactly and the other three literals are warm neutrals belonging to neither theme, so a `lattice` deck - cool ground, ink `#1E201F` - degrades into the other theme's family, and so will every template the generator CLAUDE.md rule 4 plans produces. If it reads as damage the block wants neutral literals; if it reads as a plain document the values stay and the comment already says why. **The block may use no custom property**, so whatever is chosen stays literal | [T-253](../tasks/T-253-the-low-findings-batch.md), `PR-79` |
 
 ## What has already been looked at
 

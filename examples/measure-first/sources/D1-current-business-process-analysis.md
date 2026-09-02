@@ -116,7 +116,7 @@ leaves roughly one week to order and produce anything. `[example]`
 **Step 2 is the main one.** Regional managers adjust the forecast from experience. Nobody writes
 down why, and nobody checks afterwards whether they were right.
 
-**Step 5 can change any number without a recorded reason.** The meeting minutes hold the new figure,
+**Step 6 can change any number without a recorded reason.** The meeting minutes hold the new figure,
 not the argument behind it.
 
 ### Which measurements already exist?
@@ -184,7 +184,7 @@ All figures `[example]`.
 | Problem | Possible cause | Evidence available? | Data we would need | Priority |
 | :--- | :--- | :---: | :--- | :---: |
 | Too much slow-moving stock | Sales optimism on expensive families is never corrected (step 2) | Partly | Forecast vs. actual per family and per region, 2 years | **High** |
-| Too much slow-moving stock | The monthly meeting overrides the calculation with no recorded reason (step 5) | No | Keep the original draft forecast alongside the agreed one | **High** |
+| Too much slow-moving stock | The monthly meeting overrides the calculation with no recorded reason (step 6) | No | Keep the original draft forecast alongside the agreed one | **High** |
 | Shortages of fast movers | Everyday products get no analytical attention | Partly | How often each family was out of stock | **High** |
 | Late deliveries | Supplier delays are absorbed by re-planning instead of being predicted | Partly | Supplier records: date promised vs. date delivered | **High** |
 | Rising costs | Rush orders and express shipping to cover shortages | Partly | Express shipping cost charged to the family that caused it | Medium |

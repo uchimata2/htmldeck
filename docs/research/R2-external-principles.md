@@ -90,8 +90,14 @@ conflicts with an E1 or E2 one, it loses without discussion. Where nothing bette
 still become a default, but it is labelled so a later session knows the default is unsupported and
 may be changed cheaply.
 
-Counted across §4–§11: **7 principles at E1, 8 at E2, 9 at E3, 2 at E4.** The two E4s are both
-about visual pacing, and both are flagged in §14 as cheap to overturn.
+**A principle carries a grade *set*, not one grade**, which is why a single tally could never be
+right: five of the headings below name two - three `E2/E3` and two `E1/E3`. Counted across
+§4–§11: **28 principles**, and counting every grade a heading mentions, **E1 11 · E2 5 · E3 16 ·
+E4 1** - a sum over 28 by the five compounds. **`E4` appears exactly once**, on `P-10`, which the
+same heading marks *rejected as stated*, so nothing here is carrying an E4 default forward.
+
+*This read “7 at E1, 8 at E2, 9 at E3, 2 at E4” until 2026-09-02 - 26 against a population of 28,
+wrong on every term, and its gloss named two E4s that do not exist (`PR-113`).*
 
 ---
 
@@ -558,9 +564,11 @@ the brief rather than filling it in:
   it needs is *applying to the documents*: R2, and the design-system reference T-014 writes, must
   reference other skills by name and carry the rule's consequence inline, since the pointer can
   resolve to nothing without saying so.
-- **The two E4 principles (P-09's exact range, P-12's scope)** are defaults with no measurement
-  behind them. Both are single token values. Flagged as cheap to overturn if anything better turns
-  up — which is the point of grading them.
+- **Two defaults have no measurement behind them (P-09's exact range, P-12's scope).** Both are
+  single token values, and both are cheap to overturn if anything better turns up. *They were
+  called *the two E4 principles* until 2026-09-02; §6 grades both `E3`, and E4 is the set that
+  loses an argument without discussion - so the label handed a licence to two principles this
+  document graded higher (`PR-113`).*
 
 ---
 

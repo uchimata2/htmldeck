@@ -273,15 +273,23 @@ def instrument(html, seconds=6, slide=None, name=None):
 def self_test():
     """The injection, and the two ways it can silently do nothing."""
     out = instrument("<html><body><p>x</p></body></html>", seconds=3)
-    assert "fps-card" in out, "the overlay did not land"
-    assert out.count("</body>") == 1, "the anchor was duplicated rather than replaced"
-    assert "var SECONDS = 3," in out, "--seconds did not reach the page"
-    assert "FORCED = null" in out, "an unforced run should pick the slide itself"
-    assert "FORCED = 4" in instrument("<body></body>", slide=4), "--slide did not reach the page"
-    assert "DECK_NAME = 'my-deck'" in instrument("<body></body>", name="my-deck"), "the deck name did not"
-    assert "DECK_NAME = 'this deck'" in out, "a missing name must not leave the template unfilled"
+    if not ("fps-card" in out):
+        sys.exit("SELF-TEST FAILED: %s" % ("the overlay did not land",))
+    if not (out.count("</body>") == 1):
+        sys.exit("SELF-TEST FAILED: %s" % ("the anchor was duplicated rather than replaced",))
+    if not ("var SECONDS = 3," in out):
+        sys.exit("SELF-TEST FAILED: %s" % ("--seconds did not reach the page",))
+    if not ("FORCED = null" in out):
+        sys.exit("SELF-TEST FAILED: %s" % ("an unforced run should pick the slide itself",))
+    if not ("FORCED = 4" in instrument("<body></body>", slide=4)):
+        sys.exit("SELF-TEST FAILED: %s" % ("--slide did not reach the page",))
+    if not ("DECK_NAME = 'my-deck'" in instrument("<body></body>", name="my-deck")):
+        sys.exit("SELF-TEST FAILED: %s" % ("the deck name did not",))
+    if not ("DECK_NAME = 'this deck'" in out):
+        sys.exit("SELF-TEST FAILED: %s" % ("a missing name must not leave the template unfilled",))
     # A percent sign in the template that is not doubled would raise here rather than at run time.
-    assert "%(seconds)s" not in out, "the template was not applied"
+    if not ("%(seconds)s" not in out):
+        sys.exit("SELF-TEST FAILED: %s" % ("the template was not applied",))
     try:
         instrument("<html><p>no body close</p></html>")
     except ValueError:

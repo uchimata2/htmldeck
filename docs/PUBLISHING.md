@@ -56,7 +56,7 @@ Today the test resolves to three things:
   can and does read it. It was outside the set for the first six releases; `v0.2.0` is therefore not
   a release that missed a gate, and the set widened after it rather than during it.
 
-**The test is the rule; those two are only today's answer.** A list of filenames goes stale the first
+**The test is the rule; the list above is only today's answer.** A list of filenames goes stale the first
 time a document is added, and it goes stale *silently* — nothing fails, the new document simply is
 not covered. This repository has already paid for that twice, in the same place: `reconcile_targets`
 in `.handoff/config.md` was an enumeration, and what it had quietly stopped covering is what
@@ -162,8 +162,8 @@ diffing the five commands by eye, which is what this section said until 2026-08-
 already gone stale under that instruction, because a rule with nothing behind it is a claim
 ([T-060](../tasks/T-060-check-that-the-readmes-pasted-figures-still-match-their-commands.md)).
 
-**A figure is bound to the field that produced it, not to the run as a whole.** The gate prints
-`checked   84`, so a sentence saying `checks` names that field and one about the judgement half does
+**A figure is bound to the field that produced it, not to the run as a whole.** The gate prints a
+`checked` field, so a sentence saying `checks` names that field and one about the judgement half does
 not — a correct number moved into the wrong sentence fails, and the report names the field behind
 every figure it compared. **The same rule reaches five documents that paste no output at all**:
 wherever a page states a part of a whole the gate prints — *"88 of the 118 rules a gate owns … the

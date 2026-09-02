@@ -38,12 +38,19 @@ a single instance · `stated` written down but under-delivered.
 
 > ### The verdicts, counted
 >
-> **110 keep · 17 amend · 1 drop · 26 defer** — 154.
+> **111 keep · 16 amend · 1 drop · 26 defer** — 154, folded over the rule rows below.
+>
+> *It read 110 and 17 until 2026-09-02. `A10` moved from `amend` to `keep` on 2026-08-22
+> ([T-211](../../tasks/T-211-scope-speaker-notes-and-decide-what-ds-088-becomes.md)) in a commit of one
+> insertion and one deletion, and a tally four screens above the row it changed had nothing to notice
+> — `PR-111`.*
 >
 > **The single drop is C7** (one palette per deck), and it falls to a standing owner decision rather
-> than to evidence. **The 26 defers are all boundary, not indecision:** 11 process rules to T-020,
-> 5 check mechanics to T-005, 7 critique-format rules to T-004, and 4 pipeline rules from group A
-> that belong with T-020's set. Nothing was deferred for want of an answer.
+> than to evidence. **The 26 defers are all boundary, not indecision**, and they are
+> exactly the four groups' defer rows: **group A′** to T-020, **group K** to T-005, **group M** to
+> T-004, and **group A**'s pipeline rules with T-020's set. *The breakdown named a count per group
+> until 2026-09-02 and summed to 27: group A′ was given 11, its size, where 10 of its eleven rules
+> are defers and the eleventh is a keep.* Nothing was deferred for want of an answer.
 >
 > **That a synthesis keeps 71% of an observed corpus is the expected result, not a soft one.** The
 > tie-break only fires where an external principle is E1/E2 *and* contradicts a habit, and R2 found

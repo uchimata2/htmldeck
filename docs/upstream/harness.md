@@ -52,7 +52,7 @@ truncation.
 ## Provenance
 
 Assembled by the htmldeck project as part of a context-economy audit of its own development
-workflow. All three rows are *implementation* vintage: they were found while building something, not
+workflow. All four rows are *implementation* vintage: they were found while building something, not
 while auditing, and **no backlog was consulted** — there was none available to read. See
 [`../CONTEXT-AUDIT.md`](../CONTEXT-AUDIT.md) §7.3 for where they sat before this document existed,
 and [`../research/R8-context-economy-for-coding-agents.md`](../research/R8-context-economy-for-coding-agents.md)

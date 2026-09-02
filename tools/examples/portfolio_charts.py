@@ -1341,7 +1341,12 @@ def compose():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "selftest":
+    if len(sys.argv) > 1:
+        if sys.argv[1:] != ["selftest"]:
+            # PR-75: any other argument used to fall through to compose(), which rewrites the
+            # tracked deck in place. The no-argument form is the documented way to compose it.
+            sys.exit("usage: portfolio_charts.py [selftest]   "
+                     "(no argument composes the deck)")
         sys.exit(selftest())
     rc = selftest()
     if rc:

@@ -206,9 +206,6 @@ below it is unchanged. That render is what caught the escape defect above.
 - **A deliberate failure must be the only failure**, or a maintainer tidying the noise is one edit
   from deleting the notes. Same lesson, second half.
 
-**Child fix tasks raised**
-- none
-
 ## Log
 
 | Date | Status change | Note |

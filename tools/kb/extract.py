@@ -6,6 +6,7 @@ interpretation happens in the write-up, against this output.
 
     python tools/kb/extract.py inventory   # classify + deduplicate the corpus tree
     python tools/kb/extract.py decks       # measure every deck
+    python tools/kb/extract.py libs        # which libraries the decks reach for, linked or vendored
     python tools/kb/extract.py selftest    # verify the measurements on a known case
 
 Writes to .kb/, which is gitignored: the corpus carries client and personal data and must

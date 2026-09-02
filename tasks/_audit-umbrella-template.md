@@ -38,7 +38,7 @@ a child task for every High and Medium, and a decision recorded against every Lo
 - In: <which aspects of `docs/AUDIT-METHOD.md` §2, and which surfaces>
 - Out: <what this run does not look at, and why>
 
-**Coverage grades** — §3 of the method. State the split for this run and measure it.
+**Coverage grades** — §1 of the method. State the split for this run and measure it.
 
 | Grade | What it applies to here | Files | Bytes |
 | :--- | :--- | ---: | ---: |

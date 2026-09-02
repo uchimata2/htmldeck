@@ -88,6 +88,7 @@ WIDE = [
     ("tools/docs/lessons.py", [], True),
     ("tools/docs/figures.py", [], True),
     ("tools/docs/chronology.py", [], True),
+    ("tools/docs/severity.py", [], True),
     ("tools/docs/screening.py", [], True),
     ("tools/docs/tables.py", [], True),
     ("tools/deck/ruleset.py", ["--counts"], True),
@@ -244,21 +245,25 @@ NOT_RUN = {
         "- the old gate list never did, so DS-222's page count was checked by nothing. Its own "
         "entry point now derives the slide count from the deck instead of defaulting to a hardcoded "
         "12 and agrees with that caller on both shipped decks (T-120), so running it here would "
-        "print the same verdict from a second Chrome launch",
+        "print the same verdict from a second Chrome launch. Run it alone: python "
+        "tools/deck/printpages.py <deck>",
     "tools/deck/printgeom.py":
         "runs inside tools/deck/check.py under the same --print-pages the per-deck line above "
         "passes. It is the printed GEOMETRY - no two contents cards intersect, no card reaches the "
         "footnote - which is the one fault class no screen measurement reaches and which shipped in "
         "three decks with every gate green (T-123, T-116, **L-76**). Its own entry point takes any "
         "deck it is pointed at, which is what an adopter runs; here it would be a second Chrome "
-        "print of a verdict check.py already has",
+        "print of a verdict check.py already has. Run it alone: python "
+        "tools/deck/printgeom.py <deck>",
 
     "tools/deck/critique.py":
         "the review mode, not a gate. It assembles the half of a critique a program can assemble "
         "so a reviewer can spend on the half it cannot; its output is prose for a person",
     "tools/deck/paths.py":
         "a library - one function that formats a path for display on any drive. Its main is a "
-        "self-test, not a check of anything in the repository",
+        "self-test, not a check of anything in the repository. Fourteen callers import it, "
+        "which is where its reachability is. Run the self-test alone: python "
+        "tools/deck/paths.py",
     "tools/deck/render.py":
         "an instrument, not a gate. It renders a deck in real Chrome offline and reports what came "
         "out; the gates that need a render call it",
@@ -278,31 +283,46 @@ NOT_RUN = {
         "a builder. It writes the capability preflight into a deck; shell.py check gates the result",
     "tools/deck/print_variants.py":
         "a builder. It emits the two print variants T-018 measures, for a person to print and look "
-        "at - CLAUDE.md rule 5 keeps printing optional and rule 6 keeps the looking manual",
+        "at - CLAUDE.md rule 5 keeps printing optional and rule 6 keeps the looking manual. Run "
+        "it by hand: python tools/deck/print_variants.py",
     "tools/deck/chrome_row.py":
         "a measurement for T-035, taken once against a real browser. It answers whether the ruler "
-        "fits the chrome row; it has no pass or fail to report on a shipped deck",
+        "fits the chrome row; it has no pass or fail to report on a shipped deck. Run it by hand, "
+        "in real Chrome: python tools/deck/chrome_row.py",
     "tools/deck/longdeck.py":
         "a fixture builder for T-178 - it splices a deck to any slide count so a long-deck question "
-        "can be asked twice. It produces a deck to look at, and decides nothing about one",
+        "can be asked twice. It produces a deck to look at, and decides nothing about one. Run it "
+        "by hand: python tools/deck/longdeck.py examples/reference-deck.html 25, and "
+        "--self-test for its own. **This table and T-178 are the only places it is named** "
+        "(PR-62)",
     "tools/deck/rulerstrip.py":
         "an instrument for T-178. It renders candidate treatments for the dense-mode position mark "
         "side by side, for a person to choose between; which one reads best is the judgement it "
-        "exists to put in front of the eye rather than to make",
+        "exists to put in front of the eye rather than to make. Run it by hand: python "
+        "tools/deck/rulerstrip.py, and --self-test for its own. **This table and T-178 are "
+        "the only places it is named** (PR-62)",
 
     "tools/assets/measure.py":
         "a research instrument for T-013 - what one embeddable asset costs inside one HTML file",
     "tools/assets/build_probe_deck.py":
         "a research instrument for T-013 - it builds a probe deck to weigh, not a deck this "
-        "repository ships",
+        "repository ships. **It defines no self-test and that is the stated answer, not an "
+        "omission**: it reads a cache and writes a file, and the one part with a property "
+        "worth asserting - chunk_text, which is not lossless - is fixture-tested in "
+        "tools/portability/build_probes.py in both directions (PR-74)",
     "tools/assets/chart_probe.py":
         "a research instrument for T-006 - it generates the four chart types as hand-computed SVG "
-        "to settle whether a charting library is needed",
+        "to settle whether a charting library is needed. **Its guards do run on every "
+        "release**: tools/examples/portfolio_charts.py imports guard_height, guard_label, "
+        "label_box, ChartError and MIN_BAR_PX from it, and that file is a gate above - so "
+        "the three guards run inside portfolio_charts.py selftest, which imports it (PR-73)",
     "tools/portability/build_probes.py":
         "a research instrument for T-017 - it builds the file:// probe pages",
     "tools/portability/run_probes.py":
         "a research instrument for T-017 - it runs those probes in a real browser and collects "
-        "what they report",
+        "what they report. Finding the windows needs Windows and a browser; reassembling the "
+        "rotating title does not, and that half now has a fixture that main() runs first "
+        "(PR-74). Run it by hand: python tools/portability/run_probes.py",
     "tools/kb/extract.py":
         "extracts the deck corpus into .kb/, which .gitignore excludes because it holds client and "
         "personal data. There is nothing here for it to read and nothing it produces may publish",

@@ -16,7 +16,9 @@ provenance in [`research/R4-prior-art.md`](research/R4-prior-art.md).
 
 ## 1. How a rule got its verdict
 
-154 corpus rules were resolved into this ruleset: **110 keep · 17 amend · 1 drop · 26 defer.**
+154 corpus rules were resolved into this ruleset: **111 keep · 16 amend · 1 drop · 26 defer** — folded
+from [`research/R1-rules-candidate.md`](research/R1-rules-candidate.md)'s own rule rows, where it read
+110 and 17 until 2026-09-02 (`PR-111`).
 
 **The precedence used, and it ran the same way for all 154:**
 
@@ -85,9 +87,9 @@ it tells you whether it is possible. These sixteen came from reading. Thirteen m
 ### 2.1 The thirteen the build found — F-01 to F-13, and how each was closed
 
 **The shape of the set is the result, not any single row.** Four conflicts between two `hard` rules,
-three rules that could not be built as written, two silences with a computable answer, one check that
-was impossible as specified, two measurement traps, and one loop rule that could not coexist with its
-own cost control. **Roughly one finding per ten rules, and none of them cosmetic** — which is the
+three rules that could not be built as written, three silences with a computable answer, one check that
+was impossible as specified, one measurement trap holding two of them, and one loop rule that could not
+coexist with its own cost control - the partition is the table's own `Class` cell, folded. **Roughly one finding per ten rules, and none of them cosmetic** — which is the
 argument that a design system has to be built against before it can be trusted.
 
 **Where a conflict is resolved, the resolution names which rule yields, and that ruling is now in the
@@ -686,8 +688,12 @@ is added by writing a rule**, and that is precisely the moment nobody remembers 
 exists. Without it the contract decays into a description of the deck as it was on the day it was
 written, and every check built on it keeps passing.
 
-**What `vocabulary` is for.** Five rows are styled, emittable and unused by this deck — the figure's
-three role classes, `.t-ink` and `.mono`. *Declared and unused* is otherwise an unfalsifiable label,
+**What `vocabulary` is for.** **No row is `vocabulary` today and that is the correct number rather than
+a gap**, which [`COMPONENT-CONTRACT.md`](COMPONENT-CONTRACT.md) §2 states in its own preamble: the five
+that were - the figure's three role classes, `.t-ink` and `.mono` - moved to `author` on 2026-08-12
+when the deck they were waiting for arrived, and `component.py check` has printed *0 declared, 0 now in
+the deck* since. *This paragraph named them as live until 2026-09-02 (`PR-99`'s neighbour, `PR-100`).
+The state is still worth checking with no members in it, for the reason the next sentence gives.* *Declared and unused* is otherwise an unfalsifiable label,
 so the check reads it backwards: a `vocabulary` row with an instance in the deck is a **failure**,
 and the row has to be reclassified. That makes the count of them a number a reader can watch, which
 is what the deck's own stale `.ribbon button::before` selector cost T-035 — **a rule that matches

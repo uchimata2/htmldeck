@@ -42,19 +42,20 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is over its own bound** — 15,833 bytes against `docs/AUDIT-METHOD.md`'s 7,837, measured
-2026-09-02 with the command above. *The floor rose 1,162 bytes that day, when `T-239` gave that file
-a Method column, so the debt is 7,996; it had fallen to it from `tasks/TASK-WORKFLOW.md`'s 13,324
-when the 2026-08-23 ruling made the audit method a term — twice a change in the smaller side, once
-in the definition, and never in this file.* The two cuts this bound was written to make
+**This file is over its own bound** — 15,899 bytes against `docs/AUDIT-METHOD.md`'s 8,040, measured
+2026-09-02 with the command above, so the debt is 7,859. *The floor moved twice that day and this
+sentence was rewritten twice with it: `T-239` gave that file a Method column, and B22 gave it
+`PR-82`'s clause. It had fallen to that file from `tasks/TASK-WORKFLOW.md`'s 13,324 when the
+2026-08-23 ruling made the audit method a term — three changes in the smaller side, one in the
+definition, and never in this file.* The two cuts this bound was written to make
 decidable are spent: `CE-01` as
 [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and `CE-04` as
 [T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), both ranked in
 [`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6, and what remains has had a ranked finding behind
 it since 2026-09-02 — `CE-14` in the same table, carried by
 [T-288](tasks/T-288-move-the-rules-that-bind-only-deck-or-release-work-under-path-scoped-rules.md).
-That is dated debt and not a rule already met. *This statement has been wrong in both terms three
-times — twice when the smaller side changed hands, once when the definition did. **Re-measure both,
+That is dated debt and not a rule already met. *This statement has been wrong in both terms four
+times — three when the smaller side moved, once when the definition did. **Re-measure both,
 never one**, and write it here in the same edit — a figure about this file cannot be corrected
 anywhere else, and `tools/docs/figures.py` holds both terms to the fence.*
 

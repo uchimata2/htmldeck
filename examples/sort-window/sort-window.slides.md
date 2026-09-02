@@ -236,6 +236,7 @@ bottom line in the outline to be the one that ships.
   marked with, so it is one idea and not two.
 - **Animations.** Rise, two steps.
 - **Interactive elements.** None.
+- **Sources.** fleet-and-cost-model, service-calendar
 
 ---
 
@@ -245,5 +246,3 @@ bottom line in the outline to be the one that ships.
 | :-- | :--- | :--- | :--- |
 | 1 | Slide 8 sets 12.4% struck through above 2.4%. | DS-045 forbids an unscoped rule on a bare element, so `<s>` or a bare `<del>` fails the gate; a class is composition and passes. | Draw it as a class in `<style id="slides">`. Taken at build time if unanswered. |
 | 2 | Slide 9's fleet column states its assumption in the board's own words. | A ledger with one straw-man column fails A-04 the way X-03 records, and the fix is editorial rather than structural. | Keep the wording. Revisit only if the build review scores D1 below 3. |
-- **Sources.** fleet-and-cost-model, service-calendar
-

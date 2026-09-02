@@ -62,7 +62,9 @@ are the plan's to decide, and this list is what has been decided *here*, not a r
   one. The register's cycle-17 row still carries them, dated, which is where a measurement belongs;
   restating them here made a second home for a number that decays, in the document that tells every
   cycle to re-measure its own subject.* The decks are rendered, looked at offline, and measured
-  with the tools in `tools/deck/`, and their specifications are read. **The fixture is not.** It
+  with the tools in `tools/deck/`; **their specifications and sources are cycle 18's and are read
+  there**, not here - the clause said only *and their specifications are read* until 2026-09-02, and
+  one cycle read two of cycle 18's files on the strength of it (`PR-82`). **The fixture is not.** It
   carries one seeded defect per evaluation dimension on purpose, at score 0, so a deck gate pointed
   at it reports the fixture working rather than a finding; its instrument is `python
   tools/examples/seed_defects.py --check`, which proves it is still derived from the reference deck

@@ -109,17 +109,22 @@ def probe_windows_now():
     return set(h for h, t in window_titles() if t.startswith("HD "))
 
 
-def harvest_title_channel(seconds=14.0, want_prefix=None, ignore=None):
+def harvest_title_channel(seconds=14.0, want_prefix=None, ignore=None, titles=None):
     """Collect the rotating `HD i/n <chunk>` title and reassemble it in index order.
+
+    `titles` is the source of `(hwnd, title)` pairs and defaults to the real window list. It is
+    a parameter so the reassembly - the half an off-by-one truncates in silence - can be put to
+    a fixture with no browser in the room (`self_test`, `PR-74`).
 
     `want_prefix` matters when the page emits more than one payload in a run: the automatic rows
     go out first, and the gesture rows replace them only once someone has clicked. Without it this
     returns the first complete payload it sees, which is always the wrong one."""
     chunks, total = {}, None
     ignore = ignore or set()
+    source = titles or window_titles
     deadline = time.time() + seconds
     while time.time() < deadline:
-        for hwnd, t in window_titles():
+        for hwnd, t in source():
             if not t.startswith("HD ") or hwnd in ignore:
                 continue
             head, _, body = t.partition(" ")[2].partition(" ")
@@ -151,6 +156,49 @@ def harvest_title_channel(seconds=14.0, want_prefix=None, ignore=None):
     if total is None or len(chunks) != total:
         return None
     return "".join(chunks[i] for i in range(total))
+
+
+def self_test():
+    """Refuse to run if the title channel has stopped reassembling (**L-04**).
+
+    Only the reassembly. Finding the windows needs Windows and a browser; putting the chunks
+    back in index order needs neither, and it is the half whose own comment says an off-by-one
+    truncates a result without saying so (`PR-74`).
+    """
+    def feed(*frames):
+        rows = list(frames)
+        def source():
+            return rows.pop(0) if rows else []
+        return source
+
+    S = "¬"
+    # `build_probes.py` writes `k % chunks.length`, so the index is ZERO-based against a
+    # one-based total: `HD 0/3` to `HD 2/3`.
+    whole = feed([(1, "HD 1/3 lo" + S + " - Chrome"), (1, "HD 0/3 hel" + S),
+                  (1, "HD 2/3 !" + S + " - Personal - Microsoft Edge")])
+    got = harvest_title_channel(seconds=1.0, titles=whole)
+    if got != "hello!":
+        sys.exit("SELF-TEST FAILED: chunks out of order did not reassemble by index: %r" % got)
+
+    # A second payload has a different chunk count, and keeping the first payload's chunks
+    # would splice two unrelated messages into one plausible-looking string.
+    mixed = feed([(1, "HD 0/3 aa" + S), (1, "HD 0/2 xx" + S), (1, "HD 1/2 yy" + S)])
+    got = harvest_title_channel(seconds=1.0, titles=mixed)
+    if got != "xxyy":
+        sys.exit("SELF-TEST FAILED: a new payload did not clear the old chunks: %r" % got)
+
+    # want_prefix keeps waiting when a complete payload is the wrong one.
+    two = feed([(1, "HD 0/1 auto" + S)], [(1, "HD 0/1 gesture" + S)])
+    got = harvest_title_channel(seconds=2.0, want_prefix="gest", titles=two)
+    if got != "gesture":
+        sys.exit("SELF-TEST FAILED: want_prefix returned the wrong payload: %r" % got)
+
+    # An incomplete payload is no payload, and a window in `ignore` contributes nothing.
+    if harvest_title_channel(seconds=0.3, titles=feed([(1, "HD 0/2 aa" + S)])) is not None:
+        sys.exit("SELF-TEST FAILED: an incomplete payload was returned as a result")
+    if harvest_title_channel(seconds=0.3, ignore={1},
+                             titles=feed([(1, "HD 0/1 aa" + S)])) is not None:
+        sys.exit("SELF-TEST FAILED: an ignored window was harvested")
 
 
 def probe_window_rect():
@@ -419,6 +467,7 @@ def report(folder):
 
 
 def main(argv):
+    self_test()
     if not os.path.isdir(OUT):
         print("No probes built. Run:  python tools/portability/build_probes.py")
         return 1

@@ -313,7 +313,7 @@ def verdicts(deck, pdf=None):
         return [("PRINT-2", "Chrome produced no PDF - the printed geometry is unmeasured", False),
                 ("PRINT-3", "Chrome produced no PDF - the printed geometry is unmeasured", False)]
 
-    collisions, reaches, unread = [], [], []
+    collisions, reaches, unread, footless = [], [], [], []
     for i, want in enumerate(sheets, start=1):
         cards, foot, problem = sheet_geometry(pdf, i)
         if problem:
@@ -329,6 +329,14 @@ def verdicts(deck, pdf=None):
                     collisions.append("sheet %d: cards %d and %d intersect (%.1f-%.1f pt and "
                                       "%.1f-%.1f pt)" % (i, a + 1, b + 1, cards[a][1], cards[a][3],
                                                          cards[b][1], cards[b][3]))
+        if want["feet"] and not foot:
+            # The deck says this sheet carries a footnote and the reader found none. Passing
+            # here would report *every card ends above it* about a line nothing measured -
+            # `sheet_problem` refuses the same shape one condition up (`PR-60`).
+            unread.append("sheet %d: a footnote is declared and none was read" % i)
+            continue
+        if not want["feet"]:
+            footless.append(i)
         if foot and want["feet"]:
             for n, c in enumerate(cards, start=1):
                 if c[3] > foot[0] + EPS:
@@ -353,7 +361,10 @@ def verdicts(deck, pdf=None):
                     % (n, len(sheets), "" if len(sheets) == 1 else "s",
                        some(collisions, "no two intersect")),
          not collisions),
-        ("PRINT-3", "footnote clearance: %s" % some(reaches, "every card ends above it"),
+        ("PRINT-3", "footnote clearance: %s%s"
+                    % (some(reaches, "every card ends above it"),
+                       "" if not footless else " (%d sheet%s declare none)"
+                       % (len(footless), "" if len(footless) == 1 else "s")),
          not reaches),
     ]
 

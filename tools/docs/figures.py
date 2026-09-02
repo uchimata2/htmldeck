@@ -28,9 +28,9 @@ output and describe the account in their own words, where a gate's labels - `che
 ones. What binds there is the claim's construction: *part* of *whole*, plus the remainder. That
 figure drifted to three different values across those five pages while the README's stayed correct.
 
-**Two kinds of number, and one rule cannot hold both.** A figure that describes a *decision* - 165
-rule rows, 119 hard rules, 25 that need a person - moves when somebody changes the ruleset, which is
-rare and deliberate. A figure that counts the *repository* moves on every documentation commit,
+**Two kinds of number, and one rule cannot hold both.** A figure that describes a *decision* - how
+many rule rows there are, how many are `hard`, how many need a person - moves when somebody changes
+the ruleset, which is rare and deliberate. A figure that counts the *repository* moves on every documentation commit,
 **including the commit that corrects it**, which is why re-deriving it has never converged (T-067
 §4). So a figure is `compared` and fails the run on any drift, or it is a `floor`, declared below
 with the reason: **the run may print more and never redden, and a pasted `0` is exact**, because
@@ -755,15 +755,16 @@ def deck_facts():
 # `CLAUDE.md` states the two figures that govern what every session of this project pays, carries the
 # command that produces them in a fence, and pastes nothing under it. So `bind()` saw a command and
 # never ran it, `fields()` got no labels from it, and both figures sat in `unanchored` among 413.
-# Measured: the pair drifted 15,034 -> 15,208 with nothing reporting it, and the page's own debt note
-# records that the statement *has now been wrong in both terms twice*.
+# Measured 2026-08-15: the pair had drifted with nothing reporting it, and the page's own debt note
+# already recorded that the statement had been wrong in both terms more than once - it has said so
+# again since, which is the argument for the rule below rather than for restamping a number here.
 #
 # **The comparison runs the other way round from every other rule here, and the page is why.**
 # Elsewhere a written numeral must be printed by a command. Held to that, this page fails twice over:
-# its live sentence says *"15,208 bytes against `tasks/TASK-WORKFLOW.md`'s 11,925"* and never writes
-# `CLAUDE.md`, so the first term binds nothing; and the record sentence beside it says *"it read
-# 18,807 against `.taskmd/config.md`'s 14,087"*, which names a label the command does print and would
-# be reported STALE for stating what was true in the past. One term unwatched, one false alarm - T-068's
+# its live sentence gives this file's own size and then the smaller document it is measured against,
+# naming that document and never `CLAUDE.md`, so the first term binds nothing; and the record sentence
+# beside it says what the pair *read* on an earlier date and names both, so it names a label the
+# command does print and would be reported STALE for stating what was true in the past. One term unwatched, one false alarm - T-068's
 # measured result, on a page that deliberately keeps its own history.
 #
 # So: **every measured term must be written**, and a numeral the page states that nothing measures is

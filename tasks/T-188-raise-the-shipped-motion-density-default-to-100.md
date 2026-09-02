@@ -123,6 +123,17 @@ either fixing it or dropping it. If it is real it is a separate defect and gets 
 | The token is 100 in the shipped theme and in every deck | **pass** | measured in the browser: `--motion-density` resolves to `100` |
 | No document states the old figure as a fact | **pass** | grep for `density 10` and `default of **10**` returns only the amendment notes, which state it as history |
 | The fixture is derived, not edited | **pass** | `seed_defects.py --check` green |
+| The deck is opened and looked at offline at 100, in both themes | **not recorded** | Added 2026-09-02 closing `PR-127`: section 1 asked for it and section 4 was written without a row either way, so what a person saw is not in this record. It is not re-run here - `docs/OWED-LOOKS.md` is where a look is queued now, and that file did not exist when this task closed |
+| `lint.py` and `refcheck.py` clean | **not recorded** | Same edit, same reason: section 1 asked and section 4 did not answer. Both are green on today's tree, which says nothing about the day this closed |
+
+**Section 1's open question, answered 2026-09-02 (`PR-127`).** *Does the skill tell a deck author to
+emit `--motion-density` at all?* It does not - `grep -rn motion-density skills/` still returns
+nothing - and **the premise behind the worry is wrong, so there is no defect and no child task**:
+the token comes from the theme, not from the author. `themes/quarto.css` and `themes/lattice.css`
+both declare `--motion-density:100`, so a deck inherits it and the invalid `calc()` this section
+feared cannot arise. The question was left unanswered and the task it promised unraised, and the
+condition it named still held, so the next reader was going to re-run a check that was always
+going to pass.
 
 **Child fix tasks raised**
 - none

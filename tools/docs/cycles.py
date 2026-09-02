@@ -305,8 +305,10 @@ CYCLES = [
     # a cycle is sized to. **Derived membership does not mean derived boundaries.** A ceiling that
     # rebalanced itself would move a finished cycle's membership under it, and a coverage-ledger row
     # would stop describing what that session read - so the ceilings are declared, sized once, and
-    # `--sizing` reports when one has drifted far enough to need cutting again. None of the five had
-    # run when they moved.
+    # the default report prints an `OVERSIZED` line per cycle over the sizing bound, which is when
+    # one has drifted far enough to need cutting again. None of the five had run when they moved.
+    # *The comment named a `--sizing` flag until 2026-09-02 and no such flag was ever implemented;
+    # every unrecognised argument ran the default report, so it appeared to work (`PR-68`).*
     (30, "PH3 closed, up to T-113", "B", [
         Task(work_package=("PH3",), state="closed", id_max=113),
     ], None),
@@ -739,6 +741,11 @@ def main(argv):
         plan_rows(assignment, byte)
         return code
 
+    if argv:
+        # PR-68: every unknown argument used to fall through to the whole partition report -
+        # `--sizing`, and `--cycl 14` with it. refcheck.py and lessons.py both refuse instead.
+        sys.exit(("unknown argument: %s" + chr(10) + "usage: cycles.py [--cycle <n> | --list | --plan]")
+                 % " ".join(argv))
     report(assignment, unassigned, stale, byte)
     return code
 

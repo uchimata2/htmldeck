@@ -50,6 +50,12 @@ here, and the records say so themselves.
   treat the version as provenance, not as a fresh reproduction. One uncertainty is stated in the
   index: two versions were installed within the same hour, so a record found in that hour may have
   seen the earlier one.
+  *[Editor's note, 2026-09-02: the index below is this document's findings table and carries no
+  version column and no such statement, and the phrase appears nowhere else in the set. Every one
+  of the 27 records stamps `Version seen` as `0.6.0`, and none names an earlier one, so the
+  uncertainty cannot be resolved from what was sent and no record can be told from another by it.
+  The sentence is kept because the sender knew of the uncertainty; the pointer does not resolve -
+  `PR-117`.]*
 - **`Severity` is what it costs the author who hits it**, never how hard it is to fix.
 - **The `Target` rows are the staging project's own bookkeeping** and name a local clone path. They
   are left verbatim rather than edited, because editing an evidence record on the way out is worse

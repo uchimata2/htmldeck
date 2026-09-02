@@ -5,7 +5,8 @@ A critique has two halves and they are not equally hard. **The mechanical half i
 somewhere else** - `check.py` knows which rules failed, `ruleset.py` knows which rules no gate can
 reach, `content.py` knows every figure and where it came from. A reviewer that re-derives those by
 reading gets a count wrong (**L-08**), and worse, spends its attention there instead of on the five
-dimensions and 26 `hard` rules nothing mechanical can see.
+dimensions and the `hard` rules nothing mechanical can see. *That said 26 until 2026-09-02 against a
+derived 29, in the file whose `judge_rules()` reads the count off the ruleset every run (`PR-52`).*
 
 So this tool assembles the report's spine and **judges nothing**:
 

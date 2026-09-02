@@ -1,8 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1780 900" width="1780" height="900"
      font-family="Inter, 'Segoe UI', system-ui, sans-serif" role="img"
-     aria-label="Two candidate layouts for the htmldeck chrome row, compared with what ships today">
+     aria-label="Two candidate layouts for the htmldeck chrome row, compared with the row that shipped before 0.4.0">
   <title>Chrome row — X and Y (T-114, revision 2)</title>
-  <desc>What ships today, and two candidates built on one principle: the navigation container holds
+  <desc>Closed: option Y was ruled by the owner on 2026-08-12 and shipped in 0.4.0, so the panel
+  labelled as shipping is the pre-0.4.0 row and option Y is what ships now. This is a snapshot of
+  the decision, not of the product. What shipped then, and two candidates built on one principle: the navigation container holds
   the ruler, the counter and the pager, and nothing else. Read and Motion move outside it. Option X
   puts them in a second quiet section; option Y folds them into a standalone More control whose menu
   opens upward.</desc>
