@@ -470,9 +470,14 @@ deck pay it ten times over rather than estimate. There was no such deck: every o
 carries at most one chart, which is the case hand-authored SVG already wins.
 
 So the answer has a price on it.
-[`tools/examples/portfolio_charts.py`](../tools/examples/portfolio_charts.py) is 1,351 lines, and
-that is what ten charts cost when the arithmetic is computed once at build time and the marks it
-produces are ordinary SVG. Three of the chart kinds - a multi-series line chart, a waterfall and a
+[`tools/examples/portfolio_charts.py`](../tools/examples/portfolio_charts.py) is **1,356 lines,
+measured 2026-09-02**, and that is what ten charts cost when the arithmetic is computed once at
+build time and the marks it produces are ordinary SVG. *The costing itself is
+[T-113](../tasks/T-113-evaluate-an-embeddable-chart-library-against-hand-authored-svg.md) step 7,
+which took the file at 1,036 lines and found the scale arithmetic to be 69 of them - that is the
+number the argument rests on, and it is dated there. The figure here is a snapshot of a file this
+repository keeps changing: it read 1,351 until 2026-09-02, correct when written and falsified by
+`B22`, in a sentence no gate binds. Date it or leave it out; do not re-derive it silently.* Three of the chart kinds - a multi-series line chart, a waterfall and a
 scatter - are written there rather than in the shared probe, because they are what a *financial*
 deck adds to the four a *business* deck needs. That difference is itself a finding.
 

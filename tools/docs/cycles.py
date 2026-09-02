@@ -188,12 +188,23 @@ CYCLES = [
         # derived from. AUDIT-METHOD.md section 2 is why an unassigned file is a defect rather than
         # a state to tolerate - "a file with no audit cycle is a defect in the audit's coverage".
         "docs/REMEDIATION-ORDER.md",
+        # Created 2026-08-29 by T-273 while closing B7, and UNASSIGNED from that moment until
+        # 2026-09-02 - found the same way REMEDIATION-ORDER.md was, by running this command.
+        # Same cycle for the same reason: it is the remediation's own machinery, it accumulates
+        # while the remediation runs, and REMEDIATION-ORDER.md section 4 makes it a release
+        # gate - "no release is cut until the pass runs". Cycle 7 is read LAST at cycle 41
+        # (PR-102), which is exactly right for a queue that is complete only against a tree
+        # that stopped moving. T-284.
+        "docs/OWED-LOOKS.md",
         Task(state="open"),
         # *Every `shipped_in: unreleased` record*, which is the cycle's own words. A task can close
         # and stay unreleased for days, and the closed-record bands are stage 7 - the LEAST current
         # subject. Without this a remedy raised by this very audit would be read as history the week
-        # it was written. No record carries the value today; the first one to close after `0.6.0`
-        # will, which is why the rule is here before it is needed.
+        # it was written. The rule was written before it had a subject, and the remediation gave it
+        # one: it now carries most of this cycle's files. *This comment said "no record carries the
+        # value today" until 2026-09-02, undated and in the present tense, and cycle 41 found it
+        # false by 68 - the rule's own success read as a standing fact. Do not paste the count back:
+        # `python tools/docs/cycles.py --cycle 7` is what answers it.*
         Task(state="closed", shipped_in=("unreleased",)),
     ], None),
     (8, "The design system and the evaluation", "A", [
