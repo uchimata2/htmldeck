@@ -2,17 +2,18 @@
 id: T-219
 title: Pre-release audit of the whole repository, project and product
 type: audit
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-218, T-042, T-119, T-130, T-153]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: xl
 created: 2026-08-22
-updated: 2026-09-02
+updated: 2026-09-03
 deliverables:
   - docs/PRE-RELEASE-AUDIT.md
   - docs/upstream/taskmd-audit-method.md
@@ -107,8 +108,11 @@ right at the moment it runs and the table is right at the moment it was pasted, 
   result. Cycle 39 is done. *It read
   3,046,859 and 44% when the plan was written; `0.6.0` closed eighteen tasks into it on 2026-08-23,
   which is the share growing while nobody decided anything. **The share itself was the third figure cycle 39 corrected in this run's own record**: it read 47% and the plan is now 9,359,208 bytes over 532 files, of which stage 7's 219 files are **36%**. The bytes never moved and the denominator did — cycle 7 alone grew to 420,677, and 88,610 bytes of adopter report arrived on 2026-08-28. A share falls while its subject stands still, which is the one direction nobody re-checks. Re-derive with `python tools/docs/cycles.py --plan`, never cite this.*
-- **Which release this precedes.** `0.6.0` is published; the digit the next one takes is
-  [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8's rule and is not this audit's to set.
+- ~~**Which release this precedes.**~~ **Handed, not answered — 2026-09-03.**
+  [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8 owns which digit a release takes, and the
+  register's §1 already records the same answer in its *Target release* row. This audit closes
+  without it, which is the point: a run that had to know its own release number before it could
+  finish would be waiting on a decision it is an input to.
 
 ## 2. Plan
 
@@ -314,17 +318,60 @@ Counts only; the statements live in the register.
 
 ## 4. Review
 
+**Every cell below is derived by a command, never transcribed from a cycle's own claim** — which is
+the discipline this run spent `PR-06`, `PR-101` and `PR-110` learning, and closing on a
+hand-totalled table would be the last place to abandon it.
+
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| Every tracked file is read, skipped with a stated reason, or produced a finding, and the coverage ledger says which for every cycle | met, **as at a date** | `python tools/docs/cycles.py` exits 0: it assigns every tracked path to exactly one cycle and fails on one belonging to none. The ledger is 33 rows covering all 43 cycles — 0 to 26 singly, 27 to 33 and 35 to 38 as skipped groups carrying the reason, then 34, 39, 40, 41, 42. The partition holds over the tree **as it stands**, and the tree moved under the run — see *What this run could not see* |
+| Every finding carries the command that proves it | met | Section 3 is **129 rows, every one ten cells wide with a non-empty `Evidence` cell**. Derived rather than read: split the document at section 3, count the rows, measure cell 5 |
+| Every High and Medium is covered by a child task; every Low is batched or accepted with a reason and a date | met | `python tools/docs/severity.py` exits 0 — *section 3's twelve cells agree with the register's 129 rows, and section 4 carries every accepted one*. Eight `High` one to one, 69 `Med` across nineteen grouped records on the owner's 2026-08-29 granularity ruling, 49 `Low` in [T-253](T-253-the-low-findings-batch.md), and one `Low` accepted in the register's section 4 — `PR-123`, dated 2026-09-02 |
+| No High finding is open when the release is tagged | met, **and standing rather than spent** | All eight closed 2026-08-29 and 08-30; `severity.py` derives the `Open` column and it is 0 in every band. **The condition binds at the tag, which has not been cut** — so what closes this task is that the guard exists and runs, not that the moment has passed. Re-derive with the command before tagging; never read this cell as the answer |
+| Cycles 1, 3 and 5 are re-run after the last remedy lands, and what the remedies broke is recorded | met, **and wider than asked** | Cycle 41, 2026-09-02. It re-read the three the programme names and then **derived its real subject instead of assuming it**: the 261 files changed since `7117b73`, joined to `cycles.py --list`, name **28** cycles, all re-read, cycle 7 last (`PR-102`). One finding, `PR-129`. Two corrections were made rather than raised, on cycle 6's precedent that this run's own machinery is this run's to keep true |
+| Phase 2 is written, and it names at least one prediction the measurement refused | met, **four times over** | Register section 5, run as cycle 42 on 2026-09-02. Section 5.4 lists four refusals, and the method requires that list to be non-empty rather than merely present |
 
 **Phase 2**
 
-<Where the grading is recorded, and the one sentence it reduces to.>
+[`../docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) section 5 is the grading and the only
+home for it; nothing here restates a row.
+
+**The one sentence it reduces to:** the run predicted a per-finding `Effort` **129 times and left
+only 13 of them gradeable**, because its own triage ruling changed the unit the work was recorded in
+— and the same ruling is why severity sequenced the remediation while the order document says it does
+not. Both halves are one mechanism, which is [**L-163**](../docs/lessons/L-163.md): *a ruling that
+changes a record's grain re-aims everything downstream that reads it.* **Cost the unit that will be
+worked, not the unit that is found.**
 
 **What this run could not see**
 
-- <a limit met in practice, beyond the method's §10 list>
+- **The tree moved under the audit, so the coverage claim is dated rather than standing.** Section
+  1's grade table records **500 files, 8,905,214 bytes**, measured 2026-08-23; `cycles.py` exits 0
+  today over **639 and 10,857,652**. Most of the difference is the run's own remediation record.
+  Cycle 41 read the 261 files that had changed by 2026-09-02 and **nothing has read what landed
+  after it, this closure included**. An audit of a live tree audits a date, and the honest form of
+  the claim is the command plus the day it was run.
+- **Ninety per cent of the `Effort` column is unfalsifiable, and the run made it so** — section 5.2.
+  Recorded here as well as there because it is a limit on the **instrument**, not only a result the
+  instrument produced.
+- **The one result about rank is not separable from how much was written per row** — section 5.4's
+  *What held*. `High` rows had some part of their remedy refused far more often than `Low` rows, in
+  the direction predicted, but the `High` median `Status` cell is 1,234 characters against `Low`'s
+  419. The confirmation and the artifact of length are the same measurement, and section 5.4 reports
+  it as unresolved rather than as a win.
+- **The audit's largest single subject is the audit.** `cycles.py` prints `OVERSIZED cycle 7 ...
+  1,352,274 bytes` against the ~300 KB a cycle is sized to, and cycle 7 is *the unreleased work, and
+  this audit's own record* — so it grew with every row this run wrote into it. Cycle 12 is oversized
+  too, at 359,082. Neither is a defect the run could fix from inside itself, and both are printed on
+  every run rather than left for a reader to notice.
+
+**Child fix tasks raised**
+- **None at closure.** The 33 are section 3's, raised at the triage and ahead of it, and **all are
+  `done`** — [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md) was the last, closed
+  2026-09-03. [T-298](T-298-decide-what-the-clause-sweep-owes-for-a-rule-the-clause-table-cannot-hold.md)
+  came out of that closure and is deliberately **parentless**: it is a defect in the clause sweep's
+  own membership, not an audit finding, and giving it this parent would reopen an umbrella the
+  register says is complete.
 
 ## Log
 
@@ -377,3 +424,4 @@ than the account the cycle wrote. So the ledger is the record and this log is co
 | 2026-08-29 | (no change) | **Cycle 40 done: the triage. 125 open findings, 28 child tasks, one withdrawal.** No tracked file - `cycles.py --cycle 40` names none, which is the third cycle with no membership by construction. **The shape was the owner's decision and it is the cycle's most consequential output.** The method obliges a child task per `High` and per `Med`; taken as a file count that is 75 records, of which 41 would carry one `xs` correction each - the exact cost the method's own batching paragraph refuses one level down. The owner ruled on 2026-08-29 that a severity obliges a **disposition before the release** rather than a file count, on the precedent that `Low` already batches many findings into one task. So: **eight `High` records one-for-one**, seven of them `PH1` because an adopter meets the defect and one `PH3` because it is a completeness claim rather than a behaviour; **nineteen `Med` records grouped** by shared subject *and* shared remedy, the largest being seven tool defects and the smallest two; **one `Low` batch** of 49. Section 1's third acceptance criterion is amended to *covered by* a child task, in the same edit, because a criterion that no longer describes what the run does is worse than one that is hard. **`AM-12` caught a duplicate for the second time in this run**: `PR-96` is `PR-65` raised again at a lower rank by a later cycle that did not search the register first - same four documents, same code path - so it is **withdrawn**, its id spent and not reused on `PR-66`'s precedent, and the one observation it added is on `PR-65`'s row. That is the second withdrawal of this run and both were cheaper to withdraw than the original was to find. **Nothing was re-ranked.** Demoting a `Med` to avoid writing a record is the one bad reason to demote, and cycle 42 grades exactly that - so the band was grouped rather than thinned, and the register's ranks stand as the cycles wrote them. **The counts are re-derived from the register, not incremented**: `High` 8 raised and 8 tasked, `Med` 69 and 69, `Low` 49 and 49 - `Low` falls from 50 by the withdrawal. Every open row's `Task` cell now names the record that closes it, filled from the same table the records were generated from, so the two cannot drift. **What cycle 40 did not do**: it raised no finding of its own, which is correct - triage ranks what the cycles found and is not a cycle. Next is 41, which re-reads cycles 1, 3 and 5 **after the remedies exist**, not after this ranking. |
 | 2026-09-02 | (no change) | **Cycle 41 done, as `B23`: the re-read, and one finding.** The subject was **derived, not assumed** - 261 files changed since `7117b73`, joined to `cycles.py --list`, name **28 cycles** a remedy touched, against the programme's *cycles 1, 3 and 5 plus every cycle a remedy touched*. All four named instruments were re-run rather than cited: `refcheck.py` 0 broken, `figures.py` 0 stale, `severity.py` green, `lint.py` and `check_all.py` green and run separately. **`PR-129` is the one finding, and it is exactly what this cycle exists to catch**: `c7de9d3`, this run's own last remediation commit, took `portfolio_charts.py` from 1,351 lines to 1,356 and left `examples/README.md` saying 1,351 - a numeral no gate binds, on a human-facing page. **One suspicion did not survive**: the README's drifted `refcheck.py` block is a declared `floor` and the tool is right to report rather than fail it (`T-067` §4), which is **L-54**'s case a second time. **Two things were corrected rather than raised**, on cycle 6's precedent: `cycles.py`'s cycle-7 comment claimed *no record carries the value today* and was false by 68 closed records the remediation itself produced, and `T-284`'s section 1 named two candidate cycles that were both misnamed. `T-284` closed here, in the batch [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) predicted would meet it. |
 | 2026-09-02 | (no change) | **Cycle 42 done, as `B24`: phase 2, and the run's last cycle.** All 129 rows graded on the three things a row predicts. **The remedy is graded per row already**, in the register's §3 `Status` cell written as each closed, so phase 2 does not restate it. **The effort is gradeable for thirteen findings and no others** - the eight `High` rows one-for-one plus five raised outside the triage - and of those **eleven held exactly, two came in one band high, none came in low**. `PR-36` and `PR-77` are the two, and `PR-84` is what refuses the obvious reading of them: it was deferred, had all three candidate answers refused and was settled by the owner, and it held. What moved the other two is a ruling that chose a *different* remedy from the one the row costed. **The other 116 efforts cannot be graded at all**, because cycle 40's own granularity ruling closed them in 20 multi-finding tasks - the run predicted a quantity it then decided not to record, and 90% of the `Effort` column is unfalsifiable in consequence. **The sharpest refusal is `REMEDIATION-ORDER.md` §1's**: it states that severity does not sequence the remediation, and the closing dates say otherwise - every `High` in the first two days, 50 of 51 `Low` on the last, and it survives holding the aspect fixed, so it is not the rework order in disguise. The mechanism is the two rulings meeting: cycle 40 made the whole `Low` band one task, and a task is the unit the order schedules. **Corrected there rather than raised**, on cycle 41's precedent and cycle 6's. **One prediction held and is reported unresolved rather than confirmed**: `High` rows had a refused remedy more often than `Low` rows, and their `Status` cells are also three times longer, so the instrument cannot separate the two. **The cycle programme is complete - 43 of 43 settled - and this task stays `in_progress`**, because [T-278](../tasks/T-278-write-the-clause-rows-the-sweep-found-owing.md) is still `proposed` and a parent does not close over an open child. |
+| 2026-09-03 | in_progress → done | **The run closes.** The last open child, [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md), closed the same day, and section 4 is written: six acceptance criteria, every verdict derived by a command rather than transcribed — `cycles.py` exit 0 over the partition, 129 section-3 rows all ten cells wide with a non-empty `Evidence` cell, `severity.py` exit 0 over the bands, cycle 41's re-read of 28 cycles, and section 5's four refused predictions. **Two criteria are met in a qualified form and the qualification is in the cell, not dropped**: the coverage claim is dated rather than standing, because the tree grew from 500 files to 639 under the run and nothing has read what landed after cycle 41; and *no High open at the tag* binds at a tag that has not been cut, so what closes it is that `severity.py` guards it, not that the moment passed. Rule 6 is satisfied by [`../docs/OWED-LOOKS.md`](../docs/OWED-LOOKS.md), whose queue is **empty as of 2026-09-03** — twelve looks, all taken by the owner, which is also what [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §8 wants before a release is cut. Section 1's one live open question is handed to §8 rather than answered here. |
