@@ -304,6 +304,14 @@ already and no gate said so. That is
 [T-156](../tasks/T-156-make-the-screening-partition-a-figure-a-checker-can-count.md), raised rather
 than fixed here because building it is not re-running research.
 
+**Closed 2026-08-15 by [T-156](../tasks/T-156-make-the-screening-partition-a-figure-a-checker-can-count.md),
+and the paragraph above is kept as the state it closed from.** `tools/docs/screening.py` counts
+exactly those rows in exactly those two documents, and prints the three counts, the sentence it
+checks, the catalogue size and `0 disagreements`. **`PR-91` guessed the class might be wider than
+this one paragraph, and the sweep refused that**: reading both audit registers for a stated gap whose
+remedy had since shipped returned §4.1 alone — §10.4 and §10.3's *text a reader follows and no checker
+reads* already carry their own closure notes, which is how this one was found missing.
+
 ---
 
 ## 5. The family walk

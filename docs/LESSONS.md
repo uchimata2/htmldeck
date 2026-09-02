@@ -200,5 +200,6 @@ comes here.
 | [L-134](lessons/L-134.md) | A pipe inside a code span still splits a table cell, and Markdown drops the remainder rather than showing it | Writing |
 | [L-151](lessons/L-151.md) | A prohibition that spells the token it forbids is destroyed by whatever substitutes it | Writing |
 | [L-152](lessons/L-152.md) | A total decays when an item is added and a per-item record does not, so a count nothing binds is deleted, never refreshed | Writing |
+| [L-160](lessons/L-160.md) | A snapshot document dates its values and forgets to date its membership, so a subject added after the run reads as a subject never examined | Writing |
 
 <!-- lessons:end -->

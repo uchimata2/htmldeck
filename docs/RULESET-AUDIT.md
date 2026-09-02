@@ -1,21 +1,25 @@
 # htmldeck — the ruleset audit
 
-**Every rule in [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) tested against one question: does satisfying
-it make a deck better, or only different?** Run 2026-08-17 by
+**Every rule [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) carried on 2026-08-17, tested against one
+question: does satisfying it make a deck better, or only different?** Run that day by
 [T-119](../tasks/T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md). Tier 3 —
 loaded by nothing, read when someone asks whether a rule was ever examined.
 
 **This is a dated snapshot and it does not update itself.** The ID, Label and Check/Reach columns
 were read out of `DESIGN-SYSTEM.md` when it ran, so they cannot be mistyped; the three verdicts are
 this audit's judgement and live here only. A rule amended after 2026-08-17 has a verdict about the
-wording it used to carry. **What changed as a result is [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md)
+wording it used to carry, and **a rule *added* after that date has no row at all** — the membership
+is dated exactly like the verdicts, which is the half this paragraph did not say until 2026-09-02.
+Ask which rules those are rather than reading a list here: `python tools/deck/ruleset.py` prints the
+ruleset's current ids, and the ones §5 has no row for are the answer. Running the three tests on them
+is a second audit and belongs to whoever asks for one. **What changed as a result is [`DESIGN-RATIONALE.md`](DESIGN-RATIONALE.md)
 §6** — this file is the examination, that one is the record.
 
 ---
 
 ## 1. The result
 
-**165 rules examined. 161 left exactly as they were.** That figure is the audit's
+**165 rules examined — every rule the ruleset carried that day. 161 left exactly as they were.** That figure is the audit's
 main product and it is stated first on purpose: an audited ruleset is one a later reader can trust,
 and the value of examining a rule that survives is the same as the value of removing one that does
 not.
@@ -92,10 +96,16 @@ sounds like the rule.**
 | **3 Scope fit** | Does the wording reach exactly as far as its reason? | The rule text against its stated reason | Judgement, and the expensive one. It is the test that found three of the four changes |
 
 **Test 2's ceiling is stated rather than worked around.** `examples/reference-deck-seeded-defects.html`
-seeds **five** defects — DS-035, DS-075, DS-141, DS-142, DS-229 — so it proves five rules can fail and
-is silent on the other 110 the gate owns. Manufacturing a defect per rule is a larger task than this
+seeds one defect per **evaluation dimension** — ten of them, `D1`–`D4` and `S1`–`S6`, asserted by
+`python tools/examples/seed_defects.py --check` — so it proves those ten dimensions can fail and is
+silent on how many of the rules the gate owns have ever fired; `python tools/deck/ruleset.py` prints
+how many that is. Manufacturing a defect per rule is a larger task than this
 one and it is [T-054](../tasks/T-054-record-which-clauses-of-a-rule-the-gate-decides.md)'s
-neighbourhood. **29 rules are recorded `unverified`**, which §1 rules is the correct
+neighbourhood. *Until 2026-09-02 this paragraph pinned the fixture by naming five rule ids it was
+said to seed — `DS-035`, `DS-075`, `DS-141`, `DS-142`, `DS-229` — and had been wrong since
+[T-224](../tasks/T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) rebuilt the
+fixture around dimensions, because a sentence pinned to a list of outputs has nothing to fail
+against when the instrument changes. It now names the instrument: `PR-92`.* **29 rules are recorded `unverified`**, which §1 rules is the correct
 outcome and not a gap: *a rule that has never fired is unverified, not proven*. 27 of them
 the gate owns and excuses on every deck built here, each excusal stating its own closing condition in
 `check.py`; the rest are `off-gate` in the ruleset itself — DS-072, DS-210 and DS-211, where the
@@ -125,7 +135,7 @@ ever apply, and that was 13 rules and DS-042.
 
 ---
 
-## 5. Every rule, with its verdict
+## 5. Every rule examined, with its verdict
 
 **Reading the table.** `Check/Reach` is the pair read from `DESIGN-SYSTEM.md` **as it stands after
 this audit** — so for the four changed rules it shows the new value and the reason names the old one.
