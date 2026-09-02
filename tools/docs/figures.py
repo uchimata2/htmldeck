@@ -3,6 +3,12 @@
 
     python tools/docs/figures.py            # the partition, and the verdict
     python tools/docs/figures.py --values   # what to paste when something has drifted
+    python tools/docs/figures.py --report   # the partition even when piped; --quiet is the reverse
+
+**A green run prints one line when stdout is not a terminal** (T-286). An agent pays a tool's output
+again on every later turn, and this account was 3,043 bytes of which the verdict was one line;
+`--report` restores it, `--quiet` forces the line at a terminal, `--values` always prints what it has
+to, and a red run prints everything in every mode.
 
 **Why this file exists.** `docs/PUBLISHING.md` §6 says every figure in the README is pasted from a
 run, and instructs a person to run five commands and diff each by eye. That instruction was in
@@ -39,6 +45,7 @@ Runs its own self-test first and refuses to report if it fails (**L-04**). Pure 
 (**L-07**).
 """
 
+import contextlib
 import io
 import os
 import re
@@ -1709,10 +1716,60 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a page that does carry its declared fence was reported as "
                  "missing it, so the rule fires on the ordinary case")
 
+    # Quiet never hides a failure (T-286). The decision is one function so it can be asserted
+    # without a stale README to run against.
+    if emit("FULL", 1, "line", True) != "FULL":
+        sys.exit("SELF-TEST FAILED: a red run under --quiet printed the one-line form; quiet "
+                 "decides how a GREEN run reads and nothing else")
+    if emit("FULL", 0, "line", True) != "line\n" or emit("FULL", 0, "line", False) != "FULL":
+        sys.exit("SELF-TEST FAILED: the green form did not follow the quiet flag")
+
+    class _Stream(object):
+        def __init__(self, tty):
+            self._tty = tty
+
+        def isatty(self):
+            return self._tty
+    if (quiet_wanted([], _Stream(False)) is not True or quiet_wanted([], _Stream(True)) is not False
+            or quiet_wanted(["--report"], _Stream(False)) is not False
+            or quiet_wanted(["--quiet"], _Stream(True)) is not True
+            or quiet_wanted(["--values"], _Stream(False)) is not False):
+        sys.exit("SELF-TEST FAILED: the quiet default did not follow the terminal, --report, "
+                 "--quiet and --values as the docstring says")
+
     return True
 
 
-def report(values):
+def quiet_wanted(argv, stdout=None):
+    """Whether a green run prints one line (T-286). `--report` says no and `--quiet` says yes,
+    outright, and `--values` is the paste helper, which prints what it has to; otherwise a terminal
+    gets the account and anything else - a pipe, a file, an agent's capture - gets the line."""
+    if "--report" in argv or "--values" in argv:
+        return False
+    if "--quiet" in argv:
+        return True
+    stdout = sys.stdout if stdout is None else stdout
+    return not (hasattr(stdout, "isatty") and stdout.isatty())
+
+
+def emit(full, code, line, quiet):
+    """The text a run prints: the whole account on a red run or a watched one, the line otherwise.
+    `code` is consulted before `quiet` - a quiet mode that hid a stale figure would be worse than
+    the report it replaces."""
+    return full if code or not quiet else line + "\n"
+
+
+def report(values, quiet=False):
+    """Print the account, or its one line on a green quiet run; the exit code."""
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        code, line = account(values)
+    sys.stdout.write(emit(buf.getvalue(), code, line, quiet))
+    return code
+
+
+def account(values):
+    """Print the whole account; `(exit code, the one-line form of it)`."""
     text = io.open(README, encoding="utf-8").read()
     rows, prose_rows, _seen, table, outputs, readme_watched = audit(text)
     doc_rows, unanchored, watched = declared(table, outputs)
@@ -1849,9 +1906,13 @@ def report(values):
     print("\nThis checks that a pasted figure matches its command. It cannot tell you the sentence\n"
           "around it is still true - the README's \"all three are fixed\" went false with every\n"
           "figure on the page correct, and no gate here would have seen it (L-05).")
-    return 1 if fails else 0
+    line = ("figures: %s - %d fence(s), %d prose numeral(s), %d in %d document(s) pasting no "
+            "output%s" % ("%d figure(s) to fix" % fails if fails else "0 stale",
+                          len(rows), len(prose_rows), sum(dc.values()), len(DECLARED_DOCS),
+                          " - %d floor block(s) grew (see --values)" % len(drift) if drift else ""))
+    return (1 if fails else 0), line
 
 
 if __name__ == "__main__":
     self_test()
-    sys.exit(report("--values" in sys.argv[1:]))
+    sys.exit(report("--values" in sys.argv[1:], quiet_wanted(sys.argv[1:])))

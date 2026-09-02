@@ -61,6 +61,27 @@ closing evidence, finish every edit first, start it last, and touch nothing unti
 edit turns out to be necessary, the run is void, and re-running is cheaper than reasoning about which
 steps were affected.
 
+**A documentation task's commit runs `python tools/check_all.py --docs`; a batch's landing runs the
+full gate.** Under the flag every per-deck and per-theme gate and every rendered suite is **skipped
+with its reason** - the same partition, so the saving is printed rather than taken by habit - and
+only the gates that read a document run. It **refuses**, naming the path, when anything under
+`tools/deck/`, `shell/`, `themes/`, `examples/` or `tools/examples/`, or one of the three documents a
+deck gate reads, differs from `origin/master`; a refused diff owes the full run now, and a pushed
+tree is a fully gated one under `../docs/REMEDIATION-ORDER.md` §4, which is why that is the base.
+**Measured 2026-09-02 on B17's tree**: the full run was 211 s, of which the two rendered suites were
+93 s and `check.py` over the four decks 83 s, and B17's three documentation tasks paid it four times
+against decks nothing they changed could reach
+([T-285](T-285-let-a-documentation-task-run-the-gates-its-change-can-reach.md), which records the
+docs-mode time). `--docs` is never the release's step 1 and never a batch's last run.
+
+**A green gate prints one line when its stdout is not a terminal.** `check_all.py`, `figures.py`,
+`chronology.py` and `lint.py`'s own lines all do this, because a session pays a tool's output again
+on every later turn and a green report is one nobody acts on - B17's four full runs alone printed
+some 74 KB of green account ([T-286](T-286-print-the-verdict-on-a-green-run-and-the-report-only-when-asked.md)).
+The line carries the partition's counts, `--report` restores the account, `--quiet` forces the line
+at a terminal, and **a red run prints everything in every mode** - each tool's self-test asserts
+that. `lint.py`'s children are untouched: the advisory count below still works piped.
+
 **`HTMLDECK_RENDER_WORKERS` decides how many Chrome launches overlap; it does not decide anything
 else.** Renders that fan out are independent processes with their own throwaway profiles, so the
 verdicts are the same either way - proved by `check.py`'s output being byte-identical at `1` and at

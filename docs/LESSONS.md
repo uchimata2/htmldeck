@@ -177,6 +177,7 @@ comes here.
 | [L-132](lessons/L-132.md) | Make the forbidden thing its own marker, and make it the only failure | Tooling |
 | [L-135](lessons/L-135.md) | A list of the homes to check is a second copy of what the homes are, and it goes stale on the day one is added | Tooling |
 | [L-140](lessons/L-140.md) | A classifier that silently reclassifies is worse than one that crashes; `rstrip` takes a character set, not a suffix | Tooling |
+| [L-153](lessons/L-153.md) | Output an agent captures is paid on every later turn, so a green run prints its verdict and the account prints on a terminal or on failure | Tooling |
 
 ### Writing
 

@@ -2,6 +2,11 @@
 """Hold `docs/RELEASE-HISTORY.md`'s two derived columns to the commands the document says derive them.
 
     python tools/docs/chronology.py          # the verdict, and the partition behind it
+    python tools/docs/chronology.py --report # the partition even when piped; --quiet is the reverse
+
+**A green run prints one line when stdout is not a terminal** (T-286): an agent pays a tool's output
+again on every later turn, and a green partition is a report nobody acts on. `--report` restores it,
+`--quiet` forces the line at a terminal, and a red run prints everything in every mode.
 
 **Why this file exists.** Section 1 of the chronology names two commands in a fence - the tag list
 with each tag's date, and `shipped_in` counted over the task records - and says the *Date* and
@@ -43,6 +48,7 @@ Runs its own self-test first and refuses to report if it fails (**L-04**). Runs 
 project root is derived from this file, not from the working directory. Pure standard library.
 """
 
+import contextlib
 import io
 import os
 import re
@@ -203,11 +209,57 @@ def self_test():
         fail("a version the records carry with no row produced %r" % (got,))
     if compare(table, tags, Counter(counts, **{"unreleased": 9})):
         fail("`unreleased` was read as a version owing a row")
+
+    # Quiet never hides a failure (T-286). The decision is one function so it can be asserted
+    # without a red history to run against.
+    if emit("FULL", 1, "line", True) != "FULL":
+        fail("a red run under --quiet printed the one-line form; quiet decides how a GREEN run "
+             "reads and nothing else")
+    if emit("FULL", 0, "line", True) != "line\n" or emit("FULL", 0, "line", False) != "FULL":
+        fail("the green form did not follow the quiet flag")
+
+    class _Stream(object):
+        def __init__(self, tty):
+            self._tty = tty
+
+        def isatty(self):
+            return self._tty
+    if (quiet_wanted([], _Stream(False)) is not True or quiet_wanted([], _Stream(True)) is not False
+            or quiet_wanted(["--report"], _Stream(False)) is not False
+            or quiet_wanted(["--quiet"], _Stream(True)) is not True):
+        fail("the quiet default did not follow the terminal, --report and --quiet as documented")
     return True
 
 
-def main():
+def quiet_wanted(argv, stdout=None):
+    """Whether a green run prints one line (T-286). `--report` says no and `--quiet` says yes,
+    outright; otherwise a terminal gets the account and anything else gets the line."""
+    if "--report" in argv:
+        return False
+    if "--quiet" in argv:
+        return True
+    stdout = sys.stdout if stdout is None else stdout
+    return not (hasattr(stdout, "isatty") and stdout.isatty())
+
+
+def emit(full, code, line, quiet):
+    """The text a run prints: the whole account on a red run or a watched one, the line otherwise.
+    `code` is consulted before `quiet` - a quiet mode that hid a failure would be worse than the
+    report it replaces."""
+    return full if code or not quiet else line + "\n"
+
+
+def main(argv):
     self_test()
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        code, line = account()
+    sys.stdout.write(emit(buf.getvalue(), code, line, quiet_wanted(argv)))
+    return code
+
+
+def account():
+    """Print the whole partition; `(exit code, the one-line form of it)`."""
     text = io.open(HISTORY, encoding="utf-8").read()
     rel = os.path.relpath(HISTORY, ROOT).replace(os.sep, "/")
     print("Release chronology - %s\n" % rel)
@@ -235,14 +287,17 @@ def main():
     print("  %-18s %3d" % ("FAILING", len(bad)))
     for line in bad:
         print("    FAILING  %s" % line)
+    line = ("chronology: %d row(s) agree with both commands, %d tag(s), %d version(s) in tasks, "
+            "%d FAILING" % (len(table), len(tags), sum(1 for v in counts if VERSION.match(v)),
+                            len(bad)))
     if bad:
         print("\n%d disagreement(s) between the table and the commands the document names." % len(bad))
-        return 1
+        return 1, line
     print("\nOK - %d row(s) agree with both commands, in both directions.\n"
           "     this checks that the two derived columns match what derives them. It cannot tell you\n"
           "     a release should have been cut, or what a row is remembered for." % len(table))
-    return 0
+    return 0, line
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

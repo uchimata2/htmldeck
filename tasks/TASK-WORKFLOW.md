@@ -216,6 +216,11 @@ checked, when it resolves, and why quoting a dead reference must not create one.
    inside the one command, so a failure stops the chain instead of scrolling past. **The fourth binds
    an audit finding to the task serving it**, so a closure that leaves the two disagreeing stops here
    rather than at the next release.
+7. **The gate the change can reach.** A task that changed documents and document tools only commits
+   on `python tools/check_all.py --docs`, which skips the deck gates with a printed reason and
+   refuses if the diff reaches a deck-facing path - then the full run is owed now. **The batch's
+   landing owes the full run in every case.** Which paths refuse, and why `origin/master` is the
+   base, is [`TOOLING.md`](TOOLING.md) §1.
 
 ---
 

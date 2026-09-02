@@ -17,6 +17,16 @@ find the installed skill - and the incantation had two homes the moment it had o
 task workflow and in the handoff config's `tracker_lint`. Both now name this file (**L-13**).
 
     python tools/tasks/lint.py
+    python tools/tasks/lint.py --report   # this file's headings and closing paragraph even when piped
+
+**This file's own lines go quiet when stdout is not a terminal** (T-286): the four step headings
+and the closing paragraph become one line on a green run, and `--report` restores them (`--quiet`
+forces the line at a terminal). **What the four steps print is untouched in every mode** - the
+children write to the console directly, so a failure reads exactly as it did, and `taskmd check`'s
+standing advisories keep printing, because `tasks/TOOLING.md` section 1 counts them to tell a new
+one from the eleven, and quieting upstream's output is a pull request to taskmd rather than a line
+here. Measured 2026-09-01 on a green run: 2,222 bytes, of which this file's own lines were about
+300; the rest is the children's and stays.
 
 Runs from anywhere: the project root is derived from this file, not from the working directory.
 Pure standard library (**L-07**).
@@ -105,6 +115,31 @@ def steps():
     ]
 
 
+def quiet_wanted(argv, stdout=None):
+    """Whether a green run prints one line (T-286). `--report` says no and `--quiet` says yes,
+    outright; otherwise a terminal gets the headings and the paragraph, anything else the line."""
+    if "--report" in argv:
+        return False
+    if "--quiet" in argv:
+        return True
+    stdout = sys.stdout if stdout is None else stdout
+    return not (hasattr(stdout, "isatty") and stdout.isatty())
+
+
+def verdict(code, label, quiet):
+    """The closing text. A failure reads the same in every mode; `quiet` shortens the green form
+    only, so it can never hide the step that stopped the chain."""
+    if code:
+        return ("\nFAILED at `%s` (exit %d). The chain stopped there; the steps after it did not "
+                "run." % (label, code))
+    if quiet:
+        return "lint: all four passed - index, check, refcheck, findings"
+    return ("\nAll four passed: the task record, its references, every pointer in every "
+            "document, and\nthe finding-to-task register.\n"
+            "This validates structure and references. It cannot tell you a specification is "
+            "wrong or a deliverable is bad.")
+
+
 def self_test():
     """A chain that does not stop is not a chain (**L-04**), and the exit status is the whole
     contract `tracker_lint` is called under - so both halves are asserted, not read."""
@@ -129,22 +164,38 @@ def self_test():
         sys.exit("SELF-TEST FAILED: the newest of %r was read as %r. Sorted as text 0.10.0 loses "
                  "to 0.5.0, and both tools here would then run an older installed skill than the "
                  "one present, with nothing to say so" % (installs, newest))
+
+    # Quiet never hides a failure (T-286): the failing verdict is the same text in both modes, and
+    # the green quiet form is one line.
+    if verdict(3, "second", True) != verdict(3, "second", False) or "FAILED at `second`" not in \
+            verdict(3, "second", True):
+        sys.exit("SELF-TEST FAILED: a failing chain reads differently under --quiet, or no longer "
+                 "names the step that stopped it. Quiet decides how a GREEN run reads and nothing "
+                 "else")
+    if "\n" in verdict(0, None, True):
+        sys.exit("SELF-TEST FAILED: the green quiet verdict is more than one line")
+
+    class _Stream(object):
+        def __init__(self, tty):
+            self._tty = tty
+
+        def isatty(self):
+            return self._tty
+    if (quiet_wanted([], _Stream(False)) is not True or quiet_wanted([], _Stream(True)) is not False
+            or quiet_wanted(["--report"], _Stream(False)) is not False
+            or quiet_wanted(["--quiet"], _Stream(True)) is not True):
+        sys.exit("SELF-TEST FAILED: the quiet default did not follow the terminal, --report and "
+                 "--quiet as the docstring says")
     return True
 
 
-def main():
+def main(argv):
     self_test()
-    code, label = run(steps())
-    if code:
-        print("\nFAILED at `%s` (exit %d). The chain stopped there; the steps after it did not "
-              "run." % (label, code))
-    else:
-        print("\nAll four passed: the task record, its references, every pointer in every "
-              "document, and\nthe finding-to-task register.\n"
-              "This validates structure and references. It cannot tell you a specification is "
-              "wrong or a deliverable is bad.")
+    quiet = quiet_wanted(argv)
+    code, label = run(steps(), quiet=quiet)
+    print(verdict(code, label, quiet))
     return code
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

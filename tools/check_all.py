@@ -4,6 +4,24 @@
     python tools/check_all.py            # the partition, and the verdict
     python tools/check_all.py --list     # the manifest, without running anything
     python tools/check_all.py --verbose  # let every child write to the console
+    python tools/check_all.py --docs     # the gates a documentation change can reach; the rest skipped
+    python tools/check_all.py --report   # the full account on a green run, even when piped
+    python tools/check_all.py --quiet    # one line on a green run, even at a terminal
+
+**`--docs` is a documentation task's commit gate; the full run is the batch's** (T-285). Measured
+2026-09-01 on a green full run: 211 s, of which the two rendered seeded-variant suites were 93 s and
+`check.py` over the four decks 83 s, and B17's three documentation tasks paid that four times against
+a tree where nothing those gates read had moved. Under the flag, every per-theme and per-deck gate and
+every WIDE entry whose subject sits wholly under a deck-facing prefix is **skipped with that reason**
+- the same partition, so the saving is declared rather than taken by habit - and the flag **refuses**
+when anything under such a prefix differs from `origin/master`, because under
+`docs/REMEDIATION-ORDER.md` section 4 a pushed tree is a fully gated one. It errs towards the full run.
+
+**A green run prints one line when nobody is watching** (T-286). An agent pays a tool's output once
+when it reads it and again on every later turn, so a report compounds with the number of runs: this
+command's green account was 18,480 bytes, and a three-task batch runs it four times. When stdout is
+not a terminal, or under `--quiet`, a green run prints the partition's counts and the seconds and
+nothing else; `--report` restores the account, and a **red run prints everything in every mode**.
 
 **This exists because `docs/PUBLISHING.md` §8's gate list was an enumeration, and said so.** It was
 written on 2026-08-10 after four releases had each re-derived the sequence from the last one's
@@ -58,25 +76,51 @@ PY = sys.executable
 # Four tables, and between them they name every tracked `tools/**/*.py` exactly once. Adding a
 # tool and wiring nothing goes red; deleting one an entry names goes red.
 
-# Repository-wide gates: `path -> argv tail`. Run once, in this order.
+# Repository-wide gates: `(path, argv tail, what --docs does)`. Run once, in this order.
+#
+# **The third element is what `--docs` does with the entry** (T-285). `True` runs it: the gate reads
+# at least one document, so a documentation change can move its verdict. A string skips it, and is
+# the subject the skip reason names: everything the gate reads sits under a prefix in DOCS_REFUSED,
+# so a diff that left all of those alone cannot have changed what it would say - and a diff that
+# touched one refuses the flag before anything runs. Both directions are asserted in the self-test.
 WIDE = [
-    ("tools/tasks/lint.py", []),
-    ("tools/docs/lessons.py", []),
-    ("tools/docs/figures.py", []),
-    ("tools/docs/chronology.py", []),
-    ("tools/docs/screening.py", []),
-    ("tools/deck/ruleset.py", ["--counts"]),
-    ("tools/plugin/check_scaffold.py", []),
-    ("tools/deck/static_variants.py", []),
-    ("tools/deck/deliverable_variants.py", []),
-    ("tools/deck/contract_variants.py", []),
-    ("tools/deck/content_variants.py", []),
-    ("tools/examples/seed_defects.py", ["--check"]),
-    ("tools/examples/portfolio_charts.py", ["selftest"]),
-    ("tools/deck/contents_bound.py", []),
-    ("tools/deck/slidefacts.py", ["--self-test"]),
-    ("tools/deck/readability.py", ["--self-test"]),
+    ("tools/tasks/lint.py", [], True),
+    ("tools/docs/lessons.py", [], True),
+    ("tools/docs/figures.py", [], True),
+    ("tools/docs/chronology.py", [], True),
+    ("tools/docs/screening.py", [], True),
+    ("tools/deck/ruleset.py", ["--counts"], True),
+    ("tools/plugin/check_scaffold.py", [], True),
+    ("tools/deck/static_variants.py", [],
+     "the shell and the reference deck, seeded one rule at a time and rendered"),
+    ("tools/deck/deliverable_variants.py", [],
+     "the reference deck, seeded one deliverable rule at a time and rendered"),
+    ("tools/deck/contract_variants.py", [],
+     "the reference deck and the themes, seeded one contract rule at a time and rendered"),
+    ("tools/deck/content_variants.py", [],
+     "the reference deck and its sources, seeded one content class at a time"),
+    ("tools/examples/seed_defects.py", ["--check"],
+     "the seeded-defects fixture, which derives from the reference deck"),
+    ("tools/examples/portfolio_charts.py", ["selftest"],
+     "the portfolio deck's charts, composed from its own specification"),
+    ("tools/deck/contents_bound.py", [], "the printed contents page, rendered in Chrome"),
+    ("tools/deck/slidefacts.py", ["--self-test"], "its own deck fixtures"),
+    ("tools/deck/readability.py", ["--self-test"], "its own deck-copy fixtures"),
 ]
+
+# What `--docs` compares against, and what it refuses on. A path under any of these prefixes
+# differing from the base means a gate the flag skips might have a new verdict, so the flag refuses
+# and names the path - it errs towards the full run. The prefixes are the trees the skipped gates
+# read and the folders those gates live in; a skipped gate reading anything outside them would be a
+# hole here, which is why each entry above says what it reads.
+DOCS_BASE = "origin/master"
+DOCS_REFUSED = ("tools/deck/", "shell/", "themes/", "examples/", "tools/examples/")
+# **Three documents are inputs to deck gates, so a change to one of them is not a documentation
+# change here.** `check.py` derives its jurisdiction from the design system through `ruleset.py`,
+# `theme.py` reads the theme contract and `component.py` the component contract - found by grepping
+# `tools/deck/` for what it opens under `docs/`, not assumed. A gate this flag skips reading any
+# other document would be a hole in this tuple; add it here, never widen the skip.
+DOCS_REFUSED_DOCS = ("docs/DESIGN-SYSTEM.md", "docs/THEME-CONTRACT.md", "docs/COMPONENT-CONTRACT.md")
 
 # Per-theme gates: `path -> builder`, the builder taking the theme's repo-relative path.
 #
@@ -361,7 +405,7 @@ def classify(tools, wide, per_deck, not_run):
     nobody wired looks like. `stale` is the mirror: an entry naming a file that is gone.
     """
     named = {}
-    for path, _ in wide:
+    for path, *_ in wide:
         named[path] = "gate"
     for path, _ in per_deck:
         named[path] = "per-deck gate"
@@ -413,20 +457,70 @@ def run_one(path, argv_tail, verbose):
                   seconds=time.time() - started_one)
 
 
-def plan(decks, themes=()):
-    """Every command this run will issue, in order, as `(section, path, argv-tail-or-reason)`."""
-    steps = [("repository-wide", path, tail) for path, tail in WIDE]
+def plan(decks, themes=(), wide=None, per_theme=None, per_deck=None, docs=None):
+    """Every command this run will issue, in order, as `(section, path, argv-tail-or-reason)`.
+
+    `docs` is `None` for a full run, or the function `--docs` builds: given the subject a skipped
+    gate reads, it returns the skip reason (T-285). Under it every per-theme and per-deck step is a
+    skip, and so is every WIDE entry whose third element is a subject rather than `True`.
+    """
+    wide = WIDE if wide is None else wide
+    per_theme = PER_THEME if per_theme is None else per_theme
+    per_deck = PER_DECK if per_deck is None else per_deck
+    steps = [("repository-wide", path, docs(reads) if docs and reads is not True else tail)
+             for path, tail, reads in wide]
     # Themes before decks: a deck is built against a theme, so a theme that does not conform is
     # the more useful failure to read first.
     for theme in themes:
-        for path, builder in PER_THEME:
-            steps.append((theme, path, builder(theme)))
+        for path, builder in per_theme:
+            steps.append((theme, path, docs("the theme") if docs else builder(theme)))
     for deck in decks:
         src = DECKS[deck]
-        for path, builder in PER_DECK:
+        for path, builder in per_deck:
             exempt = DECK_EXEMPT.get((path, deck))
-            steps.append((deck, path, exempt if exempt else builder(deck, src)))
+            steps.append((deck, path, exempt if exempt else
+                          docs("the deck and its sources") if docs else builder(deck, src)))
     return steps
+
+
+def changed_since(base):
+    """`(short sha, sorted paths)` differing from `base` - committed ahead of it, staged, unstaged or
+    untracked - or `(None, [])` when `base` does not resolve here.
+
+    Untracked files count. A new deck or a new tool is exactly what a skipped gate would have judged,
+    and `git diff` does not see one.
+    """
+    rev = subprocess.run(["git", "rev-parse", "--verify", "--quiet", "--short", base], cwd=ROOT,
+                         capture_output=True, text=True)
+    if rev.returncode:
+        return None, []
+    diff = subprocess.run(["git", "diff", "--name-only", base], cwd=ROOT,
+                          capture_output=True, text=True)
+    other = subprocess.run(["git", "ls-files", "--others", "--exclude-standard"], cwd=ROOT,
+                           capture_output=True, text=True)
+    paths = set(p.strip() for p in (diff.stdout + other.stdout).splitlines() if p.strip())
+    return rev.stdout.strip(), sorted(paths)
+
+
+def docs_blockers(paths, refused=DOCS_REFUSED, docs=DOCS_REFUSED_DOCS):
+    """The paths in `paths` under a refused prefix or naming a refused document - each one a reason
+    `--docs` cannot run."""
+    return sorted(p for p in paths if p.startswith(refused) or p in docs)
+
+
+def quiet_wanted(argv, stdout=None):
+    """Whether a green run prints one line (T-286).
+
+    `--report` and `--verbose` say no and `--quiet` says yes, outright. Otherwise a terminal gets the
+    account and anything else - a pipe, a file, an agent's capture - gets the line: a person watching
+    keeps what they had, and a stream that is read once and carried forever stops paying for it.
+    """
+    if "--report" in argv or "--verbose" in argv:
+        return False
+    if "--quiet" in argv:
+        return True
+    stdout = sys.stdout if stdout is None else stdout
+    return not (hasattr(stdout, "isatty") and stdout.isatty())
 
 
 # --- the report -----------------------------------------------------------------------------
@@ -528,7 +622,7 @@ def self_test():
     """**A partition that has never been seen to fail is a claim about the instrument** (**L-04**,
     **L-36**). Three states have to be asserted rather than read: an unwired tool, a stale entry,
     and a deck with no declared `--sources`."""
-    wide = [("tools/a.py", [])]
+    wide = [("tools/a.py", [], True)]
     per_deck = [("tools/b.py", lambda deck, src: [deck])]
     not_run = {"tools/c.py": "a library"}
 
@@ -565,6 +659,60 @@ def self_test():
         sys.exit("SELF-TEST FAILED: no --sources declared for the reference deck. Guessing it "
                  "wrong does not error, it reports a content failure that reads like a defect in "
                  "the deck")
+
+    # `--docs` in both directions (T-285): a documentation diff skips exactly the deck-facing gates,
+    # and a diff touching a refused path refuses. Each half alone would be a flag that saves time
+    # by not looking, which is the failure the partition exists to make visible.
+    if docs_blockers(["docs/BRIEF.md", "tasks/README.md", "tools/docs/figures.py", "README.md"]):
+        sys.exit("SELF-TEST FAILED: a documentation-only diff was refused --docs, so the mode "
+                 "could never run on the diffs it exists for")
+    for path in ("shell/shell.html", "themes/lattice.css", "examples/reference-deck.html",
+                 "tools/deck/ruleset.py", "tools/examples/seed_defects.py") + DOCS_REFUSED_DOCS:
+        if docs_blockers(["docs/BRIEF.md", path]) != [path]:
+            sys.exit("SELF-TEST FAILED: a diff touching %r did not refuse --docs. A skipped gate "
+                     "reads that tree, so its verdict could have moved unseen" % path)
+    docs_wide = [("tools/a.py", [], True), ("tools/d.py", [], "a deck")]
+    fake_per_deck = [("tools/b.py", lambda deck, src: [deck])]
+    shape = lambda steps: [(p, isinstance(t, str)) for _s, p, t in steps]
+    full = shape(plan(["examples/reference-deck.html"], ["themes/lattice.css"], wide=docs_wide,
+                      per_deck=fake_per_deck))
+    if full != [("tools/a.py", False), ("tools/d.py", False), ("tools/deck/theme.py", False),
+                ("tools/b.py", False)]:
+        sys.exit("SELF-TEST FAILED: a full run's plan skipped something, %r. The docs flag must "
+                 "change nothing when it is not passed" % (full,))
+    docs = shape(plan(["examples/reference-deck.html"], ["themes/lattice.css"], wide=docs_wide,
+                      per_deck=fake_per_deck, docs=lambda reads: "skipped: reads " + reads))
+    if docs != [("tools/a.py", False), ("tools/d.py", True), ("tools/deck/theme.py", True),
+                ("tools/b.py", True)]:
+        sys.exit("SELF-TEST FAILED: --docs planned %r. It must run every entry marked True, and "
+                 "skip - not omit - every deck-facing one, the per-theme and the per-deck gates"
+                 % (docs,))
+    for path, _tail, reads in WIDE:
+        if reads is not True and not isinstance(reads, str):
+            sys.exit("SELF-TEST FAILED: %s says neither True nor what it reads, so --docs cannot "
+                     "classify it" % path)
+
+    # Quiet never hides a failure (T-286): a red run prints its failures in every mode, and a
+    # green quiet run is one line carrying the counts. Asserted on fake results rather than read,
+    # because a quiet mode that swallowed a failure is the one outcome worse than the report.
+    import contextlib
+    red = [("repository-wide", Result("python tools/x.py", "failed", 3,
+                                      "BOOM: the seeded failure", seconds=0.1)),
+           ("repository-wide", Result("python tools/y.py", "ran", 0, seconds=0.1))]
+    named = {"tools/x.py": "gate", "tools/y.py": "gate"}
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        code = finish(red, named, [], [], sorted(named), [], 0.2, quiet=True)
+    if code != 1 or "BOOM: the seeded failure" not in buf.getvalue() or "FAIL" not in buf.getvalue():
+        sys.exit("SELF-TEST FAILED: a failing command under --quiet returned %d and printed %r. "
+                 "Quiet decides how a GREEN run reads and nothing else" % (code, buf.getvalue()))
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        code = finish(red[1:], {"tools/y.py": "gate"}, [], [], ["tools/y.py"], [], 0.2, quiet=True)
+    line = buf.getvalue()
+    if code != 0 or line.count("\n") != 1 or len(line.encode("utf-8")) > 300 or "1 ran" not in line:
+        sys.exit("SELF-TEST FAILED: a green quiet run printed %r - wanted one line under 300 "
+                 "bytes carrying the partition's counts" % line)
     return True
 
 
@@ -597,9 +745,89 @@ def decks_not_in_examples_readme():
 
 # --- entry point ----------------------------------------------------------------------------
 
+def finish(results, classified, unclassified, stale, tools, decks, wall, quiet, mode="", docs=False):
+    """Print the account and return the exit code.
+
+    A red run prints everything, in every mode; `quiet` decides how a green run reads and nothing
+    else (T-286). `mode` is appended to the verdict line - `--docs` puts its base there - and `docs`
+    swaps the closing paragraph, because a green docs run is not the whole gate set and must not
+    say it is.
+    """
+    ran = sum(1 for _, r in results if r.state == "ran")
+    failed = sum(1 for _, r in results if r.state == "failed")
+    skipped = sum(1 for _, r in results if r.state == "skipped")
+    if quiet and not (failed or unclassified or stale):
+        print("check_all: %d ran, %d skipped with a reason, 0 failed, 0 unclassified, 0 stale  -  "
+              "%.0f s%s" % (ran, skipped, wall, mode))
+        return 0
+
+    failed, un, st = report(results, classified, unclassified, stale, tools, decks, NOT_A_DECK)
+    failures(results)
+
+    # **How long this took, printed rather than written down anywhere** (T-148, `CE-08`). Five
+    # successive handoffs carried a run time for this command that no committed document stated, so
+    # nothing could check it and it drifted freely - it was quoted as 7-11 minutes against a real
+    # 154 seconds (`BP-2`). A figure with no home cannot be stale and cannot be corrected either.
+    # The number belongs to the run, not to a document: **L-95**.
+    # **Where that time went, ranked** (T-279). The line above was the whole account of cost until
+    # 2026-08-29, and one number over 37 commands cannot answer *what is slow* - the first person to
+    # ask had to write a harness outside the repository to rank them. Printed on every run, at any
+    # size, for the reason everything else here is: a figure that appears only when somebody is
+    # already suspicious is a figure nobody checks (**L-36**).
+    timed_rows = sorted(((r.seconds, r.label) for _s, r in results if r.seconds is not None),
+                        reverse=True)
+    measured = sum(sec for sec, _l in timed_rows)
+    if timed_rows:
+        print("\n  where the time went")
+        shown, cum = 0, 0.0
+        for sec, label in timed_rows:
+            cum += sec
+            shown += 1
+            print("    %7.1fs  %5.1f%%  cum %5.1f%%  %s"
+                  % (sec, 100 * sec / measured, 100 * cum / measured, label))
+            # The tail is a long list of sub-second commands and naming each buys nothing; the cut
+            # is at the share, so what prints is *the commands that dominate* rather than a fixed
+            # count that would flatter a faster machine. **The row that crosses the line is shown
+            # before breaking**: cutting above it put a 41 s command into a bucket whose own label
+            # says none of them is the reason a run is slow, which was a lie the first time it ran.
+            if cum / measured > 0.95:
+                break
+        rest = timed_rows[shown:]
+        if rest:
+            tail = sum(s for s, _l in rest)
+            print("    %7.1fs  %5.1f%%              the other %d command(s), none of them the "
+                  "reason a run is slow" % (tail, 100 * tail / measured, len(rest)))
+        # The commands are a partition of the run, so their times must reconcile with the clock.
+        # The difference is this file's own work - discovery, classification, the report - and it
+        # is printed rather than absorbed, because an unexplained gap is where a slow step hides.
+        print("    ------------------------")
+        print("    %7.1fs  in commands, against %.1fs on the clock - %.1fs is this file's own "
+              "discovery and report" % (measured, wall, wall - measured))
+    print("\n%d failure(s), %d unclassified, %d stale  -  %.0f s%s"
+          % (failed, un, st, wall, mode))
+    if failed or un or st:
+        print("\nThis is step 1 of docs/PUBLISHING.md section 8, and it is red. Nothing after it "
+              "runs until it is green.")
+        return 1
+    if docs:
+        print("\n**A green --docs run is the gates a documentation change can reach, and not the "
+              "whole set.** Every\nper-deck and per-theme gate and every rendered suite was skipped "
+              "with its reason above, on the\nevidence that nothing they read differs from %s. The "
+              "batch's landing owes the full run,\nand so does any diff this flag refuses." % DOCS_BASE)
+        return 0
+    print("\n**A green run here is the whole gate set, and it is still not a good deck.** Every "
+          "one of these\nvalidates structure, references or a stated rule. None can tell you a "
+          "specification is wrong, a\nplan is thin, or a deck reads as machine-written - and the "
+          "rules a person asserts by looking are\nnamed, with reasons, in check.py's own account "
+          "(L-05, CLAUDE.md rule 6).")
+    return 0
+
+
 def main(argv):
     verbose = "--verbose" in argv
     listing = "--list" in argv
+    docs_mode = "--docs" in argv
+    quiet = quiet_wanted(argv)
     started = time.time()
     self_test()
 
@@ -633,7 +861,30 @@ def main(argv):
     decks = [d for d in html if d in DECKS]
     themes = themes_tracked()
 
-    steps = plan(decks, themes)
+    docs, mode = None, ""
+    if docs_mode:
+        sha, changed = changed_since(DOCS_BASE)
+        if sha is None:
+            print("REFUSED --docs: %s does not resolve here, so there is no fully gated tree to "
+                  "compare against. Run the full gate." % DOCS_BASE)
+            return 2
+        blockers = docs_blockers(changed)
+        if blockers:
+            print("REFUSED --docs: %d path(s) a skipped gate reads differ from %s (%s), so a "
+                  "verdict this mode would not re-take may have moved. Run the full gate."
+                  % (len(blockers), DOCS_BASE, sha))
+            for path in blockers:
+                print("    %s" % path)
+            return 2
+        mode = "  (--docs, against %s %s)" % (DOCS_BASE, sha)
+        where = ", ".join(DOCS_REFUSED) + " and " + ", ".join(DOCS_REFUSED_DOCS)
+
+        def docs(reads):
+            return ("docs mode - it reads %s, and nothing under %s differs from %s (%s), so the "
+                    "verdict that tree got stands. The batch's landing runs the full gate"
+                    % (reads, where, DOCS_BASE, sha))
+
+    steps = plan(decks, themes, docs=docs)
     if listing:
         for sect, path, tail in steps:
             if isinstance(tail, str):
@@ -658,69 +909,17 @@ def main(argv):
             label = "python %s <%s>" % (path, sect)
             results.append((sect, Result(label, "skipped", why=tail)))
             continue
-        if not verbose:
+        if not verbose and not quiet:
             print("  %s ..." % path, end="\r")
             sys.stdout.flush()
         results.append((sect, run_one(path, tail, verbose)))
 
-    if not verbose:
-        print(" " * 78, end="\r")
-    print()
-    failed, un, st = report(results, classified, unclassified, stale, tools, decks, NOT_A_DECK)
-    failures(results)
-
-    # **How long this took, printed rather than written down anywhere** (T-148, `CE-08`). Five
-    # successive handoffs carried a run time for this command that no committed document stated, so
-    # nothing could check it and it drifted freely - it was quoted as 7-11 minutes against a real
-    # 154 seconds (`BP-2`). A figure with no home cannot be stale and cannot be corrected either.
-    # The number belongs to the run, not to a document: **L-95**.
-    # **Where that time went, ranked** (T-279). The line above was the whole account of cost until
-    # 2026-08-29, and one number over 37 commands cannot answer *what is slow* - the first person to
-    # ask had to write a harness outside the repository to rank them. Printed on every run, at any
-    # size, for the reason everything else here is: a figure that appears only when somebody is
-    # already suspicious is a figure nobody checks (**L-36**).
-    wall = time.time() - started
-    timed_rows = sorted(((r.seconds, r.label) for _s, r in results if r.seconds is not None),
-                        reverse=True)
-    measured = sum(sec for sec, _l in timed_rows)
-    if timed_rows:
-        print("\n  where the time went")
-        shown, cum = 0, 0.0
-        for sec, label in timed_rows:
-            cum += sec
-            shown += 1
-            print("    %7.1fs  %5.1f%%  cum %5.1f%%  %s"
-                  % (sec, 100 * sec / measured, 100 * cum / measured, label))
-            # The tail is a long list of sub-second commands and naming each buys nothing; the cut
-            # is at the share, so what prints is *the commands that dominate* rather than a fixed
-            # count that would flatter a faster machine. **The row that crosses the line is shown
-            # before breaking**: cutting above it put a 41 s command into a bucket whose own label
-            # says none of them is the reason a run is slow, which was a lie the first time it ran.
-            if cum / measured > 0.95:
-                break
-        rest = timed_rows[shown:]
-        if rest:
-            tail = sum(s for s, _l in rest)
-            print("    %7.1fs  %5.1f%%              the other %d command(s), none of them the "
-                  "reason a run is slow" % (tail, 100 * tail / measured, len(rest)))
-        # The commands are a partition of the run, so their times must reconcile with the clock.
-        # The difference is this file's own work - discovery, classification, the report - and it
-        # is printed rather than absorbed, because an unexplained gap is where a slow step hides.
-        print("    ------------------------")
-        print("    %7.1fs  in commands, against %.1fs on the clock - %.1fs is this file's own "
-              "discovery and report" % (measured, wall, wall - measured))
-    print("\n%d failure(s), %d unclassified, %d stale  -  %.0f s"
-          % (failed, un, st, wall))
-    if failed or un or st:
-        print("\nThis is step 1 of docs/PUBLISHING.md section 8, and it is red. Nothing after it "
-              "runs until it is green.")
-        return 1
-    print("\n**A green run here is the whole gate set, and it is still not a good deck.** Every "
-          "one of these\nvalidates structure, references or a stated rule. None can tell you a "
-          "specification is wrong, a\nplan is thin, or a deck reads as machine-written - and the "
-          "rules a person asserts by looking are\nnamed, with reasons, in check.py's own account "
-          "(L-05, CLAUDE.md rule 6).")
-    return 0
+    if not quiet:
+        if not verbose:
+            print(" " * 78, end="\r")
+        print()
+    return finish(results, classified, unclassified, stale, tools, decks, time.time() - started,
+                  quiet, mode, docs_mode)
 
 
 if __name__ == "__main__":
