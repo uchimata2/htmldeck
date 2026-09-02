@@ -50,6 +50,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-282](T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | The portfolio deck's opening slide carries one of the two figures its specification calls the whole argument | `PH3` | - | `proposed` | `specify` | - | - | - | T-233 |
 | [T-283](T-283-ds-218-reports-a-pass-where-it-has-no-subject.md) | Make DS-218 report no subject where it has none, rather than a pass | `PH1` | - | `proposed` | `specify` | - | - | - | T-231, T-257 |
 | [T-284](T-284-owed-looks-belongs-to-no-audit-cycle.md) | Give OWED-LOOKS.md an audit cycle, or a rule that says which one reads it | `PH3` | - | `proposed` | `specify` | T-219 | - | - | T-223, T-273 |
+| [T-285](T-285-let-a-documentation-task-run-the-gates-its-change-can-reach.md) | Let a documentation task run the gates its change can reach, and keep the full run for the batch | `PH3` | - | `proposed` | `specify` | - | - | - | T-279, T-280 |
 
 ## Closed
 
@@ -319,8 +320,8 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-275](T-275-retire-accent-ink-from-the-contract-the-themes-and-the-decks.md) | Retire --accent-ink from the contract, both themes and every deck that carries it | `PH3` | - | `done` | `review` | - | - | - | T-242, T-274 |
 | [T-276](T-276-narrow-ds-100-to-the-question-a-slide-puts-in-its-header.md) | Narrow DS-100 to the question a slide puts in its header | `PH3` | - | `done` | `review` | - | - | - | T-225, T-270 |
 | [T-277](T-277-put-motion-back-inside-the-more-menu.md) | Put Motion back inside the More menu, and let DS-218 count a persistent menu button as reachable | `PH3` | - | `done` | `review` | - | - | - | T-114, T-180, T-257 |
-| [T-279](T-279-check-all-reports-one-number-for-thirty-seven-commands.md) | Time each command check_all runs, so the gate's cost is measured rather than guessed | `PH3` | - | `done` | `review` | - | - | - | T-131, T-132, T-280 |
-| [T-280](T-280-every-render-pays-a-fresh-chrome-launch.md) | Every render pays a fresh Chrome launch, and the launch is most of the render | `PH3` | - | `done` | `review` | - | - | - | T-279 |
+| [T-279](T-279-check-all-reports-one-number-for-thirty-seven-commands.md) | Time each command check_all runs, so the gate's cost is measured rather than guessed | `PH3` | - | `done` | `review` | - | - | - | T-131, T-132, T-280, T-285 |
+| [T-280](T-280-every-render-pays-a-fresh-chrome-launch.md) | Every render pays a fresh Chrome launch, and the launch is most of the render | `PH3` | - | `done` | `review` | - | - | - | T-279, T-285 |
 | [T-281](T-281-the-sort-windows-capacity-story-cannot-hold-its-own-failure-table.md) | The sort-window deck's capacity story cannot hold its own failure table, and the fix changes its headline | `PH3` | - | `done` | `review` | - | - | - | T-248 |
 
 <!-- taskmd:end -->
