@@ -26,7 +26,9 @@ will not find it.*
 Ran as [T-042](../tasks/T-042-audit-the-whole-repository-against-itself.md),
 [T-119](../tasks/T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md),
 [T-130](../tasks/T-130-audit-the-context-economy-of-an-agent-driven-repository.md) and its grading pass
-[T-153](../tasks/T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md).
+[T-153](../tasks/T-153-run-the-audit-methods-phase-2-over-this-repositorys-own-audit.md); the
+context-economy audit's second run is [T-287](../tasks/T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md),
+and its phase 2 is [T-294](../tasks/T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md).
 
 **No audit is a release step**, and [`PUBLISHING.md`](PUBLISHING.md) §8 says so where the sequence
 lives.

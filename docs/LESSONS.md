@@ -178,6 +178,7 @@ comes here.
 | [L-135](lessons/L-135.md) | A list of the homes to check is a second copy of what the homes are, and it goes stale on the day one is added | Tooling |
 | [L-140](lessons/L-140.md) | A classifier that silently reclassifies is worse than one that crashes; `rstrip` takes a character set, not a suffix | Tooling |
 | [L-153](lessons/L-153.md) | Output an agent captures is paid on every later turn, so a green run prints its verdict and the account prints on a terminal or on failure | Tooling |
+| [L-154](lessons/L-154.md) | A token that enters the context at call t is paid about 2 + 0.1 × (N − t) times, so the earliest reads are the dearest and a resume compounds like tier 1 | Tooling |
 
 ### Writing
 

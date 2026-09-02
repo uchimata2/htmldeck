@@ -366,6 +366,18 @@ the finding itself, and four closures showed that none of it is obvious from the
 | ~~11~~ | **CE-08** | A / F2 | A measured figure gets a durable home — **done, and the shape was refused**: the figure now has no home at all. The decision it drove was coarser than the number, so `PUBLISHING.md` §8 states *minutes, background it* and `check_all.py` prints its own seconds (**L-95**) | `S` | `xs` | none | R8 §8 |
 | ~~12~~ | **CE-10** | A / F2 | Prune the memory index of spent entries — **done, and the band held: 6,706 → 5,818, −13.2% of a file loaded on every turn.** Six of the seven entries removed were duplicating `../CLAUDE.md`, so the fact was charged twice per turn | `S` | `xs` | stated | §6.1 |
 | ~~13~~ | **CE-12** | B / F3 | ~~Two docstring outliers~~ — **withdrawn 2026-08-14: there are no docstring outliers.** The figures counted triple-quoted string tokens, and in those files the strings are the tools' payloads | ~~`M`~~ **none** | `s` | ~~stated~~ — the stated risk was never reached | §6.1 |
+| 14 | **CE-14** | A / F1 | Move the rules that bind only deck or release work under path-scoped rules — about 4,500 of `CLAUDE.md`'s 15,581 bytes, and rule 6 stays | `L` on tier 1, `M` on the start context | `s` | stated | §6.3 |
+| 15 | **CE-15** | B / F1 | `TOOLING.md` §1 is 18,461 of 26,408 bytes and every pointer to it costs the whole | `M` | `s` | none | §6.3 |
+| 16 | **CE-16** | E / F5 | A session boundary re-pays the start context and the read path at the write rate; the session-per-task rhythm buys continuity, not tokens — **a measurement first, because it collides with a settled rhythm** | `L` (estimated) | `m` | stated | §6.3 |
+| 17 | **CE-17** | A / F1 | Sixty skills offered every turn, five of them this repository's; the app's store is outside `CE-07`'s reach | `M` on the start context | `xs` | none | §6.3 |
+| 18 | **CE-18** | E / F5 | The docs gate is 81% one render — seconds, not tokens | *time* | `s` | stated | §6.3 |
+| 19 | **CE-19** | C / F5 | The deck gate's green default prints 29,980 bytes, up 72%; L-153 was not applied to it | `M` | `xs` | none | §6.3 |
+| 20 | **CE-20** | A / F2 | Five memory-index entries duplicate a rule with a home | `S` | `xs` | none | §6.3 |
+| 21 | **CE-21** | C / F5 | `refcheck.py` and `findings.py` print 446 bytes green inside every lint | `S` | `xs` | none | §6.3 |
+| 22 | **CE-22** | D / F3 | Output at five times the input rate was a quarter of the session's weighted spend, and the record forms are the mechanism — **collides with the project's record policy; reported, not tasked** | *bimodal* | — | stated | §6.3 |
+
+**Rows 14 to 22 are the second run's** — [T-287](../tasks/T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md),
+2026-09-02, ranked within that run; §6.3 states them and §11 measures them.
 
 **CE-13's gain is bimodal, which is why it ranks above larger bands**: it saves nothing on most
 sessions and saves a whole session's runway on the one that would otherwise open a deck.
@@ -537,6 +549,141 @@ to the very section `CE-09` measures. *The row was written into `BRIEF.md` until
 `CE-05` moved that section out; the obligation is unchanged and the file is not.*
 
 ---
+
+### 6.3 The second run — what a session accumulates by working
+
+**[T-287](../tasks/T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md), 2026-09-02.** The
+rows `CE-14` to `CE-22` in the table above are this run's; §11 is how they were measured and what the
+measurement says on its own. The ranks continue the first run's numbering because `findings.py` reads
+one table, and they rank within this run only. **Every `Change` cell is a hypothesis** — §10.2's
+sentence is the standing verdict on this method's forecasts, and nothing here is exempt from it.
+
+#### CE-14 — Rules that bind only deck or release work are paid on every turn of every session
+
+| | |
+| :--- | :--- |
+| **Surface / Family** | A / F1 |
+| **Finding** | `CLAUDE.md` is 15,581 bytes. Its *rules that must survive* (2,556), *Voice* (540) and *Verifying* (1,568) bind deck work; the humanizer and corpus rules in *Publishing constraints* (part of 3,107) bind a release. About **4,500 bytes, 29%**, bind work that most sessions here never do, and the harness documents a mechanism for exactly this: `.claude/rules/*.md` with `paths:` front matter loads when a matching file is read, not at launch. The repository's tier model calls that tier 3 and does not use it |
+| **Change** | Two rule files scoped to the deck trees and to the release documents; the paragraphs deleted at the source. **Rule 6 stays**: a rule that fires when a deck is read cannot forbid reading the deck |
+| **Gain** | `L` on tier 1 (about 4,500 of 15,581); `M` on the start context (about 1,100 of 70,788 estimated tokens). Both stated because the second is what a session pays |
+| **Effort** | `s` |
+| **Risk** | stated — addressability: the desktop harness is not the one the document describes, and what loads is established by observation, never by a document's claim. The task measures first |
+| **Applies to** | `this project` |
+| **Controller** | `project`, with one `harness` question the task answers first |
+| **Source** | this audit; the harness's own documentation for the mechanism |
+
+#### CE-15 — One section of the tooling document is ten rules, and every pointer to it costs all ten
+
+| | |
+| :--- | :--- |
+| **Surface / Family** | B / F1 |
+| **Finding** | `tasks/TOOLING.md` §1 is **18,461 of the file's 26,408 bytes** and holds the gate order, the no-edit rule, `--docs`, the quiet line, the render workers, the bulk-edit rule, `lint.py`, `query.py`, the board question, `refcheck.py` and `findings.py`. The handoff pointed at `§1` for one rule and this session read all of it — 15% of everything the resume read from the project's own homes |
+| **Change** | Numbered subsections, one rule each; every `§1` pointer re-pointed |
+| **Gain** | `M` on the read path — a resume that needs one rule reads about a tenth of what it reads today |
+| **Effort** | `s` |
+| **Risk** | `none` — `refcheck.py` resolves `§n` pointers, so a missed one fails the lint |
+| **Applies to** | `this project` |
+| **Controller** | `project` |
+| **Source** | this audit |
+
+#### CE-16 — A session boundary costs about as much as thirty turns of carried context
+
+| | |
+| :--- | :--- |
+| **Surface / Family** | E / F5 |
+| **Finding** | From this session's transcript (§11.2): a new session pays its start context at the cache-write rate — 70,788 tokens, weighted ×2 — and its resume read path the same way, about 25,000 tokens more. That is roughly **190,000 weighted tokens per boundary**. Continuing instead costs the carried context at the read rate: at 140,000 tokens, about 14,000 weighted per turn, and about 7,000 more per turn than a fresh session would pay. **A restart pays back after about 27 turns at the smaller context.** The per-task rhythm — one session, one handoff, one task — pays a boundary per task, and B17 paid three |
+| **Change** | **A hypothesis with a collision.** Continue across a batch's tasks, compact between them, hand off at the batch. It collides with `REMEDIATION-ORDER.md` §4's rhythm, `AUDIT-METHOD.md`'s cycle-as-session-boundary, and the owner's handoff discipline — the ecoctx method's fourth refusal applies, so the child task measures one batch both ways and the owner decides |
+| **Gain** | `L` on a batch's total spend — **estimated from one session, with the weights stated once in §11.2** |
+| **Effort** | `m` — the measurement, not the change |
+| **Risk** | stated — what a compaction loses is a re-read later, and it is counted against the compaction in the task |
+| **Applies to** | `this project` |
+| **Controller** | `user` |
+| **Source** | this audit; the harness's cost page for the cache mechanics |
+
+#### CE-17 — Sixty skills are offered on every turn and five of them are this repository's
+
+| | |
+| :--- | :--- |
+| **Surface / Family** | A / F1 |
+| **Finding** | The catalogue this session received: **60 skills, 15,024 bytes of name and description, about 3,800 estimated tokens per turn**, 5.3% of the start context. Five serve this repository; 41 are installed by the desktop app in the user's roaming profile and 14 are the harness's built-ins. `CE-07` scoped the `~/.claude` plugins per project and reached none of these |
+| **Change** | Find whether the app's store scopes or disables per skill; disable what no project on the machine uses; record the boundary where it cannot |
+| **Gain** | `M` on the start context |
+| **Effort** | `xs` |
+| **Risk** | `none` |
+| **Applies to** | `this project`'s sessions |
+| **Controller** | `user` — the change lands outside the repository and no clone inherits it |
+| **Source** | this audit |
+
+#### CE-18 — The documents gate is four fifths one render
+
+| | |
+| :--- | :--- |
+| **Surface / Family** | E / F5 |
+| **Finding** | `check_all.py --docs` spent **22.5 of 27.6 s** (81.4%) in `figures.py`, which resolves the README's coverage account by running `check.py` on the reference deck. `T-285` §3 measured the same thing as 37.6 of 45 s an hour earlier on a slower machine and named it for this audit |
+| **Change** | Bind the account to what `check.py` reads rather than to a render, or skip that one binding under `--docs` with a printed reason. **L-152 bounds the hypothesis**: bound or deleted, never refreshed, so a cached figure is not a candidate |
+| **Gain** | none in tokens — the run prints one line either way; about 22 s per documentation commit |
+| **Effort** | `s` |
+| **Risk** | stated — a binding that stops being live |
+| **Applies to** | `this project` |
+| **Controller** | `project` |
+| **Source** | `T-285` §3, confirmed here |
+
+#### CE-19 — The deck gate's green default grew 72% and L-153 was not applied to it
+
+| | |
+| :--- | :--- |
+| **Surface / Family** | C / F5 |
+| **Finding** | `check.py` on the reference deck prints **29,980 bytes** green by default, against 17,391 on 2026-08-13 and **398** under `--quiet`. `T-286` gave four document tools the rule that quiet is the non-terminal default; the tool that prints most still needs the flag remembered, and `build.md` remembers it in one place |
+| **Change** | `quiet_wanted` as in the four tools; the self-test already asserts a red run is never swallowed |
+| **Gain** | `M` on surface C for any session that runs the gate by hand without the flag; `S` where `build.md` is followed |
+| **Effort** | `xs` |
+| **Risk** | `none` |
+| **Applies to** | `this project` |
+| **Controller** | `project` |
+| **Source** | this audit |
+
+#### CE-20 — Five memory-index entries duplicate a rule that has a home
+
+| | |
+| :--- | :--- |
+| **Surface / Family** | A / F2 |
+| **Finding** | The index is 47 entries, 9,014 bytes, mean 186 per line, under the harness's 200-line / 25 KB load limit. Five entries restate a rule that `CLAUDE.md` or the owner's global preferences already state: the publishing identity, the trailer rule, the cross-repository rule, the PowerShell command rule, the incoming-labels rule — about **930 bytes**, paid every turn twice over. `CE-10`'s mechanism, recurring: the memory was written before the rule got its home |
+| **Change** | Prune at the next consolidate pass; the *memory with a repository home is spent* entry is the test |
+| **Gain** | `S` |
+| **Effort** | `xs` |
+| **Risk** | `none` |
+| **Applies to** | `this project`'s sessions |
+| **Controller** | `user` |
+| **Source** | this audit |
+
+#### CE-21 — Two document tools still print their green account inside every lint
+
+| | |
+| :--- | :--- |
+| **Surface / Family** | C / F5 |
+| **Finding** | `refcheck.py` prints 384 bytes and `findings.py --check` 62 on a green run, inside `lint.py`'s 1,976. `T-286` §3 named both for this audit |
+| **Change** | L-153's one line |
+| **Gain** | `S` |
+| **Effort** | `xs` |
+| **Risk** | `none` |
+| **Applies to** | `this project` |
+| **Controller** | `project` |
+| **Source** | `T-286` §3 |
+
+#### CE-22 — The session's own writing is a quarter of what it pays, and the record forms are why
+
+| | |
+| :--- | :--- |
+| **Surface / Family** | D / F3 |
+| **Finding** | Output tokens weigh five times an input token. At the fourteenth call this session had written 22,020 of them — **25% of its weighted spend**, more than the whole carried context. The forms are the mechanism: a task's §3 runs 3–4 KB of decisions, a register row 2,186 bytes on average over 159 rows, a lesson 1.5–2 KB, a handoff 6–7 KB — and every one of them is read again by the next session as surface B |
+| **Change** | **None proposed here.** The forms are the project's settled policy — records are the durable homes, L-153's own argument that a report is read forever by an agent applies to them, and the F3 test is *does it decide anything future*, which most of a decisions section does. Reported for the owner as the ecoctx method's fourth refusal requires; the one lever that does not collide is the resume side: read the section a pointer names and not the file |
+| **Gain** | *bimodal* — bytes not written now against bytes not read later, and a decision not recorded against a decision re-litigated |
+| **Effort** | — |
+| **Risk** | stated — a shorter record costs a fact its only home |
+| **Applies to** | `this project` |
+| **Controller** | `project` — and the owner's, since it is policy |
+| **Source** | this audit |
+
 
 ## 7. Upstream — observed here, reported for their owner, implemented there
 
@@ -966,3 +1113,175 @@ unwatched *and* reports the record sentence beside it as stale — one silence a
 the two sentences the page is most careful about. The comparison had to invert: **every measured term
 must be written**, rather than every written numeral measured. That is **L-104**, and it is the part of
 this section that generalises beyond the one number.
+
+---
+
+## 11. The second run — what a session accumulates by working
+
+**[T-287](../tasks/T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md), measured
+2026-09-02 on the working tree at `807d2db`**, the commit that landed `T-285` and `T-286`, so the
+gate figures below are after those two cuts and count their saving once. The findings are `CE-14` to
+`CE-22` in §6's table and §6.3. **Inventory figures here are measurements; every gain in §6.3 is a
+band.** The conversion is the one §0 states, bytes ÷ 4, labelled an estimate.
+
+| | |
+| :--- | :--- |
+| **Representative unit** | the resume of this session itself — a handoff read to its first edit — and B17's three tasks plus this one for write volume; chosen before the measurement, as the method requires |
+| **Instruments** | three throwaway scripts outside the repository: sizes off the filesystem; every gate run in sequence on the frozen tree with its output captured to a file and the file measured; and the harness's own transcript of this session, read for the token fields of every API call |
+| **Grade C, decided** | the transcript is **an instrument for the session it reads and nothing wider**, and every figure it yields says so — the task's first open question, its recommendation adopted |
+| **Weights, stated once** | an input token 1; a cache read 0.1; a cache write 2; an output token 5 — the harness's `explain-usage` skill's, applied uniformly. *Weighted* below always means these |
+
+### 11.1 The inventories
+
+**A — the load path.** The first API call of this session carried **70,788 tokens** before any work:
+39,315 read from a cache shared with other sessions — the system prompt and the tool schemas, the
+harness's — and 31,471 written fresh for this session. Of the fresh part, the repository's tier 1 is
+**30,084 bytes, about 7,500 tokens**: `CLAUDE.md` 15,581, the owner's global preferences 5,489, the
+memory index 9,014. The skill catalogue is 15,024 bytes, about 3,800 tokens (`CE-17`). The remaining
+20,000 or so are environment, git state, the invoked skill's text and the harness's own reminders,
+and cannot be decomposed from outside the harness. **So the repository controls about a tenth of the
+start context, and every further tier-1 cut has that tenth as its ceiling.** This is a result rather
+than a finding: it says what the first run's remedies were bounded by while they were being banded.
+
+**B — the read path.** This resume opened sixteen files and read **123,684 of their 306,038 bytes**
+before its first edit, about 30,900 estimated tokens. By owner: the handoff skill's own spine, flow
+and config 35,311 (28.5%); the audit method's skill and first reference 17,443 (14.1%); the project's
+homes 70,930 (57.4%), of which `TOOLING.md` §1 was 18,461 (`CE-15`), the register's §0–§2 and §6
+14,748, the task 8,014, `AUDIT-METHOD.md` 6,438, the handoff 6,197. The harness capped one result —
+the 26,526-byte spine arrived as a 2 KB preview and a file — so what entered was nearer 99,000 bytes,
+and the transcript agrees: the context grew from 70,788 to 97,762 tokens across the eight calls that
+did the reading.
+
+**C — tool output on a green run**, the frozen tree, in sequence, stdout and stderr together.
+
+| Command | Bytes | Seconds | Note |
+| :--- | ---: | ---: | :--- |
+| `python tools/tasks/lint.py` | 1,976 | 4.1 | `T-286` measured 1,969; the difference is a date |
+| `python tools/check_all.py` | **89** | 226 | 8,233 on 2026-08-13; the full gate, one line |
+| `python tools/check_all.py --docs` | 129 | 27.7 | 7 ran, 35 skipped with a reason |
+| `python tools/check_all.py --docs --report` | 27,537 | 27.8 | `figures.py` 22.5 s of it (`CE-18`) |
+| `python tools/docs/figures.py` / `--report` | 131 / 3,547 | 21.6 | |
+| `python tools/docs/refcheck.py` | 384 | 2.0 | `CE-21` |
+| `python tools/docs/findings.py --check` / bare | 62 / 1,332 | 0.1 | `CE-21` |
+| `python tools/docs/chronology.py` | 94 | 0.1 | |
+| `python tools/docs/cycles.py` | 5,931 | 0.1 | **exit 1** while `T-284` is open; not a gate |
+| `python tools/tasks/query.py list --open` / `context T-287` | 1,909 / 876 | 0.2 | 18 open tasks |
+| `python tools/deck/check.py examples/reference-deck.html` / `--quiet` | **29,980** / 398 | 18.7 | 17,391 on 2026-08-13 (`CE-19`) |
+| `python tools/examples/seed_defects.py --check` | 1,200 | 0.1 | |
+
+**`T-286`'s prediction held on every tool it touched**: the four green runs that printed 74 KB across
+B17 print 89, 129, 131 and 94 bytes now. The full gate took 226 s on this machine against 211 and
+332 s in the previous session, which is the machine and not the tree.
+
+**D — write volume.** Nine commits since 2026-08-31 carried 4,920 bytes of message and +1,680 / −292
+lines; the most-churned files were `check_all.py` (372 lines) and `chronology.py` (311). B17's task
+files closed at 9,763, 9,740 and 11,908 bytes; `T-285` and `T-286` at 12,948 and 11,473; this task
+opened at 8,014. Three handoffs in two days: 6,170, 7,367 and 6,197 bytes. The board is 70,662 bytes
+over 287 tasks, median 11,721; the pre-release register is 353,983 bytes, 288,021 of it §3's 159 rows
+at a mean of 2,186; all markdown in the tree is 651 files and 7.1 MB. **The first run's negative
+result stands**: closed records cost nothing until cited. What this surface costs is `CE-22`.
+
+**E — workflow.** The gate split is right and now quiet; the docs mode is one render (`CE-18`); the
+session rhythm is `CE-16`; and the harness offers three mechanisms this project does not use — path-
+scoped rules (`CE-14`), subagents for read-heavy work, and a `PostToolUse` hook that rewrites a
+tool's output before it enters context. The last two are screened in §11.3.
+
+### 11.2 Why it grows — the per-turn model, from one transcript
+
+Fourteen API calls into this session the context stood at 137,904 tokens. Summed over those calls:
+1,095 input, 98,507 cache-written, 1,288,603 cache-read, 22,020 output. Weighted: **fresh content
+198,109 (45%), the session's own output 110,100 (25%), carried context 128,860 (30%)**, 437,069 in
+all. The per-call growth was between 1,063 and 13,341 tokens, and the two largest steps were a batch
+of four document reads and one fetched documentation page.
+
+**Every token that enters the context at call *t* of an *N*-call session is paid about 2 + 0.1 × (N − t)
+times its size.** Written at 2 once, read at 0.1 on every later call. So the bytes that enter
+earliest cost most: at forty calls, a read at call 5 costs 5.5 times its size and one at call 35
+costs 2.5. **The resume read path compounds like tier 1 for the rest of the session**, which is why a
+30,000-token resume is the dearest thing a session does after its own writing, and why `CE-15`'s
+read-path saving is banded on what a session pays and not on file size. The carried term overtakes
+the fresh term once the context exceeds about twenty times what a call adds — for this session, at
+about the fourteenth call. **A cache miss** — an hour idle on a subscription, a plugin toggled, a tool
+list rebuilt — re-writes the whole context at 2, which at 130,000 tokens costs what twenty calls of
+carrying it cost. The *exponential* the owner felt is a quadratic: per-call cost is linear in the
+context, and the sum over a session is not.
+
+**What the instrument cannot say**: it reads one session, it attributes a call's fresh tokens to the
+tool results before it in proportion to their size, and it does not see thinking separately from
+output. A first version counted each API call once per content block and reported 36 calls for 14;
+the dedup is by message id, and the figures above are after it.
+
+### 11.3 The catalogue, second pass — search record and screening
+
+**Three axes, as the method names them, thirteen searches and three page fetches.** Axis **A**
+(ideas): rounds of four, one and one searches; the third added nothing the first two had not, so A
+stopped there. Axis **B** (named tools, by name): five rounds, each adding — `rtk`, `context-mode`,
+`ccusage`; `headroom`, `caveman`, `CBM`; `pxpipe`, `ponytail`, `codebase-memory-mcp`; `mem0`,
+`serena`; `squeez`, `graphify` — **and it was stopped while still adding**, at the session's budget,
+which is stated here rather than dressed as saturation. Axis **C** (the harness's own documentation):
+the context-window, costs and memory pages fetched whole, and two searches; five rounds, the fifth
+adding the compaction layers. **Named tools were looked for by name** on axis B throughout.
+
+**Screened**, against the constraints this project has already settled:
+
+| Technique | Verdict | Why |
+| :--- | :--- | :--- |
+| Path-scoped `.claude/rules/` | **adopted** as `CE-14` | the harness documents it; the repository's tier model asked for it |
+| Quiet by `isatty` on every tool | adopted, extended to the deck gate as `CE-19` | already the house rule, L-153 |
+| Compaction between tasks instead of a session boundary | **deferred** to `CE-16`'s measurement | collides with a settled rhythm; the owner decides on numbers |
+| Subagents for read-heavy exploration | deferred | this run found no read that a summary would have served — the resume needs the rule, not a summary of it; re-screen when a task's read path is a deck specification |
+| `PostToolUse` hook rewriting tool output | **rejected** | a hook that edits what a gate printed collides with L-05's *say which half you checked*; the tools already decide their own green output, which is the same saving with the tool as the owner |
+| Shell-output compressors (`rtk`, `headroom`, `squeez`) | rejected | a proxy between the gate and the reader is a second author of the evidence; L-153 solved the case that mattered at the source |
+| Rendering context as images (`pxpipe`) | rejected | lossy on exact strings by its own README, and every figure here is an exact string |
+| Output-style compressors (`caveman`, `ponytail`) | rejected | the record forms are policy (`CE-22`); the reply style is already the owner's structured style |
+| Code-graph and memory servers (`CBM`, `codebase-memory-mcp`, `mem0`, `serena`) | rejected | vendor figures measure compression against whole-repo grep; this tree's questions are answered by its own tools in under 2 KB |
+| `ENABLE_TOOL_SEARCH`, tool deferral | accepted as already in force | this session's Notion tools arrived as names only; the browser and artifact schemas did not, and that is the harness's |
+| `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`, `/autocompact` | deferred | no session here has compacted; `CE-16`'s task is where a threshold would be chosen |
+| Block-level HTML comments in `CLAUDE.md` are stripped before injection | noted, not adopted | maintainer notes at zero cost; the project keeps its notes as rules with reasons, and a comment nobody loads is a fact with no home |
+| Move instructions from `CLAUDE.md` to skills | rejected | the plugin's skill is the adopter's, not this repository's; `CE-14` is the same move by a mechanism that fires on the tree |
+
+**The research changed two findings**: `CE-14` exists because the harness's mechanism was found on
+axis C, and `CE-16`'s arithmetic uses the harness's cache lifetimes. Nothing on axis B survived
+screening, and that is a result.
+
+### 11.4 Upstream — observed here, for their owners
+
+Each entry says whether the owner's backlog was read, and each carries this project's labels, not
+theirs.
+
+- **The handoff skill** (the owner's `Handoff`). The always-loaded spine is 26,526 bytes and the
+  resume flow 6,219; a resume pays 35 KB for about 3 KB of steps it follows. The skill already loads
+  spine-plus-one-flow (P6); the spine is the remaining weight. **Backlog not read.** By the owner's
+  cross-repository rule this is fix-or-drop, never a report: a candidate pull request from a session
+  in that repository, measured there first.
+- **The ecoctx skill** (the owner's). The method cost this run 31 KB across its body and two
+  references, loaded one at a time as designed; its instrument for surface A cannot see inside the
+  harness's shared prefix, and its search record cannot be made complete — both stated in the skill.
+  Two things it could add: the transcript instrument as a named grade, and the per-byte cost line
+  in §11.2, which is the mechanism behind its own *only tier 1 gets a budget* rule. **Backlog not
+  read.**
+- **The harness.** Two of three documentation pages fetched with a prompt asking for a list came
+  back whole, at 10–12 thousand tokens each; the third, larger still, was capped to a 2 KB preview
+  and a file, which saved more than any finding here. The cap is the right default and the prompt is
+  not honoured on that site; this project has no channel for it and none is proposed.
+
+### 11.5 Phase 2 — recorded after the remedies exist
+
+*Not yet run.* [T-294](../tasks/T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md)
+is raised and blocked on the six children; it grades every band above and the model in §11.2, and
+names at least one prediction the measurement refused. §10.2's sentence stands until then.
+
+### 11.6 Byproducts, second run
+
+Recorded, never ranked.
+
+- `python tools/docs/cycles.py` exits 1 on every run while `T-284` is open, printing 5,931 bytes —
+  known, and the reason is in `check_all.py`.
+- `docs/PRE-RELEASE-AUDIT.md` §3 is 288,021 bytes over 159 rows; nothing reads it whole, and the
+  task's own statement that a row is one or two kilobytes was right about the mean and silent about
+  the 5,732-byte maximum.
+- The full gate ran 226 s here against 211 and 332 s the previous day on the same tree — the
+  machine's drift is larger than any tool's share, so a timing is read against its own run's ranking.
+- The transcript instrument's first version over-counted calls by content block; a scan owes a
+  known-good case before its output is a finding, which the method already says and this run
+  re-learned.
