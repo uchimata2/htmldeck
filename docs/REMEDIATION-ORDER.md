@@ -25,7 +25,7 @@ directly, which outranks a standing authority rather than needing one. **One joi
 which is a count of what the triage put on the board and reads as a count of what this file holds.
 The sentence below forbids exactly that, and the title was the one place nobody applied it.*
 
-**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 to B11 landed 2026-08-29, B12 to B16 on 2026-08-30, B17 on 2026-09-01, B18 and B19 on 2026-09-02.**
+**A batch keeps its membership whether or not its tasks are closed — this is a schedule, not a board.** How many are still open is [`../tasks/README.md`](../tasks/README.md)'s answer and never this file's, so nothing here carries a count that decays. **B1 to B11 landed 2026-08-29, B12 to B16 on 2026-08-30, B17 on 2026-09-01, and B18 to B21 on 2026-09-02.**
 
 ---
 
