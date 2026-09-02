@@ -283,7 +283,9 @@ owner ruled on 2026-08-29 that a severity obliges a disposition rather than a fi
 what made 129 findings affordable as 33 tasks. The same ruling made 90% of this column
 unfalsifiable. **A per-finding estimate is worth writing only where a per-finding record will answer
 it**, and this run wrote the one and then chose not to keep the other. *For the next audit: cost the
-unit that will be worked, not the unit that is found.*
+unit that will be worked, not the unit that is found.* **The generic rule, with §5.3's half of it,
+is [L-163](lessons/L-163.md)**: a ruling that changes the grain of a record re-aims everything
+downstream that reads it.
 
 ### 5.3 Severity ordered the work, and the order document says it does not
 
