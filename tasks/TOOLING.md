@@ -111,10 +111,12 @@ back to the default rather than failing, because a typo in a knob must not decid
 `lint.py` is the checks a task edit owes: it stops at the first failure and exits with that
 failure's code, and it is `tracker_lint` in [`../.handoff/config.md`](../.handoff/config.md).
 **It is also the only name tier 1 gives**: [`../CLAUDE.md`](../CLAUDE.md) enumerated the checkers
-until 2026-08-14 and the list went stale both times the set changed, so it points here and this
-section carries the count.
-`query.py` is the two questions: everything after the command name goes to taskmd untouched, and it
-refuses `index` and `check` by name because `lint.py` owns those. Both find the installed skill
+until 2026-08-14 and the list went stale both times the set changed, so it points here — and this
+section carries no count either, because a fifth step was added on 2026-09-02 and the number was
+wrong in four documents at once. **The tool counts its own steps and prints them**, which is the
+only place it cannot decay.
+`query.py` is the questions, `list` and `context` passed to taskmd untouched and `next` answered
+locally, and it refuses `index` and `check` by name because `lint.py` owns those. Both find the installed skill
 through one locator, in `lint.py`, so the incantation has one home rather than one per document
 (**L-13**).
 
