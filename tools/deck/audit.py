@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 """Run the mechanical half of `docs/EVALUATION.md`'s pipeline over a deck.
 
-Stage 1 is the **auto gate** — static analysis of the file. Stage 2 is the part of the **render
-gate** a measurement can answer: the design-unit floor, continuous motion, the reflow view, tab
-order, target size, and the 320 CSS px reflow requirement.
+Stage 1 is the **auto gate** — every clause the markup alone decides, which is what
+`check.static_rows` composes. Stage 2 is the part of the **render gate** a measurement can answer: the
+design-unit floor, continuous motion, the reflow view, tab order, target size, and the 320 CSS px
+reflow requirement.
+
+**The two stage names are historical and are not the ruleset's `auto` / `render` columns.** That column says what kind of
+instrument a rule wants; the stage says whether answering it needs a browser. Many `auto` rules
+are decided only by a rendered measurement and a few `render` rules need none, so the partition
+that decides a run is `check.static_rows` and `check.NOT_STATIC` — EVALUATION.md §2, `PR-50`.
 
 **This is necessary and nowhere near sufficient, and it says so.** Validating the rubric against a
 seeded-defect deck showed that **five of the ten evaluation dimensions are invisible to any static

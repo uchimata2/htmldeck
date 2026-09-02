@@ -119,6 +119,7 @@ comes here.
 | [L-148](lessons/L-148.md) | A fix applied to a generated file has a half-life, and the gate that finds it is the next rebuild | Evidence and verification |
 | [L-149](lessons/L-149.md) | A container answers with everything nested in it, including documents it only cites | Evidence and verification |
 | [L-150](lessons/L-150.md) | A reported impossibility can be a property of the reporter's instrument | Evidence and verification |
+| [L-155](lessons/L-155.md) | A resolver proves an id exists, never that it is unique, so two sections numbered the same are green in both directions | Evidence and verification |
 
 ### Tooling
 

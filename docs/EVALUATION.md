@@ -33,9 +33,15 @@ failure into a score is how a deck ships with a wrong number on the title slide 
 
 | | Gate | Score |
 | :--- | :--- | :--- |
-| Which rules | 117 `hard` | 41 `default`, 6 `guidance`, and the dimensions in §3–§4 |
+| Which rules | every `hard` rule | every `default` and `guidance` rule, and the dimensions in §3–§4 |
 | Result | pass / fail, per rule ID | 0–4 per dimension |
 | On failure | The deck is defective. Fix before scoring is meaningful. | A finding with a severity, entering the loop |
+
+**How many rules are in each column is derived, never written here** — `python tools/deck/ruleset.py
+--counts` prints the partition and the two totals. The figures that used to sit in that row went
+stale and read as maintained because one figure beside them was; [T-236](../tasks/T-236-tier-1-and-the-brief-against-what-they-measure.md)
+deleted the same document's other set on 2026-09-01 rather than re-counting it, and this row is the
+rest of that decision.
 
 **A `hard` rule cited in a dimension's rule list is context for the anchor, not a scoring input.**
 §3 and §4 cite `DS-nnn` IDs so a scorer knows what the anchor is talking about — S1's anchors cite
@@ -57,8 +63,11 @@ python tools/deck/ruleset.py --gates
 | `judge` | **The hard-judge checklist**, run inside the fresh-context pass (§8.1) |
 | `Check: —` | Nobody. These bind whoever builds a check, not the deck |
 
-**The checklist exists because twenty-five `hard` rules were declared gates and gated by nothing.**
-*Twenty-six now — DS-107 moved to `Check: —` on 2026-08-09, its subject being the checker rather
+**The checklist exists because `hard` rules were being declared gates and gated by nothing.**
+**Its size is derived, never written here** — the command above prints the set and counts it, and
+the three figures that used to stand in this document disagreed with each other as well as with the
+ruleset.
+*The set moves — DS-107 moved to `Check: —` on 2026-08-09, its subject being the checker rather
 than the deck; DS-230 arrived with T-016's editorial split rule ([T-052](../tasks/T-052-two-hard-judge-failures-in-the-reference-deck.md)); and DS-042 joined on 2026-08-17, when
 [T-119](../tasks/T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) found it
 declared a gate's and undecidable by any gate — which is this checklist's own founding case, arriving
@@ -126,11 +135,22 @@ Ordering is a cost decision. **Never spend a judgement pass on a deck with exter
 
 | # | Stage | Covers | Cost |
 | :--- | :--- | :--- | :--- |
-| 1 | **Auto gate** | 68 `auto` rules — static analysis of the file | Near zero. Runs first, always. |
-| 2 | **Render gate** | 45 `render` rules — measurement and a look at the rendered deck, **with motion pinned off** (DS-221) | One render, several measurements |
+| 1 | **Auto gate** | Every clause the **markup alone** decides — `check.static_rows` is the definition, and it is composed rather than listed | Near zero. Runs first, always. |
+| 2 | **Render gate** | Every clause that needs the deck **rendered** — measurement and a look, **with motion pinned off** (DS-221). `check.NOT_STATIC` names the rest, with a reason each | One render, several measurements |
 | 3 | **Per-slide score, by the author** | S3, S5, S6 (§3), per slide | Scales with slide count, but the author already holds the context |
 | 4 | **The judgement pass, in fresh context** | S1, S2, S4 across every slide, and D1–D4 (§4) | One pass over the finished artifact |
 | 5 | **Fix and re-enter** | §5 | Bounded by the iteration cap |
+
+**The two stages are named by what they need, not by the ruleset's `Check` column, and the two are
+different partitions.** **The stage names are historical**: *auto gate* and *render gate* are what
+the whole tree calls them, and they do **not** name the `auto` and `render` sets. `Check` says what kind of instrument a rule wants; the stage says whether
+answering it requires a browser. Many rules labelled `auto` are decided only by a rendered
+measurement, and a few labelled `render` need no browser at all — the reading and its date are
+`PR-50` in [`PRE-RELEASE-AUDIT.md`](PRE-RELEASE-AUDIT.md) §3. [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md)'s
+preamble already rules this way about `Reach` — *a rule checked in an unexpected stage is still
+`yes`* — and the argument reaches `Check` unchanged. The split is `check.static_rows` and
+`check.NOT_STATIC`, derived when the gate runs, and `check.py`'s self-test fails the run over a
+producer in neither.
 
 **Stages 1 and 2 are one command**, built by
 [T-005](../tasks/T-005-build-check-the-gate-the-deck-must-pass.md) on 2026-08-09:
@@ -164,8 +184,12 @@ separately defined.**
 
 > **The rule list beside each dimension is the rule's instrument, so a rule missing from every list
 > is a rule nothing applies.** A `hard` rule falls through to §1.1's checklist, and a gated rule to
-> `check.py`; a `default` or `guidance` rule that is `judge` has **only** these lists, and if no list
-> names it, nothing in this project ever will.
+> `check.py`; a `default` or `guidance` rule that is `judge` **and that this rubric scores** has
+> **only** these lists, and if no list names it, nothing here will ever score it. **The test is what
+> this document owns, not what the project owns** — three such rules sit outside it and are owned
+> elsewhere: DS-212 and DS-213 by [`pipeline.md`](../skills/htmldeck/references/pipeline.md), DS-234
+> by [`critique.md`](../skills/htmldeck/references/critique.md). Read as a project-wide claim, the
+> sentence asks for three list entries that would duplicate an instrument already in the tree.
 > [T-119](../tasks/T-119-audit-the-ruleset-for-rules-that-cost-more-than-they-return.md) found
 > **thirteen** in that state on 2026-08-17 and added them above — DS-022, DS-025, DS-029 and DS-038 to
 > S5, DS-083 and DS-094 to DS-098 to S1, DS-169, DS-170 and DS-206 to S4, and DS-213 to the pipeline
@@ -387,7 +411,112 @@ reused, so a component defect caught in batch one is fixed once instead of in tw
 
 ---
 
-## 6.3 Figures no gate can take, and the machine each was taken on
+## 7. Validating the rubric itself
+
+**A rubric that has never been tested is a rubric that passes everything.** This project has already
+paid for that lesson once: a scan measuring one quality dimension under-reported by 15× and was
+believed because it did not look like a tool.
+
+**Requirement: a seeded-defect deck with one known defect per dimension at score 0.** The rubric must
+find each and score it 0 or 1. **If it scores a seeded 0 as a 2, the anchors are wrong** — fix the
+anchors, not the deck.
+
+Re-run whenever a dimension or an anchor changes. It is the only evidence that the loop's numbers
+mean anything.
+
+---
+
+## 8. Decisions taken
+
+Three questions this document held open. **All three are now settled** — the two below by the owner
+on 2026-08-06 ([T-026](../tasks/T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md)),
+the third against measurement. They are rulings, not recommendations; a mode that departs from one
+is defective, not merely unusual.
+
+### 8.1 Who scores — the author, plus one fresh-context judgement pass
+
+**Ruling.** The author scores **S3, S5 and S6** per slide against the anchors. **One fresh-context
+pass** scores the five dimensions no mechanical check can reach — **S1, S2 and S4 across every
+slide, and D1 to D4** — reading the finished artifact without the build history.
+
+**Cost accepted: 2 passes per measurement round** — 4 for a deck like T-024's, which reached PASS in
+two rounds; 6 at the cap of 3. The alternatives were 0 passes (author scores everything) and roughly
+25 passes for T-024's deck at a fresh-context pass per slide.
+
+**The hard-judge checklist (§1.1) runs inside this pass and does not change that cost.** It is
+one yes/no judgement per rule the command in §1.1 prints, over a deck the pass already reads end to
+end, taken **before** any
+scoring so a `hard` failure is a defect rather than a number. Giving it a pass of its own was
+rejected for the same reason §8.1 rejects a pass per slide: the second read buys nothing the first
+cannot see.
+
+**How the five judgement-only dimensions are covered.** They are the whole point of the ruling.
+[T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.2 found that five of
+ten dimensions — **S1 Claim, S2 Evidence, S4 Density, D1 Spine, D4 Consistency** — are invisible to
+every static and measured check, so whoever scores *them* is the quality mechanism. All five are
+assigned to the fresh-context pass and none is left with the author. The evidence for putting them
+there is in the same task: **D4 scored 4 only after counting, and on reading alone it was a 2** —
+the author had read past the contradiction repeatedly.
+
+**Why one pass and not twelve.** S1, S2 and S4 are per-slide dimensions, but they are scored in a
+single read of the whole deck rather than twelve isolated ones. That is not a cost compromise: S4's
+"a first-time reader needs this" and S2's "one side argued and the other not" are both judgements
+about the deck a reader actually meets, and a per-slide pass in isolated context cannot make them.
+D1 and D4 require the whole deck by definition.
+
+**The threshold in §5 is unchanged and combines both passes.** A slide's 24 points come from the
+author's S3/S5/S6 and the judgement pass's S1/S2/S4; the per-dimension floor applies across both.
+
+**The known limit.** Fresh context removes the build history, not the author. Where the same model
+scores its own work without that history, this ruling buys independence of *memory*, not of
+judgement — a real reduction in the failure T-024 exhibited, and not the same thing as review by
+another party.
+
+### 8.2 Does the score reach the user — no
+
+**Ruling.** The report states the **outcome** (PASS · CAP · STALL · OSCILLATION) and **every
+finding**. **The numbers are never shown** — not per-slide totals, not the whole-deck total, not
+per-dimension scores.
+
+**What the user sees instead.** The outcome, which is the decision the score exists to make; every
+finding with its severity and the rule ID or dimension it came from; and, on a PASS, what was fixed
+plus every remaining `Note`. A dimension at 0 or 1 reaches the user **as a finding naming the
+dimension** (§5 makes it one regardless of the total) — so the actionable half survives without the
+arithmetic.
+
+**Cost accepted: none in passes.** The scoring runs either way; this governs only what is printed.
+The cost is opacity — a user cannot see how close to threshold a deck sits, and cannot watch it
+converge round by round.
+
+**Why.** §0 of this document says the score is a stopping rule, not a quality claim. T-024's deck
+passed at 18–22 per slide and 16/16, and those numbers imply a precision the rubric does not have;
+its **findings**, by contrast, were all actionable. A visible number also invites fixes aimed at the
+number rather than at the deck.
+
+### 8.3 Is the cap 2 or 3 — 3
+
+**Ruling: the cap stays at 3, counting measurement rounds.** Closed 2026-08-06 by
+[T-025](../tasks/T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md), **against a
+real 12-slide deck rather than in the abstract** — this one was settled by measurement, not by the
+owner.
+
+[T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.1 reached PASS in
+**two measurement rounds** — round 1 found 23 defects across contrast, spill, clipping, the type
+floor and the reflow view; round 2 found one, a cross-slide figure disagreement. The measured need
+was 2, and a cap set at the measured need leaves a first-draft deck no margin at all.
+
+**What the evidence settles is that 3 is not *low*** — the question §6.2 answered — rather than that
+3 is exactly right. **One deck, one topic, one author.** A deck that needs a fourth round is a deck
+the loop should hand back, and that claim has been tested once.
+
+---
+
+## 9. Figures no gate can take, and the machine each was taken on
+
+*Numbered outside §6 on purpose. It was `## 6.3` beside §6's own `### 6.3`, so the document had two
+sections of that number and citations to both — `PR-33`, and `refcheck.py` cannot see it, because
+both ids resolve. This section is not a step of the loop, so `6.5` would have been the same
+mistake one append later; a number of its own is what stops it recurring.*
 
 **Everything else in this document is decided by something that runs here. This section is for the
 figures that are not**, and there is one so far. It is a table rather than a sentence because a
@@ -451,102 +580,3 @@ renderer — the facts that make the number mean something. Not a hostname, a us
 account. `CLAUDE.md`'s publishing rule keeps machine data out of this repository and this is how the
 two hold together; `fps.py` gathers nothing else, so the rule is kept by what is collected rather
 than by what is remembered.
-
----
-
-## 7. Validating the rubric itself
-
-**A rubric that has never been tested is a rubric that passes everything.** This project has already
-paid for that lesson once: a scan measuring one quality dimension under-reported by 15× and was
-believed because it did not look like a tool.
-
-**Requirement: a seeded-defect deck with one known defect per dimension at score 0.** The rubric must
-find each and score it 0 or 1. **If it scores a seeded 0 as a 2, the anchors are wrong** — fix the
-anchors, not the deck.
-
-Re-run whenever a dimension or an anchor changes. It is the only evidence that the loop's numbers
-mean anything.
-
----
-
-## 8. Decisions taken
-
-Three questions this document held open. **All three are now settled** — the two below by the owner
-on 2026-08-06 ([T-026](../tasks/T-026-settle-who-scores-a-deck-and-whether-the-score-is-shown.md)),
-the third against measurement. They are rulings, not recommendations; a mode that departs from one
-is defective, not merely unusual.
-
-### 8.1 Who scores — the author, plus one fresh-context judgement pass
-
-**Ruling.** The author scores **S3, S5 and S6** per slide against the anchors. **One fresh-context
-pass** scores the five dimensions no mechanical check can reach — **S1, S2 and S4 across every
-slide, and D1 to D4** — reading the finished artifact without the build history.
-
-**Cost accepted: 2 passes per measurement round** — 4 for a deck like T-024's, which reached PASS in
-two rounds; 6 at the cap of 3. The alternatives were 0 passes (author scores everything) and roughly
-25 passes for T-024's deck at a fresh-context pass per slide.
-
-**The hard-judge checklist (§1.1) runs inside this pass and does not change that cost.** It is
-twenty-four yes/no judgements over a deck the pass already reads end to end, taken **before** any
-scoring so a `hard` failure is a defect rather than a number. Giving it a pass of its own was
-rejected for the same reason §8.1 rejects a pass per slide: the second read buys nothing the first
-cannot see.
-
-**How the five judgement-only dimensions are covered.** They are the whole point of the ruling.
-[T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.2 found that five of
-ten dimensions — **S1 Claim, S2 Evidence, S4 Density, D1 Spine, D4 Consistency** — are invisible to
-every static and measured check, so whoever scores *them* is the quality mechanism. All five are
-assigned to the fresh-context pass and none is left with the author. The evidence for putting them
-there is in the same task: **D4 scored 4 only after counting, and on reading alone it was a 2** —
-the author had read past the contradiction repeatedly.
-
-**Why one pass and not twelve.** S1, S2 and S4 are per-slide dimensions, but they are scored in a
-single read of the whole deck rather than twelve isolated ones. That is not a cost compromise: S4's
-"a first-time reader needs this" and S2's "one side argued and the other not" are both judgements
-about the deck a reader actually meets, and a per-slide pass in isolated context cannot make them.
-D1 and D4 require the whole deck by definition.
-
-**The threshold in §5 is unchanged and combines both passes.** A slide's 24 points come from the
-author's S3/S5/S6 and the judgement pass's S1/S2/S4; the per-dimension floor applies across both.
-
-**The known limit.** Fresh context removes the build history, not the author. Where the same model
-scores its own work without that history, this ruling buys independence of *memory*, not of
-judgement — a real reduction in the failure T-024 exhibited, and not the same thing as review by
-another party.
-
-### 8.2 Does the score reach the user — no
-
-**Ruling.** The report states the **outcome** (PASS · CAP · STALL · OSCILLATION) and **every
-finding**. **The numbers are never shown** — not per-slide totals, not the whole-deck total, not
-per-dimension scores.
-
-**What the user sees instead.** The outcome, which is the decision the score exists to make; every
-finding with its severity and the rule ID or dimension it came from; and, on a PASS, what was fixed
-plus every remaining `Note`. A dimension at 0 or 1 reaches the user **as a finding naming the
-dimension** (§5 makes it one regardless of the total) — so the actionable half survives without the
-arithmetic.
-
-**Cost accepted: none in passes.** The scoring runs either way; this governs only what is printed.
-The cost is opacity — a user cannot see how close to threshold a deck sits, and cannot watch it
-converge round by round.
-
-**Why.** §0 of this document says the score is a stopping rule, not a quality claim. T-024's deck
-passed at 18–22 per slide and 16/16, and those numbers imply a precision the rubric does not have;
-its **findings**, by contrast, were all actionable. A visible number also invites fixes aimed at the
-number rather than at the deck.
-
-### 8.3 Is the cap 2 or 3 — 3
-
-**Ruling: the cap stays at 3, counting measurement rounds.** Closed 2026-08-06 by
-[T-025](../tasks/T-025-reconcile-the-thirteen-ruleset-findings-from-the-reference-deck.md), **against a
-real 12-slide deck rather than in the abstract** — this one was settled by measurement, not by the
-owner.
-
-[T-024](../tasks/T-024-build-the-reference-deck-and-validate-the-ruleset.md) §4.1 reached PASS in
-**two measurement rounds** — round 1 found 23 defects across contrast, spill, clipping, the type
-floor and the reflow view; round 2 found one, a cross-slide figure disagreement. The measured need
-was 2, and a cap set at the measured need leaves a first-draft deck no margin at all.
-
-**What the evidence settles is that 3 is not *low*** — the question §6.2 answered — rather than that
-3 is exactly right. **One deck, one topic, one author.** A deck that needs a fourth round is a deck
-the loop should hand back, and that claim has been tested once.

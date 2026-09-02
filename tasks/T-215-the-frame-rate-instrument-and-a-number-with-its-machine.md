@@ -184,7 +184,7 @@ can never again be read as a loaded deck holding its frame rate when it is an id
 **Outputs produced**
 - [`tools/deck/fps.py`](../tools/deck/fps.py) — the instrument, standard library only (**L-07**)
 - [`tools/check_all.py`](../tools/check_all.py) — the `NOT_RUN` entry saying what it is instead
-- [`docs/EVALUATION.md`](../docs/EVALUATION.md) §6.3 — the figure's home, one row per measurement
+- [`docs/EVALUATION.md`](../docs/EVALUATION.md) §9 — the figure's home, one row per measurement
 
 **Verification**
 - `fps.py` self-test passes: the overlay lands, the anchor is replaced rather than duplicated,
@@ -209,15 +209,15 @@ label was wrong in a way only a person watching the slide could see.
 
 **The figure:** **144.1 fps held against a 144 fps ceiling**, reference deck slide 8, one looping
 animation and five finished entrances, Windows 11 / Chrome 151 / 16 cores / RTX 4070, 2026-08-22.
-Recorded in [`docs/EVALUATION.md`](../docs/EVALUATION.md) §6.3, which takes a row per machine.
+Recorded in [`docs/EVALUATION.md`](../docs/EVALUATION.md) §9, which takes a row per machine.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Frame rate held on a real 12-slide deck, heaviest slide, **number and machine stated together** | met | **144.1 held against a 144 ceiling**, reference deck slide 8, 1 looping + 5 entry, on Windows 11 / Chrome 151 / 16 cores / RTX 4070. `docs/EVALUATION.md` §6.3. Took three runs, and the first two were the instrument's fault |
+| Frame rate held on a real 12-slide deck, heaviest slide, **number and machine stated together** | met | **144.1 held against a 144 ceiling**, reference deck slide 8, 1 looping + 5 entry, on Windows 11 / Chrome 151 / 16 cores / RTX 4070. `docs/EVALUATION.md` §9. Took three runs, and the first two were the instrument's fault |
 | The instrument runs somewhere a person can repeat it, and what it needs is written down | met | `python tools/deck/fps.py <deck>`; the docstring states what it needs and why nothing here can substitute |
-| The figure's home takes a second row for a second machine without contradicting the first | met | `docs/EVALUATION.md` §6.3 — a table keyed by date, deck, slide and machine |
+| The figure's home takes a second row for a second machine without contradicting the first | met | `docs/EVALUATION.md` §9 — a table keyed by date, deck, slide and machine |
 | Nothing this task adds can fail a deck | met | `fps.py` is in `check_all.py`'s `NOT_RUN`, is called by no gate, and prints a measurement rather than a verdict |
 
 **Child fix tasks raised**
