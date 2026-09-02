@@ -127,6 +127,7 @@ comes here.
 | [L-157](lessons/L-157.md) | Where one step names two homes and only one of them has a proof, the unprovable half stops running and the proof stays green | Evidence and verification |
 | [L-159](lessons/L-159.md) | A finding that names its own test can still have been counted by a coarser one, and then its number is an over-count nobody re-derives | Evidence and verification |
 | [L-161](lessons/L-161.md) | A derived figure written into a document that is inside its own subject cannot converge, and the case that converges by accident is the dangerous one | Evidence and verification |
+| [L-162](lessons/L-162.md) | A note saying nothing uses a rule yet is falsified by the rule working, and no gate reads a comment | Evidence and verification |
 
 ### Tooling
 

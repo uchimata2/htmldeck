@@ -203,7 +203,8 @@ CYCLES = [
         # it was written. The rule was written before it had a subject, and the remediation gave it
         # one: it now carries most of this cycle's files. *This comment said "no record carries the
         # value today" until 2026-09-02, undated and in the present tense, and cycle 41 found it
-        # false by 68 - the rule's own success read as a standing fact. Do not paste the count back:
+        # false by 68 - the rule's own success read as a standing fact (**L-162**). Do not paste
+        # the count back:
         # `python tools/docs/cycles.py --cycle 7` is what answers it.*
         Task(state="closed", shipped_in=("unreleased",)),
     ], None),
