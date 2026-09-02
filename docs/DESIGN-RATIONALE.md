@@ -118,19 +118,25 @@ who cannot satisfy DS-102 honestly will reach for real research quoted from memo
 misremembered elasticity is a fabricated metric wearing a citation. The rule is stricter with the
 provision than without it.
 
-### 2.2 The two real use found — U-01 and U-02, and neither is resolved
+### 2.2 The two real use found — U-01 and U-02, both closed by shipped work
 
 **A third provenance, and it is the one the other two cannot reach.** §2's sixteen came from reading
 the corpus and §2.1's thirteen from building a deck against the ruleset. These two came from an
 **adopting project presenting a finished deck to its owner** — from a reader saying the deck did not
-serve them, on a build where every gate was green. Kept in their own subsection because the column
-above is *Resolution* and these have none: they are recorded so the next person to open DS-092 or
-DS-105 sees that the rule has a known cost, not so that a ruling can be inferred from the entry.
+serve them, on a build where every gate was green. Kept in their own subsection for **where they came
+from**, not for being open: the next person to open DS-092 or DS-105 should see that the rule had a
+known cost, and what paid it.
 
-| # | The tension | State |
+*Both were `Open` in a column headed `State` until 2026-09-02, long after the work that closed them
+shipped — `PR-97`. Every other table here records a closure by amending the
+sentence it invalidates, and a cell already designed to say *open* is the one shape that habit cannot
+reach. The column is `Resolution` now, like the rest of the document, so an unclosed row looks
+unfinished.*
+
+| # | The tension | Resolution |
 | :--- | :--- | :--- |
-| **U-01** | DS-105 forbids a dead link in a shipped deck, and a `file://` link cannot be shown to be live **vs** a source line a reader can open | **Open.** A deck whose sources sit beside it on disk has no conformant way to reach them, so the mark degrades to a slug — `D5 §2` — which names a document the reader cannot identify or open. The rule is right about dead links; what it has no answer for is a live one it cannot verify. Owned by [T-070](../tasks/T-070-the-quick-view-for-a-source-document.md), whose overlay is the other way to satisfy the same need. |
-| **U-02** | DS-092's four-sentence, twenty-word bound on the provenance mark **vs** a source line that says what each document *is* | **Open.** The mark is one `<p>`, so its items are counted together: give each source a full stop and the paragraph exceeds four sentences; leave them without one and they concatenate into a single sentence over twenty words. **Five sources cannot carry titles either way**, and the bound was written for a mark carrying one. Owned by nobody yet; it arrives with [T-092](../tasks/T-092-product-feedback-from-the-first-external-deck.md). |
+| **U-01** | DS-105 forbids a dead link in a shipped deck, and a `file://` link cannot be shown to be live **vs** a source line a reader can open | **Closed in `0.2.1`** by [T-070](../tasks/T-070-the-quick-view-for-a-source-document.md), whose §1 reads *U-01 is this task's to close*. The tension was real: a deck whose sources sit beside it on disk had no conformant way to reach them, so the mark degraded to a slug — `D5 §2` — naming a document the reader could not identify or open. **The overlay removed the link rather than verifying it.** A source is a titled control the reader opens in place, so there is no `file://` link to be dead or live; `python tools/deck/quickview.py list` names them per deck. |
+| **U-02** | DS-092's four-sentence, twenty-word bound on the provenance mark **vs** a source line that says what each document *is* | **Closed in `0.1.4`** by [T-069](../tasks/T-069-extend-the-provenance-mark-to-multiple-sources.md). The tension was real while the mark was one `<p>`: its items were counted together, so a full stop each exceeded four sentences and none at all concatenated into one sentence over twenty words, and five sources could carry titles neither way. **DS-105 no longer puts multiple sources in a `<p>` at all** — they route into a `.sources` control, one line per source, so DS-092's bound never counts them together. [T-092](../tasks/T-092-product-feedback-from-the-first-external-deck.md) arrived and is `done`; it did not need to carry this. |
 
 **Both were hit weeks before they were reported**, and by the same project, which had written each
 one into its own build log as a local deviation and moved on. That is the finding underneath the two
@@ -612,8 +618,15 @@ side the reason is on rather than which side is cheaper.
 
 ## 5.8 The `hard` `judge` rules — gated, not demoted
 
-`EVALUATION.md` §1 declares every `hard` rule a gate. Eighty-five are `auto` or `render` and the
-mechanical gate owns them; four have `Check: —` and bind whoever builds a check rather than the deck.
+`EVALUATION.md` §1 declares every `hard` rule a gate. **Every figure in this paragraph is a
+2026-08-09 reading and is deliberately not refreshed** — the ruling below is about the state that
+forced it, so re-deriving the numbers would destroy the argument rather than correct it (`L-95`: a
+count inside a narrative is a different object from a count inside a claim, and only the second may
+be refreshed in place). §5.6, §5.9 and §5.10 carry the opposite caveat because their counts *are*
+claims. For today's split, run `python tools/deck/ruleset.py --gates`.
+
+**As of 2026-08-09:** eighty-five were `auto` or `render` and the mechanical gate owned them; four
+had `Check: —` and bound whoever builds a check rather than the deck.
 **The remaining twenty-five were `judge`, and until 2026-08-09 nothing produced a verdict for any of
 them** — twenty-four after DS-107 moved to `Check: —`, below — eleven were not named anywhere in `EVALUATION.md`, four of those being §3.4's deliverable
 contract, the section this document's §3 records as the one the owner named after reading the deck.

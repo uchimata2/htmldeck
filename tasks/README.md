@@ -38,7 +38,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-237](T-237-the-release-machinery-and-its-record.md) | Reconcile the release documents with the releases that actually ran | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - | - |
 | [T-238](T-238-the-trackers-own-rules-against-its-own-records.md) | Fix the board header that routes work into a shipped phase, and two silent closures | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - | - |
 | [T-239](T-239-the-audits-own-record-against-what-it-did.md) | Reconcile the audit's plan, its ledger and the document binding it to its method | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - | - |
-| [T-241](T-241-the-design-system-and-the-rationale-against-what-shipped.md) | Close three statements the ruleset and its rationale still record as open | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - | - |
 | [T-249](T-249-the-two-prior-audits-registers.md) | Correct three claims the ruleset and context audits make about their own coverage | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - | - |
 | [T-250](T-250-two-lessons-state-a-figure-and-two-link-to-a-dead-anchor.md) | Fix four lessons in the folder whose own rule is that a lesson outlives its instance | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - | - |
 | [T-251](T-251-a-research-note-and-a-memory-entry-describe-a-state-that-changed.md) | Correct R9's account of DS-122 and a memory entry recording an edit never made | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - | - |
@@ -297,6 +296,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-235](T-235-the-skills-documents-against-the-tools-they-describe.md) | Reconcile the skill's documents with the tools and rules they describe | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | - |
 | [T-236](T-236-tier-1-and-the-brief-against-what-they-measure.md) | Correct tier 1's three figures and settle the tier-2 set the owner already ruled on | `PH3` | `unreleased` | `done` | `review` | T-219 | - | - | - | T-288 |
 | [T-240](T-240-the-evaluation-document-against-itself-and-the-code.md) | Correct EVALUATION.md's four internal contradictions and its account of the stage split | `PH3` | - | `done` | `review` | T-219 | - | - | - | - |
+| [T-241](T-241-the-design-system-and-the-rationale-against-what-shipped.md) | Close three statements the ruleset and its rationale still record as open | `PH3` | - | `done` | `review` | T-219 | - | - | - | - |
 | [T-242](T-242-the-contracts-against-the-checkers-that-decide-them.md) | Reconcile the component and theme contracts with what their checkers read | `PH3` | - | `done` | `review` | T-219 | - | - | - | T-274, T-275 |
 | [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | Re-bind five checks on what is true at run time instead of on a name | `PH3` | - | `done` | `review` | T-219 | - | - | - | - |
 | [T-244](T-244-the-gates-own-coverage-account.md) | Derive the clause-level account, and correct two excusals that name the wrong decider | `PH3` | - | `done` | `review` | T-219 | - | - | - | T-278 |

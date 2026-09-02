@@ -536,9 +536,14 @@ agent that wrote it. §3.4 and §3.5 arrived *after* it, from the owner's review
 rewrote the reference deck to the deliverable contract, all twelve slides carry a bottom line, and
 DS-202/203/205/216/217 are gated rather than asserted — `BRIEF.md` records the release gate as clear.
 **The other half of that sentence still holds and is the part worth keeping: the rules that matter
-most are the least exercised.** One conforming deck is one deck, and four of the nine
-deliverable-contract rules are named nowhere in `EVALUATION.md`
-([T-048](../tasks/T-048-gate-the-hard-rules-only-judgement-can-reach.md)). The reproducibility
+most are the least exercised.** One conforming deck is one deck. **The evidence that used to stand
+here has been turned round.** Most of the nine deliverable-contract rules are named nowhere in
+[`EVALUATION.md`](EVALUATION.md), and that costs them nothing:
+[T-048](../tasks/T-048-gate-the-hard-rules-only-judgement-can-reach.md) **ruled on 2026-08-09 that
+they stay out** — demoting DS-201, DS-204, DS-207 and DS-208 into the dimensions would convert the
+rules the release gate exists for from a defect into a point off a score — and built that document's
+hard-judge checklist to own them instead. The checklist takes its membership from this ruleset, so
+every one of the nine has an instrument; `python tools/deck/ruleset.py --gates` says which. The reproducibility
 rulings still come from R6's capability matrix, which answers *"is
 this available?"* rather than *"does this read well?"* CLAUDE.md rule 6 governs the second question,
 and it is answered by looking, not by this document.
