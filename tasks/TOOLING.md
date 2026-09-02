@@ -209,14 +209,19 @@ rule that survived a tool swap unnoticed is the thing to recognise faster next t
 
   **A green run says nothing about which eleven they are**, so a session that adds one and removes
   another sees the same total. The point of the figure is that a *twelfth* is new and worth reading;
-  chasing the standing ten is [T-250](T-250-two-lessons-state-a-figure-and-two-link-to-a-dead-anchor.md)'s
-  and B20's, not a passing session's. *Measured 2026-08-29 while B1 ran, and unchanged across the
-  five runs of that batch.*
+  chasing the standing ten is not a passing session's. *Measured 2026-08-29 while B1 ran, unchanged
+  across the five runs of that batch, and still eleven after B20's six.* **`T-250` and B20 were named
+  here as the owner until 2026-09-02 and neither took it**: `T-250`'s subject was two lessons and two
+  dead anchors, and the batch closed without touching the advisory. So the standing ten have no owner,
+  which is the correct state rather than an omission — the figure exists to make an *eleventh* legible,
+  and an owner would turn that into a backlog.
 ### 1.13 What `refcheck.py` enforces, and what none of them can
 
 - `refcheck.py` — every markdown link, **every repo-relative `.md` path written in prose or printed by
-  a tool**, **every `<named document> §n` reference** (§2 below), and **every link *label* that names a
-  `.md` file the link does not open** (§2.1). Two things are skipped and it prints
+  a tool**, **every `<named document> §n` reference** (§2 below), **every link *label* that names a
+  `.md` file the link does not open** (§2.1), and, since `T-250` on 2026-09-02, **every `](#...)`
+  link against the headings of the file it sits in** — a class `LINK`'s own pattern could not match,
+  so two dead ones survived every run of the tool. Two things are skipped and it prints
   how many: documents `.gitignore` excludes, which are machine-local by design and absent from a fresh
   clone; and front-matter, which is a structured record rather than prose.
 - **A bare path that is not `.md` is checked by nothing, and now never will be.** `refcheck.py` matches
