@@ -226,7 +226,7 @@ checked, when it resolves, and why quoting a dead reference must not create one.
    on `python tools/check_all.py --docs`, which skips the deck gates with a printed reason and
    refuses if the diff reaches a deck-facing path - then the full run is owed now. **The batch's
    landing owes the full run in every case.** Which paths refuse, and why `origin/master` is the
-   base, is [`TOOLING.md`](TOOLING.md) §1.
+   base, is [`TOOLING.md`](TOOLING.md) §1.4.
 
 ---
 

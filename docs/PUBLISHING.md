@@ -294,7 +294,7 @@ anything else: `taskmd check` reports `DUPLICATE INDEX` against
 [`RELEASE-PHASES.md`](RELEASE-PHASES.md), because the phase
 tables name a majority of the board's ids. It is a true reading of a document that is not a duplicate
 index, it fires on every run, and the decision behind ignoring it is
-[`../tasks/TOOLING.md`](../tasks/TOOLING.md) §1. **A `DUPLICATE INDEX` naming any other
+[`../tasks/TOOLING.md`](../tasks/TOOLING.md) §1.12. **A `DUPLICATE INDEX` naming any other
 document is not covered by it and stops the release.** *It named `docs/BRIEF.md` until 2026-08-14,
 when the tables moved; the advisory followed them, which is what the file-name form of the excusal is
 for.*

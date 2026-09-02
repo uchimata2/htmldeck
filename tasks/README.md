@@ -52,12 +52,11 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-283](T-283-ds-218-reports-a-pass-where-it-has-no-subject.md) | Make DS-218 report no subject where it has none, rather than a pass | `PH1` | - | `proposed` | `specify` | - | - | - | - | T-231, T-257 |
 | [T-284](T-284-owed-looks-belongs-to-no-audit-cycle.md) | Give OWED-LOOKS.md an audit cycle, or a rule that says which one reads it | `PH3` | - | `proposed` | `specify` | T-219 | - | - | - | T-223, T-273 |
 | [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md) | Audit — what a session pays per turn, and why it grows | `PH3` | - | `in_progress` | `review` | - | T-288, T-289, T-290, T-291, T-292, T-293, T-294, T-295 | - | - | T-130, T-153, T-285, T-286 |
-| [T-289](T-289-give-tooling-md-section-1-addressable-subsections.md) | Give TOOLING.md section 1 addressable subsections, so a pointer costs one rule and not ten | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-285, T-286 |
 | [T-290](T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md) | Measure one batch run as a single session with compaction, against the session-per-task rhythm | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-285, T-286 |
 | [T-291](T-291-measure-whether-the-desktop-apps-skill-catalogue-can-be-scoped-per-project.md) | Measure whether the desktop app's skill catalogue can be scoped, and disable what no project uses | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-135 |
 | [T-292](T-292-the-docs-gate-is-four-fifths-one-render.md) | The docs gate is four fifths one render — decide what figures.py's coverage account binds to | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-234, T-285 |
 | [T-293](T-293-the-second-runs-low-findings-in-one-pass.md) | The second context-economy run's three Low findings, in one pass | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-132, T-286 |
-| [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | Grade the second context-economy run's bands after its remedies land | `PH3` | - | `proposed` | `specify` | T-287 | - | T-289, T-290, T-291, T-292, T-293 | - | T-153 |
+| [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | Grade the second context-economy run's bands after its remedies land | `PH3` | - | `proposed` | `specify` | T-287 | - | T-290, T-291, T-292, T-293 | - | T-153 |
 | [T-295](T-295-complete-t-288s-observation-and-decide-the-move.md) | Complete T-288's observation in a session that can take it, then decide the move on the evidence | `PH3` | - | `proposed` | `specify` | T-287 | - | - | - | T-236, T-288 |
 
 ## Closed
@@ -338,5 +337,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-285](T-285-let-a-documentation-task-run-the-gates-its-change-can-reach.md) | Let a documentation task run the gates its change can reach, and keep the full run for the batch | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-279, T-280, T-286, T-287, T-289, T-290, T-292 |
 | [T-286](T-286-print-the-verdict-on-a-green-run-and-the-report-only-when-asked.md) | Print the verdict on a green run, and the report only when asked or when it fails | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-279, T-285, T-287, T-289, T-290, T-293 |
 | [T-288](T-288-move-the-rules-that-bind-only-deck-or-release-work-under-path-scoped-rules.md) | Move the rules that bind only deck or release work out of tier 1, under path-scoped rules | `PH3` | `unreleased` | `done` | `review` | T-287 | - | - | T-294 | T-143, T-236, T-295 |
+| [T-289](T-289-give-tooling-md-section-1-addressable-subsections.md) | Give TOOLING.md section 1 addressable subsections, so a pointer costs one rule and not ten | `PH3` | `unreleased` | `done` | `review` | T-287 | - | - | T-294 | T-285, T-286 |
 
 <!-- taskmd:end -->

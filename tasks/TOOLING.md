@@ -15,6 +15,8 @@ and are new addresses that nothing cites yet.
 
 ## 1. The tooling
 
+### 1.1 The two commands, and what each is for
+
 Two tools, and the split between them is what they are about:
 
 ```
@@ -41,6 +43,8 @@ python tools/tasks/query.py list --open     # what to work on next
 python tools/tasks/query.py context T-NNN   # everything needed to start one task
 ```
 
+### 1.2 Never run the two gates at the same time
+
 **Never run `lint.py` and `tools/check_all.py` at the same time.** `lint.py`'s first step is
 `taskmd index`, which **rewrites `tasks/README.md`**, and the release gate reads that file — so a gate
 started beside the lint reads a board mid-write and fails on it. **Observed 2026-08-15: two failures
@@ -49,6 +53,8 @@ were lost to a tail, so the mechanism is inferred from the write rather than pro
 what is certain is that the two runs disagreed about one tree. The trap is that both commands are slow
 enough to want to overlap and the gate is the one told to run in the background. **Lint first, let it
 finish, then gate.**
+
+### 1.3 Do not edit anything while a gate runs
 
 **And do not edit anything while the gate runs — including a document.** It reads each file when its
 step reaches it, not when the command starts, and its task-lint step runs first. So an edit landing
@@ -60,6 +66,8 @@ one is two commands contending, this one is one command racing the author. When 
 closing evidence, finish every edit first, start it last, and touch nothing until it returns; if an
 edit turns out to be necessary, the run is void, and re-running is cheaper than reasoning about which
 steps were affected.
+
+### 1.4 `--docs`, and the gate a change can reach
 
 **A documentation task's commit runs `python tools/check_all.py --docs`; a batch's landing runs the
 full gate.** Under the flag every per-deck and per-theme gate and every rendered suite is **skipped
@@ -74,6 +82,8 @@ against decks nothing they changed could reach
 ([T-285](T-285-let-a-documentation-task-run-the-gates-its-change-can-reach.md), which records the
 docs-mode time). `--docs` is never the release's step 1 and never a batch's last run.
 
+### 1.5 A green gate prints one line when nobody is watching
+
 **A green gate prints one line when its stdout is not a terminal.** `check_all.py`, `figures.py`,
 `chronology.py` and `lint.py`'s own lines all do this, because a session pays a tool's output again
 on every later turn and a green report is one nobody acts on - B17's four full runs alone printed
@@ -81,6 +91,8 @@ some 74 KB of green account ([T-286](T-286-print-the-verdict-on-a-green-run-and-
 The line carries the partition's counts, `--report` restores the account, `--quiet` forces the line
 at a terminal, and **a red run prints everything in every mode** - each tool's self-test asserts
 that. `lint.py`'s children are untouched: the advisory count below still works piped.
+
+### 1.6 `HTMLDECK_RENDER_WORKERS`, and when to set it to 1
 
 **`HTMLDECK_RENDER_WORKERS` decides how many Chrome launches overlap; it does not decide anything
 else.** Renders that fan out are independent processes with their own throwaway profiles, so the
@@ -90,7 +102,11 @@ measured rather than derived from the core count. **Set it to `1` when a render 
 are diagnosing**, so a browser problem is not also a concurrency problem; a malformed value falls
 back to the default rather than failing, because a typo in a knob must not decide a gate.
 
+### 1.7 A bulk edit of a task field matches the front matter, never the file
+
 **A bulk edit of a task field must match the front-matter block, never the whole file.** Task records quote field syntax in their own prose, so a script testing `"shipped_in: unreleased" in text` edits records that do not carry the field at all. **Measured 2026-08-22 while recording `0.6.0`**: twenty tasks were in the release and twenty-one files changed, because [`T-219`](T-219-pre-release-audit-of-the-whole-repository.md) —2's cycle table names the field in a cell. It is `planned`, and it was handed a shipping version. Nothing failed: the lint passed, the index rendered, and the only thing that caught it was counting the files written against the tasks expected. **So split the file at its front matter and match only there, then read back and assert the field landed in front matter and once.**
+
+### 1.8 `lint.py`, and why it is the only name tier 1 gives
 
 `lint.py` is the checks a task edit owes: it stops at the first failure and exits with that
 failure's code, and it is `tracker_lint` in [`../.handoff/config.md`](../.handoff/config.md).
@@ -101,6 +117,8 @@ section carries the count.
 refuses `index` and `check` by name because `lint.py` owns those. Both find the installed skill
 through one locator, in `lint.py`, so the incantation has one home rather than one per document
 (**L-13**).
+
+### 1.9 Ask the board a question; never read the board
 
 **An agent asks the board a question; it does not read the board.** [`README.md`](README.md) is
 generated for people, and answers *what next* only by being read whole — **36,559 bytes on
@@ -125,9 +143,13 @@ closed, and an Effort cell ending in `each` means the band is per item, so a clo
 finished subject — `CE-04` is the instance and it kept a task open after its row closed.
 [T-151](T-151-generate-the-finding-to-task-listing-instead-of-keeping-it-by-hand.md).
 
+### 1.10 `index` rewrites only what lies between its markers
+
 **`index` rewrites only the block between its generated markers**; hand-written sections of
 `README.md` survive it. `check` reports a stale index and does not fix it, so run `index` after any
 task edit.
+
+### 1.11 A generated view counts only open tasks as gated
 
 **Generated views count only open tasks as gated** — the rule, and it is currently observed by
 `list` and `context` and **not** by `index`. Both directions of an edge should be filtered the same
@@ -145,7 +167,9 @@ upstream as their **T-111**, they accepted it, and **taskmd 0.3.0 filters both c
 Measured on this board, not taken from a release note. The whole episode is left visible because a
 rule that survived a tool swap unnoticed is the thing to recognise faster next time (**L-59**).
 
-**What the two checks enforce**
+### 1.12 What `taskmd check` enforces, and the advisory that is expected forever
+
+**What each check enforces**
 
 - `taskmd check` — the vocabularies in the config; every `parent`, `blocked_by` and `related`
   reference resolves; `blocked` implies a dependency; no dependency cycles; a declared deliverable
@@ -186,6 +210,8 @@ rule that survived a tool swap unnoticed is the thing to recognise faster next t
   chasing the standing ten is [T-250](T-250-two-lessons-state-a-figure-and-two-link-to-a-dead-anchor.md)'s
   and B20's, not a passing session's. *Measured 2026-08-29 while B1 ran, and unchanged across the
   five runs of that batch.*
+### 1.13 What `refcheck.py` enforces, and what none of them can
+
 - `refcheck.py` — every markdown link, **every repo-relative `.md` path written in prose or printed by
   a tool**, **every `<named document> §n` reference** (§2 below), and **every link *label* that names a
   `.md` file the link does not open** (§2.1). Two things are skipped and it prints
@@ -206,11 +232,11 @@ rule that survived a tool swap unnoticed is the thing to recognise faster next t
   promise about the future. It was hiding **110 of 357 pointers**, because most declared outputs are
   long-existing documents that everything else cites (**L-05**).
 
-**What neither does.** They validate structure and references. Neither can tell you a specification is
+**What none of them does.** They validate structure and references. None can tell you a specification is
 wrong, a plan is thin, or a deliverable is bad — and both say so in their own output rather than
 reporting a clean pass (**L-05**).
 
-### 1.1 After an edit to `shell/`, in this order
+### 1.14 After an edit to `shell/`, in this order
 
 **A shell edit makes four gates red at once**, on every deck, until the decks are synced —
 `shell.py check`, `component.py check`, `check.py` and `static_variants.py`. The order below is not

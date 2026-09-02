@@ -119,7 +119,7 @@ recommendation rather than a guard.
 | 5 | `tools/deck/audit.py` — `motionPersistent` decides *the control exists, and if it sits inside a collapsed container, the button that opens that container is persistent and keyboard-operable*. Probe reads it off the built markup as before | a check bound to the rule's new words |
 | 6 | `docs/COMPONENT-CONTRACT.md` §3.4 — the *Where `Motion` sits* paragraph rewritten: one build-time position, inside `.more-menu`. The sentence saying a control inside a shut menu is not persistent is the one that must go | no document contradicting the rule |
 | 7 | `tools/deck/static_variants.py` — `T-180`'s variant re-seeded against the **new** condition: the old edit moves a button that is now where it belongs, so it can no longer fail. The replacement breaks the opener instead | the check watched failing (L-125) |
-| 8 | Re-tail the four tracked decks, then `TOOLING.md` §1.1's four commands in order | decks carrying the one form, gates re-derivable |
+| 8 | Re-tail the four tracked decks, then `TOOLING.md` §1.14's four commands in order | decks carrying the one form, gates re-derivable |
 | 9 | Both gates, run separately | `lint.py` and `check_all.py` green |
 
 **Ordering that is not arbitrary.** Step 1 precedes step 5 for L-144's reason. Step 2 precedes step 8
