@@ -48,6 +48,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-295](T-295-complete-t-288s-observation-and-decide-the-move.md) | Complete T-288's observation in a session that can take it, then decide the move on the evidence | `PH3` | - | `proposed` | `specify` | T-287 | - | - | - | T-236, T-288 |
 | [T-296](T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md) | Decide what a documentation commit may skip on the front page, since one README fence is the whole cost | `PH3` | - | `proposed` | `specify` | T-287 | - | - | - | T-285, T-286, T-292 |
 | [T-298](T-298-decide-what-the-clause-sweep-owes-for-a-rule-the-clause-table-cannot-hold.md) | Decide what the clause sweep owes for a rule the clause table cannot hold | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-054, T-244, T-278 |
+| [T-299](T-299-triage-the-nextep-adopter-report.md) | Triage the Nextep adopter report and decide each of its eighteen findings | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-225 |
 
 ## Closed
 
@@ -276,7 +277,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-222](T-222-derive-the-reconcile-sweeps-membership-instead-of-enumerating-it.md) | Derive the reconcile sweep's membership instead of enumerating it | `PH3` | `0.7.0` | `done` | `review` | - | - | - | - | T-218, T-219, T-223 |
 | [T-223](T-223-derive-the-audit-cycles-membership-instead-of-counting-it.md) | Derive each audit cycle's membership instead of counting it | `PH3` | `0.7.0` | `done` | `review` | T-219 | - | - | - | T-218, T-220, T-222, T-224, T-284 |
 | [T-224](T-224-give-the-blindness-fixture-its-own-instrument-in-cycle-17.md) | Give the blindness fixture its own instrument in cycle 17 | `PH3` | `0.7.0` | `done` | `review` | T-219 | - | - | - | T-044, T-223 |
-| [T-225](T-225-triage-the-claimai-adopter-report.md) | Triage the ClaimAI adopter report and decide each of its twenty-seven findings | `PH3` | `0.7.0` | `done` | `review` | - | - | - | - | T-063, T-254, T-255, T-256, T-257, T-258, T-259, T-260, T-261, T-262, T-263, T-264, T-265, T-266, T-267, T-268, T-269, T-270, T-271, T-276 |
+| [T-225](T-225-triage-the-claimai-adopter-report.md) | Triage the ClaimAI adopter report and decide each of its twenty-seven findings | `PH3` | `0.7.0` | `done` | `review` | - | - | - | - | T-063, T-254, T-255, T-256, T-257, T-258, T-259, T-260, T-261, T-262, T-263, T-264, T-265, T-266, T-267, T-268, T-269, T-270, T-271, T-276, T-299 |
 | [T-226](T-226-a-shipped-deck-is-in-neither-human-facing-document.md) | Give the portfolio-review deck a home in both human-facing documents | `PH3` | `0.7.0` | `done` | `review` | T-219 | - | - | - | - |
 | [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | Correct the copy-into-your-own-plugin route, or withdraw it | `PH1` | `0.7.0` | `done` | `review` | T-219 | - | - | - | - |
 | [T-228](T-228-the-second-theme-fails-the-contract-it-demonstrates.md) | Bring lattice.css up to the theme contract, and put a theme in a gate's subject | `PH1` | `0.7.0` | `done` | `review` | T-219 | - | - | - | - |
