@@ -49,6 +49,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-296](T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md) | Decide what a documentation commit may skip on the front page, since one README fence is the whole cost | `PH3` | - | `proposed` | `specify` | T-287 | - | - | - | T-285, T-286, T-292 |
 | [T-298](T-298-decide-what-the-clause-sweep-owes-for-a-rule-the-clause-table-cannot-hold.md) | Decide what the clause sweep owes for a rule the clause table cannot hold | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-054, T-244, T-278 |
 | [T-299](T-299-triage-the-nextep-adopter-report.md) | Triage the Nextep adopter report and decide each of its eighteen findings | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-225 |
+| [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | - | - | - |
 
 ## Closed
 
