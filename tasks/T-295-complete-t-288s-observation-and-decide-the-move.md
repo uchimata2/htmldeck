@@ -2,8 +2,8 @@
 id: T-295
 title: Complete T-288's observation in a session that can take it, then decide the move on the evidence
 type: decision
-status: done
-phase: review
+status: in_progress
+phase: implement
 parent: T-287
 blocked_by: []
 related: [T-288, T-236]
@@ -82,6 +82,10 @@ start itself. That is one turn of work for a session that starts with the probe 
 | 4 | Put the planted probe itself to the same subagent test | Observation 3: delivered and logged in the subagent |
 | 5 | Take the decision against the owner's condition, read by its reason, and write the reversal | §3 |
 | 6 | Delete every probe and the `.gitignore` line naming the first; reconcile `CLAUDE.md`, `CONTEXT-AUDIT.md` §6's row and the lesson | The outputs below |
+| 7 | Next session: take the reversal reading against the three conditions, then put a partial read to a subagent | Observations 4 and 5: all three hold; a partial read loads |
+| 8 | Carry `T-288`'s scope: `decks.md` and `release.md` under `.claude/rules/`, tracked, as block lists; the paragraphs deleted from `CLAUDE.md`, rule 6 kept with its sentence, the pair re-measured | Owed |
+| 9 | Re-point every reference to a moved rule. Count them with `rg -c "CLAUDE.md.{0,6}rules? [1-57]\b" -g "!tasks/**" -g "!.handoff/**"`, plus *Voice*, *Verifying* and *Publishing constraints* by name: the set includes `shell/components.css`, so the shipped decks are rebuilt | Owed |
+| 10 | Reconcile `CLAUDE.md`'s debt paragraph, `CONTEXT-AUDIT.md` §6's `CE-14` row and `.gitignore`'s comment on `.claude/`; lint, the full gate, land | Owed |
 
 ## 3. Implement
 
@@ -123,8 +127,37 @@ Its `prompt_id` is the subagent's; the main context made no read of that file th
 is this session's and the delivery is not the main context's** — a distinction the log does not draw,
 which is [L-164](../docs/lessons/L-164.md).
 
+**Observation 4 — the reversal. Delivered and logged, in the main context.** The next session started
+2026-09-14 with the block-list probe `t-295-reversal.md` already under `.claude/rules/`, `paths:`
+naming `LICENSE` alone. Its first tool call, from the main context with no subagent running, was a
+whole read of `LICENSE`. The probe's body arrived in a block after that read's result, without its
+front matter, and the log wrote, four seconds after the session's start line:
+
+```
+2026-09-14T00:49:25 {"session_id":"ea1832f9-…","prompt_id":"02b2a5a2-…",
+"hook_event_name":"InstructionsLoaded","file_path":"…\\.claude\\rules\\t-295-reversal.md",
+"memory_type":"Project","load_reason":"path_glob_match","globs":["LICENSE"],
+"trigger_file_path":"…\\LICENSE"}
+```
+
+All three conditions below hold. Observation 1's null therefore had a cause it did not isolate: its
+first read was partial, and its probe's `paths:` was an inline array.
+
+**Observation 5 — a partial read. Delivered and logged, in a subagent.** The same session planted a
+probe on `.gitignore`, and a subagent's only tool call read five lines of it. The subagent quoted the
+marker `T295-PARTIAL-51C7` in context, and the log wrote a `path_glob_match` line for that probe under
+the subagent's `prompt_id`. It measures a subagent, which is L-164's limit, so a partial read is not
+excluded as a trigger in the main context; it is unmeasured there.
+
 **Decisions & assumptions**
-- **Not carried. Nothing moves, and `CLAUDE.md` stays over its bound** — 2026-09-14. The owner's
+- **Carried, reversing the decline below** — 2026-09-14. The owner's 2026-09-13 answer was *carry,
+  if the observation shows the marker arriving*, and the reversal wrote that answer applies unchanged
+  once all three conditions hold. They hold (Observation 4), so step 8 carries `T-288`'s scope.
+  *Rejected:* **one more session to measure a partial read in the main context first** — Observation 5
+  removes the decisive negative, a partial read that loads nothing, and most edits here start from one.
+  The residual risk is a session that works a deck tree without reading a matching file; rule 6, the
+  one rule that risk would break, stays in `CLAUDE.md`.
+- *Superseded the same day by the decision above.* **Not carried. Nothing moves, and `CLAUDE.md` stays over its bound** — 2026-09-14. The owner's
   condition was *carry, if the observation shows the marker arriving*, and its reason is that the
   deck and release rules reach the agent doing that work. That agent is the main context, and there
   the marker did not arrive from a rule that existed before the session started. Carrying on the
@@ -158,7 +191,8 @@ because the log loses lines.
 
 **Outputs produced**
 - This record, and [L-164](../docs/lessons/L-164.md)
-- `.claude/rules/` — the planted probe and T-295's seven probes deleted, and the directory with them
+- `.claude/rules/` — the planted probe and T-295's seven probes deleted, and the directory with them;
+  the reversal probe and the partial-read probe deleted in the next session, the directory again with them
 - [`../.gitignore`](../.gitignore) — the line naming the probe removed, and the comment about
   `.claude/` restated as decided
 - [`../CLAUDE.md`](../CLAUDE.md) — the debt paragraph pointed at this decline instead of at `T-288`,
@@ -170,10 +204,10 @@ because the log loses lines.
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
 | The marker's arrival recorded as an observation of what was delivered, with the log's line quoted | met | Recorded per context, because the two disagree: the main context, no delivery and only the start line; a subagent of the same session, the marker reported and the `path_glob_match` line quoted in §3. Neither is inferred from the marker being in this record's author's context |
-| The decision taken, its reasons named, including which `T-288` §3 finding moved it; a decline checkable | met | Not carried. Neither finding moved it — the owner's answer had settled both — and §3 says so. The reversal is three observable conditions in one session |
-| If carry: tracked rules, one home each, rule 6 with its sentence, the pair re-measured | n/a | The decision was not to carry. `CLAUDE.md` was edited anyway, to point its debt paragraph here, and its pair re-measured in that edit |
+| The decision taken, its reasons named, including which `T-288` §3 finding moved it; a decline checkable | met | Carried, on the reversal's three conditions (Observation 4). Neither finding moved it — the owner's answer had settled both. The first close read *not carried*, and §3 keeps that decision marked superseded |
+| If carry: tracked rules, one home each, rule 6 with its sentence, the pair re-measured | pending | Plan steps 8 to 10 |
 | The probe deleted either way, `.claude/rules/` holding only what the decision put there | met | The decision put nothing there. `.claude/rules/` no longer exists, and the `.gitignore` line that named the probe is gone |
-| `lint.py` and `check_all.py` green, run separately | met | Lint first, then the full gate, on the tree committed with this record |
+| `lint.py` and `check_all.py` green, run separately | pending | Met at the first close on the tree committed with that record; owed again for the carry |
 
 **Child fix tasks raised**
 - none. The reversal is an observation for the owner to ask for, not scheduled work.
@@ -185,3 +219,5 @@ because the log loses lines.
 | 2026-09-02 | → proposed | Raised in B19 while closing [T-288](T-288-move-the-rules-that-bind-only-deck-or-release-work-under-path-scoped-rules.md) `not met`. That task closes on its own instruction and the move is then unowned, which is a gap rather than a conclusion. **Unbatched, for the owner**, like the rest of [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md)'s children — the audit's own rule. |
 | 2026-09-13 | (no change) | The owner answered the open question: carry, on the observation. Still `proposed`. |
 | 2026-09-14 | proposed → done | **Not carried.** The whole lifecycle ran in one session on the owner's instruction in the handoff. The planted probe never reached the main context of a session started twelve days after it, on a partial or a whole read, and reached a subagent of the same session at once. Probes varying the front-matter form, the glob shape and the ignore line all loaded in a subagent, so none of those explains the null. The owner's condition is read by its reason — the rules must reach the agent doing the work — and is unmet there. Every probe deleted; the reversal is three conditions in §3; [L-164](../docs/lessons/L-164.md). |
+| 2026-09-14 | (no change) | **The owner answered the reversal: run it.** A block-list probe on `LICENSE`, `t-295-reversal.md` under `.claude/rules/`, was planted at the end of this session, so condition 1 holds for the next one. That session takes the reading against the three conditions, records it here, and deletes the probe. |
+| 2026-09-14 | done → in_progress | **The reversal held, so the move is carried.** The next session opened with a whole read of `LICENSE` from the main context; the probe's body arrived and the log wrote its `path_glob_match` line at that read (Observation 4). A partial read then loaded a second probe in a subagent (Observation 5). Both probes deleted. Reopened at `implement` for plan steps 8 to 10, on branch `t-295-carry`; [L-164](../docs/lessons/L-164.md) corrected, since its main-context null had a cause the first session did not isolate. |
