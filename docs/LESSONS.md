@@ -129,6 +129,7 @@ comes here.
 | [L-161](lessons/L-161.md) | A derived figure written into a document that is inside its own subject cannot converge, and the case that converges by accident is the dangerous one | Evidence and verification |
 | [L-162](lessons/L-162.md) | A note saying nothing uses a rule yet is falsified by the rule working, and no gate reads a comment | Evidence and verification |
 | [L-163](lessons/L-163.md) | A ruling that changes the grain of a record re-aims the schedule and orphans every estimate written at the old grain | Evidence and verification |
+| [L-164](lessons/L-164.md) | A load logged in the session is not a load in the context that does the work | Evidence and verification |
 
 ### Tooling
 

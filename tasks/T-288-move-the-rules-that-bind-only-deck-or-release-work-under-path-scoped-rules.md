@@ -88,7 +88,7 @@ are in §11.1 there.
 - **The sibling project took this decision and declined it.** taskmd's `T-169` decided whether its tier-1 prose moved into a path-scoped rule, and its rules directory is empty today. Its §3 names the **margin** as the evidence that moved it, and it took the decision against the *worse* branch — assuming the rule does not re-fire after a compaction — on the reasoning that a remedy which fails to pay under that assumption cannot be rescued by the better one. That is precedent this project has to read before proposing the same move, not after — 2026-09-02
 
 **Outputs produced**
-- `.claude/rules/t-288-probe.md` — the instrument, untracked, deleted by `T-295`
+- `t-288-probe.md`, under `.claude/rules/` — the instrument, untracked, deleted by `T-295` on 2026-09-14
 - [T-295](T-295-complete-t-288s-observation-and-decide-the-move.md)
 - **No change to [`../CLAUDE.md`](../CLAUDE.md).** Its measured pair was re-measured anyway: 15,742 bytes against `docs/AUDIT-METHOD.md`'s 6,675, debt 9,067 — unmoved, so the paragraph there is still right and owed no edit
 
@@ -110,4 +110,4 @@ are in §11.1 there.
 | :--- | :--- | :--- |
 | 2026-09-02 | → proposed | Raised by `T-287` from `CE-14`, the highest-ranked finding of the second context-economy run. `PH3` by `CLAUDE.md`'s rule. |
 | 2026-09-02 | proposed → done | B19, closing **`not met`** on the first criterion as §1 instructs. The mechanism is proven on this harness — `path_glob_match` is in the hook log, once in 1,814 loads — but not here, and a rule added mid-session does not fire, so no session can take this reading on itself. Nothing moved. Two findings the ranking did not have: `.claude/` is untracked in a repository that is published, and the sibling project declined the same move. [T-295](T-295-complete-t-288s-observation-and-decide-the-move.md) carries all of it. |
-| 2026-09-02 | (no change) | The probe was pushed. `git add -A` at the batch's landing swept `.claude/rules/t-288-probe.md` into this task's own commit while §3 said it was untracked. Untracked and ignored by name now; the directory is left un-ignored so `T-295` still owns the question. §3 records it rather than quietly correcting the sentence. |
+| 2026-09-02 | (no change) | The probe was pushed. `git add -A` at the batch's landing swept the probe, `t-288-probe.md` under `.claude/rules/`, into this task's own commit while §3 said it was untracked. Untracked and ignored by name now; the directory is left un-ignored so `T-295` still owns the question. §3 records it rather than quietly correcting the sentence. |
