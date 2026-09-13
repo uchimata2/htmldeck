@@ -38,7 +38,7 @@ first reached an installed copy, derived from the first tag containing the commi
 
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocked By | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215 |
+| [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH3` | - | `proposed` | `specify` | - | T-215 | - | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215, T-302 |
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-225 |
 | [T-282](T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | The portfolio deck's opening slide carries one of the two figures its specification calls the whole argument | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-233 |
 | [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md) | Audit — what a session pays per turn, and why it grows | `PH3` | - | `in_progress` | `review` | - | T-288, T-289, T-290, T-291, T-292, T-293, T-294, T-295, T-296, T-301 | - | - | T-130, T-153, T-285, T-286 |
@@ -50,6 +50,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-299](T-299-triage-the-nextep-adopter-report.md) | Triage the Nextep adopter report and decide each of its eighteen findings | `PH3` | - | `proposed` | `specify` | - | - | - | T-290 | T-225 |
 | [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | - | - | - |
 | [T-301](T-301-decide-whether-the-record-forms-get-shorter.md) | Decide whether task, register, lesson and handoff records get shorter, since writing them is a quarter of a session's spend | `PH3` | - | `proposed` | `specify` | T-287 | - | - | - | T-290 |
+| [T-302](T-302-give-the-3d-line-its-own-release-phase.md) | Give the 3D line its own release phase, so the 1.0.0 backlog can be empty while T-057 stays open | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-057 |
 
 ## Closed
 
