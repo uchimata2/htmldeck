@@ -12,7 +12,7 @@ owner: the project owner
 business_value: high
 effort: m
 created: 2026-09-02
-updated: 2026-09-02
+updated: 2026-09-13
 deliverables: [docs/CONTEXT-AUDIT.md, docs/lessons/L-154.md]
 ---
 
@@ -133,6 +133,8 @@ instruments were three scripts and the subjects were small; the boundary was nev
 - **`CE-16` and `CE-22` collide with settled policy and are not resolved here** — the ecoctx method's
   fourth refusal. `CE-16` gets a measurement task and no change; `CE-22` gets no task and a stated
   reason. Both are the owner's.
+- **`CE-22` tasked on the owner's ruling, 2026-09-13** — raised as [T-301](T-301-decide-whether-the-record-forms-get-shorter.md),
+  a decision on the record forms, with `parent` this audit, which it now holds open too.
 - **The Lows are one task with one `finding:` field** — `findings.py` binds one id per task, so
   `T-293` carries `CE-19` and names `CE-20` and `CE-21` in its body; the tool reports a finding with
   no task rather than failing on it.
@@ -150,7 +152,7 @@ Counts only; the statements live in the register.
 | :--- | ---: | ---: | ---: | ---: |
 | High | 1 | 1 | 0 | 0 |
 | Medium | 4 | 4 | 0 | 0 |
-| Low | 4 | 3 (batched) | 1 | 0 |
+| Low | 4 | 4 (3 batched) | 0 | 0 |
 
 **Child tasks raised**
 - [T-288](T-288-move-the-rules-that-bind-only-deck-or-release-work-under-path-scoped-rules.md) — `CE-14` — deck and release rules out of tier 1, under path-scoped rules; addressability measured first
@@ -160,6 +162,7 @@ Counts only; the statements live in the register.
 - [T-292](T-292-the-docs-gate-is-four-fifths-one-render.md) — `CE-18` — what `figures.py`'s coverage account binds to
 - [T-293](T-293-the-second-runs-low-findings-in-one-pass.md) — `CE-19`, with `CE-20` and `CE-21` — the Lows in one pass
 - [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) — phase 2, blocked on the six above
+- [T-301](T-301-decide-whether-the-record-forms-get-shorter.md) — `CE-22` — the record forms, decided by the owner
 
 **Outputs produced**
 - [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) — rows `CE-14` to `CE-22` in §6's table, §6.3 the statements, §11 the measurement
@@ -173,7 +176,7 @@ Counts only; the statements live in the register.
 | :--- | :---: | :--- |
 | Every cost in scope measured, skipped with a reason, or a finding | met | the four named costs: gates → §11.1 C and `CE-18`, `CE-19`, `CE-21`; the resume → §11.1 B and `CE-15`; a finding's closing cost → §11.1 D, and `CE-22` is what it produced; tier 1 → §11.1 A and `CE-14`, `CE-17`, `CE-20`. The method as packaged → §11.4. Nothing skipped |
 | Every finding carries its proof | met | a command or a script for `CE-14`, `CE-15`, `CE-17`–`CE-21`; the transcript reading, named as one session's, for `CE-16` and `CE-22` |
-| High and Medium tasked; Low batched or accepted | met | five tasks for five; `T-293` for three Lows; `CE-22` accepted with the collision stated |
+| High and Medium tasked; Low batched or accepted | met | five tasks for five; `T-293` for three Lows; `CE-22` accepted with the collision stated, then tasked as `T-301` on the owner's ruling of 2026-09-13 |
 | Baseline after `T-285` and `T-286`, and says so | met | `807d2db`, §11's first paragraph |
 | Phase 2 recorded after the remedies, with a refused prediction | **not met** | the remedies do not exist yet; [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) is raised and blocked on them, which is how `T-130` closed with `T-153` still to run |
 
@@ -197,3 +200,4 @@ the inventory is what survives, and every `Change` cell is a hypothesis.
 | 2026-09-02 | → specified, planned | Both open questions decided by their recommendations; the cycle program written as seven cycles over the five surfaces plus research. |
 | 2026-09-02 | → in_progress | Cycle 0 on the frozen tree at `807d2db`: full gate green in 226 s before any edit. Cycles 1–6 in the same session. |
 | 2026-09-02 | → review | Nine findings, `CE-14`–`CE-22`; seven children raised, `T-288`–`T-294`; L-154. Four criteria met, the fifth carried by `T-294`. **Stays `in_progress` as the umbrella** — `taskmd check` refuses a `done` parent with open children, so this closes when `T-294` does, which is when phase 2 is recorded; the pre-release audit's umbrella rule, met the same way. Committed on the docs gate. |
+| 2026-09-13 | (no change) | The owner ruled that `CE-22` becomes a task: `T-301` raised as a child. Still `in_progress` at `review` — its open children hold it, as the row above says. |

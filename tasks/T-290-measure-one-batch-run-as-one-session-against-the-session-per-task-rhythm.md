@@ -5,7 +5,7 @@ type: research
 status: proposed
 phase: specify
 parent: T-287
-blocked_by: []
+blocked_by: [T-299]
 related: [T-285, T-286]
 work_package: PH3
 owner: the project owner
@@ -13,7 +13,7 @@ business_value: medium
 effort: m
 finding: CE-16
 created: 2026-09-02
-updated: 2026-09-02
+updated: 2026-09-13
 deliverables: []
 ---
 
@@ -40,6 +40,8 @@ until the owner reads the measurement, and this task produces the measurement, n
 - In: one batch of two or three documentation tasks run as one session with `/compact` between
   tasks, and the usage read from the transcript by the same instrument `T-287` used; the same batch's
   figures from the per-task rhythm, taken from B17's or B18's transcripts, whichever the owner names.
+  *Superseded 2026-09-13: neither transcript survives — the oldest on disk is dated 2026-09-04 — so
+  both rhythms are measured fresh; see the open question.*
 - In: what a compaction loses — the second session must be able to find what the first knew, and
   a re-read after compaction is counted against the compaction.
 - Out: changing `REMEDIATION-ORDER.md` §4 or the handoff config; that is the owner's, after the numbers.
@@ -54,6 +56,10 @@ until the owner reads the measurement, and this task produces the measurement, n
 
 **Open questions**
 - Which batch to run twice — the owner. Recommended: the smallest documentation batch left in the order.
+  **Answered by the owner 2026-09-13, on a changed premise**: every batch in the order has landed.
+  Both rhythms are measured on the first two to four `s` tasks
+  [T-299](T-299-triage-the-nextep-adopter-report.md) raises, alternating the boundary between
+  neighbouring tasks — `/compact` and continue, or a fresh session. The owner types `/compact`.
 
 ## 2. Plan
 
@@ -85,3 +91,4 @@ until the owner reads the measurement, and this task produces the measurement, n
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-02 | → proposed | Raised by `T-287` from `CE-16`, as a measurement and not a change, because the finding collides with a settled rhythm. `PH3`. |
+| 2026-09-13 | (no change) | The owner's ruling on the open question: the named baseline no longer exists, so both rhythms are measured fresh on `T-299`'s first small tasks. `blocked_by` gains `T-299`. |
