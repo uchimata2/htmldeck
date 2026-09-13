@@ -2,7 +2,7 @@
 
     python tools/deck/glitchfree.py <deck.html> [...]
 
-**CLAUDE.md rule 2 requires a deck to render glitch-free in recent Chrome/Edge, and that is a
+**.claude/rules/decks.md rule 2 requires a deck to render glitch-free in recent Chrome/Edge, and that is a
 testable statement only once it is decomposed.**
 [`R6 section 8`](../../docs/research/R6-portability-contract.md) decomposed it into nine conditions
 *"for T-005 to implement"*, [`BRIEF.md`](../../docs/BRIEF.md) relayed the assignment, and T-005's own
@@ -330,7 +330,7 @@ def _verdict_rows(d):
         # The criterion says *fails on a deck with no canvas rather than passing*; its own gloss
         # says why - *the subject being absent is not the subject being sound*. `None` says exactly
         # that. `False` would make a canvas-free deck un-passable, which is a check forbidding a
-        # design choice CLAUDE.md rule 3 permits rather than requires.
+        # design choice .claude/rules/decks.md rule 3 permits rather than requires.
         rows.append(("GF-7", "this deck draws no canvas or WebGL surface, so nothing was measured - "
                              "which is not the same as nothing being wrong", None))
     elif len(c["unreadable"]) == c["total"]:

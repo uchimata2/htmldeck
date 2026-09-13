@@ -124,7 +124,7 @@ Every archetype is reproducible in a single self-contained file. The column is n
 | :--- | :--- | :--- |
 | A-01, A-03, A-11, A-12, A-14 | Type and layout only | **Yes** — trivially. |
 | A-02 | Document structure | **Yes** — not a rendering question at all. |
-| A-04, A-08, A-09, A-10 | CSS grid + inline SVG, labelled | **Yes.** SVG preferred per CLAUDE.md rule 3. |
+| A-04, A-08, A-09, A-10 | CSS grid + inline SVG, labelled | **Yes.** SVG preferred per .claude/rules/decks.md rule 3. |
 | A-06, A-07 | Inline SVG, repeated / paired | **Yes.** |
 | A-05 | Animated SVG or `<canvas>` | **Yes.** R6 measured both as available from `file://`; no fetch-like access is involved, since the data is inlined. Must degrade under `prefers-reduced-motion` to a static end-state that still carries the claim — the corpus pattern of keeping the dashed arrows dashed ([R1 §11](R1-corpus-conventions.md)). |
 | A-13 | CSS disclosure + minimal JS | **Yes**, with the constraints from R2 §11: two tiers only, ≥ 24 × 24 px targets, keyboard-operable, never hover-only. |

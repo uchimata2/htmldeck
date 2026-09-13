@@ -139,7 +139,7 @@ rather than lost: chaining `break-after:avoid` through the standfirst forces a s
 opening onto the next page whenever the block after it is tall, and opens larger holes than it
 closes (18 pages, five bad, worst 61%). It lost on both papers tested.
 
-**Why it is rejected rather than pursued.** [`CLAUDE.md`](../../CLAUDE.md) rule 5 makes printing
+**Why it is rejected rather than pursued.** [`.claude/rules/decks.md`](../../.claude/rules/decks.md) rule 5 makes printing
 *a mode the user can force on, never a constraint on the design*. Continuing to reshape the reading
 view so it paginates well is precisely printing becoming a constraint on the design. The reading
 view already serves the read-alone case **on screen**, where progressive disclosure works; print

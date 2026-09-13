@@ -22,7 +22,7 @@ from [`research/R1-rules-candidate.md`](research/R1-rules-candidate.md)'s own ru
 
 **The precedence used, and it ran the same way for all 154:**
 
-1. **A standing owner decision** (`BRIEF.md` § *Decisions taken*, or a CLAUDE.md rule) overrides an
+1. **A standing owner decision** (`BRIEF.md` § *Decisions taken*, or a rule in CLAUDE.md or .claude/rules/) overrides an
    observed habit. **This class is not in the owner's stated tie-break, and it fired four times** —
    DS-011, DS-030, DS-001, DS-002.
 2. **An E1/E2 external principle contradicting the habit** — the stated tie-break. **Fired once**, on
@@ -846,7 +846,7 @@ relationship to DS-101 in its own text rather than hiding it, and a ruleset that
 says so is not the failure this audit was looking for.
 
 **DS-011 — one palette per deck was dropped.** The corpus rule (C7) is `dominant`; it describes what
-the decks actually do. It lost to CLAUDE.md rule 4, **not to evidence** — a standing decision
+the decks actually do. It lost to .claude/rules/decks.md rule 4, **not to evidence** — a standing decision
 overriding an observed habit. R4 also grades C7 inherited (the source skill's four presets adapted
 per deck), so dropping it costs the owner's signature nothing. Everything else in §2.1 is
 *within-palette* discipline and is unaffected. The variety it provided returns from the template

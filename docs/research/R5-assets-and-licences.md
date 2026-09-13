@@ -229,7 +229,7 @@ The owner's answer to T-013's open question set the default as **CDN references,
 available on request**, and asked for a measured recommendation on how a user of the plugin should
 face this choice. This section is that recommendation, and it disagrees.
 
-**This contradicts CLAUDE.md rule 1** ("Self-contained or it doesn't ship... renders correctly
+**This contradicts .claude/rules/decks.md rule 1** ("Self-contained or it doesn't ship... renders correctly
 with the network disabled") and it reverses the position R4 identified as the owner's sharpest
 departure from the source deck skill — J1, where *the skill means one file and the owner means no
 network*. CLAUDE.md requires findings that contradict the brief to be raised as candidate changes
@@ -238,7 +238,7 @@ of direction rather than worked around, so it is raised here rather than impleme
 **Recommendation: embed by default; make CDN the opt-in; drop the local-files mode entirely.**
 
 > **Accepted by the owner, 2026-08-06.** This is now the project's decision, recorded under
-> *Delivery mode* in [BRIEF.md](../BRIEF.md) "Decisions taken". CLAUDE.md rule 1 stands unchanged
+> *Delivery mode* in [BRIEF.md](../BRIEF.md) "Decisions taken". .claude/rules/decks.md rule 1 stands unchanged
 > and `linked` is a development mode only. The rest of this section is the argument that was made,
 > kept as the rationale behind the decision.
 
@@ -262,7 +262,7 @@ The case, in the order the evidence supports it:
    corporate proxy, an air-gapped laptop and a plane all produce the same result months after the
    author last looked.
 4. **"Local file references" should not exist.** A deck plus a folder of assets is the format that
-   breaks when emailed, and it fails CLAUDE.md rule 2 — the recipient double-clicks *the file*.
+   breaks when emailed, and it fails .claude/rules/decks.md rule 2 — the recipient double-clicks *the file*.
    Two delivery modes are enough.
 
 **What the configuration parameter should be.** Not "CDN or embedded" — that asks the author to

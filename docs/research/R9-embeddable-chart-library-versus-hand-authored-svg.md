@@ -309,7 +309,7 @@ for a better checker, not for a different default.
 **And one constraint that decides *which* library the day the middle row fires: the output has to be
 SVG.** The stage is scaled by a transform (DS-060, DS-062) and the deck is printed (DS-224). A canvas
 chart at fixed pixel dimensions blurs under the first and prints badly under the second, which is
-CLAUDE.md rule 3's *when SVG is as good, prefer it* applied to a case where SVG is better. Chart.js
+.claude/rules/decks.md rule 3's *when SVG is as good, prefer it* applied to a case where SVG is better. Chart.js
 and uPlot are canvas-only. ECharts defaults to canvas. **TanStack Charts is SVG by default and canvas
 by opt-in**, on its own documentation — which, with reduced motion and the framework-free `dom`
 entry, is why it wins a race it currently cannot enter.

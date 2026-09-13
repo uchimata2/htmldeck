@@ -18,6 +18,10 @@ three**; the other two are the owner's and outside this bound, and the memory in
 plugin also writes into an adopter's tier 1, through `skills/htmldeck/SKILL.md`'s description block
 and nothing else.
 
+**`.claude/rules/` is tier 2 by path**, observed 2026-09-14 ([T-295](tasks/T-295-complete-t-288s-observation-and-decide-the-move.md) §3): the
+harness appends a rule file after a read of a file its `paths:` names. A rule file is content cut
+from this one, so it is not a term of the bound below, for the reason a tier-3 document is not.
+
 **The bound: this file stays smaller than the smallest document it defers to that a session enters
 at the start of work of a kind** — today `docs/BRIEF.md`, `docs/PUBLISHING.md`,
 `tasks/TASK-WORKFLOW.md`, `tasks/README.md`, `.taskmd/config.md` and `docs/AUDIT-METHOD.md`. **That
@@ -42,8 +46,8 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is over its own bound** — 16,015 bytes against `docs/AUDIT-METHOD.md`'s 8,040, measured
-2026-09-14 with the command above, so the debt is 7,975. *The floor moved twice on 2026-09-02 and this
+**This file is over its own bound** — 11,413 bytes against `docs/AUDIT-METHOD.md`'s 8,040, measured
+2026-09-14 with the command above, so the debt is 3,373. *The floor moved twice on 2026-09-02 and this
 sentence was rewritten twice with it: `T-239` gave that file a Method column, and B22 gave it
 `PR-82`'s clause. It had fallen to that file from `tasks/TASK-WORKFLOW.md`'s 13,324 when the
 2026-08-23 ruling made the audit method a term — three changes in the smaller side, one in the
@@ -51,11 +55,10 @@ definition, and never in this file.* The two cuts this bound was written to make
 decidable are spent: `CE-01` as
 [T-143](tasks/T-143-split-the-release-chronology-out-of-claude-md.md) and `CE-04` as
 [T-144](tasks/T-144-give-each-cumulative-rule-one-operative-home.md), both ranked in
-[`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6, and what remains has had a ranked finding behind
-it since 2026-09-02 — `CE-14` in the same table, declined on 2026-09-14 by
-[T-295](tasks/T-295-complete-t-288s-observation-and-decide-the-move.md) until a path-scoped rule is
-seen reaching the main context.
-That is dated debt and not a rule already met. *This statement has been wrong in both terms four
+[`docs/CONTEXT-AUDIT.md`](docs/CONTEXT-AUDIT.md) §6, and so is the third: `CE-14` in the same table,
+carried on 2026-09-14 by [T-295](tasks/T-295-complete-t-288s-observation-and-decide-the-move.md),
+which moved the deck and release rules under `.claude/rules/`. What remains has no ranked finding
+behind it. That is dated debt and not a rule already met. *This statement has been wrong in both terms four
 times — three when the smaller side moved, once when the definition did. **Re-measure both,
 never one**, and write it here in the same edit — a figure about this file cannot be corrected
 anywhere else, and `tools/docs/figures.py` holds both terms to the fence.*
@@ -112,46 +115,17 @@ direction, not quietly worked around.
 
 ## The rules that must survive
 
-1. **Self-contained or it doesn't ship.** One `.html` that renders correctly with the network
-   disabled. Most of the source corpus failed this, mostly on web fonts, and the decks that passed
-   are the precedent — the measurement is [R1](docs/research/R1-corpus-conventions.md)'s, and no
-   figure from it lives here (**L-96**).
-   *Measured and settled 2026-08-06:* this is no longer the main technical problem. A full
-   12-slide deck with three embedded faces, icons, a motion library and SVG diagrams is **192 KB
-   with zero external references** (`docs/research/R5-assets-and-licences.md`). Embedding is
-   cheap, so `portable` is the default and the only shipping mode. A `linked` (CDN) mode exists
-   **for the authoring loop only**; a deck delivered that way is a defect, and the critique pass
-   says so.
-2. **Portability is the constraint, not restraint.** No installation, no special privileges — the
-   recipient double-clicks the file. It must render **glitch-free in recent Chrome/Edge**; other
-   browsers degrade gracefully and mobile is secondary. Within that envelope, richness is wanted:
-   interaction, animation and 3D. There is no JavaScript budget. The corpus habit of 1–3 script
-   tags describes past work, not this.
-3. **Use whatever renders best.** SVG, `<canvas>` and WebGL are all permitted, for diagrams
-   included. Still never a rasterised diagram (DS-110), and never an *external* library — rule 1
-   settles that. When SVG is as good, prefer it: it scales, themes and diffs.
-4. **One theme, every layer parametric.** Ship one fully-resolved look, not several and not a
-   per-topic palette. Every value that could differ between themes is a token. Variety comes later,
-   from a tool that generates new templates — design for it now, do not build it yet.
-5. **Printing is optional.** A mode the user can force on, never a constraint on the design.
+**Rules 1 to 5 and 7 are [`.claude/rules/decks.md`](.claude/rules/decks.md)**, with *Voice* and
+*Verifying*, and the harness appends that file after a session reads one in a deck tree. **Rule 6
+stays here**, because a path-scoped rule arrives after the read that matches it — one read too late
+for the rule that forbids reading a deck whole. The numbers did not change, so a citation of rule N
+still names one rule.
+
 6. **Look at the rendered deck, and never read one whole.** A deck that validates is not a deck
    that reads well — so *look* means render it and open it, which nothing here replaces. It does
    **not** mean reading the file: every shipped deck is over 300 KB (`python tools/docs/figures.py`
    prints each size), and a question about what is inside one is answered by a tool in `tools/deck/`
    or by a targeted search, never by opening the HTML.
-7. **Critique is a first-class mode**, not a footnote. It is what turns a first draft into
-   something worth presenting, and it is the part users cannot do for their own work.
-
-## Voice
-
-The critique mode is blunt on purpose — bottom line up front, then section by section, no
-diplomatic padding. A review that opens with three compliments is one nobody acts on. This is a
-deliberate choice carried from the corpus, where the harshest review was the most useful
-artifact in it.
-
-That applies to the critique output. The **decks** themselves stay respectful, positive and
-professional, and avoid the terminology that marks text as machine-written — ship that list and
-enforce it at build time rather than hoping.
 
 ## Working method
 
@@ -165,11 +139,9 @@ enforce it at build time rather than hoping.
 ## Publishing constraints
 
 **The steps of a release, in order, are [`docs/PUBLISHING.md`](docs/PUBLISHING.md) §8.** Do not
-re-derive the sequence from the last release's commits; that is what §8 was written to stop. **Step 1
-is one command** — `python tools/check_all.py` — which discovers every checker a clone receives and
-every deck this repository ships, and ends with a partition: each **ran**, **was skipped with a
-stated reason**, or **failed**. A tool in none of those three fails the run. What it replaced, and
-what its first run found that a hand-kept list could not, are §8 as well.
+re-derive the sequence from the last release's commits; that is what §8 was written to stop. Its step 1
+and the humanizing rule are [`.claude/rules/release.md`](.claude/rules/release.md), appended after a
+session reads `README.md` or `docs/PUBLISHING.md`; the font-licence rule is `decks.md`'s.
 
 This repository goes to GitHub. Everything written here must be:
 
@@ -189,38 +161,3 @@ This repository goes to GitHub. Everything written here must be:
   Ruled by the owner 2026-08-14, after four commits carrying an agent trailer were stripped before
   they went out.
 - **Out-of-the-box.** Clone and run, no path editing.
-- **Font-licence aware.** If fonts are embedded, only ones whose licence permits redistribution.
-  Record the licence next to each.
-- **Humanized where a human reads it.** **No release ships until the human-facing text has been
-  through the humanizer** — every release, not the first. The test is *what a stranger reads before
-  installing anything*: today `README.md` and the repository description. **Plugin files are not
-  human-facing and must stay AI-optimized** — the skill, this file, tool docstrings, commit messages
-  and the task record — and a humanizer pass over them is a defect, not a courtesy. Deck copy is
-  DS-106's, gated by `check.py`. The covered-set test, the exclusions and the owner's verbatim
-  exception: [`docs/PUBLISHING.md`](docs/PUBLISHING.md), which is the rule and outlives any task.
-  The first release's pass is recorded in
-  [T-056](tasks/T-056-humanize-the-human-facing-documents-before-publishing.md); **every release
-  after it runs the rule again.**
-
-## Verifying
-
-Test the generator on a **real 12-slide deck with diagrams**, not a three-slide toy — the corpus
-decks are the target case, and that is the size where layout and pacing problems appear. State
-results as what was actually produced, not as "works".
-
-**12 is the floor, not the target.** Only the contents page has been built and printed above 13 —
-at 17, 25 and 43 — and what is still known to bite above it is the ruler, which degrades to dense
-mode past 16 and then marks where you are more quietly than it marks anything else
-([T-178](tasks/T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md)). Treat a long deck as
-**untested territory** rather than as a longer version of a tested one, and say which length a
-result was measured at. How the target moved, and off what evidence, is
-[`docs/RELEASE-HISTORY.md`](docs/RELEASE-HISTORY.md) §4.
-
-**And print it. One thing here can read the paper, and it reads two numbers.**
-`tools/deck/printgeom.py` reads the card rectangles out of the printed PDF and asserts `PRINT-2` *no
-two cards intersect* and `PRINT-3` *no card reaches the footnote*, on any deck it is pointed at,
-standard library only. **It is two numbers and nothing wider**, and the fault it was written for
-lives only in paged layout, which no screen measurement reaches (**L-76**). Whether the page reads as
-a compact mode rather than as damage is still a person's, which is the 2026-08-08 ruling on DS-222 to
-DS-226 and is untouched. Rule 6 is not satisfied by a screen render at any length, nor by a green
-`PRINT-2`.

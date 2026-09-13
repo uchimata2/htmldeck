@@ -60,7 +60,7 @@ a single instance · `stated` written down but under-delivered.
 > **Where the verdicts came from, in order of precedence** — this is the lookup, and it ran the same
 > way for all 154:
 >
-> 1. **A standing owner decision in `BRIEF.md` § *Decisions taken* or a CLAUDE.md rule** overrides an
+> 1. **A standing owner decision in `BRIEF.md` § *Decisions taken* or a rule in CLAUDE.md or .claude/rules/** overrides an
 >    observed habit. This is a class the tie-break does not name, and it is what dropped C7 and
 >    amended D1, J1 and J2.
 > 2. **An E1/E2 external principle that contradicts the habit** — the owner's tie-break. It fired
@@ -154,7 +154,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 | C4 | Semantic role colours fixed for a whole deck | variant | **keep** |
 | C5 | Calm colours; functional but attractive | stated | **keep** |
 | C6 | Gradients only when functional (depth, progress), never decoration | stated | **keep** |
-| C7 | One palette per deck, fitted to that deck's story | dominant | **drop** — contradicts CLAUDE.md rule 4 outright. See the note below |
+| C7 | One palette per deck, fitted to that deck's story | dominant | **drop** — contradicts .claude/rules/decks.md rule 4 outright. See the note below |
 | C8 | Both themes readable — no component that inverts into white-on-light | stated | **keep** |
 | C9 | **Never pure white, never pure black** — warm paper ground, graphite or warm-charcoal ink | dominant | **keep** |
 | C10 | **Light, not dark**, by default: lit rooms lose dark-deck contrast under a projector; management reads paper-white as considered; dark/violet dashboard is the generic cliché | stated | **keep** |
@@ -165,7 +165,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 
 > **C7 is the one dominant corpus rule this pass drops, so the reason is recorded here rather than
 > only in the reference.** "One palette per deck, fitted to that deck's story" is `dominant` — it
-> describes what the decks actually do. It is also the exact thing CLAUDE.md rule 4 rules out: *ship
+> describes what the decks actually do. It is also the exact thing .claude/rules/decks.md rule 4 rules out: *ship
 > one fully-resolved look, not several and not a per-topic palette.* This is not the tie-break
 > firing (no external principle is involved); it is a **standing owner decision overriding an
 > observed habit**, which is a third resolution class the tie-break does not cover and the reference
@@ -173,7 +173,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 > adapted per deck — so dropping it costs the owner's signature nothing.
 >
 > **What survives the drop:** C1–C6 and C8–C14 are all *within-palette* discipline and are
-> unaffected. The variety C7 provided returns later from the template generator CLAUDE.md rule 4
+> unaffected. The variety C7 provided returns later from the template generator .claude/rules/decks.md rule 4
 > defers, not from per-deck improvisation.
 
 ## D. Typography
@@ -190,7 +190,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 
 > **D1's amendment is the same decision as C7's drop, in the other medium.** R4 grades D1 inherited:
 > the "deliberate pairing per deck" reading came from the source skill's instruction to rotate
-> pairings and never repeat one. Under CLAUDE.md rule 4 the project ships **one** trio — R5 §2
+> pairings and never repeat one. Under .claude/rules/decks.md rule 4 the project ships **one** trio — R5 §2
 > recommends Instrument Serif · Space Grotesk · JetBrains Mono at 97.3 KB — so the rotation has
 > nowhere to go. **The structural half of D1 is the valuable half and it is kept:** three named
 > roles (display · text · mono), one face each, every one a token.
@@ -202,7 +202,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 | E1 | **Never hand-draw icons.** Complex objects come from an icon set | stated | **keep** |
 | E2 | Draw particles, connectors and custom diagrams freely in SVG or canvas | stated | **keep** — and the Render-technique decision widens it to WebGL |
 | E3 | Embed the icon set as its official SVG symbols — that is *using* the set, not drawing | stated | **keep** — C-02 |
-| E4 | Diagrams as inline SVG; authoring source may keep them as separate files | dominant | **keep** — CLAUDE.md rule 3 prefers SVG where it is as good |
+| E4 | Diagrams as inline SVG; authoring source may keep them as separate files | dominant | **keep** — .claude/rules/decks.md rule 3 prefers SVG where it is as good |
 | E5 | No raster images | dominant | **keep** |
 | E6 | Canvas particle/emission effects read as artificial — use only when extremely restrained | stated | **amend** — C-04: the restraint survives as the *encode* test, not as suspicion of canvas |
 | E7 | An accumulation effect must actually accumulate, not fall through | stated | **keep** |
@@ -315,7 +315,7 @@ a **selection sheet that cites `docs/DESIGN-SYSTEM.md`**, not nine authored sect
 
 | ID | Rule | Freq | Verdict |
 | :--- | :--- | :--- | :--- |
-| I1 | Theme driven entirely by CSS custom properties | dominant | **keep** — CLAUDE.md rule 4 promotes it from habit to hard: *every* value that could differ between themes is a token |
+| I1 | Theme driven entirely by CSS custom properties | dominant | **keep** — .claude/rules/decks.md rule 4 promotes it from habit to hard: *every* value that could differ between themes is a token |
 | I2 | Token vocabulary already stable: `--ink` 11/12, `--bg` 9/12, `--line` 8/12, `--shadow` 7/12, plus semantic colour roles | dominant | **amend** — extended: `--measure` (R2 §12.2) and a disclosure mark (R2 P-28) are token values the corpus never named |
 
 ## J. Portability

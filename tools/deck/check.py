@@ -973,7 +973,7 @@ def gather(deck, sources=None, print_pages=False, skip_contract=False):
     # path in its own row; the derivation itself is pure.
     rows += density.verdicts(deck)
 
-    # GF-2 to GF-8, added by T-041. R6 section 8 decomposed CLAUDE.md rule 2 into nine conditions
+    # GF-2 to GF-8, added by T-041. R6 section 8 decomposed .claude/rules/decks.md rule 2 into nine conditions
     # for T-005 to implement; T-005's own criterion was narrower and seven of the nine were never
     # anyone's (**L-39**). Its own render for `figgrid`'s reason - the tool owns the measurement,
     # and a second copy of the probe here is the composition that disagreed the first time either

@@ -64,7 +64,7 @@ ROOT = shell_mod.ROOT
 
 # **The bound is the deck, not the source.** R5 measured a full 12-slide deck at 192 KB and the two
 # shipped here are 232 and 244 KB; a deck that has to be uploaded rather than emailed has lost the
-# property the whole project is built on (CLAUDE.md rule 2). 5 MB is the smallest common attachment
+# property the whole project is built on (.claude/rules/decks.md rule 2). 5 MB is the smallest common attachment
 # limit still in wide use, and half of it is the working bound so a deck stays comfortable rather
 # than just legal.
 SIZE_BOUND = 2 * 1024 * 1024

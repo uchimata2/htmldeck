@@ -1415,7 +1415,7 @@ def eyebrow_verdicts(html):
 #
 # What a static read settles, and the one thing it cannot:
 #   - **empty, `#` alone, `file://`, or any relative target — dead.** The deck is one file the
-#     recipient double-clicks (CLAUDE.md rule 1); nothing sitting beside it on the author's disk
+#     recipient double-clicks (.claude/rules/decks.md rule 1); nothing sitting beside it on the author's disk
 #     travels with it, so a link into that folder is dead on arrival, exactly as DS-002 treats a
 #     CDN reference. This is the clause T-069 settled.
 #   - **`#frag` — decidable exactly.** The id is in this document or it is not.
