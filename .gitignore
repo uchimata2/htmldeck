@@ -23,16 +23,11 @@ __pycache__/
 .handoff/processed_*
 
 # Machine state under `.claude/`, named one line at a time rather than by the directory.
-# `.claude/` itself is deliberately NOT ignored: whether this repository should track a rule
-# file at all is T-295's decision, and a wholesale rule would take that decision quietly -
-# which is how the probe below came to be published before anyone chose. The worktrees line
-# was `.git/info/exclude`'s until 2026-09-02 and so reached no clone at all.
+# `.claude/` itself is deliberately NOT ignored. T-295 decided on 2026-09-14 that this repository
+# tracks no rule file for now, and a wholesale rule would take the next decision quietly. The
+# worktrees line was `.git/info/exclude`'s until 2026-09-02 and so reached no clone at all.
 .claude/settings.local.json
 .claude/worktrees/
-
-# A test instrument, not a rule: T-288's probe, which T-295 deletes when it takes the
-# reading. `git add -A` published this one before anyone chose; hence the line.
-.claude/rules/t-288-probe.md
 
 # Corpus knowledgebase — full-fidelity extraction of the owner's private notes.
 # Local-only by construction: it contains client and personal data and must never publish.
