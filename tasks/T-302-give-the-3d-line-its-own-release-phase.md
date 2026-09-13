@@ -53,6 +53,7 @@ and features that use a 3D library; T-057 is only its beginning. Today T-057 sit
 - The mechanism - the owner. Recommended: a fourth phase, `PH4`, because this repository already groups
   work by release phase and a phase is what the index divides on. The alternative, a log note on
   T-057, leaves every open-task query counting it toward 1.0.0.
+  **Answered by the owner 2026-09-13: `PH4`.**
 
 ## 2. Plan
 
@@ -83,3 +84,4 @@ and features that use a 3D library; T-057 is only its beginning. Today T-057 sit
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-13 | -> proposed | Raised on the owner's direction of the same day: 3D is 1.1.0 and must not hold 1.0.0. `PH3`, since it is neither a published defect nor `l`. |
+| 2026-09-13 | (no change) | The owner chose `PH4`. Still `proposed`. |
