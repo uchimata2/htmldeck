@@ -2,8 +2,8 @@
 id: T-295
 title: Complete T-288's observation in a session that can take it, then decide the move on the evidence
 type: decision
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: T-287
 blocked_by: []
 related: [T-288, T-236]
@@ -15,7 +15,7 @@ finding: CE-14
 created: 2026-09-02
 updated: 2026-09-14
 shipped_in: unreleased
-deliverables: [docs/lessons/L-164.md]
+deliverables: [docs/lessons/L-164.md, .claude/rules/decks.md, .claude/rules/release.md]
 ---
 
 # T-295 — Complete T-288's observation in a session that can take it, then decide the move on the evidence
@@ -83,9 +83,9 @@ start itself. That is one turn of work for a session that starts with the probe 
 | 5 | Take the decision against the owner's condition, read by its reason, and write the reversal | §3 |
 | 6 | Delete every probe and the `.gitignore` line naming the first; reconcile `CLAUDE.md`, `CONTEXT-AUDIT.md` §6's row and the lesson | The outputs below |
 | 7 | Next session: take the reversal reading against the three conditions, then put a partial read to a subagent | Observations 4 and 5: all three hold; a partial read loads |
-| 8 | Carry `T-288`'s scope: `decks.md` and `release.md` under `.claude/rules/`, tracked, as block lists; the paragraphs deleted from `CLAUDE.md`, rule 6 kept with its sentence, the pair re-measured | Owed |
-| 9 | Re-point every reference to a moved rule. Count them with `rg -c "CLAUDE.md.{0,6}rules? [1-57]\b" -g "!tasks/**" -g "!.handoff/**"`, plus *Voice*, *Verifying* and *Publishing constraints* by name: the set includes `shell/components.css`, so the shipped decks are rebuilt | Owed |
-| 10 | Reconcile `CLAUDE.md`'s debt paragraph, `CONTEXT-AUDIT.md` §6's `CE-14` row and `.gitignore`'s comment on `.claude/`; lint, the full gate, land | Owed |
+| 8 | Carry `T-288`'s scope: `decks.md` and `release.md` under `.claude/rules/`, tracked, as block lists; the paragraphs deleted from `CLAUDE.md`, rule 6 kept with its sentence, the pair re-measured | `decks.md` and `release.md`; `CLAUDE.md` at 11,413 bytes against 8,040 |
+| 9 | Re-point every reference to a moved rule. Count them with `rg -c "CLAUDE.md.{0,6}rules? [1-57]\b" -g "!tasks/**" -g "!.handoff/**"`, plus *Voice*, *Verifying* and *Publishing constraints* by name: the set includes `shell/components.css`, so the shipped decks are rebuilt | 41 citations by number in 20 files and `PUBLISHING.md`'s by name; four decks synced, the fixture re-seeded |
+| 10 | Reconcile `CLAUDE.md`'s debt paragraph, `CONTEXT-AUDIT.md` §6's `CE-14` row and `.gitignore`'s comment on `.claude/`; lint, the full gate, land | All three reconciled; `cycles.py`'s cycle 3 reads `.claude/rules/*`; §4 |
 
 ## 3. Implement
 
@@ -157,6 +157,24 @@ excluded as a trigger in the main context; it is unmeasured there.
   removes the decisive negative, a partial read that loads nothing, and most edits here start from one.
   The residual risk is a session that works a deck tree without reading a matching file; rule 6, the
   one rule that risk would break, stays in `CLAUDE.md`.
+- **Rule numbers kept across two homes** — 2026-09-14. Rules 1 to 5 and 7 keep their numbers in
+  `decks.md` and rule 6 keeps its number in `CLAUDE.md`, so a re-pointed citation changes its path
+  and never its number. *Rejected:* **renumbering `decks.md` from 1** — every citation of rule 7,
+  and every reader's memory of the numbers, would name a different rule with nothing to flag it.
+- **Three publishing constraints stay in `CLAUDE.md`** — 2026-09-14. Free of personal data, the
+  publishing identity with its co-author rule, and out-of-the-box bind every commit, because every
+  commit is pushed to a public repository. `T-288` §1 scoped out the identity and the co-author rule
+  on that reason, and the other two share it. `release.md` takes step 1 of a release and the
+  humanizing rule; `decks.md` takes the font-licence rule, since a font is embedded only through a
+  deck tree. The sentence pointing at `docs/PUBLISHING.md` §8 stays, because `release.md` arrives
+  only after that file is read.
+- **A rule file is not a term of `CLAUDE.md`'s bound** — 2026-09-14. It is content cut from that
+  file, and counting it would make the move raise the debt it pays down, which is the reason a
+  tier-3 document is not a term. `CLAUDE.md` says so in one sentence.
+- **Records re-pointed, quotations untouched** — 2026-09-14. `PRE-RELEASE-AUDIT.md`'s rows and the
+  research notes cite a rule's location so a reader can find it; the path changes and a quoted
+  wording, already a record of its date, does not. `tasks/` and `.handoff/` are untouched, as step
+  9's count excludes them.
 - *Superseded the same day by the decision above.* **Not carried. Nothing moves, and `CLAUDE.md` stays over its bound** — 2026-09-14. The owner's
   condition was *carry, if the observation shows the marker arriving*, and its reason is that the
   deck and release rules reach the agent doing that work. That agent is the main context, and there
@@ -192,12 +210,26 @@ because the log loses lines.
 **Outputs produced**
 - This record, and [L-164](../docs/lessons/L-164.md)
 - `.claude/rules/` — the planted probe and T-295's seven probes deleted, and the directory with them;
-  the reversal probe and the partial-read probe deleted in the next session, the directory again with them
+  the reversal probe and the partial-read probe deleted in the next session, the directory again with them;
+  the carry recreated it holding `decks.md` and `release.md` and nothing else
 - [`../.gitignore`](../.gitignore) — the line naming the probe removed, and the comment about
   `.claude/` restated as decided
 - [`../CLAUDE.md`](../CLAUDE.md) — the debt paragraph pointed at this decline instead of at `T-288`,
   and its measured pair re-measured in the same edit
-- [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) — §6's `CE-14` row reads declined
+- [`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) — §6's `CE-14` row reads declined, and reads carried after the carry
+- [`../.claude/rules/decks.md`](../.claude/rules/decks.md) — rules 1 to 5 and 7, *Voice*, *Verifying*
+  and the font-licence rule, on `examples/**`, `tools/deck/**`, `shell/**`, `themes/**` and
+  `skills/htmldeck/**`
+- [`../.claude/rules/release.md`](../.claude/rules/release.md) — step 1 of a release and the
+  humanizing rule, on `README.md` and `docs/PUBLISHING.md`
+- [`../CLAUDE.md`](../CLAUDE.md) — the moved paragraphs deleted, rule 6 kept with its sentence, one
+  sentence placing `.claude/rules/` in the tiers, and the pair re-measured at 11,413 against 8,040
+- 41 citations by number re-pointed in 20 files, `shell/components.css` among them, and
+  [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md)'s pointer re-pointed by name, which also retires
+  its count of a *fourth bullet* that had been the fifth; the four shipped decks synced and
+  the seeded fixture rewritten
+- [`../tools/docs/cycles.py`](../tools/docs/cycles.py) — cycle 3, *Tier 1 and the brief*, reads
+  `.claude/rules/*`
 
 ## 4. Review
 
@@ -205,9 +237,9 @@ because the log loses lines.
 | :--- | :---: | :--- |
 | The marker's arrival recorded as an observation of what was delivered, with the log's line quoted | met | Recorded per context, because the two disagree: the main context, no delivery and only the start line; a subagent of the same session, the marker reported and the `path_glob_match` line quoted in §3. Neither is inferred from the marker being in this record's author's context |
 | The decision taken, its reasons named, including which `T-288` §3 finding moved it; a decline checkable | met | Carried, on the reversal's three conditions (Observation 4). Neither finding moved it — the owner's answer had settled both. The first close read *not carried*, and §3 keeps that decision marked superseded |
-| If carry: tracked rules, one home each, rule 6 with its sentence, the pair re-measured | pending | Plan steps 8 to 10 |
-| The probe deleted either way, `.claude/rules/` holding only what the decision put there | met | The decision put nothing there. `.claude/rules/` no longer exists, and the `.gitignore` line that named the probe is gone |
-| `lint.py` and `check_all.py` green, run separately | pending | Met at the first close on the tree committed with that record; owed again for the carry |
+| If carry: tracked rules, one home each, rule 6 with its sentence, the pair re-measured | met | Both rule files tracked. One script cut each paragraph out of `CLAUDE.md` and wrote it into its rule file, and asserted the cut text no longer appears there. Rule 6 kept, with the sentence on why. The pair re-measured in the same edit: 11,413 against 8,040, debt 3,373 |
+| The probe deleted either way, `.claude/rules/` holding only what the decision put there | met | Every probe deleted. `.claude/rules/` holds `decks.md` and `release.md`, which the carry put there, and nothing else; the `.gitignore` line that named the probe is gone |
+| `lint.py` and `check_all.py` green, run separately | met | Met at the first close, and again on the carry's tree: `lint: all 5 passed`, then `check_all: 42 ran, 2 skipped with a reason, 0 failed, 0 unclassified, 0 stale` |
 
 **Child fix tasks raised**
 - none. The reversal is an observation for the owner to ask for, not scheduled work.
@@ -221,3 +253,4 @@ because the log loses lines.
 | 2026-09-14 | proposed → done | **Not carried.** The whole lifecycle ran in one session on the owner's instruction in the handoff. The planted probe never reached the main context of a session started twelve days after it, on a partial or a whole read, and reached a subagent of the same session at once. Probes varying the front-matter form, the glob shape and the ignore line all loaded in a subagent, so none of those explains the null. The owner's condition is read by its reason — the rules must reach the agent doing the work — and is unmet there. Every probe deleted; the reversal is three conditions in §3; [L-164](../docs/lessons/L-164.md). |
 | 2026-09-14 | (no change) | **The owner answered the reversal: run it.** A block-list probe on `LICENSE`, `t-295-reversal.md` under `.claude/rules/`, was planted at the end of this session, so condition 1 holds for the next one. That session takes the reading against the three conditions, records it here, and deletes the probe. |
 | 2026-09-14 | done → in_progress | **The reversal held, so the move is carried.** The next session opened with a whole read of `LICENSE` from the main context; the probe's body arrived and the log wrote its `path_glob_match` line at that read (Observation 4). A partial read then loaded a second probe in a subagent (Observation 5). Both probes deleted. Reopened at `implement` for plan steps 8 to 10, on branch `t-295-carry`; [L-164](../docs/lessons/L-164.md) corrected, since its main-context null had a cause the first session did not isolate. |
+| 2026-09-14 | in_progress → done | **Carried.** Rules 1 to 5 and 7, *Voice*, *Verifying* and the font-licence rule are `.claude/rules/decks.md`; step 1 of a release and the humanizing rule are `.claude/rules/release.md`; rule 6 and the three publishing constraints that bind every commit stay in `CLAUDE.md`, now 11,413 bytes against 8,040. 41 citations re-pointed and the four shipped decks synced. |

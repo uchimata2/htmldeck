@@ -51,7 +51,7 @@ DECK = os.path.join(ROOT, "examples", "reference-deck.html")
 
 # --- the candidates ---------------------------------------------------------------------------
 # Each is scoped to `.ruler[data-dense] .ruler-ring` and NOT to a tick style, so one rule serves
-# `dot` and `bar` alike. That is CLAUDE.md rule 4 as a constraint on the candidate rather than as a
+# `dot` and `bar` alike. That is .claude/rules/decks.md rule 4 as a constraint on the candidate rather than as a
 # check applied to it afterwards: the shipped ring is defined only under `[data-ticks="dot"]`, so a
 # dense rule written the same way would silently leave `bar` with the defect it has today.
 #
@@ -442,7 +442,7 @@ def self_test():
                         "element or misses dense mode" % name)
         if "data-ticks" in css:
             fail.append("%s scopes itself to a tick style, which forks the component "
-                        "(CLAUDE.md rule 4)" % name)
+                        "(.claude/rules/decks.md rule 4)" % name)
         if "li[data-lit]" in css or "button::before" in css:
             fail.append("%s touches the lit mark itself; size on the ruler means section-versus-"
                         "slide and DS-216 forbids a third encoding of position" % name)

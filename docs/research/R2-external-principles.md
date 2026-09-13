@@ -110,7 +110,7 @@ can reference. Three skills were read in full.
 | :--- | :--- | :--- |
 | `dataviz` | Colour assigned by job (categorical / ordinal / sequential / diverging / status); a six-check palette test with a **runnable validator**; mark specifications; the one-axis rule; the hover/tooltip layer; a catalogue of chart anti-patterns. | **Point.** This is more rigorous than anything R2 would produce for colour-in-charts, and it is executable rather than advisory. |
 | `artifact-design` | Typeface pairing as a first-class decision; token-level theming across light/dark with the `data-theme` override; layout by flex/grid `gap`; a named list of AI-generated design tells to avoid. | **Point, with one local override.** Its warning against Space Grotesk and Inter as "safe" faces is directly relevant to [R5](R5-assets-and-licences.md)'s recommendation — see §14. |
-| `artifact-diagramming` | When a diagram earns its place at all; label the arrows; `viewBox` sizing; `currentColor` theming; `<figure>`/`<figcaption>`/`role="img"` structure; the no-script-inside-SVG rule. | **Point.** It agrees with CLAUDE.md rule 3 and is more specific. |
+| `artifact-diagramming` | When a diagram earns its place at all; label the arrows; `viewBox` sizing; `currentColor` theming; `<figure>`/`<figcaption>`/`role="img"` structure; the no-script-inside-SVG rule. | **Point.** It agrees with .claude/rules/decks.md rule 3 and is more specific. |
 
 ### 3.1 The pointer problem — a finding for T-012
 

@@ -187,7 +187,7 @@ NOT_RUN = {
     "tools/deck/glitchfree.py":
         "runs inside tools/deck/check.py, the per-deck gate, which is where its exit code "
         "is read. Its verdicts() are GF-2 to GF-8 - R6 section 8's conditions 2 to 8, the "
-        "decomposition of CLAUDE.md rule 2 - and check.py gathers all seven on every deck. "
+        "decomposition of .claude/rules/decks.md rule 2 - and check.py gathers all seven on every deck. "
         "Condition 1 is DS-001 and condition 9 is a person, which check.py's closing text "
         "names rather than this table. Still runnable alone, and then it prints all seven "
         "rows per deck with the counts behind them rather than one verdict: python "
@@ -283,7 +283,7 @@ NOT_RUN = {
         "a builder. It writes the capability preflight into a deck; shell.py check gates the result",
     "tools/deck/print_variants.py":
         "a builder. It emits the two print variants T-018 measures, for a person to print and look "
-        "at - CLAUDE.md rule 5 keeps printing optional and rule 6 keeps the looking manual. Run "
+        "at - .claude/rules/decks.md rule 5 keeps printing optional and CLAUDE.md rule 6 keeps the looking manual. Run "
         "it by hand: python tools/deck/print_variants.py",
     "tools/deck/chrome_row.py":
         "a measurement for T-035, taken once against a real browser. It answers whether the ruler "

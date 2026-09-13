@@ -69,7 +69,7 @@ giving up the typography.
 > **Raised and resolved, 2026-08-06 — the sentence above stands.** When T-013 asked whether a
 > per-deck size ceiling was acceptable, the owner's answer made delivery a configuration parameter
 > with **CDN references as the default** and embedding on request. That would have reversed this
-> sentence, CLAUDE.md rule 1, and the position [R4](research/R4-prior-art.md) identified as the
+> sentence, .claude/rules/decks.md rule 1, and the position [R4](research/R4-prior-art.md) identified as the
 > owner's sharpest departure from the source deck skill (J1 — *the skill means one file, the owner
 > means no network*).
 >

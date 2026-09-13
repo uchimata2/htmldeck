@@ -160,6 +160,7 @@ CYCLES = [
     ], None),
     (3, "Tier 1 and the brief", "A", [
         "CLAUDE.md",
+        ".claude/rules/*",
         "docs/BRIEF.md",
     ], None),
     (4, "The release machinery", "A", [

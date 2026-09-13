@@ -388,7 +388,7 @@ REDUCED_VARIANTS = [
 
 
 # **The glitch-free half** (T-041). One seed per condition R6 section 8 numbers 2 to 8, and each
-# breaks its own condition rather than a `DS-nnn` rule - these are a decomposition of CLAUDE.md
+# breaks its own condition rather than a `DS-nnn` rule - these are a decomposition of .claude/rules/decks.md
 # rule 2, not new design law. Six of the seven need a browser and the seventh would be dishonest
 # without one, so they are a fourth suite rather than rows in the static half.
 #

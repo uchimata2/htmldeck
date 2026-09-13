@@ -647,7 +647,7 @@ svg{display:block}
 .ruler[data-ticks="dot"][data-dense] .ruler-ticks li:not([data-section])[data-lit] button::before{
   width:calc(7*var(--du));height:calc(7*var(--du));background:var(--accent)}
 
-/* ---- TICK STYLE IS A THEME PARAMETER, not a fork of the component (CLAUDE.md rule 4).
+/* ---- TICK STYLE IS A THEME PARAMETER, not a fork of the component (.claude/rules/decks.md rule 4).
    `dot` is the shipped default and `bar` is the alternative; they share one manifest, one set of
    targets, one keyboard model and one degradation, so only the mark and the current-position
    treatment differ and a later template generator can pick between them without re-deriving
@@ -694,7 +694,7 @@ svg{display:block}
    means section-versus-slide (DS-216) - nothing about the marks changes, and what a reader gains is
    an outline around the one that is current.
    NOT scoped to a tick style, unlike the ring rule above it: `bar` never received the ring at all,
-   so a dense rule written the same way would leave half the component with the defect (CLAUDE.md
+   so a dense rule written the same way would leave half the component with the defect (.claude/rules/decks.md
    rule 4). Equal specificity to the `[data-ticks="dot"]` rule and later in source order, which is
    what lets one declaration serve both.
    Chosen by the project owner 2026-08-19 from a rendered strip of three candidates against the
@@ -1308,7 +1308,7 @@ svg{display:block}
    **The look is fixed, and it is not a theme's.** `#23211d` is `quarto.css`'s `--ink` exactly;
    `#f6f1e4`, `#b9b2a4` and `#ddd6c6` are warm neutrals matching no token in either theme. So a
    deck on `lattice`, whose ground is a cool near-neutral, degrades into the other theme's family,
-   and every template CLAUDE.md rule 4's generator will produce degrades into `quarto` too. That
+   and every template .claude/rules/decks.md rule 4's generator will produce degrades into `quarto` too. That
    is deliberate rather than an oversight: the degraded state is a plain document, it owes no
    palette, and the values cannot be tokenised without breaking the rule above.
 
@@ -1322,7 +1322,7 @@ svg{display:block}
 
    Printing is unchanged by it. The print block above is `!important` throughout and paginates the
    stage; a browser that failed the preflight prints what that block says. Printing is a mode the
-   user forces on and never a constraint on the design (CLAUDE.md rule 5), so it is not this
+   user forces on and never a constraint on the design (.claude/rules/decks.md rule 5), so it is not this
    block's subject. */
 .preflight{display:none}
 :root[data-preflight] .preflight{
@@ -1377,7 +1377,7 @@ svg{display:block}
 :root[data-preflight] .figwrap,
 :root[data-preflight] .fig{width:100%;height:auto}
 
-/* printing is a mode the user forces on, never a constraint on the design (CLAUDE.md rule 5)
+/* printing is a mode the user forces on, never a constraint on the design (.claude/rules/decks.md rule 5)
 
    THE PAGINATED STAGE - one slide per printed page. R7 ruled this the printable mode against a
    measured alternative: the reading view prints as a continuous document, and prints badly for a
