@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: [T-214]
 related: [T-007, T-016, T-019, T-033, T-187, T-215]
-work_package: PH3
+work_package: PH4
 owner: maintainer
 business_value: medium
 effort: l
@@ -178,3 +178,4 @@ holds itself back for them is slower for no reader's benefit.
 | 2026-08-10 | (specify) | **Estimated `medium`/`xl`, and moved to `PH3`.** `medium` because all three are wanted and none is a shipping requirement — that is precisely why T-016 split them out rather than holding PH1; `xl` because it is three deliverables and not one: a functional 3D visual with a chosen static projection as its reduced-motion and print fallback, a frame-rate figure with the machine stated beside it, and the DS-140 amendment the first forces. `PH3` under the release split set by the owner 2026-08-10, as the largest new capability on the board. |
 | 2026-08-09 | → proposed | **Split out of [T-016](T-016-the-interaction-and-motion-layer.md) so that PH1 ships.** T-016 replanned into eight steps on 2026-08-09 and completed four: the reduced-motion render, the component contract, the gate that holds a deck to it, and the editorial split rule. The remaining four are **capabilities the interaction layer does not reach**, not defects in what it does — the deck has no 3D at all, and no deck here has ever had its frame rate measured. Holding a release for them buys no reader anything, and each is wanted, so they move rather than being dropped. **The order inside the task is the part worth carrying over**: the wobble is a fifth motion or an exemption, DS-140 is a closed vocabulary of four, and shipping the figure before the ruleset has a named side produces a deck that fails its own gate. |
 | 2026-09-13 | (no change) | The owner scheduled 3D for 1.1.0: this task is the first of a line that also needs thorough testing, more examples, fixes, and features using a 3D library. 1.0.0 does not wait for it, and it stays open. [T-302](T-302-give-the-3d-line-its-own-release-phase.md) gives the line its own phase. |
+| 2026-09-13 | (no change) | `work_package` `PH3` -> `PH4`, by [T-302](T-302-give-the-3d-line-its-own-release-phase.md): the 3D line's own phase, which 1.0.0 does not wait for. Still `proposed`. |

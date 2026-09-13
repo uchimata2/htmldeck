@@ -82,12 +82,12 @@ and the reason the config exists.*
 
 Two things about this project's use of it that the config does not say:
 
-- **`work_package` is a grouping key, and its values are a release phase.** Tasks use `PH1`, `PH2` or
-  `PH3`; the `WP1`–`WP3` packages belong to tasks worked under the research and design phases, which
+- **`work_package` is a grouping key, and its values are a release phase.** Tasks use `PH1` to
+  `PH4`; the `WP1`–`WP3` packages belong to tasks worked under the research and design phases, which
   are history rather than the current plan. [`../docs/RELEASE-PHASES.md`](../docs/RELEASE-PHASES.md)
   is the decision behind
   the split, and which phase a new task takes is `../CLAUDE.md`'s rule: `PH1` only when a defect in
-  the published plugin reopens it, `PH3` for anything `l` or `xl`, and — since PH2 shipped — for
+  the published plugin reopens it, `PH4` for 3D work, `PH3` for anything else `l` or `xl`, and — since PH2 shipped — for
   everything else that is not such a defect.
 - **`work_package` is the phase; `shipped_in` is the version. This is the operative statement of that
   rule** — everywhere else points here, and the incident behind it is **L-69**. They are different

@@ -282,7 +282,7 @@ describe a plan.
   0.6.0.
 
 The whole backlog is in [`tasks/`](tasks/README.md), one Markdown file per task with its own log. It
-is split into three phases, and a phase is not a version. **PH1** is what a first working plugin
+is split into four phases, and a phase is not a version. **PH1** is what a first working plugin
 needs; it shipped as 0.1.0 and took five patches. **PH2** is the minor and moderate fixes already
 known. It shipped as 0.2.0 with two of its tasks open behind it. Both have since closed. The
 second was the printed contents page, which now continues onto another sheet for decks past the
@@ -292,7 +292,7 @@ repository's own example deck as well as in the deck that reported them. 0.2.4 c
 install; it was the project's own record. 0.3.0 was the first release shaped by a deck somebody else
 built. **PH3** is the
 larger work. The frame-rate figure and those seven conditions have now shipped; the 3D visuals have
-not.
+not. **PH4** is those 3D visuals, moved out of PH3 so that 1.0.0 does not wait for them.
 [`docs/BRIEF.md`](docs/BRIEF.md) says what is in each and why.
 
 The current release is 0.7.0. It is the release where the repository read itself end to end and

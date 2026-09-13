@@ -7,7 +7,7 @@ phase: specify
 parent: null
 blocked_by: []
 related: []
-work_package: PH1 | PH2 | PH3 | WP1 | WP2 | WP3 | final | none
+work_package: PH1 | PH2 | PH3 | PH4 | WP1 | WP2 | WP3 | final | none
 owner: the project owner
 business_value: critical | high | medium | low
 effort: xs | s | m | l | xl

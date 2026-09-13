@@ -38,7 +38,8 @@ project's `work_package` values are enumerated below, which both catches a typo 
 and `PH3`**, one to one, meaning unchanged. A phase name that looks like a version is one, and it had
 already come within a tag of shipping three fixes to nobody (**L-69**); it went on being misread in
 conversation afterwards. `WP1`–`WP3` keep their names — they were research and design packages and
-were never version-shaped. **T-099.**
+were never version-shaped. **T-099.** `PH4`, the 3D line that 1.0.0 does not wait for, joined them
+on 2026-09-13 (**T-302**).
 
 **`shipped_in` is a carried field, not an enumerated one.** It holds the version in which a task's
 work first reached an installed copy — bare, `0.2.1`, never `v0.2.1`, because the `v` belongs to the
@@ -184,7 +185,7 @@ independent projects reached for it and neither could validate (T-088).
 | type | analysis, decision, deliverable, research, fix, admin, audit |
 | business_value | critical, high, medium, low |
 | effort | xs, s, m, l, xl |
-| work_package | WP1, WP2, WP3, PH1, PH2, PH3, final, none |
+| work_package | WP1, WP2, WP3, PH1, PH2, PH3, PH4, final, none |
 
 ## Ordering
 
