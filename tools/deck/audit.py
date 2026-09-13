@@ -2972,10 +2972,19 @@ def render_verdicts(data):
         # DS-218's placement clause (T-277). The row prints `motionReach` because a rule that
         # passes has to say what it passed on; *True* over a condition nothing else guards is the
         # shape L-144 warns about, and the sentence is what makes it checkable by eye.
-        ("DS-218", "control reachable while motion runs: %s - %s (present: %s, %d looping)"
-         % (data["motionPersistent"], data.get("motionReach", "not measured"),
-            data["motionControl"], len(data["infinite"])),
-         len(data["infinite"]) == 0 or data["motionPersistent"]),
+        # A deck with no looping motion owes no control, and ABSENCE_IS_A_PASS declares the pass.
+        # The row printed the reachability reading anyway - `False - no control` beside `pass` -
+        # which read as the gate stating a failure and passing it (T-257's seed). The owner kept
+        # the pass and asked for the row to name the absence instead (T-283).
+        ("DS-218", ("control reachable while motion runs: %s - %s (present: %s, %d looping)"
+                    % (data["motionPersistent"], data.get("motionReach", "not measured"),
+                       data["motionControl"], len(data["infinite"])))
+                   if data["infinite"] else
+                   ("no looping motion in this deck - no stop control owed (present: %s - %s)"
+                    % (data["motionControl"], data.get("motionReach", "not measured"))),
+         # `motionPersistent` first: the self-test's unread-key check runs on a measurement with no
+         # looping motion, and the other order short-circuits past it. Same verdict for every input.
+         data["motionPersistent"] or len(data["infinite"]) == 0),
         # **The instance T-051 was raised for.** `.current` is the only subject this row has, the
         # probe emits the key only when it finds one, and `None != "none"` is `True` - so the rule
         # passed on its own absence, and the seeded fixture that deletes the deck's only dashed flow
@@ -3444,6 +3453,24 @@ def self_test():
             sys.exit("SELF-TEST FAILED: DS-140 does not report %s - it gave %r. The fault T-051 "
                      "exists for is back, or the row has stopped deciding anything"
                      % (state, ds140(**kw)))
+
+    # DS-218 is a declared conditional, so its three states are a vacuous pass, a pass and a
+    # failure. The vacuous pass has to say it is one: T-257's seed printed `False - no control`
+    # beside `pass`, which is the line T-283 removed. The pass and the failure differ in
+    # `motionPersistent` alone, so the failure fires for the reason the row names (L-125).
+    def ds218(**kw):
+        return [(w, ok) for r, w, ok in render_verdicts(dict(empty, **kw)) if r == "DS-218"][0]
+
+    loops = {"infinite": [["current", 1]], "motionControl": True}
+    for want, says, state, kw in (
+            (True, "no looping motion", "a vacuous pass that names its absence", {}),
+            (True, "True - ", "a pass on a reachable control", dict(loops, motionPersistent=True)),
+            (False, "False - ", "a failure on an unreachable control",
+             dict(loops, motionPersistent=False))):
+        what, ok = ds218(**kw)
+        if ok is not want or says not in what:
+            sys.exit("SELF-TEST FAILED: DS-218 does not report %s - it gave %r on %r"
+                     % (state, ok, what))
 
     # DS-231 has to be able to fail, and it has to fail for the stated reason rather than on any
     # figure the panel happens to repeat. The two documents differ in one place: whether the face
