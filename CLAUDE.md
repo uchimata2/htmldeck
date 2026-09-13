@@ -42,8 +42,8 @@ every turn, so a size limit there measures the wrong cost, and what constrains t
 a time. It accepts that `docs/BRIEF.md` and `docs/LESSONS.md` grow without limit. A tier-2 document
 that starts loading on every turn has become tier 1, and this bound applies to it.
 
-**This file is over its own bound** — 15,899 bytes against `docs/AUDIT-METHOD.md`'s 8,040, measured
-2026-09-02 with the command above, so the debt is 7,859. *The floor moved twice that day and this
+**This file is over its own bound** — 15,968 bytes against `docs/AUDIT-METHOD.md`'s 8,040, measured
+2026-09-13 with the command above, so the debt is 7,928. *The floor moved twice on 2026-09-02 and this
 sentence was rewritten twice with it: `T-239` gave that file a Method column, and B22 gave it
 `PR-82`'s clause. It had fallen to that file from `tasks/TASK-WORKFLOW.md`'s 13,324 when the
 2026-08-23 ruling made the audit method a term — three changes in the smaller side, one in the
@@ -86,15 +86,17 @@ Conflating them nearly shipped a release no adopter could have installed: **L-69
 *release* takes is [`docs/PUBLISHING.md`](docs/PUBLISHING.md) §8; which field a *task* carries is
 `tasks/TASK-WORKFLOW.md` §3.
 
-**The backlog is three release phases — `PH1`, `PH2` and `PH3`, and PH3 is the main line.**
-[`docs/RELEASE-PHASES.md`](docs/RELEASE-PHASES.md) is the decision: what each phase contains, why the
-second split was needed, and why the line between the last two falls at an effort estimate of `l`.
-`tasks/README.md` is the current state, grouped by the same three names. **A new task belongs to one
+**The backlog is four release phases — `PH1` to `PH4`. PH3 is the main line, and `PH4` is the 3D
+line, which 1.0.0 does not wait for.**
+[`docs/RELEASE-PHASES.md`](docs/RELEASE-PHASES.md) is the decision: what each phase contains, why each
+split was needed, and why the line between PH2 and PH3 falls at an effort estimate of `l`.
+`tasks/README.md` is the current state, grouped by the same names. **A new task belongs to one
 of them**: `PH1` only when a defect in the published plugin reopens it — such a defect is a `PH1`
-**phase** task, not a later improvement — `PH3` for anything `l` or `xl`, **and, since PH2 shipped,
-for everything else that is not such a defect**, because reopening a shipped phase is reserved for
-them. That last clause is why a small task can sit in the phase of the big ones. A phase that quietly
-takes work the size of the next one is the failure both splits exist to prevent.
+**phase** task, not a later improvement — `PH4` for 3D work, `PH3` for anything else `l` or `xl`,
+**and, since PH2 shipped, for everything else that is not such a defect**, because reopening a shipped
+phase is reserved for them. That last clause is why a small task can sit in the phase of the big ones.
+A phase that quietly takes work the size of the next one is the failure the first two splits exist to
+prevent.
 
 **A task's classification is this project's to make, not its filer's.** A report that arrives as
 feedback because a contract behaves as written is still a defect when a published gate fails a deck

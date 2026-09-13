@@ -96,8 +96,9 @@ contradiction here ([`../tasks/TASK-WORKFLOW.md`](../tasks/TASK-WORKFLOW.md) §3
 [T-036](../tasks/T-036-the-second-contents-page-for-long-decks.md) closed 2026-08-13, which emptied
 the phase.
 
-**PH3 is the main line since 2026-08-13.** The three phases were set by the owner — `PH1` and `PH2`
-on 2026-08-09, `PH3` split off PH2 on 2026-08-10 — and
+**PH3 is the main line since 2026-08-13.** The four phases were set by the owner — `PH1` and `PH2`
+on 2026-08-09, `PH3` split off PH2 on 2026-08-10, and `PH4`, the 3D line 1.0.0 does not wait for, on
+2026-09-13 — and
 [`RELEASE-PHASES.md`](RELEASE-PHASES.md) is the decision, including why the second split was needed
 and why the line fell at an effort estimate of `l`. **T-089, T-092 and T-093 sit in PH3 against
 their size**, because reopening a shipped phase is reserved for defects in the published plugin.
