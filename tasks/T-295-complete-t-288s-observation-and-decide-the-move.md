@@ -13,7 +13,7 @@ business_value: high
 effort: s
 finding: CE-14
 created: 2026-09-02
-updated: 2026-09-02
+updated: 2026-09-13
 deliverables: []
 ---
 
@@ -66,6 +66,10 @@ start itself. That is one turn of work for a session that starts with the probe 
   deletes rules from what an adopter receives; tracked, the repository starts carrying a file that
   only one tool reads. **The project owner answers**, and the answer decides the task rather than
   colouring it.
+  **Answered by the owner 2026-09-13: carry, if the observation shows the marker arriving.** The
+  objection does not separate the two files — `CLAUDE.md` is also read by one harness only — and
+  taskmd's `T-169` declined the same move on its margin under budget, where this repository's
+  `CLAUDE.md` is over its own bound.
 
 ## 2. Plan
 
@@ -96,3 +100,4 @@ start itself. That is one turn of work for a session that starts with the probe 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-02 | → proposed | Raised in B19 while closing [T-288](T-288-move-the-rules-that-bind-only-deck-or-release-work-under-path-scoped-rules.md) `not met`. That task closes on its own instruction and the move is then unowned, which is a gap rather than a conclusion. **Unbatched, for the owner**, like the rest of [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md)'s children — the audit's own rule. |
+| 2026-09-13 | (no change) | The owner answered the open question: carry, on the observation. Still `proposed`. |

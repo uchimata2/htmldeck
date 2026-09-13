@@ -12,7 +12,7 @@ owner: the project owner
 business_value: high
 effort: s
 created: 2026-08-30
-updated: 2026-08-30
+updated: 2026-09-13
 deliverables: []
 ---
 
@@ -70,6 +70,16 @@ is an adopter's.
 **Open questions**
 - None. The shape is settled by `DS-140`, which sits four lines away in the same list and already
   does this.
+- **Raised 2026-09-13, before plan. It changes the outcome, so the owner answers.** The premise
+  above does not hold. `DS-140` is a universal (*every `Current` is dashed*), so `None` on no flow
+  is right for it. `DS-218` is a conditional (*if motion loops, a control is reachable*), and
+  `ABSENCE_IS_A_PASS` in `tools/deck/audit.py` rules in writing that a conditional with no
+  subject passes: *vacuous truth is the right answer*. Its self-test enforces that, and `DS-143`'s
+  flow-dash row and `DS-219` are declared the same way, so criterion 1 would convert one
+  conditional of three. **Recommended:** keep the declared pass, and make the row name the absence
+  (*no looping motion - no control owed*) instead of printing `False - no control` beside `pass`.
+  That line is the contradiction T-257's seed printed, and the wording is what the adopter's record
+  [`018`](../docs/adopter-reports/claimai/018-ds-218-passes-the-shipped-example-only-because-it-has-no-looping-motion.md) asked about.
 
 ## 2. Plan
 
@@ -100,3 +110,4 @@ is an adopter's.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-30 | -> proposed | Raised while closing [T-257](T-257-ds-218-passes-the-shipped-example-vacuously.md), whose seeded run printed the defect: `False - no control` beside `pass`. **`PH1`**: `check.py` ships in `0.6.0` and this is the instrument an adopter runs, which is `CLAUDE.md`'s one condition for reopening the phase. It is separated from `T-257` rather than absorbed because it changes a verdict for every deck the gate reads, which [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) section 4 routes to a task. |
+| 2026-09-13 | (no change) | Specify reopened before plan: criterion 1 conflicts with `ABSENCE_IS_A_PASS`, which declares `DS-218` a conditional that passes on an absent subject. The question and a recommendation are in section 1. Still `proposed` at `specify` until the owner answers. |

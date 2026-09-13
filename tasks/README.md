@@ -42,14 +42,15 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-225 |
 | [T-282](T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | The portfolio deck's opening slide carries one of the two figures its specification calls the whole argument | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-233 |
 | [T-283](T-283-ds-218-reports-a-pass-where-it-has-no-subject.md) | Make DS-218 report no subject where it has none, rather than a pass | `PH1` | - | `proposed` | `specify` | - | - | - | - | T-231, T-257 |
-| [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md) | Audit — what a session pays per turn, and why it grows | `PH3` | - | `in_progress` | `review` | - | T-288, T-289, T-290, T-291, T-292, T-293, T-294, T-295, T-296 | - | - | T-130, T-153, T-285, T-286 |
-| [T-290](T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md) | Measure one batch run as a single session with compaction, against the session-per-task rhythm | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-294 | T-285, T-286 |
+| [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md) | Audit — what a session pays per turn, and why it grows | `PH3` | - | `in_progress` | `review` | - | T-288, T-289, T-290, T-291, T-292, T-293, T-294, T-295, T-296, T-301 | - | - | T-130, T-153, T-285, T-286 |
+| [T-290](T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md) | Measure one batch run as a single session with compaction, against the session-per-task rhythm | `PH3` | - | `proposed` | `specify` | T-287 | - | T-299 | T-294 | T-285, T-286, T-301 |
 | [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | Grade the second context-economy run's bands after its remedies land | `PH3` | - | `proposed` | `specify` | T-287 | - | T-290 | - | T-153 |
 | [T-295](T-295-complete-t-288s-observation-and-decide-the-move.md) | Complete T-288's observation in a session that can take it, then decide the move on the evidence | `PH3` | - | `proposed` | `specify` | T-287 | - | - | - | T-236, T-288 |
 | [T-296](T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md) | Decide what a documentation commit may skip on the front page, since one README fence is the whole cost | `PH3` | - | `proposed` | `specify` | T-287 | - | - | - | T-285, T-286, T-292 |
 | [T-298](T-298-decide-what-the-clause-sweep-owes-for-a-rule-the-clause-table-cannot-hold.md) | Decide what the clause sweep owes for a rule the clause table cannot hold | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-054, T-244, T-278 |
-| [T-299](T-299-triage-the-nextep-adopter-report.md) | Triage the Nextep adopter report and decide each of its eighteen findings | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-225 |
+| [T-299](T-299-triage-the-nextep-adopter-report.md) | Triage the Nextep adopter report and decide each of its eighteen findings | `PH3` | - | `proposed` | `specify` | - | - | - | T-290 | T-225 |
 | [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | - | - | - |
+| [T-301](T-301-decide-whether-the-record-forms-get-shorter.md) | Decide whether task, register, lesson and handoff records get shorter, since writing them is a quarter of a session's spend | `PH3` | - | `proposed` | `specify` | T-287 | - | - | - | T-290 |
 
 ## Closed
 

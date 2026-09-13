@@ -13,7 +13,7 @@ business_value: medium
 effort: s
 finding: CE-18
 created: 2026-09-02
-updated: 2026-09-02
+updated: 2026-09-13
 deliverables: []
 ---
 
@@ -64,6 +64,8 @@ currently guarantees on every documentation commit:
 
 **Open questions**
 - Which candidate. The owner's, because each one trades a guarantee rather than an implementation.
+  **Answered by the owner 2026-09-13: the first** — skip the render-driving fence under `--docs`,
+  with a printed reason. The full gate still compares it at every batch landing.
 
 ## 2. Plan
 
@@ -95,3 +97,4 @@ currently guarantees on every documentation commit:
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-02 | → proposed | Raised in B20 by [T-292](T-292-the-docs-gate-is-four-fifths-one-render.md), which refused its own remedy on a measurement. `CE-18` named the coverage account as what runs the deck gate inside `figures.py`; emptying `ACCOUNTS` leaves the run in place, so the subject is the README's output fence and the remedy is a different one. **Not absorbed into B20** under §4's elastic: every candidate removes something the front page guarantees on every documentation commit, which is a ruling rather than a fix. `PH3`. |
+| 2026-09-13 | (no change) | The owner chose the first candidate. Still `proposed`. |
