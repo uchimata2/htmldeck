@@ -155,7 +155,9 @@ weigh.
 
 - **Nothing was rejected.** Every record is accepted and raised. None is deferred either: the owner's
   direction recorded in [T-302](T-302-give-the-3d-line-its-own-release-phase.md) is that 1.0.0 waits
-  for an empty backlog outside `PH4`, and a deferral here would have no phase to wait in. — 2026-09-13
+  for an empty backlog outside `PH4`, and a deferral here would have no phase to wait in. **The owner
+  confirmed the same day that the three `PH3` requests, T-307, T-308 and T-309, hold 1.0.0.** —
+  2026-09-13
 
 - **The eight are not added to [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md).** That
   document schedules the forty-nine tasks of 2026-08-29. These take the board's own ordering. —
@@ -213,3 +215,5 @@ weigh.
 - 2026-09-13 — in_progress -> done. Eighteen accepted and raised into `T-303` to `T-310`: five `PH1`
   tasks carrying thirteen records, three `PH3` carrying five. Nothing merged, deferred or rejected.
   `shipped_in: unreleased`.
+- 2026-09-13 — (no change). The owner confirmed that T-307, T-308 and T-309 hold 1.0.0, and answered
+  T-308's open question.

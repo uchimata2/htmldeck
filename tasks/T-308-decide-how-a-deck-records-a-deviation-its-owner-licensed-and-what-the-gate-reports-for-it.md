@@ -64,6 +64,7 @@ the gate does what it says. What is missing is vocabulary. That also separates `
   the reason and the date required in the deck and printed on every run. An author who can never reach
   zero stops reading the gate, which is T-225's ruling, and a licence the gate prints stays visible
   where a wrapper hides it.
+  **Answered by the owner 2026-09-13: yes, as recommended.**
 
 ## 2. Plan
 
@@ -94,3 +95,4 @@ the gate does what it says. What is missing is vocabulary. That also separates `
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-13 | -> proposed | Raised by T-299 from Nextep record `17`. `PH3` and `decision`: the rules fire correctly, so no published behaviour is wrong, and the open question is the owner's. |
+| 2026-09-13 | (no change) | The owner answered the open question: a deck may license a `hard` rule, with the rule, the reason and the date stated in the deck and printed on every run. Still `proposed`. |
