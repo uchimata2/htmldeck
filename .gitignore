@@ -23,8 +23,8 @@ __pycache__/
 .handoff/processed_*
 
 # Machine state under `.claude/`, named one line at a time rather than by the directory.
-# `.claude/` itself is deliberately NOT ignored. T-295 decided on 2026-09-14 that this repository
-# tracks no rule file for now, and a wholesale rule would take the next decision quietly. The
+# `.claude/` itself is deliberately NOT ignored. T-295 decided on 2026-09-14 to carry the deck and
+# release rules under `.claude/rules/`, tracked, and a wholesale rule would untrack them. The
 # worktrees line was `.git/info/exclude`'s until 2026-09-02 and so reached no clone at all.
 .claude/settings.local.json
 .claude/worktrees/
