@@ -576,7 +576,10 @@
   });
 
   document.addEventListener('keydown', function(e){
-    if (e.target.matches('input,textarea')) return;
+    var tg = e.target;
+    /* `document` has no `matches`, so a keydown dispatched on it threw here and lost every
+       shortcut at once (T-310, Nextep record `02`). The guard is the idiom the ruler line uses. */
+    if (tg.matches && tg.matches('input,textarea')) return;
     /* **Every shortcut here is a bare letter, so every browser chord built on one was being
        swallowed** - Ctrl-R entered the reading view and cancelled the reload, Ctrl-F went
        fullscreen instead of opening find (adopter report `009`'s sibling, `008`). A deck is a
@@ -597,6 +600,9 @@
       if (k === 'Escape' || k === 'r' || k === 'R'){ setView(false); e.preventDefault(); }
       return;
     }
+    /* Space activates a focused control, so it is the control's and not the pager's. Cancelling
+       it here left a real `<button>` on a slide inoperable by Space (T-310, Nextep record `12`). */
+    if (k === ' ' && tg.closest && tg.closest('button,[role="button"],a[href],input,select,textarea')) return;
     if (k === 'ArrowRight' || k === 'PageDown' || k === ' ')      { go(idx+1); e.preventDefault(); }
     else if (k === 'ArrowLeft' || k === 'PageUp')                 { go(idx-1); e.preventDefault(); }
     else if (k === 'Home')                                        { go(0); e.preventDefault(); }

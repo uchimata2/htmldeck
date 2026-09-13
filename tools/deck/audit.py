@@ -2088,10 +2088,10 @@ PROBE = r"""
       var p = document.querySelector('.slide[data-current] .disc-panel:not([hidden])');
       if (p) out.panelBelowControl =
         p.getBoundingClientRect().top >= p.parentNode.querySelector('.disc-btn').getBoundingClientRect().bottom - 1;
-      // Dispatched on BODY, never on `document`. The deck's handler opens with
-      // `e.target.matches('input,textarea')`, and `document` has no `matches` - so an event
-      // dispatched on the document throws inside the deck's own listener and the key does
-      // nothing, silently. Found by DS-166 reporting that an arrow did not advance the deck.
+      // Dispatched on BODY, the target a real key press has. Until T-310 the deck's handler
+      // called `e.target.matches` unguarded and `document` has no `matches`, so an event
+      // dispatched on the document threw inside the listener - found here by DS-166 reporting
+      // that an arrow did not advance. A deck built before that shell still does it.
       document.body.dispatchEvent(new KeyboardEvent('keydown', {key:'Escape', bubbles:true}));
 
       // DS-166 - disclosure state is never required to advance, and the two do not interact.
@@ -2108,10 +2108,10 @@ PROBE = r"""
       var afterArrow = at();
       document.body.dispatchEvent(new KeyboardEvent('keydown', {key:'d', bubbles:true}));
       out.toggleDoesNotAdvance = at() === afterArrow;
-      // Dispatched on BODY, never on `document`. The deck's handler opens with
-      // `e.target.matches('input,textarea')`, and `document` has no `matches` - so an event
-      // dispatched on the document throws inside the deck's own listener and the key does
-      // nothing, silently. Found by DS-166 reporting that an arrow did not advance the deck.
+      // Dispatched on BODY, the target a real key press has. Until T-310 the deck's handler
+      // called `e.target.matches` unguarded and `document` has no `matches`, so an event
+      // dispatched on the document threw inside the listener - found here by DS-166 reporting
+      // that an arrow did not advance. A deck built before that shell still does it.
       document.body.dispatchEvent(new KeyboardEvent('keydown', {key:'Escape', bubbles:true}));
 
       // DS-146 - charts draw in ONCE, never again on the way back. The deck marks a slide played
