@@ -55,7 +55,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-307](T-307-give-the-chrome-first-and-last-page-controls-and-a-ruler-whose-marks-a-reader-can-aim-at.md) | Give the chrome first and last page controls, and a ruler whose marks a reader can aim at | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-178, T-299 |
 | [T-308](T-308-decide-how-a-deck-records-a-deviation-its-owner-licensed-and-what-the-gate-reports-for-it.md) | Decide how a deck records a deviation its owner licensed, and what the gate reports for it | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-225, T-264, T-265, T-299 |
 | [T-309](T-309-contract-an-inline-term-that-opens-a-definition-bubble.md) | Contract an inline term that opens a definition bubble | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-262, T-299 |
-| [T-310](T-310-stop-the-shells-keydown-handler-throwing-on-a-document-target-and-taking-space-from-a-focused-control.md) | Stop the shell's keydown handler throwing on a document target and taking Space from a focused control | `PH1` | - | `proposed` | `specify` | - | - | - | - | T-268, T-299 |
 
 ## Closed
 
@@ -353,5 +352,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-297](T-297-record-the-degraded-states-colour-ruling-where-the-block-asks-the-question.md) | Record the degraded state's colour ruling in the block that asks the question | `PH3` | `0.7.0` | `done` | `review` | - | - | - | - | T-253 |
 | [T-299](T-299-triage-the-nextep-adopter-report.md) | Triage the Nextep adopter report and decide each of its eighteen findings | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-290 | T-225, T-303, T-304, T-305, T-306, T-307, T-308, T-309, T-310 |
 | [T-302](T-302-give-the-3d-line-its-own-release-phase.md) | Give the 3D line its own release phase, so the 1.0.0 backlog can be empty while T-057 stays open | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-057 |
+| [T-310](T-310-stop-the-shells-keydown-handler-throwing-on-a-document-target-and-taking-space-from-a-focused-control.md) | Stop the shell's keydown handler throwing on a document target and taking Space from a focused control | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-268, T-299 |
 
 <!-- taskmd:end -->
