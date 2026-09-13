@@ -12,7 +12,7 @@ owner: the project owner
 business_value: medium
 effort: s
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-13
 deliverables: []
 ---
 
@@ -55,7 +55,7 @@ work here is to have every value ready and correct.
 
 | Field | Value | Why |
 | :--- | :--- | :--- |
-| Supported platforms | **Claude Code only** | The field's own instruction is to test each surface first. Cowork has never been run against this plugin, and it ships `tools/` and `shell/`, which is exactly what differs between surfaces. Add Cowork after someone has built a deck there. |
+| Supported platforms | **Claude Code only** | The field's own instruction is to test each surface first. Cowork has never been run against this plugin. Add Cowork after someone has built a deck there. |
 | License type | `MIT` | `LICENSE` and `plugin.json` agree. |
 | Privacy policy URL | leave blank, **but read the note below first** | |
 | Email address | prefilled | |
@@ -71,7 +71,12 @@ notices before you do is worse than saying so.
 **Scope**
 - In: the form's values, and any manifest change they expose
 - In: confirming `claude plugin validate . --strict` still exits 0 at the time of submission
+- In: **re-measuring every figure in this record when the work starts.** They date from 2026-09-12,
+  and the owner scheduled other tasks to land first, any of which can move `plugin.json`, the
+  validator's result or the catalog
 - Out: the submission itself. The form is behind a sign-in and is the owner's to send
+- Out: **review and close before the owner confirms the form was sent.** Implement ends with every
+  value ready, and the record waits there
 - Out: adding Cowork as a supported surface. That is a test first, then a resubmission
 
 **Inputs**
@@ -85,11 +90,17 @@ notices before you do is worse than saying so.
 - [ ] The description is written for the catalog's norms, not copied from the manifest unchanged
 - [ ] Supported platforms names only a surface that has actually been tested
 - [ ] The privacy-policy answer accounts for `tools/assets/measure.py`'s outbound fetches
+- [ ] `htmldeck` is re-checked as free in the catalog at submission time, not trusted from 2026-09-12
+- [ ] At close, `shipped_in` follows `tasks/TASK-WORKFLOW.md` for a task that ships no version.
+  `python tools/tasks/lint.py` counts closed records without one; it printed
+  ``0 closed with no `shipped_in` `` on 2026-09-12
 
 **Open questions**
 - Is the catalog description covered text under `docs/PUBLISHING.md`'s *what a stranger reads before
   installing* test? It is read in a directory listing before anything is installed, which argues yes,
   and yes means it goes through the humanizer before submission — the owner answers.
+- Which tasks must close before this one starts? The owner scheduled other work first. Any that
+  must land before submission belong in `blocked_by`, not in prose — the owner answers.
 
 ## 2. Plan
 
@@ -103,13 +114,16 @@ notices before you do is worse than saying so.
 **Description — a draft, not the answer.** The catalog's median description is **274 characters** and
 64% run over 200; `plugin.json`'s current 218 is serviceable but does not carry the words someone
 would search. The gap to close is *deck*, *slides*, *presentation*, *offline*, *critique*, *diagram*.
-The nearest catalog neighbours are presentation and markdown-slide plugins, so the differentiator to
-lead with is the one they do not have: a deck that renders with the network disabled, and a critique
-pass that scores an existing deck rather than only generating a new one.
+**The neighbours, measured 2026-09-12.** 29 catalog entries match *slide*, *presentation*, *deck* or
+*pptx* in their name or description. **Self-contained is already claimed**: `keynot` describes a
+self-contained HTML slide deck in a single file with no runtime dependencies, which is close to this
+plugin's opening sentence, and `slidecast` also says self-contained. Most of the rest produce `.pptx`
+(`genpptx`, `pptx-deck-plugin`, `hackflow-ppt`, `arcdeck`) or PDF (`pdf-forge`). **None of them
+claims offline**: the one catalog match for the word in that set is `semanticsearch`, a search tool.
+*Critique* appears in one description, `arcdeck`'s; read it before calling the critique mode unique.
 
-**Category.** The form's next screen stores one. `development` holds 104 entries and `productivity`
-18, against 2,125 with none set at all. Filling it is a cheap differentiator either way; `design` has
-a single entry and is arguably the honest home for this plugin.
+**Category.** The catalog stores one, but the Console form asks for none on either screen, checked
+when the sibling project `taskmd` was submitted on 2026-09-12. It is not a field you can fill.
 
 ## 3. Implement
 
@@ -133,3 +147,4 @@ a single entry and is arguably the honest home for this plugin.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-12 | → proposed | Created from the sibling project `taskmd`'s submission the same day, with every figure re-measured against this repository rather than carried over. **Two answers differ from taskmd's and would be wrong if copied**: the path field is blank here because `source` is `./`, and the privacy-policy reasoning has to account for `tools/assets/measure.py` fetching fonts over the network. |
+| 2026-09-13 | no change | **Folded in what a separate prompt would otherwise have carried**, on the owner's instruction that everything this task needs lives in the record: the stop before review, re-measuring before the work starts, the `shipped_in` rule at close, and the question of which tasks land first. **Two claims corrected**: the form has no category field, and the Cowork row asserted a difference between surfaces that nobody measured. The neighbours paragraph is now measured against the catalog rather than described. |
