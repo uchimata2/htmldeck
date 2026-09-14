@@ -45,6 +45,7 @@ recorded under the next heading with their answers. **The queue being empty is w
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
 | 18 | [`examples/reference-deck.html`](../examples/reference-deck.html) | the chrome row, any slide - the four pager buttons | A press that starts on a pager button's edge now pages. *Press each of first, previous, next and last right at its border: does every press page, and does the pinch still read?* | [T-313](../tasks/T-313-keep-a-pager-press-that-starts-on-the-buttons-edge-a-click.md) |
+| 19 | [`examples/reference-deck.html`](../examples/reference-deck.html) | *Eleven minutes decides this*, slide 3 - the stat figure; *Month eighteen stays reversible*, slide 9 - the arrowheads | The pulse and the arrowheads now wait until the slide has finished arriving. Page to each slide with motion on. *Does each motion start once the new slide is fully in view and play through where you can see it? Do the arrowheads stay hidden during the crossfade rather than flash and vanish?* | [T-312](../tasks/T-312-start-a-slides-one-time-content-motions-when-the-slide-has-arrived.md) |
 
 ## What has already been looked at
 

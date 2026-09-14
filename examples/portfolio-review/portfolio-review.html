@@ -1013,7 +1013,7 @@ svg{display:block}
    and without it the head flies in from the top-left corner of the figure. */
 .arrow-pop marker path{
   transform-box:fill-box;transform-origin:left center;
-  animation:arrowpop var(--scale-dur) var(--scale-ease) both;
+  animation:arrowpop var(--scale-dur) var(--scale-ease) both;animation-play-state:paused;
   animation-duration:calc(var(--m-on,0) * var(--scale-dur));
   /* **The delay is gated too, and finding out why cost a render.** A zero-duration animation still
      honours its delay, and `fill:both` paints the FROM keyframe for the whole of it - so a matrix
@@ -1037,7 +1037,7 @@ svg{display:block}
    motion with one rank, for the same reason the arrowheads are. */
 .dot-pop circle{
   transform-box:fill-box;transform-origin:center;
-  animation:dotpop var(--scale-dur) var(--scale-ease) both;
+  animation:dotpop var(--scale-dur) var(--scale-ease) both;animation-play-state:paused;
   animation-duration:calc(var(--m-on,0) * var(--scale-dur));
   animation-delay:calc(var(--m-on,0) * var(--dp,0) * var(--dot-stagger));   /* see the arrowhead */
   --motion-kind:content}
@@ -1091,10 +1091,20 @@ svg{display:block}
 @keyframes current{to{stroke-dashoffset:-26}}
 
 .pulse{animation:pulse var(--pulse-dur) var(--pulse-ease) 1 both;animation-delay:var(--pulse-delay);
+  animation-play-state:paused;
   animation-duration:calc(var(--m-on,0) * var(--pulse-dur));
   /* DS-141's licence: 1.2s is a once-only mark held long enough to be seen, not a slow entrance. */
   --motion-kind:content;--motion-long:emphasis}
 @keyframes pulse{0%,100%{transform:scale(1)}45%{transform:scale(1.035)}}
+
+/* **A one-time content motion waits for its slide to arrive** (T-312, DS-146). Each is held on its
+   first frame until the outgoing slide has finished leaving, so the crossfade no longer covers it:
+   the pulse and the arrowheads were running before `data-arrived` landed. Held paused rather than
+   gated by selector, so each motion keeps the one rule the contract and the motion checks read, and
+   its delay counts from arrival. A continuous motion such as `Current` is not held. */
+.slide[data-arrived] .pulse,
+.slide[data-arrived] .arrow-pop marker path,
+.slide[data-arrived] .dot-pop circle{animation-play-state:running}
 
 :root[data-motion="off"] .current{animation:none}
 /* T-112's two content motions collapse with everything else. `animation:none` drops the fill, so
@@ -1170,6 +1180,8 @@ svg{display:block}
    a document, not a scaled stage (DS-074), so the box has to leave its absolute placement and its
    design-unit width, and the control that opens it has nothing left to do once DS-073 opens it. */
 .doc .sources{position:static;display:block}
+/* a copied slide never arrives, so its held motions settle here instead (T-312) */
+.doc .pulse,.doc .arrow-pop marker path,.doc .dot-pop circle{animation:none;transform:none}
 /* a term's definition reads as a parenthetical beside its term (T-309, DS-163) */
 .doc .term-btn{text-decoration:none;cursor:auto}
 .doc .term-bub{position:static;display:inline;width:auto;padding:0;border:0;background:none;
@@ -1441,6 +1453,8 @@ svg{display:block}
 :root[data-preflight] .opening,
 :root[data-preflight] .turn,
 :root[data-preflight] .current{opacity:1;transform:none;animation:none}
+:root[data-preflight] .arrow-pop marker path,
+:root[data-preflight] .dot-pop circle{transform:none;animation:none}
 :root[data-preflight] .figwrap,
 :root[data-preflight] .fig{width:100%;height:auto}
 
