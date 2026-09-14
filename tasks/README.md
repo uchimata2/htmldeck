@@ -39,10 +39,9 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocked By | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH4` | - | `proposed` | `specify` | - | T-215 | - | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215, T-302 |
-| [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | T-318, T-319 | - | T-318, T-319 |
-| [T-318](T-318-mark-a-built-deck-in-its-source-a-colophon-and-a-generator-tag.md) | Mark a built deck in its source: a colophon and a generator tag | `PH3` | - | `planned` | `plan` | - | - | - | T-300 | T-300, T-311 |
-| [T-319](T-319-rewrite-the-readme-for-a-reader-choosing-whether-to-install.md) | Rewrite the README for a reader choosing whether to install | `PH3` | - | `review` | `review` | - | - | - | T-300 | T-056, T-060, T-300, T-320 |
-| [T-320](T-320-remove-what-the-repository-says-about-other-projects.md) | Remove what the repository says about other projects | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-128, T-225, T-319 |
+| [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | T-320 | - | T-318, T-319 |
+| [T-320](T-320-remove-what-the-repository-says-about-other-projects.md) | Remove what the repository says about other projects | `PH3` | - | `proposed` | `specify` | - | - | - | T-300 | T-128, T-225, T-319 |
+| [T-321](T-321-make-a-decks-render-independent-of-its-file-length.md) | Make a deck's render independent of its file length | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-318 |
 
 ## Closed
 
@@ -363,5 +362,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-315](T-315-make-the-inline-terms-underline-a-theme-token.md) | Make the inline term's underline a theme token, solid in the shipped theme | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-309 |
 | [T-316](T-316-give-the-reference-decks-sources-quick-views.md) | Give the reference deck's sources quick views | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-070, T-233 |
 | [T-317](T-317-fill-the-ruler-readouts-drop-in-ink-soft.md) | Fill the ruler readout's drop in the softer ink | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-314 |
+| [T-318](T-318-mark-a-built-deck-in-its-source-a-colophon-and-a-generator-tag.md) | Mark a built deck in its source: a colophon and a generator tag | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-300 | T-300, T-311, T-321 |
+| [T-319](T-319-rewrite-the-readme-for-a-reader-choosing-whether-to-install.md) | Rewrite the README for a reader choosing whether to install | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-300 | T-056, T-060, T-300, T-320 |
 
 <!-- taskmd:end -->

@@ -2,18 +2,19 @@
 id: T-318
 title: Mark a built deck in its source: a colophon and a generator tag
 type: deliverable
-status: planned
-phase: plan
+status: done
+phase: review
 parent: null
 blocked_by: []
-related: [T-300, T-311]
+related: [T-300, T-311, T-321]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: medium
 effort: s
 created: 2026-09-14
-updated: 2026-09-14
-deliverables: [tools/deck/shell.py, shell/shell.html, shell/README.md]
+updated: 2026-09-15
+deliverables: [tools/deck/shell.py, shell/shell.html, shell/README.md, docs/COMPONENT-CONTRACT.md, docs/PUBLISHING.md, skills/htmldeck/references/build.md]
 ---
 
 # T-318 — Mark a built deck in its source: a colophon and a generator tag
@@ -52,16 +53,16 @@ X-12 stands unamended.
 - [T-311](T-311-keep-a-decks-chart-engine-declaration-through-a-shell-sync.md): the head comment is the one place in the head a deck's own declaration survives a sync
 
 **Acceptance criteria**
-- [ ] A deck built by `shell.py new` carries the colophon with the repository URL in its head comment,
+- [x] A deck built by `shell.py new` carries the colophon with the repository URL in its head comment,
       and the generator tag with the version read from `.claude-plugin/plugin.json`.
-- [ ] A sync writes the tag, at the current version, on a deck whose head comment names the repository
+- [x] A sync writes the tag, at the current version, on a deck whose head comment names the repository
       URL. It writes no tag on a deck whose head comment does not. A self-test asserts both, and
       asserts that deleting the line and syncing leaves both marks absent.
-- [ ] Nothing renders differently: the reference deck's screen captures before and after the change
+- [x] Nothing renders differently: the reference deck's screen captures before and after the change
       are identical, so no look is owed.
-- [ ] The shipped example decks carry the colophon, and every document that describes the head note
+- [x] The shipped example decks carry the colophon, and every document that describes the head note
       says where the marks are and how to remove them, with one home for the how.
-- [ ] `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately.
+- [x] `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately.
 
 **Open questions**
 - none. The four above were the owner's and are ruled.
@@ -84,18 +85,34 @@ X-12 stands unamended.
 **Decisions & assumptions**
 - The repository URL in the head comment is the switch for both marks, so an author has one line to delete and no new vocabulary to learn. Reversible. — 2026-09-14
 - An existing adopter deck synced to 1.0.0 gains neither mark, because a sync cannot tell a removed colophon from one that never existed, and the owner ruled that removal sticks. Reversible. — 2026-09-14
+- The tag is a thirteenth slot, `GENERATOR`, between the viewport line and `<title>`, not fixed markup in `shell.html`: `check` compares the skeleton byte for byte, so a fixed tag would fail every deck whose author removed the colophon. `new` and `sync` derive it from `NOTE`; `kept()` excludes it and `changes()` reports it. `head_note()` skips it, because the gates' fixtures build heads without a viewport line. Reversible. — 2026-09-15
+- The colophon is one line, `Built with htmldeck: <URL>`, so deleting the line removes the name and the switch together. Reversible. — 2026-09-15
+- `docs/PUBLISHING.md` §8 step 2 now syncs every shipped deck after the version bump, so no example ships with the outgoing version in its tag. A check that failed a deck on a stale tag was rejected: a plugin update with no shell change would turn every adopter deck red. Reversible. — 2026-09-15
+- `measure-first` carries the colophon too: it was built with the published plugin. Reversible. — 2026-09-15
 
 **Outputs produced**
-- `tools/deck/shell.py`, `shell/shell.html`, `shell/README.md`
+- `tools/deck/shell.py` (`GENERATOR`, `REPO_URL`, `version()`, `generator_tag()`, five fixtures), `shell/shell.html`, `shell/README.md` (*The slots*: the one home for removal)
+- Pointers: `docs/COMPONENT-CONTRACT.md`, `skills/htmldeck/references/build.md`; release step: `docs/PUBLISHING.md` §8 step 2
+- The four shipped decks, the seeded-defect fixture and the three presenter builds, re-derived per `TOOLING.md` §1.14
+
+| Measurement, 2026-09-15 | Result |
+| :--- | :--- |
+| `shell.py` self-test | 76 of 76 fixtures |
+| Tags written by sync | `<meta name="generator" content="htmldeck 0.7.0">` on all four decks; regions changed per deck: `GENERATOR`, `NOTE` |
+| Reference deck captures, 13 slides, before against after | 11 identical; slide 9 noise (matched on recapture); slide 11 stable difference, reproduced by padding the committed deck with neutral bytes, so it follows file length (T-321) |
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `new` carries both marks | pass | Fixture, and the version read from the manifest |
+| Sync writes or drops the tag by the URL | pass | Three fixtures: written, dropped, deletion kept; both forms pass `check` |
+| Nothing renders differently | pass | Nothing T-318 writes renders. Slide 11's difference is reproduced without T-318's content, by padding alone; raised as T-321. No look owed |
+| Examples and documents | pass | Four decks carry the colophon; one home for removal in `shell/README.md`, pointed at from the contract and the build reference |
+| Lint and full gate | pass | Run separately after the last edit |
 
 **Child fix tasks raised**
-- none
+- [T-321](T-321-make-a-decks-render-independent-of-its-file-length.md)
 
 ## Log
 
@@ -103,3 +120,4 @@ X-12 stands unamended.
 | :--- | :--- | :--- |
 | 2026-09-14 | → proposed | Asked for by the owner: mark the decks htmldeck builds, without intruding and without marketing. `PH3`. |
 | 2026-09-14 | → specified, planned | The owner ruled the four questions on their recommendations: the head comment and a generator tag, a colophon, removal sticks, 1.0.0 in B29 ahead of `T-300`. |
+| 2026-09-15 | → implement, done | Built as a derived slot; examples synced; screen comparison raised T-321. |

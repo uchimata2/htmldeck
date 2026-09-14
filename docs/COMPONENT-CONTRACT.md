@@ -566,8 +566,9 @@ The line is `htmldeck-chart-engine:` followed by four `key=value` pairs separate
 ```
 
 It sits in the deck's head comment, above `EMBEDDED FONT LICENCES`, which is `shell.py`'s `NOTE`
-region and where a deck's licences sit too. **That is the one place in the head `shell.py sync`
-keeps.** Until T-311 the declaration was a `<meta>`, and the first sync deleted it. DS-122 fails a
+region and where a deck's licences sit too. It opens with htmldeck's colophon line, which also
+switches the generator tag on; how to remove both is [`../shell/README.md`](../shell/README.md)'s
+*The slots*. **That is the one place in the head `shell.py sync` keeps.** Until T-311 the declaration was a `<meta>`, and the first sync deleted it. DS-122 fails a
 declaration anywhere outside the head comment, and its failure says where the line goes. All four are required, `output` must be `svg`, and `licence` must be an SPDX
 identifier whose terms permit redistribution inside a single file, which is the same test DS-032
 applies to an embedded face. **A deck that declares nothing is held to the hand-authored default**,

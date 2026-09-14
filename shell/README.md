@@ -62,10 +62,18 @@ because a component block with one extra rule breaks no rule.
 
 ## The slots
 
-Twelve, and nowhere else may a deck differ:
+Thirteen, and nowhere else may a deck differ:
 
-`TITLE` · `NOTE` · `THEME` · `COMPONENTS` · `PREFLIGHT` · `ICONS` · `SLIDES` · `CHROME_TAIL` ·
-`DOC_TITLE` · `DOC_SUB` · `COMPOSITION` · `SCRIPT`
+`GENERATOR` · `TITLE` · `NOTE` · `THEME` · `COMPONENTS` · `PREFLIGHT` · `ICONS` · `SLIDES` ·
+`CHROME_TAIL` · `DOC_TITLE` · `DOC_SUB` · `COMPOSITION` · `SCRIPT`
+
+**`GENERATOR` is the thirteenth, and the one no author writes (T-318).** A deck htmldeck builds is
+marked in its source and nowhere a reader sees. The head comment, the `NOTE` region, opens with
+`Built with htmldeck: https://github.com/uchimata2/htmldeck`, and `GENERATOR` holds
+`<meta name="generator" content="htmldeck X.Y.Z">` at the installed version. **To remove both marks,
+delete that one line from the head comment.** `shell.py new` and `shell.py sync` write the tag only
+while the head comment names the repository, so the next sync drops the tag and no later sync puts
+either mark back. This paragraph is the one home for that instruction.
 
 **`CHROME_TAIL` is the twelfth and the odd one (T-114).** The others hold what a deck *says*; this
 one holds the chrome row's tail — `More`, its menu, and `Read` and `Motion` inside it. It is a

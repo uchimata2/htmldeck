@@ -40,6 +40,7 @@ library (**L-07**).
 """
 
 import io
+import json
 import os
 import re
 import sys
@@ -71,6 +72,11 @@ DEFAULT_THEME = os.path.join(ROOT, "themes", "quarto.css")
 # found, so a deck whose chrome comment has drifted has to fail rather than be re-anchored around.
 #   (slot, opening delimiter, closing delimiter, what it is)
 SLOTS = (
+    # Thirteenth, added by T-318, and the one region no author writes: `new` and `sync` derive it
+    # from the NOTE region below it (`generator_tag`). It is a region rather than shell because two
+    # decks legitimately differ here - one carries the tag, one whose author deleted the colophon
+    # does not - and `check`'s byte comparison must not own that difference.
+    ("GENERATOR", 'initial-scale=1">\n', "<title>", "the generator tag, derived from NOTE (T-318)"),
     ("TITLE", "<title>", "</title>", "the browser tab and the deck's name"),
     ("NOTE", "<!--\n", "\n\n  EMBEDDED FONT LICENCES", "the head comment above the licences"),
     ("THEME", '<style id="theme">', "</style>", "the theme region (THEME-CONTRACT.md)"),
@@ -147,6 +153,9 @@ def head_note(html):
     """
     pos = 0
     for slot, opener, closer, _what in SLOTS:
+        if slot == "GENERATOR":
+            # Derived, and absent from the minimal heads the gates' own fixtures build.
+            continue
         start = html.find(opener, pos)
         end = html.find(closer, start + len(opener)) if start >= 0 else -1
         if end < 0:
@@ -190,8 +199,38 @@ def fill(skeleton, parts):
 # ------------------------------------------------------------------------------- new
 
 
-NOTE_DEFAULT = """  Built by htmldeck. One self-contained file: every font, icon, script and style is
-  inlined, and it renders with the network disabled (DS-001)."""
+REPO_URL = "https://github.com/uchimata2/htmldeck"
+
+# **A colophon, and its first line is the switch for both marks** (T-318, ruled by the owner
+# 2026-09-14). Nothing a reader sees: DESIGN-SYSTEM.md X-12 makes visible generator branding a `hard`
+# anti-pattern, and a line in the source is not residue a recipient meets.
+NOTE_DEFAULT = """  Built with htmldeck: %s
+  One self-contained file: every font, icon, script and style is inlined, and it renders
+  with the network disabled (DS-001).""" % REPO_URL
+
+
+def version():
+    """The installed plugin's version, read from its manifest - the version's one home - or `None`."""
+    try:
+        with io.open(os.path.join(ROOT, ".claude-plugin", "plugin.json"), encoding="utf-8") as fh:
+            return json.load(fh).get("version")
+    except (IOError, OSError, ValueError):
+        return None
+
+
+def generator_tag(note):
+    """The GENERATOR region for a deck whose head comment is `note` (T-318).
+
+    **The repository line is the switch.** While the head comment names the repository, the head
+    carries `<meta name="generator">` at the installed version; once an author deletes that line,
+    nothing. A sync cannot tell a deleted colophon from one that never existed, so a removal sticks,
+    which is the owner's ruling. No version goes into the comment itself: no sync rewrites the
+    comment, so it would go stale (L-152), where this tag is rewritten on every sync.
+    """
+    if REPO_URL not in note:
+        return ""
+    v = version()
+    return '<meta name="generator" content="htmldeck%s">\n' % (" " + v if v else "")
 
 
 # The tail every deck gets, looping or not (T-277). There was a second form until 2026-08-29, for
@@ -250,9 +289,11 @@ def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_
         "STAGES": ",".join("'%s'" % s.replace("'", "\\'") for s in stages),
         "STAGE_ICON": ",".join("'i-%s'" % concept for concept, _glyph in stage_icons),
     })
+    note = NOTE_DEFAULT if note is None else note
     parts = {
+        "GENERATOR": generator_tag(note),
         "TITLE": escape(title),
-        "NOTE": note if note is not None else NOTE_DEFAULT,
+        "NOTE": note,
         "THEME": "\n%s\n" % resolved.strip("\n"),
         "COMPONENTS": read(COMPONENTS),
         # Empty here and derived below, once there is a deck to read it off. It cannot be decided
@@ -459,17 +500,18 @@ def sync(html):
     _script_skeleton, script_parts = cut(parts["SCRIPT"], SCRIPT_SLOTS)
     parts["SCRIPT"] = fill(read(DECK_JS), script_parts)
     parts["COMPONENTS"] = read(COMPONENTS)
+    parts["GENERATOR"] = generator_tag(parts["NOTE"])
     return fill(read(SHELL_HTML), parts)
 
 
 def kept(html):
-    """Every per-deck part, flattened - the ten top-level regions that are not the component block,
-    with the script replaced by the three declarations nested inside it.
+    """Every per-deck part, flattened - the ten top-level regions that are neither the component
+    block nor the generator tag, with the script replaced by the three declarations nested inside it.
 
     This is what a sync must not touch, and comparing it before and after is the whole guarantee."""
     _skeleton, parts = cut(html)
     _script_skeleton, script_parts = cut(parts["SCRIPT"], SCRIPT_SLOTS)
-    out = dict((k, v) for k, v in parts.items() if k not in ("COMPONENTS", "SCRIPT"))
+    out = dict((k, v) for k, v in parts.items() if k not in ("COMPONENTS", "SCRIPT", "GENERATOR"))
     out.update(script_parts)
     return out
 
@@ -482,7 +524,8 @@ def changes(before, after):
     tell a shell that moved from an edit of their own being reverted, which is the distinction no
     program here can make for them."""
     rows = []
-    for name, old, new_ in (("SKELETON", cut(before)[0], cut(after)[0]),
+    for name, old, new_ in (("GENERATOR", cut(before)[1]["GENERATOR"], cut(after)[1]["GENERATOR"]),
+                            ("SKELETON", cut(before)[0], cut(after)[0]),
                             ("COMPONENTS", cut(before)[1]["COMPONENTS"],
                              cut(after)[1]["COMPONENTS"]),
                             ("SCRIPT", cut(cut(before)[1]["SCRIPT"], SCRIPT_SLOTS)[0],
@@ -967,6 +1010,24 @@ def self_test():
        kept(sync(original)) == kept(original),
        "moved: %r" % sorted(k for k in kept(original)
                             if kept(original)[k] != kept(sync(original)).get(k)))
+    # T-318. The colophon's repository line is the switch for both marks, in both directions, and
+    # every deck below is built here rather than read from the repository (T-176).
+    tag = generator_tag(NOTE_DEFAULT)
+    fresh_sk, fresh_parts = cut(fresh)
+    ok("a new deck carries the colophon and the generator tag",
+       REPO_URL in fresh_parts["NOTE"] and fresh_parts["GENERATOR"] == tag
+       and tag.startswith('<meta name="generator" content="htmldeck'), repr(fresh_parts["GENERATOR"]))
+    ok("and the tag names the installed version", version() is None or version() in tag, tag)
+    untagged = fill(fresh_sk, dict(fresh_parts, GENERATOR=""))
+    ok("a sync writes the tag on a deck whose head comment names the repository",
+       cut(sync(untagged))[1]["GENERATOR"] == tag, repr(cut(sync(untagged))[1]["GENERATOR"]))
+    removed = fill(fresh_sk, dict(fresh_parts, NOTE="\n".join(
+        ln for ln in NOTE_DEFAULT.split("\n") if REPO_URL not in ln)))
+    ok("a deleted repository line drops the tag, and the deletion survives the sync",
+       cut(sync(removed))[1]["GENERATOR"] == "" and REPO_URL not in cut(sync(removed))[1]["NOTE"])
+    ok("and a deck in either form passes check", check(untagged) == [] and check(removed) == [],
+       "; ".join(check(untagged) + check(removed))[:70])
+
     # A deck ALREADY IN STEP is not changed - asserted on a deck this line syncs itself, never on
     # the repository's copy. `sync(original) == original` was the fixture until 2026-08-13, and it
     # asserts the current contents of a tracked artifact rather than a property of the tool: one

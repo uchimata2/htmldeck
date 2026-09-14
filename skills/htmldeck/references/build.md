@@ -285,8 +285,10 @@ per-rule listing to read yourself; that listing is why the default is the defaul
 
 **If the deck's owner rules that a rule does not apply to this deck, license it in the deck rather
 than wrapping the gate.** Write one line per rule in the deck's head comment, above `EMBEDDED FONT
-LICENCES`. That comment is the one part of `<head>` a `shell.py sync` keeps, so a licence anywhere
-else is deleted by the next sync and the gate reports it as a fault:
+LICENCES`, and below htmldeck's colophon line, which leave in place unless the owner asks for the
+marks to go (`shell/README.md`, *The slots*). That comment is the one part of `<head>` a
+`shell.py sync` keeps, so a licence anywhere else is deleted by the next sync and the gate reports it
+as a fault:
 
 ```html
 <!--
