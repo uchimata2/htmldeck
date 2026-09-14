@@ -208,6 +208,15 @@ def tail(html):
     return fill(skeleton, parts)
 
 
+def tail_behind(html):
+    """True when `tail` would change this deck. `sync` asks, because it never writes the tail.
+
+    Read on a deck `migrate` has already run over, which is what `sync` holds: on one it has not,
+    a pending migration reads as a stale tail.
+    """
+    return tail(html) != html
+
+
 def new(title, subtitle, note=None, theme_css=DEFAULT_THEME, stages=None, stage_icons=None):
     """A deck with the shell in place and no slides yet."""
     resolved = theme_mod.resolve(read(theme_css))
@@ -1032,6 +1041,15 @@ def self_test():
            "--set" in str(exc) and "comma-separated" in str(exc),
            "it exited without naming the argument: %s" % exc)
 
+    # T-306, Nextep record `15`: `sync` names the chrome tail when it is behind, and only then. The
+    # stale form is the one the record met, `Motion` outside the menu.
+    fixture = new("Fixture", "Subtitle")
+    ok("a current chrome tail is not reported behind", not tail_behind(fixture))
+    sk, pt = cut(fixture)
+    motion = '\n      <button class="btn" id="motion" aria-pressed="false">Motion on</button>'
+    pt["CHROME_TAIL"] = "  " + motion.strip() + "\n" + CHROME_TAIL.replace(motion, "")
+    ok("and one with `Motion` outside the menu is", tail_behind(fill(sk, pt)))
+
     # The usage list, the per-command help and the dispatch name the same commands.
     #
     # **T-208.** `preflight` was dispatched, named in `USAGE` and named in a DS-009 failure message,
@@ -1242,10 +1260,20 @@ def main(argv):
         # What a sync cannot carry, and therefore has to say (T-166). Read off the SYNCED deck,
         # because the question is what the incoming shell needs, not what the old one did.
         missing = undeclared_tokens(fresh)
+        # The tail is the other thing a sync cannot carry: it is per-deck, and `tail` owns it. A
+        # sync that said nothing about it read as *nothing outstanding* while `tail` had work to do
+        # (T-306, Nextep record `15`), so it is compared read-only and named. The exit code stays
+        # about the regions a sync writes.
+        behind = (["  %-12s per-deck, so a sync never writes it, and this one is not the form "
+                   "DS-218 asks for." % "CHROME_TAIL",
+                   "    `shell.py tail %s --write` puts `Motion` inside the menu." % rel]
+                  if tail_behind(fresh) else [])
 
         rows = changes(html, fresh)
         if not rows and not missing:
             print("OK - %s already carries the installed shell. Nothing to sync." % rel)
+            for line in behind:
+                print(line)
             return 0
         for name, note in rows:
             print("  %-12s %s" % (name, note))
@@ -1257,6 +1285,8 @@ def main(argv):
             print("""    A sync must not touch the theme region - it is the deck's own - so this is
     reported and never written here. `shell.py tokens %s --write` adds exactly
     the missing declarations at the values above. Until then DS-013 fails.""" % rel)
+        for line in behind:
+            print(line)
         if not rows:
             print("\n%s already carries the installed shell; only the declarations above are "
                   "missing." % rel)
