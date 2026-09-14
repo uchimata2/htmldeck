@@ -2,12 +2,13 @@
 id: T-319
 title: Rewrite the README for a reader choosing whether to install
 type: deliverable
-status: review
+status: done
 phase: review
 parent: null
 blocked_by: []
 related: [T-300, T-056, T-060, T-320]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: s
@@ -97,3 +98,4 @@ It is shorter than the 0.7.0 page and carries screenshots of a shipped deck.
 | :--- | :--- | :--- |
 | 2026-09-14 | → in_progress | Created from the owner's request during B29, and batched into B29 after T-318. |
 | 2026-09-15 | → review | Owner reviewed the draft; images replaced as directed; self-test fixture added. |
+| 2026-09-15 | → done | Owner: "Looks all good". No lesson beyond the existing rule that a self-test must not assert repo state. |
