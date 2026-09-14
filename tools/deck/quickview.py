@@ -427,8 +427,12 @@ def render(path):
 # the short identifier and the kind glyph (T-109). Both are the component's, not the route's, so
 # wiring a quick view must preserve them rather than rebuild them - a `D1` this tool dropped would
 # be a defect in the mark that only shows up on the slides a source happens to be wired into.
-ITEM_HEAD = (r'(?:<span class="sources-id">[^<]*</span>)?'
-             r'(?:<svg class="sources-icon"[^>]*>.*?</svg>)?')
+# **In either order**: the contract fixes none, and one fixed here read a glyph-first item as
+# uncited (T-306, Nextep record `03`). The alternation is that record's own.
+ITEM_HEAD = (r'(?:(?:<span class="sources-id">[^<]*</span>)?'
+             r'(?:<svg class="sources-icon"[^>]*>.*?</svg>)?'
+             r'|(?:<svg class="sources-icon"[^>]*>.*?</svg>)?'
+             r'(?:<span class="sources-id">[^<]*</span>)?)')
 
 
 def item_pattern(title):
@@ -889,6 +893,18 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a source titled %r does not match the markup a correct deck "
                  "carries for it. That is `PR-59`: the author is sent to fix a citation that is "
                  "already right" % amp)
+    # T-306, Nextep record `03`. The contract fixes no order between the identifier and the kind
+    # glyph, and `ITEM_HEAD` fixed one, so an item writing the glyph first read as uncited - the same
+    # wrong direction as `PR-59`. Wired too, because `wire` carries the head through as it found it.
+    glyph_first = ('<span class="sources-item"><svg class="sources-icon"></svg>'
+                   '<span class="sources-id">D1</span>%s</span>' % esc(amp))
+    if not item_pattern(amp).search(glyph_first):
+        sys.exit("SELF-TEST FAILED: an item whose kind glyph comes before its identifier does not "
+                 "match, so `wire` and `plan` report a cited source as uncited (T-306)")
+    if ('<svg class="sources-icon"></svg><span class="sources-id">D1</span>'
+            not in wire(glyph_first, amp, "<p>body</p>", file="d1.md")):
+        sys.exit("SELF-TEST FAILED: wiring a glyph-first item did not carry its head through in "
+                 "the order the deck wrote it (T-306)")
     wired = wire(cited, amp, "<p>body</p>", file="d1.md")
     if [t for t, _c in carried(wired)] != [amp]:
         sys.exit("SELF-TEST FAILED: %r did not read back as itself - got %r. The raw title is this "
