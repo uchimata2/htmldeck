@@ -141,13 +141,19 @@ is blocked.
 **Ruled by the owner 2026-09-14.** Every open task except [T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) closes before 1.0.0 is released
 and htmldeck is submitted to the community marketplace. Tasks are batched by the area they work in,
 with a fresh session and a handoff between batches. Inside a batch the session continues, and
-`/compact` is the boundary if one is needed: [T-290](../tasks/T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md) measured it as the cheaper one. Each task
-lands as its own pull request, and the owner approves each merge. §4's standing authorities are not
-renewed by this wave.
+`/compact` is the boundary if one is needed: [T-290](../tasks/T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md) measured it as the cheaper one.
+
+**What a wave 8 session does unattended, ruled the same day.** The owner starts each batch in a
+fresh session with `/handoff resume`. The session implements, gates, commits and pushes. Each task
+is its own commit on the batch's branch, and the batch lands as one pull request that the owner
+merges, because a session cannot merge what the owner did not ask it to. A decision that is the
+owner's stops the batch at a survey and is never guessed. A real key press or a look at a rendered
+deck that the session cannot take is recorded in [`OWED-LOOKS.md`](OWED-LOOKS.md) and named in the
+pull request. B29 runs attended. §4's standing authorities are not renewed.
 
 | Batch | Tasks | Eff | Why here |
 | :--- | :--- | :--- | :--- |
-| **B25** | [T-301](../tasks/T-301-decide-whether-the-record-forms-get-shorter.md), [T-296](../tasks/T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md) | `s`·2 | **First, because both change what every later task pays**: `T-301` the records it writes, `T-296` the docs gate a documentation commit runs. `T-301` holds the owner's decision per record form, asked inside the batch once each form is measured |
+| **B25** | [T-296](../tasks/T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md), [T-301](../tasks/T-301-decide-whether-the-record-forms-get-shorter.md) | `s`·2 | **First, because both change what every later task pays**: `T-296` the docs gate a documentation commit runs, `T-301` the records it writes. `T-296` goes first because nothing in it is the owner's. `T-301` measures each record form, then stops the batch at the owner's survey |
 | **B26** | [T-305](../tasks/T-305-let-render-py-see-an-svg-paint-change-a-scripted-hover-and-a-figure-painting-over-its-neighbour.md), [T-303](../tasks/T-303-close-a-slidefacts-element-at-its-own-tag-find-every-control-and-make-readabilitys-ledger-add-up.md), [T-298](../tasks/T-298-decide-what-the-clause-sweep-owes-for-a-rule-the-clause-table-cannot-hold.md), [T-308](../tasks/T-308-decide-how-a-deck-records-a-deviation-its-owner-licensed-and-what-the-gate-reports-for-it.md) | `m`·3, `s` | **The instruments and the gate**, before the product they judge — wave 1 and 2's reason. `T-305` and `T-303` are defects in what `render.py`, `slidefacts` and `readability` measure; `T-298` and `T-308` change what the gate owes and reports |
 | **B27** | [T-304](../tasks/T-304-bring-a-deck-authored-motion-inside-the-shells-motion-gate-the-motion-control-and-densitys-ranking.md), [T-307](../tasks/T-307-give-the-chrome-first-and-last-page-controls-and-a-ruler-whose-marks-a-reader-can-aim-at.md), [T-309](../tasks/T-309-contract-an-inline-term-that-opens-a-definition-bubble.md), [T-271](../tasks/T-271-a-quick-view-scoped-to-a-document-section.md), [T-282](../tasks/T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | `m`·4, `s` | **The shell, its components and the decks they sync.** The four `m` tasks each change the shell or the component contract, so each pays `../tasks/TOOLING.md` §1.14's sync. `T-282` edits a deck's content and comes last, after the syncs it would otherwise be re-derived through — wave 4's reason |
 | **B28** | [T-294](../tasks/T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | `s` | **The context-economy audit's close.** It grades the bands once every remedy has landed, and its second transcript is this batch's own session. Closing it closes [T-287](../tasks/T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md), whose last open child it is |
