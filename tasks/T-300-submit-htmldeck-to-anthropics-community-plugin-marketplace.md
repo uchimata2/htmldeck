@@ -5,7 +5,7 @@ type: admin
 status: proposed
 phase: specify
 parent: null
-blocked_by: [T-271, T-282, T-287, T-290, T-294, T-296, T-298, T-301, T-303, T-304, T-305, T-307, T-308, T-309, T-311]
+blocked_by: [T-271, T-282, T-287, T-290, T-294, T-296, T-298, T-301, T-303, T-304, T-305, T-307, T-308, T-309, T-311, T-318]
 related: []
 work_package: PH3
 owner: the project owner
@@ -153,3 +153,4 @@ when the sibling project `taskmd` was submitted on 2026-09-12. It is not a field
 | 2026-09-12 | → proposed | Created from the sibling project `taskmd`'s submission the same day, with every figure re-measured against this repository rather than carried over. **Two answers differ from taskmd's and would be wrong if copied**: the path field is blank here because `source` is `./`, and the privacy-policy reasoning has to account for `tools/assets/measure.py` fetching fonts over the network. |
 | 2026-09-13 | no change | **Folded in what a separate prompt would otherwise have carried**, on the owner's instruction that everything this task needs lives in the record: the stop before review, re-measuring before the work starts, the `shipped_in` rule at close, and the question of which tasks land first. **Two claims corrected**: the form has no category field, and the Cowork row asserted a difference between surfaces that nobody measured. The neighbours paragraph is now measured against the catalog rather than described. |
 | 2026-09-14 | no change | The owner answered both open questions: the catalog description is humanized, and every open task except `T-057` closes first, so `blocked_by` names them. |
+| 2026-09-14 | no change | `T-318` joined B29 ahead of this task by the owner's ruling, and `blocked_by` names it. |
