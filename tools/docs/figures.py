@@ -4,6 +4,11 @@
     python tools/docs/figures.py            # the partition, and the verdict
     python tools/docs/figures.py --values   # what to paste when something has drifted
     python tools/docs/figures.py --report   # the partition even when piped; --quiet is the reverse
+    python tools/docs/figures.py --docs     # what check_all.py --docs runs: see DOCS_SKIPPED
+
+**Under `--docs` the README's render-driving block is read, not run, while it is the base's** (T-296).
+That block was 28.7 of this tool's 33.2 s, and a documentation commit paid it against a deck nothing
+it changed could reach. What that costs, and when the block runs anyway, is `DOCS_SKIPPED`'s comment.
 
 **A green run prints one line when stdout is not a terminal** (T-286). An agent pays a tool's output
 again on every later turn, and this account was 3,043 bytes of which the verdict was one line;
@@ -46,6 +51,7 @@ Runs its own self-test first and refuses to report if it fails (**L-04**). Pure 
 """
 
 import contextlib
+import importlib.util
 import io
 import os
 import re
@@ -214,6 +220,25 @@ ACCOUNTS = {
         "part": "checked",
         "whole": "owned by a gate",
     },
+}
+
+# ------------------------------------------------------------ what `--docs` reads instead of running
+# **A command here is not run under `--docs` while its pasted block is identical to the same block
+# at `check_all.py`'s base** (T-296, `CE-18`). The block is then compared with itself, and its
+# pasted lines stand in for the run: every prose figure and every declared document is still held
+# to them, and every figure bound to that command was measured inside the paste (T-296 §3). It runs as usual when the
+# block differs from the base, when the base does not resolve, or when `check_all.py --docs` would
+# refuse the diff - so a documentation commit that edits the pasted gate output still pays for it.
+#
+# Each entry says what the command reads, because that is what the skip rests on: all of it sits
+# under a path the refusal covers, so the full gate the base took cannot answer differently here.
+# **What a documentation commit loses is a verdict that moves with no file changing** - a browser
+# update is the known case - which every other gate `--docs` skips loses too, and which the batch
+# landing's full run still sees. An entry no command on the page starts with fails the run
+# (`missing_docs_skips`), on the terms `ACCOUNTS` was allowed on.
+DOCS_SKIPPED = {
+    "python tools/deck/check.py ":
+        "it drives headless Chrome over a deck and reads the deck, tools/deck/ and the design system",
 }
 
 # ---------------------------------------------------------------- a property of a named artifact
@@ -640,6 +665,58 @@ ARTIFACTS = {
 
 _RUNS = {}
 
+# `{command: pasted body}` for the blocks `--docs` reads instead of running, and the one clause the
+# report prints about it. Both are set once, before the self-test, and empty on a full run.
+_DOCS = {}
+_DOCS_WHY = ""
+
+
+def docs_skips(text, base_text, skipped=None):
+    """`{command: body}` - the output blocks on `text` that `--docs` compares with themselves.
+
+    A block qualifies when its command starts with a `DOCS_SKIPPED` prefix and its body is identical
+    to that command's block in `base_text`. A `base_text` of `None` qualifies nothing, which is the
+    direction to err in.
+    """
+    prefixes = tuple(DOCS_SKIPPED if skipped is None else skipped)
+    if base_text is None or not prefixes:
+        return {}
+    was = dict((w, b) for k, _s, w, b in bind(fences(base_text)) if k == "output")
+    return dict((w, b) for k, _s, w, b in bind(fences(text))
+                if k == "output" and w.startswith(prefixes) and was.get(w) == b)
+
+
+def missing_docs_skips(text, skipped=None):
+    """`[(prefix, why)]` for every `DOCS_SKIPPED` entry no command fence on the page starts with."""
+    cmds = [w for k, _s, w, _b in bind(fences(text)) if k == "command"]
+    return [(p, why) for p, why in sorted((DOCS_SKIPPED if skipped is None else skipped).items())
+            if not [c for c in cmds if c.startswith(p)]]
+
+
+def docs_base():
+    """`(README text at the base, or None, and the clause the report prints)` for `--docs`.
+
+    **The base and the refusal are `check_all.py`'s, loaded rather than restated**, so this flag
+    cannot skip a block that command would have refused to skip, even when run on its own.
+    """
+    spec = importlib.util.spec_from_file_location("check_all", os.path.join(ROOT, "tools",
+                                                                            "check_all.py"))
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    sha, changed = gate.changed_since(gate.DOCS_BASE)
+    if sha is None:
+        return None, "nothing is read instead of run: %s does not resolve here" % gate.DOCS_BASE
+    blockers = gate.docs_blockers(changed)
+    if blockers:
+        return None, ("nothing is read instead of run: %d path(s) check_all.py --docs refuses on "
+                      "differ from %s" % (len(blockers), gate.DOCS_BASE))
+    shown = subprocess.run(["git", "show", "%s:README.md" % gate.DOCS_BASE], cwd=ROOT,
+                           capture_output=True)
+    if shown.returncode:
+        return None, "nothing is read instead of run: %s has no README.md" % gate.DOCS_BASE
+    return (shown.stdout.decode("utf-8", "replace").replace("\r\n", "\n"),
+            "identical to its block at %s %s, so compared with itself" % (gate.DOCS_BASE, sha))
+
 
 def has_quiet_default(rel):
     """Whether a tool of this repository prints one line when its stdout is not a terminal.
@@ -955,17 +1032,25 @@ def drifted(pasted, actual):
 # ---------------------------------------------------------------------------- the run
 
 
-def audit(text):
-    """`(rows, prose_rows, corpus)` - every verdict this tool reaches, decided nowhere else."""
+def audit(text, skips=None):
+    """`(rows, prose_rows, corpus)` - every verdict this tool reaches, decided nowhere else.
+
+    `skips` is `docs_skips()`'s result, and `None` means the one `--docs` set up."""
+    skips = _DOCS if skips is None else skips
     rows, corpus, outputs = [], [], {}
     for kind, start, what, body in bind(fences(text)):
         if kind != "output":
             rows.append((kind, start, what, None))
             continue
         if what not in outputs:
-            outputs[what] = run(what)
+            # A skipped command's output is the block it pasted at the base (T-296). A page that
+            # moved the block since is compared with that, and fails, rather than excused.
+            outputs[what] = "\n".join(skips[what]) if what in skips else run(what)
         actual = outputs[what]
         corpus.append(actual)
+        if what in skips and body == skips[what]:
+            rows.append(("skipped", start, what, None))
+            continue
         flo = what in FLOOR
         ok, bad = excerpt(body, actual, flo)
         if not ok:
@@ -1743,6 +1828,38 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a page that does carry its declared fence was reported as "
                  "missing it, so the rule fires on the ordinary case")
 
+    # 13. **`--docs` reads a block instead of running it only while the block is the base's**
+    # (T-296). Derived from the live page, and no fixture here renders: the page's render-driving
+    # block qualifies against an unchanged base; a base whose copy differs by one figure, or a base
+    # that does not resolve, qualifies nothing, so the command runs; and a block read instead of run
+    # still fails when the page moves under it, because it is compared with what it was.
+    own = dict((w, b) for k, _s, w, b in bind(fences(base))
+               if k == "output" and w.startswith(tuple(DOCS_SKIPPED)))
+    if not own or docs_skips(base, base) != own:
+        sys.exit("SELF-TEST FAILED: no output block on the live page starts with a DOCS_SKIPPED "
+                 "command, or an unchanged base did not qualify it, so --docs saves nothing")
+    what, body = sorted(own.items())[0]
+    figure = next((l for l in body if re.search(r"[1-9]", l)), None)
+    if figure is None:
+        sys.exit("SELF-TEST FAILED: the %s block carries no non-zero figure to move, so the base "
+                 "comparison is unexercised" % what)
+    older = base.replace(figure, re.sub(r"[1-9]\d*", lambda m: str(int(m.group(0)) + 7), figure,
+                                        count=1), 1)
+    if docs_skips(base, older) or docs_skips(base, None):
+        sys.exit("SELF-TEST FAILED: a block that differs from the base, or a base that does not "
+                 "resolve, was still read instead of run - a documentation commit could then change "
+                 "the pasted gate output and stay green")
+    if [r[0] for r in audit(base, own)[0] if r[2] == what and r[0] != "command"] != ["skipped"]:
+        sys.exit("SELF-TEST FAILED: a qualifying block was not reported skipped, so --docs saves "
+                 "its seconds without the partition saying so")
+    if not [r for r in audit(older, own)[0] if r[0] == "FAILING" and r[2].startswith(what + ":")]:
+        sys.exit("SELF-TEST FAILED: the page moved a figure in a block --docs reads instead of runs, "
+                 "and the run stayed green")
+    if (not missing_docs_skips(base, {"python tools/no-such-tool.py ": "a fixture entry"})
+            or missing_docs_skips(base)):
+        sys.exit("SELF-TEST FAILED: DOCS_SKIPPED can name a command the page does not carry without "
+                 "the run saying so, or the live table already does")
+
     # Quiet never hides a failure (T-286). The decision is one function so it can be asserted
     # without a stale README to run against.
     if emit("FULL", 1, "line", True) != "FULL":
@@ -1814,6 +1931,16 @@ def account(values):
             for was, now in extra:
                 print("               was  %s" % was)
                 print("               now  %s" % now)
+        elif kind == "skipped":
+            why = next(w for p, w in DOCS_SKIPPED.items() if what.startswith(p))
+            print("  %-10s line %-4d %s - read under --docs, not run: %s; %s"
+                  % (kind, start, what, _DOCS_WHY, why))
+    if "--docs" in sys.argv[1:] and not counts.get("skipped"):
+        print("  --docs     %s" % (_DOCS_WHY or "no block on the page qualifies"))
+    unskippable = missing_docs_skips(text)
+    for prefix, why in unskippable:
+        print("  %-10s DOCS_SKIPPED names %r and no command on the page starts with it - %s"
+              % ("MISSING", prefix, why))
     pc = {}
     for kind, n, why in prose_rows:
         pc[kind] = pc.get(kind, 0) + 1
@@ -1849,7 +1976,7 @@ def account(values):
             print("    %-6s %s" % (n, why))
 
     print("\n  fenced blocks")
-    for k in ("command", "compared", "floor", "excluded", "UNDECLARED", "FAILING"):
+    for k in ("command", "compared", "floor", "skipped", "excluded", "UNDECLARED", "FAILING"):
         if counts.get(k):
             print("    %-12s %3d" % (k, counts[k]))
     print("    %-12s %3d   = every fence, so the account is a partition" % ("total", len(rows)))
@@ -1925,7 +2052,7 @@ def account(values):
     # statement sits in the tool - the state this check was written from (T-077).
     fails = (counts.get("FAILING", 0) + counts.get("UNDECLARED", 0)
              + pc.get("UNDECLARED", 0) + pc.get("STALE", 0) + len(dead) + dc.get("STALE", 0)
-             + len(gone) + len(unresolved) + len(unfenced))
+             + len(gone) + len(unresolved) + len(unfenced) + len(unskippable))
     print("\n%s" % ("%d figure(s) to fix" % fails if fails else
                     "0 stale figure(s)%s" % (" - %d floor block(s) grew above what is pasted, "
                                              "which is reported rather than failed (see --values)"
@@ -1934,12 +2061,17 @@ def account(values):
           "around it is still true - the README's \"all three are fixed\" went false with every\n"
           "figure on the page correct, and no gate here would have seen it (L-05).")
     line = ("figures: %s - %d fence(s), %d prose numeral(s), %d in %d document(s) pasting no "
-            "output%s" % ("%d figure(s) to fix" % fails if fails else "0 stale",
-                          len(rows), len(prose_rows), sum(dc.values()), len(DECLARED_DOCS),
-                          " - %d floor block(s) grew (see --values)" % len(drift) if drift else ""))
+            "output%s%s" % ("%d figure(s) to fix" % fails if fails else "0 stale",
+                            len(rows), len(prose_rows), sum(dc.values()), len(DECLARED_DOCS),
+                            " - %d floor block(s) grew (see --values)" % len(drift) if drift else "",
+                            " - %d block(s) read under --docs, not run" % counts["skipped"]
+                            if counts.get("skipped") else ""))
     return (1 if fails else 0), line
 
 
 if __name__ == "__main__":
+    if "--docs" in sys.argv[1:]:
+        _base_text, _DOCS_WHY = docs_base()
+        _DOCS = docs_skips(io.open(README, encoding="utf-8").read(), _base_text)
     self_test()
     sys.exit(report("--values" in sys.argv[1:], quiet_wanted(sys.argv[1:])))

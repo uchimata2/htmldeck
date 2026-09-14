@@ -16,6 +16,8 @@ every WIDE entry whose subject sits wholly under a deck-facing prefix is **skipp
 - the same partition, so the saving is declared rather than taken by habit - and the flag **refuses**
 when anything under such a prefix differs from `origin/master`, because under
 `docs/REMEDIATION-ORDER.md` section 4 a pushed tree is a fully gated one. It errs towards the full run.
+`figures.py` runs under it with `--docs`, which reads the README's render-driving block rather than
+re-running it while that block is identical at the base (T-296).
 
 **A green run prints one line when nobody is watching** (T-286). An agent pays a tool's output once
 when it reads it and again on every later turn, so a report compounds with the number of runs: this
@@ -83,10 +85,12 @@ PY = sys.executable
 # the subject the skip reason names: everything the gate reads sits under a prefix in DOCS_REFUSED,
 # so a diff that left all of those alone cannot have changed what it would say - and a diff that
 # touched one refuses the flag before anything runs. Both directions are asserted in the self-test.
+# A list runs the gate with that argv tail instead: `figures.py --docs` reads the README's
+# render-driving block rather than re-running it, while the block is the base's (T-296).
 WIDE = [
     ("tools/tasks/lint.py", [], True),
     ("tools/docs/lessons.py", [], True),
-    ("tools/docs/figures.py", [], True),
+    ("tools/docs/figures.py", [], ["--docs"]),
     ("tools/docs/chronology.py", [], True),
     ("tools/docs/severity.py", [], True),
     ("tools/docs/screening.py", [], True),
@@ -489,12 +493,15 @@ def plan(decks, themes=(), wide=None, per_theme=None, per_deck=None, docs=None):
 
     `docs` is `None` for a full run, or the function `--docs` builds: given the subject a skipped
     gate reads, it returns the skip reason (T-285). Under it every per-theme and per-deck step is a
-    skip, and so is every WIDE entry whose third element is a subject rather than `True`.
+    skip, and so is every WIDE entry whose third element is a subject rather than `True`; an entry
+    whose third element is a list runs with that tail instead (T-296).
     """
     wide = WIDE if wide is None else wide
     per_theme = PER_THEME if per_theme is None else per_theme
     per_deck = PER_DECK if per_deck is None else per_deck
-    steps = [("repository-wide", path, docs(reads) if docs and reads is not True else tail)
+    steps = [("repository-wide", path,
+              tail if not docs or reads is True else
+              reads if isinstance(reads, list) else docs(reads))
              for path, tail, reads in wide]
     # Themes before decks: a deck is built against a theme, so a theme that does not conform is
     # the more useful failure to read first.
@@ -698,26 +705,27 @@ def self_test():
         if docs_blockers(["docs/BRIEF.md", path]) != [path]:
             sys.exit("SELF-TEST FAILED: a diff touching %r did not refuse --docs. A skipped gate "
                      "reads that tree, so its verdict could have moved unseen" % path)
-    docs_wide = [("tools/a.py", [], True), ("tools/d.py", [], "a deck")]
+    docs_wide = [("tools/a.py", [], True), ("tools/d.py", [], "a deck"),
+                 ("tools/f.py", ["--x"], ["--docs"])]
     fake_per_deck = [("tools/b.py", lambda deck, src: [deck])]
-    shape = lambda steps: [(p, isinstance(t, str)) for _s, p, t in steps]
+    shape = lambda steps: [(p, t if p == "tools/f.py" else isinstance(t, str)) for _s, p, t in steps]
     full = shape(plan(["examples/reference-deck.html"], ["themes/lattice.css"], wide=docs_wide,
                       per_deck=fake_per_deck))
-    if full != [("tools/a.py", False), ("tools/d.py", False), ("tools/deck/theme.py", False),
-                ("tools/b.py", False)]:
-        sys.exit("SELF-TEST FAILED: a full run's plan skipped something, %r. The docs flag must "
-                 "change nothing when it is not passed" % (full,))
+    if full != [("tools/a.py", False), ("tools/d.py", False), ("tools/f.py", ["--x"]),
+                ("tools/deck/theme.py", False), ("tools/b.py", False)]:
+        sys.exit("SELF-TEST FAILED: a full run's plan skipped something or changed a tail, %r. The "
+                 "docs flag must change nothing when it is not passed" % (full,))
     docs = shape(plan(["examples/reference-deck.html"], ["themes/lattice.css"], wide=docs_wide,
                       per_deck=fake_per_deck, docs=lambda reads: "skipped: reads " + reads))
-    if docs != [("tools/a.py", False), ("tools/d.py", True), ("tools/deck/theme.py", True),
-                ("tools/b.py", True)]:
-        sys.exit("SELF-TEST FAILED: --docs planned %r. It must run every entry marked True, and "
-                 "skip - not omit - every deck-facing one, the per-theme and the per-deck gates"
-                 % (docs,))
+    if docs != [("tools/a.py", False), ("tools/d.py", True), ("tools/f.py", ["--docs"]),
+                ("tools/deck/theme.py", True), ("tools/b.py", True)]:
+        sys.exit("SELF-TEST FAILED: --docs planned %r. It must run every entry marked True, run a "
+                 "list-marked one with that tail, and skip - not omit - every deck-facing one, the "
+                 "per-theme and the per-deck gates" % (docs,))
     for path, _tail, reads in WIDE:
-        if reads is not True and not isinstance(reads, str):
-            sys.exit("SELF-TEST FAILED: %s says neither True nor what it reads, so --docs cannot "
-                     "classify it" % path)
+        if reads is not True and not isinstance(reads, (str, list)):
+            sys.exit("SELF-TEST FAILED: %s says neither True, a docs-mode tail, nor what it reads, "
+                     "so --docs cannot classify it" % path)
 
     # Quiet never hides a failure (T-286): a red run prints its failures in every mode, and a
     # green quiet run is one line carrying the counts. Asserted on fake results rather than read,

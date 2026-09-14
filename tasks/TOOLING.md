@@ -81,6 +81,12 @@ tree is a fully gated one under `../docs/REMEDIATION-ORDER.md` §4, which is why
 against decks nothing they changed could reach
 ([T-285](T-285-let-a-documentation-task-run-the-gates-its-change-can-reach.md), which records the
 docs-mode time). `--docs` is never the release's step 1 and never a batch's last run.
+**`figures.py` runs under it with `--docs`**
+([T-296](T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md)): the README's
+`check.py` block is compared with itself instead of re-run, while it is identical at the base. A
+commit that edits that block pays for the render. What a documentation commit stops seeing is a
+render verdict that moves with no file changing, such as a browser update, which every skipped deck
+gate already misses and the batch's full run still catches.
 
 ### 1.5 A green gate prints one line when nobody is watching
 
