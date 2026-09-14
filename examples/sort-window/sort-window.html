@@ -857,6 +857,13 @@ svg{display:block}
 .btn.btn--pager:active,
 .btn.btn--pager.is-back:active{transform:scale(var(--pager-pinch));
   transition:transform var(--press-dur) var(--press-ease);--motion-kind:affordance}
+/* **The pinch keeps the click** (T-313). The button shrinks while it is held, so a press that started
+   near its edge was released outside it and the browser fired no click: the pager animated and did
+   not page. This invisible margin is part of the button for hit-testing, and it shrinks with it:
+   `--sp-1` covers the pinch at the widest pager button several times over, and two neighbours'
+   margins meet in the `--sp-2` gap between them without overlapping. */
+.btn.btn--pager{position:relative}
+.btn.btn--pager::after{content:"";position:absolute;inset:calc(-1 * var(--sp-1))}
 .btn svg{width:var(--icon-ui);height:var(--icon-ui)}
 .btn .chev{width:var(--chev);height:var(--chev);border-right:var(--chev-stroke) solid currentColor;
   border-bottom:var(--chev-stroke) solid currentColor}

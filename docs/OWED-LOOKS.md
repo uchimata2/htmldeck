@@ -44,6 +44,7 @@ recorded under the next heading with their answers. **The queue being empty is w
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
+| 18 | [`examples/reference-deck.html`](../examples/reference-deck.html) | the chrome row, any slide - the four pager buttons | A press that starts on a pager button's edge now pages. *Press each of first, previous, next and last right at its border: does every press page, and does the pinch still read?* | [T-313](../tasks/T-313-keep-a-pager-press-that-starts-on-the-buttons-edge-a-click.md) |
 
 ## What has already been looked at
 
