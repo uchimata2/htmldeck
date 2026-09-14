@@ -2,17 +2,18 @@
 id: T-287
 title: Audit — what a session pays per turn, and why it grows
 type: audit
-status: in_progress
+status: done
 phase: review
 parent: null
 blocked_by: []
 related: [T-130, T-153, T-285, T-286]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: m
 created: 2026-09-02
-updated: 2026-09-13
+updated: 2026-09-14
 deliverables: [docs/CONTEXT-AUDIT.md, docs/lessons/L-154.md]
 ---
 
@@ -89,7 +90,7 @@ and not typed here, except tier 1, which is measured today because it is the tri
       command can.
 - [x] Every High and Medium finding has a child task; every Low is batched or accepted with a reason.
 - [x] The baseline is taken on a tree where `T-285` and `T-286` have landed, and says so.
-- [ ] Phase 2 is recorded after the remedies exist, and names at least one prediction the
+- [x] Phase 2 is recorded after the remedies exist, and names at least one prediction the
       measurement refused — or it was not run honestly.
 
 **Open questions** — both decided at cycle 0, the recommendation adopted in each case, as `T-285`
@@ -178,12 +179,10 @@ Counts only; the statements live in the register.
 | Every finding carries its proof | met | a command or a script for `CE-14`, `CE-15`, `CE-17`–`CE-21`; the transcript reading, named as one session's, for `CE-16` and `CE-22` |
 | High and Medium tasked; Low batched or accepted | met | five tasks for five; `T-293` for three Lows; `CE-22` accepted with the collision stated, then tasked as `T-301` on the owner's ruling of 2026-09-13 |
 | Baseline after `T-285` and `T-286`, and says so | met | `807d2db`, §11's first paragraph |
-| Phase 2 recorded after the remedies, with a refused prediction | **not met** | the remedies do not exist yet; [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) is raised and blocked on them, which is how `T-130` closed with `T-153` still to run |
+| Phase 2 recorded after the remedies, with a refused prediction | met | run 2026-09-14 by [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md), whose §4 names the refused predictions |
 
 **Phase 2**
-§11.5 of the register holds the placeholder and names `T-294`; the sentence it reduces to is not
-written until the remedies are measured. What this run can already say is §10.2's sentence unchanged:
-the inventory is what survives, and every `Change` cell is a hypothesis.
+[`../docs/CONTEXT-AUDIT.md`](../docs/CONTEXT-AUDIT.md) §11.5 holds it, and it is not restated here.
 
 **What this run could not see**
 - Inside the harness's shared prefix — 39,315 of the 70,788 tokens a session starts with. The
@@ -201,3 +200,4 @@ the inventory is what survives, and every `Change` cell is a hypothesis.
 | 2026-09-02 | → in_progress | Cycle 0 on the frozen tree at `807d2db`: full gate green in 226 s before any edit. Cycles 1–6 in the same session. |
 | 2026-09-02 | → review | Nine findings, `CE-14`–`CE-22`; seven children raised, `T-288`–`T-294`; L-154. Four criteria met, the fifth carried by `T-294`. **Stays `in_progress` as the umbrella** — `taskmd check` refuses a `done` parent with open children, so this closes when `T-294` does, which is when phase 2 is recorded; the pre-release audit's umbrella rule, met the same way. Committed on the docs gate. |
 | 2026-09-13 | (no change) | The owner ruled that `CE-22` becomes a task: `T-301` raised as a child. Still `in_progress` at `review` — its open children hold it, as the row above says. |
+| 2026-09-14 | → done | `T-294`, the last open child, recorded phase 2 in the register's §11.5. The fifth criterion is met. |
