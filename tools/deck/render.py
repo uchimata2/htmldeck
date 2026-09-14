@@ -264,6 +264,11 @@ PROBE = r"""
     return [ +(((r.left - srect.left)/k).toFixed(2)), +(((r.top - srect.top)/k).toFixed(2)),
              +((r.width/k).toFixed(2)), +((r.height/k).toFixed(2)) ];
   }
+  function nameOf(el){
+    var c = el.getAttribute('class');
+    return el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') +
+           (c ? '.' + c.trim().split(/\s+/).slice(0, 2).join('.') : '');
+  }
   function run(){
     var stage = document.getElementById('stage');
     var next  = document.getElementById('next');
@@ -352,6 +357,42 @@ PROBE = r"""
         var g = local(watch[i], srect, k);
         if (g[0] < -1 || g[1] < -1 || g[0]+g[2] > 1921 || g[1]+g[3] > 1081)
           out.overflow.push('element outside the stage: ' + JSON.stringify(g));
+      }
+      /* **A figure against its own container, not only against the stage** (T-305). An SVG that
+         takes its height from its viewBox ratio overflows a grid track that resolves shorter, and
+         paints over the rows beneath it while staying inside `.body` and the stage - so neither
+         check above sees it, and a run printed `overflow findings: 0` over a figure drawn on top
+         of two paragraphs. The container is read two ways because it is one of two things: the
+         parent box, when a wrapper is what the track sized, and the in-flow siblings, when the
+         figure is itself the grid item and the track is not an element at all. */
+      var figs = cur.querySelectorAll('svg.fig');
+      for (var f = 0; f < figs.length; f++){
+        var fig = figs[f], fr = fig.getBoundingClientRect();
+        if (!fr.width || !fr.height) continue;
+        var box = fig.parentElement;
+        while (box && getComputedStyle(box).display === 'contents') box = box.parentElement;
+        if (box){
+          var br = box.getBoundingClientRect();
+          var past = Math.max(br.left - fr.left, br.top - fr.top,
+                              fr.right - br.right, fr.bottom - br.bottom) / k;
+          if (past > 2) out.overflow.push('figure paints ' + Math.round(past) +
+                                          ' du past its container ' + nameOf(box));
+        }
+        // An out-of-flow figure is layered on purpose, and so is an out-of-flow neighbour.
+        var fpos = getComputedStyle(fig).position;
+        if (fpos === 'absolute' || fpos === 'fixed' || !fig.parentElement) continue;
+        var sibs = fig.parentElement.children;
+        for (var j = 0; j < sibs.length; j++){
+          var sb = sibs[j];
+          if (sb === fig) continue;
+          var sbs = getComputedStyle(sb);
+          if (sbs.display === 'none' || sbs.position === 'absolute' || sbs.position === 'fixed') continue;
+          var sr = sb.getBoundingClientRect();
+          var ix = (Math.min(fr.right, sr.right) - Math.max(fr.left, sr.left)) / k;
+          var iy = (Math.min(fr.bottom, sr.bottom) - Math.max(fr.top, sr.top)) / k;
+          if (ix > 2 && iy > 2) out.overflow.push('figure paints over its neighbour ' + nameOf(sb) +
+                                                  ': ' + Math.round(ix) + 'x' + Math.round(iy) + ' du');
+        }
       }
       var db = cur.querySelector('.disc-btn');
       if (db){ var dr = db.getBoundingClientRect();
@@ -1020,6 +1061,14 @@ STATE_PROBE = r"""
          CSS marks a control as reachable, which is the very question `--probe` asks. */
       o.outline = c.outline;
       o.filter = c.filter;
+      /* **SVG paint, which none of the above reads** (T-305). A mark changes `fill` and `stroke`,
+         never `color` or `background`, so a plate tinted on hover printed two identical lines and
+         `nothing measured differs`. */
+      o.fill = c.fill;
+      o.fillOpacity = c.fillOpacity;
+      o.stroke = c.stroke;
+      o.strokeWidth = c.strokeWidth;
+      o.strokeDasharray = c.strokeDasharray;
     }
     return o;
   }
@@ -1086,6 +1135,57 @@ STATE_PROBE = r"""
       n++;
     }
     return n;
+  }
+
+  /* ---- item 2, second half: the events a script listens for (T-305) ------------------------
+     **The substitution reaches `:hover` and nothing else, and an event reaches a listener and
+     nothing else.** Measured 2026-09-14 in headless Chrome on a rect carrying both: six dispatched
+     pointer and mouse events ran every listener, while `matches(':hover')` stayed false and the
+     computed fill stayed `none`. Neither half stands in for the other, so a hover a deck finishes
+     in script - a caption written from `mouseenter` - was photographed half done.
+
+     Fired at the named element's centre in the order a real pointer produces them, with the enter
+     events on every ancestor outermost first, because a pointer arriving from outside the window
+     enters each of them. What the listeners changed is read from a MutationObserver's records,
+     taken synchronously - so an effect a handler defers to a timer, a frame or a canvas is not
+     counted, and the report says what it counted. */
+  function dispatchHover(el){
+    var r = el.getBoundingClientRect();
+    var x = r.left + r.width / 2, y = r.top + r.height / 2;
+    var chain = [];
+    for (var e = el; e && e.nodeType === 1; e = e.parentElement) { chain.unshift(e); }
+    var mo = new MutationObserver(function(){});
+    mo.observe(document.documentElement,
+               {subtree: true, attributes: true, childList: true, characterData: true});
+    var sent = 0;
+    function fire(type, target, bubbles){
+      var init = {bubbles: bubbles, cancelable: true, composed: true, view: window,
+                  clientX: x, clientY: y};
+      var ev;
+      if (type.indexOf('pointer') === 0 && typeof PointerEvent === 'function'){
+        init.pointerType = 'mouse'; init.isPrimary = true; init.pointerId = 1;
+        ev = new PointerEvent(type, init);
+      } else { ev = new MouseEvent(type, init); }
+      target.dispatchEvent(ev);
+      sent++;
+    }
+    fire('pointerover', el, true);
+    chain.forEach(function(t){ fire('pointerenter', t, false); });
+    fire('mouseover', el, true);
+    chain.forEach(function(t){ fire('mouseenter', t, false); });
+    fire('pointermove', el, true);
+    fire('mousemove', el, true);
+    var recs = mo.takeRecords();
+    mo.disconnect();
+    var changed = [];
+    for (var i = 0; i < recs.length; i++){
+      var t = recs[i].target;
+      if (t.nodeType !== 1) { t = t.parentElement; }
+      var nm = who(t);
+      if (nm && changed.indexOf(nm) < 0) { changed.push(nm); }
+    }
+    return {at: [Math.round(x), Math.round(y)], sent: sent, mutations: recs.length,
+            changed: changed};
   }
 
   /* ---- item 4: hit-testing ----------------------------------------------------------------
@@ -1225,7 +1325,8 @@ STATE_PROBE = r"""
       var sub = substituteHover();
       var h = pick(opts.hover);
       out.hover = {sel: opts.hover, css: sub,
-                   note: 'substituted trigger - the real CSS, fired by an attribute'};
+                   note: 'substituted trigger - the real CSS, fired by an attribute; and the ' +
+                         'pointer events dispatched at its centre, for the script'};
       if (h === undefined){ out.hover.error = 'not a selector this browser will parse'; }
       else if (!h){ out.hover.found = false; }
       else {
@@ -1233,6 +1334,7 @@ STATE_PROBE = r"""
         out.hover.name = who(h);
         out.hover.before = shown(h, true);
         out.hover.marked = markHover(h);
+        out.hover.events = dispatchHover(h);
         out.hover.after = shown(h, true);
       }
     }
@@ -1276,9 +1378,12 @@ def state_url(probe, slide, opts, quiet=False):
 
 # The `deep` fields, in the order they are printed. Named here rather than derived from the
 # reading, so a field that stopped being collected shows up as a missing line instead of silently
-# leaving the comparison.
-STATE_DEEP = ("color", "background", "borderColor", "transform", "boxShadow", "outline",
-              "filter")
+# leaving the comparison. **SVG paint is a tuple of its own** so the failure message can name it as a
+# kind, rather than as five more words in a list a reader skims (T-305).
+STATE_DEEP_BOX = ("color", "background", "borderColor", "transform", "boxShadow", "outline",
+                  "filter")
+STATE_DEEP_PAINT = ("fill", "fillOpacity", "stroke", "strokeWidth", "strokeDasharray")
+STATE_DEEP = STATE_DEEP_BOX + STATE_DEEP_PAINT
 
 
 def _state_line(label, before, after):
@@ -1375,21 +1480,36 @@ def report_state(res):
         else:
             print("    %s, marked on it and %d ancestor(s)"
                   % (hv["name"], max(0, hv.get("marked", 1) - 1)))
+            ev = hv.get("events") or {}
+            at = ev.get("at") or ["?", "?"]
+            changed = ev.get("changed") or []
+            print("    %d pointer and mouse event(s) dispatched at (%s,%s)"
+                  % (ev.get("sent", 0), at[0], at[1]))
+            if changed:
+                print("    the listeners changed %d element(s): %s%s"
+                      % (len(changed), ", ".join(changed[:5]),
+                         " and %d more" % (len(changed) - 5) if len(changed) > 5 else ""))
+            else:
+                # Not a failure: most hovers are CSS alone. But a picture of a scripted hover that
+                # never ran looks exactly like a CSS hover that did, so the report says which (T-305).
+                print("    no listener changed the DOM while they were dispatched - an effect "
+                      "deferred to a timer, a frame or a canvas is not in that count")
             print(_state_line("it", hv.get("before"), hv.get("after")))
             moved = _state_deltas(hv.get("before"), hv.get("after"))
             for line in moved:
                 print("    %-14s %s" % ("changed", line))
-            if not c.get("rules"):
-                print("    ! this deck declares no `:hover` rule, so nothing could differ")
+            if not c.get("rules") and not changed:
+                print("    ! this deck declares no `:hover` rule and no listener changed the DOM, "
+                      "so nothing could differ")
                 bad += 1
-            elif not moved and hv.get("before") == hv.get("after"):
+            elif not moved and hv.get("before") == hv.get("after") and not changed:
                 # **Said, not left to be inferred from two identical lines.** Identical lines are
                 # also what a hover that never fired prints, and the reader cannot tell the two
                 # apart from the output alone - so the output says which of them this is not.
-                print("    ! nothing measured differs: not the box, and none of %s."
-                      % ", ".join(STATE_DEEP))
-                print("      the substitution ran, so either no rule reaches this element or its "
-                      "effect is in a property this reads none of")
+                print("    ! nothing measured differs: not the box, none of %s, and none of the "
+                      "SVG paint %s." % (", ".join(STATE_DEEP_BOX), ", ".join(STATE_DEEP_PAINT)))
+                print("      the substitution ran and no listener changed the DOM, so either no "
+                      "rule reaches this element or its effect is in a property this reads none of")
                 bad += 1
 
     for p in res.get("points") or []:
@@ -1519,6 +1639,13 @@ def self_test():
     probe_marker = "data-probe-done"
     if probe_marker not in PROBE:
         sys.exit("SELF-TEST FAILED: the probe no longer signals completion")
+    # **A figure against its own container** (T-305). The stage check cannot see a figure that
+    # paints over the prose inside the same `.body`, so both readings of the container are named.
+    for _needle in ("past its container", "over its neighbour"):
+        if _needle not in PROBE:
+            sys.exit("SELF-TEST FAILED: PROBE no longer compares a figure with its container "
+                     "(%r), so `measure` reports no overflow over a figure painted on its "
+                     "neighbour (T-305)" % _needle)
 
     # **T-206's guard, and it is structural on purpose.** The fault it watches for is not a wrong
     # number, it is the motion pin going back behind a caller's flag - at which point `measure`
@@ -1701,6 +1828,27 @@ def self_test():
             if _needle not in STATE_PROBE:
                 sys.exit("SELF-TEST FAILED: STATE_PROBE no longer names %s (%r), so `--hover` "
                          "reports a state it did not produce (T-267)" % (_why, _needle))
+
+        # **Every `deep` field is one the probe reads** (T-305). The tuple is what the report
+        # compares and the probe is what fills it, and a name in one and not the other compares
+        # `None` with `None` - equal, so silent. SVG paint was absent from both, which is the same
+        # silence one level up, so the two paint names are asserted as well.
+        for _field in STATE_DEEP:
+            if "o.%s = " % _field not in STATE_PROBE:
+                sys.exit("SELF-TEST FAILED: STATE_DEEP compares %r and STATE_PROBE never reads it, "
+                         "so a hover changing it prints `nothing measured differs` (T-305)" % _field)
+        for _paint in ("fill", "stroke"):
+            if _paint not in STATE_DEEP:
+                sys.exit("SELF-TEST FAILED: STATE_DEEP no longer compares %r, so an SVG mark's "
+                         "hover reads as one that never fired (T-305)" % _paint)
+        # **The events, and what counts their effect.** Without the dispatch a scripted hover is
+        # photographed half done; without `takeRecords` the report cannot say whether it ran.
+        for _needle, _why in (("dispatchHover(h)", "the call that fires the events"),
+                              ("'mouseenter'", "the event a deck's script listens for"),
+                              ("takeRecords()", "what the listeners' effect is counted from")):
+            if _needle not in STATE_PROBE:
+                sys.exit("SELF-TEST FAILED: STATE_PROBE no longer carries %s (%r), so `--hover` "
+                         "photographs a scripted hover that never ran (T-305)" % (_why, _needle))
 
         # **The trap, proved on the written page and in all three cases** (T-041). The pin has one
         # declared exemption and the trap has none, so `MOTION_PROBE` is here as a case that must

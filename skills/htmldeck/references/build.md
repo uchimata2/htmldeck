@@ -265,7 +265,9 @@ python $HTMLDECK/tools/deck/render.py state <slug>.html --probe "#next" --at 960
 Four things, and they compose in one run: `--click` presses a named control (repeatable, in order,
 and `--watch` names what that press should change); `--qv` opens a named quick view; `--hover`
 reaches `:hover`, which no DOM write can — **it substitutes the trigger**, re-inserting the deck's
-own `:hover` rules against an attribute, and it says so on every run; `--probe` hit-tests a control
+own `:hover` rules against an attribute, and it says so on every run — then fires the pointer
+events a real pointer would, at the element's centre, so a hover your script finishes runs too, and
+it names what those listeners changed; `--probe` hit-tests a control
 at five points and answers whether anything is on top of it. `--shot` turns any of them into a
 picture. **It exits non-zero when something you asked for did not happen** — a selector that
 matched nothing still produces a photograph, and a photograph never says what it is not showing.
@@ -274,6 +276,24 @@ matched nothing still produces a photograph, and a photograph never says what it
 notes and one line carrying the rule partition — 345 bytes instead of 17,581 — and a run that is
 not passing prints everything either way, so the flag costs no diagnosis. Drop it when you want the
 per-rule listing to read yourself; that listing is why the default is the default.
+
+**If the deck's owner rules that a rule does not apply to this deck, license it in the deck rather
+than wrapping the gate.** Write one line per rule in the deck's head comment, above `EMBEDDED FONT
+LICENCES`. That comment is the one part of `<head>` a `shell.py sync` keeps, so a licence anywhere
+else is deleted by the next sync and the gate reports it as a fault:
+
+```html
+<!--
+  <what this deck is>
+  htmldeck-licence: rule=DS-100; reason=<why>; by=<who licensed it>; date=YYYY-MM-DD
+
+  EMBEDDED FONT LICENCES ...
+```
+
+That failure stops failing the run, and every run prints it with its reason, who licensed it and
+when, `--quiet` included. Every other failure still fails. So does the licence itself if it omits a
+field, names no rule, or names a rule that passes on the deck, so remove a licence once its rule
+passes.
 
 `--out` is optional and the default is right: shots, probes and measurements go to
 `.assets-cache/deck/` **under the deck's own project**, never under the plugin. Add

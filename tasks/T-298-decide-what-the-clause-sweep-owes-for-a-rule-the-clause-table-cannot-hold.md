@@ -2,18 +2,19 @@
 id: T-298
 title: Decide what the clause sweep owes for a rule the clause table cannot hold
 type: decision
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-278, T-244, T-054]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: medium
 effort: s
 created: 2026-09-03
-updated: 2026-09-03
-deliverables: []
+updated: 2026-09-14
+deliverables: [tools/deck/check.py]
 ---
 
 # T-298 — Decide what the clause sweep owes for a rule the clause table cannot hold
@@ -70,33 +71,69 @@ wrong on their own:
   read every `hard` rule, so the question is answerable by counting `hard judge` rules whose text is
   a conjunction. Answer it before choosing an exit — a single instance and a family argue for
   different remedies.
+  **Answered 2026-09-14: a family, of at least seven. §3.**
 
 ## 2. Plan
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Answer §1's question: read every `hard` rule the gate does not own, and count the conjunctions | §3 |
+| 2 | Choose the exit from the clause table's own reason | §3 |
+| 3 | Empty `CONJUNCTIONS_OWED`, make `sweep_debt` refuse a rule the gate does not own, and split the guard's fault into *not tabulated* and *not owned* | `tools/deck/check.py` |
+| 4 | Self-test both splits, and the refusal with DS-230 put back in the queue | `tools/deck/check.py` |
+| 5 | Lint, then the batch's full gate | — |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- §1's question is answered by reading the 34 `hard` rules no gate here owns: DS-230 is not alone.
+  At least six more state more than one testable assertion, DS-036, DS-085, DS-102, DS-112, DS-167
+  and DS-235, and none was recorded anywhere. Twelve statements were read cut at 330 characters, so
+  six is a floor. Reversible. — 2026-09-14
+- The exit is the queue's membership. `CONJUNCTIONS_OWED` holds only rules a gate here owns, and
+  `sweep_debt` fails a run that puts any other rule there. The clause table's own reason decides it:
+  a row exists to see through a `checked` claim, a rule no gate owns is never `checked`, and its
+  judge reads the whole statement. §1's objection to dropping DS-230 does not reach such a rule, for
+  the reason §1 gives against widening the guard. Reversible. — 2026-09-14
+- Widening the guard is refused for T-278's reason, recorded in §1. A second record for these
+  conjunctions is refused because nothing would read it: the evaluator applies each whole statement
+  already ([`../docs/EVALUATION.md`](../docs/EVALUATION.md) §1.1). Reversible. — 2026-09-14
+- The sweep still reads every `hard` rule. A rule whose `Check` moves into a gate changes its row, so
+  the sweep reports it `CHANGED` and it is read again as a rule the queue can hold. Reversible.
+  — 2026-09-14
+- The guard's two failures are reported apart: an id the ruleset does not tabulate, and a tabulated
+  rule no gate here owns. Reversible. — 2026-09-14
+- The exit was decided here rather than put to the owner, because it follows from the table's own
+  reason. The pull request names it so the owner can reverse it. Reversible. — 2026-09-14
+
+| Case | Before | After |
+| :--- | :--- | :--- |
+| `sweep_debt()`, what is owed | `['DS-230']` | `[]` |
+| a clause row for `DS-999`, which the ruleset does not tabulate | `clausesForRulesNotOwned: ['DS-999']` | `clausesForRulesNotTabulated: ['DS-999']` only |
+| a clause row for `DS-230`, tabulated as `judge` | `clausesForRulesNotOwned: ['DS-230']`, the same key | `clausesForRulesNotOwned: ['DS-230']` only |
+| DS-230 put back in the queue | no fault | `SWEEP DS-230 is owed clause rows the clause table must refuse` |
 
 **Outputs produced**
-- <the files this task changed>
+- `tools/deck/check.py`: `CONJUNCTIONS_OWED` emptied; `sweep_debt` refuses a rule no gate here owns;
+  `clause_account` reports *not tabulated* apart from *not owned*; three self-test cases
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `CONJUNCTIONS_OWED` is empty, or the document says which record holds a rule like DS-230 and why that is not the queue | **pass** | Empty. No record holds DS-230, and §3 says why that is not a silence |
+| a self-test distinguishes a clause row for a rule the ruleset does not tabulate from one for a rule it tabulates and does not own | **pass** | `DS-999` lands only in *not tabulated*, and a rule picked from the ruleset's non-owned set lands only in *not owned* |
+| `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | **pass** | Lint, then the batch's full gate on the finished tree |
 
 **Child fix tasks raised**
-- <T-NNN or "none">
+- none
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-09-14 | -> done | Closed on the queue's membership, decided from the clause table's own reason rather than put to the owner. §1's question came first: DS-230 has at least six siblings, so the remedy is a rule of membership rather than a row. |
+| 2026-09-14 | -> in_progress | Step 1 answered §1's question before an exit was chosen. |
+| 2026-09-14 | -> planned | Five steps. |
+| 2026-09-14 | -> specified | §1 was complete as raised. |
 | 2026-09-03 | → proposed | Raised by [T-278](T-278-write-the-clause-rows-the-sweep-found-owing.md) while writing the nine rows the sweep counted. **The defect is a disagreement between two records, not a missing row**: `sweep_faults` reads every `hard` rule and `CLAUSES` accepts only `auto` and `render` ones, so the queue can hold a rule the table must refuse. Found by attempting it — the row was written, the run went red on `clausesForRulesNotOwned`, and the guard's message names jurisdiction where the self-test only ever probed existence. **`PH3`**: not a defect an adopter met in the published `0.6.0`, so `CLAUDE.md`'s one condition for reopening `PH1` does not apply. |

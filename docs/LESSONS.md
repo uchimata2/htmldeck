@@ -196,6 +196,8 @@ comes here.
 | [L-154](lessons/L-154.md) | A token that enters the context at call t is paid about 2 + 0.1 × (N − t) times, so the earliest reads are the dearest and a resume compounds like tier 1 | Tooling |
 | [L-158](lessons/L-158.md) | A rule no tool asks for is back-filled, not fixed, and the record of back-filling it is the evidence that it recurs | Tooling |
 | [L-165](lessons/L-165.md) | Skip a check when its subject matches a checked base, not when a mode says so | Tooling |
+| [L-166](lessons/L-166.md) | A capture proves a state change only where the two states look different | Tooling |
+| [L-167](lessons/L-167.md) | A defect in how a pattern closes an element is a class, so sweep for it | Tooling |
 
 ### Writing
 

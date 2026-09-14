@@ -51,9 +51,17 @@ import density                                                      # noqa: E402
 import content                                                      # noqa: E402
 
 TEMPLATE = re.compile(r"<template\b[^>]*>.*?</template>", re.S | re.I)
-SVG = re.compile(r"<svg\b.*?</svg>", re.S | re.I)
 TAG = re.compile(r"<[^>]+>")
 CLASS_ATTR = re.compile(r'\bclass="([^"]*)"')
+OPEN_TAG = re.compile(r"<(\w+)(\s[^>]*)?>")
+ATTR = re.compile(r'([\w:-]+)\s*=\s*(?:"([^"]*)"|\'([^\']*)\')')
+# The elements HTML never closes, so none of them opens a depth.
+VOID = frozenset(("area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta",
+                  "param", "source", "track", "wbr"))
+# The roles that make an element a control a reader operates (report `10`).
+CONTROL_ROLES = ("button", "tab", "switch")
+
+
 def unescape(text):
     """Every named and numeric HTML entity, through the standard library.
 
@@ -81,6 +89,64 @@ def without_templates(section):
     return TEMPLATE.sub(" ", section)
 
 
+def close_of(section, tag, start):
+    """Where the `tag` element whose open tag ends at `start` closes, or the end of `section`.
+
+    **At its own close tag, not at the first one** (T-303). This was `section.find("</div>")` until
+    2026-09-14, so a `.body` whose first child is a `<div>` ended at that child, and every sibling
+    after it was dropped with no marker (report `13`). Opens of the same tag are counted, and the
+    close is the one where the depth returns to zero. A void element opens no depth.
+    """
+    if tag.lower() in VOID:
+        return start
+    depth = 1
+    for m in re.compile(r"<(/?)%s(?=[\s/>])[^>]*>" % re.escape(tag), re.I).finditer(section, start):
+        if m.group(1):
+            depth -= 1
+            if not depth:
+                return m.start()
+        elif not m.group(0).endswith("/>"):
+            depth += 1
+    return len(section)
+
+
+def svg_spans(section):
+    """`[(start, end)]` of every outermost `<svg>`, each closed at its own `</svg>`.
+
+    `<svg\\b.*?</svg>` is the first-close defect in a second helper: it ended a figure at the first
+    icon nested inside it, so the reference deck's sources slide printed a figure's labels as body
+    copy and none as drawn labels. `readability.py`'s ledger found it on its first run (T-303).
+    """
+    out, pos = [], 0
+    opener = re.compile(r"<svg(?=[\s/>])[^>]*>", re.I)
+    while True:
+        m = opener.search(section, pos)
+        if not m:
+            return out
+        if m.group(0).endswith("/>"):
+            end = m.end()
+        else:
+            close = close_of(section, "svg", m.end())
+            end = section.find(">", close) + 1 if close < len(section) else len(section)
+        out.append((m.start(), end))
+        pos = end
+
+
+def without_svg(section):
+    """`section` with every `<svg>` replaced by a space."""
+    parts, pos = [], 0
+    for start, end in svg_spans(section):
+        parts += [section[pos:start], " "]
+        pos = end
+    return "".join(parts) + section[pos:]
+
+
+def attributes(fragment):
+    """`{name: value}` for an open tag's attribute text, names lower-cased and values unescaped."""
+    return {m.group(1).lower(): unescape(m.group(2) if m.group(2) is not None else m.group(3))
+            for m in ATTR.finditer(fragment or "")}
+
+
 def by_class(section, name):
     """Every element carrying class `name`, flattened, in document order.
 
@@ -94,8 +160,7 @@ def by_class(section, name):
         cls = CLASS_ATTR.search(attrs)
         if not cls or not token.search(cls.group(1)):
             continue
-        end = section.find("</%s>" % m.group(1), m.end())
-        text = flatten(section[m.end():end if end > 0 else len(section)])
+        text = flatten(section[m.end():close_of(section, m.group(1), m.end())])
         if text:
             out.append(text)
     return out
@@ -108,25 +173,75 @@ def drawn_labels(section):
     rewrites it, a drawn label drifts when the chart behind it is rebuilt.
     """
     out = []
-    for svg in SVG.findall(section):
-        for m in re.finditer(r"<text\b[^>]*>(.*?)</text>", svg, re.S | re.I):
+    for start, end in svg_spans(section):
+        for m in re.finditer(r"<text\b[^>]*>(.*?)</text>", section[start:end], re.S | re.I):
             text = flatten(m.group(1))
             if text:
                 out.append(text)
     return out
 
 
-def controls(section):
-    """`[(kind, name, label)]` - every interactive control the slide carries.
+def reachable(tabindex):
+    """True for a `tabindex` a keyboard reaches. Below zero is focusable by script only."""
+    try:
+        return tabindex is not None and int(tabindex.strip()) >= 0
+    except ValueError:
+        return False
 
-    `data-disc` is the disclosure's own name and is what a specification entry quotes.
+
+def accessible_name(section, m, attrs):
+    """`aria-label`, else the element's own text, else `title`, else empty.
+
+    `aria-labelledby` is not resolved: the id it names can sit on another slide, and a name read
+    from the wrong element is worse than an empty one, which the report prints as missing.
     """
-    out = []
-    for m in re.finditer(r'\bdata-disc="([^"]*)"', section):
-        out.append(("disclosure", unescape(m.group(1)), ""))
-    labels = by_class(section, "disc-label")
-    for i, (kind, name, _) in enumerate(out):
-        out[i] = (kind, name, labels[i] if i < len(labels) else "")
+    if attrs.get("aria-label", "").strip():
+        return attrs["aria-label"].strip()
+    if not m.group(0).endswith("/>"):
+        inner = section[m.end():close_of(section, m.group(1), m.end())]
+        text = flatten(without_svg(inner))
+        if text:
+            return text
+    return attrs.get("title", "").strip()
+
+
+def controls(section):
+    """`[(kind, name, label)]` - every interactive control the slide carries, in document order.
+
+    `data-disc` is the disclosure's own name and is what a specification entry quotes. **Every other
+    control is read from the accessibility contract, not from a class name** (T-303): a `<button>`,
+    an element whose `role` is `button`, `tab` or `switch`, and an element a keyboard reaches through
+    `tabindex`, SVG included, each with its accessible name. This read `data-disc` alone until
+    2026-09-14, so a slide's own buttons printed *the slide carries none* (report `10`).
+
+    **Each control is printed once, under the field that names it.** The first control inside a
+    `[data-disc]` element is that disclosure's trigger, and a control carrying `data-qv` is under
+    `Quick views`.
+    """
+    out, spans, labels = [], [], by_class(section, "disc-label")
+    for m in OPEN_TAG.finditer(section):
+        tag, attrs = m.group(1).lower(), attributes(m.group(2))
+        if "data-disc" in attrs:
+            n = sum(1 for kind, _n, _l in out if kind == "disclosure")
+            out.append(("disclosure", attrs["data-disc"], labels[n] if n < len(labels) else ""))
+            spans.append([m.end(), close_of(section, m.group(1), m.end()), False])
+            continue
+        role = attrs.get("role", "").strip().lower()
+        if tag == "button":
+            kind = "button"
+        elif role in CONTROL_ROLES:
+            kind = "role=" + role
+        elif reachable(attrs.get("tabindex")):
+            kind = "tabindex"
+        else:
+            continue
+        trigger = next((s for s in spans if s[0] <= m.start() < s[1] and not s[2]), None)
+        if trigger:
+            trigger[2] = True
+            continue
+        if "data-qv" in attrs:
+            continue
+        out.append((kind, accessible_name(section, m, attrs), ""))
     return out
 
 
@@ -176,7 +291,7 @@ def facts(html, index):
     # `examples/sort-window/sort-window.html`: without this the eleven chart labels are printed
     # twice, once as prose, and a reader holding the entry's `Text.` line against the deck reads
     # axis ticks as a paragraph. The two fields partition the slide's text; they do not overlap.
-    prose = SVG.sub(" ", section)
+    prose = without_svg(section)
     return {
         "slide": index,
         "name": name,
@@ -205,7 +320,8 @@ ABSENT = "- (the slide carries none)"
 def render_line(field, value):
     """One field's answer, as lines."""
     if field == "controls":
-        return ["- %s %r%s" % (kind, name, (" - %r" % label) if label else "")
+        return ["- %s %s%s" % (kind, repr(name) if name else "(no accessible name)",
+                               (" - %r" % label) if label else "")
                 for kind, name, label in value]
     if field == "motion classes":
         return ["- .%s (%s)" % (name, kind) for name, kind in value]
@@ -289,6 +405,57 @@ def self_test():
         sys.exit("SELF-TEST FAILED: entities came out as %r. `&middot;` and `&rsquo;` are on the "
                  "title slide of a tracked deck, and an undecoded one is printed as literal text "
                  "and counted as a word by readability.py" % (got,))
+
+    # --- an element closes at its OWN close tag (T-303, report `13`)
+    nested = '<div class="body"><div class="a">FIRST</div><p>SECOND</p><p>THIRD</p></div>'
+    if by_class(nested, "body") != ["FIRST SECOND THIRD"]:
+        sys.exit("SELF-TEST FAILED: a `.body` whose first child is a <div> read as %r. It closed "
+                 "at that child's tag, so every sibling after it went missing" %
+                 (by_class(nested, "body"),))
+    # The failing direction (**L-125**): the arithmetic this replaced, so the case is seen to
+    # reproduce the defect rather than merely to pass.
+    if flatten(nested[len('<div class="body">'):nested.find("</div>")]) != "FIRST":
+        sys.exit("SELF-TEST FAILED: the nested fixture no longer reproduces the first-close defect, "
+                 "so the assertion above proves nothing about it")
+    if by_class('<p class="body">a<br>b<img src="x">c</p><p>d</p>', "body") != ["a b c"]:
+        sys.exit("SELF-TEST FAILED: a void element inside a field opened a depth, so the field "
+                 "ran past its own close")
+
+    # --- an <svg> closes at its own </svg>, not at an icon nested inside it (T-303)
+    iconed = ('<section class="slide" data-name="i"><div class="body"><svg class="fig">'
+              '<svg class="icon"><use href="#i"/></svg><text class="name">After the icon</text>'
+              '</svg><p>Prose.</p></div></section>')
+    got = facts(iconed, 1)
+    if got["drawn labels"] != ["After the icon"] or got["body copy"] != ["Prose."]:
+        sys.exit("SELF-TEST FAILED: a figure holding an icon <svg> read as drawn labels %r and body "
+                 "copy %r. It closed at the icon's </svg>, so its labels became prose"
+                 % (got["drawn labels"], got["body copy"]))
+    if "After the icon" not in flatten(re.sub(r"<svg\b.*?</svg>", " ", iconed, flags=re.S | re.I)):
+        sys.exit("SELF-TEST FAILED: the icon fixture no longer reproduces the first-close defect, "
+                 "so the assertion above proves nothing about it")
+
+    # --- every control, once, under the field that names it (T-303, report `10`)
+    ctl = ('<section class="slide" data-name="c">'
+           '<div class="disc" data-disc="scope"><button class="disc-btn">Open</button>'
+           '<span class="disc-label">What it covers</span></div>'
+           '<button class="walkbtn" type="button">Next step</button>'
+           '<svg viewBox="0 0 9 9"><rect tabindex="0" role="button" aria-label="Exact, 47 of 91"/>'
+           '</svg><div role="tab">Winter</div><p tabindex="0" title="A focusable note"></p>'
+           '<span tabindex="0"></span><h2 tabindex="-1">Not a control</h2>'
+           '<button class="sources-open" data-qv="Model" data-file="m.md">open</button>'
+           '</section>')
+    want = [("disclosure", "scope", "What it covers"), ("button", "Next step", ""),
+            ("role=button", "Exact, 47 of 91", ""), ("role=tab", "Winter", ""),
+            ("tabindex", "A focusable note", ""), ("tabindex", "", "")]
+    if facts(ctl, 1)["controls"] != want:
+        sys.exit("SELF-TEST FAILED: the controls came out as %r, expected %r"
+                 % (facts(ctl, 1)["controls"], want))
+    if "(no accessible name)" not in report(ctl, 1):
+        sys.exit("SELF-TEST FAILED: a control with no accessible name printed an empty quote "
+                 "rather than saying it has none")
+    if facts('<section class="slide" data-name="q"><p class="body">Prose.</p></section>',
+             1)["controls"] != []:
+        sys.exit("SELF-TEST FAILED: a slide with no control reported one")
 
     # --- the two text fields partition the slide, they do not overlap
     for label in f["drawn labels"]:
