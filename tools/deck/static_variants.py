@@ -133,15 +133,21 @@ STATIC_VARIANTS = [
         # string, and the check treats them alike for that reason.
         # *Re-anchored 2026-08-12 by T-103*: a one-source mark is the `.sources--one` shape now,
         # so the link is seeded where a link actually goes - inside the item.
-        ('<span class="sources-box" id="src20"><span class="sources-item">Ridership model</span>',
+        # *Re-anchored again 2026-09-14 by T-316*: the item now carries the quick view's opener and,
+        # as the first to cite the source, its template. The seed replaces the opener and leaves the
+        # template where it is.
+        ('<span class="sources-box" id="src20"><span class="sources-item"><button class="sources-open" '
+         'type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model'
+         '</button>',
          '<span class="sources-box" id="src20"><span class="sources-item">'
-         '<a class="sources-link" href="file:///C:/sources/ridership-model.md">Ridership '
-         'model</a></span>')]),
+         '<a class="sources-link" href="file:///C:/sources/ridership-model.md">Ridership model</a>')]),
     ("provenance-link-to-a-fragment-that-is-not-there", "DS-105", [
         # The other half, and the one a person cannot see by reading: an in-document anchor whose
         # target was renamed. It looks like a working link and behaves like a dead one.
-        # *Re-anchored 2026-08-12 by T-103*, for the reason above.
-        ('<span class="sources-box" id="src25"><span class="sources-item">Cost model</span>',
+        # *Re-anchored 2026-08-12 by T-103*, for the reason above. *Re-anchored again 2026-09-14 by
+        # T-316*: the item now carries the quick view's opener, and the seed replaces it with the link.
+        ('<span class="sources-box" id="src25"><span class="sources-item"><button class="sources-open" '
+         'type="button" data-qv="Cost model" data-file="cost-model.md">Cost model</button></span>',
          '<span class="sources-box" id="src25"><span class="sources-item">'
          '<a class="sources-link" href="#src-cost-model">Cost model</a></span>')]),
     # ---- added by T-016, which made the markup a contract
@@ -233,7 +239,8 @@ STATIC_VARIANTS = [
 # One render each. These are the rules where T-005 added the MEASUREMENT and not just a threshold,
 # so a string edit alone would prove nothing about whether the probe can see the defect.
 # The one-source provenance mark, written once: two anchors below quote it (T-103).
-MARK21 = ('<p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src21"><span class="sources-item">Ridership model</span></span></span></p>')
+# *Re-anchored 2026-09-14 by T-316*: the mark's item now carries the quick view's opener.
+MARK21 = ('<p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src21"><span class="sources-item"><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>')
 
 # The anchor T-214's two element-injecting seeds hang off - the one headline in the deck whose
 # text is unique, so the injection lands in a slide (the probe walks `.stage` only) and lands

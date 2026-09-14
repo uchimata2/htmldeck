@@ -40,7 +40,7 @@ study, company or place. See *Provenance*, below.
 *Buy frequency before bikes*, a mid-size city choosing between building a bike-share network and
 raising bus frequency, with one capital grant that closes in March.
 
-[`reference-deck.html`](reference-deck.html) is **331 KB in one file**, 339 349 bytes. Three embedded
+[`reference-deck.html`](reference-deck.html) is **344 KB in one file**, 352 105 bytes. Three embedded
 typefaces (97 KB of it as base64), eleven Lucide icons in one sprite, eight hand-written SVG figures,
 and the deck shell. No libraries, no build step, no network.
 
