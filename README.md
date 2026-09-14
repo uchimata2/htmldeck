@@ -43,7 +43,7 @@ The deck checks need Python and Chrome or Edge. You don't install any packages.
   waits for your sign-off on both, unless you tell it to just build.
 - **A check that admits what it skipped.** `check.py` tests a deck against the design system and
   names every rule it could not test, with the reason.
-- **A blunt review.** Critique mode scores a deck, yours or anyone's, and tells you what to fix
+- **A blunt review.** Critique mode reviews a deck, yours or anyone's, and tells you what to fix
   first.
 
 <p>
@@ -139,4 +139,4 @@ and `themes/` together. The skill needs the rest to run.
 MIT, in [`LICENSE`](LICENSE). The embedded typefaces are under the SIL Open Font License 1.1. Each
 deck carries that notice beside the fonts, so a deck you send is correctly licensed on its own.
 
-Current version: 0.7.0.
+Current version: 1.0.0.
