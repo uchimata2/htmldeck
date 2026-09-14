@@ -85,4 +85,5 @@ never cut to fit (T-301). -->
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-09-14 | (no change) | Batched by the owner into B27, first, after PR #14 merged. Still `proposed`. |
 | 2026-09-14 | -> proposed | Raised by T-308. `PH1`: the published contract places a declaration where the published `sync` deletes it. Not batched: which batch carries it is the owner's call, and B27 is the shell batch. |
