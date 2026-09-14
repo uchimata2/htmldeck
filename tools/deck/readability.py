@@ -25,7 +25,9 @@ no sentence end, and scoring them measures label style rather than reading. The 
 
 Lines come from `slidefacts.facts`, so *what text is on a slide* has one implementation here and
 this tool inherits its two cuts: the `<template>` payload of a quick view is another document's
-prose, and drawn labels are partitioned away from body copy (**L-08**, **L-149**).
+prose, and drawn labels are partitioned away from body copy (**L-08**, **L-149**). **The ledger is
+counted a second time by the standard library's HTML parser**, and a disagreement prints as `LEDGER
+SHORT`: a reader cannot audit itself, and one truncation went unnamed on both sides (T-303).
 
 **What the numbers are, and are not.** Flesch, Flesch-Kincaid and Fog are syllable-and-length
 formulas from the 1940s-60s. They cannot see whether a sentence is ambiguous, whether a claim
@@ -37,6 +39,7 @@ are cheap, reproducible and they rank - not because a score is a verdict. Pure s
 import os
 import re
 import sys
+from html.parser import HTMLParser
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -50,6 +53,10 @@ import slidefacts                                                   # noqa: E402
 # `quick views` and `sources` are deliberately not here - see the docstring.
 PROSE_FIELDS = ["eyebrow", "headline", "standfirst", "body copy", "bottom line"]
 COUNTED_OUT = ["drawn labels", "sources"]
+# The class each field is read by in `slidefacts`. `drawn labels` has none: it is every `<text>`
+# inside an `<svg>`.
+FIELD_CLASS = {"eyebrow": "eyebrow", "headline": "headline", "standfirst": "standfirst",
+               "body copy": "body", "bottom line": "bottom-line", "sources": "sources-item"}
 
 VOWELS = "aeiouy"
 WORD = re.compile(r"[A-Za-z][A-Za-z'’-]*")
@@ -167,6 +174,73 @@ def counted_out(html):
     return words, fields
 
 
+class Carried(HTMLParser):
+    """Words per field as the standard library's parser reads a slide, **not** through `slidefacts`.
+
+    A ledger checked against the reader it audits adds up whatever that reader drops: `counted_out`
+    reads the same facts as `lines_of`, so a third of an adopter's copy was neither read nor named
+    and the report still looked complete (T-303, report `14`). Hence a second reader, and where the
+    two disagree the report prints the difference instead of absorbing it.
+    """
+    SKIP = ("template", "script", "style")
+
+    def __init__(self):
+        HTMLParser.__init__(self, convert_charrefs=True)
+        self.stack, self.words = [], {}
+
+    def handle_starttag(self, tag, attrs):
+        if tag in slidefacts.VOID:
+            return
+        classes = (dict(attrs).get("class") or "").split()
+        self.stack.append((tag, [f for f, c in FIELD_CLASS.items() if c in classes]))
+
+    def handle_startendtag(self, tag, attrs):
+        pass                                        # `<x/>` holds no text and opens nothing
+
+    def handle_endtag(self, tag):
+        for i in range(len(self.stack) - 1, -1, -1):
+            if self.stack[i][0] == tag:
+                del self.stack[i:]
+                return
+
+    def handle_data(self, data):
+        tags = [t for t, _f in self.stack]
+        n = len(WORD.findall(data))
+        if not n or any(t in self.SKIP for t in tags):
+            return
+        in_svg = "svg" in tags
+        for _t, fields in self.stack:
+            for f in fields:
+                if not (f == "body copy" and in_svg):   # body copy is read with the SVG removed
+                    self.words[f] = self.words.get(f, 0) + n
+        if in_svg and "text" in tags:
+            self.words["drawn labels"] = self.words.get("drawn labels", 0) + n
+
+
+def ledger(html, facts=None):
+    """`(carried, accounted, short)` - the words the slides carry in the fields this partitions, the
+    words read or counted out, and `[(slide, field, carried, accounted)]` wherever they differ.
+
+    `facts` is injectable so the self-test can hand it a truncated reading and watch it go short.
+    """
+    facts = facts or slidefacts.facts
+    carried = accounted = 0
+    short = []
+    for i, (start, end, _name) in enumerate(density.slide_bounds(html), 1):
+        reader = Carried()
+        reader.feed(html[start:end])
+        reader.close()
+        f = facts(html, i)
+        for field in PROSE_FIELDS + COUNTED_OUT:
+            got = sum(len(WORD.findall(t)) for t in f[field])
+            has = reader.words.get(field, 0)
+            carried += has
+            accounted += got
+            if got != has:
+                short.append((i, field, has, got))
+    return carried, accounted, short
+
+
 # A line shorter than this is not ranked. Fog over four words is arithmetic on one sentence and puts
 # a two-word eyebrow at the top of a list meant to name what to rewrite. Measured on the four
 # tracked decks: at 8 the eyebrows leave the ranking and every entry is a sentence somebody wrote.
@@ -219,6 +293,17 @@ def report(html, limit):
                 "sentence end;" % (skipped, ", ".join("%s %d" % (f, n) for f, n in
                                                       sorted(fields.items()))),
             "  scoring one measures label style rather than reading (T-258 section 2)."]
+    carried, accounted, short = ledger(html)
+    if not short:
+        out.append("  Ledger: the slides carry %d word(s) in those fields, counted by a second "
+                   "reader, and every one is read or not read above." % carried)
+    else:
+        out.append("  LEDGER SHORT: the slides carry %d word(s) in those fields, counted by a "
+                   "second reader, and %d are read or not read above:" % (carried, accounted))
+        for slide, field, has, got in short[:10]:
+            out.append("    slide %d, %s: carries %d, accounted for %d" % (slide, field, has, got))
+        if len(short) > 10:
+            out.append("    and %d more" % (len(short) - 10))
 
     out += ["", "The hardest lines. This ranks them; it does not judge them - a slide that has to "
                 "say", "`depreciation` says it.", ""]
@@ -297,6 +382,25 @@ def self_test():
     for _s, _f, text in lines:
         if text in ("Jan", "Feb"):
             sys.exit("SELF-TEST FAILED: a drawn label reached the prose subject")
+
+    # the ledger adds up where nothing is dropped, and goes short where something is (T-303)
+    if ledger(FIXTURE)[2]:
+        sys.exit("SELF-TEST FAILED: the ledger went short on the fixture: %r" % (ledger(FIXTURE)[2],))
+    nested = ('<section class="slide" data-name="n"><div class="body"><div class="a">First words '
+              'here.</div><p>Second sentence of body copy.</p></div></section>')
+    carried, accounted, short = ledger(nested)
+    if short or carried != 8 or accounted != 8:
+        sys.exit("SELF-TEST FAILED: a `.body` opening with a nested <div> carried %d word(s) and "
+                 "accounted for %d, %r. Expected 8 and 8 (report `14`)" % (carried, accounted, short))
+
+    def truncated(html, i):
+        f = slidefacts.facts(html, i)
+        f["body copy"] = [t.split(" Second")[0] for t in f["body copy"]]
+        return f
+    if [(s, fld, h, g) for s, fld, h, g in ledger(nested, facts=truncated)[2]] != [
+            (1, "body copy", 8, 3)]:
+        sys.exit("SELF-TEST FAILED: a reading that dropped five words of body copy did not put the "
+                 "ledger short, so the ledger promises what it cannot check")
 
     # an empty subject answers `None`, not zero - a deck with no prose is not the easiest deck
     if measure("") is not None or measure("   ") is not None:
