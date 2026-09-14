@@ -278,6 +278,17 @@ def stray_ranks(html):
     return out
 
 
+def unranked(html):
+    """One sentence per motion `write` cannot rank because no rule for its class declares a kind.
+
+    **Said at write, not only at check** (T-304, adopter record `05`). An unranked element takes
+    rank 101 and never moves, and the ranked count helps only an author who knows what it should be.
+    """
+    return ["`%s` starts a motion and no rule for its class declares --motion-kind, so nothing it "
+            "animates is ranked (DS-237)" % sel[:60]
+            for sel, _body, kind in motion_rules(html) if kind is None]
+
+
 def report(deck):
     """`(problems, rows, ranks)` - everything wrong with this deck's ranking."""
     html = io.open(deck, encoding="utf-8").read()
@@ -380,10 +391,22 @@ def switched_off(value):
 
 
 def motion_rules(html):
-    """`[(selector, body, kind)]` for every rule that starts a motion. `kind` may be `None`."""
+    """`[(selector, body, kind)]` for every rule that starts a motion. `kind` may be `None`.
+
+    **The kind may sit on any rule for the class** (T-304, adopter record `05`). A deck that
+    declares `--motion-kind` on `.dot` and animates `.stage[data-state] .dot` meant `.dot` to be
+    content motion, and reading only the animating rule left its elements unranked with no message.
+    The rule's own declaration still wins where both exist.
+    """
+    rules = [(m.group(1).strip(), m.group(2)) for m in CSS_RULE.finditer(css_of(html))]
+    elsewhere = {}
+    for sel, body in rules:
+        k = KIND.search(body)
+        if k and not sel.startswith("@"):
+            for c in ranked_classes(sel):
+                elsewhere.setdefault(c, k.group(1))
     out = []
-    for m in CSS_RULE.finditer(css_of(html)):
-        sel, body = m.group(1).strip(), m.group(2)
+    for sel, body in rules:
         if sel.startswith("@") or not STARTS.search(body):
             continue
         # a rule whose every motion declaration is `none` is switching motion off, not starting it
@@ -392,7 +415,9 @@ def motion_rules(html):
         if all(switched_off(v) for v in live if v.strip()):
             continue
         k = KIND.search(body)
-        out.append((sel, body, k.group(1) if k else None))
+        kind = k.group(1) if k else next(
+            (elsewhere[c] for c in ranked_classes(sel) if c in elsewhere), None)
+        out.append((sel, body, kind))
     return out
 
 
@@ -482,6 +507,17 @@ def self_test():
     if sorted(content_classes(commented)) != ["dot-pop"]:
         sys.exit("SELF-TEST FAILED: a comment above a rule reached the selector - the vocabulary "
                  "came out as %r" % (sorted(content_classes(commented)),))
+
+    # **A kind on another rule for the class counts** (T-304, adopter record `05`): the base rule
+    # declares, a state rule animates, and the element is ranked. Without any kind, `write` says so.
+    split = ('<style>.dot{fill:red;--motion-kind:content}'
+             '.stage[data-state="active"] .dot{animation:dotpop 400ms ease both}</style>'
+             '<section class="slide" data-name="one"><p class="dot">a</p></section>')
+    if "dot" not in content_classes(split) or len(eligible(split)) != 1 or unranked(split):
+        sys.exit("SELF-TEST FAILED: a --motion-kind on the base rule did not rank the class its state "
+                 "rule animates - the vocabulary came out as %r" % (content_classes(split),))
+    if len(unranked(split.replace("--motion-kind:content", ""))) != 1:
+        sys.exit("SELF-TEST FAILED: a motion no rule gives a kind was not named at write")
     tag = '<p class="stat-figure pulse">'
     if set_rank(tag, 7) != '<p class="stat-figure pulse" style="--m-rank:7">':
         sys.exit("SELF-TEST FAILED: a rank was not added to a tag with no style attribute")
@@ -645,6 +681,8 @@ def main(argv):
             fh.write(html)
         print("wrote %s - %d content motion(s) ranked"
               % (paths.display_path(out, ROOT), len(rows)))
+        for line in unranked(html):
+            print("  %s" % line)
         return 0
     sys.exit("usage: density.py list|check|write <deck>")
 

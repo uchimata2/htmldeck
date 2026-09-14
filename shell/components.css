@@ -172,6 +172,29 @@ svg{display:block}
   text-transform:none;text-align:left;color:var(--ink-soft);
 }
 .sources-box[hidden]{display:none}
+
+/* ---- the inline term (T-309): a real button in the sentence, and a bubble over the prose that
+   never pushes it. The bubble opens ABOVE its term - the term sits inside the reading line, so below
+   is the next line of the argument - and below only where above would leave the stage (DS-138). */
+.term{position:relative;display:inline}
+.term-btn{
+  display:inline;padding:0;border:0;background:none;cursor:pointer;
+  font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;
+  text-decoration:underline dotted var(--accent);
+}
+.term-btn:hover,.term[data-pinned] .term-btn{color:var(--accent)}
+.term-bub{
+  position:absolute;left:0;bottom:calc(100% + var(--sp-1));z-index:30;
+  width:var(--sources-box-w);
+  padding:var(--sp-2) var(--sp-3);
+  border:var(--hair) solid var(--line);border-radius:var(--radius);
+  background:var(--paper-sunk);box-shadow:0 var(--shadow-y-sm) var(--shadow-blur-sm) var(--shadow-soft);
+  font-family:var(--font-text);font-size:var(--fs-small);font-weight:normal;letter-spacing:normal;
+  text-transform:none;text-align:left;white-space:normal;color:var(--ink-soft);
+}
+.term-bub[hidden]{display:none}
+.term[data-below] .term-bub{bottom:auto;top:calc(100% + var(--sp-1))}
+.term[data-end] .term-bub{left:auto;right:0}
 /* One row, three columns, and only the third is always there: identifier, kind glyph, title.
    This is the component T-109 unified - the same row renders in the one-source mark, inside a
    multi-source box, and as the colophon's body, so the three cannot drift apart the way the
@@ -439,6 +462,18 @@ svg{display:block}
   text-transform:uppercase;color:var(--ink-faint);
 }
 .ruler-label[data-preview]{color:var(--ink)}
+/* The readout at the mark (T-307, adopter record `11`). The label names the tick beside the ticks;
+   this puts the tick's slide number over the tick, where a pointer's eye is. Nothing is painted at
+   rest, so the scale keeps no per-item label (DS-217), and the tick's accessible name is unchanged,
+   so this is a supplement and not the only route (DS-163). Placed by measurement like the ring, so
+   it takes no width from the ruler's capacity. */
+.ruler-tip{
+  display:none;position:absolute;left:0;bottom:100%;
+  transform:translateX(calc(var(--tx,0px) - 50%));
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  color:var(--ink-faint);white-space:nowrap;pointer-events:none;
+}
+.ruler-tip[data-on]{display:block}
 
 /* THE NAVIGATION CONTAINER (T-114). The ruler, the counter and the pager answer one question -
    where am I and how do I move - so they share a box and read as one control; `Read` and `Motion`
@@ -541,6 +576,9 @@ svg{display:block}
   border-bottom:var(--chev-stroke) solid currentColor}
 .btn .chev.l{transform:rotate(135deg)}
 .btn .chev.r{transform:rotate(-45deg)}
+/* First and last carry two chevrons, the second over half of the first: the usual mark for *to the
+   end*, drawn with the pager's own glyph rather than an icon (T-307). */
+.btn .chev + .chev{margin-left:calc(-0.5 * var(--chev))}
 
 /* DS-133 wants a progress indicator that encodes real position; the `05 / 12` counter above is
    it. The accent bar that used to run along the foot of the stage was a THIRD encoding of the
@@ -657,8 +695,12 @@ svg{display:block}
    leave the element at `opacity:0`, which is DS-224's failure in a new place. */
 /* The fallback is in the `var()` and not in a `:root` block, which would be a second theme region
    and is what DS-011 counts. 101 outranks every density, so an element the build did not rank does
-   not move - a content motion nobody placed is not a content motion the deck chose. */
-.pulse,.arrow-pop,.dot-pop,.turn{
+   not move - a content motion nobody placed is not a content motion the deck chose.
+   **Keyed on the rank, not on a class name** (T-304). `density.py write` puts `--m-rank` on every
+   element of a class the deck declares `content`, so this reaches a motion the deck wrote. It cannot
+   sit on `.slide` for descendants to inherit: a custom property inherits its computed value, so each
+   descendant would get the slide's own rank, and a slide has none. */
+[style*="--m-rank"]{
   --m-on:max(0,min(1,calc(var(--motion-density) - var(--m-rank,101) + 1)))}
 
 /* **The arrowhead scales out of its line.** T-112's first content motion, and it is DS-140's Scale
@@ -724,7 +766,7 @@ svg{display:block}
    t = 0 of the transition, so a card starting to turn there does most of its turning underneath
    the outgoing slide.
 
-   Content motion, so it is ranked and density gates it - the `--m-on` list above. Inside DS-141's
+   Content motion, so it is ranked and density gates it - the `--m-on` rule above. Inside DS-141's
    cap without a licence: `--turn-dur` is typed `ms 0-500` in the theme contract, so the cap holds
    by construction rather than by anyone checking. */
 .turn{opacity:0;transform:scaleY(0);transform-origin:center}
@@ -767,6 +809,13 @@ svg{display:block}
 :root[data-motion="off"] .rise,:root[data-motion="off"] .pulse,
 :root[data-motion="off"] .opening,
 :root[data-motion="off"] .turn{animation:none;opacity:1;transform:none}
+/* **Every other animation stops too, whatever its class** (T-304). The rules above settle the
+   shell's own classes; this reaches a motion the deck wrote. It zeroes the clock rather than
+   removing the name, for `--m-on`'s reason: the animation lands on its end state, where
+   `animation:none` would leave a reveal at its hidden start. `!important`, because a deck's own
+   rule can be more specific than this one and would restart its loop. */
+:root[data-motion="off"] *,:root[data-motion="off"] *::before,:root[data-motion="off"] *::after{
+  animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important}
 /* The motion control turns the transition off with everything else (DS-221), which is also what a
    headless capture leans on: `render.py` pins motion off before it shoots, so a capture can never
    catch a slide mid-leave. */
@@ -825,6 +874,12 @@ svg{display:block}
    a document, not a scaled stage (DS-074), so the box has to leave its absolute placement and its
    design-unit width, and the control that opens it has nothing left to do once DS-073 opens it. */
 .doc .sources{position:static;display:block}
+/* a term's definition reads as a parenthetical beside its term (T-309, DS-163) */
+.doc .term-btn{text-decoration:none;cursor:auto}
+.doc .term-bub{position:static;display:inline;width:auto;padding:0;border:0;background:none;
+  box-shadow:none;font:inherit;color:var(--ink-soft)}
+.doc .term-bub::before{content:" ("}
+.doc .term-bub::after{content:")"}
 .doc .sources-btn{display:none}
 /* `display:block` is load-bearing, not tidying. On the stage the box is absolutely positioned, so
    it computes to a block whatever its element is; static, a <span> falls back to inline and paints
@@ -950,6 +1005,9 @@ svg{display:block}
 .qv-doc h2{font-size:var(--doc-fs-head);margin-top:var(--doc-sp)}
 .qv-doc h3{font-size:var(--doc-fs-lead);margin-top:var(--doc-sp-sm)}
 .qv-doc h1:first-child,.qv-doc h2:first-child,.qv-doc h3:first-child{margin-top:0}
+/* The section a slide opened the source at (T-271): a rule down its edge, so the reader sees where
+   they were sent. */
+.qv-doc [data-qv-here]{border-left:var(--rule) solid var(--accent);padding-left:var(--sp-2)}
 /* The reset above kills every marker (`list-style:none`), which is right for the deck and
    wrong for a quoted document: an ordered list rendered without its numbers has lost the
    thing that made it ordered. Restored here, and only here. T-107. */
@@ -1068,6 +1126,8 @@ svg{display:block}
 /* Tier two travels open, for DS-073's reason: there is nothing left to open it with. */
 :root[data-preflight] .disc-panel[hidden],
 :root[data-preflight] .sources-box[hidden]{display:block}
+:root[data-preflight] .term-bub[hidden]{display:inline}
+:root[data-preflight] .term-bub{position:static;width:auto;padding:0;border:0;background:none;box-shadow:none}
 :root[data-preflight] .disc,
 :root[data-preflight] .disc-panel,
 :root[data-preflight] .provenance,
@@ -1184,6 +1244,11 @@ svg{display:block}
      not, and paper is where provenance matters most. Static placement also settles DS-223 for this
      component: nothing absolutely positioned means nothing to scatter across a break. */
   .slide .sources-btn{display:none!important}
+  /* a term prints its definition beside it, as the reading view does (T-309) */
+  .slide .term-bub{display:inline!important;position:static;width:auto;padding:0;border:0;
+    background:none;box-shadow:none;font:inherit;color:var(--ink-soft)}
+  .slide .term-bub::before{content:" ("}
+  .slide .term-bub::after{content:")"}
   .slide .sources-box{display:block!important;position:static;min-width:0;
     padding:0;border:0;background:none;box-shadow:none;
     font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);

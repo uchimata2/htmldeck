@@ -73,7 +73,7 @@ go missing (**L-62**).
 | Figure | Value | Origin | Used on |
 | :--- | :--- | :--- | :--- |
 | Renewables share of NAV, 2026 | 52% | portfolio-model | 1, 3, 4 |
-| Renewables contribution to FY26 return | +8.1 points | portfolio-model | 5 |
+| Renewables share of FY26 return | 65% | portfolio-model | 1 |
 | Net asset value | $2.40B | portfolio-model | 3 |
 | Single-sector policy limit | 45% | portfolio-model | 3, 11 |
 | Forward curve, 2026 | $78 | market-outlook | 2 |

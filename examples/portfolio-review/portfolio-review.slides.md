@@ -16,13 +16,12 @@ the count-ups print their final value (DS-143); for print they hold nothing back
 - **Archetype.** A-11 — Manifesto Line.
 - **Title.** Concentration, not performance
 - **Bottom line.** Renewables is 52% of the fund and produced 65% of the year's return.
-- **As built — the deck carries one of these two figures, not both.** `65%` appears nowhere a
-  reader can see: the built slide shows `52%` alone, and the only `65%` in the file is inside the
-  quick view's copy of `portfolio-model.md`. Everything above is the reviewed wording and stays as
-  the record of what was reviewed; this note records what shipped, and
+- **As built — the two figures do not count up.** Both are on the slide with their labels, and
+  `Pulse-once` is on `65%` alone. The shell's count-up drives one bare number per deck (DS-147), and
+  a percentage is not one, so both figures are set rather than counted. A note here said the slide
+  carried `52%` alone; it did not, and
   [T-282](../../tasks/T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md)
-  carries the repair. Found in B12 by removing ten dead quick-view payloads, which is what had been
-  making `spec.py`'s SPEC-5 report the figure as shown.
+  replaced it with this one.
 - **Structure.** One declarative line set at display size, upper two thirds. Below it, two figures
   side by side on the content column — `52%` and `65%` — each with a four-word label beneath. No body
   copy. Both figures are tier one.

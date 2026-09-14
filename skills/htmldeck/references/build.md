@@ -95,6 +95,12 @@ will not tell you, because they are this stage's judgement:
   question about the argument and the slide would still make its point without it. `check.py` fails
   a motion rule that declares neither (DS-237), and the shell's own motions are already declared, so
   in practice this reaches a motion you add.
+- **A content motion you write is gated and stopped the way the shell's are.** Multiply its
+  duration, and any delay, by `--m-on`: `animation-duration:calc(var(--m-on,0) * var(--long-dur))`.
+  Do not declare `--m-on` yourself. The shell sets it on every element that carries `--m-rank`, and
+  `density.py write` ranks every element of a class that any rule declares `--motion-kind:content`.
+  The reader's Motion control stops every animation, whatever its class, by running it at zero
+  duration, so give the motion `both` or `forwards` fill and it lands on its end state.
 - **You may invent a motion, and a motion running past 500 ms says why.** DS-140 is a suggested
   starter set rather than an allow-list, so a motion that encodes something, does not shape the page
   and survives reduced motion, print and the stop control is admissible whether or not it has a name

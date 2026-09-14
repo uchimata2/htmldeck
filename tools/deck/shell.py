@@ -137,6 +137,26 @@ class NotAShell(Exception):
     """The file does not have the shell's structure, and says which anchor is missing."""
 
 
+def head_note(html):
+    """`(start, end)` of the deck's head comment - the `NOTE` region - or `None`.
+
+    **The one place in the head a deck's own declaration survives `sync`**, so T-308's licences and
+    DS-122's chart-engine declaration both live there (T-311). Found slot by slot from the top, the
+    way `cut` finds it, so the delimiters keep one home; `cut` itself needs every region present,
+    which a fixture is not.
+    """
+    pos = 0
+    for slot, opener, closer, _what in SLOTS:
+        start = html.find(opener, pos)
+        end = html.find(closer, start + len(opener)) if start >= 0 else -1
+        if end < 0:
+            return None
+        if slot == "NOTE":
+            return start + len(opener), end
+        pos = end
+    return None
+
+
 def cut(text, slots=SLOTS):
     """`(skeleton, parts)` - the shell with `{{SLOT}}` where the deck varies, and what was there.
 

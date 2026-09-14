@@ -47,7 +47,8 @@ import markhits                                                     # noqa: E402
 import density                                                      # noqa: E402
 import glitchfree                                                   # noqa: E402
 import printpages                                                   # noqa: E402
-import spec                                                         # noqa: E402
+import shell                                                        # noqa: E402
+import spec                                                        # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -734,8 +735,15 @@ CANVAS_TAG = re.compile(r"<canvas\b", re.I)
 # would have to decide which chart each governs in order to say anything - where a single block is
 # one thing to find and one licence to read. It follows DS-009's preflight, which is also one head
 # block for a whole-deck capability.
-CHART_ENGINE_DECL = re.compile(
-    r"""<meta\s+name=["']htmldeck-chart-engine["']\s+content=["']([^"']+)["']""", re.I)
+#
+# **A line in the head comment, not a `<meta>`** (T-311). `shell.py sync` rewrites every byte of the
+# head outside the deck's regions, and the `<meta>` this read until then was outside them: one sync
+# took it from 1 to 0. The head comment is the `NOTE` region, where T-308's licences live for the
+# same reason. A declaration anywhere else fails and says where it goes, because a deck built on
+# 0.7.0 or earlier carries the `<meta>`.
+CHART_ENGINE_KEY = "htmldeck-chart-engine"
+CHART_ENGINE_LINE = re.compile(r"^[ \t]*%s:[ \t]*(.*)$" % re.escape(CHART_ENGINE_KEY), re.M)
+CHART_ENGINE_META = re.compile(r"""<meta\s+name=["']%s["']""" % re.escape(CHART_ENGINE_KEY), re.I)
 
 # SPDX identifiers whose terms permit redistribution inside a single file, which is what a deck is.
 # The same test DS-032 applies to an embedded face, one artifact along.
@@ -849,13 +857,22 @@ def ds122_charts(h):
     seen = [name for name, rx in (("SVG marks built from script", RUNTIME_SVG),
                                   ("a canvas drawing context", CANVAS_CTX),
                                   ("a <canvas> element", CANVAS_TAG)) if rx.search(h)]
-    decl = CHART_ENGINE_DECL.search(h)
-    if not decl:
+    span = shell.head_note(h)
+    note = h[span[0]:span[1]] if span else ""
+    rest = h[:span[0]] + h[span[1]:] if span else h
+    if CHART_ENGINE_META.search(rest) or CHART_ENGINE_LINE.search(rest):
+        return False, ("a chart-engine declaration sits outside the deck's head comment, where "
+                       "`shell.py sync` deletes it. Write it as one `%s:` line above EMBEDDED FONT "
+                       "LICENCES" % CHART_ENGINE_KEY)
+    decls = CHART_ENGINE_LINE.findall(note)
+    if len(decls) > 1:
+        return False, "the chart engine is declared %d times, and a deck declares one" % len(decls)
+    if not decls:
         if seen:
             return False, "draws at run time (%s) and declares no chart engine" % ", ".join(seen)
         return True, "hand-authored: no marks are built at run time"
     fields = dict()
-    for part in decl.group(1).split(";"):
+    for part in decls[0].split(";"):
         if "=" in part:
             k, v = part.split("=", 1)
             fields[k.strip().lower()] = v.strip()
@@ -1163,6 +1180,18 @@ def fetch_verdicts(h):
     ]
 
 
+def chart_verdicts(h):
+    """DS-122's row, with its reason in the text.
+
+    **Moved out of `STATIC` by T-311**, for DS-005's reason: a boolean cannot say why. A deck whose
+    declaration is still the `<meta>` and a deck that declares nothing fail the same boolean, and
+    only the text tells the first where the declaration goes.
+    """
+    ok, why = ds122_charts(h)
+    return [("DS-122", "charts are built at build time, or the engine that draws them is declared: "
+             "%s" % why, ok)]
+
+
 STATIC = [
     ("DS-001", "zero external references, provenance links excepted (DS-105 judges those)",
      ds001_no_external_references),
@@ -1194,8 +1223,8 @@ STATIC = [
     ("DS-110", "no raster the deck produces; a quoted source may be raster inside a quick view, "
                "and decoration may be raster outside a slide's `.body` if it carries no role=img",
      lambda h: ds110_no_produced_raster(h)),
-    ("DS-122", "charts are built at build time, or the engine that draws them is declared",
-     lambda h: ds122_charts(h)[0]),
+    # DS-122 moved out of `STATIC` by T-311 and into `chart_verdicts`: the reason a declaration fails
+    # has to travel in the text, and a boolean cannot carry it.
     # The two rows that read slide copy rather than the file. See the note above the helpers.
     ("DS-100", "no rhetorical questions in slide copy", ds100_no_rhetorical_questions),
     ("DS-106", "no banned terminology", ds106_no_banned_terminology),
@@ -1481,6 +1510,20 @@ SOURCES_WRAPPER = re.compile(r'<span class="sources((?: sources--\w+)*)">(.*?)</
 MARK_USE = re.compile(r'<svg class="sources-mark"[^>]*><use href="#([^"]+)"')
 OPEN_KEY = re.compile(r'<button class="sources-open"[^>]*\bdata-qv="([^"]*)"')
 TEMPLATE_KEY = re.compile(r'<template class="qv-src" data-qv="([^"]*)"')
+# An opener may name a heading in its source, and the quick view opens at it (T-271). An anchor that
+# names no heading in the source it opens is a control that opens nothing where it says.
+OPEN_TAG = re.compile(r'<button class="sources-open"[^>]*>')
+OPEN_QV = re.compile(r'\bdata-qv="([^"]*)"')
+OPEN_AT = re.compile(r'\bdata-qv-at="([^"]*)"')
+TEMPLATE_BODY = re.compile(r'<template class="qv-src" data-qv="([^"]*)">(.*?)</template>', re.S)
+HEADING_TEXT = re.compile(r"<h[1-6][^>]*>(.*?)</h[1-6]>", re.S)
+HTML_UNESCAPE = html.unescape
+
+
+def section_name(text):
+    """A heading or an anchor as `openQuick` compares them: tags gone, entities read, space collapsed,
+    case folded."""
+    return re.sub(r"\s+", " ", HTML_UNESCAPE(re.sub(r"<[^>]+>", "", text))).strip().lower()
 
 
 def source_component(html):
@@ -1513,6 +1556,14 @@ def source_component(html):
     carried = set(TEMPLATE_KEY.findall(html))
     keys = OPEN_KEY.findall(html)
     unresolved = sorted({k for k in keys if k not in carried})
+    heads = {}
+    for key, body in TEMPLATE_BODY.findall(html):
+        heads.setdefault(key, set()).update(section_name(h) for h in HEADING_TEXT.findall(body))
+    for tag in OPEN_TAG.findall(html):
+        at, key = OPEN_AT.search(tag), OPEN_QV.search(tag)
+        if at and key and key.group(1) in carried \
+                and section_name(at.group(1)) not in heads.get(key.group(1), ()):
+            unresolved.append("%s at %r, which is no heading in it" % (key.group(1), at.group(1)))
     return long_ids, wrong_glyphs, unresolved, (len(SOURCE_ID.findall(html)), marks, len(keys))
 
 
@@ -1696,6 +1747,21 @@ PROBE = r"""
     var cur = document.querySelector('.current');
     if (cur) out.currentDasharray = getComputedStyle(cur).strokeDasharray;
 
+    // DS-218 - the control has to STOP each loop, not only be reachable (T-304, adopter record
+    // `07`). The shell stopped its own classes by name, so a loop the deck wrote kept running with
+    // motion off and this rule passed on the control alone. So the probe does what the control
+    // does, sets `data-motion="off"`, and reads every element again. The pin below sets the same
+    // attribute, so nothing is restored.
+    out.unstopped = [];
+    if (out.infinite.length) {
+      document.documentElement.setAttribute('data-motion','off');
+      for (var u=0;u<all.length;u++){
+        var cu = getComputedStyle(all[u]);
+        if ((cu.animationIterationCount||'').indexOf('infinite') < 0 || cu.animationName === 'none') continue;
+        out.unstopped.push([cu.animationName, (all[u].closest('.slide')||{dataset:{}}).dataset.name || '']);
+      }
+    }
+
     // ---- the seam. Motion facts above, settled geometry below. ----
     if (!window.__htmldeckPinMotion) throw new Error(
       'no motion pin to call - `make_probe` did not honour htmldeck:pins-locally (T-261)');
@@ -1770,6 +1836,18 @@ PROBE = r"""
       if (el.querySelector('p,li,td')) continue;
       var txt = (el.textContent||'').replace(/\s+/g,' ').trim();
       if (!txt) continue;
+      // **A term's bubble is not part of the sentence it sits in** (T-309). It sits mid-sentence in
+      // the markup, so read whole the definition lengthens the sentence around it and adds to the
+      // paragraph. Both halves read the run without its bubbles, and each definition is held to the
+      // twenty-word cap as sentences of its own.
+      var bubRun = el, bubDefs = [], bubs = el.querySelectorAll('.term-bub');
+      if (bubs.length){
+        bubRun = el.cloneNode(true);
+        var bubGone = bubRun.querySelectorAll('.term-bub');
+        for (var bgI=0;bgI<bubGone.length;bgI++) bubGone[bgI].parentNode.removeChild(bubGone[bgI]);
+        for (var bdI=0;bdI<bubs.length;bdI++) bubDefs = bubDefs.concat(sentences(bubs[bdI].textContent||''));
+        txt = (bubRun.textContent||'').replace(/\s+/g,' ').trim();
+      }
       var ss = sentences(txt);
       // **The paragraph half reads PROSE, and a sources box is a list of pointers** (T-262). The
       // provenance mark is authored as a `<p>` (COMPONENT-CONTRACT §`.provenance`) with the box
@@ -1781,11 +1859,12 @@ PROBE = r"""
       // still reads the whole run, source items included: a source description past twenty words
       // is a real defect, and that half of the rule was never the complaint.
       var paraSs = ss;
-      if (el.querySelector('.sources-box')){
-        var bare = el.cloneNode(true), boxes = bare.querySelectorAll('.sources-box');
+      if (bubRun.querySelector('.sources-box')){
+        var bare = bubRun.cloneNode(true), boxes = bare.querySelectorAll('.sources-box');
         for (var b=0;b<boxes.length;b++) boxes[b].parentNode.removeChild(boxes[b]);
         paraSs = sentences((bare.textContent||'').replace(/\s+/g,' ').trim());
       }
+      ss = ss.concat(bubDefs);
       if (el.tagName.toLowerCase() === 'p' && paraSs.length > 4)
         out.longParagraphs.push([(el.closest('.slide')||{dataset:{}}).dataset.name, paraSs.length]);
       for (var q=0;q<ss.length;q++){
@@ -2071,7 +2150,9 @@ PROBE = r"""
     // judgement about whether the slide's point survives closure, DS-160 is "two tiers, never
     // three", and neither is what these three lines measure. Both rules the probe used to name are
     // `judge`, so the ruleset says no check should be deciding them at all.
-    out.panelsOpenInitially = document.querySelectorAll('.stage .disc-panel:not([hidden])').length;
+    // A term's bubble is a panel for this rule too (T-309): shut at load, opened by the reader.
+    out.panelsOpenInitially = document.querySelectorAll(
+      '.stage .disc-panel:not([hidden]), .stage .term-bub:not([hidden])').length;
     // DS-160 - two tiers, never three. A third tier is a disclosure control or panel living
     // INSIDE a panel, which is the only shape slide -> detail -> further detail can take.
     out.thirdTier = document.querySelectorAll(
@@ -2503,6 +2584,10 @@ ABSENCE_IS_A_PASS = {
                               "- *0 naming a path, of 0 sites* and *of 12* are the same boolean and "
                               "not the same fact (T-093)"),
     "DS-035": ("prohibition", "no text run under 16 design units; the subject is the deck's text"),
+    "DS-122": ("conditional", "marks built at run time need a declared engine, and a declaration "
+                              "sits in the head comment. A deck that draws nothing at run time and "
+                              "declares nothing satisfies both, and its row says it is hand-authored "
+                              "(T-311)"),
     "DS-241": ("prohibition", "no eyebrow spending itself on the position, the stage or the "
                               "headline's own words. **The row is written as the prohibition on "
                               "purpose**, and the choice is worth stating: the rule's positive "
@@ -2730,6 +2815,7 @@ ALWAYS_MEASURED = {
     "outranked": [],
     # ---- motion
     "infinite": [],
+    "unstopped": [],
     "ambient": [],
     "motionControl": False,          # `!!getElementById('motion')`
     # Reachability, not placement and not existence (DS-218, T-277). The shell builds the control
@@ -2976,15 +3062,18 @@ def render_verdicts(data):
         # The row printed the reachability reading anyway - `False - no control` beside `pass` -
         # which read as the gate stating a failure and passing it (T-257's seed). The owner kept
         # the pass and asked for the row to name the absence instead (T-283).
-        ("DS-218", ("control reachable while motion runs: %s - %s (present: %s, %d looping)"
+        ("DS-218", ("control reachable while motion runs: %s - %s (present: %s, %d looping, %d "
+                    "still looping with motion off%s)"
                     % (data["motionPersistent"], data.get("motionReach", "not measured"),
-                       data["motionControl"], len(data["infinite"])))
+                       data["motionControl"], len(data["infinite"]), len(data["unstopped"]),
+                       _naming(data["unstopped"])))
                    if data["infinite"] else
                    ("no looping motion in this deck - no stop control owed (present: %s - %s)"
                     % (data["motionControl"], data.get("motionReach", "not measured"))),
-         # `motionPersistent` first: the self-test's unread-key check runs on a measurement with no
-         # looping motion, and the other order short-circuits past it. Same verdict for every input.
-         data["motionPersistent"] or len(data["infinite"]) == 0),
+         # `unstopped` and `motionPersistent` before `infinite`: the self-test's unread-key check
+         # runs on a measurement with no looping motion, and the other order short-circuits past
+         # them. Same verdict for every input.
+         (not data["unstopped"] and data["motionPersistent"]) or len(data["infinite"]) == 0),
         # **The instance T-051 was raised for.** `.current` is the only subject this row has, the
         # probe emits the key only when it finds one, and `None != "none"` is `True` - so the rule
         # passed on its own absence, and the seeded fixture that deletes the deck's only dashed flow
@@ -3120,7 +3209,7 @@ def self_test():
         # found nothing, which is a different thing from a render where the preference never took -
         # `reduced_verdicts` reports that one as its own failure and it is not an absent subject.
         rows = (render_verdicts(empty) + split_verdicts("") + provenance_verdicts("")
-                + fetch_verdicts("") + marker_verdicts("") + eyebrow_verdicts("")
+                + fetch_verdicts("") + chart_verdicts("") + marker_verdicts("") + eyebrow_verdicts("")
                 + front_matter_verdicts("")
                 + reduced_verdicts(reduced))
     except KeyError as exc:
@@ -3236,7 +3325,8 @@ def self_test():
     # equally invisible. The source is read rather than imported so a module nothing imports is
     # still found.
     exercised = {"audit.render_verdicts", "audit.split_verdicts", "audit.provenance_verdicts",
-                 "audit.fetch_verdicts", "audit.marker_verdicts", "audit.eyebrow_verdicts",
+                 "audit.fetch_verdicts", "audit.chart_verdicts", "audit.marker_verdicts",
+                 "audit.eyebrow_verdicts",
                  "audit.front_matter_verdicts",
                  "audit.reduced_verdicts", "contract.verdicts", "contract.scale_verdicts_from",
                  "contrast.verdicts", "theme.verdicts", "component.verdicts",
@@ -3268,33 +3358,63 @@ def self_test():
     # library it did not name, so nobody found that `uPlot`, `tanstack charts`, `apexcharts` and
     # `frappe-charts` walked past a rule reading *no chart library*. The engine below is invented
     # for the fixture on purpose: **the check must not know its name to refuse it.**
-    _decl = ('<meta name="htmldeck-chart-engine" content="engine=nobody-has-heard-of-this; '
+    _decl = ("htmldeck-chart-engine: engine=nobody-has-heard-of-this; version=0.3.1; licence=MIT; "
+             "output=svg")
+    _meta = ('<meta name="htmldeck-chart-engine" content="engine=nobody-has-heard-of-this; '
              'version=0.3.1; licence=MIT; output=svg">')
     _engine = ("<script>var e=document.createElementNS('http://www.w3.org/2000/svg','path');"
                "</script>")
+
+    def _head(*lines, extra=""):
+        # The head comment carries the delimiters `shell.head_note` finds it by (T-311).
+        return ("<head><title>x</title>\n<!--\n  A deck.\n" + "".join("  %s\n" % l for l in lines)
+                + "\n  EMBEDDED FONT LICENCES - none\n-->\n" + extra + "</head>")
+
     _ds122 = [
-        ("an invented engine building SVG marks, undeclared", "<head></head>" + _engine, False),
-        ("a <canvas>, undeclared", "<head></head><canvas id='c'></canvas>", False),
-        ("a 2d drawing context, undeclared", "<head></head><script>x.getContext('2d')</script>",
-         False),
+        ("an invented engine building SVG marks, undeclared", _head() + _engine, False),
+        ("a <canvas>, undeclared", _head() + "<canvas id='c'></canvas>", False),
+        ("a 2d drawing context, undeclared", _head() + "<script>x.getContext('2d')</script>", False),
         # The blocklist failed this and it is not a defect: naming a library in prose is what a
         # deck arguing against one does. A false alarm is a defect in the check (**L-125**).
-        ("prose naming a real library", "<head></head><p>We considered Chart.js.</p>", True),
-        ("the same invented engine, declared", "<head>" + _decl + "</head>" + _engine, True),
-        ("declared with a field missing", "<head>" + _decl.replace("version=0.3.1; ", "")
-         + "</head>" + _engine, False),
-        ("declared under a licence that forbids redistribution",
-         "<head>" + _decl.replace("licence=MIT", "licence=Proprietary") + "</head>" + _engine,
+        ("prose naming a real library", _head() + "<p>We considered Chart.js.</p>", True),
+        ("the same invented engine, declared", _head(_decl) + _engine, True),
+        ("declared with a field missing", _head(_decl.replace("version=0.3.1; ", "")) + _engine,
          False),
-        ("declared with canvas output", "<head>" + _decl.replace("output=svg", "output=canvas")
-         + "</head>" + _engine, False),
-        ("a deck that draws nothing at run time", "<head></head><svg><path d='M0 0'/></svg>", True),
+        ("declared under a licence that forbids redistribution",
+         _head(_decl.replace("licence=MIT", "licence=Proprietary")) + _engine, False),
+        ("declared with canvas output", _head(_decl.replace("output=svg", "output=canvas"))
+         + _engine, False),
+        ("declared twice", _head(_decl, _decl) + _engine, False),
+        # The place the contract gave the declaration until T-311, which `sync` deletes. It fails on
+        # a deck that draws nothing too, so the author hears it before a sync and not after.
+        ("declared as the old <meta>", _head(extra=_meta) + _engine, False),
+        ("declared as the old <meta>, drawing nothing", _head(extra=_meta), False),
+        ("declared in a comment below the head comment",
+         _head() + "<!--\n  " + _decl + "\n-->" + _engine, False),
+        ("a deck that draws nothing at run time", _head() + "<svg><path d='M0 0'/></svg>", True),
+        ("no head comment, drawing nothing", "<head></head><svg><path d='M0 0'/></svg>", True),
     ]
     for _label, _html, _want in _ds122:
         _got, _why = ds122_charts(_html)
         if _got != _want:
             sys.exit("SELF-TEST FAILED: DS-122 on %r wanted %s and gave %s (%s)"
                      % (_label, "pass" if _want else "fail", "pass" if _got else "fail", _why))
+    _why = chart_verdicts(_head(extra=_meta) + _engine)[0][1]
+    if "head comment" not in _why:
+        sys.exit("SELF-TEST FAILED: DS-122 failed the old <meta> without saying where the declaration "
+                 "goes: %r" % _why)
+
+    # ---- DS-105, an anchor into a source, both directions (T-271, **L-125**) -------------------
+    _src = ('<template class="qv-src" data-qv="Model"><h1>The model</h1><h2>Failure &amp; recovery</h2>'
+            '</template>')
+    for _at, _want in (("Failure & recovery", 0), ("failure  &amp; RECOVERY", 0), ("Volume", 1),
+                       (None, 0)):
+        _btn = ('<button class="sources-open" type="button" data-qv="Model"%s>Model</button>'
+                % ("" if _at is None else ' data-qv-at="%s"' % _at))
+        _got = len(source_component(_src + _btn)[2])
+        if _got != _want:
+            sys.exit("SELF-TEST FAILED: DS-105 reported %d unresolved control(s) for the anchor %r, "
+                     "wanted %d" % (_got, _at, _want))
 
     # ---- DS-106, every term the rule names, both directions (T-229, **L-125**) ----------------
     #
@@ -3466,7 +3586,10 @@ def self_test():
             (True, "no looping motion", "a vacuous pass that names its absence", {}),
             (True, "True - ", "a pass on a reachable control", dict(loops, motionPersistent=True)),
             (False, "False - ", "a failure on an unreachable control",
-             dict(loops, motionPersistent=False))):
+             dict(loops, motionPersistent=False)),
+            # T-304: a reachable control that leaves a loop running fails for that reason alone.
+            (False, "1 still looping", "a failure on a loop the control does not stop",
+             dict(loops, motionPersistent=True, unstopped=[["spin", "x"]]))):
         what, ok = ds218(**kw)
         if ok is not want or says not in what:
             sys.exit("SELF-TEST FAILED: DS-218 does not report %s - it gave %r on %r"

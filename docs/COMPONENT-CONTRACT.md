@@ -202,6 +202,9 @@ with a mark that referenced nothing.
 | `.sources-icon` | `svg` | `.sources-item` | `0-1` | `aria-hidden` | author |
 | `.sources-link` | `a` | `.sources-item` | `0-1` | `href` | author |
 | `.sources-open` | `button` | `.sources-item` | `0-1` | `type` `data-qv` `data-file` | author |
+| `.term` | `span` | `.slide` | `0+` | — | author |
+| `.term-btn` | `button` | `.term` | `1` | `type` `aria-expanded` `aria-controls` | author |
+| `.term-bub` | `span` | `.term` | `1` | `id` `hidden` | author |
 | `.qv-src` | `template` | `.sources-item` | `0-1` | `data-qv` | author |
 | `.qv` | `div` | — | `1` | `id` `hidden` `role` `aria-modal` `aria-labelledby` | author |
 | `.qv-sheet` | `div` | `.qv` | `1` | — | author |
@@ -288,6 +291,14 @@ map off `data-qv` across the whole stage, so the row resolves to the template th
 already carries. Five documents quoted twice would be the size cost this feature has to justify,
 spent on nothing.
 
+**An opener may name a section with `data-qv-at`** (T-271, from ClaimAI adopter report `001`). Its
+value is the text of a heading in the source, compared without case or extra space. The quick view
+opens scrolled to that heading and marks it, and the rest of the document stays a scroll away. A slide
+citing one clause names it, and the colophon's row names nothing and opens the whole file. An anchor
+that names no heading in its source opens nothing where it says, and DS-105's row counts it. **A
+heading, not an id and not a range**: the sources are rendered from Markdown with no ids, and a range
+would cut the clause away from the text a reader checks it against.
+
 **The quick view is two components' worth of rows for one reason: the surface is the shell's and
 the content is the deck's.** `.qv` and everything under it ship empty in `shell/shell.html`, like the
 chrome and the reading view — a deck carrying no quick view still carries the surface. What varies
@@ -315,6 +326,21 @@ script's, like `.doc`'s sections.
 **`.sources` is not a `.disc` and must not be counted as one** — see DS-105 and DS-230. It shares the
 disclosure interaction rules and none of its vocabulary, which is why it is contracted here beside
 the mark it belongs to rather than in §3.3.
+
+**`.term` is an inline term and its definition bubble, on the same footing** (T-309, from Nextep
+adopter report `18`). The term is a word in a sentence, so `.term` sits inside the copy, and its
+`.term-btn` is the word itself. `.term-bub` is the definition, shut at load (DS-227), and the button's
+`aria-controls` names it. Hover shows it, a press pins it, and opening one closes any other panel
+(DS-137). It opens above its term and below only where above would leave the stage (DS-138). The
+reading view and print show every definition as a parenthetical beside its term, which is what
+keeps the hover a supplement (DS-163). DS-092 reads the sentence without its bubbles, and DS-168
+admits the term at the height of its line.
+
+```
+<span class="term"><button class="term-btn" type="button" aria-expanded="false"
+  aria-controls="term-gate">gate</button><span class="term-bub" id="term-gate" hidden>The month-18
+  review that decides whether the held grant goes to bike-share.</span></span>
+```
 
 **`.headline` sits in the slide, not in its header, and that is measured rather than tidied.**
 Eleven of the twelve put it in `<header>`; the closing slide puts it inside `.body` so the ask can
@@ -368,20 +394,21 @@ are DS-131's and DS-217's, measured in the render gate rather than read out of t
 | `.ruler` | `div` | `.navbox` | `1` | `id` `data-ticks` | author |
 | `.ruler-ticks` | `ul` | `.ruler` | `1` | `id` `data-scale` | author |
 | `.ruler-ring` | `i` | `.ruler` | `1` | `id` `aria-hidden` | author |
+| `.ruler-tip` | `p` | `.ruler` | `1` | `id` `aria-hidden` | author |
 | `.ruler-label` | `p` | `.ruler` | `1` | `id` `aria-hidden` | author |
 | `.count` | `p` | `.navbox` | `1` | `id` `aria-hidden` | author |
 | `.more` | `div` | `.chrome` | `1` | `id` | author |
 | `.more-menu` | `div` | `.more` | `1` | `id` `hidden` | author |
 | `.btn` | `button` | `.chrome` | `1+` | `id` | author |
 | `.btn--pager` | — | `on .btn` | `1+` | — | author |
-| `.is-back` | — | `on .btn--pager` | `0-1` | — | author |
-| `.chev` | `span` | `.btn` | `0-1` | — | author |
+| `.is-back` | — | `on .btn--pager` | `0+` | — | author |
+| `.chev` | `span` | `.btn` | `0+` | — | author |
 | `.l` | — | `on .chev` | `0+` | — | author |
 | `.r` | — | `on .chev` | `0+` | — | author |
 
 **What may sit in the navigation container, and what may not (T-114).** `.navbox` holds the
-controls that answer *where am I, and how do I move*: the ruler, the counter, and the two pager
-buttons. Nothing else may go in it. `Read` switches rendering and `Motion` switches playback —
+controls that answer *where am I, and how do I move*: the ruler, the counter, and the four pager
+buttons, first, previous, next and last (T-307). Nothing else may go in it. `Read` switches rendering and `Motion` switches playback —
 neither is navigation, and both sit outside. The rule is not tidiness: the complaint that opened
 T-114 was that the pager read as an afterthought, and the pager was not under-styled, it was in the
 wrong company. A container that admits *the other chrome controls too* is the container that caused
@@ -389,7 +416,12 @@ it, so the boundary is stated as a closed list rather than as a principle to int
 
 `.navbox` is also what `rulerAvailableDu()` measures. Capacity is a property of the box the ruler
 competes for width inside, and admitting one more control to the container silently spends the
-ruler's targets — which is DS-217's bound moving without anyone editing DS-217.
+ruler's targets — which is DS-217's bound moving without anyone editing DS-217. T-307's first and
+last buttons spent three, and DS-217 records the re-measured bound.
+
+**`.ruler-tip` is the readout at the mark (T-307).** While a pointer or the focus is on a target
+tick it shows that slide's number over the tick, in both ruler modes, and at rest it is empty. Past
+the capacity bound only the section ticks are targets, so only they show it.
 
 **`.more`, and why it is not a `.disc`.** DS-230's tier-two vocabulary is closed at four kinds, and
 a chrome menu is not content the face provokes a question about — so `More` is its own component,
@@ -420,9 +452,9 @@ the table above binds `.btn` to `.chrome` as `1+` and names no opener, and `PR-7
 tail with one button removed produces a deck that refuses to start while `shell.py check` and
 `component.py` both pass it.
 
-**`.is-back` is on the Previous pager and nowhere else, and it exists so a motion can carry a direction.** T-112's pager tilt leans the control toward where it goes; without a class saying which of the two this is, both would lean the same way and the tilt would encode nothing, which is DS-150's test failed by a motion that looks fine. It is a modifier on `.btn--pager` rather than a match on `#prev`, because an id is a handle for the script and a class is what a stylesheet is allowed to know.
+**`.is-back` is on the First and Previous pagers and nowhere else, and it exists so a motion can carry a direction.** T-112's pager tilt leans the control toward where it goes; without a class saying which of the two this is, both would lean the same way and the tilt would encode nothing, which is DS-150's test failed by a motion that looks fine. It is a modifier on `.btn--pager` rather than a match on `#prev`, because an id is a handle for the script and a class is what a stylesheet is allowed to know.
 
-**The pager is exactly two, and the table says `1+` because the count vocabulary has no `2`.** `.btn--pager` is the row's only filled surface — the weight half of T-114's fix, where `.navbox` is the company half. Both were in the ruled sketch; the container is a drawn box and the pager is filled, and neither reads as the change on its own.
+**The pager is exactly four, and the table says `1+` because the count vocabulary has no `4`.** First and last carry two `.chev` each (T-307). `.btn--pager` is the row's only filled surface — the weight half of T-114's fix, where `.navbox` is the company half. Both were in the ruled sketch; the container is a drawn box and the pager is filled, and neither reads as the change on its own.
 
 **`.btn` is bound to `.chrome`, not to its box, and that is a limit of this table rather than a
 looser rule.** A chrome button has three possible parents now — `.navbox`, `.more` and
@@ -509,22 +541,32 @@ the rows stay*; an adopting project then built exactly that deck and had to choo
 the loss in red and passing the gate (T-105). `.t-ink` moved with them: it is the sibling of five
 `author` text roles and would have failed the next deck to colour figure text explicitly.
 
-**The chart-engine declaration is a figure part, and it lives in the head** (DS-122, T-202). A deck
+**The chart-engine declaration is a figure part, and it lives in the head comment** (DS-122, T-202,
+T-311). A deck
 whose charts the reader is expected to *interrogate* may carry an engine, and it says so once:
 
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `htmldeck-chart-engine` | `meta` | `head` | `0-1` | `name` `content` | author |
+| `htmldeck-chart-engine` | comment line | head comment | `0-1` | — | author |
 
 *This row is drawn as a part and is **not** one: `parse_part_row` in `tools/deck/component.py`
-reads a leading dot, so a bare element name is skipped and this document *as data* carries 102
-rows where it prints 103. That is correct for a `meta` declaration rather than a class, and
+reads a leading dot, so a bare name is skipped and this document *as data* carries 102
+rows where it prints 103. That is correct for a declaration rather than a class, and
 nothing is unenforced - the four keys, the `output=svg` rule and the SPDX test are `audit.py`'s
 under DS-122. The count cell read `0..1` until 2026-09-02, the one cell outside §2's closed
 vocabulary (`PR-41`).*
 
-`content` is four `key=value` pairs separated by `;` — **`engine`**, **`version`**, **`licence`**
-and **`output`**. All four are required, `output` must be `svg`, and `licence` must be an SPDX
+The line is `htmldeck-chart-engine:` followed by four `key=value` pairs separated by `;` —
+**`engine`**, **`version`**, **`licence`** and **`output`**:
+
+```
+  htmldeck-chart-engine: engine=uPlot; version=1.6.30; licence=MIT; output=svg
+```
+
+It sits in the deck's head comment, above `EMBEDDED FONT LICENCES`, which is `shell.py`'s `NOTE`
+region and where a deck's licences sit too. **That is the one place in the head `shell.py sync`
+keeps.** Until T-311 the declaration was a `<meta>`, and the first sync deleted it. DS-122 fails a
+declaration anywhere outside the head comment, and its failure says where the line goes. All four are required, `output` must be `svg`, and `licence` must be an SPDX
 identifier whose terms permit redistribution inside a single file, which is the same test DS-032
 applies to an embedded face. **A deck that declares nothing is held to the hand-authored default**,
 which is where every deck this repository ships stands today.
@@ -681,6 +723,9 @@ governs it.
 | `inert` `aria-hidden` | `.slide` | on every slide but the current | follows `data-current` inverted | DS-132 |
 | `data-lit` `aria-current` | a ruler tick | on the first tick | follows the current slide | DS-134 |
 | `data-dense` | `.ruler` | absent | set past the measured capacity | DS-217 |
+| `data-on` | `.ruler-tip` | absent | set while a tick is hovered or focused | DS-163, DS-217 |
+| `aria-expanded` `hidden` | `.term-btn`, `.term-bub` | `false`, present | open while hovered or pinned | DS-227, DS-137 |
+| `data-pinned` `data-below` `data-end` | `.term` | absent | pinned by a press; placed on opening | DS-138 |
 | `data-motion` | `:root` | from `matchMedia` | toggled by the control | DS-143, DS-218 |
 | `data-on` | `.doc` `.viewswitch` | absent | set in the reading view | DS-071 |
 

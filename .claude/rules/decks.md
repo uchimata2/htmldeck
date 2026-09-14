@@ -63,7 +63,8 @@ results as what was actually produced, not as "works".
 
 **12 is the floor, not the target.** Only the contents page has been built and printed above 13 —
 at 17, 25 and 43 — and what is still known to bite above it is the ruler, which degrades to dense
-mode past 16 and then marks where you are more quietly than it marks anything else
+mode past the capacity `tools/deck/chrome_row.py` measures (17 slides on the reference deck,
+2026-09-14) and then marks where you are more quietly than it marks anything else
 ([T-178](../../tasks/T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md)). Treat a long deck as
 **untested territory** rather than as a longer version of a tested one, and say which length a
 result was measured at. How the target moved, and off what evidence, is

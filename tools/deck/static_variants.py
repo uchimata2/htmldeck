@@ -41,6 +41,21 @@ OUT = os.path.join(render.OUT, "variants")
 # (name, rule it must break, [(old, new), ...]) - the edit is the smallest one that breaks the
 # rule and nothing else, because a variant that breaks three rules proves nothing about any of them.
 STATIC_VARIANTS = [
+    # ---- added by T-309: an inline term whose button names no bubble and whose bubble has no id.
+    # A bubble left open in the file. Not a render seed: the shell's `go(0)` shuts every bubble before
+    # any probe runs, as it shuts a disc panel, so the render could never fail it. The contract row
+    # requires `hidden`, and that is where the misuse is caught.
+    ("term-bubble-not-shut-in-the-file", "DS-229", [
+        ("locked to the gate.</p>",
+         'locked to the <span class="term"><button class="term-btn" type="button" '
+         'aria-expanded="false" aria-controls="term-gate">gate</button><span class="term-bub" '
+         'id="term-gate">The month-18 review that decides whether the held grant goes to '
+         'bike-share.</span></span>.</p>')]),
+    ("term-button-naming-no-bubble", "DS-229", [
+        ("locked to the gate.</p>",
+         'locked to the <span class="term"><button class="term-btn" type="button" '
+         'aria-expanded="false">gate</button><span class="term-bub" hidden>The month-18 review that '
+         'decides whether the held grant goes to bike-share.</span></span>.</p>')]),
     # ---- added by T-202, which re-bound DS-122 from five vendor names onto when the marks exist.
     # The engine is invented on purpose: a check that has to know a library's name is a check the
     # next library walks past, which is what the blocklist did to four of them (**L-125**).
@@ -50,6 +65,12 @@ STATIC_VARIANTS = [
          "</script></body>")]),
     ("chart-canvas-undeclared", "DS-122", [
         ("</body>", "<canvas id=\"chart\"></canvas></body>")]),
+    # ---- added by T-311: the `<meta>` the contract placed the declaration in until then, which
+    # `shell.py sync` deletes. It fails with a reason naming the head comment.
+    ("chart-engine-declared-in-a-meta", "DS-122", [
+        ('<meta charset="utf-8">',
+         '<meta charset="utf-8"><meta name="htmldeck-chart-engine" content="engine=x; version=1; '
+         'licence=MIT; output=svg">')]),
     ("cdn-reference", "DS-002", [
         ('<meta charset="utf-8">',
          '<meta charset="utf-8"><link rel="stylesheet" href="https://cdn.example.com/x.css">')]),
@@ -221,6 +242,15 @@ MARK21 = ('<p class="provenance"><span class="sources sources--one"><svg class="
 SEED_HEAD = '<h2 class="headline rise" style="--i:1">The window shuts in March</h2>'
 
 RENDER_VARIANTS = [
+    # ---- added by T-304: a loop the Motion control does not stop. The shell's stop is `!important`
+    # on every element, so the seed out-ranks it the one way a deck can: a more specific
+    # `!important` rule. It keeps the loop's declarations, and it is scoped to no motion preference
+    # so reduced motion still stops it, which leaves DS-218's new reading as the only one to fail.
+    ("loop-the-motion-control-does-not-stop", "DS-218", [
+        ('<style id="slides">',
+         '<style id="slides">@media (prefers-reduced-motion:no-preference){.stage .slide .current{'
+         'animation:current var(--current-dur) linear infinite!important;--motion-kind:affordance;'
+         '--motion-long:loop;--motion-subject:live}}')]),
     ("slide-is-not-a-section", "DS-080", [
         ('<section class="slide" data-name="Waiting is the trip"',
          '<div class="slide" data-name="Waiting is the trip"'),
@@ -334,6 +364,14 @@ RENDER_VARIANTS = [
 # only that a row FAILS, and DS-142's pass had never been observed on anything but `.current` -
 # which is the whole of what T-214 was raised for.
 RENDER_PASS_VARIANTS = [
+    # ---- added by T-309: a term mid-sentence. The sentence is 17 words and its definition 12, so
+    # DS-092 fails it if the bubble is read as part of the sentence.
+    ("a-term-in-a-sentence", "DS-092", [
+        ("locked to the gate.</p>",
+         'locked to the <span class="term"><button class="term-btn" type="button" '
+         'aria-expanded="false" aria-controls="term-gate">gate</button><span class="term-bub" '
+         'id="term-gate" hidden>The month-18 review that decides whether the held grant goes to '
+         'bike-share.</span></span>.</p>')]),
     ("looping-motion-declaring-a-live-subject", "DS-142", [
         # A looping motion that is **not** `.current`, on an element that carries no class the
         # checker has ever heard of, declaring its subject. Before T-214 this failed DS-142 for the
