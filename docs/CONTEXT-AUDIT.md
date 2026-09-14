@@ -376,7 +376,7 @@ the finding itself, and four closures showed that none of it is obvious from the
 | ~~13~~ | **CE-12** | B / F3 | ~~Two docstring outliers~~ — **withdrawn 2026-08-14: there are no docstring outliers.** The figures counted triple-quoted string tokens, and in those files the strings are the tools' payloads | ~~`M`~~ **none** | `s` | ~~stated~~ — the stated risk was never reached | §6.1 |
 | ~~14~~ | **CE-14** | A / F1 | Move the rules that bind only deck or release work under path-scoped rules — about 4,500 of `CLAUDE.md`'s 15,581 bytes, and rule 6 stays. **Carried 2026-09-14 by `T-295`: the deck and release rules are under `.claude/rules/`, and rule 6 stays. It was declined earlier that day and reversed when `T-295` §3's reversal observation held — a rule present before the session started reached the main context on a whole first read of its file.** The first decline read as follows, and the risk cell was right to name addressability. `T-288` measured it and closed `not met` without moving anything: the mechanism is real on this harness — one `path_glob_match` in 1,814 logged instruction loads — but a rule file added mid-session does not fire, so no session can take the reading on itself. `T-295` took it in a later session: the rule, present since 2026-09-02, never reached that session's main context on a partial or a whole read of its file, and reached a subagent of the same session at once. Nothing moved, and `T-295` §3 names the one observation that reverses it | `L` on tier 1, `M` on the start context | `s` | stated | §6.3 |
 | ~~15~~ | **CE-15** | B / F1 | `TOOLING.md` §1 is 18,461 of 26,408 bytes and every pointer to it costs the whole — **done 2026-09-02, and the band is real but conditional in a way this row did not say.** Nothing was deleted, so a session that reads §1 whole still pays all of it. What changed is that no pointer sends it there: fourteen numbered subsections of 262 to 3,440 bytes, and the four live pointers now each name the one rule they meant. The saving belongs to the pointer, not to the file, and a row stating a gain against a file size cannot see that distinction | `M` | `s` | none | §6.3 |
-| 16 | **CE-16** | E / F5 | A session boundary re-pays the start context and the read path at the write rate; the session-per-task rhythm buys continuity, not tokens — **a measurement first, because it collides with a settled rhythm** | `L` (estimated) | `m` | stated | §6.3 |
+| ~~16~~ | **CE-16** | E / F5 | A session boundary re-pays the start context and the read path at the write rate; the session-per-task rhythm buys continuity, not tokens — **a measurement first, because it collides with a settled rhythm. Measured 2026-09-14 by `T-290` on one pair: `/compact` and continue reached a pull request 167,255 weighted tokens cheaper, all of it at the boundary, before the compaction's own call. The change is the owner's** | `L` (estimated) | `m` | stated | §6.3 |
 | ~~17~~ | **CE-17** | A / F1 | Sixty skills offered every turn, five of them this repository's; the app's store is outside `CE-07`'s reach — **done 2026-09-02, and the band is unspendable from here.** The counts re-derive exactly — 5 this repository's, 41 others, and 15 built-ins against the row's 14 — but **the row's account of where the 41 live is wrong**: 40 of them are on no disk in this profile, and the one that is sits in `~/.claude/skills`. They are account-level, and this CLI has no settings key to disable a skill by name. So the gain is real and the controller is the account's own interface | `M` on the start context | `xs` | none | §6.3 |
 | 18 | **CE-18** | E / F5 | The docs gate is 81% one render — seconds, not tokens | *time* | `s` | stated | §6.3 |
 | ~~19~~ | **CE-19** | C / F5 | The deck gate's green default prints 29,980 bytes, up 72%; L-153 was not applied to it — **done 2026-09-02, and the band held with room.** One line: the default now comes from `isatty` rather than from the flag. A piped green run of the reference deck is **327 bytes**, not the 398 the row predicted from `--quiet`, because the deck line and the two notes are all that survive. The self-test asserts all three readings — terminal, pipe, and each flag winning — rather than only the red run it already covered | `M` | `xs` | none | §6.3 |
@@ -607,6 +607,13 @@ sentence is the standing verdict on this method's forecasts, and nothing here is
 | **Applies to** | `this project` |
 | **Controller** | `user` |
 | **Source** | this audit; the harness's cost page for the cache mechanics |
+
+**Measured 2026-09-14 by [T-290](../tasks/T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md), on one pair.** A fresh session reached an open pull
+request on `T-310` at 728,330 weighted tokens, and `/compact` and continue reached one on `T-306` at
+561,075. The task work cost about the same, so the difference is the boundary: 161,671 against the
+row's estimate of 190,000, before the compaction's own call, which the transcript does not hold.
+**The payback after about 27 turns does not arise against a compaction**: the compacted session's
+context was smaller than the fresh one's at both readings. The change is still the owner's.
 
 #### CE-17 — Sixty skills are offered on every turn and five of them are this repository's
 
@@ -1300,6 +1307,7 @@ theirs.
 *Not yet run.* [T-294](../tasks/T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md)
 is raised and blocked on the six children; it grades every band above and the model in §11.2, and
 names at least one prediction the measurement refused. §10.2's sentence stands until then.
+`CE-16`'s measurement landed first: [T-290](../tasks/T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md) §3 is the record `T-294` grades that band from.
 
 ### 11.6 Byproducts, second run
 
