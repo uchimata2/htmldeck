@@ -107,8 +107,9 @@ instrument takes it.
 
 ## 5. How to run it
 
-**The skill.** `humanizer@humanizer`, **2.9.1**, from the `blader/humanizer` marketplace. Verified
-present in this project's session 2026-08-09; nothing had to be enabled.
+**The skill.** `humanizer@humanizer`, from the `blader/humanizer` marketplace. Verified present at
+**2.9.1** on 2026-08-09, and at **2.11.2** on 2026-09-15 by T-319, where patterns 15, 16 and 18 still
+carried the names below; nothing had to be enabled.
 
 **Mode.** File mode for `README.md` — it rewrites in place and reports a summary. Pasted-text mode for
 the repository description, which is short enough that the draft, the audit answers and the final text

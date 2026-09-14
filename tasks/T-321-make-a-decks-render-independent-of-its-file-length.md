@@ -51,6 +51,7 @@ both states. The difference therefore follows file length, not content.
 **Open questions**
 - Phase: `PH3` until the cause is known. If it is in `shell/`, it is a defect in the published plugin
   and becomes `PH1` by `CLAUDE.md`'s rule. — whoever takes the task.
+- Does 1.0.0 wait for it? — the owner, 2026-09-15: no. It stays unbatched, outside B29.
 
 ## 2. Plan
 
@@ -80,3 +81,4 @@ both states. The difference therefore follows file length, not content.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-15 | → proposed | Raised by T-318's screen comparison. |
+| 2026-09-15 | proposed | The owner ruled it out of B29; 1.0.0 does not wait for it. |

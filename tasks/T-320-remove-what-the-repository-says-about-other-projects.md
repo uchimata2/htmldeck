@@ -62,7 +62,7 @@ this repository survives, stated without the project it came from.
 **Decisions & assumptions**
 - Each project name became an ordinal, "the second adopter" or "the third adopter", counted from the adopter whose deck is `measure-first`, so a record still tells two adopters apart. Reversible. — 2026-09-15
 - The report folder is deleted, not rewritten: every report was another project's content, and what each one found is already in the task it raised. A link into it keeps its label; a path to it reads "the adopter reports T-320 removed". Reversible from git. — 2026-09-15
-- Git history is not rewritten. The repository is public and cloned, and a history rewrite is the owner's call on terms `CLAUDE.md`'s publishing section already set. Not reversible once pushed. — 2026-09-15
+- Git history is not rewritten, ruled by the owner 2026-09-15 on the recommendation put to them: the repository is public and cloned, so past commits keep the names. Reversible: a rewrite stays possible later. — 2026-09-15
 - `tools/docs/cycles.py` loses the folder's glob from audit cycle 24, rather than keeping a pattern that matches nothing. Reversible. — 2026-09-15
 - Eleven `hard` rows in `docs/DESIGN-SYSTEM.md` changed, so the clause sweep reported each `CHANGED` and every deck gate went red. Each row was re-read as a character diff against `HEAD`: the only change in all eleven is the provenance note (a name to an ordinal, a link to its label), and no statement moved. Their digests in `check.py`'s `SWEPT` were re-recorded on that reading. Reversible. — 2026-09-15
 
