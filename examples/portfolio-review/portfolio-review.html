@@ -461,6 +461,29 @@ svg{display:block}
   text-transform:none;text-align:left;color:var(--ink-soft);
 }
 .sources-box[hidden]{display:none}
+
+/* ---- the inline term (T-309): a real button in the sentence, and a bubble over the prose that
+   never pushes it. The bubble opens ABOVE its term - the term sits inside the reading line, so below
+   is the next line of the argument - and below only where above would leave the stage (DS-138). */
+.term{position:relative;display:inline}
+.term-btn{
+  display:inline;padding:0;border:0;background:none;cursor:pointer;
+  font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;
+  text-decoration:underline dotted var(--accent);
+}
+.term-btn:hover,.term[data-pinned] .term-btn{color:var(--accent)}
+.term-bub{
+  position:absolute;left:0;bottom:calc(100% + var(--sp-1));z-index:30;
+  width:var(--sources-box-w);
+  padding:var(--sp-2) var(--sp-3);
+  border:var(--hair) solid var(--line);border-radius:var(--radius);
+  background:var(--paper-sunk);box-shadow:0 var(--shadow-y-sm) var(--shadow-blur-sm) var(--shadow-soft);
+  font-family:var(--font-text);font-size:var(--fs-small);font-weight:normal;letter-spacing:normal;
+  text-transform:none;text-align:left;white-space:normal;color:var(--ink-soft);
+}
+.term-bub[hidden]{display:none}
+.term[data-below] .term-bub{bottom:auto;top:calc(100% + var(--sp-1))}
+.term[data-end] .term-bub{left:auto;right:0}
 /* One row, three columns, and only the third is always there: identifier, kind glyph, title.
    This is the component T-109 unified - the same row renders in the one-source mark, inside a
    multi-source box, and as the colophon's body, so the three cannot drift apart the way the
@@ -1140,6 +1163,12 @@ svg{display:block}
    a document, not a scaled stage (DS-074), so the box has to leave its absolute placement and its
    design-unit width, and the control that opens it has nothing left to do once DS-073 opens it. */
 .doc .sources{position:static;display:block}
+/* a term's definition reads as a parenthetical beside its term (T-309, DS-163) */
+.doc .term-btn{text-decoration:none;cursor:auto}
+.doc .term-bub{position:static;display:inline;width:auto;padding:0;border:0;background:none;
+  box-shadow:none;font:inherit;color:var(--ink-soft)}
+.doc .term-bub::before{content:" ("}
+.doc .term-bub::after{content:")"}
 .doc .sources-btn{display:none}
 /* `display:block` is load-bearing, not tidying. On the stage the box is absolutely positioned, so
    it computes to a block whatever its element is; static, a <span> falls back to inline and paints
@@ -1383,6 +1412,8 @@ svg{display:block}
 /* Tier two travels open, for DS-073's reason: there is nothing left to open it with. */
 :root[data-preflight] .disc-panel[hidden],
 :root[data-preflight] .sources-box[hidden]{display:block}
+:root[data-preflight] .term-bub[hidden]{display:inline}
+:root[data-preflight] .term-bub{position:static;width:auto;padding:0;border:0;background:none;box-shadow:none}
 :root[data-preflight] .disc,
 :root[data-preflight] .disc-panel,
 :root[data-preflight] .provenance,
@@ -1499,6 +1530,11 @@ svg{display:block}
      not, and paper is where provenance matters most. Static placement also settles DS-223 for this
      component: nothing absolutely positioned means nothing to scatter across a break. */
   .slide .sources-btn{display:none!important}
+  /* a term prints its definition beside it, as the reading view does (T-309) */
+  .slide .term-bub{display:inline!important;position:static;width:auto;padding:0;border:0;
+    background:none;box-shadow:none;font:inherit;color:var(--ink-soft)}
+  .slide .term-bub::before{content:" ("}
+  .slide .term-bub::after{content:")"}
   .slide .sources-box{display:block!important;position:static;min-width:0;
     padding:0;border:0;background:none;box-shadow:none;
     font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
@@ -2719,6 +2755,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(d);
     closeAllSources(null);
+    closeAllTerms(null);
     closeMore();
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     panel.hidden = !open;
@@ -2754,6 +2791,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(null);
     closeAllSources(s);
+    closeAllTerms(null);
     closeMore();
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     box.hidden = !open;
@@ -2769,6 +2807,59 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
      outside and shut what it had just opened. */
   document.addEventListener('click', function(e){
     if (!e.target.closest || !e.target.closest('.sources')) closeAllSources(null);
+  });
+
+  /* ------------------------------------------------ terms (T-309, one open at a time) */
+  /* An inline term: a word in the prose that opens its definition over the sentence. Its own
+     component and not a .disc, on the sources box's footing - it shares the precedence rule with the
+     disclosures (DS-137) and none of tier two's vocabulary (DS-230). A pointer resting on the term
+     shows the bubble and a press pins it, so a presenter can point at the definition while talking.
+     The press is the route and the hover a supplement (DS-163), so a preview does not close what the
+     reader opened elsewhere, and a pin does. */
+  var terms = Array.prototype.slice.call(stage.querySelectorAll('.term'));
+  terms.forEach(function(t){
+    t.querySelector('.term-btn').addEventListener('click', function(){
+      toggleTerm(t, !t.hasAttribute('data-pinned'), true);
+    });
+    t.addEventListener('mouseenter', function(){
+      if (!terms.some(function(o){ return o.hasAttribute('data-pinned'); })) showTerm(t, true);
+    });
+    t.addEventListener('mouseleave', function(){
+      if (!t.hasAttribute('data-pinned')) showTerm(t, false);
+    });
+  });
+
+  /* `terms || []`: `go()` closes everything on the first slide change, which can run before the
+     list above is built. */
+  function closeAllTerms(except){
+    (terms || []).forEach(function(t){
+      if (t !== except) { t.removeAttribute('data-pinned'); showTerm(t, false); }
+    });
+  }
+  function showTerm(t, open){
+    var bub = t.querySelector('.term-bub');
+    t.querySelector('.term-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+    bub.hidden = !open;
+    if (open) placeTerm(t, bub);
+  }
+  function toggleTerm(t, open, pin){
+    if (open) { closeAllDiscs(null); closeAllSources(null); closeMore(); }
+    closeAllTerms(t);
+    if (open && pin) t.setAttribute('data-pinned', ''); else t.removeAttribute('data-pinned');
+    showTerm(t, open);
+  }
+  /* Above the term, and below only where above would leave the stage (DS-138); pulled back to the
+     term's right edge where it would cross the stage's. Measured on opening, because where a term
+     falls in its line belongs to the text. */
+  function placeTerm(t, bub){
+    t.removeAttribute('data-below');
+    t.removeAttribute('data-end');
+    var sr = stage.getBoundingClientRect(), br = bub.getBoundingClientRect();
+    if (br.top < sr.top) t.setAttribute('data-below', '');
+    if (br.right > sr.right) t.setAttribute('data-end', '');
+  }
+  document.addEventListener('click', function(e){
+    if (!e.target.closest || !e.target.closest('.term')) closeAllTerms(null);
   });
 
   /* ------------------------------------------------ the quick view (DS-105, T-070) */
@@ -2817,6 +2908,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   function openQuick(btn, title, tpl, file){
     closeAllDiscs(null);
     closeAllSources(null);
+    closeAllTerms(null);
     closeMore();
     qvBody.textContent = '';
     /* The contracted container, not a wrapper for its own sake: COMPONENT-CONTRACT.md gives
@@ -2880,6 +2972,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     closeQuick();
     closeAllDiscs(null);
     closeAllSources(null);
+    closeAllTerms(null);
     closeMore();
     slides.forEach(function(s, n){
       var cur = n === i;
@@ -3020,7 +3113,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       var d = slides[idx].querySelector('[data-disc]');
       if (d) { toggleDisc(d, null); e.preventDefault(); }
     }
-    else if (k === 'Escape')     { closeQuick(); closeAllDiscs(null); closeAllSources(null); closeMore(); }
+    else if (k === 'Escape')     { closeQuick(); closeAllDiscs(null); closeAllSources(null); closeAllTerms(null); closeMore(); }
     else if (k === 'r' || k === 'R')                              { setView(true); e.preventDefault(); }
     else if (k === 'm' || k === 'M')                              { setMotion(root.dataset.motion === 'off'); }
     else if (k === 't' || k === 'T')                              { setTheme(root.dataset.theme === 'light' ? 'dark' : 'light'); }
@@ -3095,6 +3188,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       ? moreBtn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(null);
     closeAllSources(null);
+    closeAllTerms(null);
     moreMenu.hidden = !open;
     moreBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     /* Opening moves focus into the menu, because the control that opened it is the last thing a
@@ -3135,6 +3229,10 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
       });
       /* the source list travels opened too - same rule, same reason (DS-073) */
       Array.prototype.forEach.call(c.querySelectorAll('.sources-box'), function(b){
+        b.hidden = false;
+      });
+      /* and a term's definition travels as a parenthetical beside its term (T-309, DS-163) */
+      Array.prototype.forEach.call(c.querySelectorAll('.term-bub'), function(b){
         b.hidden = false;
       });
       Array.prototype.forEach.call(c.querySelectorAll('[id]'), function(n){ n.id = 'doc-' + n.id; });

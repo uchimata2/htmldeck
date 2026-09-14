@@ -1814,6 +1814,18 @@ PROBE = r"""
       if (el.querySelector('p,li,td')) continue;
       var txt = (el.textContent||'').replace(/\s+/g,' ').trim();
       if (!txt) continue;
+      // **A term's bubble is not part of the sentence it sits in** (T-309). It sits mid-sentence in
+      // the markup, so read whole the definition lengthens the sentence around it and adds to the
+      // paragraph. Both halves read the run without its bubbles, and each definition is held to the
+      // twenty-word cap as sentences of its own.
+      var bubRun = el, bubDefs = [], bubs = el.querySelectorAll('.term-bub');
+      if (bubs.length){
+        bubRun = el.cloneNode(true);
+        var bubGone = bubRun.querySelectorAll('.term-bub');
+        for (var bgI=0;bgI<bubGone.length;bgI++) bubGone[bgI].parentNode.removeChild(bubGone[bgI]);
+        for (var bdI=0;bdI<bubs.length;bdI++) bubDefs = bubDefs.concat(sentences(bubs[bdI].textContent||''));
+        txt = (bubRun.textContent||'').replace(/\s+/g,' ').trim();
+      }
       var ss = sentences(txt);
       // **The paragraph half reads PROSE, and a sources box is a list of pointers** (T-262). The
       // provenance mark is authored as a `<p>` (COMPONENT-CONTRACT §`.provenance`) with the box
@@ -1825,11 +1837,12 @@ PROBE = r"""
       // still reads the whole run, source items included: a source description past twenty words
       // is a real defect, and that half of the rule was never the complaint.
       var paraSs = ss;
-      if (el.querySelector('.sources-box')){
-        var bare = el.cloneNode(true), boxes = bare.querySelectorAll('.sources-box');
+      if (bubRun.querySelector('.sources-box')){
+        var bare = bubRun.cloneNode(true), boxes = bare.querySelectorAll('.sources-box');
         for (var b=0;b<boxes.length;b++) boxes[b].parentNode.removeChild(boxes[b]);
         paraSs = sentences((bare.textContent||'').replace(/\s+/g,' ').trim());
       }
+      ss = ss.concat(bubDefs);
       if (el.tagName.toLowerCase() === 'p' && paraSs.length > 4)
         out.longParagraphs.push([(el.closest('.slide')||{dataset:{}}).dataset.name, paraSs.length]);
       for (var q=0;q<ss.length;q++){
@@ -2115,7 +2128,9 @@ PROBE = r"""
     // judgement about whether the slide's point survives closure, DS-160 is "two tiers, never
     // three", and neither is what these three lines measure. Both rules the probe used to name are
     // `judge`, so the ruleset says no check should be deciding them at all.
-    out.panelsOpenInitially = document.querySelectorAll('.stage .disc-panel:not([hidden])').length;
+    // A term's bubble is a panel for this rule too (T-309): shut at load, opened by the reader.
+    out.panelsOpenInitially = document.querySelectorAll(
+      '.stage .disc-panel:not([hidden]), .stage .term-bub:not([hidden])').length;
     // DS-160 - two tiers, never three. A third tier is a disclosure control or panel living
     // INSIDE a panel, which is the only shape slide -> detail -> further detail can take.
     out.thirdTier = document.querySelectorAll(

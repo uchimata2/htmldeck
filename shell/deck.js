@@ -326,6 +326,7 @@
     var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(d);
     closeAllSources(null);
+    closeAllTerms(null);
     closeMore();
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     panel.hidden = !open;
@@ -361,6 +362,7 @@
     var open = force === null ? btn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(null);
     closeAllSources(s);
+    closeAllTerms(null);
     closeMore();
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     box.hidden = !open;
@@ -376,6 +378,59 @@
      outside and shut what it had just opened. */
   document.addEventListener('click', function(e){
     if (!e.target.closest || !e.target.closest('.sources')) closeAllSources(null);
+  });
+
+  /* ------------------------------------------------ terms (T-309, one open at a time) */
+  /* An inline term: a word in the prose that opens its definition over the sentence. Its own
+     component and not a .disc, on the sources box's footing - it shares the precedence rule with the
+     disclosures (DS-137) and none of tier two's vocabulary (DS-230). A pointer resting on the term
+     shows the bubble and a press pins it, so a presenter can point at the definition while talking.
+     The press is the route and the hover a supplement (DS-163), so a preview does not close what the
+     reader opened elsewhere, and a pin does. */
+  var terms = Array.prototype.slice.call(stage.querySelectorAll('.term'));
+  terms.forEach(function(t){
+    t.querySelector('.term-btn').addEventListener('click', function(){
+      toggleTerm(t, !t.hasAttribute('data-pinned'), true);
+    });
+    t.addEventListener('mouseenter', function(){
+      if (!terms.some(function(o){ return o.hasAttribute('data-pinned'); })) showTerm(t, true);
+    });
+    t.addEventListener('mouseleave', function(){
+      if (!t.hasAttribute('data-pinned')) showTerm(t, false);
+    });
+  });
+
+  /* `terms || []`: `go()` closes everything on the first slide change, which can run before the
+     list above is built. */
+  function closeAllTerms(except){
+    (terms || []).forEach(function(t){
+      if (t !== except) { t.removeAttribute('data-pinned'); showTerm(t, false); }
+    });
+  }
+  function showTerm(t, open){
+    var bub = t.querySelector('.term-bub');
+    t.querySelector('.term-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+    bub.hidden = !open;
+    if (open) placeTerm(t, bub);
+  }
+  function toggleTerm(t, open, pin){
+    if (open) { closeAllDiscs(null); closeAllSources(null); closeMore(); }
+    closeAllTerms(t);
+    if (open && pin) t.setAttribute('data-pinned', ''); else t.removeAttribute('data-pinned');
+    showTerm(t, open);
+  }
+  /* Above the term, and below only where above would leave the stage (DS-138); pulled back to the
+     term's right edge where it would cross the stage's. Measured on opening, because where a term
+     falls in its line belongs to the text. */
+  function placeTerm(t, bub){
+    t.removeAttribute('data-below');
+    t.removeAttribute('data-end');
+    var sr = stage.getBoundingClientRect(), br = bub.getBoundingClientRect();
+    if (br.top < sr.top) t.setAttribute('data-below', '');
+    if (br.right > sr.right) t.setAttribute('data-end', '');
+  }
+  document.addEventListener('click', function(e){
+    if (!e.target.closest || !e.target.closest('.term')) closeAllTerms(null);
   });
 
   /* ------------------------------------------------ the quick view (DS-105, T-070) */
@@ -424,6 +479,7 @@
   function openQuick(btn, title, tpl, file){
     closeAllDiscs(null);
     closeAllSources(null);
+    closeAllTerms(null);
     closeMore();
     qvBody.textContent = '';
     /* The contracted container, not a wrapper for its own sake: COMPONENT-CONTRACT.md gives
@@ -487,6 +543,7 @@
     closeQuick();
     closeAllDiscs(null);
     closeAllSources(null);
+    closeAllTerms(null);
     closeMore();
     slides.forEach(function(s, n){
       var cur = n === i;
@@ -627,7 +684,7 @@
       var d = slides[idx].querySelector('[data-disc]');
       if (d) { toggleDisc(d, null); e.preventDefault(); }
     }
-    else if (k === 'Escape')     { closeQuick(); closeAllDiscs(null); closeAllSources(null); closeMore(); }
+    else if (k === 'Escape')     { closeQuick(); closeAllDiscs(null); closeAllSources(null); closeAllTerms(null); closeMore(); }
     else if (k === 'r' || k === 'R')                              { setView(true); e.preventDefault(); }
     else if (k === 'm' || k === 'M')                              { setMotion(root.dataset.motion === 'off'); }
     else if (k === 't' || k === 'T')                              { setTheme(root.dataset.theme === 'light' ? 'dark' : 'light'); }
@@ -702,6 +759,7 @@
       ? moreBtn.getAttribute('aria-expanded') !== 'true' : force;
     closeAllDiscs(null);
     closeAllSources(null);
+    closeAllTerms(null);
     moreMenu.hidden = !open;
     moreBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     /* Opening moves focus into the menu, because the control that opened it is the last thing a
@@ -742,6 +800,10 @@
       });
       /* the source list travels opened too - same rule, same reason (DS-073) */
       Array.prototype.forEach.call(c.querySelectorAll('.sources-box'), function(b){
+        b.hidden = false;
+      });
+      /* and a term's definition travels as a parenthetical beside its term (T-309, DS-163) */
+      Array.prototype.forEach.call(c.querySelectorAll('.term-bub'), function(b){
         b.hidden = false;
       });
       Array.prototype.forEach.call(c.querySelectorAll('[id]'), function(n){ n.id = 'doc-' + n.id; });

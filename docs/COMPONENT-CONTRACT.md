@@ -202,6 +202,9 @@ with a mark that referenced nothing.
 | `.sources-icon` | `svg` | `.sources-item` | `0-1` | `aria-hidden` | author |
 | `.sources-link` | `a` | `.sources-item` | `0-1` | `href` | author |
 | `.sources-open` | `button` | `.sources-item` | `0-1` | `type` `data-qv` `data-file` | author |
+| `.term` | `span` | `.slide` | `0+` | — | author |
+| `.term-btn` | `button` | `.term` | `1` | `type` `aria-expanded` `aria-controls` | author |
+| `.term-bub` | `span` | `.term` | `1` | `id` `hidden` | author |
 | `.qv-src` | `template` | `.sources-item` | `0-1` | `data-qv` | author |
 | `.qv` | `div` | — | `1` | `id` `hidden` `role` `aria-modal` `aria-labelledby` | author |
 | `.qv-sheet` | `div` | `.qv` | `1` | — | author |
@@ -315,6 +318,21 @@ script's, like `.doc`'s sections.
 **`.sources` is not a `.disc` and must not be counted as one** — see DS-105 and DS-230. It shares the
 disclosure interaction rules and none of its vocabulary, which is why it is contracted here beside
 the mark it belongs to rather than in §3.3.
+
+**`.term` is an inline term and its definition bubble, on the same footing** (T-309, from Nextep
+adopter report `18`). The term is a word in a sentence, so `.term` sits inside the copy, and its
+`.term-btn` is the word itself. `.term-bub` is the definition, shut at load (DS-227), and the button's
+`aria-controls` names it. Hover shows it, a press pins it, and opening one closes any other panel
+(DS-137). It opens above its term and below only where above would leave the stage (DS-138). The
+reading view and print show every definition as a parenthetical beside its term, which is what
+keeps the hover a supplement (DS-163). DS-092 reads the sentence without its bubbles, and DS-168
+admits the term at the height of its line.
+
+```
+<span class="term"><button class="term-btn" type="button" aria-expanded="false"
+  aria-controls="term-gate">gate</button><span class="term-bub" id="term-gate" hidden>The month-18
+  review that decides whether the held grant goes to bike-share.</span></span>
+```
 
 **`.headline` sits in the slide, not in its header, and that is measured rather than tidied.**
 Eleven of the twelve put it in `<header>`; the closing slide puts it inside `.body` so the ask can
@@ -698,6 +716,8 @@ governs it.
 | `data-lit` `aria-current` | a ruler tick | on the first tick | follows the current slide | DS-134 |
 | `data-dense` | `.ruler` | absent | set past the measured capacity | DS-217 |
 | `data-on` | `.ruler-tip` | absent | set while a tick is hovered or focused | DS-163, DS-217 |
+| `aria-expanded` `hidden` | `.term-btn`, `.term-bub` | `false`, present | open while hovered or pinned | DS-227, DS-137 |
+| `data-pinned` `data-below` `data-end` | `.term` | absent | pinned by a press; placed on opening | DS-138 |
 | `data-motion` | `:root` | from `matchMedia` | toggled by the control | DS-143, DS-218 |
 | `data-on` | `.doc` `.viewswitch` | absent | set in the reading view | DS-071 |
 

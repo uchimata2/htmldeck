@@ -43,8 +43,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-282](T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | The portfolio deck's opening slide carries one of the two figures its specification calls the whole argument | `PH3` | - | `proposed` | `specify` | - | - | - | T-300 | T-233 |
 | [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md) | Audit — what a session pays per turn, and why it grows | `PH3` | - | `in_progress` | `review` | - | T-288, T-289, T-290, T-291, T-292, T-293, T-294, T-295, T-296, T-301 | - | T-300 | T-130, T-153, T-285, T-286 |
 | [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | Grade the second context-economy run's bands after its remedies land | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-300 | T-153 |
-| [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | T-271, T-282, T-287, T-294, T-309 | - | - |
-| [T-309](T-309-contract-an-inline-term-that-opens-a-definition-bubble.md) | Contract an inline term that opens a definition bubble | `PH3` | - | `proposed` | `specify` | - | - | - | T-300 | T-262, T-299 |
+| [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | T-271, T-282, T-287, T-294 | - | - |
 
 ## Closed
 
@@ -352,6 +351,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-306](T-306-wire-an-icon-first-source-item-in-quickview-py-and-make-shell-py-sync-name-a-stale-chrome-tail.md) | Wire an icon-first source item in quickview.py, and make shell.py sync name a stale chrome tail | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-269, T-299 |
 | [T-307](T-307-give-the-chrome-first-and-last-page-controls-and-a-ruler-whose-marks-a-reader-can-aim-at.md) | Give the chrome first and last page controls, and a ruler whose marks a reader can aim at | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-300 | T-178, T-299 |
 | [T-308](T-308-decide-how-a-deck-records-a-deviation-its-owner-licensed-and-what-the-gate-reports-for-it.md) | Decide how a deck records a deviation its owner licensed, and what the gate reports for it | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-300 | T-225, T-264, T-265, T-299, T-311 |
+| [T-309](T-309-contract-an-inline-term-that-opens-a-definition-bubble.md) | Contract an inline term that opens a definition bubble | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-300 | T-262, T-299 |
 | [T-310](T-310-stop-the-shells-keydown-handler-throwing-on-a-document-target-and-taking-space-from-a-focused-control.md) | Stop the shell's keydown handler throwing on a document target and taking Space from a focused control | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-268, T-299 |
 | [T-311](T-311-keep-a-decks-chart-engine-declaration-through-a-shell-sync.md) | Keep a deck's chart-engine declaration through a shell sync | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-300 | T-202, T-308 |
 

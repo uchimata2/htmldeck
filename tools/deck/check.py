@@ -313,6 +313,9 @@ CLAUSES = {
                 ("amendment", "DS-091"))),
     "DS-092": (("sentence under 20 words", True),
                ("paragraph 3-4 sentences", True),
+               # T-309's amendment: the same probe reads a run without its term bubbles, and holds
+               # each definition to the sentence cap on its own.
+               ("an inline term's bubble is part of neither half", True),
                ("table cell one line",
                 "*One line* is a rendered fact, not a markup one: a cell wraps or does not wrap "
                 "depending on the column width the table resolves to, so the static half cannot "
@@ -529,7 +532,7 @@ SWEPT = {
     "DS-085": "40c2509277",
     "DS-090": "33c3591364",
     "DS-091": "d9a933935f",
-    "DS-092": "8af674db55",
+    "DS-092": "ceed164df9",
     "DS-093": "c8f4d7621c",
     "DS-097": "a2f334adfe",
     "DS-099": "13e91de6d5",
@@ -556,7 +559,7 @@ SWEPT = {
     "DS-135": "8b9f2f112c",
     "DS-136": "dca68b60a0",
     "DS-137": "189e12c311",
-    "DS-138": "041b5234a0",
+    "DS-138": "b3bf8f66f8",
     "DS-140": "aaf4830ee8",
     "DS-141": "c98bb96d44",
     "DS-142": "481a4a62c1",
@@ -573,7 +576,7 @@ SWEPT = {
     "DS-165": "5ad4f97ff2",
     "DS-166": "153d03bb00",
     "DS-167": "e7025afa05",
-    "DS-168": "08e69e8e54",
+    "DS-168": "c0dc009199",
     "DS-190": "24b6600b91",
     "DS-191": "45bd03b75f",
     "DS-200": "01e0869f9e",

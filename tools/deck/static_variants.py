@@ -41,6 +41,21 @@ OUT = os.path.join(render.OUT, "variants")
 # (name, rule it must break, [(old, new), ...]) - the edit is the smallest one that breaks the
 # rule and nothing else, because a variant that breaks three rules proves nothing about any of them.
 STATIC_VARIANTS = [
+    # ---- added by T-309: an inline term whose button names no bubble and whose bubble has no id.
+    # A bubble left open in the file. Not a render seed: the shell's `go(0)` shuts every bubble before
+    # any probe runs, as it shuts a disc panel, so the render could never fail it. The contract row
+    # requires `hidden`, and that is where the misuse is caught.
+    ("term-bubble-not-shut-in-the-file", "DS-229", [
+        ("locked to the gate.</p>",
+         'locked to the <span class="term"><button class="term-btn" type="button" '
+         'aria-expanded="false" aria-controls="term-gate">gate</button><span class="term-bub" '
+         'id="term-gate">The month-18 review that decides whether the held grant goes to '
+         'bike-share.</span></span>.</p>')]),
+    ("term-button-naming-no-bubble", "DS-229", [
+        ("locked to the gate.</p>",
+         'locked to the <span class="term"><button class="term-btn" type="button" '
+         'aria-expanded="false">gate</button><span class="term-bub" hidden>The month-18 review that '
+         'decides whether the held grant goes to bike-share.</span></span>.</p>')]),
     # ---- added by T-202, which re-bound DS-122 from five vendor names onto when the marks exist.
     # The engine is invented on purpose: a check that has to know a library's name is a check the
     # next library walks past, which is what the blocklist did to four of them (**L-125**).
@@ -349,6 +364,14 @@ RENDER_VARIANTS = [
 # only that a row FAILS, and DS-142's pass had never been observed on anything but `.current` -
 # which is the whole of what T-214 was raised for.
 RENDER_PASS_VARIANTS = [
+    # ---- added by T-309: a term mid-sentence. The sentence is 17 words and its definition 12, so
+    # DS-092 fails it if the bubble is read as part of the sentence.
+    ("a-term-in-a-sentence", "DS-092", [
+        ("locked to the gate.</p>",
+         'locked to the <span class="term"><button class="term-btn" type="button" '
+         'aria-expanded="false" aria-controls="term-gate">gate</button><span class="term-bub" '
+         'id="term-gate" hidden>The month-18 review that decides whether the held grant goes to '
+         'bike-share.</span></span>.</p>')]),
     ("looping-motion-declaring-a-live-subject", "DS-142", [
         # A looping motion that is **not** `.current`, on an element that carries no class the
         # checker has ever heard of, declaring its subject. Before T-214 this failed DS-142 for the
