@@ -136,6 +136,29 @@ is blocked.
 | **B23** — landed 2026-09-02 | [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) cycle 41, and [T-284](../tasks/T-284-owed-looks-belongs-to-no-audit-cycle.md) | — | Re-read cycles 1, 3 and 5 plus every cycle a remedy touched. **This is where the audit's own damage shows**, and it cannot run before the remedies exist. **Landed, and the damage was one finding wide.** The subject was derived rather than assumed: 261 files changed since `7117b73` name **28 cycles**, not the handful the phrase suggests. `PR-129` is this run's own last remediation commit falsifying a figure on a human-facing page that no gate binds. `T-284` closed here, which is where this document said it would be met. Two further corrections were made rather than raised, on cycle 6's precedent for the run's own machinery |
 | **B24** — landed 2026-09-02 | [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md) cycle 42 | — | Phase 2: predicted against measured, per finding. It has to name at least one prediction the measurement refused, or it was not run honestly. **Landed, and it named four.** All 129 rows graded on the three things a row predicts. The **remedy** was already graded per row in the register's §3, so phase 2 did not restate it; the **effort** is gradeable for thirteen findings and no others, of which eleven held exactly, two came in one band high and none came in low; the **rank** is graded as a band, because a band is what consumed it. **The other 116 efforts cannot be graded at all** — cycle 40's granularity ruling closed them in 20 multi-finding tasks, so the run predicted a quantity it then decided not to record. **The sharpest refusal is this file's own §1 corollary**, corrected there rather than raised, on cycle 41's precedent. **§4's standing authorities expire with this row** |
 
+### Wave 8 — the backlog before 1.0.0
+
+**Ruled by the owner 2026-09-14.** Every open task except [T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) closes before 1.0.0 is released
+and htmldeck is submitted to the community marketplace. Tasks are batched by the area they work in,
+with a fresh session and a handoff between batches. Inside a batch the session continues, and
+`/compact` is the boundary if one is needed: [T-290](../tasks/T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md) measured it as the cheaper one.
+
+**What a wave 8 session does unattended, ruled the same day.** The owner starts each batch in a
+fresh session with `/handoff resume`. The session implements, gates, commits and pushes. Each task
+is its own commit on the batch's branch, and the batch lands as one pull request that the owner
+merges, because a session cannot merge what the owner did not ask it to. A decision that is the
+owner's stops the batch at a survey and is never guessed. A real key press or a look at a rendered
+deck that the session cannot take is recorded in [`OWED-LOOKS.md`](OWED-LOOKS.md) and named in the
+pull request. B29 runs attended. §4's standing authorities are not renewed.
+
+| Batch | Tasks | Eff | Why here |
+| :--- | :--- | :--- | :--- |
+| **B25** | [T-296](../tasks/T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md), [T-301](../tasks/T-301-decide-whether-the-record-forms-get-shorter.md) | `s`·2 | **First, because both change what every later task pays**: `T-296` the docs gate a documentation commit runs, `T-301` the records it writes. `T-296` goes first because nothing in it is the owner's. `T-301` measures each record form, then stops the batch at the owner's survey |
+| **B26** | [T-305](../tasks/T-305-let-render-py-see-an-svg-paint-change-a-scripted-hover-and-a-figure-painting-over-its-neighbour.md), [T-303](../tasks/T-303-close-a-slidefacts-element-at-its-own-tag-find-every-control-and-make-readabilitys-ledger-add-up.md), [T-298](../tasks/T-298-decide-what-the-clause-sweep-owes-for-a-rule-the-clause-table-cannot-hold.md), [T-308](../tasks/T-308-decide-how-a-deck-records-a-deviation-its-owner-licensed-and-what-the-gate-reports-for-it.md) | `m`·3, `s` | **The instruments and the gate**, before the product they judge — wave 1 and 2's reason. `T-305` and `T-303` are defects in what `render.py`, `slidefacts` and `readability` measure; `T-298` and `T-308` change what the gate owes and reports |
+| **B27** | [T-304](../tasks/T-304-bring-a-deck-authored-motion-inside-the-shells-motion-gate-the-motion-control-and-densitys-ranking.md), [T-307](../tasks/T-307-give-the-chrome-first-and-last-page-controls-and-a-ruler-whose-marks-a-reader-can-aim-at.md), [T-309](../tasks/T-309-contract-an-inline-term-that-opens-a-definition-bubble.md), [T-271](../tasks/T-271-a-quick-view-scoped-to-a-document-section.md), [T-282](../tasks/T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | `m`·4, `s` | **The shell, its components and the decks they sync.** The four `m` tasks each change the shell or the component contract, so each pays `../tasks/TOOLING.md` §1.14's sync. `T-282` edits a deck's content and comes last, after the syncs it would otherwise be re-derived through — wave 4's reason |
+| **B28** | [T-294](../tasks/T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | `s` | **The context-economy audit's close.** It grades the bands once every remedy has landed, and its second transcript is this batch's own session. Closing it closes [T-287](../tasks/T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md), whose last open child it is |
+| **B29** | [T-300](../tasks/T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md), and the 1.0.0 release | `s` | **Last, because `T-300` is blocked by every task above.** The release follows [`PUBLISHING.md`](PUBLISHING.md) §8, and the owner sends the submission form |
+
 ---
 
 ## 3. The eight rulings — answered 2026-08-29, before B1
