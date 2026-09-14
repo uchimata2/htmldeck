@@ -1725,6 +1725,21 @@ PROBE = r"""
     var cur = document.querySelector('.current');
     if (cur) out.currentDasharray = getComputedStyle(cur).strokeDasharray;
 
+    // DS-218 - the control has to STOP each loop, not only be reachable (T-304, adopter record
+    // `07`). The shell stopped its own classes by name, so a loop the deck wrote kept running with
+    // motion off and this rule passed on the control alone. So the probe does what the control
+    // does, sets `data-motion="off"`, and reads every element again. The pin below sets the same
+    // attribute, so nothing is restored.
+    out.unstopped = [];
+    if (out.infinite.length) {
+      document.documentElement.setAttribute('data-motion','off');
+      for (var u=0;u<all.length;u++){
+        var cu = getComputedStyle(all[u]);
+        if ((cu.animationIterationCount||'').indexOf('infinite') < 0 || cu.animationName === 'none') continue;
+        out.unstopped.push([cu.animationName, (all[u].closest('.slide')||{dataset:{}}).dataset.name || '']);
+      }
+    }
+
     // ---- the seam. Motion facts above, settled geometry below. ----
     if (!window.__htmldeckPinMotion) throw new Error(
       'no motion pin to call - `make_probe` did not honour htmldeck:pins-locally (T-261)');
@@ -2763,6 +2778,7 @@ ALWAYS_MEASURED = {
     "outranked": [],
     # ---- motion
     "infinite": [],
+    "unstopped": [],
     "ambient": [],
     "motionControl": False,          # `!!getElementById('motion')`
     # Reachability, not placement and not existence (DS-218, T-277). The shell builds the control
@@ -3009,15 +3025,18 @@ def render_verdicts(data):
         # The row printed the reachability reading anyway - `False - no control` beside `pass` -
         # which read as the gate stating a failure and passing it (T-257's seed). The owner kept
         # the pass and asked for the row to name the absence instead (T-283).
-        ("DS-218", ("control reachable while motion runs: %s - %s (present: %s, %d looping)"
+        ("DS-218", ("control reachable while motion runs: %s - %s (present: %s, %d looping, %d "
+                    "still looping with motion off%s)"
                     % (data["motionPersistent"], data.get("motionReach", "not measured"),
-                       data["motionControl"], len(data["infinite"])))
+                       data["motionControl"], len(data["infinite"]), len(data["unstopped"]),
+                       _naming(data["unstopped"])))
                    if data["infinite"] else
                    ("no looping motion in this deck - no stop control owed (present: %s - %s)"
                     % (data["motionControl"], data.get("motionReach", "not measured"))),
-         # `motionPersistent` first: the self-test's unread-key check runs on a measurement with no
-         # looping motion, and the other order short-circuits past it. Same verdict for every input.
-         data["motionPersistent"] or len(data["infinite"]) == 0),
+         # `unstopped` and `motionPersistent` before `infinite`: the self-test's unread-key check
+         # runs on a measurement with no looping motion, and the other order short-circuits past
+         # them. Same verdict for every input.
+         (not data["unstopped"] and data["motionPersistent"]) or len(data["infinite"]) == 0),
         # **The instance T-051 was raised for.** `.current` is the only subject this row has, the
         # probe emits the key only when it finds one, and `None != "none"` is `True` - so the rule
         # passed on its own absence, and the seeded fixture that deletes the deck's only dashed flow
@@ -3518,7 +3537,10 @@ def self_test():
             (True, "no looping motion", "a vacuous pass that names its absence", {}),
             (True, "True - ", "a pass on a reachable control", dict(loops, motionPersistent=True)),
             (False, "False - ", "a failure on an unreachable control",
-             dict(loops, motionPersistent=False))):
+             dict(loops, motionPersistent=False)),
+            # T-304: a reachable control that leaves a loop running fails for that reason alone.
+            (False, "1 still looping", "a failure on a loop the control does not stop",
+             dict(loops, motionPersistent=True, unstopped=[["spin", "x"]]))):
         what, ok = ds218(**kw)
         if ok is not want or says not in what:
             sys.exit("SELF-TEST FAILED: DS-218 does not report %s - it gave %r on %r"

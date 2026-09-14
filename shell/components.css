@@ -657,8 +657,12 @@ svg{display:block}
    leave the element at `opacity:0`, which is DS-224's failure in a new place. */
 /* The fallback is in the `var()` and not in a `:root` block, which would be a second theme region
    and is what DS-011 counts. 101 outranks every density, so an element the build did not rank does
-   not move - a content motion nobody placed is not a content motion the deck chose. */
-.pulse,.arrow-pop,.dot-pop,.turn{
+   not move - a content motion nobody placed is not a content motion the deck chose.
+   **Keyed on the rank, not on a class name** (T-304). `density.py write` puts `--m-rank` on every
+   element of a class the deck declares `content`, so this reaches a motion the deck wrote. It cannot
+   sit on `.slide` for descendants to inherit: a custom property inherits its computed value, so each
+   descendant would get the slide's own rank, and a slide has none. */
+[style*="--m-rank"]{
   --m-on:max(0,min(1,calc(var(--motion-density) - var(--m-rank,101) + 1)))}
 
 /* **The arrowhead scales out of its line.** T-112's first content motion, and it is DS-140's Scale
@@ -724,7 +728,7 @@ svg{display:block}
    t = 0 of the transition, so a card starting to turn there does most of its turning underneath
    the outgoing slide.
 
-   Content motion, so it is ranked and density gates it - the `--m-on` list above. Inside DS-141's
+   Content motion, so it is ranked and density gates it - the `--m-on` rule above. Inside DS-141's
    cap without a licence: `--turn-dur` is typed `ms 0-500` in the theme contract, so the cap holds
    by construction rather than by anyone checking. */
 .turn{opacity:0;transform:scaleY(0);transform-origin:center}
@@ -767,6 +771,13 @@ svg{display:block}
 :root[data-motion="off"] .rise,:root[data-motion="off"] .pulse,
 :root[data-motion="off"] .opening,
 :root[data-motion="off"] .turn{animation:none;opacity:1;transform:none}
+/* **Every other animation stops too, whatever its class** (T-304). The rules above settle the
+   shell's own classes; this reaches a motion the deck wrote. It zeroes the clock rather than
+   removing the name, for `--m-on`'s reason: the animation lands on its end state, where
+   `animation:none` would leave a reveal at its hidden start. `!important`, because a deck's own
+   rule can be more specific than this one and would restart its loop. */
+:root[data-motion="off"] *,:root[data-motion="off"] *::before,:root[data-motion="off"] *::after{
+  animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important}
 /* The motion control turns the transition off with everything else (DS-221), which is also what a
    headless capture leans on: `render.py` pins motion off before it shoots, so a capture can never
    catch a slide mid-leave. */

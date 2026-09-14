@@ -38,13 +38,13 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-**None outstanding.** All twelve have been taken, all by the owner, all recorded below with their
-answers. Row 12 was the last, and it was the one a session may not take for itself: a colour
-judgement on the degraded state. **The queue being empty is what [`PUBLISHING.md`](PUBLISHING.md) §8
-needs before a release is cut**, and it is empty as of 2026-09-03.
+**Outstanding: the rows in the table below.** Rows 1 to 12 were all taken by the owner and are
+recorded under the next heading with their answers. **The queue being empty is what
+[`PUBLISHING.md`](PUBLISHING.md) §8 needs before a release is cut.**
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
+| 13 | [`examples/reference-deck.html`](../examples/reference-deck.html) | *Eleven minutes decides this*, slide 3 - the stat figure; *Month eighteen stays reversible*, slide 9 - the arrowheads; *Approve the frequency package*, slide 12 - the headline | The shell now gates a content motion on its rank rather than on four class names, and the Motion control stops every animation by running it at zero duration rather than removing it. Open each slide with motion on, then turn `Motion` off in the `More` menu and open them again. *With motion on, does the figure pulse once, do the arrowheads scale out and does the headline turn face-up? With motion off, does each sit still on its settled look, with nothing hidden, snapping or still moving, and does the dashed flow stop?* | [T-304](../tasks/T-304-bring-a-deck-authored-motion-inside-the-shells-motion-gate-the-motion-control-and-densitys-ranking.md) |
 
 ## What has already been looked at
 

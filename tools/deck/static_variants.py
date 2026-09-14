@@ -227,6 +227,15 @@ MARK21 = ('<p class="provenance"><span class="sources sources--one"><svg class="
 SEED_HEAD = '<h2 class="headline rise" style="--i:1">The window shuts in March</h2>'
 
 RENDER_VARIANTS = [
+    # ---- added by T-304: a loop the Motion control does not stop. The shell's stop is `!important`
+    # on every element, so the seed out-ranks it the one way a deck can: a more specific
+    # `!important` rule. It keeps the loop's declarations, and it is scoped to no motion preference
+    # so reduced motion still stops it, which leaves DS-218's new reading as the only one to fail.
+    ("loop-the-motion-control-does-not-stop", "DS-218", [
+        ('<style id="slides">',
+         '<style id="slides">@media (prefers-reduced-motion:no-preference){.stage .slide .current{'
+         'animation:current var(--current-dur) linear infinite!important;--motion-kind:affordance;'
+         '--motion-long:loop;--motion-subject:live}}')]),
     ("slide-is-not-a-section", "DS-080", [
         ('<section class="slide" data-name="Waiting is the trip"',
          '<div class="slide" data-name="Waiting is the trip"'),
