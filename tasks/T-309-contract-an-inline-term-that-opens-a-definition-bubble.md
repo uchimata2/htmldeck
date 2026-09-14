@@ -28,7 +28,7 @@ as a block, and no inline disclosure exists. The nearest precedent is the source
 a `.disc`, with rows of its own, and still bound to the general disclosure rules `DS-163`, `DS-164`,
 `DS-227` and `DS-137`.
 
-**From the adopter report** [`18`](../docs/adopter-reports/nextep/2026-09-08-an-inline-term-tag-with-a-definition-bubble-has-no-contracted-form.md).
+**From the adopter report** `18`.
 The deck's owner asked for the pattern by name and approved it.
 
 **Scope**
@@ -146,4 +146,4 @@ on each, and the seven size figures corrected.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-14 | -> done | The inline term is contracted and built on the sources box's footing. DS-092, DS-138 and DS-168 amended, DS-168 beyond the scope for the reason in §3. Record `18` closed; the look is owed as `OWED-LOOKS.md` row 15. |
-| 2026-09-13 | -> proposed | Raised by T-299 from Nextep record `18`. `PH3`: a new component, not a defect in one that exists. |
+| 2026-09-13 | -> proposed | Raised by T-299 from the third adopter's record `18`. `PH3`: a new component, not a defect in one that exists. |

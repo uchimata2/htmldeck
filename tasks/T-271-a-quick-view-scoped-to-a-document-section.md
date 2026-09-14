@@ -24,7 +24,7 @@ deliverables: [shell/deck.js, shell/components.css, tools/deck/audit.py, docs/CO
 **Outcome**
 **Accepted and deferred.** A slide citing one risk row, one finding or one clause makes the reader open the whole source and scroll to find it. The whole-file view is right on the colophon, where a reader is browsing sources, and wrong on an argument slide, where they are checking one claim. The adopter built any per-section panel by hand on the slide that needed it.
 
-**From the adopter report** [`001`](../docs/adopter-reports/claimai/001-per-section-quick-view.md).
+**From the adopter report** `001`.
 
 **Scope**
 - In: the decision, which the record explicitly leaves to this repository: a new component, an anchor into the existing sheet, or a `data-` attribute selecting a range
@@ -34,7 +34,7 @@ deliverables: [shell/deck.js, shell/components.css, tools/deck/audit.py, docs/CO
   than asked.
 
 **Inputs**
-- the record above, [`001`](../docs/adopter-reports/claimai/001-per-section-quick-view.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `001` — each carries its evidence, its version and its own proposed fix
 - `COMPONENT-CONTRACT.md` section 3 — `.qv-src` as a `template` whose parent is `.sources-item`
 - `DS-085`, which names the colophon as the one thing allowed to follow the closing slide
 
@@ -121,4 +121,4 @@ on each, and the size figures corrected.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-14 | → done | Decided and built: an anchor names a heading in the source, and the quick view opens at it. A component and a range are rejected in §3. Record `001` closed; the look is owed as `OWED-LOOKS.md` row 16. |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |

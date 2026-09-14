@@ -24,7 +24,7 @@ deliverables: [tools/examples/portfolio_charts.py, examples/portfolio-review/por
 **Outcome**
 `examples/portfolio-review/` satisfies `DS-218` because it is measured, not because it has no subject. Today it passes with `0 looping`, so the rule never fires. *This sentence also said the control sits inside the shut menu, which `COMPONENT-CONTRACT.md` called not persistent. Both halves went 2026-08-29: `T-277` put the control back in the menu on every deck and deleted that sentence from the contract. The vacuity is untouched and is the whole of what is left.* **An author reads the example, copies its chrome, and the first looping motion they add fails a rule about motion on a deck whose motion is fine.** Reproduced on this tree: `present: True, 0 looping — pass`.
 
-**From the adopter report** [`018`](../docs/adopter-reports/claimai/018-ds-218-passes-the-shipped-example-only-because-it-has-no-looping-motion.md).
+**From the adopter report** `018`.
 
 **Scope**
 - In: giving the example one looping motion, or moving its control out of the menu
@@ -36,7 +36,7 @@ deliverables: [tools/examples/portfolio_charts.py, examples/portfolio-review/por
   than asked.
 
 **Inputs**
-- the record above, [`018`](../docs/adopter-reports/claimai/018-ds-218-passes-the-shipped-example-only-because-it-has-no-looping-motion.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `018` — each carries its evidence, its version and its own proposed fix
 - **L-57**, the absent-subject class this repository has now met nine times
 - [T-231](T-231-two-packaging-checks-have-no-subject-at-all.md) — the same class in the packaging gate, raised by the audit. The general form both want is that an instrument prints its denominator
 
@@ -157,7 +157,7 @@ it had reported 12; and the rebuilt deck's visible text now differs from the shi
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| every record named above is closed with its remedy measured, or explicitly deferred | pass | Adopter report [`018`](../docs/adopter-reports/claimai/018-ds-218-passes-the-shipped-example-only-because-it-has-no-looping-motion.md) is closed. Its remedy was a hypothesis offering two routes; the second - move the control out of the menu - was removed by the owner's reversal ([T-277](T-277-put-motion-back-inside-the-more-menu.md)), so the first was taken and measured |
+| every record named above is closed with its remedy measured, or explicitly deferred | pass | Adopter report `018` is closed. Its remedy was a hypothesis offering two routes; the second - move the control out of the menu - was removed by the owner's reversal ([T-277](T-277-put-motion-back-inside-the-more-menu.md)), so the first was taken and measured |
 | each fix is proved by seeding the defect and watching the check fire, in both directions (**L-125**) | pass | The table in section 3. The before/after pair is the proof: the same seed reads `pass` on the shipped deck and `FAIL` on the fixed one |
 | `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | pass | Recorded in the log row below |
 
@@ -179,5 +179,5 @@ than to a fix in place.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-29 | (no change) | **Reconciled against [T-277](T-277-put-motion-back-inside-the-more-menu.md), which landed the reversal this record was already carrying a note about.** Two statements here had gone false rather than merely out of date: the outcome cited a `COMPONENT-CONTRACT.md` sentence that `T-277` deleted, and scope bullet 2 asked for verdict wording about a state that is now correct. Both corrected, and **the title with them** - it promised to *say why a control is not persistent*, which is no longer a thing this task can say. `PH1` and the scope are untouched: what is left is the example passing on `0 looping`, which is the vacuity the adopter reported and is unaffected by the ruling. |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
 | 2026-08-30 | proposed → done | **B13.** Two of the three scope bullets were already spent by [T-277](T-277-put-motion-back-inside-the-more-menu.md), so what was left was the vacuity alone. `Current` goes on slide 11's timeline, on the segment entering the gate and on nothing after it. **The vacuity reached four rows, not one** — `DS-218`, `DS-140` and two of `DS-143`'s were all undecided on the same absence, and all four now measure. The seeded pair is the proof and it is exact: the same seed reads **pass** on the deck as `0.6.0` shipped it and **FAIL** on the fixed one. The instrument half went to [T-283](T-283-ds-218-reports-a-pass-where-it-has-no-subject.md). **The rebuild reverted `T-233` and the gate caught it** — fixed in the builder, recorded as **L-148**. One look owed on slide 11. |

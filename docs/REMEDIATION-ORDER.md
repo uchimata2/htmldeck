@@ -3,8 +3,8 @@
 **Tier 3. Loaded by nothing**; opened when a session asks *what do I work next*. It is a schedule,
 not a decision: what each task does is its own record, and this file never restates one.
 
-Written 2026-08-29, after the pre-release audit's triage (cycle 40) and the ClaimAI adopter triage
-([T-225](../tasks/T-225-triage-the-claimai-adopter-report.md)) put 49 tasks on the board at once.
+Written 2026-08-29, after the pre-release audit's triage (cycle 40) and the second adopter's triage
+([T-225](../tasks/T-225-triage-the-second-adopters-report.md)) put 49 tasks on the board at once.
 **[T-057](../tasks/T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) is out of
 scope by the owner's instruction** — the 3D visual is deferred, not scheduled here. That leaves 47
 tasks plus [T-219](../tasks/T-219-pre-release-audit-of-the-whole-repository.md)'s two remaining
@@ -208,7 +208,7 @@ reason**, on the same terms as the eight above.
 ### One more, raised in B8 — a ruling that could not be carried out, and the one that replaced it
 
 **`T-270`'s `DS-100` half is refused by its own measurement.** The ruling above accepts report
-[`023`](adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md)'s proposal 1,
+`023`'s proposal 1,
 whose condition the report states as *a `?` followed, within the slide, by a declarative bottom
 line*. Measured on this repository's three decks before a line of it was written: **38 slides, 38
 with a bottom line, 38 declarative — the condition holds on 100% of them.** The component contract

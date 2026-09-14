@@ -428,7 +428,7 @@ def render(path):
 # wiring a quick view must preserve them rather than rebuild them - a `D1` this tool dropped would
 # be a defect in the mark that only shows up on the slides a source happens to be wired into.
 # **In either order**: the contract fixes none, and one fixed here read a glyph-first item as
-# uncited (T-306, Nextep record `03`). The alternation is that record's own.
+# uncited (T-306, the third adopter's record `03`). The alternation is that record's own.
 #
 # **The glyph ends at its own `</svg>`** (T-316). It read `.*?</svg>` under `re.S`, so a lazy match
 # that failed on one item's title stretched to the next `</svg>` in the file, crossed every item in
@@ -904,7 +904,7 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a source titled %r does not match the markup a correct deck "
                  "carries for it. That is `PR-59`: the author is sent to fix a citation that is "
                  "already right" % amp)
-    # T-306, Nextep record `03`. The contract fixes no order between the identifier and the kind
+    # T-306, the third adopter's record `03`. The contract fixes no order between the identifier and the kind
     # glyph, and `ITEM_HEAD` fixed one, so an item writing the glyph first read as uncited - the same
     # wrong direction as `PR-59`. Wired too, because `wire` carries the head through as it found it.
     glyph_first = ('<span class="sources-item"><svg class="sources-icon"></svg>'

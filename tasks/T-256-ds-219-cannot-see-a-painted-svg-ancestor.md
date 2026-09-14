@@ -24,7 +24,7 @@ deliverables: []
 **Outcome**
 `DS-219` measures a label against the ground a reader actually sees. Today it walks to the nearest painted background and **stops at the mark**, so a pale label on a pale card resting on a filled panel is measured against the card alone and can never reach 3:1. The adopter's deck fails **40 of 46 labels** and has since the build; every attempt to fix it made the slide worse.
 
-**From the adopter report** [`019`](../docs/adopter-reports/claimai/019-ds-219-cannot-see-a-painted-svg-ancestor.md).
+**From the adopter report** `019`.
 
 **Scope**
 - In: compositing painted ancestors rather than stopping at the first
@@ -35,7 +35,7 @@ deliverables: []
   than asked.
 
 **Inputs**
-- the record above, [`019`](../docs/adopter-reports/claimai/019-ds-219-cannot-see-a-painted-svg-ancestor.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `019` — each carries its evidence, its version and its own proposed fix
 - [T-241](T-241-the-design-system-and-the-rationale-against-what-shipped.md), which closes `PR-97` — the rationale recording conflicts as unresolved. **This task supplies the evidence that one of them can now be settled**
 - the second face in the record: seven unfilled `rect`s are black, `DS-215` reported fourteen runs under 4.5:1 and `DS-219`'s count rose by the same fourteen — the rule sees a painted *sibling* it was never meant to measure and misses the *ancestor* that is the real ground
 
@@ -76,13 +76,13 @@ deliverables: []
 - [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — the `DS-219` row
 - [`docs/DESIGN-RATIONALE.md`](../docs/DESIGN-RATIONALE.md) §5.7 — the re-measurement
 - [`docs/lessons/L-142.md`](../docs/lessons/L-142.md), [`docs/LESSONS.md`](../docs/LESSONS.md)
-- [`docs/adopter-reports/claimai/019-ds-219-cannot-see-a-painted-svg-ancestor.md`](../docs/adopter-reports/claimai/019-ds-219-cannot-see-a-painted-svg-ancestor.md) — closed
+- the adopter reports T-320 removed — closed
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Record [`019`](../docs/adopter-reports/claimai/019-ds-219-cannot-see-a-painted-svg-ancestor.md) closed with its remedy measured | pass | Items 1 and 2 implemented and measured; item 3 answered — the section it rests on records a settled amendment, not an open doubt |
+| Record `019` closed with its remedy measured | pass | Items 1 and 2 implemented and measured; item 3 answered — the section it rests on records a settled amendment, not an open doubt |
 | Each fix proved by seeding the defect and watching the check fire, in both directions (**L-125**) | pass | Four fixtures. `panel` **1 of 3 FAIL → 0 of 3 pass**; `nopanel` **still FAIL**, so the rule keeps its force; one gradient fill → pass with **1 unmeasurable** named; every mark a gradient → **NO SUBJECT**, not a pass |
 | `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | pass | Both run at the end of B6, on a tree nothing was editing |
 
@@ -93,5 +93,5 @@ deliverables: []
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
 | 2026-08-29 | → done | Batch **B6**. The ground is composited over every painted layer under the mark, the figure's own shapes included, and an unmeasurable pair is no longer reported as a failed one. **The record's wider claim is refused**: §5.7 records a settled amendment, and with the walk fixed the deck's shape passes while a genuinely pale mark still fails. Kept as [L-142](../docs/lessons/L-142.md). |

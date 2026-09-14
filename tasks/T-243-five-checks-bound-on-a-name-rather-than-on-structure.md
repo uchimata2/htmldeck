@@ -29,8 +29,8 @@ Five checks decide a property rather than recognise a spelling - the shape [T-21
 **Scope**
 - In: `density.py`'s class lists, `content.py`'s `UNITS`, `audit.py`'s `STATIC` entry for DS-032, `theme.py`'s `self_test` fixtures, and the two variant suites' anchors
 - In: **nothing else** - every finding this task closes is named above, and each statement stays in the register rather than being restated here (the method's umbrella condition 2)
-- In: **from the ClaimAI adopter report, [`020`](../docs/adopter-reports/claimai/020-ds-229-keys-motion-rows-to-exact-selector-text.md)** — `DS-229` keys the contract's motion rows to **exact selector text**, so `:where(.slide[data-played]) .pulse` no longer has a row the contract can find — the tokens are declared, the motion works, and the gate reports the row unsatisfied. Scoping a motion to a state is the ordinary way to say *this plays on arrival*, and the rule makes the natural construction fail and the awkward one pass
-- In: **from the ClaimAI adopter report, [`021`](../docs/adopter-reports/claimai/021-ds-239-re-derives-m-rank-so-removing-one-motion-invalidates-the-rest.md)** — `DS-239` re-derives `--m-rank` **from the deck**, so ranks are properties of the set rather than of a motion: removing two of five content motions left the other three wrong with nothing in the edit touching them. `PR-44` already names this rule. The record's added half is that **the gate should print the value it derives, per motion** — it knows it, and printing it turns a bisection into an edit
+- In: **from the second adopter's report, `020`** — `DS-229` keys the contract's motion rows to **exact selector text**, so `:where(.slide[data-played]) .pulse` no longer has a row the contract can find — the tokens are declared, the motion works, and the gate reports the row unsatisfied. Scoping a motion to a state is the ordinary way to say *this plays on arrival*, and the rule makes the natural construction fail and the awkward one pass
+- In: **from the second adopter's report, `021`** — `DS-239` re-derives `--m-rank` **from the deck**, so ranks are properties of the set rather than of a motion: removing two of five content motions left the other three wrong with nothing in the edit touching them. `PR-44` already names this rule. The record's added half is that **the gate should print the value it derives, per motion** — it knows it, and printing it turns a bisection into an edit
 - Out: any finding not in the list above
 - Out: committing to a remedy before measuring it. A remedy is a hypothesis (the method's section 5); a fix that the measurement refuses is reported here and its finding stays open
 
@@ -38,7 +38,7 @@ Five checks decide a property rather than recognise a spelling - the shape [T-21
 - [`docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) section 3 - the rows for `PR-44`, `PR-45`, `PR-49`, `PR-54`, `PR-57`
 - **L-125** - before amending a rule, read what its gate actually tests
 - the memory entry *a self-test must not assert repo state*, which `PR-54` is an instance of
-- [`020`](../docs/adopter-reports/claimai/020-ds-229-keys-motion-rows-to-exact-selector-text.md), [`021`](../docs/adopter-reports/claimai/021-ds-239-re-derives-m-rank-so-removing-one-motion-invalidates-the-rest.md) — the adopter records merged into this task by [T-225](T-225-triage-the-claimai-adopter-report.md), because this task already owns the class. Each carries its own evidence and version.
+- `020`, `021` — the adopter records merged into this task by [T-225](T-225-triage-the-second-adopters-report.md), because this task already owns the class. Each carries its own evidence and version.
 
 **Acceptance criteria**
 - [ ] every finding above is **closed with its remedy measured**, or explicitly deferred with the reason recorded on its register row - the method's obligation for `Med`
@@ -63,8 +63,8 @@ register proposed.
 | 3 | **`PR-57`** - tighten both suites to the siblings' exact-count form, then re-anchor the DS-143 variant on `:root[data-motion="off"] .current`, which is the path the seed already took and now says so | `content_variants.py` and `static_variants.py`, `build()` and `self_test()` |
 | 4 | **`PR-44`** - derive the content-motion vocabulary from the deck's own `--motion-kind` declarations. Two things had to be fixed first, and both were found by measuring rather than by reading (below) | `density.py` |
 | 5 | **`PR-45`** - derive the unit vocabulary from the pair being compared, so a figure is a numeral followed by a word the sources also use beside a numeral | `content.py`'s `UNITS` and `FIGURE` |
-| 6 | **Adopter [`020`](../docs/adopter-reports/claimai/020-ds-229-keys-motion-rows-to-exact-selector-text.md)** - match a contract motion row on the compound selector, exact match first and a scoped match reported when it is what satisfied the row | `component.py`'s `motion_gaps` |
-| 7 | **Adopter [`021`](../docs/adopter-reports/claimai/021-ds-239-re-derives-m-rank-so-removing-one-motion-invalidates-the-rest.md)** - print the derived rank per motion, which the gate already knows | `density.py`'s `report` |
+| 6 | **Adopter `020`** - match a contract motion row on the compound selector, exact match first and a scoped match reported when it is what satisfied the row | `component.py`'s `motion_gaps` |
+| 7 | **Adopter `021`** - print the derived rank per motion, which the gate already knows | `density.py`'s `report` |
 
 **What the measurements said, and what they changed.**
 
@@ -176,8 +176,8 @@ old bindings could not see, and each of those is proved by a fixture rather than
 | `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | met | Run separately on a frozen tree; the Log row carries the result |
 
 **The two adopter records are closed in their own files** -
-[`020`](../docs/adopter-reports/claimai/020-ds-229-keys-motion-rows-to-exact-selector-text.md) and
-[`021`](../docs/adopter-reports/claimai/021-ds-239-re-derives-m-rank-so-removing-one-motion-invalidates-the-rest.md) -
+`020` and
+`021` -
 each recording what was implemented, and for `020` the thing the report could not see, which is why
 a first attempt at it failed: a deck keeps several rules on one class, so `.pulse` matched exactly,
 read none of the motion tokens, and a fallback guarded on *no exact match* never ran.

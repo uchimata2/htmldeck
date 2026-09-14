@@ -24,7 +24,7 @@ deliverables: []
 **Outcome**
 A deck can name a repeated figure treatment once, or is told plainly that it cannot. Today `DS-229` reports `.ico` as *uncontracted* — and the contract lives in the plugin, so a builder reads *not yet in the contract*, goes looking for where to add the row, and the search ends nowhere. Eleven marks then repeat three presentation attributes each.
 
-**From the adopter report** [`014`](../docs/adopter-reports/claimai/014-a-deck-cannot-name-a-repeated-figure-treatment-once.md).
+**From the adopter report** `014`.
 
 **Scope**
 - In: **the message, which is a string change and removes the whole dead-end search**: a deck may not add a class; carry the properties as presentation attributes on the element
@@ -34,7 +34,7 @@ A deck can name a repeated figure treatment once, or is told plainly that it can
   than asked.
 
 **Inputs**
-- the record above, [`014`](../docs/adopter-reports/claimai/014-a-deck-cannot-name-a-repeated-figure-treatment-once.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `014` — each carries its evidence, its version and its own proposed fix
 - the record explicitly does **not** ask to weaken `DS-229` over components — holding `.slide` or `.sources-box` to a contract is the rule earning its keep
 - its third proposal, a figure-internals contract section, which the record itself calls probably wrong because the set of treatments a hand-built figure needs is open
 
@@ -58,7 +58,7 @@ A deck can name a repeated figure treatment once, or is told plainly that it can
 | 3 | Name the remedy in the failure message | `tools/deck/component.py` |
 | 4 | Assert the allowance, the opt-in, the prefix boundary and the component case in the self-test | `tools/deck/component.py` |
 | 5 | Reserve the prefix in the contract, and record the amendment | `docs/COMPONENT-CONTRACT.md`, `docs/DESIGN-SYSTEM.md` |
-| 6 | Close the adopter record | `docs/adopter-reports/claimai/014…` |
+| 6 | Close the adopter record | the adopter reports T-320 removed |
 
 ## 3. Implement
 
@@ -98,7 +98,7 @@ says to ask.
 - [`docs/COMPONENT-CONTRACT.md`](../docs/COMPONENT-CONTRACT.md) §1 — the reserved prefix, its two
   limits, and the refusal of proposal 3
 - [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — the `DS-229` amendment note
-- [`docs/adopter-reports/claimai/014-…`](../docs/adopter-reports/claimai/014-a-deck-cannot-name-a-repeated-figure-treatment-once.md) — closed
+- the adopter reports T-320 removed — closed
 
 ## 4. Review
 
@@ -120,4 +120,4 @@ changes and no tracked deck gained a deck-local class, so
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-29 | → done | Ruled by the owner and implemented in **B8**. Proposals 1 and 2 of report `014` taken - the message names the remedy, and `.d-` is reserved for a deck's own repeated treatments; proposal 3 refused, with the report's own reason recorded in the contract beside the prefix. **Two things beyond the ruling**: the verdict now prints the deck-local count, because the escape would otherwise be invisible in the only output anybody reads (**L-36**); and a code comment claiming the prefix cannot be used to redefine a component was **refused by the reproduction's own fixture C** and rewritten to what was measured. The reproduction's first run was itself an **L-143** - four green verdicts over a count that never moved, because the injection went into the wrong `<style>` block. |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |

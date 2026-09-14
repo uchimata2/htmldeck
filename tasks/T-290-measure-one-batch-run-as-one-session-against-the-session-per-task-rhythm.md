@@ -59,7 +59,7 @@ until the owner reads the measurement, and this task produces the measurement, n
 - Which batch to run twice — the owner. Recommended: the smallest documentation batch left in the order.
   **Answered by the owner 2026-09-13, on a changed premise**: every batch in the order has landed.
   Both rhythms are measured on the first two to four `s` tasks
-  [T-299](T-299-triage-the-nextep-adopter-report.md) raises, alternating the boundary between
+  [T-299](T-299-triage-the-third-adopters-report.md) raises, alternating the boundary between
   neighbouring tasks — `/compact` and continue, or a fresh session. The owner types `/compact`.
 - Whether one pair is enough, or a second runs — the owner. Recommended: a second, because `T-310`
   needed the owner's key presses and `T-306` did not. **Answered by the owner 2026-09-14: one pair.**

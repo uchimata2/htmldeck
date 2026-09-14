@@ -25,7 +25,7 @@ deliverables:
 **Outcome**
 A reader can ask what a slide actually contains. Today a deck is built from a specification pair and then edited in place — the supported way to work — and from that moment the specification is a claim about the deck that nothing checks. The adopter swept theirs: **twenty-three of twenty-five entries had drifted**, and `check` was green throughout.
 
-**From the adopter report** [`026`](../docs/adopter-reports/claimai/026-nothing-prints-what-a-slide-actually-contains.md).
+**From the adopter report** `026`.
 
 **Scope**
 - In: the printer: one slide's own answer for every field an entry claims — eyebrow, headline, standfirst, bottom line, drawn labels, body copy, controls, motion classes, quick views and sources. `render.py` already parses the deck for `measure` and `motion`
@@ -36,7 +36,7 @@ A reader can ask what a slide actually contains. Today a deck is built from a sp
   than asked.
 
 **Inputs**
-- the record above, [`026`](../docs/adopter-reports/claimai/026-nothing-prints-what-a-slide-actually-contains.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `026` — each carries its evidence, its version and its own proposed fix
 - a verdict is **out of scope here** and worth considering only once the printer exists and its shape is known — the record says so and it is right
 - `tools/deck/spec.py`, which reads the specification and never holds it against the output
 
@@ -65,7 +65,7 @@ per invocation. Step 1 below is that measurement; steps 2 onward are what it dec
 | 3 | Prove it in **both directions** (**L-125**): seed a field into a slide and watch the printed line carry it, remove one and watch the line say the slide does not | `self_test()`, run on every invocation |
 | 4 | Wire it into [`../tools/check_all.py`](../tools/check_all.py)'s `WIDE` as a self-test — the precedent is `tools/examples/portfolio_charts.py selftest`. **A tracked tool no table names is `unclassified` and fails the run**, so this is not optional | One `WIDE` row |
 | 5 | **Say that in-place editing forks the specification**, in [`../skills/htmldeck/references/build.md`](../skills/htmldeck/references/build.md) §4 — which already tells a build to write a deviation back, and is silent on the edit made after the build that never becomes one. Point it at the printer | The consequence written down where the workflow that causes it lives |
-| 6 | Close [`026`](../docs/adopter-reports/claimai/026-nothing-prints-what-a-slide-actually-contains.md) with its remedy measured, and record here that its step 2 — a verdict — stays out of scope, which the record itself argues for | The closed record |
+| 6 | Close `026` with its remedy measured, and record here that its step 2 — a verdict — stays out of scope, which the record itself argues for | The closed record |
 
 ## 3. Implement
 
@@ -96,7 +96,7 @@ per invocation. Step 1 below is that measurement; steps 2 onward are what it dec
 - [`../tools/check_all.py`](../tools/check_all.py) — one `WIDE` row, `slidefacts.py --self-test`
 - [`../skills/htmldeck/references/build.md`](../skills/htmldeck/references/build.md) §4 — the
   consequence of in-place editing, beside the deviation obligation for the build-time half
-- [`../docs/adopter-reports/claimai/026-nothing-prints-what-a-slide-actually-contains.md`](../docs/adopter-reports/claimai/026-nothing-prints-what-a-slide-actually-contains.md)
+- the adopter reports T-320 removed
   — closed, with what was taken and what was refused
 - [`../docs/lessons/L-149.md`](../docs/lessons/L-149.md) — the generic half of the `<template>`
   finding, and the index regenerated
@@ -118,7 +118,7 @@ per invocation. Step 1 below is that measurement; steps 2 onward are what it dec
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |
 | 2026-08-30 | → planned | B14's first task, per [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) §2 — the fact printer before the readability printer, because a later verdict would rest on it. §1's specify section needed nothing added, so the two steps were taken in one edit. |
 | 2026-08-30 | (no status change) | **The remedy's mechanism was refused before implementing it**, per the standing rule that a `Remedy` is a hypothesis: report 026 proposes reusing `render.py`'s parse, which is a Chrome DOM read, and the static markup answers every claimed field. §2 step 1 carries the measurement and the `<template>` finding it turned up. |
 | 2026-08-30 | → done | The printer ships, `026` is closed, and `build.md` §4 now says what in-place editing costs. **No look is owed**: nothing here renders — no deck changed, and the output is text. The `<template>` trap became [L-149](../docs/lessons/L-149.md) rather than staying in this record, because it is a property of reading any container and the next rule that searches a slide will meet it too. |

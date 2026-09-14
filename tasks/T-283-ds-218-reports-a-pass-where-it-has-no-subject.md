@@ -89,7 +89,7 @@ is an adopter's.
   conditional of three. **Recommended:** keep the declared pass, and make the row name the absence
   (*no looping motion - no control owed*) instead of printing `False - no control` beside `pass`.
   That line is the contradiction T-257's seed printed, and the wording is what the adopter's record
-  [`018`](../docs/adopter-reports/claimai/018-ds-218-passes-the-shipped-example-only-because-it-has-no-looping-motion.md) asked about.
+  `018` asked about.
   **Answered by the owner 2026-09-13: keep the pass and fix the row.** Criterion 1 is restated to
   match.
 

@@ -25,7 +25,7 @@ deliverables:
 **Outcome**
 `density.py write` produces valid markup on a deck containing self-closing SVG tags. Today `set_var` assumes a tag's last character is `>` and everything before it is attribute space, so `<circle ... />` becomes `<circle ... /  style="--dp:0">` — **seven invalid tags on one slide**. The browser reparents the broken subtree and `DS-035` then reports three labels at `0.0 du`, which names neither the tool nor the tag. **It is intermittent** — `0, 3, 3` over three runs — so it reads as a race in the author's own motion.
 
-**From the adopter report** [`015`](../docs/adopter-reports/claimai/015-density-py-write-corrupts-a-self-closing-svg-tag.md).
+**From the adopter report** `015`.
 
 **Scope**
 - In: the one-line guard in `set_var`: insert before `/>` when the tag is self-closing
@@ -36,7 +36,7 @@ deliverables:
   than asked.
 
 **Inputs**
-- the record above, [`015`](../docs/adopter-reports/claimai/015-density-py-write-corrupts-a-self-closing-svg-tag.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `015` — each carries its evidence, its version and its own proposed fix
 - `tools/deck/density.py` `:179` — the branch that runs when the tag carries no `style=` yet
 - the adopter's own repair, `re.subn(r'/ (style="[^"]*")>', r' \1/>', html)`, which is evidence of the shape rather than the fix to take
 
@@ -106,7 +106,7 @@ deliverables:
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Every record closed with its remedy measured, or explicitly deferred with the reason recorded | met | Record [`015`](../docs/adopter-reports/claimai/015-density-py-write-corrupts-a-self-closing-svg-tag.md) items 1 and 2 are implemented and measured above. Item 3 is deferred to [T-261](T-261-ds-035-measures-a-text-run-through-its-transform.md) with the reason in §1 |
+| Every record closed with its remedy measured, or explicitly deferred with the reason recorded | met | Record `015` items 1 and 2 are implemented and measured above. Item 3 is deferred to [T-261](T-261-ds-035-measures-a-text-run-through-its-transform.md) with the reason in §1 |
 | Each fix proved by seeding the defect and watching the check fire, in both directions (**L-125**) | met | Row 2 of *What was measured*. The guard fires on the seeded insertion and passes every correct edit |
 | `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | met | `lint.py` all four steps green with the baselined **eleven** advisories and no more. `check_all.py` **0 failures, 0 unclassified, 0 stale** over 37 commands and all 50 tracked tools, 278 s, run separately and after the last edit |
 
@@ -118,7 +118,7 @@ deliverables:
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-29 | → done | Every criterion met. The proof that settles it is not the fixture: `measure-first.html`'s 36 `--dp` values stripped and rewritten through the branch the defect lived in came back **byte-for-byte identical to the shipped deck**, and the seeded old insertion is refused with the file left untouched. |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
 | 2026-08-29 | → specified | Batch B1 of [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md). Scope item 3 deferred to [T-261](T-261-ds-035-measures-a-text-run-through-its-transform.md), which already owns the same `DS-035` measurement; `related` gained it and the deliverable is declared. The defect was reproduced at the function before the scope was closed, so *seven invalid tags* is this tree's reading rather than the report's. |
 | 2026-08-29 | → in_progress | The insertion fixed, `written_ok` written as `set_var`'s post-condition, `write` taught to refuse, and five assertions added to `self_test`. The proof that mattered most was not the fixture: `measure-first.html`'s 36 `--dp` values stripped and rewritten through the add branch came back **byte-for-byte identical to the shipped deck**. |
 | 2026-08-29 | → planned | Seven steps. Steps 3 and 4 are the record's item 2 — the verification is stated as `set_var`'s post-condition rather than as a search for the shape of this one bug, because a guard that only knows the defect it was written for reports green on the next one. |

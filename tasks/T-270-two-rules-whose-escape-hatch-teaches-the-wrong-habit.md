@@ -24,7 +24,7 @@ deliverables: []
 **Outcome**
 **A decision.** Two rules test a proxy and their escape hatches teach worse habits than the rules prevent. `DS-100` fires on any `?` immediately preceding a tag, so a question the slide answers on the same face fails — and the word *Why?* was **drawn as a shape** to get past it, putting content outside the reach of every text instrument in the toolchain. `DS-202` allows a bottom line of exactly one sentence, so an author's chosen two-clause form was joined with *and*: not one of his words changed, but the form he picked did.
 
-**From the adopter report** [`023`](../docs/adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md), [`024`](../docs/adopter-reports/claimai/024-ds-202-refuses-a-two-sentence-bottom-line-the-author-chose.md).
+**From the adopter report** `023`, `024`.
 
 **Scope**
 - In: `DS-100`: extending the existing **source-question exemption** to a question the same slide answers. The rule's own code already draws the distinction; it just does not extend it
@@ -34,7 +34,7 @@ deliverables: []
   than asked.
 
 **Inputs**
-- the records above, [`023`](../docs/adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md), [`024`](../docs/adopter-reports/claimai/024-ds-202-refuses-a-two-sentence-bottom-line-the-author-chose.md) — each carries its evidence, its version and its own proposed fix
+- the records above, `023`, `024` — each carries its evidence, its version and its own proposed fix
 - **Two halves of these records are recommended against, and the reasons are here rather than in a reply.** `023` also offers *make the rule reviewable rather than fatal*: `DS-100` is `hard` because a rhetorical question is a house-style failure the corpus measured, and *reviewable* is how a rule quietly stops being enforced. `024` also offers replacing the sentence count with a word or clause cap: that trades a crisp rule for a fuzzy one, and the record itself says `DS-202` caught **eight** bottom lines restating their headline
 - both records say plainly they are not arguments to drop the rule, which is why they are worth acting on
 
@@ -57,7 +57,7 @@ deliverables: []
 | 2 | `DS-202`: put the reason in the failure, keep the count | `tools/deck/audit.py`, `docs/DESIGN-SYSTEM.md` |
 | 3 | Prove it by seeding a two-sentence bottom line on a real deck and reading the message an author would see | the reproduction |
 | 4 | Whatever step 1 says about `DS-100`, record it where the decision is taken | `docs/REMEDIATION-ORDER.md` §3 |
-| 5 | Close both adopter records, each saying which half was taken and which refused | `docs/adopter-reports/claimai/023…`, `024…` |
+| 5 | Close both adopter records, each saying which half was taken and which refused | the adopter reports T-320 removed, `024…` |
 
 ## 3. Implement
 
@@ -99,8 +99,8 @@ control and the seeded case agreed.
   row is untouched**
 - [`docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) §3 — the refused ruling, its
   measurement and the recommendation
-- [`docs/adopter-reports/claimai/023-…`](../docs/adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md)
-  and [`024-…`](../docs/adopter-reports/claimai/024-ds-202-refuses-a-two-sentence-bottom-line-the-author-chose.md)
+- the adopter reports T-320 removed
+  and `024-…`
 
 ## 4. Review
 
@@ -123,4 +123,4 @@ control and the seeded case agreed.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-29 | → done | Implemented in **B8**, and **half the ruling was refused by its own measurement**. `DS-202` keeps its count and its failure now says why the count is one. `DS-100` is **unchanged**: the ruled condition — a `?` followed by a declarative bottom line — holds on **38 of 38** slides across the three tracked decks, because the contract puts one on every slide and `DS-202` makes it declarative. That is an off switch behind a green verdict (**L-143**), so the question of what `DS-100` should measure went to [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) §3 with a recommendation and its stated limit, on `PR-36` and `PR-77`'s precedent. Report `024` closed, `023` deferred. |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |

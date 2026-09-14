@@ -32,7 +32,7 @@ is before clicking it, in both ruler modes. Today:
 - past the dense-mode bound the small ticks are `disabled` with `tabIndex = -1`
   (`shell/deck.js` `:257`-`:259`), and `DS-217` states that as intended.
 
-**From the adopter report** [`01`](../docs/adopter-reports/nextep/2026-09-01-nav-chrome-has-no-first-last-page-control.md), [`11`](../docs/adopter-reports/nextep/2026-09-07-the-ruler-gives-no-slide-number-on-hover.md), [`16`](../docs/adopter-reports/nextep/2026-09-08-the-condensed-ruler-drops-the-small-dots-as-targets.md).
+**From the adopter report** `01`, `11`, `16`.
 
 **`01` was measured on `0.6.0`.** Triage checked it against this tree on 2026-09-13, and the pager is
 unchanged.
@@ -145,4 +145,4 @@ the reason above.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-14 | -> done | First and last join the pager, and a target tick shows its number over the mark. Record `16` is deferred: DS-168 still binds the dense marks. DS-217's bound re-measured at 17. The look is owed as `OWED-LOOKS.md` row 14. |
-| 2026-09-13 | -> proposed | Raised by T-299 from Nextep records `01`, `11` and `16`. `PH3`: all three ask for behaviour the chrome was not built to have, and none is a defect. |
+| 2026-09-13 | -> proposed | Raised by T-299 from the third adopter's records `01`, `11` and `16`. `PH3`: all three ask for behaviour the chrome was not built to have, and none is a defect. |

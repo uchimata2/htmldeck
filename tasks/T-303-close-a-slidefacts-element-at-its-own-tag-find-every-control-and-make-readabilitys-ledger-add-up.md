@@ -31,7 +31,7 @@ neither side of a ledger that promises nothing goes missing quietly. And `contro
 (`tools/deck/slidefacts.py` `:119`-`:130`) matches only `data-disc`, so a slide's real `<button>` is
 reported as absent.
 
-**From the adopter report** [`10`](../docs/adopter-reports/nextep/2026-09-07-slidefacts-reports-no-control-on-any-slide.md), [`13`](../docs/adopter-reports/nextep/2026-09-08-slidefacts-closes-an-element-at-the-first-matching-close-tag.md), [`14`](../docs/adopter-reports/nextep/2026-09-08-readability-inherits-slidefacts-truncation-so-a-third-of-the-copy-is-unread.md).
+**From the adopter report** `10`, `13`, `14`.
 
 **Re-run in triage, 2026-09-13, on this tree.** `by_class` on a nested fixture returned `['FIRST']`
 where `['FIRST SECOND THIRD']` was expected, and the unnested control returned both of its words.
@@ -49,7 +49,7 @@ where `['FIRST SECOND THIRD']` was expected, and the unnested control returned b
 
 **Inputs**
 - the three records above, each with its command, its version and its own proposed fix
-- [T-299](T-299-triage-the-nextep-adopter-report.md) section 3, where the three were ruled together
+- [T-299](T-299-triage-the-third-adopters-report.md) section 3, where the three were ruled together
 
 **Acceptance criteria**
 - [ ] records `10`, `13` and `14` are each closed with the remedy measured, or deferred with the reason
@@ -109,7 +109,7 @@ where `['FIRST SECOND THIRD']` was expected, and the unnested control returned b
 | `14` | the ledger with the first-close reading patched back into `slidefacts` | fixed `readability.py` | short on all four decks, by 121, 116, 239 and 102 words |
 | `14` | the ledger before the `<svg>` fix | fixed | short on the reference deck only: slide 13 body copy carries 0 and is read as 28 |
 | `14` | the ledger after it | fixed | adds up on all four: 986, 804, 1,353 and 585 words |
-| `10` | slide 2 of the reference deck | unchanged | the disclosure only; the `sources-btn` button absent ([T-299](T-299-triage-the-nextep-adopter-report.md) §3) |
+| `10` | slide 2 of the reference deck | unchanged | the disclosure only; the `sources-btn` button absent ([T-299](T-299-triage-the-third-adopters-report.md) §3) |
 | `10` | same | fixed | `disclosure 'scope'` and `button '2 sources'` |
 | `10` | controls on the four tracked decks | unchanged, fixed | 10 → 15, 10 → 17, 9 → 16, 8 → 8. Every added control is a sources button, and no disclosure trigger or quick-view control is printed twice |
 
@@ -140,4 +140,4 @@ where `['FIRST SECOND THIRD']` was expected, and the unnested control returned b
 | 2026-09-14 | -> in_progress | Step 1 ran with the unchanged tools before any edit. |
 | 2026-09-14 | -> planned | Six steps. |
 | 2026-09-14 | -> specified | §1 was complete as raised. |
-| 2026-09-13 | -> proposed | Raised by T-299 from Nextep records `10`, `13` and `14`, which share `slidefacts.py`. `PH1`: an adopter met all three in the published `0.7.0`. |
+| 2026-09-13 | -> proposed | Raised by T-299 from the third adopter's records `10`, `13` and `14`, which share `slidefacts.py`. `PH1`: an adopter met all three in the published `0.7.0`. |

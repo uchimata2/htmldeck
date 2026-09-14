@@ -24,7 +24,7 @@ deliverables: []
 **Outcome**
 Three build-path tools handle input the adopter's deck actually contained. Today the reading view undoes the sources **box** and never the **item**, so `white-space:nowrap` survives into a document that must fold to 320 px and one long row holds the page open — while `DS-075` reports `overflowing: 0` because the probe scans `#docBody *` and the wide element is outside it; `spec.py` splits a `Sources` field on commas and semicolons and treats every fragment as a slug, so a field naming its section breaks `SPEC-2`, `SPEC-3` and `SPEC-4` at once; and a quick view leaves `**bold**` unconverted when the emphasis spans a line break.
 
-**From the adopter report** [`003`](../docs/adopter-reports/claimai/003-reading-view-never-unwraps-a-provenance-row.md), [`004`](../docs/adopter-reports/claimai/004-spec-py-cannot-read-a-sources-field-that-carries-a-section.md), [`007`](../docs/adopter-reports/claimai/007-quickview-leaves-bold-unconverted-across-a-line-break.md).
+**From the adopter report** `003`, `004`, `007`.
 
 **Scope**
 - In: `.doc .sources-item{white-space:normal}` beside the `.doc .sources-box` rule it belongs with — **a deck should not have to repair the reading view**, and this one did
@@ -36,7 +36,7 @@ Three build-path tools handle input the adopter's deck actually contained. Today
   than asked.
 
 **Inputs**
-- the records above, [`003`](../docs/adopter-reports/claimai/003-reading-view-never-unwraps-a-provenance-row.md), [`004`](../docs/adopter-reports/claimai/004-spec-py-cannot-read-a-sources-field-that-carries-a-section.md), [`007`](../docs/adopter-reports/claimai/007-quickview-leaves-bold-unconverted-across-a-line-break.md) — each carries its evidence, its version and its own proposed fix
+- the records above, `003`, `004`, `007` — each carries its evidence, its version and its own proposed fix
 - each record carries its own reproduction; `003`'s is the one that cost most, because the failure named a number with nothing beside it
 
 **Acceptance criteria**
@@ -95,7 +95,7 @@ Three build-path tools handle input the adopter's deck actually contained. Today
 - `skills/htmldeck/references/artifacts.md` — the `Sources` grammar, with three worked examples
 - `tools/deck/quickview.py` — `settle`/`open_run` in the renderer, `leaked()` and `LEAKS`, the scan
   in `check()`, and seven self-test fixtures across both directions
-- `docs/adopter-reports/claimai/003`, `004`, `007` — closed, each with what the measurement said
+- the adopter reports T-320 removed, `004`, `007` — closed, each with what the measurement said
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
@@ -121,5 +121,5 @@ that changes nothing a reader sees writes no row, and this is that case.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
 | 2026-08-29 | proposed → done | Worked in **B10** of the remediation order. All three records closed; **two of the three proposed remedies were refused by measurement** and replaced — `004`'s separator would have broken every tracked specification, and `007` named the paragraph path, which was already correct. The gate `007` asked for is in `quickview.py check` and reads **20 quick views, 0 leaking** across the tracked decks. **No look owed**, measured rather than assumed: the reading view of all four tracked decks is byte-identical in behaviour before and after the CSS rule, because none of them is the deck that reported it. |

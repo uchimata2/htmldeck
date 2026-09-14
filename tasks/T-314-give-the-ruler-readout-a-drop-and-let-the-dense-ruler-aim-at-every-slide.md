@@ -27,8 +27,8 @@ round end holds the number. Past the dense bound, the small marks can be aimed a
 pointer as an analogue control, the drop shows the nearest slide's number, and a press goes there.
 
 **Ruled by the owner** at [`OWED-LOOKS.md`](../docs/OWED-LOOKS.md) row 14, 2026-09-14. That ruling
-reopens Nextep adopter record
-[`16`](../docs/adopter-reports/nextep/2026-09-08-the-condensed-ruler-drops-the-small-dots-as-targets.md),
+reopens the third adopter's record
+`16`,
 which [T-307](T-307-give-the-chrome-first-and-last-page-controls-and-a-ruler-whose-marks-a-reader-can-aim-at.md)
 deferred because a dense mark is an 8 du cell and DS-168 is `hard`.
 

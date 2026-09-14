@@ -24,7 +24,7 @@ deliverables: []
 **Outcome**
 A deck of any legal length can satisfy `DS-217`. Today `regularScale()` refuses the ruler's `data-scale` claim past about eighteen sections — sub-pixel layout rounding across many flex items produces a third cluster of pitch — and every tick is then counted as its own chrome item against a budget of about twelve. **The failure is one no slide edit can move**, measured by truncation: 18 sections pass, 19 fails at 24 items, 25 fails at 30.
 
-**From the adopter report** [`002`](../docs/adopter-reports/claimai/002-ruler-scale-claim-breaks-past-eighteen-sections.md).
+**From the adopter report** `002`.
 
 **Scope**
 - In: clustering gaps and widths to the nearest whole design unit rather than the nearest half CSS pixel, or accepting a spread under one unit
@@ -34,7 +34,7 @@ A deck of any legal length can satisfy `DS-217`. Today `regularScale()` refuses 
   than asked.
 
 **Inputs**
-- the record above, [`002`](../docs/adopter-reports/claimai/002-ruler-scale-claim-breaks-past-eighteen-sections.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `002` — each carries its evidence, its version and its own proposed fix
 - `DS-082` already requires a recorded reason past twelve slides and the adopter's deck has one, so *make the deck shorter* is not an answer available to them
 - `CLAUDE.md`'s verifying section and [T-178](T-178-dense-mode-drops-the-position-mark-below-the-section-marks.md) — the ruler is already known to degrade past 16, and this is the second thing that does
 
@@ -74,13 +74,13 @@ A deck of any legal length can satisfy `DS-217`. Today `regularScale()` refuses 
 - [`tools/deck/audit.py`](../tools/deck/audit.py) — `regularScale()` re-bound on the lattice, and its verdict now names why it refused
 - [`tools/deck/longdeck.py`](../tools/deck/longdeck.py) — `--solo-stage`, its docstring paragraph, and the self-test assertion
 - [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — the `DS-217` row's *uniform pitch* clause
-- [`docs/adopter-reports/claimai/002-ruler-scale-claim-breaks-past-eighteen-sections.md`](../docs/adopter-reports/claimai/002-ruler-scale-claim-breaks-past-eighteen-sections.md) — closed, with the refusals stated
+- the adopter reports T-320 removed — closed, with the refusals stated
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Record [`002`](../docs/adopter-reports/claimai/002-ruler-scale-claim-breaks-past-eighteen-sections.md) closed with its remedy measured | pass | Closed. The finding is fixed; its cause and both its candidate remedies are refused, each with the measurement that refused it |
+| Record `002` closed with its remedy measured | pass | Closed. The finding is fixed; its cause and both its candidate remedies are refused, each with the measurement that refused it |
 | Each fix proved by seeding the defect and watching the check fire, in both directions (**L-125**) | pass | `--solo-stage` at 25 slides: **30 items, FAIL** before, **6 items, pass** after. Three seeded irregularities still fail — irregular spacing, a third mark size, a label at rest — each with its own reason in the verdict |
 | `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | pass | Both run at the end of B5, after T-262 and T-264, on a tree nothing was editing |
 
@@ -91,5 +91,5 @@ A deck of any legal length can satisfy `DS-217`. Today `regularScale()` refuses 
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
 | 2026-08-29 | → done | Batch **B5**. The record's cause and both its candidate remedies refused by measurement; the finding fixed by re-binding `regularScale()` on the lattice a scale claims. `--solo-stage` makes the fixture a command, so the 30-items-to-6 proof can be re-run rather than believed. |

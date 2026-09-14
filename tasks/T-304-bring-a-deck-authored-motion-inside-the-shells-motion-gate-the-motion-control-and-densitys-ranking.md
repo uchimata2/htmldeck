@@ -35,7 +35,7 @@ mechanisms are keyed to the shell's own class names:
 - `density.py write` looks for `--motion-kind` only in the rule that starts the motion
   (`tools/deck/density.py` `:394`), and says nothing when it finds none.
 
-**From the adopter report** [`04`](../docs/adopter-reports/nextep/2026-09-07-a-deck-authored-content-motion-gets-no-motion-gate.md), [`05`](../docs/adopter-reports/nextep/2026-09-07-density-ranks-the-animating-rule-not-the-declaring-class.md), [`07`](../docs/adopter-reports/nextep/2026-09-07-motion-off-does-not-reach-a-deck-authored-motion.md).
+**From the adopter report** `04`, `05`, `07`.
 
 **Why the three are one task.** The remedy the records point at keys the gate and the stop off
 `--m-rank` or `--motion-kind` rather than off a class name. That makes `density.py`'s ranking
@@ -54,7 +54,7 @@ load-bearing, so `05` is a precondition of the fix, not a separate improvement.
 
 **Inputs**
 - the three records above, each with its command, its version and its own proposed fix
-- [T-299](T-299-triage-the-nextep-adopter-report.md) section 3, where the three were ruled together
+- [T-299](T-299-triage-the-third-adopters-report.md) section 3, where the three were ruled together
 
 **Acceptance criteria**
 - [x] records `04`, `05` and `07` are each closed with the remedy measured, or deferred with the reason
@@ -156,4 +156,4 @@ the stop and DS-218's reading.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-14 | -> done | The gate keys on the rank, the Motion control stops every animation, DS-218 reads the stop and density reads a kind from any rule. Records `04`, `05` and `07` closed. The look is owed as `OWED-LOOKS.md` row 13. |
-| 2026-09-13 | -> proposed | Raised by T-299 from Nextep records `04`, `05` and `07`. `PH1`: an adopter met all three in the published `0.7.0`. `05` arrived as a `suggestion` and is ruled a defect, because the tool reports success on a deck it did not rank. |
+| 2026-09-13 | -> proposed | Raised by T-299 from the third adopter's records `04`, `05` and `07`. `PH1`: an adopter met all three in the published `0.7.0`. `05` arrived as a `suggestion` and is ruled a defect, because the tool reports success on a deck it did not rank. |

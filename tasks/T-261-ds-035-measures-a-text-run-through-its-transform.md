@@ -24,11 +24,11 @@ deliverables: []
 **Outcome**
 `DS-035` decides legible type rather than mid-entrance geometry. Today the probe scales the computed font size by the element's screen CTM, so an ordinary `scaleY(0)` entrance with `fill-mode:both` puts the determinant at 0 and the rule fails three display-size headings at **0 du** — and the row says *text below 16 design units*, which sends a builder looking for a font size.
 
-**From the adopter report** [`006`](../docs/adopter-reports/claimai/006-ds-035-measures-text-through-its-transform.md).
+**From the adopter report** `006`.
 
 **Scope**
 - In: measuring the rest state, or naming the transform as the cause when `sqrt(|det|)` is under 1
-- In: **`DS-035` saying when a CTM is degenerate**, deferred here by [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) on 2026-08-29. Adopter record [`015`](../docs/adopter-reports/claimai/015-density-py-write-corrupts-a-self-closing-svg-tag.md) item 3 is the source: a broken tag made the browser reparent a subtree, and three untouched labels came back at `0.0 du` — **not small type, no type**, reported as a type-size failure. It is the same measurement and the same row as the clause above, which is why one task owns both. **This task closes that record's item 3**
+- In: **`DS-035` saying when a CTM is degenerate**, deferred here by [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) on 2026-08-29. Adopter record `015` item 3 is the source: a broken tag made the browser reparent a subtree, and three untouched labels came back at `0.0 du` — **not small type, no type**, reported as a type-size failure. It is the same measurement and the same row as the clause above, which is why one task owns both. **This task closes that record's item 3**
 - In: **re-deriving [T-209](T-209-six-more-probes-measure-a-page-whose-entrance-never-ran.md)'s verdict for `audit.PROBE`**, which is the part worth more than the fix — see the inputs
 - In: the `DS-035` row saying the measurement is taken through the element's transform. Nothing in it hints that an entrance can fail a legibility rule
 - Out: anything the records above do not name. The report is a closed one-way hand-over — there is no
@@ -36,7 +36,7 @@ deliverables: []
   than asked.
 
 **Inputs**
-- the record above, [`006`](../docs/adopter-reports/claimai/006-ds-035-measures-text-through-its-transform.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `006` — each carries its evidence, its version and its own proposed fix
 - **This finding refutes a measurement the audit recorded as settled.** T-209 left `audit.PROBE` unpinned and its comment in `tools/deck/audit.py` reads *its geometry rows were measured both ways on the portfolio deck and are identical, so pinning buys nothing here*. That was one deck, whose entrances happen not to move the axis `DS-035` reads; this deck's do. **The conclusion does not generalise and the comment states it as if it does.**
 - the design problem underneath: the same probe must stay unpinned for `DS-140`, `DS-142` and `DS-218`, which read `animationIterationCount`, and settled for `DS-035`, which reads geometry. One probe cannot be both, so this is a split rather than a flag
 
@@ -117,8 +117,8 @@ deterministic — a 60 s delay inside a 4 s virtual-time budget — so the rate 
 - [`tools/deck/audit.py`](../tools/deck/audit.py) — the probe's motion-facts-then-pin-then-geometry
   order, the corrected header comment, `out.noGeometry`, the `DS-035` row and its raw rows
 - [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — the `DS-035` row
-- [`docs/adopter-reports/claimai/006-ds-035-measures-text-through-its-transform.md`](../docs/adopter-reports/claimai/006-ds-035-measures-text-through-its-transform.md)
-  and [`015`](../docs/adopter-reports/claimai/015-density-py-write-corrupts-a-self-closing-svg-tag.md) — closed
+- the adopter reports T-320 removed
+  and `015` — closed
 
 ## 4. Review
 
@@ -142,4 +142,4 @@ deterministic — a 60 s delay inside a 4 s virtual-time budget — so the rate 
 | 2026-08-29 | review → done | **The split shipped and the measurement refused one part of it.** `audit.PROBE` reads its motion facts, pins, then measures geometry; `DS-035` counts a degenerate CTM apart from small type and prints the raw `font-size`. Four seeds, both directions, and `DS-218` keeps its subject in every one. **A forced reflow in the pin was written and then removed** — it took `GF-6` from 7 of 7 to 6 of 7 and bought nothing. Both adopter records closed, `015` item 3 **with what the remedy does not claim written into it**. `lint.py` green with the standing eleven and no twelfth; `check_all.py` green — 0 failures, 0 unclassified, 0 stale, 284 s, run after it and never beside it. |
 | 2026-08-29 | → planned | **T-209's verdict re-derived before anything was changed**, and it does not generalise: identical both ways on its own deck, three keys apart on a deck whose entrance moves the axis. §2 carries the measurement. The remedy is the split the probe's own header comment already prescribed. |
 | 2026-08-29 | (no change) | **Gained `DS-035`'s degenerate-CTM question**, deferred here by [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) while B1 ran, with the reasoning in that task's §1. Two tasks amending one probe is the rework [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) exists to avoid, so this task now closes adopter record `015` item 3 as well as `006`. Nothing else about its scope moved. |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |

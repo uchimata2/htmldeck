@@ -1122,7 +1122,7 @@ def self_test():
            "--set" in str(exc) and "comma-separated" in str(exc),
            "it exited without naming the argument: %s" % exc)
 
-    # T-306, Nextep record `15`: `sync` names the chrome tail when it is behind, and only then. The
+    # T-306, the third adopter's record `15`: `sync` names the chrome tail when it is behind, and only then. The
     # stale form is the one the record met, `Motion` outside the menu.
     fixture = new("Fixture", "Subtitle")
     ok("a current chrome tail is not reported behind", not tail_behind(fixture))
@@ -1343,7 +1343,7 @@ def main(argv):
         missing = undeclared_tokens(fresh)
         # The tail is the other thing a sync cannot carry: it is per-deck, and `tail` owns it. A
         # sync that said nothing about it read as *nothing outstanding* while `tail` had work to do
-        # (T-306, Nextep record `15`), so it is compared read-only and named. The exit code stays
+        # (T-306, the third adopter's record `15`), so it is compared read-only and named. The exit code stays
         # about the regions a sync writes.
         behind = (["  %-12s per-deck, so a sync never writes it, and this one is not the form "
                    "DS-218 asks for." % "CHROME_TAIL",

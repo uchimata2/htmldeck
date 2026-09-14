@@ -24,7 +24,7 @@ deliverables: []
 **Outcome**
 The shell's chrome behaves the way its own comments say. Today **every browser chord built on one of six letters is captured** — Ctrl-R enters the reading view and cancels the reload, Ctrl-F goes fullscreen instead of opening find, and `grep -n "ctrlKey|metaKey|altKey" shell/deck.js` returns nothing; the **sources box does not dismiss on an outside click** though the More menu beside it does, with the More menu's own comment arguing the case; and **`data-played` lands at `t = 0` of the transition**, so an entrance gated on it — the gate `DS-146` tells authors to use — begins under the outgoing slide.
 
-**From the adopter report** [`008`](../docs/adopter-reports/claimai/008-single-letter-shortcuts-swallow-ctrl-r-and-every-other-browser-chord.md), [`009`](../docs/adopter-reports/claimai/009-the-sources-box-does-not-dismiss-on-an-outside-click.md), [`010`](../docs/adopter-reports/claimai/010-data-played-lands-at-transition-start-so-an-entrance-plays-under-the-outgoing-slide.md).
+**From the adopter report** `008`, `009`, `010`.
 
 **Scope**
 - In: the modifier guard, one line, with Shift deliberately excluded because the handler already accepts `R` as well as `r`
@@ -36,7 +36,7 @@ The shell's chrome behaves the way its own comments say. Today **every browser c
   than asked.
 
 **Inputs**
-- the records above, [`008`](../docs/adopter-reports/claimai/008-single-letter-shortcuts-swallow-ctrl-r-and-every-other-browser-chord.md), [`009`](../docs/adopter-reports/claimai/009-the-sources-box-does-not-dismiss-on-an-outside-click.md), [`010`](../docs/adopter-reports/claimai/010-data-played-lands-at-transition-start-so-an-entrance-plays-under-the-outgoing-slide.md) — each carries its evidence, its version and its own proposed fix
+- the records above, `008`, `009`, `010` — each carries its evidence, its version and its own proposed fix
 - all three were reported by the presenter using the deck, which is the one instrument this repository cannot run
 - `010`'s own note that the reviewer's original report was the **deck's** defect and not htmldeck's; what is left is the narrower thing underneath
 
@@ -60,7 +60,7 @@ The shell's chrome behaves the way its own comments say. Today **every browser c
 | 3 | `data-arrived` as a second attribute, `data-played` untouched | `shell/deck.js` |
 | 4 | **Prove all three in a real browser on a real deck**, both directions each — they are behaviours, and no static check can see one | the probe |
 | 5 | The rule rows: `DS-131` on unmodified shortcuts, `DS-146` on when each mark lands | `docs/DESIGN-SYSTEM.md` |
-| 6 | Close the three adopter records | `docs/adopter-reports/claimai/008…`, `009…`, `010…` |
+| 6 | Close the three adopter records | the adopter reports T-320 removed, `009…`, `010…` |
 
 ## 3. Implement
 
@@ -119,4 +119,4 @@ entrance, which is the limit stated above rather than a queued row.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-29 | → done | Landed in **B9**. All three fixes are in `shell/deck.js` and all three are proved by a browser probe rather than by the diff. **Two implementations of `data-arrived` were refused by that probe before the third passed**: the first asked the arriving slide what it was running, and the answer is 0 because every transition rule is keyed to `[data-leaving]`; the second waited on `Animation.finished`, which the deck's own `animationend` cleanup cancels. It lands from that listener now. `data-played` is unchanged, which is report `010`'s own safer option. |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |

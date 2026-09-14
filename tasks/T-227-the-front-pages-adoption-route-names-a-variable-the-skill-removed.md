@@ -29,7 +29,7 @@ An adopter following the front page's second adoption route either succeeds or i
 **Scope**
 - In: the front page's install section, and `SKILL.md` section 0's resolution branches
 - In: **measuring whether a run can locate a skill file from its own path** before writing a third branch - the register's hypothesis, and the thing that decides which fix is honest
-- In: **from the ClaimAI adopter report, [`027`](../docs/adopter-reports/claimai/027-the-tools-are-unreachable-when-htmldeck-is-installed-as-a-plugin.md)** — Installed as a plugin the tools are **not on `PATH`** and there is no documented invocation, so every adopter writes a 70-line launcher. **The line worth the report on its own**: the plugin cache keeps *every* version — seven here, `0.1.1` to `0.6.0` — so a first-match glob picks `0.1.1` and the failure reads as *tool not found*. This is the same root as `PR-07`: what `$HTMLDECK` resolves to, and for whom
+- In: **from the second adopter's report, `027`** — Installed as a plugin the tools are **not on `PATH`** and there is no documented invocation, so every adopter writes a 70-line launcher. **The line worth the report on its own**: the plugin cache keeps *every* version — seven here, `0.1.1` to `0.6.0` — so a first-match glob picks `0.1.1` and the failure reads as *tool not found*. This is the same root as `PR-07`: what `$HTMLDECK` resolves to, and for whom
 - Out: `$HTMLDECK` itself, and [T-189](T-189-resolve-the-plugin-root-in-every-documented-command.md)'s ruling that the variable is not written into a command
 - Out: the two routes that work
 
@@ -37,7 +37,7 @@ An adopter following the front page's second adoption route either succeeds or i
 - `PR-07` in [`docs/PRE-RELEASE-AUDIT.md`](../docs/PRE-RELEASE-AUDIT.md) section 3
 - [`skills/htmldeck/SKILL.md`](../skills/htmldeck/SKILL.md) section 0
 - [T-189](T-189-resolve-the-plugin-root-in-every-documented-command.md)
-- [`027`](../docs/adopter-reports/claimai/027-the-tools-are-unreachable-when-htmldeck-is-installed-as-a-plugin.md) — the adopter record merged into this task by [T-225](T-225-triage-the-claimai-adopter-report.md), because this task already owns the class. Each carries its own evidence and version.
+- `027` — the adopter record merged into this task by [T-225](T-225-triage-the-second-adopters-report.md), because this task already owns the class. Each carries its own evidence and version.
 
 **Acceptance criteria**
 - [ ] the route is either **proved by running it from a copied directory**, or removed from the front page with the reason recorded - a third state, documented harder, is the failure
@@ -93,7 +93,7 @@ An adopter following the front page's second adoption route either succeeds or i
 - **Not measured, and the fix does not depend on it:** whether the placeholder's unbraced form also
   interpolates. Both observed occurrences were braced. The rewrite names no token at all, so the
   answer cannot change it.
-- **The adopter's record [`027`](../docs/adopter-reports/claimai/027-the-tools-are-unreachable-when-htmldeck-is-installed-as-a-plugin.md)
+- **The adopter's record `027`
   is answered in part.** Its version-sorting point was already correct in section 0 — the glob sorts
   as versions — but nothing said **why**, so the line read as a flourish and an adopter rewriting the
   glob would drop it. Section 0 now says it is load-bearing and what the failure looks like. Its
