@@ -265,6 +265,11 @@ def number(value, decls, unit="du"):
         return None
 
 
+# A Legal cell naming the words a token may take, comma-separated (T-315). Commas rather than pipes,
+# because the contract is a Markdown table and a pipe splits the cell when it renders.
+KEYWORDS = re.compile(r"^[a-z]+(?:,\s*[a-z]+)+$")
+
+
 def check_legal(tok, decls):
     """`None` if the token's value satisfies its *Legal* cell, else what is wrong with it."""
     legal = tok.legal.strip()
@@ -278,6 +283,10 @@ def check_legal(tok, decls):
             else "is %r, which is not a colour" % raw.strip()
     if legal == "1px":
         return None if raw.strip() == "1px" else "is %r; the design unit is fixed at 1px" % raw.strip()
+    if KEYWORDS.match(legal):
+        allowed = [w.strip() for w in legal.split(",")]
+        return None if raw.strip() in allowed \
+            else "is %r, which is not one of %s" % (raw.strip(), ", ".join(allowed))
     m = re.match(r"^(n|du|rem|ms)\s+(-?[\d.]+)-(-?[\d.]+)?$", legal)
     if not m:
         sys.exit("CONTRACT: %s has Legal %r, which is not a form this file knows" % (tok.name, legal))
@@ -628,7 +637,7 @@ def drop_token(source, name):
 def self_test():
     tokens, exemptions = load()
     for t in tokens.values():
-        if t.legal in ("—", "-", "", "colour"):
+        if t.legal in ("—", "-", "", "colour") or KEYWORDS.match(t.legal):
             continue
         if t.kind == "derived":
             sys.exit("CONTRACT: %s is derived and carries a Legal range. A derived value is a "
@@ -650,6 +659,11 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a pipe inside the Governs cell lost the row's columns")
     if parse_token_row("| Token | Axis | Kind | Governs | Legal |\n") is not None:
         sys.exit("SELF-TEST FAILED: the header row parsed as a token")
+    _kw = Token("--term-line", "shape", "primitive", "An underline.", "solid, dotted, dashed")
+    if check_legal(_kw, {"--term-line": "solid"}) is not None \
+            or check_legal(_kw, {"--term-line": "wavy"}) is None:
+        sys.exit("SELF-TEST FAILED: a keyword Legal cell did not accept its own word and refuse "
+                 "another (T-315)")
 
     d = {"--du": "1px", "--fs-base": "26", "--type-ratio": "1.155",
          "--fs-body": "calc(var(--fs-base)*var(--du))",

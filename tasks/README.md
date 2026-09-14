@@ -42,7 +42,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md) | Audit — what a session pays per turn, and why it grows | `PH3` | - | `in_progress` | `review` | - | T-288, T-289, T-290, T-291, T-292, T-293, T-294, T-295, T-296, T-301 | - | T-300 | T-130, T-153, T-285, T-286 |
 | [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | Grade the second context-economy run's bands after its remedies land | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-300 | T-153 |
 | [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | T-287, T-294 | - | - |
-| [T-315](T-315-make-the-inline-terms-underline-a-theme-token.md) | Make the inline term's underline a theme token, solid in the shipped theme | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-309 |
 | [T-316](T-316-give-the-reference-decks-sources-quick-views.md) | Give the reference deck's sources quick views | `PH3` | - | `proposed` | `specify` | - | - | - | - | T-070, T-233 |
 
 ## Closed
@@ -359,5 +358,6 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-312](T-312-start-a-slides-one-time-content-motions-when-the-slide-has-arrived.md) | Start a slide's one-time content motions when the slide has arrived | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-268, T-304 |
 | [T-313](T-313-keep-a-pager-press-that-starts-on-the-buttons-edge-a-click.md) | Keep a pager press that starts on the button's edge a click | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-199, T-307 |
 | [T-314](T-314-give-the-ruler-readout-a-drop-and-let-the-dense-ruler-aim-at-every-slide.md) | Give the ruler readout a drop, and let the dense ruler aim at every slide | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-307 |
+| [T-315](T-315-make-the-inline-terms-underline-a-theme-token.md) | Make the inline term's underline a theme token, solid in the shipped theme | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-309 |
 
 <!-- taskmd:end -->

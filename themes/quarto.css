@@ -105,6 +105,7 @@
 
   /* ---- shape: radius, stroke and depth. This is the axis a recolour cannot reach. */
   --radius:calc(14*var(--du));
+  --term-line:solid;            /* how an inline term's underline is drawn (T-315) */
   --radius-sm:calc(6*var(--du));
   --radius-xs:calc(2*var(--du));   /* a mark's corner: at a 4-unit tick, any more is a circle */
   --hair:calc(1.5*var(--du));

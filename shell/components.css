@@ -180,7 +180,7 @@ svg{display:block}
 .term-btn{
   display:inline;padding:0;border:0;background:none;cursor:pointer;
   font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;
-  text-decoration:underline dotted var(--accent);
+  text-decoration:underline var(--term-line, solid) var(--accent);   /* the theme draws it (T-315) */
 }
 .term-btn:hover,.term[data-pinned] .term-btn{color:var(--accent)}
 .term-bub{

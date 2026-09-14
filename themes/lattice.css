@@ -96,6 +96,7 @@
   /* ---- shape: square. The corner radius goes to zero and the shadow flattens, which is the
      single most visible non-colour change in the set. */
   --radius:0px;
+  --term-line:solid;
   --radius-sm:0px;
   --radius-xs:0px;
   --hair:calc(1*var(--du));

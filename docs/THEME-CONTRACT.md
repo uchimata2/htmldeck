@@ -176,6 +176,7 @@ fit one deck is worse than no threshold (**L-38**).
 | Token | Axis | Kind | Governs | Legal |
 | :--- | :--- | :--- | :--- | :--- |
 | `--radius` | shape | primitive | A card's corner (DS-049). Zero is a legitimate theme. | — |
+| `--term-line` | shape | optional | How an inline term's underline is drawn (T-315): continuous, dotted or dashed, always in the accent. Both shipped themes draw it continuous. Optional, so a deck whose theme region predates it draws the shell's default, continuous, rather than failing DS-013. | `solid, dotted, dashed` |
 | `--radius-sm` | shape | primitive | A small control's corner. | — |
 | `--radius-xs` | shape | primitive | A mark's corner. | — |
 | `--hair` | shape | primitive | A hairline's weight. | — |
