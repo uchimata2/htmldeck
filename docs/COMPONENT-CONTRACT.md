@@ -291,6 +291,14 @@ map off `data-qv` across the whole stage, so the row resolves to the template th
 already carries. Five documents quoted twice would be the size cost this feature has to justify,
 spent on nothing.
 
+**An opener may name a section with `data-qv-at`** (T-271, from ClaimAI adopter report `001`). Its
+value is the text of a heading in the source, compared without case or extra space. The quick view
+opens scrolled to that heading and marks it, and the rest of the document stays a scroll away. A slide
+citing one clause names it, and the colophon's row names nothing and opens the whole file. An anchor
+that names no heading in its source opens nothing where it says, and DS-105's row counts it. **A
+heading, not an id and not a range**: the sources are rendered from Markdown with no ids, and a range
+would cut the clause away from the text a reader checks it against.
+
 **The quick view is two components' worth of rows for one reason: the surface is the shell's and
 the content is the deck's.** `.qv` and everything under it ship empty in `shell/shell.html`, like the
 chrome and the reading view — a deck carrying no quick view still carries the surface. What varies

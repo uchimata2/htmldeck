@@ -39,11 +39,10 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocked By | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH4` | - | `proposed` | `specify` | - | T-215 | - | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215, T-302 |
-| [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | - | `proposed` | `specify` | - | - | - | T-300 | T-225 |
 | [T-282](T-282-the-opening-slide-carries-one-of-the-two-figures-its-specification-names.md) | The portfolio deck's opening slide carries one of the two figures its specification calls the whole argument | `PH3` | - | `proposed` | `specify` | - | - | - | T-300 | T-233 |
 | [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md) | Audit — what a session pays per turn, and why it grows | `PH3` | - | `in_progress` | `review` | - | T-288, T-289, T-290, T-291, T-292, T-293, T-294, T-295, T-296, T-301 | - | T-300 | T-130, T-153, T-285, T-286 |
 | [T-294](T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md) | Grade the second context-economy run's bands after its remedies land | `PH3` | - | `proposed` | `specify` | T-287 | - | - | T-300 | T-153 |
-| [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | T-271, T-282, T-287, T-294 | - | - |
+| [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | T-282, T-287, T-294 | - | - |
 
 ## Closed
 
@@ -318,6 +317,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-268](T-268-three-chrome-and-timing-defects-in-deck-js.md) | Guard the single-letter shortcuts, dismiss the sources box, and land data-played on arrival | `PH1` | `0.7.0` | `done` | `review` | - | - | - | - | T-225, T-310 |
 | [T-269](T-269-three-build-path-defects-the-adopter-worked-around.md) | Unwrap a provenance row, read a rich Sources field, and convert bold across a line break | `PH1` | `0.7.0` | `done` | `review` | - | - | - | - | T-225, T-306 |
 | [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | Decide what DS-100 and DS-202 should measure, and say the reason in each failure | `PH3` | `0.7.0` | `done` | `review` | - | - | - | - | T-225, T-276 |
+| [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3` | `unreleased` | `done` | `review` | - | - | - | T-300 | T-225 |
 | [T-272](T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md) | Make render.py motion enumerate the same animation set on every run of one deck | `PH1` | `0.7.0` | `done` | `review` | - | - | - | - | T-255 |
 | [T-273](T-273-the-owed-looks-have-no-queue-to-accumulate-in.md) | Give the owed looks a queue, so the pass before the release has something to run | `PH3` | `0.7.0` | `done` | `review` | - | - | - | - | T-219, T-284 |
 | [T-274](T-274-build-the-card-reveal-so-turns-two-dials-have-a-reader.md) | Build the card reveal, so DS-140's Turn is a component rather than two dials | `PH3` | `0.7.0` | `done` | `review` | - | - | - | - | T-242, T-275 |

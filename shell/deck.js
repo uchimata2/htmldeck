@@ -508,6 +508,21 @@
        Nothing here fights the focus call below: `qvClose` is in the header, a sibling of this
        container rather than a descendant, so focusing it cannot scroll the body. */
     qvBody.scrollTop = 0;
+    /* **A slide citing one section opens the document at that section** (T-271). The anchor names a
+       heading by its text, because the sources are rendered from Markdown and their headings are the
+       sections a slide cites; the rest of the document stays a scroll away. Divided by the scale,
+       because the stage's transform scales what getBoundingClientRect reports and scrollTop is not. */
+    var at = (btn.getAttribute('data-qv-at') || '').replace(/\s+/g, ' ').trim().toLowerCase();
+    if (at) {
+      var heads = article.querySelectorAll('h1,h2,h3,h4,h5,h6');
+      for (var h = 0; h < heads.length; h++) {
+        if ((heads[h].textContent || '').replace(/\s+/g, ' ').trim().toLowerCase() !== at) continue;
+        heads[h].setAttribute('data-qv-here', '');
+        var scale = qvBody.getBoundingClientRect().height / (qvBody.offsetHeight || 1) || 1;
+        qvBody.scrollTop = (heads[h].getBoundingClientRect().top - qvBody.getBoundingClientRect().top) / scale;
+        break;
+      }
+    }
     qvOpener = btn;
     document.getElementById('qvClose').focus();
   }

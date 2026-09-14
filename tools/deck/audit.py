@@ -1510,6 +1510,20 @@ SOURCES_WRAPPER = re.compile(r'<span class="sources((?: sources--\w+)*)">(.*?)</
 MARK_USE = re.compile(r'<svg class="sources-mark"[^>]*><use href="#([^"]+)"')
 OPEN_KEY = re.compile(r'<button class="sources-open"[^>]*\bdata-qv="([^"]*)"')
 TEMPLATE_KEY = re.compile(r'<template class="qv-src" data-qv="([^"]*)"')
+# An opener may name a heading in its source, and the quick view opens at it (T-271). An anchor that
+# names no heading in the source it opens is a control that opens nothing where it says.
+OPEN_TAG = re.compile(r'<button class="sources-open"[^>]*>')
+OPEN_QV = re.compile(r'\bdata-qv="([^"]*)"')
+OPEN_AT = re.compile(r'\bdata-qv-at="([^"]*)"')
+TEMPLATE_BODY = re.compile(r'<template class="qv-src" data-qv="([^"]*)">(.*?)</template>', re.S)
+HEADING_TEXT = re.compile(r"<h[1-6][^>]*>(.*?)</h[1-6]>", re.S)
+HTML_UNESCAPE = html.unescape
+
+
+def section_name(text):
+    """A heading or an anchor as `openQuick` compares them: tags gone, entities read, space collapsed,
+    case folded."""
+    return re.sub(r"\s+", " ", HTML_UNESCAPE(re.sub(r"<[^>]+>", "", text))).strip().lower()
 
 
 def source_component(html):
@@ -1542,6 +1556,14 @@ def source_component(html):
     carried = set(TEMPLATE_KEY.findall(html))
     keys = OPEN_KEY.findall(html)
     unresolved = sorted({k for k in keys if k not in carried})
+    heads = {}
+    for key, body in TEMPLATE_BODY.findall(html):
+        heads.setdefault(key, set()).update(section_name(h) for h in HEADING_TEXT.findall(body))
+    for tag in OPEN_TAG.findall(html):
+        at, key = OPEN_AT.search(tag), OPEN_QV.search(tag)
+        if at and key and key.group(1) in carried \
+                and section_name(at.group(1)) not in heads.get(key.group(1), ()):
+            unresolved.append("%s at %r, which is no heading in it" % (key.group(1), at.group(1)))
     return long_ids, wrong_glyphs, unresolved, (len(SOURCE_ID.findall(html)), marks, len(keys))
 
 
@@ -3381,6 +3403,18 @@ def self_test():
     if "head comment" not in _why:
         sys.exit("SELF-TEST FAILED: DS-122 failed the old <meta> without saying where the declaration "
                  "goes: %r" % _why)
+
+    # ---- DS-105, an anchor into a source, both directions (T-271, **L-125**) -------------------
+    _src = ('<template class="qv-src" data-qv="Model"><h1>The model</h1><h2>Failure &amp; recovery</h2>'
+            '</template>')
+    for _at, _want in (("Failure & recovery", 0), ("failure  &amp; RECOVERY", 0), ("Volume", 1),
+                       (None, 0)):
+        _btn = ('<button class="sources-open" type="button" data-qv="Model"%s>Model</button>'
+                % ("" if _at is None else ' data-qv-at="%s"' % _at))
+        _got = len(source_component(_src + _btn)[2])
+        if _got != _want:
+            sys.exit("SELF-TEST FAILED: DS-105 reported %d unresolved control(s) for the anchor %r, "
+                     "wanted %d" % (_got, _at, _want))
 
     # ---- DS-106, every term the rule names, both directions (T-229, **L-125**) ----------------
     #

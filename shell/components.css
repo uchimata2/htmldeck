@@ -1005,6 +1005,9 @@ svg{display:block}
 .qv-doc h2{font-size:var(--doc-fs-head);margin-top:var(--doc-sp)}
 .qv-doc h3{font-size:var(--doc-fs-lead);margin-top:var(--doc-sp-sm)}
 .qv-doc h1:first-child,.qv-doc h2:first-child,.qv-doc h3:first-child{margin-top:0}
+/* The section a slide opened the source at (T-271): a rule down its edge, so the reader sees where
+   they were sent. */
+.qv-doc [data-qv-here]{border-left:var(--rule) solid var(--accent);padding-left:var(--sp-2)}
 /* The reset above kills every marker (`list-style:none`), which is right for the deck and
    wrong for a quoted document: an ordered list rendered without its numbers has lost the
    thing that made it ordered. Restored here, and only here. T-107. */
