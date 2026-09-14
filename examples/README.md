@@ -458,7 +458,7 @@ adopter's file, and where
 ## The deck that answers whether a chart library is worth it
 
 [`portfolio-review/portfolio-review.html`](portfolio-review/portfolio-review.html) is *Meridian
-Infrastructure Fund - 2026 portfolio review*, 12 slides. It is **327 KB in one file**, 334 583 bytes,
+Infrastructure Fund - 2026 portfolio review*, 12 slides. It is **327 KB in one file**, 334 557 bytes,
 zero external references, and it carries 18 figures - ten of them charts, which is more charts than
 the other three decks hold between them.
 
