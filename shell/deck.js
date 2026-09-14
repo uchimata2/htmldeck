@@ -259,6 +259,38 @@
     if (rulerTip) rulerTip.removeAttribute('data-on');
   }
 
+  /* **Past the bound the strip aims at every slide** (T-314, reopening adopter record `16` by the
+     owner's ruling). A small mark stays a mark, because an 8 du cell is no target under DS-168, so
+     the pointer is read against the whole strip instead: the drop shows the nearest slide's number,
+     and a press goes there. A section tick keeps its own button, and the keyboard keeps the arrows. */
+  function nearestTick(x){
+    var best = -1, bestD = Infinity;
+    Array.prototype.forEach.call(rulerTicks.children, function(li, i){
+      var r = li.getBoundingClientRect(), d = Math.abs(r.left + r.width / 2 - x);
+      if (r.width && d < bestD) { bestD = d; best = i; }
+    });
+    return best;
+  }
+  function onStrip(e){
+    return rulerEl.hasAttribute('data-dense')
+      && !(e.target.closest && e.target.closest('button:not([disabled])'));
+  }
+  rulerTicks.addEventListener('mousemove', function(e){
+    if (!onStrip(e)) return;
+    var i = nearestTick(e.clientX), li = rulerTicks.children[i];
+    if (!li) return;
+    previewLabel(li.querySelector('button').dataset.label);
+    showTip(i, li);
+  });
+  rulerTicks.addEventListener('mouseleave', function(){
+    if (rulerEl.hasAttribute('data-dense')) { restoreLabel(); hideTip(); }
+  });
+  rulerTicks.addEventListener('click', function(e){
+    if (!onStrip(e)) return;
+    var i = nearestTick(e.clientX);
+    if (i >= 0) { go(i); countIfSeen(); }
+  });
+
   /* Sized after layout, and again on resize - the controls' width is what decides capacity, and a
      label can change it. */
   function fitRuler(){
@@ -266,7 +298,8 @@
     if (lay.dense) rulerEl.setAttribute('data-dense',''); else rulerEl.removeAttribute('data-dense');
     placeRing();
     /* Past the bound the small ticks are marks, not targets, so they leave the tab order and stop
-       being clickable. Section ticks stay targets at full pitch. */
+       being clickable. Section ticks stay targets at full pitch, and the strip reads the pointer
+       for the rest (T-314). */
     Array.prototype.forEach.call(rulerTicks.children, function(li){
       var b = li.querySelector('button');
       if (!b) return;

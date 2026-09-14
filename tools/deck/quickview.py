@@ -429,10 +429,16 @@ def render(path):
 # be a defect in the mark that only shows up on the slides a source happens to be wired into.
 # **In either order**: the contract fixes none, and one fixed here read a glyph-first item as
 # uncited (T-306, Nextep record `03`). The alternation is that record's own.
+#
+# **The glyph ends at its own `</svg>`** (T-316). It read `.*?</svg>` under `re.S`, so a lazy match
+# that failed on one item's title stretched to the next `</svg>` in the file, crossed every item in
+# between and carried them through as its "head": on the reference deck the Ridership model pass
+# wired one item and left two plain ones inside the span it swallowed.
+ICON = r'<svg class="sources-icon"[^>]*>(?:(?!</svg>).)*</svg>'
 ITEM_HEAD = (r'(?:(?:<span class="sources-id">[^<]*</span>)?'
-             r'(?:<svg class="sources-icon"[^>]*>.*?</svg>)?'
-             r'|(?:<svg class="sources-icon"[^>]*>.*?</svg>)?'
-             r'(?:<span class="sources-id">[^<]*</span>)?)')
+             r'(?:%s)?'
+             r'|(?:%s)?'
+             r'(?:<span class="sources-id">[^<]*</span>)?)' % (ICON, ICON))
 
 
 def item_pattern(title):
@@ -612,8 +618,12 @@ def plan(deck, sources, write=False, out=None):
         print("\nNothing written. Re-run with `add` to embed exactly what is listed above.")
         return 1 if refused else 0
     target = out or deck
+    # **The preflight follows what was embedded** (T-316). A `<template>` is a capability the preflight
+    # has to test (DS-009), and a deck this verb wrote failed DS-009 until someone ran `shell.py
+    # preflight` by hand - measured on the reference deck, the first deck it was run on after T-233.
+    html = shell_mod.apply_preflight(html)
     shell_mod.write(target, html)
-    print("\nwrote %s - %d bytes" % (paths.display_path(target, ROOT), after))
+    print("\nwrote %s - %d bytes" % (paths.display_path(target, ROOT), len(html.encode("utf-8"))))
     return 0
 
 
@@ -678,8 +688,9 @@ def refresh(deck, sources, write=False, out=None):
         print("\nNothing written. Re-run with `--write` to replace exactly what is listed above.")
         return 1 if refused else 0
     target = out or deck
+    html = shell_mod.apply_preflight(html)                        # as `add` does (T-316)
     shell_mod.write(target, html)
-    print("\nwrote %s - %d bytes" % (paths.display_path(target, ROOT), after))
+    print("\nwrote %s - %d bytes" % (paths.display_path(target, ROOT), len(html.encode("utf-8"))))
     return 0
 
 
@@ -1035,6 +1046,20 @@ def self_test():
     if 'data-file="cost-model.md"' not in wired:
         sys.exit("SELF-TEST FAILED: the quick view control names no file, or names a path rather "
                  "than a base name - %r" % wired)
+
+    # T-316. A glyph ends at its own `</svg>`. Read lazily under `re.S`, a match that failed on one
+    # item's title stretched to the next `</svg>` in the file and carried the items between as its
+    # head, unwired: the plain Ridership model item below was the reference deck's case.
+    _across = ('<span class="sources-box"><span class="sources-item">'
+               '<svg class="sources-icon" aria-hidden="true"><use href="#i-src-doc"/></svg>Cost model</span>'
+               '<span class="sources-item">Ridership model</span>'
+               '<span class="sources-item"><svg class="sources-icon" aria-hidden="true">'
+               '<use href="#i-src-doc"/></svg>Ridership model</span></span>')
+    _both = wire(_across, "Ridership model", "<p>r</p>", "ridership-model.md")
+    if _both.count('data-qv="Ridership model" data-file') != 2:
+        sys.exit("SELF-TEST FAILED: a source cited by two items was wired on %d of them - a glyph "
+                 "match crossed into the next item (T-316): %r"
+                 % (_both.count('data-qv="Ridership model" data-file'), _both))
 
     # T-179. Refreshing, and its two refusals. `wired` above is a deck that already carries a quick
     # view for "Cost model" - which is exactly the state `add` cannot act on, so it is the right

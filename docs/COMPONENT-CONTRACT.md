@@ -419,9 +419,11 @@ competes for width inside, and admitting one more control to the container silen
 ruler's targets — which is DS-217's bound moving without anyone editing DS-217. T-307's first and
 last buttons spent three, and DS-217 records the re-measured bound.
 
-**`.ruler-tip` is the readout at the mark (T-307).** While a pointer or the focus is on a target
-tick it shows that slide's number over the tick, in both ruler modes, and at rest it is empty. Past
-the capacity bound only the section ticks are targets, so only they show it.
+**`.ruler-tip` is the readout at the mark (T-307), drawn as a drop (T-314).** Its point sits on the
+mark and its round end holds the slide's number. It shows while a pointer or the focus is on a target
+tick, in both ruler modes, and at rest it is empty. Past the capacity bound a small mark is no
+target, so the strip reads the pointer instead: the drop follows the nearest slide, and a press goes
+to it.
 
 **`.more`, and why it is not a `.disc`.** DS-230's tier-two vocabulary is closed at four kinds, and
 a chrome menu is not content the face provokes a question about — so `More` is its own component,
@@ -723,7 +725,7 @@ governs it.
 | `inert` `aria-hidden` | `.slide` | on every slide but the current | follows `data-current` inverted | DS-132 |
 | `data-lit` `aria-current` | a ruler tick | on the first tick | follows the current slide | DS-134 |
 | `data-dense` | `.ruler` | absent | set past the measured capacity | DS-217 |
-| `data-on` | `.ruler-tip` | absent | set while a tick is hovered or focused | DS-163, DS-217 |
+| `data-on` | `.ruler-tip` | absent | set while a tick is hovered or focused, or the pointer is over the dense strip | DS-163, DS-217 |
 | `aria-expanded` `hidden` | `.term-btn`, `.term-bub` | `false`, present | open while hovered or pinned | DS-227, DS-137 |
 | `data-pinned` `data-below` `data-end` | `.term` | absent | pinned by a press; placed on opening | DS-138 |
 | `data-motion` | `:root` | from `matchMedia` | toggled by the control | DS-143, DS-218 |

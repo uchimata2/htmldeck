@@ -198,6 +198,7 @@ comes here.
 | [L-165](lessons/L-165.md) | Skip a check when its subject matches a checked base, not when a mode says so | Tooling |
 | [L-166](lessons/L-166.md) | A capture proves a state change only where the two states look different | Tooling |
 | [L-167](lessons/L-167.md) | A defect in how a pattern closes an element is a class, so sweep for it | Tooling |
+| [L-168](lessons/L-168.md) | A cut stays cut only where a gate re-measures it | Tooling |
 
 ### Writing
 

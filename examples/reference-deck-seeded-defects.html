@@ -469,7 +469,7 @@ svg{display:block}
 .term-btn{
   display:inline;padding:0;border:0;background:none;cursor:pointer;
   font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;
-  text-decoration:underline dotted var(--accent);
+  text-decoration:underline var(--term-line, solid) var(--accent);   /* the theme draws it (T-315) */
 }
 .term-btn:hover,.term[data-pinned] .term-btn{color:var(--accent)}
 .term-bub{
@@ -751,18 +751,29 @@ svg{display:block}
   text-transform:uppercase;color:var(--ink-faint);
 }
 .ruler-label[data-preview]{color:var(--ink)}
-/* The readout at the mark (T-307, adopter record `11`). The label names the tick beside the ticks;
-   this puts the tick's slide number over the tick, where a pointer's eye is. Nothing is painted at
-   rest, so the scale keeps no per-item label (DS-217), and the tick's accessible name is unchanged,
-   so this is a supplement and not the only route (DS-163). Placed by measurement like the ring, so
-   it takes no width from the ruler's capacity. */
+/* The readout at the mark (T-307, adopter record `11`), drawn as a drop (T-314): its point sits on
+   the mark and its round end holds the slide number, so the number reads as that one mark's. Nothing
+   is painted at rest, so the scale keeps no per-item label (DS-217), and the tick's accessible name
+   is unchanged, so this is a supplement and not the only route (DS-163). Placed by measurement like
+   the ring, so it takes no width from the ruler's capacity.
+   The drop is a square with one sharp corner, turned 45 degrees, which puts that corner 0.207 of the
+   side below the box: raising a 34-unit box 7 units above the mark's centre lands the point on it.
+   The fill is `--ink-soft` under a `--paper` number: `--ink` read as too hard a contrast (T-317). */
 .ruler-tip{
-  display:none;position:absolute;left:0;bottom:100%;
+  display:none;position:absolute;left:0;bottom:calc(50% + 7*var(--du));z-index:2;
+  width:calc(34*var(--du));height:calc(34*var(--du));
+  align-items:center;justify-content:center;
   transform:translateX(calc(var(--tx,0px) - 50%));
-  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
-  color:var(--ink-faint);white-space:nowrap;pointer-events:none;
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:normal;
+  color:var(--paper);white-space:nowrap;pointer-events:none;
 }
-.ruler-tip[data-on]{display:block}
+.ruler-tip::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  border-radius:50% 50% 50% 0;background:var(--ink-soft);transform:rotate(-45deg);
+}
+.ruler-tip[data-on]{display:flex}
+/* Past the bound the strip reads the pointer (T-314), so it says it can be pressed. */
+.ruler[data-dense] .ruler-ticks{cursor:pointer}
 
 /* THE NAVIGATION CONTAINER (T-114). The ruler, the counter and the pager answer one question -
    where am I and how do I move - so they share a box and read as one control; `Read` and `Motion`
@@ -860,6 +871,13 @@ svg{display:block}
 .btn.btn--pager:active,
 .btn.btn--pager.is-back:active{transform:scale(var(--pager-pinch));
   transition:transform var(--press-dur) var(--press-ease);--motion-kind:affordance}
+/* **The pinch keeps the click** (T-313). The button shrinks while it is held, so a press that started
+   near its edge was released outside it and the browser fired no click: the pager animated and did
+   not page. This invisible margin is part of the button for hit-testing, and it shrinks with it:
+   `--sp-1` covers the pinch at the widest pager button several times over, and two neighbours'
+   margins meet in the `--sp-2` gap between them without overlapping. */
+.btn.btn--pager{position:relative}
+.btn.btn--pager::after{content:"";position:absolute;inset:calc(-1 * var(--sp-1))}
 .btn svg{width:var(--icon-ui);height:var(--icon-ui)}
 .btn .chev{width:var(--chev);height:var(--chev);border-right:var(--chev-stroke) solid currentColor;
   border-bottom:var(--chev-stroke) solid currentColor}
@@ -1006,7 +1024,7 @@ svg{display:block}
    and without it the head flies in from the top-left corner of the figure. */
 .arrow-pop marker path{
   transform-box:fill-box;transform-origin:left center;
-  animation:arrowpop var(--scale-dur) var(--scale-ease) both;
+  animation:arrowpop var(--scale-dur) var(--scale-ease) both;animation-play-state:paused;
   animation-duration:calc(var(--m-on,0) * var(--scale-dur));
   /* **The delay is gated too, and finding out why cost a render.** A zero-duration animation still
      honours its delay, and `fill:both` paints the FROM keyframe for the whole of it - so a matrix
@@ -1030,7 +1048,7 @@ svg{display:block}
    motion with one rank, for the same reason the arrowheads are. */
 .dot-pop circle{
   transform-box:fill-box;transform-origin:center;
-  animation:dotpop var(--scale-dur) var(--scale-ease) both;
+  animation:dotpop var(--scale-dur) var(--scale-ease) both;animation-play-state:paused;
   animation-duration:calc(var(--m-on,0) * var(--scale-dur));
   animation-delay:calc(var(--m-on,0) * var(--dp,0) * var(--dot-stagger));   /* see the arrowhead */
   --motion-kind:content}
@@ -1084,10 +1102,20 @@ svg{display:block}
 @keyframes current{to{stroke-dashoffset:-26}}
 
 .pulse{animation:pulse var(--pulse-dur) var(--pulse-ease) 1 both;animation-delay:var(--pulse-delay);
+  animation-play-state:paused;
   animation-duration:calc(var(--m-on,0) * var(--pulse-dur));
   /* DS-141's licence: 1.2s is a once-only mark held long enough to be seen, not a slow entrance. */
   --motion-kind:content;--motion-long:emphasis}
 @keyframes pulse{0%,100%{transform:scale(1)}45%{transform:scale(1.035)}}
+
+/* **A one-time content motion waits for its slide to arrive** (T-312, DS-146). Each is held on its
+   first frame until the outgoing slide has finished leaving, so the crossfade no longer covers it:
+   the pulse and the arrowheads were running before `data-arrived` landed. Held paused rather than
+   gated by selector, so each motion keeps the one rule the contract and the motion checks read, and
+   its delay counts from arrival. A continuous motion such as `Current` is not held. */
+.slide[data-arrived] .pulse,
+.slide[data-arrived] .arrow-pop marker path,
+.slide[data-arrived] .dot-pop circle{animation-play-state:running}
 
 :root[data-motion="off"] .current{animation:none}
 /* T-112's two content motions collapse with everything else. `animation:none` drops the fill, so
@@ -1163,6 +1191,8 @@ svg{display:block}
    a document, not a scaled stage (DS-074), so the box has to leave its absolute placement and its
    design-unit width, and the control that opens it has nothing left to do once DS-073 opens it. */
 .doc .sources{position:static;display:block}
+/* a copied slide never arrives, so its held motions settle here instead (T-312) */
+.doc .pulse,.doc .arrow-pop marker path,.doc .dot-pop circle{animation:none;transform:none}
 /* a term's definition reads as a parenthetical beside its term (T-309, DS-163) */
 .doc .term-btn{text-decoration:none;cursor:auto}
 .doc .term-bub{position:static;display:inline;width:auto;padding:0;border:0;background:none;
@@ -1434,6 +1464,8 @@ svg{display:block}
 :root[data-preflight] .opening,
 :root[data-preflight] .turn,
 :root[data-preflight] .current{opacity:1;transform:none;animation:none}
+:root[data-preflight] .arrow-pop marker path,
+:root[data-preflight] .dot-pop circle{transform:none;animation:none}
 :root[data-preflight] .figwrap,
 :root[data-preflight] .fig{width:100%;height:auto}
 
@@ -1740,6 +1772,7 @@ var d=document.documentElement,m=[],
                                :function(){return false};
 if(!s('--a: 0'))m.push('CSS custom properties');
 if(!s('display: grid'))m.push('CSS grid');
+if(!('content' in document.createElement('template')))m.push('the <template> element');
 if(!m.length){d.removeAttribute('data-preflight');return;}
 d.setAttribute('data-preflight','fail');
 var p=document.getElementById('preflightSay');
@@ -1843,7 +1876,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     </div>
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Two options, six rows.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src5"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src5" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src5"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src5" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Cost model" data-file="cost-model.md">Cost model</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Programme timetable" data-file="programme-timetable.md">Programme timetable</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 6 — small multiple (A-06) -->
@@ -1917,7 +1950,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The three corridors bike-share wins carry 12,200
     weekday trips; the three frequency wins carry 36,000.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src22"><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src22"><span class="sources-item"><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 6 — small multiple (A-06) -->
@@ -1991,7 +2024,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The three corridors bike-share wins carry 12,200
     weekday trips; the three frequency wins carry 36,000.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src22"><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src22"><span class="sources-item"><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 6 — small multiple (A-06) -->
@@ -2065,7 +2098,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The three corridors bike-share wins carry 12,200
     weekday trips; the three frequency wins carry 36,000.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src22"><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src22"><span class="sources-item"><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 3 — single number (A-03) -->
@@ -2098,7 +2131,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>A Riverbend rider waits 11 minutes on average, and
     both proposals are ways of spending money on that number.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src20"><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src20"><span class="sources-item"><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button><template class="qv-src" data-qv="Ridership model"><h1>Riverbend capital decision — ridership model</h1><p>Illustrative. Catchments are counted from the residential register, not from ridership, so the two columns below are comparable.</p><h2>Catchment</h2><table><tr><th>Proposal</th><th>People reached</th><th>Boundary</th></tr><tr><td>Bike-share, 62 stations</td><td><b>38,000</b></td><td>within 300m of a station</td></tr><tr><td>Bus frequency, 6 trunk routes</td><td><b>121,000</b></td><td>within 400m of a trunk stop</td></tr></table><p><b>38,000</b> people live within <b>300m</b> of a proposed station. <b>121,000</b> live within <b>400m</b> of a trunk stop. The overlap between the two columns is <b>21,000</b> people, who are reached either way.</p><h2>The wait</h2><p>Peak headway averages <b>22 minutes</b> across fourteen routes [est.]. Average wait is half the headway, so <b>22 ÷ 2 = 11 minutes</b> — and the figure rises on any route where buses bunch.</p><p>One trip, door to door, takes <b>34 minutes</b> on the modelled corridor:</p><table><tr><th>Leg</th><th>Minutes</th></tr><tr><td>Walk</td><td><b>6 min</b></td></tr><tr><td>Wait</td><td><b>11 min</b></td></tr><tr><td>Ride</td><td><b>13 min</b></td></tr><tr><td>Transfer</td><td><b>4 min</b></td></tr></table><p>That is <b>15 minutes</b> not moving, or <b>44%</b> of the trip. Below roughly <b>10 minutes</b> of headway riders stop timetabling their journeys and turn up instead, which is where the wait stops being a planned cost and starts being invisible.</p><h2>Corridors</h2><p>Corridor demand, weekday trips, each corridor being the catchment <b>400m</b> either side of one axis. New daily trips are year one under each proposal, modelled from the elasticity below and not observed — the two proposals are costed against the same six corridors so the comparison is like for like:</p><table><tr><th>Corridor</th><th>Weekday trips</th><th>New daily trips, bike-share</th><th>New daily trips, frequency</th></tr><tr><td>Old Quarter</td><td><b>4,200</b></td><td><b>540</b></td><td><b>190</b></td></tr><tr><td>Riverside Park</td><td><b>2,600</b></td><td><b>380</b></td><td><b>160</b></td></tr><tr><td>University Spur</td><td><b>5,400</b></td><td><b>430</b></td><td><b>260</b></td></tr><tr><td>North Line</td><td><b>14,800</b></td><td><b>180</b></td><td><b>620</b></td></tr><tr><td>Market Cross</td><td><b>16,300</b></td><td><b>200</b></td><td><b>690</b></td></tr><tr><td>Airport Road</td><td><b>4,900</b></td><td><b>70</b></td><td><b>180</b></td></tr></table><p>Old Quarter and Market Cross share <b>900 metres</b> of catchment; trips there are counted once, to Market Cross.</p><p>The three corridors bike-share wins carry <b>12,200</b> weekday trips; the three frequency wins carry <b>36,000</b>. Bike-share wins <b>3 corridors</b>, about a quarter of trips, and it wins them on trip length rather than on volume.</p><h2>Growth</h2><p>Elasticity: each <b>10%</b> cut in wait adds <b>4%</b> ridership. Assumed for the whole modelled period and not re-estimated year by year.</p><p>The modelled period runs <b>2027</b> to <b>2031</b>, year one being the first full year after the grant is committed. By 2031 the frequency package reaches <b>6,100</b> new daily trips and bike-share reaches <b>3,000</b>. Bike-share flattens when <b>85%</b> of docks fill at peak, which the model reaches in year three — <b>2029</b> on that basis, and an estimate rather than a dated event. If elasticity is half the assumed value, frequency reaches <b>4,000</b> by 2031 and still passes bike-share, crossing in <b>2028</b>.</p><h2>Transfers</h2><p>Today a North Line rider bound for Market Cross changes at Centre from Route 3 to Route 7 and stands <b>4 minutes</b>. At the modelled frequency the timed connection removes the change: <b>0 minutes</b> standing at Centre, on Route 1.</p><h2>The demand tripwire</h2><p>Old Quarter demand passes <b>900 trips</b> a day if the corridor grows faster than modelled, at which point the reserve buys stations early. Modelled demand there is <b>540</b> trips a day.</p></template></span></span></span></p>
 </section>
 
 <!-- ============================================================ 4 — architecture view (A-10) -->
@@ -2158,7 +2191,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Eleven of the 34 minutes are the wait, and the wait
     is half the headway.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src21"><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src21"><span class="sources-item"><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 2 — why now (A-01) -->
@@ -2216,7 +2249,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>The 12 March budget vote is the only meeting
     that can commit the grant before 31 March 2027.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src2"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src2" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src2"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src2" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Cost model" data-file="cost-model.md">Cost model</button><template class="qv-src" data-qv="Cost model"><h1>Riverbend capital decision — cost model</h1><p>Illustrative. Every figure below is an output of the assumptions stated with it.</p><h2>The grant</h2><p>The state corridor grant is <b>$5.6M</b> capital, available once, and it lapses if it is not committed in the award window. The award runs on a three-year cycle, so the next one lands in 2030 [est.].</p><h2>Proposal A — bike-share, 62 stations</h2><table><tr><th>Line</th><th>Value</th><th>Basis</th></tr><tr><td>Capital</td><td><b>$5.6M</b></td><td>the whole grant; 62 stations at the vendor's per-station price</td></tr><tr><td>Operating, net</td><td><b>$1.9M</b> a year</td><td>gross operating less user revenue</td></tr><tr><td>User revenue nets out</td><td><b>$0.6M</b></td><td>fares and memberships, at the modelled ridership</td></tr><tr><td>Grant left over</td><td>none</td><td>the whole grant is spent on capital</td></tr></table><p>Bike-share nets out user revenue at <b>$0.6M</b>, which is why its operating line is the smaller of the two. That is the comparison's strongest point for the proposal and it is stated first.</p><h2>Proposal B — bus frequency, 6 trunk routes</h2><table><tr><th>Line</th><th>Value</th><th>Basis</th></tr><tr><td>Capital</td><td><b>$4.1M</b></td><td>nine buses, depot works and signal priority</td></tr><tr><td>Grant left over</td><td><b>$1.5M</b></td><td>held for bike-share in the corridors where it wins</td></tr><tr><td>Operating</td><td><b>$6.8M</b> a year</td><td>driver hours at the frequency the schedule needs</td></tr></table><p>Frequency capital of <b>$4.1M</b> leaves <b>$1.5M</b> of the grant. That <b>$1.5M</b> is <b>committed at approval and drawn at the month-18 gate</b>, not left uncommitted: the grant lapses if it is not committed, so an uncommitted balance is a forfeited one. The operating line is the uncomfortable one: the general fund carries <b>$6.8M</b> a year, and no grant covers operating.</p><h2>The operating ceiling</h2><p>The finance office's ceiling on new operating commitments is <b>$7.5M</b> a year. Operating cost passes <b>$7.5M</b> if driver hours run above the modelled schedule, and that is the third tripwire on the review gate. The modelled operating cost is <b>$6.8M</b> a year against that ceiling.</p><h2>What the city forgoes</h2><p>Taking the frequency package means the city does not build the 62-station network now. The whole <b>$5.6M</b> is committed either way — <b>$4.1M</b> to frequency and <b>$1.5M</b> to the bike-share gate — so <b>none of the grant goes back to the state</b>. What is forgone is stations and time: <b>$1.5M</b> at the vendor's per-station price buys <b>16</b> stations at month 18 against the 62 the bike-share proposal would have built at once, so the cost is <b>46 stations and eighteen months</b>. Stated plainly rather than left for someone to work out.</p></template></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Programme timetable" data-file="programme-timetable.md">Programme timetable</button><template class="qv-src" data-qv="Programme timetable"><h1>Riverbend capital decision — programme timetable</h1><p>Illustrative. Dates are the award window's, durations are the delivery estimates behind them.</p><h2>The window</h2><p>The grant closes on 31 March 2027. The budget vote sits on 12 March, and it is the only meeting before the close that can commit capital — nineteen days between the vote and the deadline.</p><h2>First benefit</h2><table><tr><th>Proposal</th><th>First benefit</th><th>Why</th></tr><tr><td>Bike-share</td><td><b>14 months</b></td><td>siting and permits before the first station opens</td></tr><tr><td>Bus frequency</td><td><b>4 months</b></td><td>a schedule change, on buses the depot already runs</td></tr></table><p>Bike-share takes <b>14 months</b> to first benefit. Frequency takes <b>4 months</b>, because the change is a timetable rather than a build.</p><h2>Weather</h2><p>Bike-share is weather-limited on <b>94 days</b> a year, below 4°C or wet [est.]. Frequency has no weather limit.</p><h2>The service change</h2><p>Six routes at <b>12 minutes</b> peak headway is the modelled service. Nine buses cannot reach a <b>12-minute</b> headway if the depot's cycle times run long, which is the first tripwire — the limit is <b>12 min</b> and the modelled peak is <b>12 min</b>, leaving no margin.</p><h2>The milestone dates</h2><table><tr><th>Milestone</th><th>When</th></tr><tr><td>Approval, and the capital committed</td><td>month 0</td></tr><tr><td>First schedule change on the trunk routes</td><td>month 4</td></tr><tr><td>Full modelled service on all six routes</td><td>month 9</td></tr><tr><td>Review gate</td><td>month 18</td></tr></table><p>Service reaches its modelled level at month 9 and holds there until the gate. If the gate does not clear, service holds at month 9 levels rather than reverting further — the timetable stays, and it is the package around it that stops.</p><h2>The review gate</h2><p>The gate sits at month 18. Nothing changes for the public until month 18; then it is either <b>16 stations</b> on the ground or a service the city can withdraw.</p><p>The gate reads boardings on the six trunk routes over months 13 to 18, against the same months two years earlier. The window opens at month 13 rather than at month 9: the first quarter after a timetable change reads the old travel habit, not the new service.</p><table><tr><th>At the gate</th><th>Threshold</th><th>Modelled</th></tr><tr><td>Trunk ridership up</td><td><b>18%</b></td><td><b>26%</b></td></tr></table><p>Trunk ridership up <b>18%</b> is the threshold. The model predicts <b>26%</b>, so the gate clears with room. If it does not clear, <b>$1.5M</b> returns to the reserve and the schedule reverts.</p><h2>When each tripwire is read</h2><table><tr><th>Tripwire</th><th>Read at</th><th>By</th></tr><tr><td>Peak headway against the limit</td><td>month 4</td><td>the scheduling office, from the published draft schedule</td></tr><tr><td>Old Quarter demand against the trigger</td><td>month 12</td><td>the annual household survey</td></tr><tr><td>Operating cost against the ceiling</td><td>month 12</td><td>the city auditor</td></tr></table><p>Every date is fixed before approval, so none can be moved to fit a result. Two of the three fall at month 12 because the survey and the audit are annual instruments already in the calendar; neither is commissioned for this programme, and neither reports earlier for it.</p><h2>The ask</h2><p>On 12 March: <b>$4.1M</b> of the grant, <b>$6.8M</b> a year from the general fund, and <b>$1.5M</b> held for the corridors where bike-share wins.</p></template></span></span></span></p>
 </section>
 
 <!-- ============================================================ 7 — trajectory (A-05) -->
@@ -2269,7 +2302,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     </svg>
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Bike-share stalls at 3,000 trips and frequency reaches 6,100, as the data shows.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src23"><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src23"><span class="sources-item"><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 8 — before / after (A-07) -->
@@ -2304,7 +2337,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>A timed connection at Centre removes one change for
     North Line and Market Cross riders.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src24"><span class="sources-item">Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src24"><span class="sources-item"><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 9 — timeline with a gate (A-09) -->
@@ -2365,7 +2398,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Nothing before month 18 is irreversible, and the
     $2.2M reserve buys 16 Old Quarter stations if the gate fails.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src9"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src9" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src9"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">2 sources</span></button><span class="sources-box" id="src9" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Cost model" data-file="cost-model.md">Cost model</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Programme timetable" data-file="programme-timetable.md">Programme timetable</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 10 — uncomfortable truth (A-12) -->
@@ -2408,7 +2441,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise seeded-throb" style="--i:6"><b>Three corridors wait until month 18, and the general
     fund carries $6.8M every year after.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src10"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src10" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src10"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src10" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Cost model" data-file="cost-model.md">Cost model</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Programme timetable" data-file="programme-timetable.md">Programme timetable</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 11 — risk retirement (A-02) -->
@@ -2478,7 +2511,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   </div>
   <p class="bottom-line rise" style="--i:4"><b>Three thresholds are fixed before approval, and each
     is measured on a stated date by someone outside this team.</b></p>
-  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src11"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src11" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Cost model</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Programme timetable</span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg>Ridership model</span></span></span></p>
+  <p class="provenance"><span class="sources"><button class="sources-btn" aria-expanded="false" aria-controls="src11"><svg class="sources-mark" aria-hidden="true"><use href="#i-sources"/></svg><span class="sources-label">3 sources</span></button><span class="sources-box" id="src11" hidden><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Cost model" data-file="cost-model.md">Cost model</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Programme timetable" data-file="programme-timetable.md">Programme timetable</button></span><span class="sources-item"><svg class="sources-icon" aria-hidden="true"><use href="#i-source"></use></svg><button class="sources-open" type="button" data-qv="Ridership model" data-file="ridership-model.md">Ridership model</button></span></span></span></p>
 </section>
 
 <!-- ============================================================ 12 — close (A-14) -->
@@ -2494,7 +2527,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   <!-- the closing slide uses the same slot as the other eleven, centred rather than left-set:
        the ask is the deliverable, so it belongs where every other deliverable has been. -->
   <p class="bottom-line bottom-line--center rise" style="--i:2"><b>In summary: wait times are long, both options have merit, and frequency looks promising.</b></p>
-  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src25"><span class="sources-item">Cost model</span></span></span></p>
+  <p class="provenance"><span class="sources sources--one"><svg class="sources-mark" aria-hidden="true"><use href="#i-source"/></svg><span class="sources-box" id="src25"><span class="sources-item"><button class="sources-open" type="button" data-qv="Cost model" data-file="cost-model.md">Cost model</button></span></span></span></p>
 </section>
 
 <!-- The colophon: DS-085's one named exemption, and DS-082's recorded reason for a thirteenth
@@ -2964,6 +2997,38 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     if (rulerTip) rulerTip.removeAttribute('data-on');
   }
 
+  /* **Past the bound the strip aims at every slide** (T-314, reopening adopter record `16` by the
+     owner's ruling). A small mark stays a mark, because an 8 du cell is no target under DS-168, so
+     the pointer is read against the whole strip instead: the drop shows the nearest slide's number,
+     and a press goes there. A section tick keeps its own button, and the keyboard keeps the arrows. */
+  function nearestTick(x){
+    var best = -1, bestD = Infinity;
+    Array.prototype.forEach.call(rulerTicks.children, function(li, i){
+      var r = li.getBoundingClientRect(), d = Math.abs(r.left + r.width / 2 - x);
+      if (r.width && d < bestD) { bestD = d; best = i; }
+    });
+    return best;
+  }
+  function onStrip(e){
+    return rulerEl.hasAttribute('data-dense')
+      && !(e.target.closest && e.target.closest('button:not([disabled])'));
+  }
+  rulerTicks.addEventListener('mousemove', function(e){
+    if (!onStrip(e)) return;
+    var i = nearestTick(e.clientX), li = rulerTicks.children[i];
+    if (!li) return;
+    previewLabel(li.querySelector('button').dataset.label);
+    showTip(i, li);
+  });
+  rulerTicks.addEventListener('mouseleave', function(){
+    if (rulerEl.hasAttribute('data-dense')) { restoreLabel(); hideTip(); }
+  });
+  rulerTicks.addEventListener('click', function(e){
+    if (!onStrip(e)) return;
+    var i = nearestTick(e.clientX);
+    if (i >= 0) { go(i); countIfSeen(); }
+  });
+
   /* Sized after layout, and again on resize - the controls' width is what decides capacity, and a
      label can change it. */
   function fitRuler(){
@@ -2971,7 +3036,8 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     if (lay.dense) rulerEl.setAttribute('data-dense',''); else rulerEl.removeAttribute('data-dense');
     placeRing();
     /* Past the bound the small ticks are marks, not targets, so they leave the tab order and stop
-       being clickable. Section ticks stay targets at full pitch. */
+       being clickable. Section ticks stay targets at full pitch, and the strip reads the pointer
+       for the rest (T-314). */
     Array.prototype.forEach.call(rulerTicks.children, function(li){
       var b = li.querySelector('button');
       if (!b) return;

@@ -1032,6 +1032,8 @@ the measurement taken *while implementing them* — `CE-12`'s premise, `CE-05`'s
 tools' payloads (`CE-12`), rebuilt `CE-05` on a timer, and split one small document into four smaller
 ones. **The rank was useful; obeying it would have done damage.**
 
+*Amended 2026-09-14 by the second run's phase 2, in §11.5.*
+
 ### 10.3 What the remedies cost
 
 **The load path ended 2.7% smaller than the audit found it, after a peak 21.8% above it.**
@@ -1306,10 +1308,87 @@ theirs.
 
 ### 11.5 Phase 2 — recorded after the remedies exist
 
-*Not yet run.* [T-294](../tasks/T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md)
-is raised and blocked on the six children; it grades every band above and the model in §11.2, and
-names at least one prediction the measurement refused. §10.2's sentence stands until then.
-`CE-16`'s measurement landed first: [T-290](../tasks/T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md) §3 is the record `T-294` grades that band from.
+**Run 2026-09-14 by [T-294](../tasks/T-294-grade-the-second-context-economy-runs-bands-after-its-remedies-land.md)**,
+twelve days after §11, on `b28` at `4e51947`, under the ecoctx skill's rubric 2, revision 7. §11 is
+dated before rubric 1 existed, so the comparison is **unversioned**: the exemption, not a missing
+line. This section grades; it raises nothing and re-classifies nothing, so §6.3's rows stay as ranked.
+
+**Instruments.** The closed children's §3 and §4, cut out by a script (46,553 of 89,392 bytes); each
+remedy's subject re-measured on today's tree by a throwaway script outside the repository; and this
+session's own transcript, deduplicated by message id and weighted as §11 states, read at its first
+edit, which is the unit §11 chose.
+
+**Every band, predicted against measured**
+
+| Finding | Band | What it measurably bought | Today | Verdict |
+| :--- | :--- | :--- | :--- | :--- |
+| `CE-14` | L on tier 1 / s | `CLAUDE.md` 16,015 → 11,413 at [T-295](../tasks/T-295-complete-t-288s-observation-and-decide-the-move.md)'s carry, −4,602; 6,700 bytes into two rule files paid after a matching read | 11,413 | **band held**, against about 4,500. **Effort refused**: `s` took two tasks, three sessions and six observations, because the addressability the row named as its risk was the work |
+| `CE-15` | M / s | `TOOLING.md` §1, 18,456 bytes, became fourteen subsections of 262 to 3,440 ([T-289](../tasks/T-289-give-tooling-md-section-1-addressable-subsections.md)) | 20,469, subsections 266 to 3,771. This session's handoff named three of them, and the read was 3,418 bytes | **held** |
+| `CE-16` | L (estimated) / m | the boundary, 161,671 weighted against the row's 190,000 ([T-290](../tasks/T-290-measure-one-batch-run-as-one-session-against-the-session-per-task-rhythm.md)) | wave 8 compacts inside a batch, on the owner's ruling ([`REMEDIATION-ORDER.md`](REMEDIATION-ORDER.md)) | **magnitude held within 15%; the payback refused.** A compacted session is smaller at every reading, so the 27-turn crossover never arises |
+| `CE-17` | M on the start context / xs | nothing: no setting on this machine reaches the catalogue ([T-291](../tasks/T-291-measure-whether-the-desktop-apps-skill-catalogue-can-be-scoped-per-project.md)) | 61 entries, **22,910 bytes** from the header to the block's end, against 15,024 for 60 in §11.1 | **mechanism refused, band unspent, and the subject grew about 7,900 bytes** with no file here changing. §11.1 counted name and description; the header and the entry prefixes are a few hundred bytes of the gap |
+| `CE-18` | time / s | nothing from [T-292](../tasks/T-292-the-docs-gate-is-four-fifths-one-render.md), whose measurement refuted the mechanism; then [T-296](../tasks/T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md)'s conditional skip, `--docs` 25.6 → 8.5 s | not re-run: T-296's pair shares one frozen tree, and one reading here would compare machines | **mechanism refused**; 17.1 s bought against about 22, by a remedy neither the row nor `T-292` named before measuring |
+| `CE-19` | M / xs | `check.py` piped green, 29,980 → 327 bytes ([T-293](../tasks/T-293-the-second-runs-low-findings-in-one-pass.md)) | 398 | **held**: the row predicted 398, and the deck's account line has grown into it |
+| `CE-20` | S / xs | the memory index, 9,014 → 8,795; two of the five entries were spent ([L-159](lessons/L-159.md)) | **9,326 bytes, 48 entries** | **refused on count and size**, 219 bytes of 930, **and the saving is gone**: the index is above where the audit found it |
+| `CE-21` | S / xs | `refcheck.py` 384 → 79; `findings.py --check` was already one line | 92 and 62 | **half held**: one tool of two needed the change |
+| `CE-22` | bimodal / — | none proposed. The owner ruled per form anyway ([T-301](../tasks/T-301-decide-whether-the-record-forms-get-shorter.md)), trialled at −11% for a task's §3 and −56% for a lesson | the handoff §11.1 read was 6,197 bytes, this session's 1,861 | **not a band.** The one form that shrank did so under the handoff skill's own rule, before the ruling |
+
+**Two held as written, two held their band and lost a second prediction, one held half, three were
+refused, and one was never a band.** The first run held two of thirteen.
+
+**The per-turn model, on a second transcript** — this session, calls 1 to 9, to its first edit
+
+| | §11.2, 2026-09-02 | This session | Verdict |
+| :--- | :--- | :--- | :--- |
+| Start context, first call | 70,788 | **75,725** | tier 1 fell 4,348 bytes to 25,736 and the start grew 4,937 tokens around it. *The repository controls about a tenth* is **upheld and tightened**: 8.5% |
+| Cache read at call *n* against the context at *n* − 1 | — | equal within 32 tokens, all eight | **the formula's premise held**: no miss, so each token was written once at 2 and read at 0.1 after |
+| Carried overtakes fresh past twenty times a call's growth | about call 14 | call 8 fresh-led, 135,117 under 20 × 8,137; call 9 carried-led, 143,224 over 20 × 4,400 | **held, by construction**: it is the ratio of the two weights |
+| Weighted split, fresh / output / carried | 45% / 25% / 30%, 14 calls | **59% / 15% / 26%**, 9 calls, 337,593 | **refused as a general figure.** The split is a session's shape, and L-154's date on it is what survives |
+| Growth to the first edit | +26,974 over eight calls | +71,931 over eight | not comparable: grading an audit reads the audit. The unit grew, not the path |
+
+**That table is also this phase's own cost**, disclosed and not ranked: 337,593 weighted tokens to
+the first edit, main thread only, no subagent run, and nothing after the edit counted.
+
+**The sentence, amended**
+
+**A finding knows where the weight is. It does not know why the weight is there or what removing it
+is worth, and a removal stays removed only where a gate re-measures it.** Every location re-derived:
+each of the nine costs sits where its row put it. But three rows were wrong inside the `Finding` cell:
+`CE-17` about where the catalogue is installed, `CE-18` about what runs the render, `CE-20` about how
+many entries were spent. So §10.2's *never about the location* holds, and its *the inventory was
+sound* does not, because the cause is part of the inventory. The last clause is this run's. What a
+check re-reads held: `CLAUDE.md`, which `figures.py` holds to its stated size, and the two quiet green
+outputs a self-test asserts. What nothing re-reads grew within twelve days: the memory index past its
+baseline, the catalogue by about half, `TOOLING.md` §1 by 2,008 bytes, the start context by 4,937
+tokens ([L-168](lessons/L-168.md)).
+
+**What the remedies cost**
+
+| Remedy | Off the load path | Onto disk, or onto the gate |
+| :--- | :--- | :--- |
+| `CE-14` | −4,602 bytes of `CLAUDE.md` | two rule files, 6,700 bytes; **757 bytes back onto tier 1** in the two paragraphs that place and point at them; 41 citations re-pointed in 20 files and the four shipped decks re-synced; L-164 |
+| `CE-15` | a pointer pays one subsection | the headings, and four pointers re-aimed |
+| `CE-19`, `CE-21` | −29,653 and −305 bytes a green run | `quiet_wanted` in two tools, four self-test assertions, and `figures.py` taught to ask a quiet tool for the form the README shows |
+| `CE-18` | 17.1 s a documentation commit | `DOCS_SKIPPED`, `docs_skips()`, `docs_base()` and fixture 13 in `figures.py`; a docs-mode argv in `check_all.py`; L-165 |
+| `CE-20` | −219 bytes, since regrown | two entries moved to `spent/`, machine-local |
+| All nine children | 4,821 bytes off tier 1 in all | **89,392 bytes of task record and 5,805 of lesson.** Closed records cost nothing until cited, which §11.1 still holds, so the ratio is stated and not scored |
+
+**Three remedies made work of another family.** `T-293`'s quiet default turned the release gate red
+on a README nobody had edited, because `figures.py` read its pasted accounts through a pipe.
+`T-288`'s probe was committed and pushed by `git add -A`, a test instrument published in a plugin
+repository. `T-295`'s cut from tier 1 paid a deck sync, because `shell/components.css` cited a rule by
+number. **The growth the audit caused on tier 1 is those 757 bytes**: the price of governing the move
+in the file it moved from. It is `CE-11`'s pattern at under a third of its size, and it was measured
+when it was paid.
+
+**Step partition**
+
+| Step | Result | Why |
+| :--- | :--- | :--- |
+| 12, every band graded | ran | the two tables above. §11.6's four rows and the children's in-passing defects were read back, and their shape is the paragraph above: three were made by a remedy |
+| 13, what the remedies cost | ran | the table above |
+| 14, reconcile the method | not run | a change to the method belongs to the skill's own repository, where the owner's rule is a branch rather than a report. Two friction entries for it: the transcript instrument is not shipped and was rebuilt from §11.2's description, and §11.1 did not state the catalogue's byte boundary |
+| 15, refresh the catalogue | not surveyed, window too short | step 5 ran 2026-09-02 and this phase 2026-09-14, and a third run is outside `T-294`'s scope |
+| 16, standing policy | ran, and writes no rule | the re-measuring checks are already wired: `figures.py` holds the tier-1 pair, the self-tests hold the quiet defaults, `refcheck.py` resolves every `§n` pointer. **The memory index has no trigger, and none can be wired from here**: it is machine-local, no clone has it, and the consolidate pass runs only when asked. The catalogue is the account's and the start context the harness's. All three are `controller: user`, reported for the owner |
 
 ### 11.6 Byproducts, second run
 
