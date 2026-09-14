@@ -33,6 +33,11 @@ had an owner.
 > This is a **floor, never a ceiling** (the skill's core §3a): a sweep still covers whatever else the
 > session touched. [T-222](../tasks/T-222-derive-the-reconcile-sweeps-membership-instead-of-enumerating-it.md).
 
+> **No byte budget for the handoff itself**, ruled by the owner 2026-09-14
+> ([T-301](../tasks/T-301-decide-whether-the-record-forms-get-shorter.md)). The skill's core §2
+> already requires a handoff to point rather than store, and wave 8's handoffs follow it, so a number
+> would only restate that rule. The form is the handoff skill's, not this project's.
+
 ## Tracker keys — `local-markdown-dir`
 
 - `tracker_dir`: tasks/

@@ -57,7 +57,10 @@ filling this in, run:
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+<!-- One bullet per decision: what was decided, why in one sentence, and whether it is reversible.
+Measurements go in a table, and how they were found does not. There is no byte cap, so a reason is
+never cut to fit (T-301). -->
+- <what was decided>: <why, in one sentence>. <Reversible | Not reversible>. — YYYY-MM-DD
 
 **Outputs produced**
 - `deliverables/...`

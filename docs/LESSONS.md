@@ -9,7 +9,11 @@ admired.
 bare id is the filename, so a citation you meet anywhere in the tree opens without a search. Read
 one; do not read them all. **To add a lesson**, write the file with a `category:` front-matter line
 and a `# L-nn — Title` heading, **ending on its last paragraph and not on a horizontal rule**, then run
-`python tools/docs/lessons.py index`. *Twenty-one files ended on a rule until 2026-09-02 - the mark
+`python tools/docs/lessons.py index`. **Keep the file under 1,500 bytes**, ruled by the owner
+2026-09-14 ([T-301](../tasks/T-301-decide-whether-the-record-forms-get-shorter.md)): the rule first,
+then **How to apply**, then the evidence as a link to the task that found it, which keeps the full
+account. A lesson is opened wherever it is cited, so every byte is paid again on each citation.
+*Twenty-one files ended on a rule until 2026-09-02 - the mark
 that separated one lesson from the next while they were all in this file, cut with the lesson above it
 by [T-146](../tasks/T-146-one-file-per-lesson-with-a-generated-index.md) (`PR-106`).* Editing the table
 below by hand is a gate failure, in both directions.
