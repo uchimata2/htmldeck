@@ -29,6 +29,15 @@ prints everything, because the output of a failure is the reason to have run it.
 unchanged: a person reading the per-rule listing is why the listing exists. `check_all.py` makes the
 same choice one altitude up, with the polarity that suits who calls it (`CE-03`, T-132).
 
+**A deck can license a failure its owner ruled on, and the gate prints it on every run** (T-308).
+One `htmldeck-licence: rule=DS-100; reason=...; by=...; date=YYYY-MM-DD` line per rule, in the
+deck's head comment above `EMBEDDED FONT LICENCES`, which is the one part of the head `shell.py sync`
+keeps. That rule's failure leaves the failure list, and every run prints it with
+its reason, who licensed it and when, `--quiet` included. Everything else still fails, and so does
+a licence that omits a field, is declared twice, names no rule, or names a rule that passes on the
+deck, so the list cannot rot into a blanket. Any owned rule can take one, `hard` rules included, by
+the owner's ruling of 2026-09-13; a coverage fault is not a rule and cannot.
+
 Pure standard library (**L-07**), real Chrome offline through `render.py`.
 """
 
@@ -37,6 +46,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -55,6 +65,7 @@ import density                                                      # noqa: E402
 import glitchfree                                                   # noqa: E402
 import theme                                                        # noqa: E402
 import component                                                    # noqa: E402
+import shell                                                        # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -1068,6 +1079,95 @@ def account(rows):
     }
 
 
+# ------------------------------------------------------------------------------ the licences
+# **Where a licence lives, and why there** (T-308). In the deck, because the gate reads the deck and
+# a deck travels alone: a licence beside the specification is lost the moment the file is sent, and
+# one in a project's wrapper is the forty lines an adopter wrote because nothing else existed. **In
+# the deck's head comment**, `shell.py`'s `NOTE` region, because `sync` rewrites everything outside a
+# deck's regions. Measured 2026-09-14: a `<meta>` licence after the viewport line - the obvious place,
+# and DS-122's precedent - was gone after one `shell.py sync --write`.
+LICENCE_KEY = "htmldeck-licence"
+LICENCE_FIELDS = ("rule", "reason", "by", "date")
+LICENCE_LINE = re.compile(r"^[ \t]*%s:[ \t]*(.*)$" % re.escape(LICENCE_KEY), re.M)
+
+
+def head_note(html):
+    """`(start, end)` of the deck's head comment - `shell.py`'s `NOTE` region - or `None`.
+
+    Found the way `shell.cut` finds it, slot by slot from the top, so the delimiters keep one home.
+    `cut` itself needs every region present, which a fixture is not.
+    """
+    pos = 0
+    for slot, opener, closer, _what in shell.SLOTS:
+        start = html.find(opener, pos)
+        end = html.find(closer, start + len(opener)) if start >= 0 else -1
+        if end < 0:
+            return None
+        if slot == "NOTE":
+            return start + len(opener), end
+        pos = end
+    return None
+
+
+def licences_in(html):
+    """`(licences, faults)` - `{rule: fields}` from every licence line in the head comment, and a
+    `(label, what)` fault for each declaration the gate cannot accept.
+
+    **A licence anywhere else is a fault, not ignored**, because the next `sync` deletes it and the
+    deck would go red with nothing to say why. Fields split only where a `;` is followed by a field
+    name, so a reason may carry a semicolon.
+    """
+    found, faults = {}, []
+    span = head_note(html)
+    note = html[span[0]:span[1]] if span else ""
+    outside = html.count(LICENCE_KEY) - note.count(LICENCE_KEY)
+    if outside:
+        faults.append(("LICENCE", "%d mention(s) of %s outside the deck's head comment, where "
+                                  "`shell.py sync` deletes them. Write each as a `%s:` line above "
+                                  "EMBEDDED FONT LICENCES" % (outside, LICENCE_KEY, LICENCE_KEY)))
+    for line in LICENCE_LINE.finditer(note):
+        fields = {}
+        for part in re.split(r";\s*(?=(?:%s)\s*=)" % "|".join(LICENCE_FIELDS), line.group(1)):
+            if "=" in part:
+                key, value = part.split("=", 1)
+                fields[key.strip().lower()] = value.strip()
+        rule = fields.get("rule") or "(no rule)"
+        missing = [f for f in LICENCE_FIELDS if not fields.get(f)]
+        if missing:
+            faults.append(("LICENCE %s" % rule, "omits %s. A licence carries the rule, the reason, "
+                                                 "who licensed it and when" % ", ".join(missing)))
+        elif not re.match(r"^\d{4}-\d{2}-\d{2}$", fields["date"]):
+            faults.append(("LICENCE %s" % rule, "its date %r is not YYYY-MM-DD" % fields["date"]))
+        elif rule in found:
+            faults.append(("LICENCE %s" % rule, "is declared twice. One rule takes one licence"))
+        else:
+            found[rule] = fields
+    return found, faults
+
+
+def apply_licences(rows, licences, owned):
+    """`(failures, licensed, faults)` - the failing rows no licence covers, `(rule, what, fields)`
+    for those one does, and a fault for every licence that licenses nothing.
+
+    **A licence for a rule that passes is a fault, not a no-op.** The adopter's wrapper reported it
+    as retired for the reason `STALE EXCUSAL` fails a run: a list nobody has to shorten grows into a
+    blanket, and the deck then claims deviations it no longer makes.
+    """
+    held = {rule: fields for rule, fields in licences.items() if rule in owned}
+    failing = {r for r, _w, ok in rows if ok is False}
+    failures = [(r, w) for r, w, ok in rows if ok is False and r not in held]
+    licensed = [(r, w, held[r]) for r, w, ok in rows if ok is False and r in held]
+    faults = []
+    for rule in sorted(licences):
+        if rule not in owned:
+            faults.append(("LICENCE %s" % rule, "names no rule the ruleset owns, so it licenses "
+                                                "nothing"))
+        elif rule not in failing:
+            faults.append(("LICENCE %s" % rule, "the rule does not fail on this deck, so the "
+                                                "licence licenses nothing. Remove it"))
+    return failures, licensed, faults
+
+
 def run(deck, sources=None, print_pages=False, skip_contract=False):
     """The entry point the pipeline calls and the command below wraps."""
     ruleset.self_test()
@@ -1084,7 +1184,10 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
     clauses = clause_account(checked=acct["checked"])
     # `is False`, not `not ok`: a row that decided nothing is not a defect in the deck, and folding
     # it into the failure list would report a missing subject as a broken one (T-051).
-    failures = [(r, w) for r, w, ok in rows if ok is False]
+    with open(deck, "r", encoding="utf-8") as fh:
+        licences, licence_faults = licences_in(fh.read())
+    failures, licensed, stale = apply_licences(rows, licences, ruleset.owned())
+    failures += licence_faults + stale
     if acct["silentNoSubject"]:
         notes.append("subject absent: %s - the check ran and this deck contains nothing for it to "
                      "judge, so the rule is undecided rather than passing"
@@ -1109,6 +1212,8 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
         "ledger": ledger,
         "notes": notes,
         "failures": [{"rule": r, "what": w} for r, w in failures],
+        "licensed": [{"rule": r, "what": w, "reason": f["reason"], "by": f["by"],
+                      "date": f["date"]} for r, w, f in licensed],
         "coverageFaults": coverage_faults,
         "blindTo": BLIND,
         "ok": not failures and not coverage_faults,
@@ -1264,6 +1369,59 @@ def self_test():
         sys.exit("SELF-TEST FAILED: a rule whose row changed since it was swept raised nothing. "
                  "An amendment is exactly where a rule acquires a second clause")
 
+    # **A licence licenses one rule's failure on one deck, and nothing else** (T-308). Every
+    # outcome the decision names, on declarations and rows written out rather than on a deck, so the
+    # cases cannot drift with a deck's content.
+    _decl = ('<title>x</title>\n<!--\n  A deck.\n'
+             '  htmldeck-licence: rule=DS-100; reason=the topic is a question; quoted; '
+             'by=the owner; date=2026-09-14\n'
+             "  htmldeck-licence: rule=DS-005; reason=the owner's demo; by=the owner\n"
+             '  htmldeck-licence: rule=DS-999; reason=r; by=b; date=2026-09-14\n'
+             '\n  EMBEDDED FONT LICENCES - none\n-->\n'
+             '<meta name="htmldeck-licence" content="rule=DS-110; reason=r; by=b; date=2026-09-14">')
+    _lic, _bad = licences_in(_decl)
+    if sorted(_lic) != ["DS-100", "DS-999"]:
+        sys.exit("SELF-TEST FAILED: the licences read as %r. Only a line in the head comment "
+                 "declares one, and one missing its date is refused" % sorted(_lic))
+    if _lic["DS-100"]["reason"] != "the topic is a question; quoted":
+        sys.exit("SELF-TEST FAILED: a reason carrying a semicolon was cut to %r"
+                 % _lic["DS-100"]["reason"])
+    if [(l, ("omits date" in w) or ("outside" in w)) for l, w in _bad] != [
+            ("LICENCE", True), ("LICENCE DS-005", True)]:
+        sys.exit("SELF-TEST FAILED: a licence outside the head comment, or one with no date, was "
+                 "not a fault: %r" % _bad)
+    _own = {"DS-100": None, "DS-110": None}
+    _rows = [("DS-100", "no rhetorical questions", False), ("DS-110", "no raster", False),
+             ("DS-092", "copy length", True)]
+    _fail, _held, _stale = apply_licences(_rows, _lic, _own)
+    if [r for r, _w in _fail] != ["DS-110"]:
+        sys.exit("SELF-TEST FAILED: the failures left after licensing were %r. An unlicensed "
+                 "failure must still fail, and only it" % [r for r, _w in _fail])
+    if [r for r, _w, _f in _held] != ["DS-100"]:
+        sys.exit("SELF-TEST FAILED: the licensed failures were %r" % [r for r, _w, _f in _held])
+    if [l for l, _w in _stale] != ["LICENCE DS-999"]:
+        sys.exit("SELF-TEST FAILED: a licence naming no owned rule was not a fault: %r" % _stale)
+    _fail, _held, _stale = apply_licences([("DS-100", "no rhetorical questions", True)],
+                                          {"DS-100": _lic["DS-100"]}, _own)
+    if _fail or _held or [l for l, _w in _stale] != ["LICENCE DS-100"]:
+        sys.exit("SELF-TEST FAILED: a licence for a rule that passes was not a fault, so the list "
+                 "can outlive every deviation it names")
+    _green = {"deck": "x", "notes": [], "account": account([]), "ok": True, "failures": [],
+              "rows": [], "blindTo": BLIND,
+              "licensed": [{"rule": "DS-100", "what": "no rhetorical questions",
+                            "reason": "the topic is a question", "by": "the owner",
+                            "date": "2026-09-14"}]}
+    out = io.StringIO()
+    stdout, sys.stdout = sys.stdout, out
+    try:
+        code = report(_green, quiet=True)
+    finally:
+        sys.stdout = stdout
+    if code != 0 or "licensed by the owner on 2026-09-14" not in out.getvalue():
+        sys.exit("SELF-TEST FAILED: --quiet on a green run with a licence exited %r and %s the "
+                 "licence. The owner's condition is that it prints on every run"
+                 % (code, "printed" if "licensed by" in out.getvalue() else "dropped"))
+
     # **`--quiet` must never be able to swallow a red run.** The whole objection to a quiet gate is
     # that it hides something, so the one thing it must not hide is asserted rather than reviewed.
     red = {"deck": "x", "notes": [], "account": account([]), "ok": False,
@@ -1340,7 +1498,33 @@ def summary(res):
             "%d undecided + %d SILENT, %d failing"
             % (res["deck"], len(a["owned"]), len(a["checked"]), len(a["deferred"]),
                len(a["excusedByRuleset"]), len(a["undecided"]), len(a["silent"]),
-               len(res["failures"])))
+               len(res["failures"]))
+            + (", %d licensed" % len(licensed_rules(res)) if licensed_rules(res) else ""))
+
+
+def licensed_rules(res):
+    """The licensed rules, once each, in the order the rows gave them."""
+    out = []
+    for x in res.get("licensed") or []:
+        if x["rule"] not in out:
+            out.append(x["rule"])
+    return out
+
+
+def print_licensed(res):
+    """Every licensed failure with its reason, who licensed it and when (T-308).
+
+    **On every run, and `--quiet` is not an exception.** The owner's condition for letting a deck
+    license a `hard` rule is that the licence stays visible, which is what a wrapper took away.
+    """
+    rules = licensed_rules(res)
+    if not rules:
+        return
+    print("\n%d licensed failure(s): %s - each still fails, and the deck's owner licensed it"
+          % (len(rules), ", ".join(rules)))
+    for x in res["licensed"]:
+        print("    %-15s %s" % (x["rule"], x["what"]))
+        print("    %-15s licensed by %s on %s: %s" % ("", x["by"], x["date"], x["reason"]))
 
 
 def report(res, verbose=True, quiet=False):
@@ -1352,6 +1536,7 @@ def report(res, verbose=True, quiet=False):
         # The notes above stay. They say which halves of the check ran, and a quiet run that hid
         # `content half: NOT RUN` would conceal more than the 169 lines it saved.
         print(summary(res))
+        print_licensed(res)
         return 0
     if verbose:
         print("\n=== verdicts")
@@ -1447,6 +1632,7 @@ def report(res, verbose=True, quiet=False):
           % (len(res["failures"]), ", ".join(f["rule"] for f in res["failures"]) or "none"))
     for f in res["failures"]:
         print("    %-15s %s" % (f["rule"], f["what"]))
+    print_licensed(res)
     print("""
 **This gate is necessary and nowhere near sufficient, and the banned-terminology row is the
 sharpest case: text can pass all five categories and still read as machine-written, so a clean

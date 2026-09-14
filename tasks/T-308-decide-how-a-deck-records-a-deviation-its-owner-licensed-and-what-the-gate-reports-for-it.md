@@ -2,18 +2,19 @@
 id: T-308
 title: Decide how a deck records a deviation its owner licensed, and what the gate reports for it
 type: decision
-status: proposed
-phase: specify
+status: done
+phase: review
 parent: null
 blocked_by: []
 related: [T-299, T-225, T-264, T-265]
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: high
 effort: m
 created: 2026-09-13
-updated: 2026-09-13
-deliverables: []
+updated: 2026-09-14
+deliverables: [tools/deck/check.py, skills/htmldeck/references/build.md]
 ---
 
 # T-308 — Decide how a deck records a deviation its owner licensed, and what the gate reports for it
@@ -70,29 +71,84 @@ the gate does what it says. What is missing is vocabulary. That also separates `
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Run the unchanged gate on a seeded deck, with and without a licence line | the before direction, §3 |
+| 2 | Decide where a licence lives, what it carries, what the gate prints and exits with, and which rules can take one | §3 |
+| 3 | Build it in `check.py`: read the licences, apply them to the rows, print them on every run, and self-test each outcome | `tools/deck/check.py` |
+| 4 | Document it where a builder meets the gate | `skills/htmldeck/references/build.md` |
+| 5 | Prove it on the seeded decks: licensed, unlicensed, stale and incomplete, and a `sync` that keeps the line | §3 |
+| 6 | Lint, then the full gate | — |
 
 ## 3. Implement
 
 **Decisions & assumptions**
-- <decision — rationale — date>
+- Build it: a decision that stops at vocabulary leaves every adopter writing the wrapper, and the
+  owner's answer in §1 already settled the hardest part. Reversible. — 2026-09-14
+- A licence lives in the deck, as a line in its head comment, which is `shell.py`'s `NOTE` region.
+  Beside the specification is rejected: the gate does not read it, and it is lost when the deck is
+  sent alone. Both places is rejected as two homes for one fact (**L-13**). A project wrapper or a
+  command-line list is rejected as the record's own cost, a mechanism that travels with one
+  project's scripts. A `<meta>` in the head is rejected on measurement: it is DS-122's precedent,
+  and `shell.py sync --write` deletes it ([T-311](T-311-keep-a-decks-chart-engine-declaration-through-a-shell-sync.md)).
+  An HTML comment anywhere, the record's proposal, is rejected because only the head comment
+  survives a sync. Reversible. — 2026-09-14
+- A licence carries four fields, all required: the rule, the reason, who licensed it, and the date
+  as `YYYY-MM-DD`. Reversible. — 2026-09-14
+- A licensed failure leaves the failure list, and the run exits 0 when nothing else fails. The
+  licence prints on every run with its reason, who and when, `--quiet` included, and `--json` carries
+  it as `licensed`. An unlicensed failure fails as before. Reversible. — 2026-09-14
+- A licence is itself a failure when its rule passes on the deck, as a stale excusal is, so the list
+  cannot outlive the deviations it names. So is a licence that omits a field, is declared twice,
+  names no owned rule, or sits outside the head comment. Reversible. — 2026-09-14
+- Every owned rule can take a licence, `hard` rules included, by the owner's answer. No rule is
+  exempt: the licence prints on every run, which is the owner's condition, and a list of exempt rules
+  would be a second severity scale beside the ruleset's own. A coverage fault is not a rule and
+  cannot be licensed. Reversible. — 2026-09-14
+- `DS-141`'s `--motion-long` token stays as it is. It is part of that rule's statement, and a licence
+  is for a rule that fails. Reversible. — 2026-09-14
+- A deck with no licence prints what it printed before, so no pasted gate output moves. Reversible.
+  — 2026-09-14
+
+Every deck below is a copy of the reference deck outside the repository. "Seeded" means slide 2's
+headline is a question, which fails `DS-100`.
+
+| Case | Tool | Result |
+| :--- | :--- | :--- |
+| seeded, no licence | unchanged | `1 failure(s): DS-100`, exit 1 |
+| seeded, a `<meta>` licence after the viewport line | unchanged | `1 failure(s): DS-100`, exit 1 |
+| a `<meta>` licence, then `shell.py sync --write` | — | licence lines 1 → 0 |
+| DS-122's chart-engine `<meta>`, then `shell.py sync --write` | — | declaration lines 1 → 0, raised as T-311 |
+| seeded, a head-comment licence | fixed, `--quiet` | `0 failing, 1 licensed`, and the licence printed with its reason, who and when; exit 0 |
+| seeded, no licence | fixed | `1 failure(s): DS-100`, exit 1 |
+| no question, the licence kept | fixed | `LICENCE DS-100`: the rule does not fail on this deck; exit 1 |
+| seeded, a licence with no `by` | fixed | `DS-100` and `LICENCE DS-100`: omits by; exit 1 |
+| seeded, the licence as a `<meta>` after the viewport line | fixed | `DS-100` and `LICENCE`: outside the head comment; exit 1 |
+| the head-comment licence, then `shell.py sync --write` | fixed | licence lines 1 → 1; `0 failing, 1 licensed`, exit 0 |
 
 **Outputs produced**
-- `deliverables/...`
+- `tools/deck/check.py`: `head_note`, `licences_in` and `apply_licences`; the licensed failures
+  printed on every run and carried in `--json`; a self-test case for each outcome
+- `skills/htmldeck/references/build.md`: how a deck's owner writes a licence
+- [T-311](T-311-keep-a-decks-chart-engine-declaration-through-a-shell-sync.md), raised
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| the decision is recorded here with the rejected alternatives and their reasons | **pass** | §3 |
+| a seeded deck licensing one rule reports it licensed, and fails with the licence removed | **pass** | §3's table, which also runs the stale, incomplete and misplaced licences, and a licensed deck after a sync |
+| `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | **pass** | Lint, then the full gate on the finished tree, since the diff reaches `tools/deck/` |
 
 **Child fix tasks raised**
-- <T-NNN or "none">
+- [T-311](T-311-keep-a-decks-chart-engine-declaration-through-a-shell-sync.md): the chart-engine
+  declaration does not survive a sync
 
 ## Log
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-09-14 | -> done | Built and proved on seeded decks in both directions. The first design put the licence in a `<meta>`, and a sync deleted it, so it moved to the head comment, and the same loss in DS-122's declaration is raised as T-311. No look is owed: no deck in the repository changed. |
+| 2026-09-14 | -> in_progress | Step 1 ran on the unchanged gate before any edit. |
+| 2026-09-14 | -> planned | Six steps. The decision in step 2 builds on the owner's answer in §1. |
+| 2026-09-14 | -> specified | §1's one open question was answered by the owner on 2026-09-13. |
 | 2026-09-13 | -> proposed | Raised by T-299 from Nextep record `17`. `PH3` and `decision`: the rules fire correctly, so no published behaviour is wrong, and the open question is the owner's. |
 | 2026-09-13 | (no change) | The owner answered the open question: a deck may license a `hard` rule, with the rule, the reason and the date stated in the deck and printed on every run. Still `proposed`. |

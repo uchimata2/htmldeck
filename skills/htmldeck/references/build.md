@@ -277,6 +277,24 @@ notes and one line carrying the rule partition — 345 bytes instead of 17,581 �
 not passing prints everything either way, so the flag costs no diagnosis. Drop it when you want the
 per-rule listing to read yourself; that listing is why the default is the default.
 
+**If the deck's owner rules that a rule does not apply to this deck, license it in the deck rather
+than wrapping the gate.** Write one line per rule in the deck's head comment, above `EMBEDDED FONT
+LICENCES`. That comment is the one part of `<head>` a `shell.py sync` keeps, so a licence anywhere
+else is deleted by the next sync and the gate reports it as a fault:
+
+```html
+<!--
+  <what this deck is>
+  htmldeck-licence: rule=DS-100; reason=<why>; by=<who licensed it>; date=YYYY-MM-DD
+
+  EMBEDDED FONT LICENCES ...
+```
+
+That failure stops failing the run, and every run prints it with its reason, who licensed it and
+when, `--quiet` included. Every other failure still fails. So does the licence itself if it omits a
+field, names no rule, or names a rule that passes on the deck, so remove a licence once its rule
+passes.
+
 `--out` is optional and the default is right: shots, probes and measurements go to
 `.assets-cache/deck/` **under the deck's own project**, never under the plugin. Add
 `<slides>` before it — `1,5,7`, counting from one — to render a subset.
