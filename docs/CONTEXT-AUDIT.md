@@ -664,6 +664,8 @@ account would trade a live binding for a weaker one to buy no seconds. `figures.
 **33.2 s**, of which `check.py` is **28.7 s** and the five other commands 4 s together. The
 remedy the measurement points at is a different one, and it removes a guarantee from the front
 page rather than moving a binding: [T-296](../tasks/T-296-the-readmes-deck-gate-fence-is-what-the-docs-gate-pays-for.md).
+**Carried 2026-09-14 without removing it.** The skip applies only while the README block is identical
+at the base, so a commit that edits the block still renders. T-296 §3 holds the timings.
 
 #### CE-19 — The deck gate's green default grew 72% and L-153 was not applied to it
 
