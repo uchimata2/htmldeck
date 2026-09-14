@@ -380,8 +380,8 @@ CLAUSES = {
     # so there is no coverage claim to see through. Its second clause IS decided - `component.py`
     # closes `data-disc` against the four kinds - but that row reports under DS-229 by
     # design, so writing `True` here would claim coverage the gate does not report under
-    # DS-230. It stays in `CONJUNCTIONS_OWED` with the reason beside it, and what is owed is
-    # a decision about the sweep's own membership. T-298.
+    # DS-230. T-298 took it out of `CONJUNCTIONS_OWED` rather than giving it a row: that queue
+    # now holds only rules a gate here owns.
     "DS-110": (("no rasterised diagram", True),
                # One check decides both, by its two halves: `role="img"` is how a raster is dressed
                # as a figure that names data, which is the diagram clause, and inside a slide's
@@ -629,16 +629,17 @@ SWEPT = {
 # stop counting. What DOES fail is a rule in here that is also in `CLAUSES` - the row exists, so
 # the debt does not - or one nothing has swept.
 CONJUNCTIONS_OWED = {
-    # **Read, judged a conjunction, and refused a `CLAUSES` row by the table's own guard** (T-278).
-    # DS-230 is `judge`, so `ruleset.owned()` excludes it and `clausesForRulesNotOwned` fails the
-    # run on a clause row for it. The sweep reads every `hard` rule and does not ask whether the
-    # clause table can hold what it finds, which is how a rule reaches this queue with nowhere to
-    # go. Left here rather than dropped: dropping it is the silence this record exists to prevent.
-    "DS-230": "tier two answers a question the face provokes / it is one of four kinds",
+    # **Empty since T-298, and it holds only rules a gate here owns.** DS-230 sat here because the
+    # sweep reads every `hard` rule and this queue asked nothing more. Clause rows exist because one
+    # satisfied check moves a rule into `checked` and hides a clause nothing reaches. A rule no gate
+    # here owns is never `checked`: its judge reads the whole statement, so a conjunction there has
+    # no claim to see through and owes no rows. Counted on 2026-09-14, DS-230 was not alone - at least
+    # six more `hard` rules the gate does not own read as conjunctions - so the remedy is the queue's
+    # membership rather than a row. `sweep_debt` refuses such a rule here.
 }
 
 
-def sweep_debt(swept=None, clauses=None, owed=None):
+def sweep_debt(swept=None, clauses=None, owed=None, owned=None):
     """`(faults, owed)` - the conjunctions read but not yet given rows, and any contradiction.
 
     The count is the point. A rule read and judged a conjunction is a known hole in the account
@@ -648,8 +649,13 @@ def sweep_debt(swept=None, clauses=None, owed=None):
     swept = SWEPT if swept is None else swept
     clauses = CLAUSES if clauses is None else clauses
     owed = CONJUNCTIONS_OWED if owed is None else owed
+    owned = ruleset.owned() if owned is None else owned
     faults = []
     for rid in sorted(owed):
+        if rid not in owned:
+            faults.append("SWEEP %s is owed clause rows the clause table must refuse - no gate here "
+                          "owns it, its judge reads the whole statement, and a conjunction there "
+                          "owes no rows (T-298)" % rid)
         if rid in clauses:
             faults.append("SWEEP %s is owed clause rows and already has them - it is in CLAUSES, "
                           "so the debt is paid and the entry is stale" % rid)
@@ -689,6 +695,10 @@ def sweep_faults(swept=None, rules=None, rows_by_id=None):
     `CLAUSES` answers. Scoping the sweep to the jurisdiction would have excused a conjunction from
     being noticed on the ground that nothing checks it - which is the reasoning this whole account
     exists to refuse.
+
+    **What a swept conjunction is owed does depend on the jurisdiction** (T-298). A rule a gate here
+    owns owes clause rows; one it does not is judged whole and owes none, so `CONJUNCTIONS_OWED`
+    holds the first kind only while this population stays every `hard` rule.
     """
     swept = SWEPT if swept is None else swept
     rows_by_id = rule_rows() if rows_by_id is None else rows_by_id
@@ -715,7 +725,7 @@ def sweep_faults(swept=None, rules=None, rows_by_id=None):
     return faults
 
 
-def clause_account(clauses=None, checked=(), owned=None):
+def clause_account(clauses=None, checked=(), owned=None, rules=None):
     """`dict` - what the clause table says about coverage, and every fault in it.
 
     **Reported on every run, including at zero** (**L-36**): a number that appears only when
@@ -728,10 +738,16 @@ def clause_account(clauses=None, checked=(), owned=None):
     """
     clauses = CLAUSES if clauses is None else clauses
     owned = ruleset.owned() if owned is None else owned
+    rules = ruleset.load() if rules is None else rules
     total = decided = 0
-    partly, faults, unowned = [], [], []
+    partly, faults, unowned, untabulated = [], [], [], []
     for rid in sorted(clauses):
-        if rid not in owned:
+        # **Two failures, reported apart** (T-298). An id the ruleset does not tabulate is a row
+        # pointing at nothing; a tabulated rule no gate here owns is a row the table must refuse.
+        # They share one message until 2026-09-14, and the self-test only ever probed the first.
+        if rid not in rules:
+            untabulated.append(rid)
+        elif rid not in owned:
             unowned.append(rid)
         open_here = []
         for text, state in ((c[0], c[1:]) for c in clauses[rid]):
@@ -751,7 +767,8 @@ def clause_account(clauses=None, checked=(), owned=None):
             "clausesTotal": total, "clausesDecided": decided,
             "clausesUnreached": total - decided,
             "clauseExcusalFaults": faults,
-            "clausesForRulesNotOwned": unowned}
+            "clausesForRulesNotOwned": unowned,
+            "clausesForRulesNotTabulated": untabulated}
 
 
 def closing_faults(deferred=None, checked=(), owned=None):
@@ -1197,7 +1214,10 @@ def run(deck, sources=None, print_pages=False, skip_contract=False):
                        + ["CLOSING %s - %s" % (rid, what)
                           for rid, what in closing_faults(checked=acct["checked"])]
                        + ["CLAUSE %s" % what for what in clauses["clauseExcusalFaults"]]
-                       + ["CLAUSE TABLE %s - the ruleset does not own it" % rid
+                       + ["CLAUSE TABLE %s - no rule the ruleset tabulates" % rid
+                          for rid in clauses["clausesForRulesNotTabulated"]]
+                       + ["CLAUSE TABLE %s - tabulated, and no gate here owns it, so no check can "
+                          "decide part of it" % rid
                           for rid in clauses["clausesForRulesNotOwned"]]
                        + sweep_faults() + sweep_debt()[0])
     if acct["partitionError"]:
@@ -1277,9 +1297,10 @@ def self_test():
     # are watched rather than reasoned about - each fixture below is built here rather than
     # asserted against the live table (**L-78**, **L-112**).
     live = clause_account()
-    if live["clauseExcusalFaults"] or live["clausesForRulesNotOwned"]:
-        sys.exit("SELF-TEST FAILED: the live clause table is broken: %s"
-                 % "; ".join(live["clauseExcusalFaults"] + live["clausesForRulesNotOwned"]))
+    _broken = (live["clauseExcusalFaults"] + live["clausesForRulesNotOwned"]
+               + live["clausesForRulesNotTabulated"])
+    if _broken:
+        sys.exit("SELF-TEST FAILED: the live clause table is broken: %s" % "; ".join(_broken))
     if live["clausesTotal"] <= live["clausesDecided"]:
         sys.exit("SELF-TEST FAILED: the clause table reports every clause decided, which is the "
                  "state it was written to disprove - DS-091's third clause is the instance")
@@ -1307,9 +1328,28 @@ def self_test():
         if got != expect:
             sys.exit("SELF-TEST FAILED: the clause table accepted or refused the wrong thing - %s "
                      "should have %s and did not" % (label, "faulted" if expect else "passed"))
-    if not clause_account({"DS-999": (("a clause", True),)})["clausesForRulesNotOwned"]:
-        sys.exit("SELF-TEST FAILED: a clause table naming a rule the ruleset does not own was "
-                 "accepted, so the table can point at nothing")
+    _untab = clause_account({"DS-999": (("a clause", True),)})
+    if _untab["clausesForRulesNotTabulated"] != ["DS-999"] or _untab["clausesForRulesNotOwned"]:
+        sys.exit("SELF-TEST FAILED: a clause row for an id the ruleset does not tabulate came out as "
+                 "not tabulated %r and not owned %r, so the table can point at nothing"
+                 % (_untab["clausesForRulesNotTabulated"], _untab["clausesForRulesNotOwned"]))
+    # **The guard's second failure, which DS-999 never probed** (T-298): a rule the ruleset does
+    # tabulate and no gate here owns. Picked from the ruleset rather than named, so the case does
+    # not assert which rules are `judge` today (**L-78**).
+    _judge = sorted(k for k, v in ruleset.load().items() if not v.owned)[0]
+    _unown = clause_account({_judge: (("a clause", True),)})
+    if _unown["clausesForRulesNotOwned"] != [_judge] or _unown["clausesForRulesNotTabulated"]:
+        sys.exit("SELF-TEST FAILED: a clause row for %s, tabulated and owned by no gate here, came "
+                 "out as not owned %r and not tabulated %r" % (_judge, _unown["clausesForRulesNotOwned"],
+                                                             _unown["clausesForRulesNotTabulated"]))
+    if not [f for f in sweep_debt(swept={_judge: "x"}, clauses={}, owed={_judge: "a / b"})[0]
+            if "must refuse" in f]:
+        sys.exit("SELF-TEST FAILED: the conjunction queue accepted %s, which the clause table must "
+                 "refuse - the disagreement T-298 was raised for" % _judge)
+    if [f for f in sweep_debt(swept={own_one: "x"}, clauses={}, owed={own_one: "a / b"})[0]
+            if "must refuse" in f]:
+        sys.exit("SELF-TEST FAILED: the conjunction queue refused %s, which a gate here owns"
+                 % own_one)
 
     # T-165: the closing condition. **Every fixture below builds its own table** (**L-78**) - an
     # assertion about the live one is an assertion about the repository's current contents, and the
