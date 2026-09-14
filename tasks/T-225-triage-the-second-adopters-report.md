@@ -1,6 +1,6 @@
 ---
 id: T-225
-title: Triage the ClaimAI adopter report and decide each of its twenty-seven findings
+title: Triage the second adopter's report and decide each of its twenty-seven findings
 type: analysis
 status: done
 phase: review
@@ -17,12 +17,12 @@ shipped_in: 0.7.0
 deliverables: []
 ---
 
-# T-225 — Triage the ClaimAI adopter report and decide each of its twenty-seven findings
+# T-225 — Triage the second adopter's report and decide each of its twenty-seven findings
 
 ## 1. Specify
 
 **Outcome**
-Every finding in [`docs/adopter-reports/claimai/`](../docs/adopter-reports/claimai/README.md) has a
+Every finding in the adopter reports T-320 removed has a
 decision against it — accepted and raised as a fix, accepted and deferred, or rejected with a reason.
 Nothing in the set is left unjudged. This task produces the judgement; the fixes it accepts become
 tasks of their own.
@@ -58,26 +58,26 @@ useful and discard the rest, including any record judged wrong.
 1. **The deck fails four rules permanently** — `DS-110`, `DS-217`, `DS-218`, `DS-219` — and has since
    the build. An author who cannot ever reach zero stops reading the gate, and that is the cost
    behind several of these records rather than the rules themselves.
-   [`019`](../docs/adopter-reports/claimai/019-ds-219-cannot-see-a-painted-svg-ancestor.md) is the
+   `019` is the
    sharpest of them: `DS-219` is unsatisfiable for a whole class of correct diagrams, and
    `docs/DESIGN-RATIONALE.md` §5.7 already records this repository's own doubt about the rule.
 2. **`DS-244` is reported twice, deliberately, from opposite directions.**
-   [`013`](../docs/adopter-reports/claimai/013-ds-244-sees-label-over-label-but-not-label-over-shape.md)
+   `013`
    says it is too blind;
-   [`022`](../docs/adopter-reports/claimai/022-ds-244-refuses-a-cross-fade-in-place.md) says it is too
+   `022` says it is too
    strict. Read together they say the rule tests proximity where it means obstruction — which neither
    record says alone. **Triage them as a pair, not separately.**
 3. **One finding is a note about this repository's own examples.**
-   [`018`](../docs/adopter-reports/claimai/018-ds-218-passes-the-shipped-example-only-because-it-has-no-looping-motion.md)
+   `018`
    shows `portfolio-review` passing `DS-218` with `0 looping` — the rule never fires, so the example
    models a control placement that is safe only for want of a subject. The adopter's first reading was
    that the example contradicted the rule, and running the gate on the example is what corrected it.
    **An example that satisfies a rule vacuously is worth finding elsewhere in the set of four.**
 4. **`density.py write` is currently refused outright by that project's launcher**, because it
    corrupts self-closing SVG tags —
-   [`015`](../docs/adopter-reports/claimai/015-density-py-write-corrupts-a-self-closing-svg-tag.md).
+   `015`.
    It is the tool `DS-239` makes necessary, so the rule and the broken writer compound: see
-   [`021`](../docs/adopter-reports/claimai/021-ds-239-re-derives-m-rank-so-removing-one-motion-invalidates-the-rest.md).
+   `021`.
    That pair is the one place in the set where a rule and a defect together produce an adopter
    editing generated markup by hand.
 
@@ -88,7 +88,7 @@ useful and discard the rest, including any record judged wrong.
 - Out: replying to the adopter. There is no channel and none is expected.
 
 **Inputs**
-- [`docs/adopter-reports/claimai/README.md`](../docs/adopter-reports/claimai/README.md) — the covering
+- the adopter reports T-320 removed — the covering
   note, the index and four suggested themes
 - The twenty-seven records beside it
 - `docs/DESIGN-SYSTEM.md` and `docs/DESIGN-RATIONALE.md` — the rules under discussion, and §5.7, which
@@ -127,22 +127,22 @@ Four passes, in this order, and the order is the point.
 
 | Record | Re-run | Result |
 | :--- | :--- | :--- |
-| [`015`](../docs/adopter-reports/claimai/015-density-py-write-corrupts-a-self-closing-svg-tag.md) | `set_var` at `tools/deck/density.py` `:179` | `tag[:-1] + ...` — the self-closing branch is unchanged |
-| [`017`](../docs/adopter-reports/claimai/017-render-py-motion-seeks-a-fraction-of-duration-and-ignores-the-delay.md) | `render.py` `:597` and `:602` | both seek expressions unchanged, and they still disagree |
-| [`008`](../docs/adopter-reports/claimai/008-single-letter-shortcuts-swallow-ctrl-r-and-every-other-browser-chord.md) | `grep -c "ctrlKey\|metaKey\|altKey" shell/deck.js` | **0** — no modifier guard anywhere in the file |
-| [`009`](../docs/adopter-reports/claimai/009-the-sources-box-does-not-dismiss-on-an-outside-click.md) | `closest('.sources')` in `shell/deck.js` | absent; the More menu's listener is still the only one |
-| [`003`](../docs/adopter-reports/claimai/003-reading-view-never-unwraps-a-provenance-row.md) | `.doc .sources-item` in `shell/components.css` | absent; the box is unwrapped and the item is not |
-| [`004`](../docs/adopter-reports/claimai/004-spec-py-cannot-read-a-sources-field-that-carries-a-section.md) | `slugs()` at `tools/deck/spec.py` `:103` | still splits on `[,;]` |
-| [`018`](../docs/adopter-reports/claimai/018-ds-218-passes-the-shipped-example-only-because-it-has-no-looping-motion.md) | `check.py` on `examples/portfolio-review/` | `DS-218 ... False (present: True, 0 looping) pass` — reproduced exactly |
+| `015` | `set_var` at `tools/deck/density.py` `:179` | `tag[:-1] + ...` — the self-closing branch is unchanged |
+| `017` | `render.py` `:597` and `:602` | both seek expressions unchanged, and they still disagree |
+| `008` | `grep -c "ctrlKey\|metaKey\|altKey" shell/deck.js` | **0** — no modifier guard anywhere in the file |
+| `009` | `closest('.sources')` in `shell/deck.js` | absent; the More menu's listener is still the only one |
+| `003` | `.doc .sources-item` in `shell/components.css` | absent; the box is unwrapped and the item is not |
+| `004` | `slugs()` at `tools/deck/spec.py` `:103` | still splits on `[,;]` |
+| `018` | `check.py` on `examples/portfolio-review/` | `DS-218 ... False (present: True, 0 looping) pass` — reproduced exactly |
 
 - **Three records were merged rather than raised, and that is what waiting for the audit bought.**
-  [`020`](../docs/adopter-reports/claimai/020-ds-229-keys-motion-rows-to-exact-selector-text.md) and [`021`](../docs/adopter-reports/claimai/021-ds-239-re-derives-m-rank-so-removing-one-motion-invalidates-the-rest.md) are `DS-229` and `DS-239` bound on selector text and on a derived set — which is
-  the class [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) already owns, `PR-44` naming `DS-239` by name. [`027`](../docs/adopter-reports/claimai/027-the-tools-are-unreachable-when-htmldeck-is-installed-as-a-plugin.md) is the plugin cache and what
+  `020` and `021` are `DS-229` and `DS-239` bound on selector text and on a derived set — which is
+  the class [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) already owns, `PR-44` naming `DS-239` by name. `027` is the plugin cache and what
   `$HTMLDECK` resolves to, which is `PR-07`'s root and [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md)'s. **Three of twenty-seven cost nothing
   to place.** — 2026-08-29
 
 - **One record refutes a conclusion the audit recorded as settled, and it is the most valuable thing
-  in the set.** [`006`](../docs/adopter-reports/claimai/006-ds-035-measures-text-through-its-transform.md) shows `DS-035` reading `0 du` on three display-size headings, because the
+  in the set.** `006` shows `DS-035` reading `0 du` on three display-size headings, because the
   probe scales font size by the screen CTM and a `scaleY(0)` entrance with `fill-mode:both` puts the
   determinant at zero. [T-209](T-209-six-more-probes-measure-a-page-whose-entrance-never-ran.md)
   left `audit.PROBE` unpinned and wrote its reason into the file: *its geometry rows were measured
@@ -154,8 +154,8 @@ Four passes, in this order, and the order is the point.
   — 2026-08-29
 
 - **`013` and `022` are decided together, as section 1 required, and the answer is neither of them
-  alone.** [`013`](../docs/adopter-reports/claimai/013-ds-244-sees-label-over-label-but-not-label-over-shape.md) says `DS-244` is too blind — it never compares a label to the shape it labels, the
-  commonest defect in a hand-built figure. [`022`](../docs/adopter-reports/claimai/022-ds-244-refuses-a-cross-fade-in-place.md) says it is too strict — it refuses a cross-fade in
+  alone.** `013` says `DS-244` is too blind — it never compares a label to the shape it labels, the
+  commonest defect in a hand-built figure. `022` says it is too strict — it refuses a cross-fade in
   place because it does not read `opacity`. **Read together they say the rule tests proximity of two
   text runs where it means obstruction**, which is a single statement neither record makes alone.
   [T-260](T-260-ds-244-tests-proximity-where-it-means-obstruction.md) takes both, and it carries a constraint: [T-204](T-204-an-instrument-for-mark-collisions.md)
@@ -176,19 +176,19 @@ Four passes, in this order, and the order is the point.
   reading the gate* — is the reason this is a group and not four unrelated rows. — 2026-08-29
 
 - **Three proposals are recommended against, and the reasons are recorded here because there is no
-  channel to send them.** [`023`](../docs/adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md)'s second option, *make `DS-100` reviewable rather than fatal* —
+  channel to send them.** `023`'s second option, *make `DS-100` reviewable rather than fatal* —
   `hard` is what the corpus measured and *reviewable* is how a rule quietly stops being enforced;
-  its first option, extending the existing source-question exemption, is accepted instead. [`024`](../docs/adopter-reports/claimai/024-ds-202-refuses-a-two-sentence-bottom-line-the-author-chose.md)'s
+  its first option, extending the existing source-question exemption, is accepted instead. `024`'s
   first option, replacing `DS-202`'s sentence count with a word or clause cap — that trades a crisp
   rule for a fuzzy one, and the record itself says the rule caught **eight** bottom lines restating
-  their headline; its second option, saying the reason in the failure, is accepted instead. [`011`](../docs/adopter-reports/claimai/011-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md)'s
+  their headline; its second option, saying the reason in the failure, is accepted instead. `011`'s
   primary form, allowing any raster in a `front` or `back` section — broader than the argument
   supports; the record's own weaker alternative is closer to the real test and is what [T-265](T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md)
   recommends. **All three records anticipated the disagreement and none of them asks to drop a
   rule**, which is why all three are still worth acting on. — 2026-08-29
 
 - **Nothing here was rejected outright.** Twenty-four records are raised, three are merged, and one
-  — [`001`](../docs/adopter-reports/claimai/001-per-section-quick-view.md) — is accepted and **deferred** rather than rejected: it is the only record asking for a
+  — `001` — is accepted and **deferred** rather than rejected: it is the only record asking for a
   new component, and deferring it is a scheduling decision rather than a judgement on the case.
   — 2026-08-29
 
@@ -212,27 +212,27 @@ Four passes, in this order, and the order is the point.
 
 | Record | Task | Decision | What it is | Phase, effort |
 | :--- | :--- | :--- | :--- | :--- |
-| [`015`](../docs/adopter-reports/claimai/015-density-py-write-corrupts-a-self-closing-svg-tag.md) | [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) | accepted, raised | Fix set_var's self-closing tag insertion, and have write verify what it wrote | `PH1`, `s` |
-| [`017`](../docs/adopter-reports/claimai/017-render-py-motion-seeks-a-fraction-of-duration-and-ignores-the-delay.md) | [T-255](T-255-render-py-motion-seeks-past-the-delay.md) | accepted, raised | Add the delay in the report branch and drop the subtraction in the capture branch | `PH1`, `s` |
-| [`019`](../docs/adopter-reports/claimai/019-ds-219-cannot-see-a-painted-svg-ancestor.md) | [T-256](T-256-ds-219-cannot-see-a-painted-svg-ancestor.md) | accepted, raised | Walk the full ancestor chain for DS-219's ground, and settle the doubt the rationale records | `PH1`, `m` |
-| [`018`](../docs/adopter-reports/claimai/018-ds-218-passes-the-shipped-example-only-because-it-has-no-looping-motion.md) | [T-257](T-257-ds-218-passes-the-shipped-example-vacuously.md) | accepted, raised | Make portfolio-review pass DS-218 for a reason, and say why a control is not persistent | `PH1`, `s` |
-| [`025`](../docs/adopter-reports/claimai/025-the-gate-passes-copy-its-own-reader-calls-difficult.md) | [T-258](T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | accepted, raised | Report a readability measurement over drawn slide copy, and name the hardest lines | `PH3`, `m` |
-| [`026`](../docs/adopter-reports/claimai/026-nothing-prints-what-a-slide-actually-contains.md) | [T-259](T-259-nothing-prints-what-a-slide-actually-contains.md) | accepted, raised | Ship a per-slide fact printer, so a specification and its deck stop drifting silently | `PH3`, `m` |
-| [`013`](../docs/adopter-reports/claimai/013-ds-244-sees-label-over-label-but-not-label-over-shape.md), [`022`](../docs/adopter-reports/claimai/022-ds-244-refuses-a-cross-fade-in-place.md) | [T-260](T-260-ds-244-tests-proximity-where-it-means-obstruction.md) | accepted, raised | Decide what DS-244 measures, from the two findings that contradict each other | `PH1`, `m` |
-| [`006`](../docs/adopter-reports/claimai/006-ds-035-measures-text-through-its-transform.md) | [T-261](T-261-ds-035-measures-a-text-run-through-its-transform.md) | accepted, raised | Re-derive whether audit.PROBE can stay unpinned, on a deck whose entrance moves the axis | `PH1`, `s` |
-| [`012`](../docs/adopter-reports/claimai/012-ds-092-counts-a-sources-box-as-prose.md) | [T-262](T-262-ds-092-counts-a-sources-box-as-prose.md) | accepted, raised | Exclude provenance from DS-092's paragraph half, and give any source ceiling its own rule | `PH1`, `s` |
-| [`002`](../docs/adopter-reports/claimai/002-ruler-scale-claim-breaks-past-eighteen-sections.md) | [T-263](T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md) | accepted, raised | Give regularScale a tolerance, so a long deck can satisfy DS-217 | `PH1`, `s` |
-| [`005`](../docs/adopter-reports/claimai/005-a-deck-cannot-express-an-author-requested-duration.md) | [T-264](T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | accepted, raised | Give a licensed long motion somewhere to state its duration | `PH1`, `s` |
-| [`011`](../docs/adopter-reports/claimai/011-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md) | [T-265](T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md) | accepted, raised | Decide whether DS-110 narrows by where a raster sits | `PH3`, `s` |
-| [`014`](../docs/adopter-reports/claimai/014-a-deck-cannot-name-a-repeated-figure-treatment-once.md) | [T-266](T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md) | accepted, raised | Say what to do when a class fails DS-229, and decide whether a deck gets a local prefix | `PH3`, `s` |
-| [`016`](../docs/adopter-reports/claimai/016-render-py-cannot-capture-a-decks-interactive-states.md) | [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | accepted, raised | Give render.py a capture path for a deck's disclosed states | `PH3`, `m` |
-| [`008`](../docs/adopter-reports/claimai/008-single-letter-shortcuts-swallow-ctrl-r-and-every-other-browser-chord.md), [`009`](../docs/adopter-reports/claimai/009-the-sources-box-does-not-dismiss-on-an-outside-click.md), [`010`](../docs/adopter-reports/claimai/010-data-played-lands-at-transition-start-so-an-entrance-plays-under-the-outgoing-slide.md) | [T-268](T-268-three-chrome-and-timing-defects-in-deck-js.md) | accepted, raised | Guard the single-letter shortcuts, dismiss the sources box, and land data-played on arrival | `PH1`, `s` |
-| [`003`](../docs/adopter-reports/claimai/003-reading-view-never-unwraps-a-provenance-row.md), [`004`](../docs/adopter-reports/claimai/004-spec-py-cannot-read-a-sources-field-that-carries-a-section.md), [`007`](../docs/adopter-reports/claimai/007-quickview-leaves-bold-unconverted-across-a-line-break.md) | [T-269](T-269-three-build-path-defects-the-adopter-worked-around.md) | accepted, raised | Unwrap a provenance row, read a rich Sources field, and convert bold across a line break | `PH1`, `s` |
-| [`023`](../docs/adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md), [`024`](../docs/adopter-reports/claimai/024-ds-202-refuses-a-two-sentence-bottom-line-the-author-chose.md) | [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | accepted, raised | Decide what DS-100 and DS-202 should measure, and say the reason in each failure | `PH3`, `s` |
-| [`001`](../docs/adopter-reports/claimai/001-per-section-quick-view.md) | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | accepted, raised | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3`, `m` |
-| [`020`](../docs/adopter-reports/claimai/020-ds-229-keys-motion-rows-to-exact-selector-text.md) | [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | accepted, **merged** | That task already owns the class; the record is an extra `In:` line on it, not a second task | — |
-| [`021`](../docs/adopter-reports/claimai/021-ds-239-re-derives-m-rank-so-removing-one-motion-invalidates-the-rest.md) | [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | accepted, **merged** | That task already owns the class; the record is an extra `In:` line on it, not a second task | — |
-| [`027`](../docs/adopter-reports/claimai/027-the-tools-are-unreachable-when-htmldeck-is-installed-as-a-plugin.md) | [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | accepted, **merged** | That task already owns the class; the record is an extra `In:` line on it, not a second task | — |
+| `015` | [T-254](T-254-density-py-write-corrupts-every-self-closing-svg-tag.md) | accepted, raised | Fix set_var's self-closing tag insertion, and have write verify what it wrote | `PH1`, `s` |
+| `017` | [T-255](T-255-render-py-motion-seeks-past-the-delay.md) | accepted, raised | Add the delay in the report branch and drop the subtraction in the capture branch | `PH1`, `s` |
+| `019` | [T-256](T-256-ds-219-cannot-see-a-painted-svg-ancestor.md) | accepted, raised | Walk the full ancestor chain for DS-219's ground, and settle the doubt the rationale records | `PH1`, `m` |
+| `018` | [T-257](T-257-ds-218-passes-the-shipped-example-vacuously.md) | accepted, raised | Make portfolio-review pass DS-218 for a reason, and say why a control is not persistent | `PH1`, `s` |
+| `025` | [T-258](T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md) | accepted, raised | Report a readability measurement over drawn slide copy, and name the hardest lines | `PH3`, `m` |
+| `026` | [T-259](T-259-nothing-prints-what-a-slide-actually-contains.md) | accepted, raised | Ship a per-slide fact printer, so a specification and its deck stop drifting silently | `PH3`, `m` |
+| `013`, `022` | [T-260](T-260-ds-244-tests-proximity-where-it-means-obstruction.md) | accepted, raised | Decide what DS-244 measures, from the two findings that contradict each other | `PH1`, `m` |
+| `006` | [T-261](T-261-ds-035-measures-a-text-run-through-its-transform.md) | accepted, raised | Re-derive whether audit.PROBE can stay unpinned, on a deck whose entrance moves the axis | `PH1`, `s` |
+| `012` | [T-262](T-262-ds-092-counts-a-sources-box-as-prose.md) | accepted, raised | Exclude provenance from DS-092's paragraph half, and give any source ceiling its own rule | `PH1`, `s` |
+| `002` | [T-263](T-263-ds-217-fails-on-any-deck-past-eighteen-sections.md) | accepted, raised | Give regularScale a tolerance, so a long deck can satisfy DS-217 | `PH1`, `s` |
+| `005` | [T-264](T-264-ds-141s-request-licence-has-nowhere-to-put-its-number.md) | accepted, raised | Give a licensed long motion somewhere to state its duration | `PH1`, `s` |
+| `011` | [T-265](T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md) | accepted, raised | Decide whether DS-110 narrows by where a raster sits | `PH3`, `s` |
+| `014` | [T-266](T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md) | accepted, raised | Say what to do when a class fails DS-229, and decide whether a deck gets a local prefix | `PH3`, `s` |
+| `016` | [T-267](T-267-render-py-cannot-capture-a-decks-interactive-states.md) | accepted, raised | Give render.py a capture path for a deck's disclosed states | `PH3`, `m` |
+| `008`, `009`, `010` | [T-268](T-268-three-chrome-and-timing-defects-in-deck-js.md) | accepted, raised | Guard the single-letter shortcuts, dismiss the sources box, and land data-played on arrival | `PH1`, `s` |
+| `003`, `004`, `007` | [T-269](T-269-three-build-path-defects-the-adopter-worked-around.md) | accepted, raised | Unwrap a provenance row, read a rich Sources field, and convert bold across a line break | `PH1`, `s` |
+| `023`, `024` | [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md) | accepted, raised | Decide what DS-100 and DS-202 should measure, and say the reason in each failure | `PH3`, `s` |
+| `001` | [T-271](T-271-a-quick-view-scoped-to-a-document-section.md) | accepted, raised | Decide whether a slide can open a quick view scoped to the section it argues from | `PH3`, `m` |
+| `020` | [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | accepted, **merged** | That task already owns the class; the record is an extra `In:` line on it, not a second task | — |
+| `021` | [T-243](T-243-five-checks-bound-on-a-name-rather-than-on-structure.md) | accepted, **merged** | That task already owns the class; the record is an extra `In:` line on it, not a second task | — |
+| `027` | [T-227](T-227-the-front-pages-adoption-route-names-a-variable-the-skill-removed.md) | accepted, **merged** | That task already owns the class; the record is an extra `In:` line on it, not a second task | — |
 
 **Child fix tasks raised**
 

@@ -1,6 +1,6 @@
 ---
 id: T-299
-title: Triage the Nextep adopter report and decide each of its eighteen findings
+title: Triage the third adopter's report and decide each of its eighteen findings
 type: analysis
 status: done
 phase: review
@@ -25,12 +25,12 @@ deliverables:
   - tasks/T-310-stop-the-shells-keydown-handler-throwing-on-a-document-target-and-taking-space-from-a-focused-control.md
 ---
 
-# T-299 — Triage the Nextep adopter report and decide each of its eighteen findings
+# T-299 — Triage the third adopter's report and decide each of its eighteen findings
 
 ## 1. Specify
 
 **Outcome**
-Every finding in [`docs/adopter-reports/nextep/`](../docs/adopter-reports/nextep/README.md) has a
+Every finding in the adopter reports T-320 removed has a
 decision against it — accepted and raised as a fix, accepted and deferred, or rejected with a
 reason. Nothing in the set is left unjudged. This task produces the judgement; the fixes it accepts
 become tasks of their own.
@@ -44,22 +44,22 @@ day it was met, with the command that proves it, and the batch was held back so 
 deadline paid nothing for a context switch into this repository.
 
 **The adopting project's repository is private, and the records were written to stand without it.**
-Every piece of evidence is quoted inside the record. Paths such as `deck/nextep.html` and
+Every piece of evidence is quoted inside the record. Paths such as `deck/the third adopter.html` and
 `tools/deck.ps1` are that project's own and resolve nowhere here; nothing links out.
 
-**What is different from [T-225](T-225-triage-the-claimai-adopter-report.md)**
+**What is different from [T-225](T-225-triage-the-second-adopters-report.md)**
 
 - **Four records are `request` rather than `defect`** — places where the design system has no
   vocabulary for a decision the deck's owner made, not places where a rule misfires. `17` is the
   general case: three owner-ruled deviations leave the gate red on every run, so the adopter wrote a
-  forty-line wrapper to hold the ruling. ClaimAI's `011`, `023` and `024` each asked for one escape
+  forty-line wrapper to hold the ruling. the second adopter's `011`, `023` and `024` each asked for one escape
   hatch; this one asks for the mechanism.
 - **One defect arrives with its downstream consumer attached.** `13` truncates a slide's body at the
   first matching close tag; `14` is `readability.py` inheriting it through `slidefacts.facts` and
   reporting aggregates over two thirds of the copy, with a ledger that promises nothing goes missing
   quietly. Deciding `13` decides most of `14`.
 - **Five records say no instrument can see an interaction** — `06`, `08`, `09`, `10`, and `12` from
-  the other side. `016` and `017` of the ClaimAI set are the same complaint one release earlier, so
+  the other side. `016` and `017` of the second adopter set are the same complaint one release earlier, so
   the triage has a before and an after to compare.
 
 **In scope.** Each of the eighteen: a verdict, and where accepted, a task. Re-deriving each one's
@@ -76,11 +76,11 @@ weigh.
 
 ## 2. Plan
 
-1. Read [`docs/adopter-reports/nextep/README.md`](../docs/adopter-reports/nextep/README.md) whole —
+1. Read the adopter reports T-320 removed whole —
    the covering note carries four themes and they cut across the individual records.
 2. For each of the eighteen, in the index's order: reproduce or accept the record's own command,
    then rule.
-3. Cross-check against the ClaimAI set before ruling on `11`, `16`, `17` and `18` — `011`, `023`,
+3. Cross-check against the second adopter set before ruling on `11`, `16`, `17` and `18` — `011`, `023`,
    `024` and `025` touch the same rules, and `023` was already answered by narrowing `DS-100`, which
    is why `17` is not a re-run of it.
 4. Cross-check `01` against what shipped in `0.7.0`: it is the one record measured on `0.6.0`.
@@ -126,13 +126,13 @@ weigh.
   [T-310](T-310-stop-the-shells-keydown-handler-throwing-on-a-document-target-and-taking-space-from-a-focused-control.md)
   measures it with a real key press and closes that half on the measurement. — 2026-09-13
 
-- **The ClaimAI cross-check separates `17` from `023`, and ties it to `011`.** `023` was a rule
+- **The second adopter cross-check separates `17` from `023`, and ties it to `011`.** `023` was a rule
   firing outside its scope, answered by narrowing `DS-100`. `17`'s three rules fire correctly on the
   deck, so what is missing is a place for the owner's licence, not a narrower rule. `011`'s `DS-110`
   is one of those three and [T-265](T-265-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md)
   still carries it. `18` takes its shape from the sources box, which
   [T-262](T-262-ds-092-counts-a-sources-box-as-prose.md) already subtracted from `DS-092`.
-  `11` and `16` have no ClaimAI counterpart. — 2026-09-13
+  `11` and `16` have no the second adopter counterpart. — 2026-09-13
 
 - **Nothing was merged into an existing task, because no open task owns any of the eighteen.** Every
   neighbour is closed: [T-258](T-258-the-gate-passes-copy-its-own-reader-calls-difficult.md),
@@ -175,20 +175,20 @@ weigh.
 | Every accepted finding names the task that carries it | **met** | The table below, and every task names its records back |
 | Every rejected finding names why | **met, and narrower than section 1 expected** | Nothing was rejected. `12`'s Enter half is the nearest thing to it, and section 3 says why it is left to be measured rather than dismissed |
 | `01` checked against what shipped in `0.7.0` (plan step 4) | **met** | Section 3: the pager is unchanged |
-| `11`, `16`, `17` and `18` checked against the ClaimAI set (plan step 3) | **met** | Section 3: `17` differs from `023` and shares `DS-110` with `011` |
+| `11`, `16`, `17` and `18` checked against the second adopter set (plan step 3) | **met** | Section 3: `17` differs from `023` and shares `DS-110` with `011` |
 
 **The triage**
 
 | Record | Task | Decision | What it is | Phase, effort |
 | :--- | :--- | :--- | :--- | :--- |
-| [`10`](../docs/adopter-reports/nextep/2026-09-07-slidefacts-reports-no-control-on-any-slide.md), [`13`](../docs/adopter-reports/nextep/2026-09-08-slidefacts-closes-an-element-at-the-first-matching-close-tag.md), [`14`](../docs/adopter-reports/nextep/2026-09-08-readability-inherits-slidefacts-truncation-so-a-third-of-the-copy-is-unread.md) | [T-303](T-303-close-a-slidefacts-element-at-its-own-tag-find-every-control-and-make-readabilitys-ledger-add-up.md) | accepted, raised | Close an element at its balanced tag, find every control, and make readability's ledger add up | `PH1`, `m` |
-| [`04`](../docs/adopter-reports/nextep/2026-09-07-a-deck-authored-content-motion-gets-no-motion-gate.md), [`05`](../docs/adopter-reports/nextep/2026-09-07-density-ranks-the-animating-rule-not-the-declaring-class.md), [`07`](../docs/adopter-reports/nextep/2026-09-07-motion-off-does-not-reach-a-deck-authored-motion.md) | [T-304](T-304-bring-a-deck-authored-motion-inside-the-shells-motion-gate-the-motion-control-and-densitys-ranking.md) | accepted, raised | Key the motion gate and the Motion control off the ranking rather than class names, and rank what density finds | `PH1`, `m` |
-| [`06`](../docs/adopter-reports/nextep/2026-09-07-measure-reports-no-overflow-while-a-figure-paints-over-the-prose.md), [`08`](../docs/adopter-reports/nextep/2026-09-07-render-state-cannot-see-an-svg-fill-change.md), [`09`](../docs/adopter-reports/nextep/2026-09-07-render-state-hover-fires-css-hover-but-no-mouseenter.md) | [T-305](T-305-let-render-py-see-an-svg-paint-change-a-scripted-hover-and-a-figure-painting-over-its-neighbour.md) | accepted, raised | SVG paint in `state`, a decided hover path, and a figure measured against its own track | `PH1`, `m` |
-| [`02`](../docs/adopter-reports/nextep/2026-09-06-a-synthetic-keydown-on-document-throws-in-the-shell-handler.md), [`12`](../docs/adopter-reports/nextep/2026-09-07-the-shell-cancels-enter-and-space-before-a-deck-button-sees-them.md) | [T-310](T-310-stop-the-shells-keydown-handler-throwing-on-a-document-target-and-taking-space-from-a-focused-control.md) | accepted, raised; `12` in part | Guard `matches`, leave Space to a focused control, and measure Enter | `PH1`, `s` |
-| [`03`](../docs/adopter-reports/nextep/2026-09-06-quickview-cannot-wire-an-icon-first-source-item.md), [`15`](../docs/adopter-reports/nextep/2026-09-08-shell-sync-is-silent-about-a-stale-chrome-tail.md) | [T-306](T-306-wire-an-icon-first-source-item-in-quickview-py-and-make-shell-py-sync-name-a-stale-chrome-tail.md) | accepted, raised | An order-independent item pattern, and `sync` naming `tail` | `PH1`, `s` |
-| [`01`](../docs/adopter-reports/nextep/2026-09-01-nav-chrome-has-no-first-last-page-control.md), [`11`](../docs/adopter-reports/nextep/2026-09-07-the-ruler-gives-no-slide-number-on-hover.md), [`16`](../docs/adopter-reports/nextep/2026-09-08-the-condensed-ruler-drops-the-small-dots-as-targets.md) | [T-307](T-307-give-the-chrome-first-and-last-page-controls-and-a-ruler-whose-marks-a-reader-can-aim-at.md) | accepted, raised | First and last page controls, a readout at the mark, and whether dense-mode ticks become targets again | `PH3`, `m` |
-| [`17`](../docs/adopter-reports/nextep/2026-09-08-the-gate-has-no-route-for-a-deviation-the-owner-licensed.md) | [T-308](T-308-decide-how-a-deck-records-a-deviation-its-owner-licensed-and-what-the-gate-reports-for-it.md) | accepted, raised | Decide where a deck's licensed deviation lives and what the gate reports for it | `PH3`, `m` |
-| [`18`](../docs/adopter-reports/nextep/2026-09-08-an-inline-term-tag-with-a-definition-bubble-has-no-contracted-form.md) | [T-309](T-309-contract-an-inline-term-that-opens-a-definition-bubble.md) | accepted, raised | Contract an inline term with a definition bubble, on the sources box's shape | `PH3`, `m` |
+| `10`, `13`, `14` | [T-303](T-303-close-a-slidefacts-element-at-its-own-tag-find-every-control-and-make-readabilitys-ledger-add-up.md) | accepted, raised | Close an element at its balanced tag, find every control, and make readability's ledger add up | `PH1`, `m` |
+| `04`, `05`, `07` | [T-304](T-304-bring-a-deck-authored-motion-inside-the-shells-motion-gate-the-motion-control-and-densitys-ranking.md) | accepted, raised | Key the motion gate and the Motion control off the ranking rather than class names, and rank what density finds | `PH1`, `m` |
+| `06`, `08`, `09` | [T-305](T-305-let-render-py-see-an-svg-paint-change-a-scripted-hover-and-a-figure-painting-over-its-neighbour.md) | accepted, raised | SVG paint in `state`, a decided hover path, and a figure measured against its own track | `PH1`, `m` |
+| `02`, `12` | [T-310](T-310-stop-the-shells-keydown-handler-throwing-on-a-document-target-and-taking-space-from-a-focused-control.md) | accepted, raised; `12` in part | Guard `matches`, leave Space to a focused control, and measure Enter | `PH1`, `s` |
+| `03`, `15` | [T-306](T-306-wire-an-icon-first-source-item-in-quickview-py-and-make-shell-py-sync-name-a-stale-chrome-tail.md) | accepted, raised | An order-independent item pattern, and `sync` naming `tail` | `PH1`, `s` |
+| `01`, `11`, `16` | [T-307](T-307-give-the-chrome-first-and-last-page-controls-and-a-ruler-whose-marks-a-reader-can-aim-at.md) | accepted, raised | First and last page controls, a readout at the mark, and whether dense-mode ticks become targets again | `PH3`, `m` |
+| `17` | [T-308](T-308-decide-how-a-deck-records-a-deviation-its-owner-licensed-and-what-the-gate-reports-for-it.md) | accepted, raised | Decide where a deck's licensed deviation lives and what the gate reports for it | `PH3`, `m` |
+| `18` | [T-309](T-309-contract-an-inline-term-that-opens-a-definition-bubble.md) | accepted, raised | Contract an inline term with a definition bubble, on the sources box's shape | `PH3`, `m` |
 
 **Child fix tasks raised**
 
@@ -200,7 +200,7 @@ weigh.
 
 - **Five of the eighteen are in the instruments the last report produced.** `08`, `09`, `10`, `13`
   and `14` are in `render.py state`, `slidefacts.py` and `readability.py`, which T-258, T-259 and T-267
-  built from the ClaimAI set and shipped in `0.7.0`. Each was proved on the deck that motivated it, and
+  built from the second adopter set and shipped in `0.7.0`. Each was proved on the deck that motivated it, and
   a second deck of a different shape found what that one could not. It is the one-deck measurement
   shape T-225 section 3 already names, so it is recorded here rather than as a new lesson.
 

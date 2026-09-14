@@ -24,7 +24,7 @@ deliverables: []
 **Outcome**
 `DS-244` decides whether anything is actually obscured. Today it compares text against text and nothing else, which makes it **wrong in both directions at once** — the pair of findings is why this is one task. It **misses** a label crossing the rectangle it labels, the commonest way a hand-built figure goes wrong, three instances in one evening on slides it called clean. It **refuses** a cross-fade in place, because it does not read `opacity` and cannot see that only one of the pair is ever visible — three constructions rejected in a row on one slide.
 
-**From the adopter report** [`013`](../docs/adopter-reports/claimai/013-ds-244-sees-label-over-label-but-not-label-over-shape.md), [`022`](../docs/adopter-reports/claimai/022-ds-244-refuses-a-cross-fade-in-place.md).
+**From the adopter report** `013`, `022`.
 
 **Scope**
 - In: reading the computed `opacity` before pairing two labels
@@ -36,7 +36,7 @@ deliverables: []
   than asked.
 
 **Inputs**
-- the records above, [`013`](../docs/adopter-reports/claimai/013-ds-244-sees-label-over-label-but-not-label-over-shape.md), [`022`](../docs/adopter-reports/claimai/022-ds-244-refuses-a-cross-fade-in-place.md) — each carries its evidence, its version and its own proposed fix
+- the records above, `013`, `022` — each carries its evidence, its version and its own proposed fix
 - **Read the two records together or neither makes the point.** `013` says the rule is too blind and `022` says it is too strict; together they say it tests proximity of two text runs where it means obstruction
 - [T-204](T-204-an-instrument-for-mark-collisions.md), which built `DS-244` and recorded text-against-line as *reports, never gates* after measuring 16 firings for 1 real defect. **That calibration is a term in this decision** and must not be quietly reversed
 - `022` records that the rule improved the slide three times while being wrong — it is a report, not a complaint
@@ -78,13 +78,13 @@ deliverables: []
 **Outputs produced**
 - [`tools/deck/markhits.py`](../tools/deck/markhits.py) — `seen()`, the `rects` collection, `outside_fraction()`, `noted_of()`, `STRADDLE_FRACTION`, the verdict text and eight self-test assertions
 - [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — the `DS-244` row's three stated limits
-- [`docs/adopter-reports/claimai/013-ds-244-sees-label-over-label-but-not-label-over-shape.md`](../docs/adopter-reports/claimai/013-ds-244-sees-label-over-label-but-not-label-over-shape.md), [`022-ds-244-refuses-a-cross-fade-in-place.md`](../docs/adopter-reports/claimai/022-ds-244-refuses-a-cross-fade-in-place.md) — closed
+- the adopter reports T-320 removed, `022-ds-244-refuses-a-cross-fade-in-place.md` — closed
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Records [`013`](../docs/adopter-reports/claimai/013-ds-244-sees-label-over-label-but-not-label-over-shape.md) and [`022`](../docs/adopter-reports/claimai/022-ds-244-refuses-a-cross-fade-in-place.md) closed with their remedies measured | pass | Both closed. `013`'s first option taken and narrowed to filled rectangles with the reason; `022`'s first item implemented and its second answered as a stated limit |
+| Records `013` and `022` closed with their remedies measured | pass | Both closed. `013`'s first option taken and narrowed to filled rectangles with the reason; `022`'s first item implemented and its second answered as a stated limit |
 | Each fix proved by seeding the defect and watching the check fire, in both directions (**L-125**) | pass | Cross-fade **gates with both visible, silent with one at `opacity:0`**, and the hidden label is counted rather than dropped silently. A label straddling a filled rect reports at **90% outside**; centred in the same box it reports nothing. Eight new self-test assertions, including that `text/shape` must not be in `GATED_KINDS` |
 | `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | pass | Both run at the end of B6, on a tree nothing was editing |
 
@@ -95,5 +95,5 @@ deliverables: []
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
 | 2026-08-29 | → done | Batch **B6**. The rule now reads opacity before pairing, measures a label across the box it names, and says in its own row what a pass does not claim. **The new kind reports**: calibrated across five decks it fires zero times, so there is no false-alarm rate to gate on. The opacity guard's first form silenced the rule entirely — 129 hidden labels, 15 label-on-line placements to 0 — and was caught by re-running T-204's count rather than by reading the diff. |

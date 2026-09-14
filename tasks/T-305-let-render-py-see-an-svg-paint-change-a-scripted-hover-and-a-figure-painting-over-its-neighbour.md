@@ -33,7 +33,7 @@ Today it reports confidently on three states it never reached:
 - `measure` checks a figure only against the stage (`tools/deck/render.py` `:325`, `:350`-`:354`), and
   never against its own track. So a figure painting over the prose beneath it reports zero overflow.
 
-**From the adopter report** [`06`](../docs/adopter-reports/nextep/2026-09-07-measure-reports-no-overflow-while-a-figure-paints-over-the-prose.md), [`08`](../docs/adopter-reports/nextep/2026-09-07-render-state-cannot-see-an-svg-fill-change.md), [`09`](../docs/adopter-reports/nextep/2026-09-07-render-state-hover-fires-css-hover-but-no-mouseenter.md).
+**From the adopter report** `06`, `08`, `09`.
 
 **Re-run in triage, 2026-09-13, on this tree.** `state --hover ".ruler-ticks button"` on a copy of the
 reference deck printed the record's message for `08`, and the tick's `mouseenter` label write did not
@@ -52,7 +52,7 @@ element's centre, or keep substitution and say in the report that script handler
 
 **Inputs**
 - the three records above, each with its command, its version and its own proposed fix
-- [T-299](T-299-triage-the-nextep-adopter-report.md) section 3, where the three were ruled together
+- [T-299](T-299-triage-the-third-adopters-report.md) section 3, where the three were ruled together
 
 **Acceptance criteria**
 - [ ] records `06`, `08` and `09` are each closed with the remedy measured, or deferred with the reason
@@ -145,4 +145,4 @@ loaded module and the written probe was confirmed to lack it.
 | 2026-09-14 | -> in_progress | Batch B26 started. Step 1 ran first. |
 | 2026-09-14 | -> planned | Seven steps. Step 1 measures before anything is designed. |
 | 2026-09-14 | -> specified | §1 was complete as raised, and its one choice is decided in §3. |
-| 2026-09-13 | -> proposed | Raised by T-299 from Nextep records `06`, `08` and `09`, which share `render.py`. `PH1`: an adopter met all three in the published `0.7.0`. `06` arrived as a `gap` and is ruled a defect, because `measure` reports zero overflow over a real overlap. |
+| 2026-09-13 | -> proposed | Raised by T-299 from the third adopter's records `06`, `08` and `09`, which share `render.py`. `PH1`: an adopter met all three in the published `0.7.0`. `06` arrived as a `gap` and is ruled a defect, because `measure` reports zero overflow over a real overlap. |

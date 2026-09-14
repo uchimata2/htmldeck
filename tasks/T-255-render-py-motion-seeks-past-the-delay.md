@@ -25,7 +25,7 @@ deliverables:
 **Outcome**
 `render.py motion` samples an animation's own life. Today two branches write a seek and both are off by the delay: the report branch takes a fraction of duration from a clock that already includes the delay, and the capture branch subtracts the delay from an absolute clock that was already correct. **A working motion reads as dead** — *the computed style DOES NOT MOVE* is printed as a finding about the deck when it is a finding about the seek. Any non-zero delay shifts the whole report invisibly, and `rise` at delays 0, 60, 120, 180 and 240 is htmldeck's own reference stagger.
 
-**From the adopter report** [`017`](../docs/adopter-reports/claimai/017-render-py-motion-seeks-a-fraction-of-duration-and-ignores-the-delay.md).
+**From the adopter report** `017`.
 
 **Scope**
 - In: both branches, `render.py` `:597-598` and `:602`
@@ -35,7 +35,7 @@ deliverables:
   than asked.
 
 **Inputs**
-- the record above, [`017`](../docs/adopter-reports/claimai/017-render-py-motion-seeks-a-fraction-of-duration-and-ignores-the-delay.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `017` — each carries its evidence, its version and its own proposed fix
 - the adopter's reproduction: at `delay 600, duration 300` the five offsets are `0, 75, 150, 225, 300` and every one falls inside the delay
 - the 100% offset reading `opacity 0.99902` on a staggered entrance — the report stops at 340 where the animation's real end is 400, so the frame labelled 100% is not the settled state
 
@@ -122,7 +122,7 @@ deliverables:
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Every record closed with its remedy measured, or explicitly deferred with the reason recorded | met | Record [`017`](../docs/adopter-reports/claimai/017-render-py-motion-seeks-a-fraction-of-duration-and-ignores-the-delay.md) items 1, 2 and 3 are all implemented and measured above. Nothing deferred |
+| Every record closed with its remedy measured, or explicitly deferred with the reason recorded | met | Record `017` items 1, 2 and 3 are all implemented and measured above. Nothing deferred |
 | Each fix proved by seeding the defect and watching the check fire, in both directions (**L-125**) | met | Rows 3 and 4 of *What was measured*. The report arithmetic was restored in the probe and the real tool run against this repository's own deck |
 | `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | met | `lint.py` all four steps green with the baselined **eleven** advisories and no more. `check_all.py` **0 failures, 0 unclassified, 0 stale** over 37 commands and all 50 tracked tools, 278 s, run separately and after the last edit |
 
@@ -140,7 +140,7 @@ deliverables:
 | :--- | :--- | :--- |
 | 2026-08-29 | (no change) | **The owed look was taken by the owner and passed.** Both questions answered *fine*: the five frames read as a stagger rather than a fade, and `motion-075.png` and `motion-100.png` are distinguishable — the one place the numbers left room for a real finding, since they differ by 101 bytes. `T-255` closed on 2026-08-29 with this outstanding under [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) §4, and **the queue that section describes is now empty for this task**. The verdict is unchanged; what changes is that rule 6 is satisfied rather than deferred. |
 | 2026-08-29 | → done | Every criterion met, all three of record `017`'s items implemented. **12 of 17 animations sampled inside their own delay before, 0 after**, on this repository's own reference deck; the seeded arithmetic is caught on 12 of 12 even where the row still says MOVES. One look is **owed** and recorded in §3 — the five `--shots` frames, which this session may not open. |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
 | 2026-08-29 | → specified | Batch B1 of [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md). **Reproduced on this repository's own `examples/reference-deck.html` before anything was written**, which the record could not do: **12 of its 17 animations were sampled inside their own delay**. The reference stagger is htmldeck's, so the adopter's deck was not a special case — this deck has been measured this way since the stagger existed. |
 | 2026-08-29 | → in_progress | Both seeks corrected, and the header comment with them — it stated the right goal and the wrong arithmetic in one sentence. `report_seeks`, `motion_verdict` and `capture_seek` put the rule in Python where it can be seeded without a browser (**L-07**), and `cmd_motion` now checks the probe's offsets against `report_seeks` on every run. On this repository's own deck, **12 of 17 animations sampled inside their delay before, 0 after**. One finding absorbed into the batch as [T-272](T-272-render-py-motion-enumerates-a-different-animation-set-across-runs.md). |
 | 2026-08-29 | → planned | Seven steps. Step 3 exists because the seek lives in a JavaScript string: without a pure statement of the same arithmetic there is nothing to seed, and **L-07** would have left this fix provable only by a browser run. |

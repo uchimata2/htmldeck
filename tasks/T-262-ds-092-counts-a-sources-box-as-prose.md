@@ -24,7 +24,7 @@ deliverables: []
 **Outcome**
 `DS-092` reads prose. Today the provenance mark is authored as a `<p class="provenance">`, so the rule counts the **sources box** as a paragraph: six source items each ending in a full stop read as six sentences and the slide fails. That puts an invisible ceiling of about three sources plus a verification line on any slide — against an author who asked to *repeat the source controls freely* — and two slides had to be trimmed, one losing a pointer with no other home.
 
-**From the adopter report** [`012`](../docs/adopter-reports/claimai/012-ds-092-counts-a-sources-box-as-prose.md).
+**From the adopter report** `012`.
 
 **Scope**
 - In: excluding `.sources-box` from the paragraph-length half; the twenty-word sentence cap stays, because a source description past twenty words is a genuine defect
@@ -34,7 +34,7 @@ deliverables: []
   than asked.
 
 **Inputs**
-- the record above, [`012`](../docs/adopter-reports/claimai/012-ds-092-counts-a-sources-box-as-prose.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `012` — each carries its evidence, its version and its own proposed fix
 - the component contract, which already distinguishes provenance from body copy by class
 
 **Acceptance criteria**
@@ -71,13 +71,13 @@ deliverables: []
 **Outputs produced**
 - [`tools/deck/audit.py`](../tools/deck/audit.py) — DS-092's paragraph half
 - [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — the `DS-092` row
-- [`docs/adopter-reports/claimai/012-ds-092-counts-a-sources-box-as-prose.md`](../docs/adopter-reports/claimai/012-ds-092-counts-a-sources-box-as-prose.md) — closed
+- the adopter reports T-320 removed — closed
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-| Record [`012`](../docs/adopter-reports/claimai/012-ds-092-counts-a-sources-box-as-prose.md) closed with its remedy measured | pass | Closed. Its primary fix taken in the precise form it names; its conditional second suggestion refused with the reason |
+| Record `012` closed with its remedy measured | pass | Closed. Its primary fix taken in the precise form it names; its conditional second suggestion refused with the reason |
 | Each fix proved by seeding the defect and watching the check fire, in both directions (**L-125**) | pass | Six terminated source items: **FAIL** before, **pass** after. A five-sentence verification line beside the box and a twenty-five-word source item both still **FAIL**, which is the paragraph half and the sentence half each still alive |
 | `python tools/tasks/lint.py` and `python tools/check_all.py` green, run separately | pass | Both run at the end of B5, on a tree nothing was editing |
 
@@ -88,5 +88,5 @@ deliverables: []
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH1`**: a defect an adopter met in the published `0.6.0`, which is `CLAUDE.md`'s one condition for reopening the phase. Verified against this tree before the record was actioned — the report's `Version seen` was stamped rather than re-run on fourteen of the twenty-seven. |
 | 2026-08-29 | → done | Batch **B5**. The sources box is subtracted from DS-092's paragraph half and read in full by its sentence half. A source ceiling was offered by the record and refused: the ceiling of about three was an accident, not a decision, and replacing it with a chosen number is a `DS-000` question nobody has asked. |

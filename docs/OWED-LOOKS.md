@@ -38,13 +38,12 @@ stage, so the element index and the reader's number differ by one from the first
 
 ## The queue
 
-**Outstanding: the rows in the table below.** Rows 1 to 22 were all taken by the owner and are
+**Outstanding: the rows in the table below.** Rows 1 to 23 were all taken by the owner and are
 recorded under the next heading with their answers. **The queue being empty is what
 [`PUBLISHING.md`](PUBLISHING.md) §8 needs before a release is cut.**
 
 | # | Deck | Where | What to look for | Owed by |
 | :-- | :--- | :--- | :--- | :--- |
-| 23 | [`examples/reference-deck.html`](../examples/reference-deck.html) | the chrome row, any slide - the ruler's drop | The drop is now filled in `--ink-soft`, the theme's dark warm brown, where it was `--ink`, and the number stays in the cream `--paper`. *Hover a mark: does the drop read as dark coffee rather than black, and is the number still legible in it?* | [T-317](../tasks/T-317-fill-the-ruler-readouts-drop-in-ink-soft.md) |
 
 ## What has already been looked at
 
@@ -75,3 +74,4 @@ look nobody can show was taken.
 | 20 | [`examples/reference-deck.html`](../examples/reference-deck.html), and the 25-slide splice `python tools/deck/longdeck.py examples/reference-deck.html 25` writes to `.assets-cache/deck/longdeck-25.html` | the chrome row, any slide - the ruler | The slide number over a mark is now a drop whose point sits on the mark. On the 25-slide splice the strip reads the pointer: moving along it shows the nearest slide's number in the drop, and a press goes there. *Does the drop point at the mark it names, with the number legible in its round end? On the splice, does sweeping the strip read as aiming, and does a press land on the slide the drop showed?* - **Yes, with one change.** The drop reads well, and its `--ink` fill is too much contrast: the owner asked for the dark coffee with the cream number, which is [T-317](../tasks/T-317-fill-the-ruler-readouts-drop-in-ink-soft.md) | [T-314](../tasks/T-314-give-the-ruler-readout-a-drop-and-let-the-dense-ruler-aim-at-every-slide.md) | 2026-09-14, by the owner |
 | 21 | the variant `a-term-in-a-sentence`, which `python tools/deck/static_variants.py` writes under `.assets-cache/deck/variants/` | *Holding is not the cheap option*, slide 10 - the word *gate* in the third cost | The inline term's underline is now continuous, in the accent, drawn by the theme's `--term-line`. *Does the continuous line read as a word you can open, distinct from a link, and sit comfortably under the text?* - **Yes.** The owner found it much better | [T-315](../tasks/T-315-make-the-inline-terms-underline-a-theme-token.md) | 2026-09-14, by the owner |
 | 22 | [`examples/reference-deck.html`](../examples/reference-deck.html) | any slide whose provenance mark lists *Cost model*, *Programme timetable* or *Ridership model*, and the colophon | The reference deck's sources now open in the quick view instead of sitting as plain text. *Open each of the three from a slide's mark: does the document appear, readable, and does the colophon's list open them too?* - **Yes.** Solved | [T-316](../tasks/T-316-give-the-reference-decks-sources-quick-views.md) | 2026-09-14, by the owner |
+| 23 | [`examples/reference-deck.html`](../examples/reference-deck.html) | the chrome row, any slide - the ruler's drop | Does the drop, now filled in `--ink-soft`, read as dark coffee rather than black, and is the number still legible in it? - **Yes.** | [T-317](../tasks/T-317-fill-the-ruler-readouts-drop-in-ink-soft.md) | 2026-09-14, by the owner |

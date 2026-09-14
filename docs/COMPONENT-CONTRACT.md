@@ -62,7 +62,7 @@ and which was the one mechanism closed to a deck. Two limits, and both are check
   row, and still fails. A deck that has not asked for the escape does not get it by accident.
 
 *Added 2026-08-29 by [T-266](../tasks/T-266-a-deck-cannot-name-a-repeated-figure-treatment-once.md),
-from ClaimAI adopter report [`014`](adopter-reports/claimai/014-a-deck-cannot-name-a-repeated-figure-treatment-once.md).
+from the second adopter's report `014`.
 Before it, the gate reported such a class as **uncontracted** — which reads as* not yet in the
 contract, *and the contract ships in the plugin, so the builder went looking for the row to add and
 the search ended nowhere. The report's third proposal, a figure-internals section here, was refused
@@ -291,7 +291,7 @@ map off `data-qv` across the whole stage, so the row resolves to the template th
 already carries. Five documents quoted twice would be the size cost this feature has to justify,
 spent on nothing.
 
-**An opener may name a section with `data-qv-at`** (T-271, from ClaimAI adopter report `001`). Its
+**An opener may name a section with `data-qv-at`** (T-271, from the second adopter's report `001`). Its
 value is the text of a heading in the source, compared without case or extra space. The quick view
 opens scrolled to that heading and marks it, and the rest of the document stays a scroll away. A slide
 citing one clause names it, and the colophon's row names nothing and opens the whole file. An anchor
@@ -327,7 +327,7 @@ script's, like `.doc`'s sections.
 disclosure interaction rules and none of its vocabulary, which is why it is contracted here beside
 the mark it belongs to rather than in §3.3.
 
-**`.term` is an inline term and its definition bubble, on the same footing** (T-309, from Nextep
+**`.term` is an inline term and its definition bubble, on the same footing** (T-309, from the third adopter
 adopter report `18`). The term is a word in a sentence, so `.term` sits inside the copy, and its
 `.term-btn` is the word itself. `.term-bub` is the definition, shut at load (DS-227), and the button's
 `aria-controls` names it. Hover shows it, a press pins it, and opening one closes any other panel
@@ -566,8 +566,9 @@ The line is `htmldeck-chart-engine:` followed by four `key=value` pairs separate
 ```
 
 It sits in the deck's head comment, above `EMBEDDED FONT LICENCES`, which is `shell.py`'s `NOTE`
-region and where a deck's licences sit too. **That is the one place in the head `shell.py sync`
-keeps.** Until T-311 the declaration was a `<meta>`, and the first sync deleted it. DS-122 fails a
+region and where a deck's licences sit too. It opens with htmldeck's colophon line, which also
+switches the generator tag on; how to remove both is [`../shell/README.md`](../shell/README.md)'s
+*The slots*. **That is the one place in the head `shell.py sync` keeps.** Until T-311 the declaration was a `<meta>`, and the first sync deleted it. DS-122 fails a
 declaration anywhere outside the head comment, and its failure says where the line goes. All four are required, `output` must be `svg`, and `licence` must be an SPDX
 identifier whose terms permit redistribution inside a single file, which is the same test DS-032
 applies to an embedded face. **A deck that declares nothing is held to the hand-authored default**,

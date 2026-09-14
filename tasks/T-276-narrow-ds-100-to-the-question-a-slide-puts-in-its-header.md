@@ -29,7 +29,7 @@ instrument in the toolchain. **The rule's escape hatch teaches a worse habit tha
 prevents**, which is the finding, and it is unchanged by this task's mechanism.
 
 **Ruled by the owner, 2026-08-29.** [T-270](T-270-two-rules-whose-escape-hatch-teaches-the-wrong-habit.md)
-took report [`023`](../docs/adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md)'s
+took report `023`'s
 proposal 1 as ruled, **measured it, and refused it**: its condition — a `?` followed within the
 slide by a declarative bottom line — holds on **38 of 38** slides, because the component contract
 puts one bottom line on every slide and `DS-202` requires it to be one plain sentence. That is an
@@ -49,7 +49,7 @@ recommendation and its stated limit; **the owner took the recommendation.**
   decision rather than an oversight
 
 **Inputs**
-- report [`023`](../docs/adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md)
+- report `023`
 - [`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) §3, which carries the question and
   the ruling
 - **The recommendation's own limit, and it stands as a limit on this task.** All three tracked
@@ -73,7 +73,7 @@ recommendation and its stated limit; **the owner took the recommendation.**
 | 2 | Repair the T-167 self-test, whose own fixture puts its question in `.body` and would now pass | `tools/deck/audit.py` |
 | 3 | Seed both directions on a shipped deck | the measurement |
 | 4 | Say what the rule measures and why | `docs/DESIGN-SYSTEM.md` |
-| 5 | Close the record and the order's open question | `docs/adopter-reports/claimai/023…`, `docs/REMEDIATION-ORDER.md` |
+| 5 | Close the record and the order's open question | the adopter reports T-320 removed, `docs/REMEDIATION-ORDER.md` |
 
 ## 3. Implement
 
@@ -101,7 +101,7 @@ limit was put to the owner with the recommendation and accepted rather than wave
   `ds100_no_rhetorical_questions`, and six self-test assertions
 - [`docs/DESIGN-SYSTEM.md`](../docs/DESIGN-SYSTEM.md) — the `DS-100` row
 - [`docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) §3 — the question answered
-- [`docs/adopter-reports/claimai/023-…`](../docs/adopter-reports/claimai/023-ds-100-fires-on-any-question-mark-meeting-a-tag.md) — closed
+- the adopter reports T-320 removed — closed
 
 ## 4. Review
 

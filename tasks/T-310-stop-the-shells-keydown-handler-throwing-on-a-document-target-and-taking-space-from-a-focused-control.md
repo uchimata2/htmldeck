@@ -31,7 +31,7 @@ keys to that control. Today it fails in two ways:
 - `:600` advances the deck on `' '` and calls `preventDefault` with no exemption for a focused
   control. So a real `<button>` on a slide cannot be pressed with Space, and the deck advances instead.
 
-**From the adopter report** [`02`](../docs/adopter-reports/nextep/2026-09-06-a-synthetic-keydown-on-document-throws-in-the-shell-handler.md), [`12`](../docs/adopter-reports/nextep/2026-09-07-the-shell-cancels-enter-and-space-before-a-deck-button-sees-them.md).
+**From the adopter report** `02`, `12`.
 
 **Re-run in triage, 2026-09-13, on this tree.** Dispatching `ArrowRight` on `document` in a copy of the
 reference deck threw `TypeError: e.target.matches is not a function`, and the slide was unchanged.
@@ -51,7 +51,7 @@ the measurement.
 
 **Inputs**
 - the two records above, each with its command, its version and its own proposed fix
-- [T-299](T-299-triage-the-nextep-adopter-report.md) section 3, where `12` was ruled in part
+- [T-299](T-299-triage-the-third-adopters-report.md) section 3, where `12` was ruled in part
 
 **Acceptance criteria**
 - [ ] records `02` and `12` are each closed with the remedy measured by a real key press in a rendered
@@ -119,6 +119,6 @@ reproduce on this shell. The capture-phase listener that record describes is not
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-09-13 | -> proposed | Raised by T-299 from Nextep records `02` and `12`, which share the shell's keydown handler. `PH1`: an adopter met both in the published `0.7.0`. `12` is accepted for Space, and its Enter half is left to be measured. |
+| 2026-09-13 | -> proposed | Raised by T-299 from the third adopter's records `02` and `12`, which share the shell's keydown handler. `PH1`: an adopter met both in the published `0.7.0`. `12` is accepted for Space, and its Enter half is left to be measured. |
 | 2026-09-14 | -> in_progress | Section 1 was complete from triage and needed no change. Planned, and started in a fresh session as the fresh-session arm of `T-290`. |
 | 2026-09-14 | in_progress -> done | `matches` guarded and Space left to a focused control, each measured in both directions; Space and Enter by the owner's real press. Record `12`'s Enter half closes as not reproduced. |

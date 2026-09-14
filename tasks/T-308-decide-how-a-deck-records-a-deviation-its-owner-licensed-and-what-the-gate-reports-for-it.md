@@ -28,16 +28,16 @@ theme token from [T-264](T-264-ds-141s-request-licence-has-nowhere-to-put-its-nu
 that rule reads it. `check.py`'s excusal mechanism excuses a **rule** from automated checking for the
 whole project, not a **deck** from one rule.
 
-**Two adopters have met this, and one of them built a wrapper for it.** ClaimAI's four
-permanently-failing rules led [T-225](T-225-triage-the-claimai-adopter-report.md) to rule that a deck
+**Two adopters have met this, and one of them built a wrapper for it.** the second adopter's four
+permanently-failing rules led [T-225](T-225-triage-the-second-adopters-report.md) to rule that a deck
 of that shape should fail at most one rule, *by an explicit decision rather than by exhaustion*, and
-there is still no place to record the decision. Nextep ended with three owner-ruled failures,
+there is still no place to record the decision. the third adopter ended with three owner-ruled failures,
 `DS-110`, `DS-100` and `DS-005`, red on every run and held by a forty-line wrapper.
 
-**From the adopter report** [`17`](../docs/adopter-reports/nextep/2026-09-08-the-gate-has-no-route-for-a-deviation-the-owner-licensed.md).
+**From the adopter report** `17`.
 
 **Not a defect, and why that matters for the scope.** The three rules fire correctly on that deck, so
-the gate does what it says. What is missing is vocabulary. That also separates `17` from ClaimAI's
+the gate does what it says. What is missing is vocabulary. That also separates `17` from the second adopter's
 `023`, which was a rule firing outside its scope and was answered by narrowing `DS-100`.
 
 **Scope**
@@ -150,5 +150,5 @@ headline is a question, which fails `DS-100`.
 | 2026-09-14 | -> in_progress | Step 1 ran on the unchanged gate before any edit. |
 | 2026-09-14 | -> planned | Six steps. The decision in step 2 builds on the owner's answer in §1. |
 | 2026-09-14 | -> specified | §1's one open question was answered by the owner on 2026-09-13. |
-| 2026-09-13 | -> proposed | Raised by T-299 from Nextep record `17`. `PH3` and `decision`: the rules fire correctly, so no published behaviour is wrong, and the open question is the owner's. |
+| 2026-09-13 | -> proposed | Raised by T-299 from the third adopter's record `17`. `PH3` and `decision`: the rules fire correctly, so no published behaviour is wrong, and the open question is the owner's. |
 | 2026-09-13 | (no change) | The owner answered the open question: a deck may license a `hard` rule, with the rule, the reason and the date stated in the deck and printed on every run. Still `proposed`. |

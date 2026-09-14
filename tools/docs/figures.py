@@ -165,9 +165,7 @@ GAP = 2
 
 EXCLUDED_FENCES = {
     "/plugin marketplace add": "typed into Claude Code; there is no local command to run",
-    "git clone https://": "clones this repository; running it would fetch the network every check",
     "claude plugin update": "upgrades an installed plugin on the reader's machine",
-    "taskmd check": "belongs to another project's tool, and no output is pasted under it",
     "python tools/deck/critique.py": "shows the calling form with placeholder arguments, not a run",
 }
 
@@ -1307,11 +1305,34 @@ def stale_exclusions(text):
     return out
 
 
+def fixture_tail():
+    """The subjects the fixtures below stale, derived at test time and appended to the page.
+
+    **The front page chooses what it shows; a fixture may not choose it for the page** (T-319). Each
+    fixture stales a copy of the README, and until T-319 each required the live page to carry its
+    subject - a floor block, a built deck's size - so a README written for a stranger failed this
+    self-test for leaving maintenance output off it. The subjects are appended here instead, each
+    pasted from the run or read from the manifest, so none can go stale.
+
+    **The compared block is appended too, although the page carries one.** Under `--docs` the page's
+    `check.py` block is read rather than run (`DOCS_SKIPPED`), so it is not `compared`, and a page
+    whose only compared block is that one left fixture 1 with no subject.
+    """
+    parts = []
+    for cmd in (sorted(FLOOR)[0], "python tools/deck/ruleset.py --counts"):
+        parts += ["", "```bash", cmd, "```", "", "```"] + run(cmd).rstrip("\n").split("\n") + ["```", ""]
+    built = "examples/sort-window/sort-window.html"
+    facts = artifact_facts()
+    if built in facts:
+        parts += ["[`%s`](%s) is **%d KB in one file**." % (built, built, facts[built]["KB"]), ""]
+    return "\n".join(parts)
+
+
 def self_test():
     """Four staled copies, one per failure mode. **A check only ever seen passing is not a check**
     (**L-36**), and reading the assertion is not enough - each fixture is judged by the *message*
     it produces, because an assertion that cannot run still exits non-zero (**L-55**)."""
-    base = io.open(README, encoding="utf-8").read()
+    base = io.open(README, encoding="utf-8").read() + fixture_tail()
 
     rows, prose_rows, _seen, table, outputs, _watched = audit(base)
     if [r for r in rows if r[0] in ("FAILING", "UNDECLARED")]:

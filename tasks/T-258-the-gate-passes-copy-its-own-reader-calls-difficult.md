@@ -25,7 +25,7 @@ deliverables:
 **Outcome**
 An author learns from the gate that copy is hard to read. Today the two rules over copy measure **length** (`DS-092`) and a **banned list** (`DS-106`), both were green on a deck its own author called difficult, and the difficulty was vocabulary, noun stacks and abstraction. Measured afterwards with an instrument the adopter had to write: Flesch 64.6, Fog 10.3, **18% three-syllable words and 129 nominalisations** — and no rule looks at either.
 
-**From the adopter report** [`025`](../docs/adopter-reports/claimai/025-the-gate-passes-copy-its-own-reader-calls-difficult.md).
+**From the adopter report** `025`.
 
 **Scope**
 - In: a readability verdict over drawn slide copy — Flesch, Fog and a three-syllable share, standard library, reading the deck's own text nodes
@@ -36,7 +36,7 @@ An author learns from the gate that copy is hard to read. Today the two rules ov
   than asked.
 
 **Inputs**
-- the record above, [`025`](../docs/adopter-reports/claimai/025-the-gate-passes-copy-its-own-reader-calls-difficult.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `025` — each carries its evidence, its version and its own proposed fix
 - the record's second half — six AI tells `DS-106` does not gate (rule-of-three cadence, negative parallelism, superficial `-ing` analyses, vague attribution, em-dash overuse, reflex bullet lists), read by hand once. **That half is [T-229](T-229-ds-106s-check-omits-a-word-the-rule-names.md)'s**, which already proposes deriving the fallback list from the rule's own row
 - `DS-107`, which is where a category nobody has built yet is recorded
 
@@ -85,7 +85,7 @@ and named rather than dropped in silence (**L-149**).
 | 4 | Prove it in **both directions** (**L-125**): a fixture of deliberately hard copy ranks above a fixture of plain copy on every measure, and the plain one is not reported as hard | `self_test()`, run on every invocation |
 | 5 | **Say what a green copy run means**, where [`../tools/deck/check.py`](../tools/deck/check.py) already says `DS-106` is never *reads as human-written* — `DS-107`'s obligation, which binds whoever builds the check. Green over `DS-092` and `DS-106` is not *reads easily* either: one measures length and one a word list | The account extended, and pointed at the reporter |
 | 6 | Wire it into [`../tools/check_all.py`](../tools/check_all.py)'s `WIDE` as a self-test — a tracked tool no table names is `unclassified` and fails the run | One `WIDE` row |
-| 7 | Close [`025`](../docs/adopter-reports/claimai/025-the-gate-passes-copy-its-own-reader-calls-difficult.md), recording that its **second half is not this task's** — the six AI tells are [T-229](T-229-ds-106s-check-omits-a-word-the-rule-names.md)'s, which has already derived `DS-106`'s list from the rule's own row | The closed record |
+| 7 | Close `025`, recording that its **second half is not this task's** — the six AI tells are [T-229](T-229-ds-106s-check-omits-a-word-the-rule-names.md)'s, which has already derived `DS-106`'s list from the rule's own row | The closed record |
 
 ## 3. Implement
 
@@ -132,7 +132,7 @@ a list the standard library owns* — the same shape as **L-08**.
 - [`../tools/deck/check.py`](../tools/deck/check.py) — the closing account now says a clean copy run
   is not *reads easily*, and points at the reporter (`DS-107`'s obligation)
 - [`../tools/check_all.py`](../tools/check_all.py) — one `WIDE` row, `readability.py --self-test`
-- [`../docs/adopter-reports/claimai/025-the-gate-passes-copy-its-own-reader-calls-difficult.md`](../docs/adopter-reports/claimai/025-the-gate-passes-copy-its-own-reader-calls-difficult.md)
+- the adopter reports T-320 removed
   — closed, with what was taken and what was refused
 
 ## 4. Review
@@ -152,6 +152,6 @@ a list the standard library owns* — the same shape as **L-08**.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |
 | 2026-08-30 | → planned | B14's second task. **The subject was decided by measurement before anything was written**, and the measurement refused the record's own wording — §2 carries the table and the eight-Flesch-point gap that settled it. |
 | 2026-08-30 | → done | The reporter ships and never gates; `025` is closed; `check.py`'s account now says a clean copy run is not *reads easily*. **No look is owed**: nothing renders, no deck changed, and the output is text. **One defect was found and fixed in place** — `slidefacts.py` decoded six entities and a tracked deck writes more, which put a byline third in the hardest-lines ranking. |

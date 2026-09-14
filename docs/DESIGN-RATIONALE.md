@@ -565,8 +565,8 @@ looked at because it assumed nobody would try.
 **Re-opened by evidence 2026-08-29, and the doubt turned out to be about the instrument.** An
 adopting project read this section as an open question about DS-219 and offered its own deck as the
 case for settling it: **40 of 46 labels failing since the build**, and every attempt to fix them
-making the slide worse (ClaimAI adopter report
-[`019`](adopter-reports/claimai/019-ds-219-cannot-see-a-painted-svg-ancestor.md)). That is what a
+making the slide worse (the second adopter's report
+`019`). That is what a
 rule outrunning its argument looks like, so it was worth taking seriously twice. It was not what had
 happened. **The rule was asking for the right two numbers against the wrong surface**: the ground
 walk stopped at the first CSS background it met and could not see a painted panel *inside* the

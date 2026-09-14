@@ -28,7 +28,7 @@ and is reported as uncited. And `shell.py sync` ends by counting regions (`tools
 `:1265`) and never runs or names `tail` (`:198`), so a deck whose chrome tail is a release behind is
 reported fully up to date.
 
-**From the adopter report** [`03`](../docs/adopter-reports/nextep/2026-09-06-quickview-cannot-wire-an-icon-first-source-item.md), [`15`](../docs/adopter-reports/nextep/2026-09-08-shell-sync-is-silent-about-a-stale-chrome-tail.md).
+**From the adopter report** `03`, `15`.
 
 **Re-run in triage, 2026-09-13, on this tree.** `item_pattern()` matched the id-first ordering and
 returned no match for the icon-first one. `15` was confirmed from source.
@@ -42,7 +42,7 @@ returned no match for the icon-first one. `15` was confirmed from source.
 
 **Inputs**
 - the two records above, each with its command, its version and its own proposed fix
-- [T-299](T-299-triage-the-nextep-adopter-report.md) section 3
+- [T-299](T-299-triage-the-third-adopters-report.md) section 3
 
 **Acceptance criteria**
 - [ ] records `03` and `15` are each closed with the remedy measured, or deferred with the reason
@@ -106,6 +106,6 @@ returned no match for the icon-first one. `15` was confirmed from source.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
-| 2026-09-13 | -> proposed | Raised by T-299 from Nextep records `03` and `15`. `PH1`: an adopter met both in the published `0.7.0`. `15` arrived as `friction` and is ruled a defect, because the tool reports a deck up to date when it is not. |
+| 2026-09-13 | -> proposed | Raised by T-299 from the third adopter's records `03` and `15`. `PH1`: an adopter met both in the published `0.7.0`. `15` arrived as `friction` and is ruled a defect, because the tool reports a deck up to date when it is not. |
 | 2026-09-14 | -> in_progress | Section 1 was complete from triage and needed no change. Planned, and started after `/compact` in the session that closed `T-310`, as the compact arm of `T-290`. |
 | 2026-09-14 | in_progress -> done | `ITEM_HEAD` accepts either order, and `sync` names a chrome tail that is behind. Each is measured in both directions. |

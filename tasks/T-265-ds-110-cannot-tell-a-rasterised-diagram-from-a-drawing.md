@@ -24,7 +24,7 @@ deliverables: []
 **Outcome**
 **A decision, not a fix.** `DS-110` bans every raster the deck produces. The adopter's presenter supplied a pencil drawing for the lobby — front matter, which `DS-242` already defines as carrying nothing from the argument — and the deck now ships a permanent failure to do something the rule was never written to prevent. Every alternative was worse: no tracer installed, the drawn emblem already rejected, and the reading view is where nobody is sitting.
 
-**From the adopter report** [`011`](../docs/adopter-reports/claimai/011-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md).
+**From the adopter report** `011`.
 
 **Scope**
 - In: the decision, argued both ways, with `DS-000`'s stated reason either way
@@ -34,7 +34,7 @@ deliverables: []
   than asked.
 
 **Inputs**
-- the record above, [`011`](../docs/adopter-reports/claimai/011-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md) — each carries its evidence, its version and its own proposed fix
+- the record above, `011` — each carries its evidence, its version and its own proposed fix
 - **My recommendation is the record's own weaker form, not its primary.** Allowing any raster in a `front`/`back` section is broader than the argument supports; allowing one that is not inside `.body` and carries no `role="img"` label naming data is closer to the real test. It is harder to explain, which is a cost worth paying for a rule this load-bearing
 - `CLAUDE.md` rule 3 — *still never raster images* — which this would amend and which is why the owner decides it
 
@@ -58,7 +58,7 @@ deliverables: []
 | 3 | Assert both directions and both boundaries in the self-test, on T-070's pattern | `tools/deck/audit.py` |
 | 4 | Say what the rule protects, and record the amendment with its stated reason | `docs/DESIGN-SYSTEM.md`, and the failure line the gate prints |
 | 5 | Correct `CLAUDE.md` rule 3, which states the ban this amends | `CLAUDE.md` |
-| 6 | Close the adopter record | `docs/adopter-reports/claimai/011…`, and its `README.md` row |
+| 6 | Close the adopter record | the adopter reports T-320 removed, and its `README.md` row |
 
 ## 3. Implement
 
@@ -96,7 +96,7 @@ deliverables: []
 - [`../CLAUDE.md`](../CLAUDE.md) — rule 3's *still never raster images* is now *still never a
   rasterised diagram (DS-110)*, and the bound figure re-measured in the same edit as the rule
   requires: **15,597 bytes** against `tasks/TASK-WORKFLOW.md`'s **13,324**
-- [`docs/adopter-reports/claimai/011-…`](../docs/adopter-reports/claimai/011-ds-110-cannot-tell-a-rasterised-diagram-from-a-drawing.md)
+- the adopter reports T-320 removed
   and that folder's `README.md` — closed
 
 ## 4. Review
@@ -119,4 +119,4 @@ renders — no tracked deck carries a raster, and none gained one — so
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-08-29 | → done | Ruled by the owner and implemented in **B8**. The narrowing is by **place** on top of T-070's by **scope**, and the ruling's own question — whether the position it allows is one the rest of the gate permits — was measured first: both positions fail `DS-110` and nothing else. Two things were taken that nobody asked for and one refused: a raster in the style block keeps failing (it sits in no place, so a place-based escape cannot reach it), `role="img"` is read as the literal attribute (the wider reading refuses the adopter's own image), and the report's primary form was refused for `DS-085`'s reason. |
-| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-claimai-adopter-report.md), the triage of the ClaimAI adopter report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |
+| 2026-08-29 | → proposed | Raised by [T-225](T-225-triage-the-second-adopters-report.md), the triage of the second adopter's report. **`PH3`**: not a defect in the published plugin's behaviour, so `CLAUDE.md`'s rule puts it in the main line rather than reopening a shipped phase. |
