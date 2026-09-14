@@ -14,7 +14,7 @@ effort: s
 finding: CE-14
 created: 2026-09-02
 updated: 2026-09-14
-shipped_in: unreleased
+shipped_in: 1.0.0
 deliverables: [docs/lessons/L-164.md, .claude/rules/decks.md, .claude/rules/release.md]
 ---
 

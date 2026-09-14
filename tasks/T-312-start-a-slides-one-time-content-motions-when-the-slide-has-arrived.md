@@ -8,7 +8,7 @@ parent: null
 blocked_by: []
 related: [T-268, T-304]
 work_package: PH1
-shipped_in: unreleased
+shipped_in: 1.0.0
 owner: the project owner
 business_value: medium
 effort: s

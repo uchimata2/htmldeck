@@ -8,7 +8,7 @@ parent: T-287
 blocked_by: [T-288, T-289, T-290, T-291, T-292, T-293]
 related: [T-153]
 work_package: PH3
-shipped_in: unreleased
+shipped_in: 1.0.0
 owner: the project owner
 business_value: medium
 effort: s
