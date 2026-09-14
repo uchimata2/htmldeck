@@ -39,7 +39,7 @@ first reached an installed copy, derived from the first tag containing the commi
 | ID | Title | Work Package | Shipped In | Status | Phase | Parent | Children | Blocks | Related |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [T-057](T-057-the-3d-class-the-frame-rate-figure-and-ds-140s-fifth-motion.md) | The 3D visual class, the frame-rate figure, and DS-140's fifth motion | `PH4` | - | `proposed` | `specify` | - | T-215 | - | T-007, T-016, T-019, T-033, T-111, T-112, T-113, T-185, T-187, T-214, T-215, T-302 |
-| [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `proposed` | `specify` | - | - | - | T-318, T-319 |
+| [T-300](T-300-submit-htmldeck-to-anthropics-community-plugin-marketplace.md) | Submit htmldeck to Anthropic's community plugin marketplace | `PH3` | - | `in_progress` | `implement` | - | - | - | T-318, T-319 |
 | [T-321](T-321-make-a-decks-render-independent-of-its-file-length.md) | Make a deck's render independent of its file length | `PH3` | - | `proposed` | `specify` | - | - | - | T-318 |
 
 ## Closed

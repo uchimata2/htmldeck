@@ -108,8 +108,10 @@ instrument takes it.
 ## 5. How to run it
 
 **The skill.** `humanizer@humanizer`, from the `blader/humanizer` marketplace. Verified present at
-**2.9.1** on 2026-08-09, and at **2.11.2** on 2026-09-15 by T-319, where patterns 15, 16 and 18 still
-carried the names below; nothing had to be enabled.
+**2.9.1** on 2026-08-09, and at **2.11.2** on 2026-09-15 by T-319; nothing had to be enabled. **At 2.11.2 the
+three skipped patterns keep their numbers and subjects but not the names below**: they read *Too much
+bold text*, *Lists with bold mini-headings* and *Emojis*, read from the installed copy by T-300 the
+same day.
 
 **Mode.** File mode for `README.md` — it rewrites in place and reports a summary. Pasted-text mode for
 the repository description, which is short enough that the draft, the audit answers and the final text

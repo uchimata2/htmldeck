@@ -2,8 +2,8 @@
 id: T-300
 title: Submit htmldeck to Anthropic's community plugin marketplace
 type: admin
-status: proposed
-phase: specify
+status: in_progress
+phase: implement
 parent: null
 blocked_by: [T-271, T-282, T-287, T-290, T-294, T-296, T-298, T-301, T-303, T-304, T-305, T-307, T-308, T-309, T-311, T-318, T-319, T-320]
 related: []
@@ -12,7 +12,7 @@ owner: the project owner
 business_value: medium
 effort: s
 created: 2026-09-12
-updated: 2026-09-14
+updated: 2026-09-15
 deliverables: []
 ---
 
@@ -132,10 +132,71 @@ when the sibling project `taskmd` was submitted on 2026-09-12. It is not a field
 ## 3. Implement
 
 **Decisions & assumptions**
-- <not started>
+- **`CLAUDE.md` stays at the repository root, and the plugin manifest fails `--strict` because of it.**
+  `claude plugin validate . --strict` exits 0, but on a directory holding
+  `.claude-plugin/marketplace.json` it validates that manifest and nothing else. `claude plugin
+  validate .claude-plugin/plugin.json --strict` exits 1 on one warning: *CLAUDE.md at the plugin root
+  is not loaded as project context*. A probe plugin in a temporary directory raised it with a root
+  `CLAUDE.md` and not with the same file inside a `.claude` directory, so moving the file would clear
+  it. The move was not
+  made: `git grep` found `CLAUDE.md` named in 220 tracked files, 642 times, 125 of them Markdown
+  links, and the file is this repository's tier 1. The warning is also right about adopters, since
+  the file is for working on htmldeck and not for using it. **Reversible**: if the review rejects the
+  submission on it, the move is the fix, as its own task.
+- **"Scored" is struck from the catalog text.** The draft offered a scored critique, and
+  [`critique.md`](../skills/htmldeck/references/critique.md) §6 says no score reaches the report.
+  What a design-audit finding carries, per its §3.2, is the rule it violates and the slide it is on,
+  and the final text says that instead.
+- **"Asks two questions" is scoped to building.** [`SKILL.md`](../skills/htmldeck/SKILL.md) says the
+  two questions do not apply when a deck is reviewed.
+- **The submission link is recorded as measured.** The community repository's README now points at
+  `https://clau.de/plugin-directory-submission`, which answered `302` to
+  `https://code.claude.com/docs/en/plugins#submit-your-plugin-to-the-official-marketplace` on
+  2026-09-15. §1's route to the Console form for an individual author is not changed by it.
 
 **Outputs produced**
-- <not started>
+- **Every figure in §1 and §2, re-measured 2026-09-15.** The catalog was fetched with
+  `gh api -H "Accept: application/vnd.github.raw" repos/anthropics/claude-plugins-community/contents/.claude-plugin/marketplace.json`.
+
+  | Figure | 2026-09-12 | 2026-09-15 |
+  | :--- | :--- | :--- |
+  | `claude plugin validate . --strict` | exit 0 | exit 0, marketplace manifest only |
+  | `claude plugin validate .claude-plugin/plugin.json --strict` | not run | exit 1, the `CLAUDE.md` warning above |
+  | Catalog entries | 2,282 | 2,282 |
+  | `htmldeck` taken | no | no |
+  | Entries setting a homepage | 2,280 | 2,280 |
+  | Median description, and share over 200 characters | 274, 64% | 274, 64% |
+  | Neighbours matching *slide*, *presentation*, *deck* or *pptx* | 29 | 28 |
+  | Neighbours claiming *offline* | `semanticsearch` only | `semanticsearch` only |
+  | Neighbours saying *critique* | `arcdeck` | `arcdeck`, a critique-revise-judge loop producing PowerPoint |
+  | Neighbours saying *self-contained* | `keynot`, `slidecast` | `keynot`, `slidecast`, `bloom` |
+  | Tools making outbound requests | `tools/assets/measure.py` | `tools/assets/measure.py`, the only `urllib.request` import under `tools/` |
+
+- **The two long fields, humanized** with `humanizer` 2.11.2 in pasted-text mode, under the owner's
+  exception in [`../docs/PUBLISHING.md`](../docs/PUBLISHING.md) §5.
+  - **Draft description:** *Single-file HTML presentations that don't look generated. Build a slide
+    deck as one .html file that opens offline with zero external references, carrying real diagrams,
+    progressive disclosure and considered typography. Or point it at an existing deck for a scored
+    critique. Asks two questions and nothing else.*
+  - **Patterns found:** an `-ing` tail (3), a subjectless clipped close (9, 13), a contrast with
+    bullet lists in the third use case (9). The three-feature list was kept: it is three real
+    features from the manifest, not padding (10).
+  - **Claims changed:** removed *scored* (false, above), *and nothing else*, and *instead of bullet
+    lists* (never verified). Added *blunt*, from `.claude/rules/decks.md`'s *Voice*.
+  - **Final, for the form:**
+
+    ```text
+    Plugin description:
+    Single-file HTML presentations that don't look generated. htmldeck builds a slide deck as one .html file that works offline, with real diagrams, progressive disclosure and careful typography. It asks two questions, then builds. Point it at an existing deck and it writes a blunt critique naming the slide and the rule behind each finding.
+
+    Example use cases:
+    - Turn an outline or a brief into a presentation you can send as one file and open with no network.
+    - Review a deck you already have: a blunt critique that names the slide and the design rule behind each finding.
+    - Explain a technical argument with diagrams that reveal one step at a time.
+    ```
+
+- **Every other field** is §1's two tables as written: the path blank, Claude Code only, `MIT`, the
+  privacy-policy URL blank with `measure.py`'s fetches accounted for.
 
 ## 4. Review
 
@@ -154,3 +215,4 @@ when the sibling project `taskmd` was submitted on 2026-09-12. It is not a field
 | 2026-09-13 | no change | **Folded in what a separate prompt would otherwise have carried**, on the owner's instruction that everything this task needs lives in the record: the stop before review, re-measuring before the work starts, the `shipped_in` rule at close, and the question of which tasks land first. **Two claims corrected**: the form has no category field, and the Cowork row asserted a difference between surfaces that nobody measured. The neighbours paragraph is now measured against the catalog rather than described. |
 | 2026-09-14 | no change | The owner answered both open questions: the catalog description is humanized, and every open task except `T-057` closes first, so `blocked_by` names them. |
 | 2026-09-14 | no change | `T-318` joined B29 ahead of this task by the owner's ruling, and `blocked_by` names it. |
+| 2026-09-15 | proposed → in_progress | Every blocker closed, so §1 and §2 stood as written and the work went to implement. Every figure re-measured, the two long fields humanized, and one new finding: the plugin manifest fails `--strict` on the root `CLAUDE.md`, kept there for the reason in §3. **Every value is ready, and the record waits for the owner to send the form.** |
