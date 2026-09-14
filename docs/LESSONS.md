@@ -9,7 +9,11 @@ admired.
 bare id is the filename, so a citation you meet anywhere in the tree opens without a search. Read
 one; do not read them all. **To add a lesson**, write the file with a `category:` front-matter line
 and a `# L-nn — Title` heading, **ending on its last paragraph and not on a horizontal rule**, then run
-`python tools/docs/lessons.py index`. *Twenty-one files ended on a rule until 2026-09-02 - the mark
+`python tools/docs/lessons.py index`. **Keep the file under 1,500 bytes**, ruled by the owner
+2026-09-14 ([T-301](../tasks/T-301-decide-whether-the-record-forms-get-shorter.md)): the rule first,
+then **How to apply**, then the evidence as a link to the task that found it, which keeps the full
+account. A lesson is opened wherever it is cited, so every byte is paid again on each citation.
+*Twenty-one files ended on a rule until 2026-09-02 - the mark
 that separated one lesson from the next while they were all in this file, cut with the lesson above it
 by [T-146](../tasks/T-146-one-file-per-lesson-with-a-generated-index.md) (`PR-106`).* Editing the table
 below by hand is a gate failure, in both directions.
@@ -191,6 +195,7 @@ comes here.
 | [L-153](lessons/L-153.md) | Output an agent captures is paid on every later turn, so a green run prints its verdict and the account prints on a terminal or on failure | Tooling |
 | [L-154](lessons/L-154.md) | A token that enters the context at call t is paid about 2 + 0.1 × (N − t) times, so the earliest reads are the dearest and a resume compounds like tier 1 | Tooling |
 | [L-158](lessons/L-158.md) | A rule no tool asks for is back-filled, not fixed, and the record of back-filling it is the evidence that it recurs | Tooling |
+| [L-165](lessons/L-165.md) | Skip a check when its subject matches a checked base, not when a mode says so | Tooling |
 
 ### Writing
 
