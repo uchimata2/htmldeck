@@ -725,6 +725,18 @@ svg{display:block}
   text-transform:uppercase;color:var(--ink-faint);
 }
 .ruler-label[data-preview]{color:var(--ink)}
+/* The readout at the mark (T-307, adopter record `11`). The label names the tick beside the ticks;
+   this puts the tick's slide number over the tick, where a pointer's eye is. Nothing is painted at
+   rest, so the scale keeps no per-item label (DS-217), and the tick's accessible name is unchanged,
+   so this is a supplement and not the only route (DS-163). Placed by measurement like the ring, so
+   it takes no width from the ruler's capacity. */
+.ruler-tip{
+  display:none;position:absolute;left:0;bottom:100%;
+  transform:translateX(calc(var(--tx,0px) - 50%));
+  font-family:var(--font-mono);font-size:var(--fs-mono);letter-spacing:var(--track-mono);
+  color:var(--ink-faint);white-space:nowrap;pointer-events:none;
+}
+.ruler-tip[data-on]{display:block}
 
 /* THE NAVIGATION CONTAINER (T-114). The ruler, the counter and the pager answer one question -
    where am I and how do I move - so they share a box and read as one control; `Read` and `Motion`
@@ -827,6 +839,9 @@ svg{display:block}
   border-bottom:var(--chev-stroke) solid currentColor}
 .btn .chev.l{transform:rotate(135deg)}
 .btn .chev.r{transform:rotate(-45deg)}
+/* First and last carry two chevrons, the second over half of the first: the usual mark for *to the
+   end*, drawn with the pager's own glyph rather than an icon (T-307). */
+.btn .chev + .chev{margin-left:calc(-0.5 * var(--chev))}
 
 /* DS-133 wants a progress indicator that encodes real position; the `05 / 12` counter above is
    it. The accent bar that used to run along the foot of the stage was a THIRD encoding of the
@@ -2643,11 +2658,14 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     <div class="ruler" id="ruler" data-ticks="dot">
       <ul class="ruler-ticks" id="rulerTicks" data-scale></ul>
       <i class="ruler-ring" id="rulerRing" aria-hidden="true"></i>
+      <p class="ruler-tip" id="rulerTip" aria-hidden="true"></p>
       <p class="ruler-label" id="rulerLabel" aria-hidden="true"></p>
     </div>
     <p class="count" id="count" aria-hidden="true"></p>
+    <button class="btn btn--pager is-back" id="first" aria-label="First slide"><span class="chev l"></span><span class="chev l"></span></button>
     <button class="btn btn--pager is-back" id="prev" aria-label="Previous slide"><span class="chev l"></span></button>
     <button class="btn btn--pager" id="next" aria-label="Next slide"><span class="chev r"></span></button>
+    <button class="btn btn--pager" id="last" aria-label="Last slide"><span class="chev r"></span><span class="chev r"></span></button>
   </div>
   <!-- The chrome row's TAIL, and a SLOT because what a deck calls these controls is its own
        (T-114 step 7a). `Motion` sits INSIDE the menu, on every deck, looping or not.
@@ -2848,6 +2866,7 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
   var rulerTicks = document.getElementById('rulerTicks');
   var rulerLabel = document.getElementById('rulerLabel');
   var rulerRing = document.getElementById('rulerRing');
+  var rulerTip = document.getElementById('rulerTip');
   var doc = document.getElementById('doc');
   var docBody = document.getElementById('docBody');
   var toDoc = document.getElementById('toDoc');
@@ -3022,10 +3041,10 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
         : 'Go to slide ' + m.n + ': ' + m.title);
       b.dataset.label = isSection ? m.stageName : m.title;
       b.addEventListener('click', function(){ go(i); countIfSeen(); });
-      b.addEventListener('mouseenter', function(){ previewLabel(b.dataset.label); });
-      b.addEventListener('mouseleave', restoreLabel);
-      b.addEventListener('focus', function(){ previewLabel(b.dataset.label); });
-      b.addEventListener('blur', restoreLabel);
+      b.addEventListener('mouseenter', function(){ previewLabel(b.dataset.label); showTip(i, li); });
+      b.addEventListener('mouseleave', function(){ restoreLabel(); hideTip(); });
+      b.addEventListener('focus', function(){ previewLabel(b.dataset.label); showTip(i, li); });
+      b.addEventListener('blur', function(){ restoreLabel(); hideTip(); });
       li.appendChild(b);
       rulerTicks.appendChild(li);
     });
@@ -3057,6 +3076,21 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
     rulerLabel.removeAttribute('data-preview');
     var m = MAN[idx];
     rulerLabel.textContent = m ? (m.matter ? m.title : m.stageName) : '';
+  }
+
+  /* The slide number over the tick a pointer or the focus is on (T-307). Measured off the tick
+     like the ring, so it lands on the mark in both ruler modes. */
+  function showTip(i, li){
+    if (!rulerTip) return;
+    var kk = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 1;
+    var tr = li.getBoundingClientRect(), lr = rulerEl.getBoundingClientRect();
+    if (!tr.width) return;
+    rulerTip.textContent = String(MAN[i].n);
+    rulerEl.style.setProperty('--tx', ((tr.left + tr.width / 2 - lr.left) / kk) + 'px');
+    rulerTip.setAttribute('data-on', '');
+  }
+  function hideTip(){
+    if (rulerTip) rulerTip.removeAttribute('data-on');
   }
 
   /* Sized after layout, and again on resize - the controls' width is what decides capacity, and a
@@ -3439,6 +3473,9 @@ if(p)p.textContent='This browser is missing '+m.join(', ')+". The deck cannot pr
 
   document.getElementById('prev').addEventListener('click', function(){ go(idx-1); });
   document.getElementById('next').addEventListener('click', function(){ go(idx+1); });
+  /* First and last, for a pointer: the keyboard's Home and End already call the same two (T-307). */
+  document.getElementById('first').addEventListener('click', function(){ go(0); });
+  document.getElementById('last').addEventListener('click', function(){ go(slides.length-1); });
 
   var wheelLock = 0;
   viewport.addEventListener('wheel', function(e){

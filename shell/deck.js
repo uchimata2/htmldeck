@@ -32,6 +32,7 @@
   var rulerTicks = document.getElementById('rulerTicks');
   var rulerLabel = document.getElementById('rulerLabel');
   var rulerRing = document.getElementById('rulerRing');
+  var rulerTip = document.getElementById('rulerTip');
   var doc = document.getElementById('doc');
   var docBody = document.getElementById('docBody');
   var toDoc = document.getElementById('toDoc');
@@ -206,10 +207,10 @@
         : 'Go to slide ' + m.n + ': ' + m.title);
       b.dataset.label = isSection ? m.stageName : m.title;
       b.addEventListener('click', function(){ go(i); countIfSeen(); });
-      b.addEventListener('mouseenter', function(){ previewLabel(b.dataset.label); });
-      b.addEventListener('mouseleave', restoreLabel);
-      b.addEventListener('focus', function(){ previewLabel(b.dataset.label); });
-      b.addEventListener('blur', restoreLabel);
+      b.addEventListener('mouseenter', function(){ previewLabel(b.dataset.label); showTip(i, li); });
+      b.addEventListener('mouseleave', function(){ restoreLabel(); hideTip(); });
+      b.addEventListener('focus', function(){ previewLabel(b.dataset.label); showTip(i, li); });
+      b.addEventListener('blur', function(){ restoreLabel(); hideTip(); });
       li.appendChild(b);
       rulerTicks.appendChild(li);
     });
@@ -241,6 +242,21 @@
     rulerLabel.removeAttribute('data-preview');
     var m = MAN[idx];
     rulerLabel.textContent = m ? (m.matter ? m.title : m.stageName) : '';
+  }
+
+  /* The slide number over the tick a pointer or the focus is on (T-307). Measured off the tick
+     like the ring, so it lands on the mark in both ruler modes. */
+  function showTip(i, li){
+    if (!rulerTip) return;
+    var kk = parseFloat(getComputedStyle(stage).getPropertyValue('--k')) || 1;
+    var tr = li.getBoundingClientRect(), lr = rulerEl.getBoundingClientRect();
+    if (!tr.width) return;
+    rulerTip.textContent = String(MAN[i].n);
+    rulerEl.style.setProperty('--tx', ((tr.left + tr.width / 2 - lr.left) / kk) + 'px');
+    rulerTip.setAttribute('data-on', '');
+  }
+  function hideTip(){
+    if (rulerTip) rulerTip.removeAttribute('data-on');
   }
 
   /* Sized after layout, and again on resize - the controls' width is what decides capacity, and a
@@ -623,6 +639,9 @@
 
   document.getElementById('prev').addEventListener('click', function(){ go(idx-1); });
   document.getElementById('next').addEventListener('click', function(){ go(idx+1); });
+  /* First and last, for a pointer: the keyboard's Home and End already call the same two (T-307). */
+  document.getElementById('first').addEventListener('click', function(){ go(0); });
+  document.getElementById('last').addEventListener('click', function(){ go(slides.length-1); });
 
   var wheelLock = 0;
   viewport.addEventListener('wheel', function(e){

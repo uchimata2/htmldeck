@@ -368,20 +368,21 @@ are DS-131's and DS-217's, measured in the render gate rather than read out of t
 | `.ruler` | `div` | `.navbox` | `1` | `id` `data-ticks` | author |
 | `.ruler-ticks` | `ul` | `.ruler` | `1` | `id` `data-scale` | author |
 | `.ruler-ring` | `i` | `.ruler` | `1` | `id` `aria-hidden` | author |
+| `.ruler-tip` | `p` | `.ruler` | `1` | `id` `aria-hidden` | author |
 | `.ruler-label` | `p` | `.ruler` | `1` | `id` `aria-hidden` | author |
 | `.count` | `p` | `.navbox` | `1` | `id` `aria-hidden` | author |
 | `.more` | `div` | `.chrome` | `1` | `id` | author |
 | `.more-menu` | `div` | `.more` | `1` | `id` `hidden` | author |
 | `.btn` | `button` | `.chrome` | `1+` | `id` | author |
 | `.btn--pager` | — | `on .btn` | `1+` | — | author |
-| `.is-back` | — | `on .btn--pager` | `0-1` | — | author |
-| `.chev` | `span` | `.btn` | `0-1` | — | author |
+| `.is-back` | — | `on .btn--pager` | `0+` | — | author |
+| `.chev` | `span` | `.btn` | `0+` | — | author |
 | `.l` | — | `on .chev` | `0+` | — | author |
 | `.r` | — | `on .chev` | `0+` | — | author |
 
 **What may sit in the navigation container, and what may not (T-114).** `.navbox` holds the
-controls that answer *where am I, and how do I move*: the ruler, the counter, and the two pager
-buttons. Nothing else may go in it. `Read` switches rendering and `Motion` switches playback —
+controls that answer *where am I, and how do I move*: the ruler, the counter, and the four pager
+buttons, first, previous, next and last (T-307). Nothing else may go in it. `Read` switches rendering and `Motion` switches playback —
 neither is navigation, and both sit outside. The rule is not tidiness: the complaint that opened
 T-114 was that the pager read as an afterthought, and the pager was not under-styled, it was in the
 wrong company. A container that admits *the other chrome controls too* is the container that caused
@@ -389,7 +390,12 @@ it, so the boundary is stated as a closed list rather than as a principle to int
 
 `.navbox` is also what `rulerAvailableDu()` measures. Capacity is a property of the box the ruler
 competes for width inside, and admitting one more control to the container silently spends the
-ruler's targets — which is DS-217's bound moving without anyone editing DS-217.
+ruler's targets — which is DS-217's bound moving without anyone editing DS-217. T-307's first and
+last buttons spent three, and DS-217 records the re-measured bound.
+
+**`.ruler-tip` is the readout at the mark (T-307).** While a pointer or the focus is on a target
+tick it shows that slide's number over the tick, in both ruler modes, and at rest it is empty. Past
+the capacity bound only the section ticks are targets, so only they show it.
 
 **`.more`, and why it is not a `.disc`.** DS-230's tier-two vocabulary is closed at four kinds, and
 a chrome menu is not content the face provokes a question about — so `More` is its own component,
@@ -420,9 +426,9 @@ the table above binds `.btn` to `.chrome` as `1+` and names no opener, and `PR-7
 tail with one button removed produces a deck that refuses to start while `shell.py check` and
 `component.py` both pass it.
 
-**`.is-back` is on the Previous pager and nowhere else, and it exists so a motion can carry a direction.** T-112's pager tilt leans the control toward where it goes; without a class saying which of the two this is, both would lean the same way and the tilt would encode nothing, which is DS-150's test failed by a motion that looks fine. It is a modifier on `.btn--pager` rather than a match on `#prev`, because an id is a handle for the script and a class is what a stylesheet is allowed to know.
+**`.is-back` is on the First and Previous pagers and nowhere else, and it exists so a motion can carry a direction.** T-112's pager tilt leans the control toward where it goes; without a class saying which of the two this is, both would lean the same way and the tilt would encode nothing, which is DS-150's test failed by a motion that looks fine. It is a modifier on `.btn--pager` rather than a match on `#prev`, because an id is a handle for the script and a class is what a stylesheet is allowed to know.
 
-**The pager is exactly two, and the table says `1+` because the count vocabulary has no `2`.** `.btn--pager` is the row's only filled surface — the weight half of T-114's fix, where `.navbox` is the company half. Both were in the ruled sketch; the container is a drawn box and the pager is filled, and neither reads as the change on its own.
+**The pager is exactly four, and the table says `1+` because the count vocabulary has no `4`.** First and last carry two `.chev` each (T-307). `.btn--pager` is the row's only filled surface — the weight half of T-114's fix, where `.navbox` is the company half. Both were in the ruled sketch; the container is a drawn box and the pager is filled, and neither reads as the change on its own.
 
 **`.btn` is bound to `.chrome`, not to its box, and that is a limit of this table rather than a
 looser rule.** A chrome button has three possible parents now — `.navbox`, `.more` and
@@ -691,6 +697,7 @@ governs it.
 | `inert` `aria-hidden` | `.slide` | on every slide but the current | follows `data-current` inverted | DS-132 |
 | `data-lit` `aria-current` | a ruler tick | on the first tick | follows the current slide | DS-134 |
 | `data-dense` | `.ruler` | absent | set past the measured capacity | DS-217 |
+| `data-on` | `.ruler-tip` | absent | set while a tick is hovered or focused | DS-163, DS-217 |
 | `data-motion` | `:root` | from `matchMedia` | toggled by the control | DS-143, DS-218 |
 | `data-on` | `.doc` `.viewswitch` | absent | set in the reading view | DS-071 |
 

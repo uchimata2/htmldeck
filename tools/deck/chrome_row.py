@@ -38,6 +38,9 @@ DECK = os.path.join(ROOT, "examples", "reference-deck.html")
 # DS-168: >= 24 x 24 CSS px, which inside the stage is >= 48 x 48 design units, because a design
 # unit is worth half a CSS pixel at the 0.5 scale floor.
 TARGET_FLOOR_DU = 48
+
+# The controls beside the ruler: the counter, the four pager buttons and `More` (T-307).
+CONTROLS = 6
 # What the ruler declares as its pitch, in `TICK_PITCH_DU`. It is `--disc-hit` (52), not the bare
 # floor, so a tick is the same size as every other hit target in the deck.
 DECLARED_PITCH_DU = 52
@@ -213,13 +216,14 @@ def self_test(wide, floor):
         failures.append("chrome row is %.1f du against a paper figure of %d - that is too far to "
                         "be the stage border, so the row has been re-laid out and T-035's "
                         "arithmetic is stale" % (wide["chrome"]["w"], ROW_DU))
-    # T-035 states the controls block holds five elements and prices the ruler against that.
-    # T-114 split them across two boxes and kept the count at five, so the comparison survives the
-    # change - which is the point of asserting it rather than dropping it.
-    if len(wide["controlItems"]) != 5:
-        failures.append("the chrome carries %d control(s) beside the ruler, T-035 says five - the "
-                        "row this task was specified against has changed"
-                        % len(wide["controlItems"]))
+    # T-035 priced the ruler against five controls beside it, and T-114 kept five across two boxes.
+    # T-277 moved `Motion` inside the menu, which left four and this assertion stale, and T-307
+    # added first and last to the pager. Asserted rather than dropped, so the next change to the
+    # row is noticed here.
+    if len(wide["controlItems"]) != CONTROLS:
+        failures.append("the chrome carries %d control(s) beside the ruler where %d are expected - "
+                        "the row this tool was calibrated against has changed"
+                        % (len(wide["controlItems"]), CONTROLS))
     # Design units must not depend on the stage scale. Measuring the same row at two scales and
     # getting two answers would mean the du conversion is wrong, and every bound with it.
     drift = abs(wide["chrome"]["w"] - floor["chrome"]["w"])
@@ -270,8 +274,8 @@ def main():
         for f in failures:
             print("  - " + f)
         return 4
-    print("self-test ok  (row %.0f du at both scales, five controls, floor run at k=%.3f)"
-          % (wide["chrome"]["w"], floor["k"]))
+    print("self-test ok  (row %.0f du at both scales, %d controls, floor run at k=%.3f)"
+          % (wide["chrome"]["w"], CONTROLS, floor["k"]))
 
     print("\nTHE CHROME ROW - what the ruler has to fit into")
     print("-" * 74)
