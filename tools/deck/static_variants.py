@@ -50,6 +50,12 @@ STATIC_VARIANTS = [
          "</script></body>")]),
     ("chart-canvas-undeclared", "DS-122", [
         ("</body>", "<canvas id=\"chart\"></canvas></body>")]),
+    # ---- added by T-311: the `<meta>` the contract placed the declaration in until then, which
+    # `shell.py sync` deletes. It fails with a reason naming the head comment.
+    ("chart-engine-declared-in-a-meta", "DS-122", [
+        ('<meta charset="utf-8">',
+         '<meta charset="utf-8"><meta name="htmldeck-chart-engine" content="engine=x; version=1; '
+         'licence=MIT; output=svg">')]),
     ("cdn-reference", "DS-002", [
         ('<meta charset="utf-8">',
          '<meta charset="utf-8"><link rel="stylesheet" href="https://cdn.example.com/x.css">')]),

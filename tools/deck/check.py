@@ -391,7 +391,10 @@ CLAUSES = {
                # `ds122_charts` refuses run-time marks with no declaration, and separately refuses a
                # declaration whose `output` is not SVG. Two tests in one function, not one test read
                # twice - the second fires on a deck the first passes.
-               ("a declared engine must emit SVG", True)),
+               ("a declared engine must emit SVG", True),
+               # T-311's amendment: the same function refuses a declaration outside the head
+               # comment before it reads one, so the third clause has its own test.
+               ("the declaration is a line in the head comment", True)),
     "DS-141": (("the 500 ms cap", True),
                ("eased rather than linear",
                 "Nothing reads the timing function. `ds141_durations` parses every rule that starts "
@@ -546,7 +549,7 @@ SWEPT = {
     "DS-119": "e9fde7cac3",
     "DS-120": "732da3a5e0",
     "DS-121": "8e0c6df3af",
-    "DS-122": "16a1cf4073",
+    "DS-122": "9bdeaf2e92",
     "DS-123": "460e066d73",
     "DS-130": "b83cf68fe2",
     "DS-132": "6b909e6fa2",
@@ -892,6 +895,9 @@ def static_rows(html):
     # count in its text, and the boolean it replaced forbade `import(blob:)` - the one route R6 §6
     # measured as working, and the one DS-006 exists to make work.
     rows += audit.fetch_verdicts(html)
+    # DS-122, moved out of `STATIC` by T-311 for the same reason: a declaration in the wrong place
+    # fails the same boolean as no declaration, and only the text says where it goes.
+    rows += audit.chart_verdicts(html)
     rows += contrast.verdicts(html)
     # The theme region, added by T-007. Three partial checks of rules `audit` and `contrast`
     # already reach from another side: DS-011 counts palettes, this counts regions; DS-013 names
@@ -1102,28 +1108,11 @@ def account(rows):
 # one in a project's wrapper is the forty lines an adopter wrote because nothing else existed. **In
 # the deck's head comment**, `shell.py`'s `NOTE` region, because `sync` rewrites everything outside a
 # deck's regions. Measured 2026-09-14: a `<meta>` licence after the viewport line - the obvious place,
-# and DS-122's precedent - was gone after one `shell.py sync --write`.
+# and DS-122's precedent until T-311 moved that declaration here too - was gone after one
+# `shell.py sync --write`.
 LICENCE_KEY = "htmldeck-licence"
 LICENCE_FIELDS = ("rule", "reason", "by", "date")
 LICENCE_LINE = re.compile(r"^[ \t]*%s:[ \t]*(.*)$" % re.escape(LICENCE_KEY), re.M)
-
-
-def head_note(html):
-    """`(start, end)` of the deck's head comment - `shell.py`'s `NOTE` region - or `None`.
-
-    Found the way `shell.cut` finds it, slot by slot from the top, so the delimiters keep one home.
-    `cut` itself needs every region present, which a fixture is not.
-    """
-    pos = 0
-    for slot, opener, closer, _what in shell.SLOTS:
-        start = html.find(opener, pos)
-        end = html.find(closer, start + len(opener)) if start >= 0 else -1
-        if end < 0:
-            return None
-        if slot == "NOTE":
-            return start + len(opener), end
-        pos = end
-    return None
 
 
 def licences_in(html):
@@ -1135,7 +1124,7 @@ def licences_in(html):
     name, so a reason may carry a semicolon.
     """
     found, faults = {}, []
-    span = head_note(html)
+    span = shell.head_note(html)
     note = html[span[0]:span[1]] if span else ""
     outside = html.count(LICENCE_KEY) - note.count(LICENCE_KEY)
     if outside:

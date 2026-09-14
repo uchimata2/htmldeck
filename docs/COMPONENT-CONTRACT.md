@@ -509,22 +509,32 @@ the rows stay*; an adopting project then built exactly that deck and had to choo
 the loss in red and passing the gate (T-105). `.t-ink` moved with them: it is the sibling of five
 `author` text roles and would have failed the next deck to colour figure text explicitly.
 
-**The chart-engine declaration is a figure part, and it lives in the head** (DS-122, T-202). A deck
+**The chart-engine declaration is a figure part, and it lives in the head comment** (DS-122, T-202,
+T-311). A deck
 whose charts the reader is expected to *interrogate* may carry an engine, and it says so once:
 
 | Part | Element | Sits in | Count | Attributes | Source |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `htmldeck-chart-engine` | `meta` | `head` | `0-1` | `name` `content` | author |
+| `htmldeck-chart-engine` | comment line | head comment | `0-1` | — | author |
 
 *This row is drawn as a part and is **not** one: `parse_part_row` in `tools/deck/component.py`
-reads a leading dot, so a bare element name is skipped and this document *as data* carries 102
-rows where it prints 103. That is correct for a `meta` declaration rather than a class, and
+reads a leading dot, so a bare name is skipped and this document *as data* carries 102
+rows where it prints 103. That is correct for a declaration rather than a class, and
 nothing is unenforced - the four keys, the `output=svg` rule and the SPDX test are `audit.py`'s
 under DS-122. The count cell read `0..1` until 2026-09-02, the one cell outside §2's closed
 vocabulary (`PR-41`).*
 
-`content` is four `key=value` pairs separated by `;` — **`engine`**, **`version`**, **`licence`**
-and **`output`**. All four are required, `output` must be `svg`, and `licence` must be an SPDX
+The line is `htmldeck-chart-engine:` followed by four `key=value` pairs separated by `;` —
+**`engine`**, **`version`**, **`licence`** and **`output`**:
+
+```
+  htmldeck-chart-engine: engine=uPlot; version=1.6.30; licence=MIT; output=svg
+```
+
+It sits in the deck's head comment, above `EMBEDDED FONT LICENCES`, which is `shell.py`'s `NOTE`
+region and where a deck's licences sit too. **That is the one place in the head `shell.py sync`
+keeps.** Until T-311 the declaration was a `<meta>`, and the first sync deleted it. DS-122 fails a
+declaration anywhere outside the head comment, and its failure says where the line goes. All four are required, `output` must be `svg`, and `licence` must be an SPDX
 identifier whose terms permit redistribution inside a single file, which is the same test DS-032
 applies to an embedded face. **A deck that declares nothing is held to the hand-authored default**,
 which is where every deck this repository ships stands today.
