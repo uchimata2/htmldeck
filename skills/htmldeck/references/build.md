@@ -265,7 +265,9 @@ python $HTMLDECK/tools/deck/render.py state <slug>.html --probe "#next" --at 960
 Four things, and they compose in one run: `--click` presses a named control (repeatable, in order,
 and `--watch` names what that press should change); `--qv` opens a named quick view; `--hover`
 reaches `:hover`, which no DOM write can — **it substitutes the trigger**, re-inserting the deck's
-own `:hover` rules against an attribute, and it says so on every run; `--probe` hit-tests a control
+own `:hover` rules against an attribute, and it says so on every run — then fires the pointer
+events a real pointer would, at the element's centre, so a hover your script finishes runs too, and
+it names what those listeners changed; `--probe` hit-tests a control
 at five points and answers whether anything is on top of it. `--shot` turns any of them into a
 picture. **It exits non-zero when something you asked for did not happen** — a selector that
 matched nothing still produces a photograph, and a photograph never says what it is not showing.
