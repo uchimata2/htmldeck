@@ -2,8 +2,8 @@
 id: T-301
 title: Decide whether task, register, lesson and handoff records get shorter, since writing them is a quarter of a session's spend
 type: decision
-status: proposed
-phase: specify
+status: in_progress
+phase: implement
 parent: T-287
 blocked_by: []
 related: [T-290]
@@ -13,8 +13,8 @@ business_value: medium
 effort: s
 finding: CE-22
 created: 2026-09-13
-updated: 2026-09-13
-deliverables: []
+updated: 2026-09-14
+deliverables: [tasks/_task-template.md, docs/AUDIT-METHOD.md, docs/LESSONS.md, .handoff/config.md]
 ---
 
 # T-301 — Decide whether task, register, lesson and handoff records get shorter, since writing them is a quarter of a session's spend
@@ -58,16 +58,39 @@ that it becomes a decision.
 
 | # | Step | Output |
 | :-- | :--- | :--- |
-| 1 |  |  |
-| 2 |  |  |
+| 1 | Measure each form over its real records | the table in §3 |
+| 2 | Find where a session writing each form reads its rules | the *written in* column |
+| 3 | Put one question per form to the owner, with the measurement and a recommendation | the ruling |
+| 4 | Measure each adopted limit or shape on one real record: bytes before and after, and any fact left with no home | a row per form |
+| 5 | Write each decision where its writer reads it | the four homes |
 
 ## 3. Implement
 
+**Measured 2026-09-14** over every record in the tree, UTF-8 bytes. The script read the files and
+wrote nothing. Tasks are `status: done`, and *recent* means created on or after 2026-09-01.
+
+| Form | Records | Median | p90 | Max | Written in, when a session writes one |
+| :--- | ---: | ---: | ---: | ---: | :--- |
+| Task §3 (implement) | 290 | 2,932 | 5,881 | 15,130 | [`_task-template.md`](_task-template.md) |
+| Task §3, recent | 14 | 2,952 | 6,425 | 10,367 | the same. The recent whole file has a median of 8,330, and §4 1,136 and the log 921 of that |
+| Register row, `PR-nn` | 143 | 2,439 | 3,365 | 5,732 | [`../docs/AUDIT-METHOD.md`](../docs/AUDIT-METHOD.md), this project's binding for an audit |
+| Lesson | 164 | 2,347 | 3,404 | 4,426 | [`../docs/LESSONS.md`](../docs/LESSONS.md), *To add a lesson* |
+| Lesson, L-150 and later | 15 | 2,239 | 3,342 | 3,561 | the same |
+| Handoff, archived | 130 | 4,800 | 6,386 | 7,608 | the handoff skill, and [`../.handoff/config.md`](../.handoff/config.md) |
+
+**The handoff has already moved.** The last six archived handoffs are 3,227, 2,444, 2,871, 2,394,
+1,850 and 1,348 bytes, the last being B25's own. Wave 8's handoff points and does not store, which is
+what the handoff skill's core §2 already required.
+
+**Frequency differs by a wide margin.** A batch writes one to five task §3s, about one lesson, and one
+handoff. It writes a register row only during an audit cycle, and no audit is scheduled before 1.0.0
+([`../docs/REMEDIATION-ORDER.md`](../docs/REMEDIATION-ORDER.md) wave 8).
+
 **Decisions & assumptions**
-- <decision — rationale — date>
+- Stopped at the owner's survey, as wave 8's batch order says. The choice per form is the owner's.
 
 **Outputs produced**
-- `deliverables/...`
+- the measurement above; the decisions follow the survey
 
 ## 4. Review
 
@@ -83,3 +106,6 @@ that it becomes a decision.
 | Date | Status change | Note |
 | :--- | :--- | :--- |
 | 2026-09-13 | → proposed | Raised from `CE-22` on the owner's ruling of the same day. The audit had reported it with no task because it collides with settled record policy. Child of [T-287](T-287-audit-what-a-session-pays-per-turn-and-why-it-grows.md). `PH3`. |
+| 2026-09-14 | → specified | B25. §1 was complete. Deliverables name the four homes a decision is written in, because a declined form still gets its reason there. |
+| 2026-09-14 | → planned | §2 written: measure, find each form's home, survey, then measure an adopted form on one real record before writing it. |
+| 2026-09-14 | → in_progress | Steps 1 and 2 done, with the table in §3. The handoff had already fallen from 3,227 to 1,348 bytes over wave 8's last six. Stopped at the owner's survey. |
