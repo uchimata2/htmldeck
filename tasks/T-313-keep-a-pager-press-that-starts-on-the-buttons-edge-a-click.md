@@ -97,5 +97,6 @@ on each, and the size figures corrected.
 
 | Date | Status change | Note |
 | :--- | :--- | :--- |
+| 2026-09-14 | - | The owner's look at row 18: an edge press still animates and does not page. Not reproduced here: in the in-app browser, real clicks 1 px inside `#next`'s right and top edges, one of them held, each paged, and every edge of all four buttons hit-tests as the button at rest, pinched and tilted. Dropped by the owner's ruling as not critical. |
 | 2026-09-14 | -> done | The pinch was the mechanism, measured on all four buttons. An invisible hit margin keeps the press a click. The look is owed as `OWED-LOOKS.md` row 18. |
 | 2026-09-14 | -> proposed | Raised from the owner's look at row 14. `PH1`: the published pager animates a press and does not page. Batched into B28 first by the owner's ruling. |

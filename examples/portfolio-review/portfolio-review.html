@@ -757,7 +757,8 @@ svg{display:block}
    is unchanged, so this is a supplement and not the only route (DS-163). Placed by measurement like
    the ring, so it takes no width from the ruler's capacity.
    The drop is a square with one sharp corner, turned 45 degrees, which puts that corner 0.207 of the
-   side below the box: raising a 34-unit box 7 units above the mark's centre lands the point on it. */
+   side below the box: raising a 34-unit box 7 units above the mark's centre lands the point on it.
+   The fill is `--ink-soft` under a `--paper` number: `--ink` read as too hard a contrast (T-317). */
 .ruler-tip{
   display:none;position:absolute;left:0;bottom:calc(50% + 7*var(--du));z-index:2;
   width:calc(34*var(--du));height:calc(34*var(--du));
@@ -768,7 +769,7 @@ svg{display:block}
 }
 .ruler-tip::before{
   content:"";position:absolute;inset:0;z-index:-1;
-  border-radius:50% 50% 50% 0;background:var(--ink);transform:rotate(-45deg);
+  border-radius:50% 50% 50% 0;background:var(--ink-soft);transform:rotate(-45deg);
 }
 .ruler-tip[data-on]{display:flex}
 /* Past the bound the strip reads the pointer (T-314), so it says it can be pressed. */

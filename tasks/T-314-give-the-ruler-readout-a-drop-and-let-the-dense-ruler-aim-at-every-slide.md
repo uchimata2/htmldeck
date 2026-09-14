@@ -65,6 +65,8 @@ deferred because a dense mark is an 8 du cell and DS-168 is `hard`.
   units above the mark's centre, which is where the turned corner lands. Reversible. — 2026-09-14
 - The drop is `--ink` with the number in `--paper`, the pager's filled pair, so the one filled shape
   on the ruler reads as belonging to the controls beside it. Reversible. — 2026-09-14
+  *Reversed by [T-317](T-317-fill-the-ruler-readouts-drop-in-ink-soft.md): the owner found `--ink`
+  too hard, and the fill is `--ink-soft`.*
 - Past the bound the small marks stay disabled cells, and the strip reads the pointer: `mousemove`
   shows the nearest slide in the drop and the label, and a click goes there. A section tick keeps its
   own button. So no target under DS-168's floor is added, and record `16` is met without amending a

@@ -209,7 +209,7 @@ names every one it misses.
 ## The deck nobody authored by hand
 
 [`examples/sort-window/`](examples/sort-window) holds *Move the window, not the fleet*: 12 slides,
-**330 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
+**331 KB in one file, zero external references**, six hand-written SVG figures and ten disclosure
 panels. It was built through the pipeline rather than written, assembled from
 [`shell/`](shell), which is the reference deck with its content cut out, then authored in batches
 of three, with the gate run on each batch.

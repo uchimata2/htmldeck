@@ -356,8 +356,9 @@ first reached an installed copy, derived from the first tag containing the commi
 | [T-311](T-311-keep-a-decks-chart-engine-declaration-through-a-shell-sync.md) | Keep a deck's chart-engine declaration through a shell sync | `PH1` | `unreleased` | `done` | `review` | - | - | - | T-300 | T-202, T-308 |
 | [T-312](T-312-start-a-slides-one-time-content-motions-when-the-slide-has-arrived.md) | Start a slide's one-time content motions when the slide has arrived | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-268, T-304 |
 | [T-313](T-313-keep-a-pager-press-that-starts-on-the-buttons-edge-a-click.md) | Keep a pager press that starts on the button's edge a click | `PH1` | `unreleased` | `done` | `review` | - | - | - | - | T-199, T-307 |
-| [T-314](T-314-give-the-ruler-readout-a-drop-and-let-the-dense-ruler-aim-at-every-slide.md) | Give the ruler readout a drop, and let the dense ruler aim at every slide | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-307 |
+| [T-314](T-314-give-the-ruler-readout-a-drop-and-let-the-dense-ruler-aim-at-every-slide.md) | Give the ruler readout a drop, and let the dense ruler aim at every slide | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-307, T-317 |
 | [T-315](T-315-make-the-inline-terms-underline-a-theme-token.md) | Make the inline term's underline a theme token, solid in the shipped theme | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-309 |
 | [T-316](T-316-give-the-reference-decks-sources-quick-views.md) | Give the reference deck's sources quick views | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-070, T-233 |
+| [T-317](T-317-fill-the-ruler-readouts-drop-in-ink-soft.md) | Fill the ruler readout's drop in the softer ink | `PH3` | `unreleased` | `done` | `review` | - | - | - | - | T-314 |
 
 <!-- taskmd:end -->
