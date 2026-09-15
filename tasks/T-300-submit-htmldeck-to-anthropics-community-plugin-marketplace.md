@@ -2,12 +2,13 @@
 id: T-300
 title: Submit htmldeck to Anthropic's community plugin marketplace
 type: admin
-status: in_progress
-phase: implement
+status: done
+phase: review
 parent: null
 blocked_by: [T-271, T-282, T-287, T-290, T-294, T-296, T-298, T-301, T-303, T-304, T-305, T-307, T-308, T-309, T-311, T-318, T-319, T-320]
 related: []
 work_package: PH3
+shipped_in: unreleased
 owner: the project owner
 business_value: medium
 effort: s
@@ -197,12 +198,20 @@ when the sibling project `taskmd` was submitted on 2026-09-12. It is not a field
 
 - **Every other field** is §1's two tables as written: the path blank, Claude Code only, `MIT`, the
   privacy-policy URL blank with `measure.py`'s fetches accounted for.
+- **Sent by the owner on 2026-09-15**, after `v1.0.0` was tagged on `master`, as the owner confirmed.
+  This record holds the values prepared above and no copy of the form as submitted.
 
 ## 4. Review
 
 | Acceptance criterion | Result | Note |
 | :--- | :---: | :--- |
-|  |  |  |
+| `claude plugin validate . --strict` exits 0, captured as output rather than asserted | met | `√ Validation passed`, exit 0, on 2026-09-15. It validates the marketplace manifest only. `plugin.json` by path fails `--strict` on the root `CLAUDE.md`, kept there by §3's decision, and the gap is [L-169](../docs/lessons/L-169.md) |
+| The path field is left blank, and the record says why | met | §1: `source` is `./`, so the plugin is the repository root |
+| The description is written for the catalog's norms, not copied from the manifest unchanged | met | §3's final text, humanized, carries *presentations*, *slide deck*, *offline*, *diagrams* and *critique*, and scopes the manifest's *asks two questions* to building |
+| Supported platforms names only a surface that has actually been tested | met | Claude Code only. Cowork has never been run against this plugin |
+| The privacy-policy answer accounts for `tools/assets/measure.py`'s outbound fetches | met | §1's note, re-measured in §3: `measure.py` is the only `urllib.request` import under `tools/` |
+| `htmldeck` is re-checked as free in the catalog at submission time, not trusted from 2026-09-12 | met | Free among 2,282 entries on 2026-09-15, the day the form was sent |
+| At close, `shipped_in` follows `tasks/TASK-WORKFLOW.md` for a task that ships no version | met | `unreleased`: that file's §3 dates `shipped_in` by the first tag containing the closing commit, and this close follows `v1.0.0` |
 
 **Child fix tasks raised**
 - none
@@ -216,3 +225,4 @@ when the sibling project `taskmd` was submitted on 2026-09-12. It is not a field
 | 2026-09-14 | no change | The owner answered both open questions: the catalog description is humanized, and every open task except `T-057` closes first, so `blocked_by` names them. |
 | 2026-09-14 | no change | `T-318` joined B29 ahead of this task by the owner's ruling, and `blocked_by` names it. |
 | 2026-09-15 | proposed → in_progress | Every blocker closed, so §1 and §2 stood as written and the work went to implement. Every figure re-measured, the two long fields humanized, and one new finding: the plugin manifest fails `--strict` on the root `CLAUDE.md`, kept there for the reason in §3. **Every value is ready, and the record waits for the owner to send the form.** |
+| 2026-09-15 | in_progress → done | The owner sent the form after `v1.0.0` was tagged on `master`. Every criterion is met. The one finding that reaches past this task is [L-169](../docs/lessons/L-169.md). Nothing this task produced renders, so no look is owed. |
